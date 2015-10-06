@@ -1,0 +1,49 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|AnyCPU">
+      <Configuration>Debug</Configuration>
+      <Platform>AnyCPU</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|AnyCPU">
+      <Configuration>Release</Configuration>
+      <Platform>AnyCPU</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\FubarDev.FtpServer.FileSystem\FubarDev.FtpServer.FileSystem.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\LICENSE.md">
+      <Link>LICENSE.md</Link>
+    </Content>
+    <Content Include="..\README.md">
+      <Link>README.md</Link>
+    </Content>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>f55dac13-faaa-40b8-9bc2-92a2b2ddb29f</ProjectGuid>
+  </PropertyGroup>
+  <PropertyGroup>
+    <NuProjPath Condition=" '$(NuProjPath)' == '' ">$(MSBuildExtensionsPath)\NuProj\</NuProjPath>
+  </PropertyGroup>
+  <Import Project="$(NuProjPath)\NuProj.props" Condition="Exists('$(NuProjPath)\NuProj.props')" />
+  <PropertyGroup Label="Configuration">
+    <Id>FubarDev.FtpServer.FileSystem</Id>
+    <Version>1.0.0-beta01</Version>
+    <Title>FTP server file system abstraction</Title>
+    <Authors>Fubar Development Junker</Authors>
+    <Owners>Fubar Development Junker</Owners>
+    <Summary>
+    </Summary>
+    <Description>FTP server file system abstraction</Description>
+    <ReleaseNotes>
+    </ReleaseNotes>
+    <ProjectUrl>https://github.com/FubarDevelopment/FtpServer</ProjectUrl>
+    <LicenseUrl>http://opensource.org/licenses/MIT</LicenseUrl>
+    <Copyright>Copyright © 2015 Fubar Development Junker</Copyright>
+    <Tags>FTP server file system</Tags>
+    <EmbedSourceFiles>true</EmbedSourceFiles>
+  </PropertyGroup>
+  <Import Project="$(NuProjPath)\NuProj.targets" />
+</Project>
