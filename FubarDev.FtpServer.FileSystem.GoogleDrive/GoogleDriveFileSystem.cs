@@ -116,7 +116,7 @@ namespace FubarDev.FtpServer.FileSystem.GoogleDrive
         public async Task<IBackgroundTransfer> CreateAsync(IUnixDirectoryEntry targetDirectory, string fileName, Stream data, CancellationToken cancellationToken)
         {
             var targetEntry = (GoogleDriveDirectoryEntry)targetDirectory;
-            var newFileEntry = await Service.CreateItemAsync(targetEntry.File, fileName, cancellationToken);
+            var newFileEntry = await Service.CreateItemAsync(targetEntry.File, fileName, "application/octet-stream", cancellationToken);
             var tempFileName = Path.GetTempFileName();
             long fileSize;
             using (var temp = new FileStream(tempFileName, FileMode.Truncate))
