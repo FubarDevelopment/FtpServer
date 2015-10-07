@@ -89,6 +89,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="FubarDev.FtpServer.FileSystem.GoogleDrive.nuspec" />
     <None Include="packages.config" />
     <None Include="stylecop.json" />
   </ItemGroup>

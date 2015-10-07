@@ -36,6 +36,7 @@
     <WarningLevel>4</WarningLevel>
     <CodeAnalysisRuleSet>..\FubarDev.FtpServer.ruleset</CodeAnalysisRuleSet>
     <RunCodeAnalysis>false</RunCodeAnalysis>
+    <DocumentationFile>bin\Release\FubarDev.FtpServer.XML</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="..\GlobalAssemblyInfo.cs">
@@ -130,6 +131,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="FubarDev.FtpServer.nuspec" />
     <None Include="packages.config" />
     <None Include="stylecop.json" />
   </ItemGroup>

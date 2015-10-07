@@ -71,6 +71,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="FubarDev.FtpServer.FileSystem.nuspec" />
     <None Include="packages.config" />
     <None Include="stylecop.json" />
   </ItemGroup>
