@@ -3,7 +3,7 @@
   <metadata>
     <id>FubarDev.FtpServer.FileSystem</id>
     <version>$version$</version>
-    <title>Portable Google Drive API using RestSharp.Portable</title>
+    <title>File system for portable FTP server</title>
     <authors>Fubar Development Junker</authors>
     <owners>Fubar Development Junker</owners>
     <licenseUrl>http://opensource.org/licenses/MIT</licenseUrl>
@@ -12,7 +12,7 @@
     <description>Portable Google Drive API using RestSharp.Portable</description>
     <releaseNotes>Reduce dependencies</releaseNotes>
     <copyright>Copyright © 2015 Fubar Development Junker</copyright>
-    <tags>RestSharp Portable Google Drive</tags>
+    <tags>File system portable FTP server</tags>
     <dependencies>
     </dependencies>
   </metadata>
