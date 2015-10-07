@@ -62,7 +62,6 @@ namespace FubarDev.FtpServer.CommandHandlers
             foreach (var entry in taskStates)
             {
                 var line = $"{entry.Item2.ToString().PadRight(12)} {entry.Item1}";
-                Connection.Log?.Debug(line);
                 await Connection.Write($" {line}", cancellationToken);
             }
 
