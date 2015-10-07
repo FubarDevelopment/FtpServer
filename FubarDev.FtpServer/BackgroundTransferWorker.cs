@@ -20,12 +20,15 @@ namespace FubarDev.FtpServer
     {
         private readonly ManualResetEvent _event = new ManualResetEvent(false);
 
+        private readonly IFtpLog _log;
+
         private CancellationTokenSource _cancellationTokenSource;
 
         private bool _disposedValue;
 
-        public BackgroundTransferWorker()
+        public BackgroundTransferWorker(FtpServer server)
         {
+            _log = server?.LogManager?.CreateLog(GetType());
             Queue = new BackgroundTransferQueue(_event);
         }
 
@@ -102,6 +105,7 @@ namespace FubarDev.FtpServer
             {
                 cancellationToken.WaitHandle, _event
             };
+            _log?.Debug("Starting background transfer worker.");
             try
             {
                 while (!cancellationToken.IsCancellationRequested)
@@ -177,9 +181,11 @@ namespace FubarDev.FtpServer
                         HasData = false;
                     }
                 }
+                _log?.Info("Cancellation requested - stopping background transfer worker.");
             }
             finally
             {
+                _log?.Debug("Background transfer worker stopped.");
                 Queue.Dispose();
             }
         }

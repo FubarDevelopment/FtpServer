@@ -58,7 +58,7 @@ namespace FubarDev.FtpServer
             MembershipProvider = membershipProvider;
             Port = port;
             CommandsHandlerFactories = handlerFactories;
-            BackgroundTransferWorker = new BackgroundTransferWorker();
+            BackgroundTransferWorker = new BackgroundTransferWorker(this);
             BackgroundTransferWorker.Start(_cancellationTokenSource);
         }
 
@@ -76,7 +76,7 @@ namespace FubarDev.FtpServer
 
         public IMembershipProvider MembershipProvider { get; }
 
-        public Action<FtpConnection> ConnectionInitializer { get; set; }
+        public IFtpLogManager LogManager { get; set; }
 
         private BackgroundTransferWorker BackgroundTransferWorker { get; }
 
@@ -156,7 +156,7 @@ namespace FubarDev.FtpServer
             var connection = new FtpConnection(this, args.SocketClient, DefaultEncoding);
             connection.Closed += ConnectionOnClosed;
             _connections.Add(connection);
-            ConnectionInitializer?.Invoke(connection);
+            connection.Log = LogManager?.CreateLog(connection);
             connection.Start();
         }
 

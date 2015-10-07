@@ -95,6 +95,7 @@
     <Compile Include="FtpServer.cs" />
     <Compile Include="FtpTransferMode.cs" />
     <Compile Include="IFtpLog.cs" />
+    <Compile Include="IFtpLogManager.cs" />
     <Compile Include="IListFormatter.cs" />
     <Compile Include="ListFormatters\LongListFormatter.cs" />
     <Compile Include="ListFormatters\ShortListFormatter.cs" />
