@@ -118,11 +118,11 @@ namespace FubarDev.FtpServer
                         while ((backgroundTransferEntry = GetNextEntry()) != null)
                         {
                             Debug.Assert(backgroundTransferEntry != null, "backgroundTransferEntry must not be null (internal error)");
+                            var log = backgroundTransferEntry.Log;
                             var backgroundTransfer = backgroundTransferEntry.BackgroundTransfer;
                             try
                             {
                                 var bt = backgroundTransfer;
-                                var log = backgroundTransferEntry.Log;
                                 log?.Info("Starting background transfer {0}", bt.TransferId);
                                 backgroundTransferEntry.Status = BackgroundTransferStatus.Transferring;
                                 var task = bt.Start(cancellationToken);
@@ -158,6 +158,10 @@ namespace FubarDev.FtpServer
                                     cancellationToken);
 
                                 log?.Trace("Background transfer {0} finished", bt.TransferId);
+                            }
+                            catch (Exception ex)
+                            {
+                                log?.Error(ex, "Error during execution of background transfer {0}", backgroundTransfer.TransferId);
                             }
                             finally
                             {
