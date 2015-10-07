@@ -100,9 +100,15 @@ namespace FubarDev.FtpServer
             _stopped = true;
         }
 
+        public IReadOnlyCollection<Tuple<string, BackgroundTransferStatus>> GetBackgroundTaskStates()
+        {
+            return BackgroundTransferWorker.GetStates();
+        }
+
         public void EnqueueBackgroundTransfer(IBackgroundTransfer backgroundTransfer, FtpConnection connection)
         {
-            BackgroundTransferWorker.Queue.Enqueue(new BackgroundTransferEntry(backgroundTransfer, connection?.Log));
+            var entry = new BackgroundTransferEntry(backgroundTransfer, connection?.Log);
+            BackgroundTransferWorker.Enqueue(entry);
         }
 
         public void Dispose()

@@ -26,6 +26,7 @@ namespace FubarDev.FtpServer.CommandHandlers
             };
         }
 
+        /// <inheritdoc/>
         public override IReadOnlyCollection<string> SupportedExtensions { get; }
 
         public override async Task<FtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)

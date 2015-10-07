@@ -6,9 +6,13 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+
+using FubarDev.FtpServer.FileSystem;
 
 namespace FubarDev.FtpServer
 {
@@ -29,12 +33,39 @@ namespace FubarDev.FtpServer
 
         public bool HasData { get; private set; }
 
+        internal BackgroundTransferEntry CurrentEntry { get; private set; }
+
         public Task Start(CancellationTokenSource cts)
         {
             if (_cancellationTokenSource != null)
                 throw new InvalidOperationException("Background transfer worker already started");
             _cancellationTokenSource = cts;
             return Task.Run(() => ProcessQueue(cts.Token), cts.Token);
+        }
+
+        public void Enqueue(BackgroundTransferEntry entry)
+        {
+            lock (Queue)
+            {
+                Queue.Enqueue(entry);
+            }
+        }
+
+        public IReadOnlyCollection<Tuple<string, BackgroundTransferStatus>> GetStates()
+        {
+            var result = new List<Tuple<string, BackgroundTransferStatus>>();
+            lock (Queue)
+            {
+                var current = CurrentEntry;
+                if (current != null)
+                {
+                    result.Add(Tuple.Create(current.BackgroundTransfer.TransferId, current.Status));
+                }
+                result.AddRange(
+                    Queue.GetEntries()
+                        .Select(entry => Tuple.Create(entry.BackgroundTransfer.TransferId, entry.Status)));
+            }
+            return result;
         }
 
         public void Dispose()
@@ -52,6 +83,16 @@ namespace FubarDev.FtpServer
                 }
 
                 _disposedValue = true;
+            }
+        }
+
+        private BackgroundTransferEntry GetNextEntry()
+        {
+            lock (Queue)
+            {
+                var item = Queue.Dequeue();
+                CurrentEntry = item;
+                return item;
             }
         }
 
@@ -74,7 +115,7 @@ namespace FubarDev.FtpServer
                     try
                     {
                         BackgroundTransferEntry backgroundTransferEntry;
-                        while ((backgroundTransferEntry = Queue.Dequeue()) != null)
+                        while ((backgroundTransferEntry = GetNextEntry()) != null)
                         {
                             Debug.Assert(backgroundTransferEntry != null, "backgroundTransferEntry must not be null (internal error)");
                             var backgroundTransfer = backgroundTransferEntry.BackgroundTransfer;
@@ -83,6 +124,7 @@ namespace FubarDev.FtpServer
                                 var bt = backgroundTransfer;
                                 var log = backgroundTransferEntry.Log;
                                 log?.Info("Starting background transfer {0}", bt.TransferId);
+                                backgroundTransferEntry.Status = BackgroundTransferStatus.Transferring;
                                 var task = bt.Start(cancellationToken);
                                 var cancelledTask = task
                                     .ContinueWith(
@@ -121,6 +163,9 @@ namespace FubarDev.FtpServer
                             {
                                 backgroundTransfer.Dispose();
                             }
+
+                            backgroundTransferEntry.Status = BackgroundTransferStatus.Finished;
+                            CurrentEntry = null;
                         }
                     }
                     finally

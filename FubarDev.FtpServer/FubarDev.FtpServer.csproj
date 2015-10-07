@@ -50,6 +50,7 @@
     <Compile Include="BackgroundTransferWorker.cs" />
     <Compile Include="CommandHandlers\AborCommandHandler.cs" />
     <Compile Include="CommandHandlers\AlloCommandHandler.cs" />
+    <Compile Include="CommandHandlers\BlstCommandHandler.cs" />
     <Compile Include="CommandHandlers\CdUpCommandHandler.cs" />
     <Compile Include="CommandHandlers\RestCommandHandler.cs" />
     <Compile Include="CommandHandlers\RntoCommandHandler.cs" />

@@ -28,6 +28,16 @@ namespace FubarDev.FtpServer
             _event = evt;
         }
 
+        public IReadOnlyCollection<BackgroundTransferEntry> GetEntries()
+        {
+            lock (_syncRoot)
+            {
+                var result = new List<BackgroundTransferEntry>(_queue.Count);
+                result.AddRange(_queue);
+                return result;
+            }
+        }
+
         public void Enqueue([NotNull] BackgroundTransferEntry transfer)
         {
             lock (_syncRoot)

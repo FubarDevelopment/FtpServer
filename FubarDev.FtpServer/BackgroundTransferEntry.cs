@@ -17,6 +17,7 @@ namespace FubarDev.FtpServer
         {
             BackgroundTransfer = backgroundTransfer;
             Log = log;
+            Status = BackgroundTransferStatus.Enqueued;
         }
 
         [NotNull]
@@ -24,5 +25,7 @@ namespace FubarDev.FtpServer
 
         [CanBeNull]
         public IFtpLog Log { get; }
+
+        public BackgroundTransferStatus Status { get; set; }
     }
 }
