@@ -16,18 +16,18 @@ namespace FubarDev.FtpServer
     {
         private static readonly char[] _whiteSpaces = { ' ', '\t' };
 
-        private readonly Encoding _encoding;
+        private readonly Func<Encoding> _getActiveEncodingFunc;
 
         private MemoryStream _buffer = new MemoryStream();
 
         private bool _skipLineFeed;
 
-        public FtpCommandCollector(Encoding encoding)
+        public FtpCommandCollector(Func<Encoding> getActiveEncodingFunc)
         {
-            _encoding = encoding;
+            _getActiveEncodingFunc = getActiveEncodingFunc;
         }
 
-        public Encoding Encoding => _encoding;
+        public Encoding Encoding => _getActiveEncodingFunc();
 
         public byte[] ToArray()
         {
@@ -92,6 +92,7 @@ namespace FubarDev.FtpServer
             return commands;
         }
 
+        /// <inheritdoc/>
         public void Dispose()
         {
             if (_buffer != null)
@@ -101,7 +102,7 @@ namespace FubarDev.FtpServer
 
         private FtpCommand CreateFtpCommand(byte[] command)
         {
-            var message = _encoding.GetString(command, 0, command.Length);
+            var message = Encoding.GetString(command, 0, command.Length);
             var spaceIndex = message.IndexOfAny(_whiteSpaces);
             var commandName = spaceIndex == -1 ? message : message.Substring(0, spaceIndex);
             var commandArguments = spaceIndex == -1 ? string.Empty : message.Substring(spaceIndex + 1);

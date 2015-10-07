@@ -111,7 +111,7 @@ namespace FubarDev.FtpServer
         private async Task ProcessMessages()
         {
             Log?.Info($"Connected from {Socket.RemoteAddress}:{Socket.RemotePort}");
-            using (var collector = new FtpCommandCollector(Encoding))
+            using (var collector = new FtpCommandCollector(() => Encoding))
             {
                 await Write(new FtpResponse(220, "FTP Server Ready"), _cancellationTokenSource.Token);
 
