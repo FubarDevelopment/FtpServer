@@ -13,7 +13,7 @@ using RestSharp.Portable.Google.Drive.Model;
 
 namespace FubarDev.FtpServer.FileSystem.GoogleDrive
 {
-    public class GoogleDriveFileEntry : IUnixFileEntry
+    internal class GoogleDriveFileEntry : IUnixFileEntry
     {
         public GoogleDriveFileEntry(File file, string fullName, long? fileSize = null)
         {

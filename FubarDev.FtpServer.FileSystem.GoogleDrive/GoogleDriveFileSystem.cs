@@ -18,7 +18,7 @@ using File = RestSharp.Portable.Google.Drive.Model.File;
 
 namespace FubarDev.FtpServer.FileSystem.GoogleDrive
 {
-    public class GoogleDriveFileSystem : IUnixFileSystem
+    internal class GoogleDriveFileSystem : IUnixFileSystem
     {
         private readonly Dictionary<string, BackgroundUpload> _uploads = new Dictionary<string, BackgroundUpload>();
 

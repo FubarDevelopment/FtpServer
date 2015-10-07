@@ -13,7 +13,7 @@ using File = RestSharp.Portable.Google.Drive.Model.File;
 
 namespace FubarDev.FtpServer.FileSystem.GoogleDrive
 {
-    public class BackgroundUpload : IBackgroundTransfer
+    internal class BackgroundUpload : IBackgroundTransfer
     {
         private readonly string _tempFileName;
 

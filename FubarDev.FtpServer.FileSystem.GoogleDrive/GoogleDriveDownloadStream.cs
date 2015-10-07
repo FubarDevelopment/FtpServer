@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace FubarDev.FtpServer.FileSystem.GoogleDrive
 {
-    public class GoogleDriveDownloadStream : Stream
+    internal class GoogleDriveDownloadStream : Stream
     {
         private readonly HttpWebResponse _response;
 
