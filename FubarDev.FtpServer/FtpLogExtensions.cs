@@ -13,11 +13,7 @@ namespace FubarDev.FtpServer
     {
         public static void Trace(this IFtpLog log, FtpCommand command)
         {
-            string message =
-                command.Name.StartsWith("PASS", StringComparison.OrdinalIgnoreCase)
-                    ? "PASS **************** (password omitted)"
-                    : $"{command.Name} {command.Argument}";
-            log.Trace("{0}", message);
+            log.Trace("{0}", command);
         }
 
         public static void Trace(this IFtpLog log, FtpResponse response)

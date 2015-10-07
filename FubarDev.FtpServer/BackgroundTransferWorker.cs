@@ -96,7 +96,7 @@ namespace FubarDev.FtpServer
                                     .ContinueWith(
                                         t =>
                                         {
-                                            log?.Error(t.Exception, t.Exception.Message);
+                                            log?.Error(t.Exception, "Background transfer {0} faulted", bt.TransferId);
                                         },
                                         TaskContinuationOptions.OnlyOnFaulted);
                                 var completedTask = task
@@ -106,7 +106,7 @@ namespace FubarDev.FtpServer
                                             // Nothing to do
                                             log?.Info("Completed background transfer {0}", bt.TransferId);
                                         },
-                                        TaskContinuationOptions.OnlyOnRanToCompletion);
+                                        TaskContinuationOptions.NotOnCanceled);
 
                                 Task.WaitAny(
                                     new[]
@@ -114,6 +114,8 @@ namespace FubarDev.FtpServer
                                         cancelledTask, faultedTask, completedTask
                                     },
                                     cancellationToken);
+
+                                log?.Trace("Background transfer {0} finished", bt.TransferId);
                             }
                             finally
                             {

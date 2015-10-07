@@ -9,7 +9,7 @@ using System;
 
 namespace FubarDev.FtpServer
 {
-    public class FtpCommand
+    public sealed class FtpCommand
     {
         public FtpCommand(string commandName, string commandArgument)
         {
@@ -20,5 +20,14 @@ namespace FubarDev.FtpServer
         public string Name { get; }
 
         public string Argument { get; }
+
+        public override string ToString()
+        {
+            string message =
+                Name.StartsWith("PASS", StringComparison.OrdinalIgnoreCase)
+                    ? "PASS **************** (password omitted)"
+                    : $"{Name} {Argument}";
+            return message;
+        }
     }
 }

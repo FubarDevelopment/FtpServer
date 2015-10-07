@@ -132,7 +132,7 @@ namespace FubarDev.FtpServer
                 }
                 catch (Exception ex)
                 {
-                    Log?.Error(ex, ex.Message);
+                    Log?.Error(ex, "Failed to process connection");
                 }
                 finally
                 {
@@ -178,7 +178,7 @@ namespace FubarDev.FtpServer
                     }
                     catch (Exception ex)
                     {
-                        Log?.Error(ex, ex.ToString());
+                        Log?.Error(ex, "Failed to process message ({0})", command);
                         response = new FtpResponse(501, "Syntax error in parameters or arguments.");
                     }
                 }

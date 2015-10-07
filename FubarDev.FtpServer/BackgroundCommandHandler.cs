@@ -71,7 +71,7 @@ namespace FubarDev.FtpServer
                     t =>
                     {
                         var ex = t.Exception;
-                        _connection.Log?.Error(ex, ex.ToString());
+                        _connection.Log?.Error(ex, "Error while processing background command {0}", command);
                         var response = new FtpResponse(501, "Syntax error in parameters or arguments.");
                         _connection.Write(response, _connection.CancellationToken).Wait(_connection.CancellationToken);
                         lock (_syncRoot)
