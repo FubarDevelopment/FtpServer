@@ -40,7 +40,7 @@ namespace FubarDev.FtpServer.FileSystem.GoogleDrive
         {
             using (var stream = new FileStream(_tempFileName, FileMode.Open))
             {
-                await _fileSystem.Service.UploadAsync(File, stream, cancellationToken);
+                await _fileSystem.Service.UploadAsync(File.Id, stream, "application/octet-stream", cancellationToken);
             }
         }
 
