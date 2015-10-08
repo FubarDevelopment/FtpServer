@@ -40,7 +40,10 @@ namespace FubarDev.FtpServer.CommandHandlers
             var currentPath = Data.Path.Clone();
             var fileInfo = await Data.FileSystem.SearchFileAsync(currentPath, fileName, cancellationToken);
             if (Data.RestartPosition == null && fileInfo.Entry != null)
-                return new FtpResponse(553, "File already exists.");
+            {
+                Connection.Log?.Warn($"File {fileName} already exists. Deleting.");
+                await Data.FileSystem.UnlinkAsync(fileInfo.Entry, cancellationToken);
+            }
 
             await Connection.Write(new FtpResponse(150, "Opening connection for data transfer."), cancellationToken);
             using (var replySocket = await Connection.CreateResponseSocket())
