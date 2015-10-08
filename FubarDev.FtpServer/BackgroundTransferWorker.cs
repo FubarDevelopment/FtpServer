@@ -154,12 +154,18 @@ namespace FubarDev.FtpServer
                                         },
                                         TaskContinuationOptions.NotOnCanceled);
 
-                                Task.WaitAll(
-                                    new[]
-                                    {
-                                        cancelledTask, faultedTask, completedTask
-                                    },
-                                    cancellationToken);
+                                try
+                                {
+                                    Task.WaitAll(
+                                        new[]
+                                        {
+                                            cancelledTask, faultedTask, completedTask
+                                        });
+                                }
+                                catch (AggregateException ex) when (ex.InnerExceptions.All(x => x is TaskCanceledException))
+                                {
+                                    // Ignore AggregateException when it only contains TaskCancelledException
+                                }
 
                                 log?.Trace("Background transfer {0} finished", bt.TransferId);
                             }
