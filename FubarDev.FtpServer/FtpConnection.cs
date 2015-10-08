@@ -19,12 +19,21 @@ using Sockets.Plugin.Abstractions;
 
 namespace FubarDev.FtpServer
 {
+    /// <summary>
+    /// This class represents a FTP connection
+    /// </summary>
     public sealed class FtpConnection : IDisposable
     {
         private readonly CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
 
         private bool _closed;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FtpConnection"/> class.
+        /// </summary>
+        /// <param name="server">The server this connection belongs to</param>
+        /// <param name="socket">The socket to use to communicate with the client</param>
+        /// <param name="encoding">The encoding to use for the LIST/NLST commands</param>
         public FtpConnection(FtpServer server, ITcpSocketClient socket, Encoding encoding)
         {
             Server = server;
@@ -38,33 +47,69 @@ namespace FubarDev.FtpServer
                 .ToDictionary(x => x.Name, x => x.Item, StringComparer.OrdinalIgnoreCase);
         }
 
+        /// <summary>
+        /// Gets or sets the event handler that is triggered when the connection is closed.
+        /// </summary>
         public event EventHandler Closed;
 
+        /// <summary>
+        /// Gets the dictionary of all known command handlers
+        /// </summary>
         public IReadOnlyDictionary<string, FtpCommandHandler> CommandHandlers { get; }
 
+        /// <summary>
+        /// Gets the server this connection belongs to
+        /// </summary>
         public FtpServer Server { get; }
 
+        /// <summary>
+        /// Gets or sets the encoding for the LIST/NLST commands
+        /// </summary>
         public Encoding Encoding { get; set; }
 
+        /// <summary>
+        /// Gets the client socket
+        /// </summary>
         public ITcpSocketClient Socket { get; }
 
+        /// <summary>
+        /// Gets the FTP connection data
+        /// </summary>
         public FtpConnectionData Data { get; }
 
+        /// <summary>
+        /// Gets the FTP connection log
+        /// </summary>
         public IFtpLog Log { get; set; }
 
+        /// <summary>
+        /// The cancellation token to use to signal a task cancellation
+        /// </summary>
         internal CancellationToken CancellationToken => _cancellationTokenSource.Token;
 
+        /// <summary>
+        /// Starts processing of messages for this connection
+        /// </summary>
         public void Start()
         {
             ProcessMessages().ConfigureAwait(false);
         }
 
+        /// <summary>
+        /// Closes the connection
+        /// </summary>
         public void Close()
         {
             _cancellationTokenSource.Cancel(true);
             _closed = true;
         }
 
+        /// <summary>
+        /// Writes a FTP response to a client
+        /// </summary>
+        /// <param name="response">The response to write to the client</param>
+        /// <param name="cancellationToken">The cancellation token</param>
+        /// <returns>The task</returns>
         public async Task Write(FtpResponse response, CancellationToken cancellationToken)
         {
             if (!_closed)
@@ -76,6 +121,12 @@ namespace FubarDev.FtpServer
             }
         }
 
+        /// <summary>
+        /// Writes response to a client
+        /// </summary>
+        /// <param name="response">The response to write to the client</param>
+        /// <param name="cancellationToken">The cancellation token</param>
+        /// <returns>The task</returns>
         public async Task Write(string response, CancellationToken cancellationToken)
         {
             if (!_closed)
@@ -86,6 +137,10 @@ namespace FubarDev.FtpServer
             }
         }
 
+        /// <summary>
+        /// Creates a response socket for e.g. LIST/NLST
+        /// </summary>
+        /// <returns>The data connection</returns>
         public async Task<ITcpSocketClient> CreateResponseSocket()
         {
             var portAddress = Data.PortAddress;
@@ -99,6 +154,7 @@ namespace FubarDev.FtpServer
             return Data.PassiveSocketClient;
         }
 
+        /// <inheritdoc/>
         public void Dispose()
         {
             if (!_closed)
@@ -118,7 +174,7 @@ namespace FubarDev.FtpServer
                 var buffer = new byte[1];
                 try
                 {
-                    for (;;)
+                    for (; ;)
                     {
                         var bytesRead = await Socket.ReadStream.ReadAsync(buffer, 0, buffer.Length, _cancellationTokenSource.Token);
                         if (bytesRead == 0)
@@ -162,14 +218,10 @@ namespace FubarDev.FtpServer
                     {
                         if (handler.IsAbortable)
                         {
-                            if (!Data.BackgroundCommandHandler.Execute(handler, command))
-                            {
-                                response = new FtpResponse(503, "Parallel commands aren't allowed.");
-                            }
-                            else
-                            {
-                                response = null;
-                            }
+                            response =
+                                !Data.BackgroundCommandHandler.Execute(handler, command)
+                                    ? new FtpResponse(503, "Parallel commands aren't allowed.")
+                                    : null;
                         }
                         else
                         {
