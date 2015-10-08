@@ -13,15 +13,24 @@ using FubarDev.FtpServer.FileSystem;
 
 namespace FubarDev.FtpServer.CommandHandlers
 {
+    /// <summary>
+    /// This class implements the STOR command (4.1.3.)
+    /// </summary>
     public class StorCommandHandler : FtpCommandHandler
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="StorCommandHandler"/> class.
+        /// </summary>
+        /// <param name="connection">The connection this command handler is created for</param>
         public StorCommandHandler(FtpConnection connection)
             : base(connection, "STOR")
         {
         }
 
+        /// <inheritdoc/>
         public override bool IsAbortable => true;
 
+        /// <inheritdoc/>
         public override async Task<FtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
         {
             if (!Data.TransferMode.IsBinary && Data.TransferMode.FileType != FtpFileType.Ascii)
