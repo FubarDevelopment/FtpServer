@@ -8,12 +8,23 @@
 using System;
 using System.Text;
 
+using JetBrains.Annotations;
+
 namespace FubarDev.FtpServer
 {
+    /// <summary>
+    /// Abstraction for an IP address
+    /// </summary>
     public class Address
     {
         private readonly bool _isEnhanced;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Address"/> class.
+        /// </summary>
+        /// <param name="addressFamily">The IP address family</param>
+        /// <param name="address">The IP address</param>
+        /// <param name="port">The port</param>
         public Address(AddressFamily addressFamily, string address, int port)
         {
             _isEnhanced = true;
@@ -22,6 +33,11 @@ namespace FubarDev.FtpServer
             IpPort = port;
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Address"/> class.
+        /// </summary>
+        /// <param name="address">IPv4 address</param>
+        /// <param name="port">The port</param>
         public Address(string address, int port)
         {
             _isEnhanced = false;
@@ -30,6 +46,13 @@ namespace FubarDev.FtpServer
             IpPort = port;
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Address"/> class.
+        /// </summary>
+        /// <param name="port">The port</param>
+        /// <remarks>
+        /// This constructor omits the address part.
+        /// </remarks>
         public Address(int port)
         {
             _isEnhanced = true;
@@ -38,12 +61,27 @@ namespace FubarDev.FtpServer
             IpPort = port;
         }
 
+        /// <summary>
+        /// Gets the IP address family
+        /// </summary>
         public AddressFamily? AddressFamily { get; }
 
+        /// <summary>
+        /// Gets the IP address
+        /// </summary>
+        [CanBeNull]
         public string IpAddress { get; }
 
+        /// <summary>
+        /// Gets the port
+        /// </summary>
         public int IpPort { get; }
 
+        /// <summary>
+        /// Parses an IP address
+        /// </summary>
+        /// <param name="address">The IP address to parse</param>
+        /// <returns>The parsed IP address</returns>
         public static Address Parse(string address)
         {
             if (string.IsNullOrEmpty(address))
@@ -53,6 +91,10 @@ namespace FubarDev.FtpServer
                        : ParseLegacy(address);
         }
 
+        /// <summary>
+        /// Converts this address to an URI
+        /// </summary>
+        /// <returns>The newly created URI</returns>
         public Uri ToUri()
         {
             if (AddressFamily != null && AddressFamily == FubarDev.FtpServer.AddressFamily.IPv6)
@@ -62,6 +104,10 @@ namespace FubarDev.FtpServer
             return new Uri($"port://{IpAddress}:{IpPort}/");
         }
 
+        /// <summary>
+        /// Converts the IP address to a string as required by the PASV command
+        /// </summary>
+        /// <returns>The IP address as string</returns>
         public override string ToString()
         {
             var result = new StringBuilder();
@@ -87,7 +133,7 @@ namespace FubarDev.FtpServer
             else
             {
                 result
-                    .Append(IpAddress.Replace('.', ','))
+                    .Append(IpAddress?.Replace('.', ','))
                     .Append(',')
                     .Append(IpPort / 256)
                     .Append(',')

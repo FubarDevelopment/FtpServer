@@ -14,8 +14,15 @@ using Sockets.Plugin;
 
 namespace FubarDev.FtpServer.CommandHandlers
 {
+    /// <summary>
+    /// The command handler for the PASV command (4.1.2.)
+    /// </summary>
     public class PasvCommandHandler : FtpCommandHandler
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PasvCommandHandler"/> class.
+        /// </summary>
+        /// <param name="connection">The connection this command handler is created for</param>
         public PasvCommandHandler(FtpConnection connection)
             : base(connection, "PASV", "EPSV")
         {
@@ -25,8 +32,10 @@ namespace FubarDev.FtpServer.CommandHandlers
             };
         }
 
+        /// <inheritdoc/>
         public override IReadOnlyCollection<string> SupportedExtensions { get; }
 
+        /// <inheritdoc/>
         public override async Task<FtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
         {
             if (Data.PassiveSocketClient != null)
