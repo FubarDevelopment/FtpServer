@@ -47,7 +47,6 @@
     <Compile Include="DotNetDirectoryEntry.cs" />
     <Compile Include="DotNetFileEntry.cs" />
     <Compile Include="DotNetFileSystem.cs" />
-    <Compile Include="DotNetSystemProvider.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\FubarDev.FtpServer.FileSystem\FubarDev.FtpServer.FileSystem.csproj">

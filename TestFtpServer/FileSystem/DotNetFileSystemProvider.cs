@@ -1,13 +1,16 @@
 ﻿using System.IO;
 using System.Threading.Tasks;
 
-namespace FubarDev.FtpServer.FileSystem.DotNet
+using FubarDev.FtpServer.FileSystem;
+using FubarDev.FtpServer.FileSystem.DotNet;
+
+namespace TestFtpServer.FileSystem
 {
-    public class DotNetSystemProvider : IFileSystemClassFactory
+    public class DotNetFileSystemProvider : IFileSystemClassFactory
     {
         private readonly string _rootPath;
 
-        public DotNetSystemProvider(string rootPath)
+        public DotNetFileSystemProvider(string rootPath)
         {
             _rootPath = rootPath;
         }
