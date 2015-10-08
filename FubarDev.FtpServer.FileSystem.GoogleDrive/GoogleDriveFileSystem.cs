@@ -138,6 +138,29 @@ namespace FubarDev.FtpServer.FileSystem.GoogleDrive
             return backgroundUploads;
         }
 
+        public async Task<IBackgroundTransfer> ReplaceAsync(IUnixFileEntry fileEntry, Stream data, CancellationToken cancellationToken)
+        {
+            var fe = (GoogleDriveFileEntry)fileEntry;
+            var tempFileName = Path.GetTempFileName();
+            long fileSize;
+            using (var temp = new FileStream(tempFileName, FileMode.Truncate))
+            {
+                await data.CopyToAsync(temp, 4096, cancellationToken);
+                fileSize = temp.Position;
+            }
+            var backgroundUploads = new BackgroundUpload(fe.FullName, fe.File, tempFileName, this, fileSize);
+            await _uploadsLock.WaitAsync(cancellationToken);
+            try
+            {
+                _uploads.Add(backgroundUploads.File.Id, backgroundUploads);
+            }
+            finally
+            {
+                _uploadsLock.Release();
+            }
+            return backgroundUploads;
+        }
+
         public void Dispose()
         {
             Dispose(true);

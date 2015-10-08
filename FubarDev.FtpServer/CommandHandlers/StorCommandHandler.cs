@@ -39,11 +39,7 @@ namespace FubarDev.FtpServer.CommandHandlers
             var fileName = command.Argument;
             var currentPath = Data.Path.Clone();
             var fileInfo = await Data.FileSystem.SearchFileAsync(currentPath, fileName, cancellationToken);
-            if (Data.RestartPosition == null && fileInfo.Entry != null)
-            {
-                Connection.Log?.Warn($"File {fileName} already exists. Deleting.");
-                await Data.FileSystem.UnlinkAsync(fileInfo.Entry, cancellationToken);
-            }
+            var doReplace = Data.RestartPosition.GetValueOrDefault() == 0 && fileInfo.Entry != null;
 
             await Connection.Write(new FtpResponse(150, "Opening connection for data transfer."), cancellationToken);
             using (var replySocket = await Connection.CreateResponseSocket())
@@ -51,7 +47,11 @@ namespace FubarDev.FtpServer.CommandHandlers
                 replySocket.ReadStream.ReadTimeout = 10000;
 
                 IBackgroundTransfer backgroundTransfer;
-                if (Data.RestartPosition.GetValueOrDefault() == 0)
+                if (doReplace)
+                {
+                    backgroundTransfer = await Data.FileSystem.ReplaceAsync(fileInfo.Entry, replySocket.ReadStream, cancellationToken);
+                }
+                else if (Data.RestartPosition.GetValueOrDefault() == 0)
                 {
                     backgroundTransfer = await Data.FileSystem.CreateAsync(fileInfo.Directory, fileInfo.FileName, replySocket.ReadStream, cancellationToken);
                 }

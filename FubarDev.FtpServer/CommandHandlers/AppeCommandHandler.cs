@@ -39,7 +39,14 @@ namespace FubarDev.FtpServer.CommandHandlers
                 IBackgroundTransfer backgroundTransfer;
                 if (Data.RestartPosition != null && Data.RestartPosition.Value == 0)
                 {
-                    backgroundTransfer = await Data.FileSystem.CreateAsync(fileInfo.Directory, fileInfo.FileName, replySocket.ReadStream, cancellationToken);
+                    if (fileInfo.Entry == null)
+                    {
+                        backgroundTransfer = await Data.FileSystem.CreateAsync(fileInfo.Directory, fileInfo.FileName, replySocket.ReadStream, cancellationToken);
+                    }
+                    else
+                    {
+                        backgroundTransfer = await Data.FileSystem.ReplaceAsync(fileInfo.Entry, replySocket.ReadStream, cancellationToken);
+                    }
                 }
                 else
                 {
