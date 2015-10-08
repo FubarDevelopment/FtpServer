@@ -154,7 +154,7 @@ namespace FubarDev.FtpServer
                                         },
                                         TaskContinuationOptions.NotOnCanceled);
 
-                                Task.WaitAny(
+                                Task.WaitAll(
                                     new[]
                                     {
                                         cancelledTask, faultedTask, completedTask
