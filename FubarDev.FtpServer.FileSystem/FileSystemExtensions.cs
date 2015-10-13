@@ -139,8 +139,11 @@ namespace FubarDev.FtpServer.FileSystem
             if (sourceDir == null)
                 return null;
             var fileName = pathElements[pathElements.Count - 1];
-            var foundEntry = (IUnixDirectoryEntry)await fileSystem.GetEntryByNameAsync(sourceDir, fileName, cancellationToken);
-            return new SearchResult<IUnixDirectoryEntry>(sourceDir, foundEntry, fileName);
+            var foundEntry = await fileSystem.GetEntryByNameAsync(sourceDir, fileName, cancellationToken);
+            var foundDirEntry = foundEntry as IUnixDirectoryEntry;
+            if (foundDirEntry == null && foundEntry != null)
+                return null;
+            return new SearchResult<IUnixDirectoryEntry>(sourceDir, foundDirEntry, fileName);
         }
 
         /// <summary>
@@ -173,8 +176,11 @@ namespace FubarDev.FtpServer.FileSystem
             if (sourceDir == null)
                 return null;
             var fileName = pathElements[pathElements.Count - 1];
-            var foundEntry = (IUnixFileEntry)await fileSystem.GetEntryByNameAsync(sourceDir, fileName, cancellationToken);
-            return new SearchResult<IUnixFileEntry>(sourceDir, foundEntry, fileName);
+            var foundEntry = await fileSystem.GetEntryByNameAsync(sourceDir, fileName, cancellationToken);
+            var foundFileEntry = foundEntry as IUnixFileEntry;
+            if (foundEntry != null && foundFileEntry == null)
+                return null;
+            return new SearchResult<IUnixFileEntry>(sourceDir, foundFileEntry, fileName);
         }
 
         /// <summary>
