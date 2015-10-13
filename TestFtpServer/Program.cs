@@ -5,10 +5,10 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using FubarDev.FtpServer;
+using FubarDev.FtpServer.AccountManagement;
 using FubarDev.FtpServer.AccountManagement.Anonymous;
+using FubarDev.FtpServer.FileSystem.DotNet;
 
-using TestFtpServer.AccountManagement;
-using TestFtpServer.FileSystem;
 using TestFtpServer.Logging;
 
 namespace TestFtpServer
@@ -19,7 +19,7 @@ namespace TestFtpServer
 
         private static void Main()
         {
-            var membershipProvider = new AnyMembershipProvider(new NoValidation());
+            var membershipProvider = new AnonymousMembershipProvider(new NoValidation());
             var fsProvider = new DotNetFileSystemProvider(Path.Combine(Path.GetTempPath(), "TestFtpServer"));
             var server = new FtpServer(fsProvider, membershipProvider, "127.0.0.1")
             {

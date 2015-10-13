@@ -18,7 +18,10 @@ using File = RestSharp.Portable.Google.Drive.Model.File;
 
 namespace FubarDev.FtpServer.FileSystem.GoogleDrive
 {
-    internal class GoogleDriveFileSystem : IUnixFileSystem
+    /// <summary>
+    /// The <see cref="IUnixFileSystem"/> implementation that uses Google Drive
+    /// </summary>
+    public class GoogleDriveFileSystem : IUnixFileSystem
     {
         private readonly Dictionary<string, BackgroundUpload> _uploads = new Dictionary<string, BackgroundUpload>();
 
@@ -26,6 +29,11 @@ namespace FubarDev.FtpServer.FileSystem.GoogleDrive
 
         private bool _disposedValue;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="GoogleDriveFileSystem"/> class.
+        /// </summary>
+        /// <param name="service">The <see cref="GoogleDriveService"/> instance to use to access the Google Drive</param>
+        /// <param name="rootFolderInfo">The <see cref="File"/> to use as root folder</param>
         public GoogleDriveFileSystem(GoogleDriveService service, File rootFolderInfo)
         {
             Service = service;
@@ -33,14 +41,23 @@ namespace FubarDev.FtpServer.FileSystem.GoogleDrive
             Root = new GoogleDriveDirectoryEntry(RootFolderInfo, "/", true);
         }
 
+        /// <summary>
+        /// Gets the <see cref="GoogleDriveService"/> instance to use to access the Google Drive
+        /// </summary>
         public GoogleDriveService Service { get; }
 
+        /// <summary>
+        /// Gets the <see cref="File"/> to use as root folder
+        /// </summary>
         public File RootFolderInfo { get; }
 
+        /// <inheritdoc/>
         public StringComparer FileSystemEntryComparer => StringComparer.OrdinalIgnoreCase;
 
+        /// <inheritdoc/>
         public IUnixDirectoryEntry Root { get; }
 
+        /// <inheritdoc/>
         public async Task<IReadOnlyList<IUnixFileSystemEntry>> GetEntriesAsync(IUnixDirectoryEntry directoryEntry, CancellationToken cancellationToken)
         {
             var dirEntry = (GoogleDriveDirectoryEntry)directoryEntry;
@@ -51,6 +68,7 @@ namespace FubarDev.FtpServer.FileSystem.GoogleDrive
             return entries;
         }
 
+        /// <inheritdoc/>
         public async Task<IUnixFileSystemEntry> GetEntryByNameAsync(IUnixDirectoryEntry directoryEntry, string name, CancellationToken cancellationToken)
         {
             var dirEntry = (GoogleDriveDirectoryEntry)directoryEntry;
@@ -61,6 +79,7 @@ namespace FubarDev.FtpServer.FileSystem.GoogleDrive
             return entries.FirstOrDefault();
         }
 
+        /// <inheritdoc/>
         public async Task<IUnixFileSystemEntry> MoveAsync(IUnixDirectoryEntry parent, IUnixFileSystemEntry source, IUnixDirectoryEntry target, string fileName, CancellationToken cancellationToken)
         {
             var parentEntry = (GoogleDriveDirectoryEntry)parent;
@@ -79,6 +98,7 @@ namespace FubarDev.FtpServer.FileSystem.GoogleDrive
             return new GoogleDriveDirectoryEntry(newDir, targetName);
         }
 
+        /// <inheritdoc/>
         public async Task UnlinkAsync(IUnixFileSystemEntry entry, CancellationToken cancellationToken)
         {
             var dirEntry = entry as GoogleDriveDirectoryEntry;
@@ -93,6 +113,7 @@ namespace FubarDev.FtpServer.FileSystem.GoogleDrive
             }
         }
 
+        /// <inheritdoc/>
         public async Task<IUnixDirectoryEntry> CreateDirectoryAsync(IUnixDirectoryEntry targetDirectory, string directoryName, CancellationToken cancellationToken)
         {
             var dirEntry = (GoogleDriveDirectoryEntry)targetDirectory;
@@ -100,6 +121,7 @@ namespace FubarDev.FtpServer.FileSystem.GoogleDrive
             return new GoogleDriveDirectoryEntry(newDir, FileSystemExtensions.CombinePath(dirEntry.FullName, newDir.Title));
         }
 
+        /// <inheritdoc/>
         public async Task<Stream> OpenReadAsync(IUnixFileEntry fileEntry, long startPosition, CancellationToken cancellationToken)
         {
             HttpRange range = startPosition != 0 ? new HttpRange("bytes", new HttpRangeItem(startPosition, fileEntry.Size)) : null;
@@ -108,11 +130,13 @@ namespace FubarDev.FtpServer.FileSystem.GoogleDrive
             return new GoogleDriveDownloadStream(response, startPosition, fe.Size);
         }
 
+        /// <inheritdoc/>
         public Task<IBackgroundTransfer> AppendAsync(IUnixFileEntry fileEntry, long? startPosition, Stream data, CancellationToken cancellationToken)
         {
             throw new NotSupportedException();
         }
 
+        /// <inheritdoc/>
         public async Task<IBackgroundTransfer> CreateAsync(IUnixDirectoryEntry targetDirectory, string fileName, Stream data, CancellationToken cancellationToken)
         {
             var targetEntry = (GoogleDriveDirectoryEntry)targetDirectory;
@@ -138,6 +162,7 @@ namespace FubarDev.FtpServer.FileSystem.GoogleDrive
             return backgroundUploads;
         }
 
+        /// <inheritdoc/>
         public async Task<IBackgroundTransfer> ReplaceAsync(IUnixFileEntry fileEntry, Stream data, CancellationToken cancellationToken)
         {
             var fe = (GoogleDriveFileEntry)fileEntry;
@@ -161,12 +186,44 @@ namespace FubarDev.FtpServer.FileSystem.GoogleDrive
             return backgroundUploads;
         }
 
+        /// <inheritdoc/>
         public void Dispose()
         {
             Dispose(true);
         }
 
-        public async Task<IReadOnlyList<IUnixFileSystemEntry>> ConvertEntries(GoogleDriveDirectoryEntry dirEntry, Func<Task<IReadOnlyList<File>>> getEntriesFunc, CancellationToken cancellationToken)
+        internal void UploadFinished(string fileId)
+        {
+            _uploadsLock.Wait();
+            try
+            {
+                _uploads.Remove(fileId);
+            }
+            finally
+            {
+                _uploadsLock.Release();
+            }
+        }
+
+        /// <summary>
+        /// Dispose the object
+        /// </summary>
+        /// <param name="disposing"><code>true</code> when called from <see cref="Dispose()"/></param>
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!_disposedValue)
+            {
+                if (disposing)
+                {
+                    Service.Dispose();
+                    _uploadsLock.Dispose();
+                }
+
+                _disposedValue = true;
+            }
+        }
+
+        private async Task<IReadOnlyList<IUnixFileSystemEntry>> ConvertEntries(GoogleDriveDirectoryEntry dirEntry, Func<Task<IReadOnlyList<File>>> getEntriesFunc, CancellationToken cancellationToken)
         {
             var result = new List<IUnixFileSystemEntry>();
             await _uploadsLock.WaitAsync(cancellationToken);
@@ -201,33 +258,6 @@ namespace FubarDev.FtpServer.FileSystem.GoogleDrive
                 _uploadsLock.Release();
             }
             return result;
-        }
-
-        internal void UploadFinished(string fileId)
-        {
-            _uploadsLock.Wait();
-            try
-            {
-                _uploads.Remove(fileId);
-            }
-            finally
-            {
-                _uploadsLock.Release();
-            }
-        }
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!_disposedValue)
-            {
-                if (disposing)
-                {
-                    Service.Dispose();
-                    _uploadsLock.Dispose();
-                }
-
-                _disposedValue = true;
-            }
         }
     }
 }

@@ -58,8 +58,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AccountManagement\AnyMembershipProvider.cs" />
-    <Compile Include="FileSystem\DotNetFileSystemProvider.cs" />
     <Compile Include="Logging\FtpLogForNLog.cs" />
     <Compile Include="Logging\FtpLogManager.cs" />
     <Compile Include="Program.cs" />

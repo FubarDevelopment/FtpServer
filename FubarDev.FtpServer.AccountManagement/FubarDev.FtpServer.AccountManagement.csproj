@@ -50,6 +50,7 @@
     </Compile>
     <Compile Include="Anonymous\BlockAnonymousValidation.cs" />
     <Compile Include="Anonymous\IAnonymousPasswordValidator.cs" />
+    <Compile Include="AnonymousMembershipProvider.cs" />
     <Compile Include="IMembershipProvider.cs" />
     <Compile Include="Anonymous\NoTopLevelDomainValidation.cs" />
     <Compile Include="Anonymous\NoValidation.cs" />
