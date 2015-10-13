@@ -161,7 +161,7 @@ namespace FubarDev.FtpServer
         }
 
         /// <summary>
-        /// Starts the FTP server
+        /// Starts the FTP server in the background
         /// </summary>
         public void Start()
         {
