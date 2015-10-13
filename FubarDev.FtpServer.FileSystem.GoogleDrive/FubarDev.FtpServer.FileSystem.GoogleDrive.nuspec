@@ -9,7 +9,7 @@
     <licenseUrl>http://opensource.org/licenses/MIT</licenseUrl>
     <projectUrl>https://github.com/FubarDevelopment/FtpServer</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>Portable Google Drive API using RestSharp.Portable</description>
+    <description>FTP server file system implementation for Google Drive</description>
     <releaseNotes>Reduce dependencies</releaseNotes>
     <copyright>Copyright © 2015 Fubar Development Junker</copyright>
     <tags>Google Drive file system portable FTP server</tags>
