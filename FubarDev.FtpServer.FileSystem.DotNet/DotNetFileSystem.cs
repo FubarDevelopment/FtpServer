@@ -65,11 +65,14 @@ namespace FubarDev.FtpServer.FileSystem.DotNet
         public Task<IUnixFileSystemEntry> GetEntryByNameAsync(IUnixDirectoryEntry directoryEntry, string name, CancellationToken cancellationToken)
         {
             var searchDirInfo = ((DotNetDirectoryEntry)directoryEntry).Info;
-            var fileInfo = new FileInfo(Path.Combine(searchDirInfo.FullName, name));
-            IUnixFileSystemEntry result =
-                !fileInfo.Exists
-                    ? null
-                    : new DotNetFileEntry(fileInfo);
+            var fullPath = Path.Combine(searchDirInfo.FullName, name);
+            IUnixFileSystemEntry result;
+            if (File.Exists(fullPath))
+                result = new DotNetFileEntry(new FileInfo(fullPath));
+            else if (Directory.Exists(fullPath))
+                result = new DotNetDirectoryEntry(new DirectoryInfo(fullPath));
+            else
+                result = null;
             return Task.FromResult(result);
         }
 
