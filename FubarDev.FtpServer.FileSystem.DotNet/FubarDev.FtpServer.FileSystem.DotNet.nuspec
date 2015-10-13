@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+  <metadata>
+    <id>FubarDev.FtpServer.FileSystem.DotNet</id>
+    <version>$version$</version>
+    <title>.NET file system for portable FTP server</title>
+    <authors>Fubar Development Junker</authors>
+    <owners>Fubar Development Junker</owners>
+    <licenseUrl>http://opensource.org/licenses/MIT</licenseUrl>
+    <projectUrl>https://github.com/FubarDevelopment/FtpServer</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>FTP server file system implementation using standard .NET</description>
+    <releaseNotes>Initial release</releaseNotes>
+    <copyright>Copyright © 2015 Fubar Development Junker</copyright>
+    <tags>file system portable FTP server</tags>
+    <dependencies>
+      <dependency id="FubarDev.FtpServer.FileSystem" version="$clientversion$" />
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="..\LICENSE.md" target="LICENSE.md" />
+    <file src="..\README.md" target="README.md" />
+    <file src="bin\$Configuration$\FubarDev.FtpServer.FileSystem.DotNet.dll" target="lib\net45\" />
+    <file src="bin\$Configuration$\FubarDev.FtpServer.FileSystem.DotNet.xml" target="lib\net45\" />
+  </files>
+</package>
