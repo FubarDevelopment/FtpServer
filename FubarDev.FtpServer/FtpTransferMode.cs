@@ -10,8 +10,15 @@ using System.Text;
 
 namespace FubarDev.FtpServer
 {
+    /// <summary>
+    /// FTP transfer mode (RFC 959, 3.4.)
+    /// </summary>
     public sealed class FtpTransferMode
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FtpTransferMode"/> class.
+        /// </summary>
+        /// <param name="fileType">The file data type of this transfer mode</param>
         public FtpTransferMode(FtpFileType fileType)
         {
             FileType = fileType;
@@ -23,20 +30,38 @@ namespace FubarDev.FtpServer
             ParseInterpretationMode(interpretationMode);
         }
 
+        /// <summary>
+        /// Gets the file data type
+        /// </summary>
         public FtpFileType FileType { get; }
 
-        public FtpFileTypeInterpreterMode? InterpreterMode { get; set; }
+        /// <summary>
+        /// Gets or sets the interpreter mode
+        /// </summary>
+        public FtpFileTypeInterpreterMode? InterpreterMode { get; private set; }
 
-        public int? Bits { get; set; }
+        /// <summary>
+        /// Gets or sets the bits of a binary transfer mode
+        /// </summary>
+        public int? Bits { get; private set; }
 
+        /// <summary>
+        /// Gets a value indicating whether the transfer mode is binary.
+        /// </summary>
         public bool IsBinary => FileType == FtpFileType.Image || (FileType == FtpFileType.Local && Bits.GetValueOrDefault() == 8);
 
+        /// <summary>
+        /// Parses a transfer mode
+        /// </summary>
+        /// <param name="type">The transfer mode to parse</param>
+        /// <returns>The new <see cref="FtpTransferMode"/></returns>
         public static FtpTransferMode Parse(string type)
         {
             var fileType = ParseFileType(type[0]);
             return new FtpTransferMode(fileType, type.Substring(1));
         }
 
+        /// <inheritdoc/>
         public override string ToString()
         {
             var result = new StringBuilder();

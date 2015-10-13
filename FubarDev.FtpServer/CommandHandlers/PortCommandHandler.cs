@@ -12,8 +12,15 @@ using System.Threading.Tasks;
 
 namespace FubarDev.FtpServer.CommandHandlers
 {
+    /// <summary>
+    /// Implements the <code>PORT</code> and <code>EPRT</code> commands.
+    /// </summary>
     public class PortCommandHandler : FtpCommandHandler
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PortCommandHandler"/> class.
+        /// </summary>
+        /// <param name="connection">The connection to create this command handler for</param>
         public PortCommandHandler(FtpConnection connection)
             : base(connection, "PORT", "EPRT")
         {
@@ -23,8 +30,10 @@ namespace FubarDev.FtpServer.CommandHandlers
             };
         }
 
+        /// <inheritdoc/>
         public override IReadOnlyCollection<string> SupportedExtensions { get; }
 
+        /// <inheritdoc/>
         public override Task<FtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
         {
             if (Data.TransferTypeCommandUsed != null && !string.Equals(command.Name, Data.TransferTypeCommandUsed, StringComparison.OrdinalIgnoreCase))

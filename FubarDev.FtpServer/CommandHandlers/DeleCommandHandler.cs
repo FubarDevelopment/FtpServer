@@ -13,13 +13,21 @@ using FubarDev.FtpServer.FileSystem;
 
 namespace FubarDev.FtpServer.CommandHandlers
 {
+    /// <summary>
+    /// Implements the <code>DELE</code> command.
+    /// </summary>
     public class DeleCommandHandler : FtpCommandHandler
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DeleCommandHandler"/> class.
+        /// </summary>
+        /// <param name="connection">The connection to create this command handler for</param>
         public DeleCommandHandler(FtpConnection connection)
             : base(connection, "DELE")
         {
         }
 
+        /// <inheritdoc/>
         public override async Task<FtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
         {
             var path = command.Argument;

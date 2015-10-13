@@ -13,13 +13,21 @@ using FubarDev.FtpServer.FileSystem;
 
 namespace FubarDev.FtpServer.CommandHandlers
 {
+    /// <summary>
+    /// Implements the <code>RMD</code> command.
+    /// </summary>
     public class RmdCommandHandler : FtpCommandHandler
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RmdCommandHandler"/> class.
+        /// </summary>
+        /// <param name="connection">The connection to create this command handler for</param>
         public RmdCommandHandler(FtpConnection connection)
             : base(connection, "RMD")
         {
         }
 
+        /// <inheritdoc/>
         public override async Task<FtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
         {
             var path = command.Argument;

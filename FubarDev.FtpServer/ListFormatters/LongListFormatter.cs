@@ -13,10 +13,12 @@ using FubarDev.FtpServer.FileSystem;
 
 namespace FubarDev.FtpServer.ListFormatters
 {
+    /// <summary>
+    /// The <see cref="IListFormatter"/> for the long directory listing format
+    /// </summary>
     public class LongListFormatter : IListFormatter
     {
-        private static readonly CultureInfo _cultureUs = new CultureInfo("en-US");
-
+        /// <inheritdoc/>
         public IEnumerable<string> GetPrefix(IUnixDirectoryEntry directoryEntry)
         {
             var result = new List<string>
@@ -30,11 +32,13 @@ namespace FubarDev.FtpServer.ListFormatters
             return result;
         }
 
+        /// <inheritdoc/>
         public IEnumerable<string> GetSuffix(IUnixDirectoryEntry directoryEntry)
         {
             return new string[0];
         }
 
+        /// <inheritdoc/>
         public string Format(IUnixFileSystemEntry entry)
         {
             var fileEntry = entry as IUnixFileEntry;
@@ -44,7 +48,7 @@ namespace FubarDev.FtpServer.ListFormatters
         private static string BuildLine(IUnixFileSystemEntry entry, IUnixFileEntry fileEntry, string name)
         {
             return string.Format(
-                _cultureUs,
+                CultureInfo.InvariantCulture,
                 "{0}{1}{2}{3} {4} {5} {6} {7:D13} {8:MMM dd HH:mm} {9}",
                 fileEntry == null ? "d" : "-",
                 BuildAccessMode(entry.Permissions.User),

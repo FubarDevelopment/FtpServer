@@ -7,36 +7,75 @@
 
 using System;
 
+using JetBrains.Annotations;
+
 namespace FubarDev.FtpServer
 {
+    /// <summary>
+    /// Extension methods for logging <see cref="FtpCommand"/> and <see cref="FtpResponse"/> objects.
+    /// </summary>
     public static class FtpLogExtensions
     {
-        public static void Trace(this IFtpLog log, FtpCommand command)
+        /// <summary>
+        /// Logs a trace message with the data of the <see cref="FtpCommand"/>
+        /// </summary>
+        /// <param name="log">The <see cref="IFtpLog"/> to use</param>
+        /// <param name="command">The <see cref="FtpCommand"/> to log</param>
+        public static void Trace([NotNull] this IFtpLog log, [NotNull] FtpCommand command)
         {
             log.Trace("{0}", command);
         }
 
-        public static void Trace(this IFtpLog log, FtpResponse response)
+        /// <summary>
+        /// Logs a trace message with the data of the <see cref="FtpResponse"/>
+        /// </summary>
+        /// <param name="log">The <see cref="IFtpLog"/> to use</param>
+        /// <param name="response">The <see cref="FtpResponse"/> to log</param>
+        public static void Trace([NotNull] this IFtpLog log, [NotNull] FtpResponse response)
         {
             log.Trace("{0}", response);
         }
 
-        public static void Debug(this IFtpLog log, FtpResponse response)
+        /// <summary>
+        /// Logs a debug message with the data of the <see cref="FtpResponse"/>
+        /// </summary>
+        /// <param name="log">The <see cref="IFtpLog"/> to use</param>
+        /// <param name="response">The <see cref="FtpResponse"/> to log</param>
+        public static void Debug([NotNull] this IFtpLog log, [NotNull] FtpResponse response)
         {
             log.Debug("{0}", response);
         }
 
-        public static void Warn(this IFtpLog log, FtpResponse response)
+        /// <summary>
+        /// Logs a warning message with the data of the <see cref="FtpResponse"/>
+        /// </summary>
+        /// <param name="log">The <see cref="IFtpLog"/> to use</param>
+        /// <param name="response">The <see cref="FtpResponse"/> to log</param>
+        public static void Warn([NotNull] this IFtpLog log, [NotNull] FtpResponse response)
         {
             log.Warn("{0}", response);
         }
 
-        public static void Error(this IFtpLog log, FtpResponse response)
+        /// <summary>
+        /// Logs an error message with the data of the <see cref="FtpResponse"/>
+        /// </summary>
+        /// <param name="log">The <see cref="IFtpLog"/> to use</param>
+        /// <param name="response">The <see cref="FtpResponse"/> to log</param>
+        public static void Error([NotNull] this IFtpLog log, [NotNull] FtpResponse response)
         {
             log.Error("{0}", response);
         }
 
-        public static void Log(this IFtpLog log, FtpResponse response)
+        /// <summary>
+        /// Logs a message with the data of the <see cref="FtpResponse"/>
+        /// </summary>
+        /// <param name="log">The <see cref="IFtpLog"/> to use</param>
+        /// <param name="response">The <see cref="FtpResponse"/> to log</param>
+        /// <remarks>
+        /// It logs either a trace, debug, or warning message depending on the
+        /// <see cref="FtpResponse.Code"/>.
+        /// </remarks>
+        public static void Log([NotNull] this IFtpLog log, [NotNull] FtpResponse response)
         {
             if (response.Code >= 200 && response.Code < 300)
             {

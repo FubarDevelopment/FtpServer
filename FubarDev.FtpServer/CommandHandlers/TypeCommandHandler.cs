@@ -10,13 +10,21 @@ using System.Threading.Tasks;
 
 namespace FubarDev.FtpServer.CommandHandlers
 {
+    /// <summary>
+    /// Implements the <code>TYPE</code> command.
+    /// </summary>
     public class TypeCommandHandler : FtpCommandHandler
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TypeCommandHandler"/> class.
+        /// </summary>
+        /// <param name="connection">The connection to create this command handler for</param>
         public TypeCommandHandler(FtpConnection connection)
             : base(connection, "TYPE")
         {
         }
 
+        /// <inheritdoc/>
         public override Task<FtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
         {
             var transferMode = FtpTransferMode.Parse(command.Argument);

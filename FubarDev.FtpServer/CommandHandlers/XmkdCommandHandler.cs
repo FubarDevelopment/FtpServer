@@ -13,13 +13,21 @@ using FubarDev.FtpServer.FileSystem;
 
 namespace FubarDev.FtpServer.CommandHandlers
 {
+    /// <summary>
+    /// Implements the <code>XMKD</code> command.
+    /// </summary>
     public class XmkdCommandHandler : FtpCommandHandler
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="XmkdCommandHandler"/> class.
+        /// </summary>
+        /// <param name="connection">The connection to create this command handler for</param>
         public XmkdCommandHandler(FtpConnection connection)
             : base(connection, "XMKD")
         {
         }
 
+        /// <inheritdoc/>
         public override async Task<FtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
         {
             var directoryName = command.Argument;

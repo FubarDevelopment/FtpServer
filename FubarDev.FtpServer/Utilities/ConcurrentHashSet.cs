@@ -12,7 +12,7 @@ using System.Threading;
 
 namespace FubarDev.FtpServer.Utilities
 {
-    public class ConcurrentHashSet<T> : IDisposable
+    internal class ConcurrentHashSet<T> : IDisposable
     {
         private readonly ReaderWriterLockSlim _lock = new ReaderWriterLockSlim(LockRecursionPolicy.SupportsRecursion);
 
@@ -110,6 +110,7 @@ namespace FubarDev.FtpServer.Utilities
             }
         }
 
+        /// <inheritdoc/>
         public void Dispose()
         {
             Dispose(true);

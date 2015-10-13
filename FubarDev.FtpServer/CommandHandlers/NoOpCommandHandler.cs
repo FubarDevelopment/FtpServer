@@ -10,13 +10,21 @@ using System.Threading.Tasks;
 
 namespace FubarDev.FtpServer.CommandHandlers
 {
+    /// <summary>
+    /// Implements the <code>NOOP</code> command.
+    /// </summary>
     public class NoOpCommandHandler : FtpCommandHandler
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="NoOpCommandHandler"/> class.
+        /// </summary>
+        /// <param name="connection">The connection to create this command handler for</param>
         public NoOpCommandHandler(FtpConnection connection)
             : base(connection, "NOOP")
         {
         }
 
+        /// <inheritdoc/>
         public override Task<FtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
         {
             return Task.FromResult(new FtpResponse(220, "NOOP command successful."));

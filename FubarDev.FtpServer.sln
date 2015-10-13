@@ -24,6 +24,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Samples", "Samples", "{7004
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestFtpServer", "TestFtpServer\TestFtpServer.csproj", "{4DFC0694-0212-491C-A102-38203A74B09F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FubarDev.FtpServer.Tests", "FubarDev.FtpServer.Tests\FubarDev.FtpServer.Tests.csproj", "{0EEB524B-D0F7-4972-838D-D4CE7963D839}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -54,6 +56,10 @@ Global
 		{4DFC0694-0212-491C-A102-38203A74B09F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4DFC0694-0212-491C-A102-38203A74B09F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4DFC0694-0212-491C-A102-38203A74B09F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0EEB524B-D0F7-4972-838D-D4CE7963D839}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0EEB524B-D0F7-4972-838D-D4CE7963D839}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0EEB524B-D0F7-4972-838D-D4CE7963D839}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0EEB524B-D0F7-4972-838D-D4CE7963D839}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

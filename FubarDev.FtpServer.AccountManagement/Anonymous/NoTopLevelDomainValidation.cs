@@ -7,8 +7,15 @@
 
 namespace FubarDev.FtpServer.AccountManagement.Anonymous
 {
+    /// <summary>
+    /// Allows a server address for anonymous authentication without top level domain
+    /// </summary>
+    /// <remarks>
+    /// In other words: No dot required after <code>@</code>.
+    /// </remarks>
     public class NoTopLevelDomainValidation : IAnonymousPasswordValidator
     {
+        /// <inheritdoc/>
         public bool IsValid(string password)
         {
             var atIndex = password.IndexOf('@');

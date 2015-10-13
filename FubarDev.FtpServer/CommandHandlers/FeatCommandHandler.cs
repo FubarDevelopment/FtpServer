@@ -12,15 +12,23 @@ using System.Threading.Tasks;
 
 namespace FubarDev.FtpServer.CommandHandlers
 {
+    /// <summary>
+    /// Implements the <code>FEAT</code> command.
+    /// </summary>
     public class FeatCommandHandler : FtpCommandHandler
     {
         private IReadOnlyCollection<string> _supportedFeatures;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FeatCommandHandler"/> class.
+        /// </summary>
+        /// <param name="connection">The connection to create this command handler for</param>
         public FeatCommandHandler(FtpConnection connection)
             : base(connection, "FEAT")
         {
         }
 
+        /// <inheritdoc/>
         public override async Task<FtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
         {
             if (_supportedFeatures == null)

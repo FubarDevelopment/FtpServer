@@ -12,15 +12,24 @@ using FubarDev.FtpServer.FileSystem;
 
 namespace FubarDev.FtpServer.CommandHandlers
 {
+    /// <summary>
+    /// Implements the <code>RNFR</code> command.
+    /// </summary>
     public class RnfrCommandHandler : FtpCommandHandler
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RnfrCommandHandler"/> class.
+        /// </summary>
+        /// <param name="connection">The connection to create this command handler for</param>
         public RnfrCommandHandler(FtpConnection connection)
             : base(connection, "RNFR")
         {
         }
 
+        /// <inheritdoc/>
         public override bool IsAbortable => true;
 
+        /// <inheritdoc/>
         public override async Task<FtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
         {
             var fileName = command.Argument;

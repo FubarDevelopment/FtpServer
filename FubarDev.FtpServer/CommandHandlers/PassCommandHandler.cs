@@ -13,15 +13,24 @@ using FubarDev.FtpServer.FileSystem;
 
 namespace FubarDev.FtpServer.CommandHandlers
 {
+    /// <summary>
+    /// Implements the <code>PASS</code> command.
+    /// </summary>
     public class PassCommandHandler : FtpCommandHandler
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PassCommandHandler"/> class.
+        /// </summary>
+        /// <param name="connection">The connection to create this command handler for</param>
         public PassCommandHandler(FtpConnection connection)
             : base(connection, "PASS")
         {
         }
 
+        /// <inheritdoc/>
         public override bool IsLoginRequired => false;
 
+        /// <inheritdoc/>
         public override async Task<FtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
         {
             var password = command.Argument;

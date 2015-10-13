@@ -10,8 +10,13 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 
+using JetBrains.Annotations;
+
 namespace FubarDev.FtpServer
 {
+    /// <summary>
+    /// Collects FTP commands using the current <see cref="System.Text.Encoding"/>
+    /// </summary>
     public sealed class FtpCommandCollector : IDisposable
     {
         private static readonly char[] _whiteSpaces = { ' ', '\t' };
@@ -22,18 +27,33 @@ namespace FubarDev.FtpServer
 
         private bool _skipLineFeed;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FtpCommandCollector"/> class.
+        /// </summary>
+        /// <param name="getActiveEncodingFunc">The delegate to get the current encoding for</param>
         public FtpCommandCollector(Func<Encoding> getActiveEncodingFunc)
         {
             _getActiveEncodingFunc = getActiveEncodingFunc;
         }
 
+        /// <summary>
+        /// Gets the currently active <see cref="System.Text.Encoding"/>
+        /// </summary>
         public Encoding Encoding => _getActiveEncodingFunc();
 
-        public byte[] ToArray()
-        {
-            return _buffer.ToArray();
-        }
+        /// <summary>
+        /// Gets a value indicating whether this collector contains unused data
+        /// </summary>
+        public bool IsEmpty => _buffer.Length == 0;
 
+        /// <summary>
+        /// Collects the data from the <paramref name="buffer"/> and tries to build <see cref="FtpCommand"/> objects from it.
+        /// </summary>
+        /// <param name="buffer">The buffer to collect the data from</param>
+        /// <param name="offset">An offset into the buffer to collect the data from</param>
+        /// <param name="length">The length of the data to collect</param>
+        /// <returns>The found <see cref="FtpCommand"/>s</returns>
+        [NotNull, ItemNotNull]
         public IEnumerable<FtpCommand> Collect(byte[] buffer, int offset, int length)
         {
             var commands = new List<FtpCommand>();

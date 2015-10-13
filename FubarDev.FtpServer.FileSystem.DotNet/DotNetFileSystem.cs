@@ -81,7 +81,7 @@ namespace FubarDev.FtpServer.FileSystem.DotNet
                 var fileEntry = (DotNetFileEntry)entry;
                 fileEntry.Info.Delete();
             }
-            await Task.Yield();
+            await Task.FromResult(0);
         }
 
         public Task<IUnixDirectoryEntry> CreateDirectoryAsync(IUnixDirectoryEntry targetDirectory, string directoryName, CancellationToken cancellationToken)

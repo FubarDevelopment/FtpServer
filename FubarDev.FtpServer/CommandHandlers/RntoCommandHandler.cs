@@ -12,15 +12,24 @@ using FubarDev.FtpServer.FileSystem;
 
 namespace FubarDev.FtpServer.CommandHandlers
 {
+    /// <summary>
+    /// Implements the <code>RNTO</code> command.
+    /// </summary>
     public class RntoCommandHandler : FtpCommandHandler
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RntoCommandHandler"/> class.
+        /// </summary>
+        /// <param name="connection">The connection to create this command handler for</param>
         public RntoCommandHandler(FtpConnection connection)
             : base(connection, "RNTO")
         {
         }
 
+        /// <inheritdoc/>
         public override bool IsAbortable => true;
 
+        /// <inheritdoc/>
         public override async Task<FtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
         {
             if (Data.RenameFrom == null)

@@ -12,8 +12,12 @@ using FubarDev.FtpServer.FileSystem;
 
 namespace FubarDev.FtpServer.ListFormatters
 {
+    /// <summary>
+    /// The <see cref="IListFormatter"/> for the short directory listing format (name only)
+    /// </summary>
     public class ShortListFormatter : IListFormatter
     {
+        /// <inheritdoc/>
         public IEnumerable<string> GetPrefix(IUnixDirectoryEntry directoryEntry)
         {
             var result = new List<string>
@@ -25,11 +29,13 @@ namespace FubarDev.FtpServer.ListFormatters
             return result;
         }
 
+        /// <inheritdoc/>
         public IEnumerable<string> GetSuffix(IUnixDirectoryEntry directoryEntry)
         {
             return new string[0];
         }
 
+        /// <inheritdoc/>
         public string Format(IUnixFileSystemEntry entry)
         {
             return entry.Name;

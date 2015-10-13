@@ -10,15 +10,24 @@ using System.Threading.Tasks;
 
 namespace FubarDev.FtpServer.CommandHandlers
 {
+    /// <summary>
+    /// Implements the <code>USER</code> command.
+    /// </summary>
     public class UserCommandHandler : FtpCommandHandler
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="UserCommandHandler"/> class.
+        /// </summary>
+        /// <param name="connection">The connection to create this command handler for</param>
         public UserCommandHandler(FtpConnection connection)
             : base(connection, "USER")
         {
         }
 
+        /// <inheritdoc/>
         public override bool IsLoginRequired => false;
 
+        /// <inheritdoc/>
         public override Task<FtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
         {
             var userName = command.Argument;

@@ -7,11 +7,24 @@
 
 using System;
 
+using JetBrains.Annotations;
+
 namespace FubarDev.FtpServer.FileSystem.Generic
 {
+    /// <summary>
+    /// A generic implementation of the <see cref="IUnixFileSystemEntry"/>
+    /// </summary>
     public abstract class GenericUnixFileSystemEntry : IUnixFileSystemEntry
     {
-        public GenericUnixFileSystemEntry(string name, IUnixPermissions permissions, DateTimeOffset lastWriteTime, string owner, string group)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="GenericUnixFileSystemEntry"/> class.
+        /// </summary>
+        /// <param name="name">The file system entry name</param>
+        /// <param name="permissions">The file system entry permissions</param>
+        /// <param name="lastWriteTime">The last write time</param>
+        /// <param name="owner">The file system entry owner</param>
+        /// <param name="group">The file system entry group</param>
+        public GenericUnixFileSystemEntry([NotNull] string name, [NotNull] IUnixPermissions permissions, DateTimeOffset? lastWriteTime, [NotNull] string owner, [NotNull] string group)
         {
             Name = name;
             Permissions = permissions;
@@ -21,16 +34,22 @@ namespace FubarDev.FtpServer.FileSystem.Generic
             NumberOfLinks = 1;
         }
 
+        /// <inheritdoc/>
         public string Name { get; }
 
+        /// <inheritdoc/>
         public IUnixPermissions Permissions { get; }
 
+        /// <inheritdoc/>
         public DateTimeOffset? LastWriteTime { get; }
 
+        /// <inheritdoc/>
         public long NumberOfLinks { get; }
 
+        /// <inheritdoc/>
         public string Owner { get; }
 
+        /// <inheritdoc/>
         public string Group { get; }
     }
 }

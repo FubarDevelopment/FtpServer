@@ -174,7 +174,7 @@ namespace FubarDev.FtpServer
                 var buffer = new byte[1];
                 try
                 {
-                    for (;;)
+                    for (; ;)
                     {
                         var bytesRead = await Socket.ReadStream.ReadAsync(buffer, 0, buffer.Length, _cancellationTokenSource.Token);
                         if (bytesRead == 0)

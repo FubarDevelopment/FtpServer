@@ -7,6 +7,9 @@
 
 namespace FubarDev.FtpServer.FileSystem
 {
+    /// <summary>
+    /// A unix directory entry
+    /// </summary>
     public interface IUnixDirectoryEntry : IUnixFileSystemEntry
     {
     }

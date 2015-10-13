@@ -15,7 +15,7 @@ using Sockets.Plugin;
 namespace FubarDev.FtpServer.CommandHandlers
 {
     /// <summary>
-    /// The command handler for the PASV command (4.1.2.)
+    /// The command handler for the <code>PASV</code> (4.1.2.) and <code>EPSV</code> commands
     /// </summary>
     public class PasvCommandHandler : FtpCommandHandler
     {

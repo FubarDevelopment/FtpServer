@@ -19,13 +19,21 @@ using Sockets.Plugin.Abstractions;
 
 namespace FubarDev.FtpServer.CommandHandlers
 {
+    /// <summary>
+    /// Implements the <code>LIST</code> and <code>NLST</code> commands.
+    /// </summary>
     public class ListCommandHandler : FtpCommandHandler
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ListCommandHandler"/> class.
+        /// </summary>
+        /// <param name="connection">The connection to create this command handler for</param>
         public ListCommandHandler(FtpConnection connection)
             : base(connection, "LIST", "NLST")
         {
         }
 
+        /// <inheritdoc/>
         public override async Task<FtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
         {
             await Connection.Write(new FtpResponse(150, "Opening data connection."), cancellationToken);

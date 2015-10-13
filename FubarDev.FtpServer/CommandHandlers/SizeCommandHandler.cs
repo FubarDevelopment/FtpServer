@@ -13,8 +13,15 @@ using FubarDev.FtpServer.FileSystem;
 
 namespace FubarDev.FtpServer.CommandHandlers
 {
+    /// <summary>
+    /// Implements the <code>SIZE</code> command.
+    /// </summary>
     public class SizeCommandHandler : FtpCommandHandler
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SizeCommandHandler"/> class.
+        /// </summary>
+        /// <param name="connection">The connection to create this command handler for</param>
         public SizeCommandHandler(FtpConnection connection)
             : base(connection, "SIZE")
         {
@@ -24,8 +31,10 @@ namespace FubarDev.FtpServer.CommandHandlers
             };
         }
 
+        /// <inheritdoc/>
         public override IReadOnlyCollection<string> SupportedExtensions { get; }
 
+        /// <inheritdoc/>
         public override async Task<FtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
         {
             var fileName = command.Argument;

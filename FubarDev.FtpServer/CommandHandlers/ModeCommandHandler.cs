@@ -11,13 +11,21 @@ using System.Threading.Tasks;
 
 namespace FubarDev.FtpServer.CommandHandlers
 {
+    /// <summary>
+    /// Implements the <code>MODE</code> command.
+    /// </summary>
     public class ModeCommandHandler : FtpCommandHandler
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ModeCommandHandler"/> class.
+        /// </summary>
+        /// <param name="connection">The connection to create this command handler for</param>
         public ModeCommandHandler(FtpConnection connection)
             : base(connection, "MODE")
         {
         }
 
+        /// <inheritdoc/>
         public override Task<FtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
         {
             if (string.Equals(command.Argument, "S", StringComparison.OrdinalIgnoreCase))

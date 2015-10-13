@@ -7,8 +7,12 @@
 
 namespace FubarDev.FtpServer.AccountManagement.Anonymous
 {
+    /// <summary>
+    /// Disallow anonymous logins
+    /// </summary>
     public class BlockAnonymousValidation : IAnonymousPasswordValidator
     {
+        /// <inheritdoc/>
         public bool IsValid(string password)
         {
             return false;

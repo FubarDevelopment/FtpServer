@@ -7,8 +7,14 @@
 
 namespace FubarDev.FtpServer.FileSystem
 {
+    /// <summary>
+    /// A unix file entry
+    /// </summary>
     public interface IUnixFileEntry : IUnixFileSystemEntry
     {
+        /// <summary>
+        /// Gets the size of the file
+        /// </summary>
         long Size { get; }
     }
 }

@@ -7,8 +7,12 @@
 
 namespace FubarDev.FtpServer.AccountManagement.Anonymous
 {
+    /// <summary>
+    /// Performs no validation. Every kind of password is allowed.
+    /// </summary>
     public class NoValidation : IAnonymousPasswordValidator
     {
+        /// <inheritdoc/>
         public bool IsValid(string password)
         {
             return true;

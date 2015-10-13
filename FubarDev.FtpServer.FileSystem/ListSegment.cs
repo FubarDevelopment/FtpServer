@@ -24,40 +24,15 @@ namespace FubarDev.FtpServer.FileSystem
 
         public IReadOnlyList<T> List { get; }
 
-        /// <summary>
-        /// Ruft die Anzahl der Elemente in der Auflistung ab.
-        /// </summary>
-        /// <returns>
-        /// Die Anzahl der Elemente in der Auflistung.
-        /// </returns>
         public int Count { get; }
 
-        /// <summary>
-        /// Ruft das Element am angegebenen Index in der schreibgeschützten Liste ab.
-        /// </summary>
-        /// <returns>
-        /// Das Element am angegebenen Index in der schreibgeschützten Liste.
-        /// </returns>
-        /// <param name="index">Der nullbasierte Index des abzurufenden Elements.</param>
         public T this[int index] => List[_offset + index];
 
-        /// <summary>
-        /// Gibt einen Enumerator zurück, der die Auflistung durchläuft.
-        /// </summary>
-        /// <returns>
-        /// Ein <see cref="T:System.Collections.Generic.IEnumerator`1"/>, der zum Durchlaufen der Auflistung verwendet werden kann.
-        /// </returns>
         public IEnumerator<T> GetEnumerator()
         {
             return List.Skip(_offset).Take(Count).GetEnumerator();
         }
 
-        /// <summary>
-        /// Gibt einen Enumerator zurück, der eine Auflistung durchläuft.
-        /// </summary>
-        /// <returns>
-        /// Ein <see cref="T:System.Collections.IEnumerator"/>-Objekt, das zum Durchlaufen der Auflistung verwendet werden kann.
-        /// </returns>
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();

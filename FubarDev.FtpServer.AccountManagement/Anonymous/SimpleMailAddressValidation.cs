@@ -7,8 +7,15 @@
 
 namespace FubarDev.FtpServer.AccountManagement.Anonymous
 {
+    /// <summary>
+    /// The password must have the form of a valid email address.
+    /// </summary>
+    /// <remarks>
+    /// A <code>@</code> is required and the host name must contain a dot.
+    /// </remarks>
     public class SimpleMailAddressValidation : IAnonymousPasswordValidator
     {
+        /// <inheritdoc/>
         public bool IsValid(string password)
         {
             var atIndex = password.IndexOf('@');
