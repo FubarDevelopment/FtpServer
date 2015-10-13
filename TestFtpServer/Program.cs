@@ -23,12 +23,12 @@ namespace TestFtpServer
                 LogManager = new FtpLogManager(),
             })
             {
-                Console.WriteLine("Press ENTER/RETURN to close the test application.");
                 var log = ftpServer.LogManager?.CreateLog(typeof(Program));
 
                 try
                 {
                     ftpServer.Start();
+                    Console.WriteLine("Press ENTER/RETURN to close the test application.");
                     Console.ReadLine();
                     ftpServer.Stop();
                 }

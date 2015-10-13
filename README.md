@@ -19,11 +19,10 @@ var fsProvider = new DotNetFileSystemProvider(Path.Combine(Path.GetTempPath(), "
 // Initialize the FTP server
 var ftpServer = new FtpServer(fsProvider, membershipProvider, "127.0.0.1");
 
-Console.WriteLine("Press ENTER/RETURN to close the test application.");
-
 // Start the FTP server
 ftpServer.Start();
 
+Console.WriteLine("Press ENTER/RETURN to close the test application.");
 Console.ReadLine();
 
 // Stop the FTP server
