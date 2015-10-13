@@ -27,7 +27,7 @@ namespace FubarDev.FtpServer.FileSystem.DotNet
         /// </summary>
         /// <param name="rootPath">The root path for all users</param>
         public DotNetFileSystemProvider([NotNull] string rootPath)
-            : this(rootPath, true)
+            : this(rootPath, false)
         {
         }
 
@@ -47,7 +47,11 @@ namespace FubarDev.FtpServer.FileSystem.DotNet
         {
             var path = _rootPath;
             if (_useUserIdAsSubFolder)
+            {
+                if (isAnonymous)
+                    userId = "anonymous";
                 path = Path.Combine(path, userId);
+            }
 
             return Task.FromResult<IUnixFileSystem>(new DotNetFileSystem(path));
         }
