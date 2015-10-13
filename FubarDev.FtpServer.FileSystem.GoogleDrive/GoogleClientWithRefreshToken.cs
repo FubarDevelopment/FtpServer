@@ -5,7 +5,6 @@
 // <author>Mark Junker</author>
 //-----------------------------------------------------------------------
 
-using System;
 using System.Threading.Tasks;
 
 using RestSharp.Portable;

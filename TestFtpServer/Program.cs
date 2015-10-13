@@ -34,7 +34,7 @@ namespace TestFtpServer
 
         private static void Run(FtpServer ftpServer)
         {
-            var log = ftpServer.LogManager.CreateLog(typeof(Program));
+            var log = ftpServer.LogManager?.CreateLog(typeof(Program));
 
             try
             {
@@ -47,7 +47,7 @@ namespace TestFtpServer
             }
             catch (Exception ex)
             {
-                log.Error(ex, "Error during main FTP server loop");
+                log?.Error(ex, "Error during main FTP server loop");
             }
             finally
             {

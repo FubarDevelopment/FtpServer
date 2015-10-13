@@ -202,7 +202,7 @@ namespace FubarDev.FtpServer.Tests
                     return -1;
                 if (ReferenceEquals(y, null))
                     return 1;
-                var v = string.Compare(x.Name ?? string.Empty, y.Name ?? string.Empty, StringComparison.OrdinalIgnoreCase);
+                var v = string.Compare(x.Name, y.Name, StringComparison.OrdinalIgnoreCase);
                 if (v != 0)
                     return v;
                 return StringComparer.Compare(x.Argument ?? string.Empty, y.Argument ?? string.Empty);
@@ -215,7 +215,7 @@ namespace FubarDev.FtpServer.Tests
 
             public int GetHashCode(FtpCommand obj)
             {
-                return StringComparer.GetHashCode(obj.Name ?? string.Empty)
+                return StringComparer.GetHashCode(obj.Name)
                        ^ StringComparer.GetHashCode(obj.Argument ?? string.Empty);
             }
         }

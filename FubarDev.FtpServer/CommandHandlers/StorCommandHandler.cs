@@ -37,8 +37,14 @@ namespace FubarDev.FtpServer.CommandHandlers
                 throw new NotSupportedException();
 
             var fileName = command.Argument;
+            if (string.IsNullOrEmpty(fileName))
+                return new FtpResponse(501, "No file name specified");
+
             var currentPath = Data.Path.Clone();
             var fileInfo = await Data.FileSystem.SearchFileAsync(currentPath, fileName, cancellationToken);
+            if (fileInfo == null)
+                return new FtpResponse(550, "Not a valid directory.");
+
             var doReplace = Data.RestartPosition.GetValueOrDefault() == 0 && fileInfo.Entry != null;
 
             await Connection.Write(new FtpResponse(150, "Opening connection for data transfer."), cancellationToken);
@@ -51,7 +57,7 @@ namespace FubarDev.FtpServer.CommandHandlers
                 {
                     backgroundTransfer = await Data.FileSystem.ReplaceAsync(fileInfo.Entry, replySocket.ReadStream, cancellationToken);
                 }
-                else if (Data.RestartPosition.GetValueOrDefault() == 0)
+                else if (Data.RestartPosition.GetValueOrDefault() == 0 || fileInfo.Entry == null)
                 {
                     backgroundTransfer = await Data.FileSystem.CreateAsync(fileInfo.Directory, fileInfo.FileName, replySocket.ReadStream, cancellationToken);
                 }

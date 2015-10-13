@@ -5,8 +5,6 @@
 // <author>Mark Junker</author>
 //-----------------------------------------------------------------------
 
-using System;
-
 using JetBrains.Annotations;
 
 namespace FubarDev.FtpServer

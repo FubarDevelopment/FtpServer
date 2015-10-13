@@ -5,7 +5,6 @@
 // <author>Mark Junker</author>
 //-----------------------------------------------------------------------
 
-using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading;
@@ -39,7 +38,7 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// <inheritdoc/>
         public override async Task<FtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
         {
-            var argument = command.Argument;
+            var argument = command.Argument ?? string.Empty;
             var whiteSpaceIndex = argument.IndexOfAny(_whiteSpaces);
             var commandName = whiteSpaceIndex == -1 ? argument : argument.Substring(0, whiteSpaceIndex);
             var commandArgument = whiteSpaceIndex == -1 ? string.Empty : argument.Substring(whiteSpaceIndex + 1);

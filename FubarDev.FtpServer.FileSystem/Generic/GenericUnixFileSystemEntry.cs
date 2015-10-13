@@ -24,7 +24,7 @@ namespace FubarDev.FtpServer.FileSystem.Generic
         /// <param name="lastWriteTime">The last write time</param>
         /// <param name="owner">The file system entry owner</param>
         /// <param name="group">The file system entry group</param>
-        public GenericUnixFileSystemEntry([NotNull] string name, [NotNull] IUnixPermissions permissions, DateTimeOffset? lastWriteTime, [NotNull] string owner, [NotNull] string group)
+        protected GenericUnixFileSystemEntry([NotNull] string name, [NotNull] IUnixPermissions permissions, DateTimeOffset? lastWriteTime, [NotNull] string owner, [NotNull] string group)
         {
             Name = name;
             Permissions = permissions;

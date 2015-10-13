@@ -156,11 +156,7 @@ namespace FubarDev.FtpServer
 
                                 try
                                 {
-                                    Task.WaitAll(
-                                        new[]
-                                        {
-                                            cancelledTask, faultedTask, completedTask
-                                        });
+                                    Task.WaitAll(cancelledTask, faultedTask, completedTask);
                                 }
                                 catch (AggregateException ex) when (ex.InnerExceptions.All(x => x is TaskCanceledException))
                                 {

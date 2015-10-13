@@ -34,6 +34,8 @@ namespace FubarDev.FtpServer.CommandHandlers
         {
             if (Data.RenameFrom == null)
                 return new FtpResponse(503, "RNTO must be preceded by a RNFR.");
+            if (Data.RenameFrom.Entry == null)
+                return new FtpResponse(550, "File specified for RNFR doesn't exist.");
 
             var fileName = command.Argument;
             var tempPath = Data.Path.Clone();

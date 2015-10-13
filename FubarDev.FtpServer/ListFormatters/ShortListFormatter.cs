@@ -5,7 +5,6 @@
 // <author>Mark Junker</author>
 //-----------------------------------------------------------------------
 
-using System;
 using System.Collections.Generic;
 
 using FubarDev.FtpServer.FileSystem;
