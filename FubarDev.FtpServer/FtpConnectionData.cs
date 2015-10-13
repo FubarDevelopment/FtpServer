@@ -47,6 +47,11 @@ namespace FubarDev.FtpServer
         public bool IsLoggedIn { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether the current user is anonymous.
+        /// </summary>
+        public bool IsAnonymous { get; set; }
+
+        /// <summary>
         /// Gets or sets the <see cref="Encoding"/> for the <code>NLST</code> command.
         /// </summary>
         public Encoding NlstEncoding { get; set; }

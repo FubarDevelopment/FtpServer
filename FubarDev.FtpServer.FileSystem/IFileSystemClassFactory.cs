@@ -18,7 +18,11 @@ namespace FubarDev.FtpServer.FileSystem
         /// Creates a <see cref="IUnixFileSystem"/> implementation for a given <paramref name="userId"/>
         /// </summary>
         /// <param name="userId">The user ID to create the <see cref="IUnixFileSystem"/> for</param>
+        /// <param name="isAnonymous">Do we have an anonymous login?</param>
         /// <returns>The new <see cref="IUnixFileSystem"/> for the <paramref name="userId"/></returns>
-        Task<IUnixFileSystem> Create(string userId);
+        /// <remarks>
+        /// When the login is anonymous, the <paramref name="userId"/> is the given password.
+        /// </remarks>
+        Task<IUnixFileSystem> Create(string userId, bool isAnonymous);
     }
 }

@@ -8,6 +8,8 @@
 using System.IO;
 using System.Threading.Tasks;
 
+using JetBrains.Annotations;
+
 namespace FubarDev.FtpServer.FileSystem.DotNet
 {
     /// <summary>
@@ -24,7 +26,7 @@ namespace FubarDev.FtpServer.FileSystem.DotNet
         /// Initializes a new instance of the <see cref="DotNetFileSystemProvider"/> class.
         /// </summary>
         /// <param name="rootPath">The root path for all users</param>
-        public DotNetFileSystemProvider(string rootPath)
+        public DotNetFileSystemProvider([NotNull] string rootPath)
             : this(rootPath, true)
         {
         }
@@ -34,18 +36,19 @@ namespace FubarDev.FtpServer.FileSystem.DotNet
         /// </summary>
         /// <param name="rootPath">The root path for all users</param>
         /// <param name="useUserIdAsSubFolder">Use the user id as subfolder?</param>
-        public DotNetFileSystemProvider(string rootPath, bool useUserIdAsSubFolder)
+        public DotNetFileSystemProvider([NotNull] string rootPath, bool useUserIdAsSubFolder)
         {
             _rootPath = rootPath;
             _useUserIdAsSubFolder = useUserIdAsSubFolder;
         }
 
         /// <inheritdoc/>
-        public Task<IUnixFileSystem> Create(string userId)
+        public Task<IUnixFileSystem> Create(string userId, bool isAnonymous)
         {
             var path = _rootPath;
             if (_useUserIdAsSubFolder)
                 path = Path.Combine(path, userId);
+
             return Task.FromResult<IUnixFileSystem>(new DotNetFileSystem(path));
         }
     }

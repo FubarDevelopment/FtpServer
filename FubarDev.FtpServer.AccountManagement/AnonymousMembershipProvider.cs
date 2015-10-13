@@ -7,6 +7,8 @@
 
 using FubarDev.FtpServer.AccountManagement.Anonymous;
 
+using JetBrains.Annotations;
+
 namespace FubarDev.FtpServer.AccountManagement
 {
     /// <summary>
@@ -32,20 +34,20 @@ namespace FubarDev.FtpServer.AccountManagement
         /// Initializes a new instance of the <see cref="AnonymousMembershipProvider"/> class.
         /// </summary>
         /// <param name="anonymousPasswordValidator">Anonymous login validation</param>
-        public AnonymousMembershipProvider(IAnonymousPasswordValidator anonymousPasswordValidator)
+        public AnonymousMembershipProvider([NotNull] IAnonymousPasswordValidator anonymousPasswordValidator)
         {
             _anonymousPasswordValidator = anonymousPasswordValidator;
         }
 
         /// <inheritdoc/>
-        public bool ValidateUser(string username, string password)
+        public MemberValidationResult ValidateUser(string username, string password)
         {
             if (string.Equals(username, "anonymous"))
             {
-                return _anonymousPasswordValidator.IsValid(password);
+                return _anonymousPasswordValidator.IsValid(password) ? MemberValidationResult.Anonymous : MemberValidationResult.InvalidAnonymousEmail;
             }
 
-            return false;
+            return MemberValidationResult.InvalidLogin;
         }
     }
 }

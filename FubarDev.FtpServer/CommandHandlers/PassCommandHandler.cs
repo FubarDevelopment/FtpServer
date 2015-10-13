@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
+using FubarDev.FtpServer.AccountManagement;
 using FubarDev.FtpServer.FileSystem;
 
 namespace FubarDev.FtpServer.CommandHandlers
@@ -33,11 +34,15 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// <inheritdoc/>
         public override async Task<FtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
         {
-            var password = command.Argument;
-            if (Server.MembershipProvider.ValidateUser(Connection.Data.UserName, password))
+            var password = command.Argument ?? string.Empty;
+            var validationResult = Server.MembershipProvider.ValidateUser(Connection.Data.UserName, password);
+            if (validationResult == MemberValidationResult.Anonymous || validationResult == MemberValidationResult.AuthenticatedUser)
             {
+                var isAnonymous = validationResult == MemberValidationResult.Anonymous;
+                var userId = isAnonymous ? password : Connection.Data.UserName;
                 Connection.Data.IsLoggedIn = true;
-                Connection.Data.FileSystem = await Server.FileSystemClassFactory.Create(Connection.Data.UserName);
+                Connection.Data.IsAnonymous = isAnonymous;
+                Connection.Data.FileSystem = await Server.FileSystemClassFactory.Create(userId, isAnonymous);
                 Connection.Data.Path = new Stack<IUnixDirectoryEntry>();
                 return new FtpResponse(220, "Password ok, FTP server ready");
             }

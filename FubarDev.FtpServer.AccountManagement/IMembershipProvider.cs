@@ -5,6 +5,8 @@
 // <author>Mark Junker</author>
 //-----------------------------------------------------------------------
 
+using JetBrains.Annotations;
+
 namespace FubarDev.FtpServer.AccountManagement
 {
     /// <summary>
@@ -21,6 +23,6 @@ namespace FubarDev.FtpServer.AccountManagement
         /// <param name="username">The user name</param>
         /// <param name="password">The password</param>
         /// <returns><code>true</code> if the combination of <paramref name="username"/> and <paramref name="password"/> is valid</returns>
-        bool ValidateUser(string username, string password);
+        MemberValidationResult ValidateUser([NotNull] string username, [NotNull] string password);
     }
 }

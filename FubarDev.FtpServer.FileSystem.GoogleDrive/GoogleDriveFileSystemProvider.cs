@@ -34,7 +34,7 @@ namespace FubarDev.FtpServer.FileSystem.GoogleDrive
         }
 
         /// <inheritdoc/>
-        public Task<IUnixFileSystem> Create(string userId)
+        public Task<IUnixFileSystem> Create(string userId, bool isAnonymous)
         {
             var service = new GoogleDriveService(_requestFactory);
             return Task.FromResult<IUnixFileSystem>(new GoogleDriveFileSystem(service, _rootFolder));
