@@ -11,5 +11,4 @@ ForEach ($nuspecFile in $nuspecFiles)
 {
 	$csFile = [System.IO.Path]::ChangeExtension($nuspecFile, ".csproj")
 	& nuget pack "$csFile" -Properties "Configuration=$config" -IncludeReferencedProjects
-	write-host $csFile
 }
