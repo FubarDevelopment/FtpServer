@@ -13,5 +13,3 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyProduct("FubarDev.FtpServer.FileSystem.GoogleDrive")]
 
 [assembly: ComVisible(false)]
-
-[assembly: Guid("b094e475-e61a-4ab1-8d85-4446e3a4f551")]

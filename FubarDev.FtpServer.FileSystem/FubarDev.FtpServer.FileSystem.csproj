@@ -56,12 +56,14 @@
     <Compile Include="IAccessMode.cs" />
     <Compile Include="IBackgroundTransfer.cs" />
     <Compile Include="IFileSystemClassFactory.cs" />
+    <Compile Include="ITemporaryData.cs" />
     <Compile Include="IUnixDirectoryEntry.cs" />
     <Compile Include="IUnixFileEntry.cs" />
     <Compile Include="IUnixFileSystem.cs" />
     <Compile Include="IUnixFileSystemEntry.cs" />
     <Compile Include="IUnixPermissions.cs" />
     <Compile Include="ListSegment.cs" />
+    <Compile Include="MemoryTemporaryData.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SearchResult.cs" />
   </ItemGroup>
@@ -76,7 +78,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <AdditionalFiles  Include="stylecop.json" />
+    <AdditionalFiles Include="stylecop.json" />
   </ItemGroup>
   <ItemGroup>
     <Analyzer Include="..\packages\StyleCop.Analyzers.1.0.0-beta013\analyzers\dotnet\cs\Newtonsoft.Json.dll" />

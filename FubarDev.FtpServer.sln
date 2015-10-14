@@ -9,8 +9,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FubarDev.FtpServer.AccountM
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FubarDev.FtpServer", "FubarDev.FtpServer\FubarDev.FtpServer.csproj", "{01EBBF94-7469-43A0-A618-07FB734B163F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FubarDev.FtpServer.FileSystem.GoogleDrive", "FubarDev.FtpServer.FileSystem.GoogleDrive\FubarDev.FtpServer.FileSystem.GoogleDrive.csproj", "{B094E475-E61A-4AB1-8D85-4446E3A4F551}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{52EFD82B-3CC2-486D-849B-199D9670C487}"
 	ProjectSection(SolutionItems) = preProject
 		LICENSE.md = LICENSE.md
@@ -25,6 +23,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestFtpServer", "TestFtpServer\TestFtpServer.csproj", "{4DFC0694-0212-491C-A102-38203A74B09F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FubarDev.FtpServer.Tests", "FubarDev.FtpServer.Tests\FubarDev.FtpServer.Tests.csproj", "{0EEB524B-D0F7-4972-838D-D4CE7963D839}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FubarDev.FtpServer.FileSystem.GoogleDrive", "FubarDev.FtpServer.FileSystem.GoogleDrive\FubarDev.FtpServer.FileSystem.GoogleDrive.csproj", "{0336A73C-3F48-493E-9E71-64015DCC146E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -44,10 +44,6 @@ Global
 		{01EBBF94-7469-43A0-A618-07FB734B163F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{01EBBF94-7469-43A0-A618-07FB734B163F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{01EBBF94-7469-43A0-A618-07FB734B163F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B094E475-E61A-4AB1-8D85-4446E3A4F551}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B094E475-E61A-4AB1-8D85-4446E3A4F551}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B094E475-E61A-4AB1-8D85-4446E3A4F551}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B094E475-E61A-4AB1-8D85-4446E3A4F551}.Release|Any CPU.Build.0 = Release|Any CPU
 		{9A83C6F5-378B-48B3-B32A-151DB90B390C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{9A83C6F5-378B-48B3-B32A-151DB90B390C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9A83C6F5-378B-48B3-B32A-151DB90B390C}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -60,6 +56,10 @@ Global
 		{0EEB524B-D0F7-4972-838D-D4CE7963D839}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0EEB524B-D0F7-4972-838D-D4CE7963D839}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0EEB524B-D0F7-4972-838D-D4CE7963D839}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0336A73C-3F48-493E-9E71-64015DCC146E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0336A73C-3F48-493E-9E71-64015DCC146E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0336A73C-3F48-493E-9E71-64015DCC146E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0336A73C-3F48-493E-9E71-64015DCC146E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

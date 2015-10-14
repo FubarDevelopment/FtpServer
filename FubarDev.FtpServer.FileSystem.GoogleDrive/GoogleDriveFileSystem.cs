@@ -9,9 +9,11 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 
+using RestSharp.Portable;
 using RestSharp.Portable.Google.Drive;
 
 using File = RestSharp.Portable.Google.Drive.Model.File;
@@ -27,6 +29,8 @@ namespace FubarDev.FtpServer.FileSystem.GoogleDrive
 
         private readonly SemaphoreSlim _uploadsLock = new SemaphoreSlim(1);
 
+        private readonly GoogleDriveSupportFactory _requestFactory;
+
         private bool _disposedValue;
 
         /// <summary>
@@ -34,8 +38,10 @@ namespace FubarDev.FtpServer.FileSystem.GoogleDrive
         /// </summary>
         /// <param name="service">The <see cref="GoogleDriveService"/> instance to use to access the Google Drive</param>
         /// <param name="rootFolderInfo">The <see cref="File"/> to use as root folder</param>
-        public GoogleDriveFileSystem(GoogleDriveService service, File rootFolderInfo)
+        /// <param name="requestFactory">A <see cref="IRequestFactory"/> used to create <see cref="IRestClient"/> and <see cref="HttpWebRequest"/> objects</param>
+        public GoogleDriveFileSystem(GoogleDriveService service, File rootFolderInfo, GoogleDriveSupportFactory requestFactory)
         {
+            _requestFactory = requestFactory;
             Service = service;
             RootFolderInfo = rootFolderInfo;
             Root = new GoogleDriveDirectoryEntry(RootFolderInfo, "/", true);
@@ -141,15 +147,9 @@ namespace FubarDev.FtpServer.FileSystem.GoogleDrive
         {
             var targetEntry = (GoogleDriveDirectoryEntry)targetDirectory;
             var newFileEntry = await Service.CreateItemAsync(targetEntry.File, fileName, cancellationToken);
-            var tempFileName = Path.GetTempFileName();
-            long fileSize;
-            using (var temp = new FileStream(tempFileName, FileMode.Truncate))
-            {
-                await data.CopyToAsync(temp, 4096, cancellationToken);
-                fileSize = temp.Position;
-            }
+            var tempData = await _requestFactory.CreateTemporaryData(data, cancellationToken);
             var fullPath = FileSystemExtensions.CombinePath(targetEntry.FullName, fileName);
-            var backgroundUploads = new BackgroundUpload(fullPath, newFileEntry, tempFileName, this, fileSize);
+            var backgroundUploads = new BackgroundUpload(fullPath, newFileEntry, tempData, this);
             await _uploadsLock.WaitAsync(cancellationToken);
             try
             {
@@ -166,14 +166,8 @@ namespace FubarDev.FtpServer.FileSystem.GoogleDrive
         public async Task<IBackgroundTransfer> ReplaceAsync(IUnixFileEntry fileEntry, Stream data, CancellationToken cancellationToken)
         {
             var fe = (GoogleDriveFileEntry)fileEntry;
-            var tempFileName = Path.GetTempFileName();
-            long fileSize;
-            using (var temp = new FileStream(tempFileName, FileMode.Truncate))
-            {
-                await data.CopyToAsync(temp, 4096, cancellationToken);
-                fileSize = temp.Position;
-            }
-            var backgroundUploads = new BackgroundUpload(fe.FullName, fe.File, tempFileName, this, fileSize);
+            var tempData = await _requestFactory.CreateTemporaryData(data, cancellationToken);
+            var backgroundUploads = new BackgroundUpload(fe.FullName, fe.File, tempData, this);
             await _uploadsLock.WaitAsync(cancellationToken);
             try
             {

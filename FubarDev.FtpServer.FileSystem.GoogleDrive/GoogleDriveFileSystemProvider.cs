@@ -20,14 +20,14 @@ namespace FubarDev.FtpServer.FileSystem.GoogleDrive
     {
         private readonly File _rootFolder;
 
-        private readonly IRequestFactory _requestFactory;
+        private readonly GoogleDriveSupportFactory _requestFactory;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GoogleDriveFileSystemProvider"/> class.
         /// </summary>
         /// <param name="rootFolder">The root folder entry</param>
         /// <param name="requestFactory">A <see cref="IRequestFactory"/> used to create <see cref="IRestClient"/> and <see cref="HttpWebRequest"/> objects</param>
-        public GoogleDriveFileSystemProvider(File rootFolder, IRequestFactory requestFactory)
+        public GoogleDriveFileSystemProvider(File rootFolder, GoogleDriveSupportFactory requestFactory)
         {
             _rootFolder = rootFolder;
             _requestFactory = requestFactory;
@@ -37,7 +37,7 @@ namespace FubarDev.FtpServer.FileSystem.GoogleDrive
         public Task<IUnixFileSystem> Create(string userId, bool isAnonymous)
         {
             var service = new GoogleDriveService(_requestFactory);
-            return Task.FromResult<IUnixFileSystem>(new GoogleDriveFileSystem(service, _rootFolder));
+            return Task.FromResult<IUnixFileSystem>(new GoogleDriveFileSystem(service, _rootFolder, _requestFactory));
         }
     }
 }
