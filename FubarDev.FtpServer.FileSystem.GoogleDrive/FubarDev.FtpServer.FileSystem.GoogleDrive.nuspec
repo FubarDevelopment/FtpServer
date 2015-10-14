@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
   <metadata>
-    <id>FubarDev.FtpServer.FileSystem.GoogleDrive</id>
+    <id>$id$</id>
     <version>$version$</version>
     <title>Google Drive file system for portable FTP server</title>
     <authors>Fubar Development Junker</authors>
@@ -13,15 +13,9 @@
     <releaseNotes>Reduce dependencies</releaseNotes>
     <copyright>Copyright © 2015 Fubar Development Junker</copyright>
     <tags>Google Drive file system portable FTP server</tags>
-    <dependencies>
-      <dependency id="RestSharp.Portable.Google.Drive" version="0.5.0-beta08" />
-      <dependency id="FubarDev.FtpServer.FileSystem" version="$clientversion$" />
-    </dependencies>
   </metadata>
   <files>
     <file src="..\LICENSE.md" target="LICENSE.md" />
     <file src="..\README.md" target="README.md" />
-    <file src="bin\$Configuration$\FubarDev.FtpServer.FileSystem.GoogleDrive.dll" target="lib\net45\" />
-    <file src="bin\$Configuration$\FubarDev.FtpServer.FileSystem.GoogleDrive.xml" target="lib\net45\" />
   </files>
 </package>
