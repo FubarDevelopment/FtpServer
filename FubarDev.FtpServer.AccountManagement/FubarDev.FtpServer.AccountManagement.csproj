@@ -42,7 +42,9 @@
     <!-- A reference to the entire .NET Framework is automatically included -->
     <None Include="FubarDev.FtpServer.AccountManagement.nuspec" />
     <None Include="packages.config" />
-    <None Include="stylecop.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <AdditionalFiles  Include="stylecop.json" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\GlobalAssemblyInfo.cs">

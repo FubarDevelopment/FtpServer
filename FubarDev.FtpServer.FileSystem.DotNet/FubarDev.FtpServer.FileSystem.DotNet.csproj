@@ -20,7 +20,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <CodeAnalysisRuleSet>..\..\..\Visual Studio 2015\Projects\FubarDev.Lexware\FubarDev.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet>..\FubarDev.FtpServer.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -30,7 +30,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>bin\Release\FubarDev.FtpServer.FileSystem.DotNet.XML</DocumentationFile>
-    <CodeAnalysisRuleSet>..\..\..\Visual Studio 2015\Projects\FubarDev.Lexware\FubarDev.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet>..\FubarDev.FtpServer.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="JetBrains.Annotations, Version=9.2.0.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
@@ -65,7 +65,9 @@
   <ItemGroup>
     <None Include="FubarDev.FtpServer.FileSystem.DotNet.nuspec" />
     <None Include="packages.config" />
-    <None Include="stylecop.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <AdditionalFiles  Include="stylecop.json" />
   </ItemGroup>
   <ItemGroup>
     <Analyzer Include="..\packages\StyleCop.Analyzers.1.0.0-beta013\analyzers\dotnet\cs\Newtonsoft.Json.dll" />
