@@ -21,9 +21,9 @@ The library is released under the [MIT license](http://opensource.org/licenses/M
 A NuGet package is available:
 
 * [![FubarDev.FtpServer](https://img.shields.io/nuget/v/FubarDev.FtpServer.svg)](https://www.nuget.org/packages/FubarDev.FtpServer)
-* [![FubarDev.FtpServer](https://img.shields.io/nuget/v/FubarDev.FtpServer.FileSystem.svg)](https://www.nuget.org/packages/FubarDev.FtpServer.FileSystem)
-* [![FubarDev.FtpServer](https://img.shields.io/nuget/v/FubarDev.FtpServer.FileSystem.GoogleDrive.svg)](https://www.nuget.org/packages/FubarDev.FtpServer.FileSystem.GoogleDrive)
-* [![FubarDev.FtpServer](https://img.shields.io/nuget/v/FubarDev.FtpServer.AccountManagement.svg)](https://www.nuget.org/packages/FubarDev.FtpServer.AccountManagement)
+* [![FubarDev.FtpServer.FileSystem](https://img.shields.io/nuget/v/FubarDev.FtpServer.FileSystem.svg)](https://www.nuget.org/packages/FubarDev.FtpServer.FileSystem)
+* [![FubarDev.FtpServer.FileSystem.GoogleDrive](https://img.shields.io/nuget/v/FubarDev.FtpServer.FileSystem.GoogleDrive.svg)](https://www.nuget.org/packages/FubarDev.FtpServer.FileSystem.GoogleDrive)
+* [![FubarDev.FtpServer.AccountManagement](https://img.shields.io/nuget/v/FubarDev.FtpServer.AccountManagement.svg)](https://www.nuget.org/packages/FubarDev.FtpServer.AccountManagement)
 
 # Example FTP server
 
