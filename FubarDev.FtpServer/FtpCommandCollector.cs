@@ -21,8 +21,6 @@ namespace FubarDev.FtpServer
     /// </summary>
     public sealed class FtpCommandCollector : IDisposable
     {
-        private static readonly char[] _whiteSpaces = { ' ', '\t' };
-
         private readonly Func<Encoding> _getActiveEncodingFunc;
 
         private readonly FtpTelnetInputParser _telnetInputParser;
@@ -136,10 +134,7 @@ namespace FubarDev.FtpServer
         private FtpCommand CreateFtpCommand(byte[] command)
         {
             var message = Encoding.GetString(command, 0, command.Length);
-            var spaceIndex = message.IndexOfAny(_whiteSpaces);
-            var commandName = spaceIndex == -1 ? message : message.Substring(0, spaceIndex);
-            var commandArguments = spaceIndex == -1 ? string.Empty : message.Substring(spaceIndex + 1);
-            return new FtpCommand(commandName, commandArguments);
+            return FtpCommand.Parse(message);
         }
 
         private class FtpTelnetInputParser : TelnetInputParser<FtpCommand>

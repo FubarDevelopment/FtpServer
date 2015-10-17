@@ -1,58 +1,53 @@
-﻿//-----------------------------------------------------------------------
-// <copyright file="BlstCommandHandler.cs" company="Fubar Development Junker">
-//     Copyright (c) Fubar Development Junker. All rights reserved.
+﻿// <copyright file="SiteCommandHandler.cs" company="Fubar Development Junker">
+// Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
-// <author>Mark Junker</author>
-//-----------------------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
-
 using Sockets.Plugin.Abstractions;
 
 namespace FubarDev.FtpServer.CommandHandlers
 {
-    /// <summary>
-    /// This is an extension which lists all active background transfers
-    /// </summary>
-    public class BlstCommandHandler : FtpCommandHandler
+    public class SiteCommandHandler : FtpCommandHandler
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="BlstCommandHandler"/> class.
-        /// </summary>
-        /// <param name="connection">The connection for which this command handler is created for.</param>
-        public BlstCommandHandler(FtpConnection connection)
-            : base(connection, "BLST")
+        public SiteCommandHandler(FtpConnection connection)
+            : base(connection, "SITE")
         {
-            SupportedExtensions = new List<string>
-            {
-                "BLST",
-            };
         }
 
-        /// <inheritdoc/>
-        public override IReadOnlyCollection<string> SupportedExtensions { get; }
+        public override Task<FtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
+        {
+            if (string.IsNullOrEmpty(command.Argument))
+                return Task.FromResult(new FtpResponse(501, "Syntax error in parameters or arguments."));
 
-        /// <inheritdoc/>
-        public override async Task<FtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
+            var siteCommand = FtpCommand.Parse(command.Argument);
+            switch (siteCommand.Name.ToUpperInvariant())
+            {
+                case "BLST":
+                    return ProcessCommandBlst(siteCommand, cancellationToken);
+                default:
+                    return Task.FromResult(new FtpResponse(501, "Syntax error in parameters or arguments."));
+            }
+        }
+
+        private async Task<FtpResponse> ProcessCommandBlst(FtpCommand command, CancellationToken cancellationToken)
         {
             string mode = (string.IsNullOrEmpty(command.Argument) ? "data" : command.Argument).ToLowerInvariant();
 
             switch (mode)
             {
                 case "data":
-                    return await SendWithDataConnection(cancellationToken);
+                    return await SendBlstWithDataConnection(cancellationToken);
                 case "direct":
-                    return await SendDirectly(cancellationToken);
+                    return await SendBlstDirectly(cancellationToken);
             }
 
             return new FtpResponse(501, $"Mode {mode} not supported.");
         }
 
-        private async Task<FtpResponse> SendDirectly(CancellationToken cancellationToken)
+        private async Task<FtpResponse> SendBlstDirectly(CancellationToken cancellationToken)
         {
             var taskStates = Server.GetBackgroundTaskStates();
             if (taskStates.Count == 0)
@@ -68,7 +63,7 @@ namespace FubarDev.FtpServer.CommandHandlers
             return new FtpResponse(211, "END");
         }
 
-        private async Task<FtpResponse> SendWithDataConnection(CancellationToken cancellationToken)
+        private async Task<FtpResponse> SendBlstWithDataConnection(CancellationToken cancellationToken)
         {
             await Connection.Write(new FtpResponse(150, "Opening data connection."), cancellationToken);
             ITcpSocketClient responseSocket;

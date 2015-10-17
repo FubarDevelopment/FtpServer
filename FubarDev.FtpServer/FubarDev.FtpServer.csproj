@@ -50,14 +50,15 @@
     <Compile Include="BackgroundTransferWorker.cs" />
     <Compile Include="CommandHandlers\AborCommandHandler.cs" />
     <Compile Include="CommandHandlers\AlloCommandHandler.cs" />
-    <Compile Include="CommandHandlers\BlstCommandHandler.cs" />
     <Compile Include="CommandHandlers\CdUpCommandHandler.cs" />
+    <Compile Include="CommandHandlers\HelpCommandHandler.cs" />
     <Compile Include="CommandHandlers\RestCommandHandler.cs" />
     <Compile Include="CommandHandlers\RntoCommandHandler.cs" />
     <Compile Include="CommandHandlers\RnfrCommandHandler.cs" />
     <Compile Include="CommandHandlers\RetrCommandHandler.cs" />
     <Compile Include="CommandHandlers\AppeCommandHandler.cs" />
     <Compile Include="CommandHandlers\MdtmCommandHandler.cs" />
+    <Compile Include="CommandHandlers\SiteCommandHandler.cs" />
     <Compile Include="CommandHandlers\StatCommandHandler.cs" />
     <Compile Include="CommandHandlers\XrmdCommandHandler.cs" />
     <Compile Include="CommandHandlers\XmkdCommandHandler.cs" />
