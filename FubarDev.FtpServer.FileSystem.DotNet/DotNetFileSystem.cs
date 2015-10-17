@@ -95,7 +95,7 @@ namespace FubarDev.FtpServer.FileSystem.DotNet
         }
 
         /// <inheritdoc/>
-        public async Task UnlinkAsync(IUnixFileSystemEntry entry, CancellationToken cancellationToken)
+        public Task UnlinkAsync(IUnixFileSystemEntry entry, CancellationToken cancellationToken)
         {
             var dirEntry = entry as DotNetDirectoryEntry;
             if (dirEntry != null)
@@ -107,7 +107,7 @@ namespace FubarDev.FtpServer.FileSystem.DotNet
                 var fileEntry = (DotNetFileEntry)entry;
                 fileEntry.Info.Delete();
             }
-            await Task.FromResult(0);
+            return Task.FromResult(0);
         }
 
         /// <inheritdoc/>

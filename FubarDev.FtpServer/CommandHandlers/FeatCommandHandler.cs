@@ -40,7 +40,7 @@ namespace FubarDev.FtpServer.CommandHandlers
 
             if (_supportedFeatures.Count == 0)
             {
-                return await Task.FromResult(new FtpResponse(211, "No extensions supported"));
+                return new FtpResponse(211, "No extensions supported");
             }
 
             await Connection.Write("211-Extensions supported:", cancellationToken);
@@ -48,7 +48,7 @@ namespace FubarDev.FtpServer.CommandHandlers
             {
                 await Connection.Write($" {supportedFeature}", cancellationToken);
             }
-            return await Task.FromResult(new FtpResponse(211, "END"));
+            return new FtpResponse(211, "END");
         }
     }
 }

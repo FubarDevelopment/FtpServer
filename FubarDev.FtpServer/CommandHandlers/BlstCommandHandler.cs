@@ -56,7 +56,7 @@ namespace FubarDev.FtpServer.CommandHandlers
         {
             var taskStates = Server.GetBackgroundTaskStates();
             if (taskStates.Count == 0)
-                return await Task.FromResult(new FtpResponse(211, "No background tasks"));
+                return new FtpResponse(211, "No background tasks");
 
             await Connection.Write("211-Active background tasks:", cancellationToken);
             foreach (var entry in taskStates)
@@ -65,7 +65,7 @@ namespace FubarDev.FtpServer.CommandHandlers
                 await Connection.Write($" {line}", cancellationToken);
             }
 
-            return await Task.FromResult(new FtpResponse(211, "END"));
+            return new FtpResponse(211, "END");
         }
 
         private async Task<FtpResponse> SendWithDataConnection(CancellationToken cancellationToken)

@@ -49,7 +49,7 @@ namespace FubarDev.FtpServer.CommandHandlers
                 case "UTF-8":
                     return await ProcessOptionUtf8(commandArgument);
                 default:
-                    return await Task.FromResult(new FtpResponse(500, "Syntax error, command unrecognized."));
+                    return new FtpResponse(500, "Syntax error, command unrecognized.");
             }
         }
 
