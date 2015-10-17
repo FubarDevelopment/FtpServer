@@ -45,6 +45,16 @@ namespace FubarDev.FtpServer
         }
 
         /// <summary>
+        /// Logs a info message with the data of the <see cref="FtpResponse"/>
+        /// </summary>
+        /// <param name="log">The <see cref="IFtpLog"/> to use</param>
+        /// <param name="response">The <see cref="FtpResponse"/> to log</param>
+        public static void Info([NotNull] this IFtpLog log, [NotNull] FtpResponse response)
+        {
+            log.Debug("{0}", response);
+        }
+
+        /// <summary>
         /// Logs a warning message with the data of the <see cref="FtpResponse"/>
         /// </summary>
         /// <param name="log">The <see cref="IFtpLog"/> to use</param>
@@ -78,6 +88,10 @@ namespace FubarDev.FtpServer
             if (response.Code >= 200 && response.Code < 300)
             {
                 log.Trace(response);
+            }
+            else if (response.Code >= 300 && response.Code < 400)
+            {
+                log.Info(response);
             }
             else if (response.Code < 200)
             {
