@@ -6,10 +6,21 @@ using System.Collections.Generic;
 
 namespace FubarDev.FtpServer
 {
+    /// <summary>
+    /// Filters the TELNET commands usually sent before an ABOR command
+    /// </summary>
+    /// <typeparam name="T">The return type of a <see cref="Collect(byte[], int, int)"/> operation</typeparam>
     public abstract class TelnetInputParser<T>
     {
         private bool _interpretAsCommandReceived;
 
+        /// <summary>
+        /// Collects data and handles the <code>Synch</code> and <code>Interrupt Process</code> TELNET commands.
+        /// </summary>
+        /// <param name="data">The data buffer</param>
+        /// <param name="offset">The offset into the data buffer</param>
+        /// <param name="length">The length of the data to read from the data buffer</param>
+        /// <returns>The list of items found inside the collected data</returns>
         public IReadOnlyList<T> Collect(byte[] data, int offset, int length)
         {
             var result = new List<T>();
@@ -25,7 +36,7 @@ namespace FubarDev.FtpServer
                     switch (v)
                     {
                         case 0xF2:
-                            result.AddRange(Sync());
+                            result.AddRange(Synch());
                             break;
                         case 0xF4:
                             result.AddRange(InterruptProcess());
@@ -53,16 +64,28 @@ namespace FubarDev.FtpServer
             return result;
         }
 
-        protected virtual IEnumerable<T> DataReceived(byte[] data, int offset, int length)
+        /// <summary>
+        /// Collects all non-TELNET data.
+        /// </summary>
+        /// <param name="data">The data buffer</param>
+        /// <param name="offset">The offset into the data buffer</param>
+        /// <param name="length">The length of the data to be collected</param>
+        /// <returns>The collected items</returns>
+        protected abstract IEnumerable<T> DataReceived(byte[] data, int offset, int length);
+
+        /// <summary>
+        /// Handles the <code>Synch</code> command
+        /// </summary>
+        /// <returns>The collected items</returns>
+        protected virtual IEnumerable<T> Synch()
         {
             return new T[0];
         }
 
-        protected virtual IEnumerable<T> Sync()
-        {
-            return new T[0];
-        }
-
+        /// <summary>
+        /// Handles the <code>Interrupt Process</code> command
+        /// </summary>
+        /// <returns>The collected items</returns>
         protected virtual IEnumerable<T> InterruptProcess()
         {
             return new T[0];

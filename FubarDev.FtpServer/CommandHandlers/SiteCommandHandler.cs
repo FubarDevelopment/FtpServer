@@ -10,13 +10,21 @@ using Sockets.Plugin.Abstractions;
 
 namespace FubarDev.FtpServer.CommandHandlers
 {
+    /// <summary>
+    /// The <code>SITE</code> command handler
+    /// </summary>
     public class SiteCommandHandler : FtpCommandHandler
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SiteCommandHandler"/> class.
+        /// </summary>
+        /// <param name="connection">The connection to create this command handler for</param>
         public SiteCommandHandler(FtpConnection connection)
             : base(connection, "SITE")
         {
         }
 
+        /// <inheritdoc/>
         public override Task<FtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
         {
             if (string.IsNullOrEmpty(command.Argument))

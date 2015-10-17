@@ -64,8 +64,16 @@ namespace FubarDev.FtpServer
             return commands;
         }
 
+        /// <inheritdoc/>
+        public void Dispose()
+        {
+            if (_buffer != null)
+                _buffer.Dispose();
+            _buffer = null;
+        }
+
         [NotNull, ItemNotNull]
-        public IEnumerable<FtpCommand> InternalCollect(byte[] buffer, int offset, int length)
+        private IEnumerable<FtpCommand> InternalCollect(byte[] buffer, int offset, int length)
         {
             var commands = new List<FtpCommand>();
 
@@ -121,14 +129,6 @@ namespace FubarDev.FtpServer
             if (length != 0)
                 _buffer.Write(buffer, offset, length);
             return commands;
-        }
-
-        /// <inheritdoc/>
-        public void Dispose()
-        {
-            if (_buffer != null)
-                _buffer.Dispose();
-            _buffer = null;
         }
 
         private FtpCommand CreateFtpCommand(byte[] command)

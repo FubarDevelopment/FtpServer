@@ -13,13 +13,21 @@ using Minimatch;
 
 namespace FubarDev.FtpServer.CommandHandlers
 {
+    /// <summary>
+    /// The <code>STAT</code> command handler
+    /// </summary>
     public class StatCommandHandler : FtpCommandHandler
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="StatCommandHandler"/> class.
+        /// </summary>
+        /// <param name="connection">The connection to create this command handler for</param>
         public StatCommandHandler(FtpConnection connection)
             : base(connection, "STAT")
         {
         }
 
+        /// <inheritdoc/>
         public override async Task<FtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
         {
             if (string.IsNullOrEmpty(command.Argument))

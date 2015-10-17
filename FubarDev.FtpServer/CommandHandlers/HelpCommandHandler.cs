@@ -8,15 +8,24 @@ using System.Threading.Tasks;
 
 namespace FubarDev.FtpServer.CommandHandlers
 {
+    /// <summary>
+    /// The <code>HELP</code> command handler
+    /// </summary>
     public class HelpCommandHandler : FtpCommandHandler
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="HelpCommandHandler"/> class.
+        /// </summary>
+        /// <param name="connection">The connection to create this command handler for</param>
         public HelpCommandHandler(FtpConnection connection)
             : base(connection, "HELP")
         {
         }
 
+        /// <inheritdoc/>
         public override bool IsLoginRequired => false;
 
+        /// <inheritdoc/>
         public override Task<FtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
         {
             var helpArg = command.Argument;
