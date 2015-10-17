@@ -37,7 +37,7 @@ namespace FubarDev.FtpServer.CommandHandlers
                 return new FtpResponse(550, "Not a valid directory.");
             if (dirInfo.Entry != null)
             {
-                await Connection.Write($"521-\"{currentPath.GetFullPath(dirInfo.FileName)}\" directory already exists", cancellationToken);
+                await Connection.WriteAsync($"521-\"{currentPath.GetFullPath(dirInfo.FileName)}\" directory already exists", cancellationToken);
                 return new FtpResponse(521, "Taking no action.");
             }
 

@@ -46,10 +46,10 @@ namespace FubarDev.FtpServer.CommandHandlers
                 return new FtpResponse(211, "No extensions supported");
             }
 
-            await Connection.Write("211-Extensions supported:", cancellationToken);
+            await Connection.WriteAsync("211-Extensions supported:", cancellationToken);
             foreach (var supportedFeature in _supportedFeatures)
             {
-                await Connection.Write($" {supportedFeature}", cancellationToken);
+                await Connection.WriteAsync($" {supportedFeature}", cancellationToken);
             }
             return new FtpResponse(211, "END");
         }

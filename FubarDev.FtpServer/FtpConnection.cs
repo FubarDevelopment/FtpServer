@@ -7,6 +7,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -26,6 +27,8 @@ namespace FubarDev.FtpServer
     {
         private readonly CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
 
+        private readonly ITcpSocketClient _socket;
+
         private bool _closed;
 
         /// <summary>
@@ -37,7 +40,9 @@ namespace FubarDev.FtpServer
         public FtpConnection(FtpServer server, ITcpSocketClient socket, Encoding encoding)
         {
             Server = server;
-            Socket = socket;
+            _socket = socket;
+            RemoteAddress = new Address(socket.RemoteAddress, socket.RemotePort);
+            SocketStream = OriginalStream = socket.GetStream();
             Encoding = encoding;
             Data = new FtpConnectionData(this);
             CommandHandlers = Server
@@ -68,11 +73,6 @@ namespace FubarDev.FtpServer
         public Encoding Encoding { get; set; }
 
         /// <summary>
-        /// Gets the client socket
-        /// </summary>
-        public ITcpSocketClient Socket { get; }
-
-        /// <summary>
         /// Gets the FTP connection data
         /// </summary>
         public FtpConnectionData Data { get; }
@@ -81,6 +81,26 @@ namespace FubarDev.FtpServer
         /// Gets the FTP connection log
         /// </summary>
         public IFtpLog Log { get; set; }
+
+        /// <summary>
+        /// Gets or sets the control connection stream
+        /// </summary>
+        public Stream OriginalStream { get; }
+
+        /// <summary>
+        /// Gets or sets the control connection stream
+        /// </summary>
+        public Stream SocketStream { get; set; }
+
+        /// <summary>
+        /// Gets a value indicating whether this is a secure connection
+        /// </summary>
+        public bool IsSecure => !ReferenceEquals(SocketStream, OriginalStream);
+
+        /// <summary>
+        /// Gets the remote address of the client
+        /// </summary>
+        public Address RemoteAddress { get; }
 
         /// <summary>
         /// The cancellation token to use to signal a task cancellation
@@ -110,13 +130,13 @@ namespace FubarDev.FtpServer
         /// <param name="response">The response to write to the client</param>
         /// <param name="cancellationToken">The cancellation token</param>
         /// <returns>The task</returns>
-        public async Task Write(FtpResponse response, CancellationToken cancellationToken)
+        public async Task WriteAsync(FtpResponse response, CancellationToken cancellationToken)
         {
             if (!_closed)
             {
                 Log?.Log(response);
                 var data = Encoding.GetBytes($"{response}\r\n");
-                await Socket.WriteStream.WriteAsync(data, 0, data.Length, cancellationToken);
+                await SocketStream.WriteAsync(data, 0, data.Length, cancellationToken);
                 response.AfterWriteAction?.Invoke();
             }
         }
@@ -127,13 +147,13 @@ namespace FubarDev.FtpServer
         /// <param name="response">The response to write to the client</param>
         /// <param name="cancellationToken">The cancellation token</param>
         /// <returns>The task</returns>
-        public async Task Write(string response, CancellationToken cancellationToken)
+        public async Task WriteAsync(string response, CancellationToken cancellationToken)
         {
             if (!_closed)
             {
                 Log?.Debug(response);
                 var data = Encoding.GetBytes($"{response}\r\n");
-                await Socket.WriteStream.WriteAsync(data, 0, data.Length, cancellationToken);
+                await SocketStream.WriteAsync(data, 0, data.Length, cancellationToken);
             }
         }
 
@@ -159,24 +179,29 @@ namespace FubarDev.FtpServer
         {
             if (!_closed)
                 Close();
-            Socket.Dispose();
+            if (!ReferenceEquals(SocketStream, OriginalStream))
+            {
+                SocketStream.Dispose();
+                SocketStream = OriginalStream;
+            }
+            _socket.Dispose();
             _cancellationTokenSource.Dispose();
             Data.Dispose();
         }
 
         private async Task ProcessMessages()
         {
-            Log?.Info($"Connected from {Socket.RemoteAddress}:{Socket.RemotePort}");
+            Log?.Info($"Connected from {RemoteAddress.ToString(true)}");
             using (var collector = new FtpCommandCollector(() => Encoding))
             {
-                await Write(new FtpResponse(220, "FTP Server Ready"), _cancellationTokenSource.Token);
+                await WriteAsync(new FtpResponse(220, "FTP Server Ready"), _cancellationTokenSource.Token);
 
                 var buffer = new byte[1];
                 try
                 {
                     for (; ;)
                     {
-                        var bytesRead = await Socket.ReadStream.ReadAsync(buffer, 0, buffer.Length, _cancellationTokenSource.Token);
+                        var bytesRead = await SocketStream.ReadAsync(buffer, 0, buffer.Length, _cancellationTokenSource.Token);
                         if (bytesRead == 0)
                             break;
                         var commands = collector.Collect(buffer, 0, bytesRead);
@@ -197,10 +222,15 @@ namespace FubarDev.FtpServer
                 }
                 finally
                 {
-                    Log?.Info($"Disconnection from {Socket.RemoteAddress}:{Socket.RemotePort}");
+                    Log?.Info($"Disconnection from {RemoteAddress.ToString(true)}");
                     _closed = true;
                     Data.BackgroundCommandHandler.Cancel();
-                    Socket.Dispose();
+                    if (!ReferenceEquals(SocketStream, OriginalStream))
+                    {
+                        SocketStream.Dispose();
+                        SocketStream = OriginalStream;
+                    }
+                    _socket.Dispose();
                     OnClosed();
                 }
             }
@@ -245,7 +275,7 @@ namespace FubarDev.FtpServer
                 response = new FtpResponse(500, "Syntax error, command unrecognized.");
             }
             if (response != null)
-                await Write(response, _cancellationTokenSource.Token);
+                await WriteAsync(response, _cancellationTokenSource.Token);
         }
 
         private void OnClosed()

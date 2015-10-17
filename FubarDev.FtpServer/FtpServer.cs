@@ -7,7 +7,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -46,7 +45,7 @@ namespace FubarDev.FtpServer
         /// <param name="membershipProvider">The <see cref="IMembershipProvider"/> used to validate a login attempt</param>
         /// <param name="commsInterface">The <see cref="ICommsInterface"/> that identifies the public IP address (required for <code>PASV</code> and <code>EPSV</code>)</param>
         public FtpServer([NotNull] IFileSystemClassFactory fileSystemClassFactory, [NotNull] IMembershipProvider membershipProvider, [NotNull] ICommsInterface commsInterface)
-            : this(fileSystemClassFactory, membershipProvider, commsInterface, 21, GetDefaultCommandHandlerFactories().ToList())
+            : this(fileSystemClassFactory, membershipProvider, commsInterface, 21, DefaultFtpCommandHandlerFactory.CreateFactories(typeof(FtpServer).GetTypeInfo().Assembly))
         {
         }
 
@@ -57,7 +56,7 @@ namespace FubarDev.FtpServer
         /// <param name="membershipProvider">The <see cref="IMembershipProvider"/> used to validate a login attempt</param>
         /// <param name="serverAddress">The public IP address (required for <code>PASV</code> and <code>EPSV</code>)</param>
         public FtpServer([NotNull] IFileSystemClassFactory fileSystemClassFactory, [NotNull] IMembershipProvider membershipProvider, [NotNull] string serverAddress)
-            : this(fileSystemClassFactory, membershipProvider, serverAddress, 21, GetDefaultCommandHandlerFactories().ToList())
+            : this(fileSystemClassFactory, membershipProvider, serverAddress, 21, DefaultFtpCommandHandlerFactory.CreateFactories(typeof(FtpServer).GetTypeInfo().Assembly))
         {
         }
 
@@ -150,21 +149,6 @@ namespace FubarDev.FtpServer
         public IFtpLogManager LogManager { get; set; }
 
         private BackgroundTransferWorker BackgroundTransferWorker { get; }
-
-        /// <summary>
-        /// Gets the default <see cref="IFtpCommandHandlerFactory"/> instances used to create
-        /// the default implementations of this libraries <see cref="FtpCommand"/> implementations.
-        /// </summary>
-        /// <returns>The default <see cref="IFtpCommandHandlerFactory"/> instances</returns>
-        [NotNull, ItemNotNull]
-        public static IEnumerable<IFtpCommandHandlerFactory> GetDefaultCommandHandlerFactories()
-        {
-            foreach (var type in typeof(FtpServer).GetTypeInfo().Assembly.DefinedTypes)
-            {
-                if (type.IsSubclassOf(typeof(FtpCommandHandler)))
-                    yield return new DefaultFtpCommandHandlerFactory(type.AsType());
-            }
-        }
 
         /// <summary>
         /// Starts the FTP server in the background

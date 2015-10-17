@@ -46,7 +46,7 @@ namespace FubarDev.FtpServer.CommandHandlers
 
             using (var input = await Data.FileSystem.OpenReadAsync(fileInfo.Entry, Data.RestartPosition ?? 0, cancellationToken))
             {
-                await Connection.Write(new FtpResponse(150, "Opening connection for data transfer."), cancellationToken);
+                await Connection.WriteAsync(new FtpResponse(150, "Opening connection for data transfer."), cancellationToken);
                 using (var replySocket = await Connection.CreateResponseSocket())
                 {
                     replySocket.WriteStream.WriteTimeout = 10000;

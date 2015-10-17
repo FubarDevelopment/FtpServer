@@ -13,7 +13,7 @@ using JetBrains.Annotations;
 namespace FubarDev.FtpServer.Log
 {
     /// <summary>
-    /// Write an FTP log entry to multiple <see cref="IFtpLog"/> implementations
+    /// WriteAsync an FTP log entry to multiple <see cref="IFtpLog"/> implementations
     /// </summary>
     public class MergeLog : IFtpLog
     {

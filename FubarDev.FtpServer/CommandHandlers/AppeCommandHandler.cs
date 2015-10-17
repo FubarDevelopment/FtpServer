@@ -44,7 +44,7 @@ namespace FubarDev.FtpServer.CommandHandlers
             if (fileInfo == null)
                 return new FtpResponse(550, "Not a valid directory.");
 
-            await Connection.Write(new FtpResponse(150, "Opening connection for data transfer."), cancellationToken);
+            await Connection.WriteAsync(new FtpResponse(150, "Opening connection for data transfer."), cancellationToken);
             using (var replySocket = await Connection.CreateResponseSocket())
             {
                 replySocket.ReadStream.ReadTimeout = 10000;

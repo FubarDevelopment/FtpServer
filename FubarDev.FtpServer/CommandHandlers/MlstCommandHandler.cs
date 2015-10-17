@@ -60,7 +60,7 @@ namespace FubarDev.FtpServer.CommandHandlers
             if (listDir && !isDirEntry)
                 return new FtpResponse(501, "Not a directory.");
 
-            await Connection.Write(new FtpResponse(150, "Opening data connection."), cancellationToken);
+            await Connection.WriteAsync(new FtpResponse(150, "Opening data connection."), cancellationToken);
             ITcpSocketClient responseSocket;
             try
             {

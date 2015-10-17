@@ -41,7 +41,7 @@ namespace FubarDev.FtpServer
         public Address(string address, int port)
         {
             _isEnhanced = false;
-            AddressFamily = FubarDev.FtpServer.AddressFamily.IPv4;
+            AddressFamily = address.IndexOf(':') == -1 ? FubarDev.FtpServer.AddressFamily.IPv4 : FubarDev.FtpServer.AddressFamily.IPv6;
             IpAddress = address;
             IpPort = port;
         }
@@ -102,6 +102,19 @@ namespace FubarDev.FtpServer
                 return new Uri($"port://[{IpAddress}]:{IpPort}/");
             }
             return new Uri($"port://{IpAddress}:{IpPort}/");
+        }
+
+        public string ToString(bool logFormat)
+        {
+            if (logFormat)
+            {
+                if (AddressFamily != null && AddressFamily == FubarDev.FtpServer.AddressFamily.IPv6)
+                {
+                    return $"[{IpAddress}]:{IpPort}";
+                }
+                return $"{IpAddress}:{IpPort}";
+            }
+            return ToString();
         }
 
         /// <summary>

@@ -78,12 +78,12 @@ namespace FubarDev.FtpServer.CommandHandlers
             if (isEpsv || Server.ServerAddress.Contains(":"))
             {
                 var listenerAddress = new Address(listener.LocalPort);
-                await Connection.Write(new FtpResponse(229, $"Entering Passive Mode ({listenerAddress})."), cancellationToken);
+                await Connection.WriteAsync(new FtpResponse(229, $"Entering Passive Mode ({listenerAddress})."), cancellationToken);
             }
             else
             {
                 var listenerAddress = new Address(Server.ServerAddress, listener.LocalPort);
-                await Connection.Write(new FtpResponse(227, $"Entering Passive Mode ({listenerAddress})."), cancellationToken);
+                await Connection.WriteAsync(new FtpResponse(227, $"Entering Passive Mode ({listenerAddress})."), cancellationToken);
             }
             await sem.WaitAsync(TimeSpan.FromSeconds(5), cancellationToken);
             await listener.StopListeningAsync();

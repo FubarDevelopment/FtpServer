@@ -3,6 +3,7 @@
 // </copyright>
 
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace FubarDev.FtpServer
 {
@@ -79,6 +80,7 @@ namespace FubarDev.FtpServer
         /// <returns>The collected items</returns>
         protected virtual IEnumerable<T> Synch()
         {
+            Debug.WriteLine("TELNET: Synch command received");
             return new T[0];
         }
 
@@ -88,6 +90,7 @@ namespace FubarDev.FtpServer
         /// <returns>The collected items</returns>
         protected virtual IEnumerable<T> InterruptProcess()
         {
+            Debug.WriteLine("TELNET: Interrupt Process command received");
             return new T[0];
         }
     }

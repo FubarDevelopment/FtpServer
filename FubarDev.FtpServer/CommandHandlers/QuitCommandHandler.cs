@@ -31,7 +31,7 @@ namespace FubarDev.FtpServer.CommandHandlers
             {
                 AfterWriteAction = () =>
                 {
-                    Connection.Socket.WriteStream.Flush();
+                    Connection.SocketStream.Flush();
                     Connection.Close();
                 }
             });

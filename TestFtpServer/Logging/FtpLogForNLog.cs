@@ -19,9 +19,9 @@ namespace TestFtpServer.Logging
         public FtpLogForNLog(FtpConnection connection)
         {
             _logger = LogManager.GetLogger("FubarDev.FtpServer.FtpConnection");
-            _remoteAddress = $"{connection.Socket.RemoteAddress}:{connection.Socket.RemotePort}";
-            _remoteIp = connection.Socket.RemoteAddress;
-            _remotePort = connection.Socket.RemotePort;
+            _remoteAddress = connection.RemoteAddress.ToString(true);
+            _remoteIp = connection.RemoteAddress.IpAddress;
+            _remotePort = connection.RemoteAddress.IpPort;
         }
 
         public FtpLogForNLog(Type type)

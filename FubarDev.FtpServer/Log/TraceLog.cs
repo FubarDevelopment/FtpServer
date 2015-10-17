@@ -100,7 +100,7 @@ namespace FubarDev.FtpServer.Log
 
         private void Log(string level, Exception ex, string format, params object[] args)
         {
-            var client = $"{_connection.Socket.RemoteAddress}:{_connection.Socket.RemotePort}";
+            var client = _connection.RemoteAddress.ToString(true);
             var message = args.Length == 0 ? format : string.Format(format, args);
             var output = new StringBuilder();
             output.AppendFormat("{2} | {0:yyyy-MM-dd HH:mm:ss.ffff} | {3} | {1}", DateTime.UtcNow, message, level.PadRight(5), client);

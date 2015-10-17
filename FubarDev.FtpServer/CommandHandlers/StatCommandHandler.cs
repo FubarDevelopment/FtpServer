@@ -54,13 +54,13 @@ namespace FubarDev.FtpServer.CommandHandlers
             var mm = new Minimatcher(mask, mmOptions);
 
             var formatter = new LongListFormatter();
-            await Connection.Write($"211-STAT {command.Argument}", cancellationToken);
+            await Connection.WriteAsync($"211-STAT {command.Argument}", cancellationToken);
 
             foreach (var entry in (await Data.FileSystem.GetEntriesAsync(Data.CurrentDirectory, cancellationToken)).Where(x => mm.IsMatch(x.Name)))
             {
                 var line = formatter.Format(entry);
                 Connection.Log?.Debug(line);
-                await Connection.Write($" {line}", cancellationToken);
+                await Connection.WriteAsync($" {line}", cancellationToken);
             }
 
             return new FtpResponse(211, "STAT");
