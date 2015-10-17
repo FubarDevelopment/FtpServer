@@ -10,7 +10,9 @@ using System.Collections.Generic;
 using System.Dynamic;
 using System.Text;
 
+using FubarDev.FtpServer.AccountManagement;
 using FubarDev.FtpServer.FileSystem;
+using FubarDev.FtpServer.ListFormatters.Facts;
 
 using JetBrains.Annotations;
 
@@ -38,10 +40,10 @@ namespace FubarDev.FtpServer
         /// <summary>
         /// Gets or sets the current user name
         /// </summary>
-        public string UserName { get; set; }
+        public FtpUser User { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether the user with the <see cref="UserName"/>
+        /// Gets or sets a value indicating whether the user with the <see cref="User"/>
         /// is logged in.
         /// </summary>
         public bool IsLoggedIn { get; set; }
@@ -116,7 +118,12 @@ namespace FubarDev.FtpServer
         /// <summary>
         /// Gets or sets the <see cref="IUnixFileEntry"/> to use for a <code>RNTO</code> operation.
         /// </summary>
-        public SearchResult<IUnixFileEntry> RenameFrom { get; set; }
+        public SearchResult<IUnixFileSystemEntry> RenameFrom { get; set; }
+
+        /// <summary>
+        /// Gets the active <see cref="IFact"/> sent by <code>MLST</code> and <code>MLSD</code>
+        /// </summary>
+        public ISet<string> ActiveMlstFacts { get; } = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
         /// <summary>
         /// Gets or sets user data as <code>dynamic</code> object

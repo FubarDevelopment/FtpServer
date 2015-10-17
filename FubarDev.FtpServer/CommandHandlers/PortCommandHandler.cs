@@ -24,14 +24,13 @@ namespace FubarDev.FtpServer.CommandHandlers
         public PortCommandHandler(FtpConnection connection)
             : base(connection, "PORT", "EPRT")
         {
-            SupportedExtensions = new List<string>
-            {
-                "EPRT",
-            };
         }
 
         /// <inheritdoc/>
-        public override IReadOnlyCollection<string> SupportedExtensions { get; }
+        public override IEnumerable<IFeatureInfo> GetSupportedExtensions()
+        {
+            yield return new GenericFeatureInfo("EPRT", null, null);
+        }
 
         /// <inheritdoc/>
         public override Task<FtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)

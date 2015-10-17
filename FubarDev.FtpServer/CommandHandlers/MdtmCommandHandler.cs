@@ -25,14 +25,13 @@ namespace FubarDev.FtpServer.CommandHandlers
         public MdtmCommandHandler(FtpConnection connection)
             : base(connection, "MDTM")
         {
-            SupportedExtensions = new List<string>
-            {
-                "MDTM",
-            };
         }
 
         /// <inheritdoc/>
-        public override IReadOnlyCollection<string> SupportedExtensions { get; }
+        public override IEnumerable<IFeatureInfo> GetSupportedExtensions()
+        {
+            yield return new GenericFeatureInfo("MDTM", null, null);
+        }
 
         /// <inheritdoc/>
         public override async Task<FtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
@@ -43,7 +42,7 @@ namespace FubarDev.FtpServer.CommandHandlers
             if (fileInfo?.Entry == null)
                 return new FtpResponse(550, "File not found.");
 
-            return new FtpResponse(220, $"{fileInfo.Entry.LastWriteTime:yyyyMMddHHmmss.fff}");
+            return new FtpResponse(220, $"{fileInfo.Entry.LastWriteTime?.ToUniversalTime():yyyyMMddHHmmss.fff}");
         }
     }
 }

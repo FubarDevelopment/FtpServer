@@ -14,16 +14,18 @@ namespace FubarDev.FtpServer.FileSystem
     /// <summary>
     /// The file system entry information that is shared between a <see cref="IUnixDirectoryEntry"/> and a <see cref="IUnixFileEntry"/>
     /// </summary>
-    public interface IUnixFileSystemEntry
+    public interface IUnixFileSystemEntry : IUnixOwner
     {
         /// <summary>
         /// Gets the name of the file system entry
         /// </summary>
+        [NotNull]
         string Name { get; }
 
         /// <summary>
         /// Gets the file entry permissions
         /// </summary>
+        [NotNull]
         IUnixPermissions Permissions { get; }
 
         /// <summary>
@@ -37,15 +39,9 @@ namespace FubarDev.FtpServer.FileSystem
         long NumberOfLinks { get; }
 
         /// <summary>
-        /// Gets the owner
+        /// Gets the file system this entry belongs to
         /// </summary>
         [NotNull]
-        string Owner { get; }
-
-        /// <summary>
-        /// Gets the group
-        /// </summary>
-        [NotNull]
-        string Group { get; }
+        IUnixFileSystem FileSystem { get; }
     }
 }

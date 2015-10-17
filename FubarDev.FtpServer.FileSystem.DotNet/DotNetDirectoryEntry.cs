@@ -7,8 +7,11 @@
 
 using System;
 using System.IO;
+using System.Linq;
 
 using FubarDev.FtpServer.FileSystem.Generic;
+
+using JetBrains.Annotations;
 
 namespace FubarDev.FtpServer.FileSystem.DotNet
 {
@@ -21,19 +24,29 @@ namespace FubarDev.FtpServer.FileSystem.DotNet
         /// <summary>
         /// Initializes a new instance of the <see cref="DotNetDirectoryEntry"/> class.
         /// </summary>
+        /// <param name="fileSystem">The file system this entry belongs to</param>
         /// <param name="dirInfo">The <see cref="DirectoryInfo"/> to extract the information from</param>
-        public DotNetDirectoryEntry(DirectoryInfo dirInfo)
+        /// <param name="isRoot">Is this the root directory?</param>
+        public DotNetDirectoryEntry([NotNull] DotNetFileSystem fileSystem, [NotNull] DirectoryInfo dirInfo, bool isRoot)
         {
+            FileSystem = fileSystem;
             Info = dirInfo;
             LastWriteTime = new DateTimeOffset(Info.LastWriteTime);
             var accessMode = new GenericAccessMode(true, true, true);
             Permissions = new GenericUnixPermissions(accessMode, accessMode, accessMode);
+            IsRoot = isRoot;
         }
 
         /// <summary>
         /// Gets the underlying <see cref="DirectoryInfo"/>
         /// </summary>
         public DirectoryInfo Info { get; }
+
+        /// <inheritdoc/>
+        public bool IsRoot { get; }
+
+        /// <inheritdoc/>
+        public bool IsDeletable => !IsRoot && (FileSystem.SupportsNonEmptyDirectoryDelete || !Info.EnumerateFileSystemInfos().Any());
 
         /// <inheritdoc/>
         public string Name => Info.Name;
@@ -46,6 +59,9 @@ namespace FubarDev.FtpServer.FileSystem.DotNet
 
         /// <inheritdoc/>
         public long NumberOfLinks => 1;
+
+        /// <inheritdoc/>
+        public IUnixFileSystem FileSystem { get; }
 
         /// <inheritdoc/>
         public string Owner => "owner";

@@ -7,6 +7,8 @@
 
 using System;
 
+using JetBrains.Annotations;
+
 namespace FubarDev.FtpServer.FileSystem.Generic
 {
     /// <summary>
@@ -18,14 +20,15 @@ namespace FubarDev.FtpServer.FileSystem.Generic
         /// <summary>
         /// Initializes a new instance of the <see cref="GenericUnixDirectoryEntry{T}"/> class.
         /// </summary>
+        /// <param name="fileSystem">The file system this entry belongs to</param>
         /// <param name="name">The directory name</param>
         /// <param name="permissions">The directory permissions</param>
         /// <param name="lastWriteTime">The last write time</param>
         /// <param name="owner">The owner</param>
         /// <param name="group">The group</param>
         /// <param name="opaque">The underlying data of type <typeparamref name="T"/></param>
-        public GenericUnixDirectoryEntry(string name, IUnixPermissions permissions, DateTimeOffset lastWriteTime, string owner, string @group, T opaque)
-            : base(name, permissions, lastWriteTime, owner, @group)
+        public GenericUnixDirectoryEntry([NotNull] IUnixFileSystem fileSystem, string name, IUnixPermissions permissions, DateTimeOffset lastWriteTime, string owner, string @group, T opaque)
+            : base(fileSystem, name, permissions, lastWriteTime, owner, @group)
         {
             Opaque = opaque;
         }

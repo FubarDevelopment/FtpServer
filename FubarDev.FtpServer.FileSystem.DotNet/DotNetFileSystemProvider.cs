@@ -42,6 +42,11 @@ namespace FubarDev.FtpServer.FileSystem.DotNet
             _useUserIdAsSubFolder = useUserIdAsSubFolder;
         }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether deletion of non-empty directories is allowed.
+        /// </summary>
+        public bool AllowNonEmptyDirectoryDelete { get; set; }
+
         /// <inheritdoc/>
         public Task<IUnixFileSystem> Create(string userId, bool isAnonymous)
         {
@@ -53,7 +58,7 @@ namespace FubarDev.FtpServer.FileSystem.DotNet
                 path = Path.Combine(path, userId);
             }
 
-            return Task.FromResult<IUnixFileSystem>(new DotNetFileSystem(path));
+            return Task.FromResult<IUnixFileSystem>(new DotNetFileSystem(path, AllowNonEmptyDirectoryDelete));
         }
     }
 }

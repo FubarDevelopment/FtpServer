@@ -26,14 +26,13 @@ namespace FubarDev.FtpServer.CommandHandlers
         public PasvCommandHandler(FtpConnection connection)
             : base(connection, "PASV", "EPSV")
         {
-            SupportedExtensions = new List<string>
-            {
-                "EPSV",
-            };
         }
 
         /// <inheritdoc/>
-        public override IReadOnlyCollection<string> SupportedExtensions { get; }
+        public override IEnumerable<IFeatureInfo> GetSupportedExtensions()
+        {
+            yield return new GenericFeatureInfo("EPSV", null, null);
+        }
 
         /// <inheritdoc/>
         public override async Task<FtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)

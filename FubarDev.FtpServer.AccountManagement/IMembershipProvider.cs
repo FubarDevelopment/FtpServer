@@ -22,7 +22,7 @@ namespace FubarDev.FtpServer.AccountManagement
         /// </summary>
         /// <param name="username">The user name</param>
         /// <param name="password">The password</param>
-        /// <returns><code>true</code> if the combination of <paramref name="username"/> and <paramref name="password"/> is valid</returns>
+        /// <returns>The result of the validation</returns>
         MemberValidationResult ValidateUser([NotNull] string username, [NotNull] string password);
     }
 }

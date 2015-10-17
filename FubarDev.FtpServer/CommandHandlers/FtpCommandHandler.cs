@@ -5,7 +5,9 @@
 // <author>Mark Junker</author>
 //-----------------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -39,11 +41,6 @@ namespace FubarDev.FtpServer.CommandHandlers
         public IReadOnlyCollection<string> Names { get; }
 
         /// <summary>
-        /// Gets a collection of strings that will be sent as supported features.
-        /// </summary>
-        public virtual IReadOnlyCollection<string> SupportedExtensions => null;
-
-        /// <summary>
         /// Gets a value indicating whether a login is required to execute this command
         /// </summary>
         public virtual bool IsLoginRequired => true;
@@ -67,6 +64,15 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// Gets the connection data
         /// </summary>
         protected FtpConnectionData Data => Connection.Data;
+
+        /// <summary>
+        /// Gets a collection of strings that will be sent as supported features.
+        /// </summary>
+        /// <returns>A list of features supported by this command handler</returns>
+        public virtual IEnumerable<IFeatureInfo> GetSupportedExtensions()
+        {
+            return Enumerable.Empty<IFeatureInfo>();
+        }
 
         /// <summary>
         /// Processes the command

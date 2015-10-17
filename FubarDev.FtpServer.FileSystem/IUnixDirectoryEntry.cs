@@ -12,5 +12,14 @@ namespace FubarDev.FtpServer.FileSystem
     /// </summary>
     public interface IUnixDirectoryEntry : IUnixFileSystemEntry
     {
+        /// <summary>
+        /// Gets a value indicating whether this is the root directory
+        /// </summary>
+        bool IsRoot { get; }
+
+        /// <summary>
+        /// Gets a value indicating whether this directory can be deleted
+        /// </summary>
+        bool IsDeletable { get; }
     }
 }

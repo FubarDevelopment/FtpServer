@@ -18,6 +18,8 @@ namespace FubarDev.FtpServer.AccountManagement.Anonymous
         /// <inheritdoc/>
         public bool IsValid(string password)
         {
+            if (password.IndexOfAny(new[] { '/', '\\' }) != -1)
+                return false;
             var atIndex = password.IndexOf('@');
             if (atIndex == -1)
                 return false;

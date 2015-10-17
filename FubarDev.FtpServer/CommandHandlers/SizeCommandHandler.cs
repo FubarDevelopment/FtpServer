@@ -25,14 +25,13 @@ namespace FubarDev.FtpServer.CommandHandlers
         public SizeCommandHandler(FtpConnection connection)
             : base(connection, "SIZE")
         {
-            SupportedExtensions = new List<string>
-            {
-                "SIZE",
-            };
         }
 
         /// <inheritdoc/>
-        public override IReadOnlyCollection<string> SupportedExtensions { get; }
+        public override IEnumerable<IFeatureInfo> GetSupportedExtensions()
+        {
+            yield return new GenericFeatureInfo("SIZE", null, null);
+        }
 
         /// <inheritdoc/>
         public override async Task<FtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)

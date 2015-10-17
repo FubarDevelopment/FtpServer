@@ -19,13 +19,15 @@ namespace FubarDev.FtpServer.FileSystem.Generic
         /// <summary>
         /// Initializes a new instance of the <see cref="GenericUnixFileSystemEntry"/> class.
         /// </summary>
+        /// <param name="fileSystem">The file system this entry belongs to</param>
         /// <param name="name">The file system entry name</param>
         /// <param name="permissions">The file system entry permissions</param>
         /// <param name="lastWriteTime">The last write time</param>
         /// <param name="owner">The file system entry owner</param>
         /// <param name="group">The file system entry group</param>
-        protected GenericUnixFileSystemEntry([NotNull] string name, [NotNull] IUnixPermissions permissions, DateTimeOffset? lastWriteTime, [NotNull] string owner, [NotNull] string group)
+        protected GenericUnixFileSystemEntry([NotNull] IUnixFileSystem fileSystem, [NotNull] string name, [NotNull] IUnixPermissions permissions, DateTimeOffset? lastWriteTime, [NotNull] string owner, [NotNull] string group)
         {
+            FileSystem = fileSystem;
             Name = name;
             Permissions = permissions;
             LastWriteTime = lastWriteTime;
@@ -45,6 +47,9 @@ namespace FubarDev.FtpServer.FileSystem.Generic
 
         /// <inheritdoc/>
         public long NumberOfLinks { get; }
+
+        /// <inheritdoc/>
+        public IUnixFileSystem FileSystem { get; }
 
         /// <inheritdoc/>
         public string Owner { get; }

@@ -8,6 +8,8 @@
 using System.Threading;
 using System.Threading.Tasks;
 
+using FubarDev.FtpServer.AccountManagement;
+
 namespace FubarDev.FtpServer.CommandHandlers
 {
     /// <summary>
@@ -31,7 +33,7 @@ namespace FubarDev.FtpServer.CommandHandlers
         public override Task<FtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
         {
             var userName = command.Argument;
-            Connection.Data.UserName = userName;
+            Connection.Data.User = new FtpUser(userName);
             return Task.FromResult(new FtpResponse(331, $"User {userName} logged in, needs password"));
         }
     }

@@ -52,7 +52,7 @@ namespace FubarDev.FtpServer.ListFormatters
                 fileEntry == null ? "d" : "-",
                 BuildAccessMode(entry.Permissions.User),
                 BuildAccessMode(entry.Permissions.Group),
-                BuildAccessMode(entry.Permissions.Owner),
+                BuildAccessMode(entry.Permissions.Other),
                 entry.NumberOfLinks,
                 entry.Owner,
                 entry.Group,

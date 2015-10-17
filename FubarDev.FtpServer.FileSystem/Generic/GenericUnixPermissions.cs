@@ -24,7 +24,7 @@ namespace FubarDev.FtpServer.FileSystem.Generic
         {
             User = user;
             Group = group;
-            Owner = owner;
+            Other = owner;
         }
 
         /// <inheritdoc/>
@@ -34,6 +34,6 @@ namespace FubarDev.FtpServer.FileSystem.Generic
         public IAccessMode Group { get; }
 
         /// <inheritdoc/>
-        public IAccessMode Owner { get; }
+        public IAccessMode Other { get; }
     }
 }

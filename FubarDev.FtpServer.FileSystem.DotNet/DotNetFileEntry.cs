@@ -10,6 +10,8 @@ using System.IO;
 
 using FubarDev.FtpServer.FileSystem.Generic;
 
+using JetBrains.Annotations;
+
 namespace FubarDev.FtpServer.FileSystem.DotNet
 {
     /// <summary>
@@ -21,9 +23,11 @@ namespace FubarDev.FtpServer.FileSystem.DotNet
         /// <summary>
         /// Initializes a new instance of the <see cref="DotNetFileEntry"/> class.
         /// </summary>
+        /// <param name="fileSystem">The file system this entry belongs to</param>
         /// <param name="info">The <see cref="FileInfo"/> to extract the information from</param>
-        public DotNetFileEntry(FileInfo info)
+        public DotNetFileEntry([NotNull] DotNetFileSystem fileSystem, [NotNull] FileInfo info)
         {
+            FileSystem = fileSystem;
             Info = info;
             LastWriteTime = new DateTimeOffset(Info.LastWriteTime);
             var accessMode = new GenericAccessMode(true, true, true);
@@ -46,6 +50,9 @@ namespace FubarDev.FtpServer.FileSystem.DotNet
 
         /// <inheritdoc/>
         public long NumberOfLinks => 1;
+
+        /// <inheritdoc/>
+        public IUnixFileSystem FileSystem { get; }
 
         /// <inheritdoc/>
         public string Owner => "owner";

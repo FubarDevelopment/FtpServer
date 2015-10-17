@@ -27,9 +27,9 @@ namespace FubarDev.FtpServer.FileSystem
         IAccessMode Group { get; }
 
         /// <summary>
-        /// Gets the owner permissions
+        /// Gets the other permissions
         /// </summary>
         [NotNull]
-        IAccessMode Owner { get; }
+        IAccessMode Other { get; }
     }
 }

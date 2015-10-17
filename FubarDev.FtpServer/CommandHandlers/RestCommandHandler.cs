@@ -24,14 +24,13 @@ namespace FubarDev.FtpServer.CommandHandlers
         public RestCommandHandler(FtpConnection connection)
             : base(connection, "REST")
         {
-            SupportedExtensions = new List<string>
-            {
-                "REST STREAM",
-            };
         }
 
         /// <inheritdoc/>
-        public override IReadOnlyCollection<string> SupportedExtensions { get; }
+        public override IEnumerable<IFeatureInfo> GetSupportedExtensions()
+        {
+            yield return new GenericFeatureInfo("REST", null, conn => "REST STREAM");
+        }
 
         /// <inheritdoc/>
         public override Task<FtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)

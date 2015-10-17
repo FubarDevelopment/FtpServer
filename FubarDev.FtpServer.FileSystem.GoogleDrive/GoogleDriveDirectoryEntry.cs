@@ -9,22 +9,31 @@ using System;
 
 using FubarDev.FtpServer.FileSystem.Generic;
 
+using JetBrains.Annotations;
+
 using RestSharp.Portable.Google.Drive.Model;
 
 namespace FubarDev.FtpServer.FileSystem.GoogleDrive
 {
     internal class GoogleDriveDirectoryEntry : IUnixDirectoryEntry
     {
-        public GoogleDriveDirectoryEntry(File file, string fullPath, bool isRoot = false)
+        public GoogleDriveDirectoryEntry([NotNull] GoogleDriveFileSystem fileSystem, [NotNull] File file, [NotNull] string fullPath, bool isRoot = false)
         {
+            FileSystem = fileSystem;
             File = file;
             Permissions = new GenericUnixPermissions(
                 new GenericAccessMode(true, true, true),
                 new GenericAccessMode(true, true, true),
                 new GenericAccessMode(true, true, true));
             FullName = fullPath;
-            Name = isRoot ? string.Empty : File.Title;
+            IsRoot = isRoot;
+            Name = File.Title;
         }
+
+        public bool IsRoot { get; }
+
+        /// <inheritdoc/>
+        public bool IsDeletable => !IsRoot;
 
         public File File { get; }
 
@@ -37,6 +46,9 @@ namespace FubarDev.FtpServer.FileSystem.GoogleDrive
         public DateTimeOffset? LastWriteTime => File.ModifiedByMeDate ?? File.ModifiedDate ?? File.CreatedDate;
 
         public long NumberOfLinks => 1;
+
+        /// <inheritdoc/>
+        public IUnixFileSystem FileSystem { get; }
 
         public string Owner => "owner";
 

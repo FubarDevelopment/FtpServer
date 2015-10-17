@@ -61,6 +61,7 @@
     <Compile Include="IUnixFileEntry.cs" />
     <Compile Include="IUnixFileSystem.cs" />
     <Compile Include="IUnixFileSystemEntry.cs" />
+    <Compile Include="IUnixOwner.cs" />
     <Compile Include="IUnixPermissions.cs" />
     <Compile Include="ListSegment.cs" />
     <Compile Include="MemoryTemporaryData.cs" />

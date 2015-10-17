@@ -15,6 +15,8 @@ namespace FubarDev.FtpServer.AccountManagement.Anonymous
         /// <inheritdoc/>
         public bool IsValid(string password)
         {
+            if (password.IndexOfAny(new[] { '/', '\\' }) != -1)
+                return false;
             return true;
         }
     }

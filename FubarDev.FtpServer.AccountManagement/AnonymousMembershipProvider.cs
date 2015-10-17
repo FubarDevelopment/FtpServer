@@ -44,10 +44,12 @@ namespace FubarDev.FtpServer.AccountManagement
         {
             if (string.Equals(username, "anonymous"))
             {
-                return _anonymousPasswordValidator.IsValid(password) ? MemberValidationResult.Anonymous : MemberValidationResult.InvalidAnonymousEmail;
+                if (_anonymousPasswordValidator.IsValid(password))
+                    return new MemberValidationResult(MemberValidationStatus.Anonymous, new AnonymousFtpUser(password));
+                return new MemberValidationResult(MemberValidationStatus.InvalidAnonymousEmail);
             }
 
-            return MemberValidationResult.InvalidLogin;
+            return new MemberValidationResult(MemberValidationStatus.InvalidLogin);
         }
     }
 }

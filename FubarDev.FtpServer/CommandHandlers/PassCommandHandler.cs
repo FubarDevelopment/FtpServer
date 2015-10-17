@@ -35,11 +35,12 @@ namespace FubarDev.FtpServer.CommandHandlers
         public override async Task<FtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
         {
             var password = command.Argument ?? string.Empty;
-            var validationResult = Server.MembershipProvider.ValidateUser(Connection.Data.UserName, password);
-            if (validationResult == MemberValidationResult.Anonymous || validationResult == MemberValidationResult.AuthenticatedUser)
+            var validationResult = Server.MembershipProvider.ValidateUser(Connection.Data.User.Name, password);
+            if (validationResult.IsSuccess)
             {
-                var isAnonymous = validationResult == MemberValidationResult.Anonymous;
-                var userId = isAnonymous ? password : Connection.Data.UserName;
+                var isAnonymous = validationResult.Status == MemberValidationStatus.Anonymous;
+                var userId = isAnonymous ? password : Connection.Data.User.Name;
+                Connection.Data.User = validationResult.User;
                 Connection.Data.IsLoggedIn = true;
                 Connection.Data.IsAnonymous = isAnonymous;
                 Connection.Data.FileSystem = await Server.FileSystemClassFactory.Create(userId, isAnonymous);

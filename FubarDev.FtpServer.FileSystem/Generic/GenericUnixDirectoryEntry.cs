@@ -19,14 +19,21 @@ namespace FubarDev.FtpServer.FileSystem.Generic
         /// <summary>
         /// Initializes a new instance of the <see cref="GenericUnixDirectoryEntry"/> class.
         /// </summary>
+        /// <param name="fileSystem">The file system this entry belongs to</param>
         /// <param name="name">The directory name</param>
         /// <param name="permissions">The directory permissions</param>
         /// <param name="lastWriteTime">The last write time</param>
         /// <param name="owner">The owner</param>
         /// <param name="group">The group</param>
-        public GenericUnixDirectoryEntry([NotNull] string name, [NotNull] IUnixPermissions permissions, DateTimeOffset? lastWriteTime, [NotNull] string owner, [NotNull] string group)
-            : base(name, permissions, lastWriteTime, owner, group)
+        public GenericUnixDirectoryEntry([NotNull] IUnixFileSystem fileSystem, [NotNull] string name, [NotNull] IUnixPermissions permissions, DateTimeOffset? lastWriteTime, [NotNull] string owner, [NotNull] string group)
+            : base(fileSystem, name, permissions, lastWriteTime, owner, group)
         {
         }
+
+        /// <inheritdoc/>
+        public bool IsRoot => string.IsNullOrEmpty(Name);
+
+        /// <inheritdoc/>
+        public bool IsDeletable => !IsRoot;
     }
 }

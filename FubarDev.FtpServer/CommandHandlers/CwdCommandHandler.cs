@@ -37,7 +37,7 @@ namespace FubarDev.FtpServer.CommandHandlers
             else if (path == "..")
             {
                 // CDUP
-                if (Data.CurrentDirectory.IsRoot())
+                if (Data.CurrentDirectory.IsRoot)
                     return new FtpResponse(550, "Not a valid directory.");
                 Data.Path.Pop();
             }

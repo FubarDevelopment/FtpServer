@@ -20,6 +20,7 @@ namespace FubarDev.FtpServer.FileSystem.Generic
         /// <summary>
         /// Initializes a new instance of the <see cref="GenericUnixFileEntry{T}"/> class.
         /// </summary>
+        /// <param name="fileSystem">The file system this entry belongs to</param>
         /// <param name="name">The file name</param>
         /// <param name="size">The file size</param>
         /// <param name="permissions">The file permissions</param>
@@ -27,8 +28,8 @@ namespace FubarDev.FtpServer.FileSystem.Generic
         /// <param name="owner">The file owner</param>
         /// <param name="group">The file group</param>
         /// <param name="opaque">The underlying data of type <typeparamref name="T"/></param>
-        public GenericUnixFileEntry([NotNull] string name, long size, [NotNull] IUnixPermissions permissions, DateTimeOffset? lastWriteTime, [NotNull] string owner, [NotNull] string @group, T opaque)
-            : base(name, size, permissions, lastWriteTime, owner, @group)
+        public GenericUnixFileEntry([NotNull] IUnixFileSystem fileSystem, [NotNull] string name, long size, [NotNull] IUnixPermissions permissions, DateTimeOffset? lastWriteTime, [NotNull] string owner, [NotNull] string @group, T opaque)
+            : base(fileSystem, name, size, permissions, lastWriteTime, owner, @group)
         {
             Opaque = opaque;
         }

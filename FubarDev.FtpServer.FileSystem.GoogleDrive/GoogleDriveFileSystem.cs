@@ -44,7 +44,7 @@ namespace FubarDev.FtpServer.FileSystem.GoogleDrive
             _requestFactory = requestFactory;
             Service = service;
             RootFolderInfo = rootFolderInfo;
-            Root = new GoogleDriveDirectoryEntry(RootFolderInfo, "/", true);
+            Root = new GoogleDriveDirectoryEntry(this, RootFolderInfo, "/", true);
         }
 
         /// <summary>
@@ -58,10 +58,16 @@ namespace FubarDev.FtpServer.FileSystem.GoogleDrive
         public File RootFolderInfo { get; }
 
         /// <inheritdoc/>
+        public bool SupportsNonEmptyDirectoryDelete => true;
+
+        /// <inheritdoc/>
         public StringComparer FileSystemEntryComparer => StringComparer.OrdinalIgnoreCase;
 
         /// <inheritdoc/>
         public IUnixDirectoryEntry Root { get; }
+
+        /// <inheritdoc/>
+        public bool SupportsAppend => false;
 
         /// <inheritdoc/>
         public async Task<IReadOnlyList<IUnixFileSystemEntry>> GetEntriesAsync(IUnixDirectoryEntry directoryEntry, CancellationToken cancellationToken)
@@ -96,12 +102,12 @@ namespace FubarDev.FtpServer.FileSystem.GoogleDrive
             if (sourceFileEntry != null)
             {
                 var newFile = await Service.MoveAsync(sourceFileEntry.File, parentEntry.File.Id, targetEntry.File, fileName, cancellationToken);
-                return new GoogleDriveFileEntry(newFile, targetName);
+                return new GoogleDriveFileEntry(this, newFile, targetName);
             }
 
             var sourceDirEntry = (GoogleDriveDirectoryEntry)source;
             var newDir = await Service.MoveAsync(sourceDirEntry.File, parentEntry.File.Id, targetEntry.File, fileName, cancellationToken);
-            return new GoogleDriveDirectoryEntry(newDir, targetName);
+            return new GoogleDriveDirectoryEntry(this, newDir, targetName);
         }
 
         /// <inheritdoc/>
@@ -124,7 +130,7 @@ namespace FubarDev.FtpServer.FileSystem.GoogleDrive
         {
             var dirEntry = (GoogleDriveDirectoryEntry)targetDirectory;
             var newDir = await Service.CreateDirectoryAsync(dirEntry.File, directoryName, cancellationToken);
-            return new GoogleDriveDirectoryEntry(newDir, FileSystemExtensions.CombinePath(dirEntry.FullName, newDir.Title));
+            return new GoogleDriveDirectoryEntry(this, newDir, FileSystemExtensions.CombinePath(dirEntry.FullName, newDir.Title));
         }
 
         /// <inheritdoc/>
@@ -229,7 +235,7 @@ namespace FubarDev.FtpServer.FileSystem.GoogleDrive
                     var fullName = FileSystemExtensions.CombinePath(baseDir, child.Title);
                     if (child.IsDirectory())
                     {
-                        result.Add(new GoogleDriveDirectoryEntry(child, fullName));
+                        result.Add(new GoogleDriveDirectoryEntry(this, child, fullName));
                     }
                     else
                     {
@@ -243,7 +249,7 @@ namespace FubarDev.FtpServer.FileSystem.GoogleDrive
                         {
                             fileSize = null;
                         }
-                        result.Add(new GoogleDriveFileEntry(child, fullName, fileSize));
+                        result.Add(new GoogleDriveFileEntry(this, child, fullName, fileSize));
                     }
                 }
             }

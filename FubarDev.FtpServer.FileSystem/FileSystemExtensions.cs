@@ -22,16 +22,6 @@ namespace FubarDev.FtpServer.FileSystem
     public static class FileSystemExtensions
     {
         /// <summary>
-        /// Is this directory a root directory?
-        /// </summary>
-        /// <param name="directoryEntry">The directory entry to test</param>
-        /// <returns><code>true</code> if the <paramref name="directoryEntry"/> is a root directory</returns>
-        public static bool IsRoot([NotNull] this IUnixDirectoryEntry directoryEntry)
-        {
-            return string.IsNullOrEmpty(directoryEntry.Name);
-        }
-
-        /// <summary>
         /// Clone the stack of directory entries
         /// </summary>
         /// <param name="path">The stack of directory entries to clone</param>
@@ -181,6 +171,40 @@ namespace FubarDev.FtpServer.FileSystem
             if (foundEntry != null && foundFileEntry == null)
                 return null;
             return new SearchResult<IUnixFileEntry>(sourceDir, foundFileEntry, fileName);
+        }
+
+        /// <summary>
+        /// Searches for a <see cref="IUnixFileSystemEntry"/> by using the <paramref name="currentPath"/> and <paramref name="path"/>
+        /// </summary>
+        /// <param name="fileSystem">The underlying <see cref="IUnixFileSystem"/></param>
+        /// <param name="currentPath">The current path</param>
+        /// <param name="path">The relative path to search for</param>
+        /// <param name="cancellationToken">The cancellation token</param>
+        /// <returns>The found <see cref="IUnixFileSystemEntry"/></returns>
+        [NotNull, ItemCanBeNull]
+        public static Task<SearchResult<IUnixFileSystemEntry>> SearchEntryAsync([NotNull] this IUnixFileSystem fileSystem, [NotNull, ItemNotNull] Stack<IUnixDirectoryEntry> currentPath, [CanBeNull] string path, CancellationToken cancellationToken)
+        {
+            var pathElements = GetPathElements(path);
+            return SearchEntryAsync(fileSystem, currentPath, pathElements, cancellationToken);
+        }
+
+        /// <summary>
+        /// Searches for a <see cref="IUnixFileSystemEntry"/> by using the <paramref name="currentPath"/> and <paramref name="pathElements"/>
+        /// </summary>
+        /// <param name="fileSystem">The underlying <see cref="IUnixFileSystem"/></param>
+        /// <param name="currentPath">The current path</param>
+        /// <param name="pathElements">The relative path elements to search for</param>
+        /// <param name="cancellationToken">The cancellation token</param>
+        /// <returns>The found <see cref="IUnixFileSystemEntry"/></returns>
+        [NotNull, ItemCanBeNull]
+        public static async Task<SearchResult<IUnixFileSystemEntry>> SearchEntryAsync(this IUnixFileSystem fileSystem, [NotNull, ItemNotNull] Stack<IUnixDirectoryEntry> currentPath, [NotNull, ItemNotNull] IReadOnlyList<string> pathElements, CancellationToken cancellationToken)
+        {
+            var sourceDir = await GetDirectoryAsync(fileSystem, currentPath, new ListSegment<string>(pathElements, 0, pathElements.Count - 1), cancellationToken);
+            if (sourceDir == null)
+                return null;
+            var fileName = pathElements[pathElements.Count - 1];
+            var foundEntry = await fileSystem.GetEntryByNameAsync(sourceDir, fileName, cancellationToken);
+            return new SearchResult<IUnixFileSystemEntry>(sourceDir, foundEntry, fileName);
         }
 
         /// <summary>

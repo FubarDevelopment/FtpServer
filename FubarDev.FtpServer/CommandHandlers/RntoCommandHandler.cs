@@ -35,17 +35,17 @@ namespace FubarDev.FtpServer.CommandHandlers
             if (Data.RenameFrom == null)
                 return new FtpResponse(503, "RNTO must be preceded by a RNFR.");
             if (Data.RenameFrom.Entry == null)
-                return new FtpResponse(550, "File specified for RNFR doesn't exist.");
+                return new FtpResponse(550, "Item specified for RNFR doesn't exist.");
 
             var fileName = command.Argument;
             var tempPath = Data.Path.Clone();
-            var fileInfo = await Data.FileSystem.SearchFileAsync(tempPath, fileName, cancellationToken);
+            var fileInfo = await Data.FileSystem.SearchEntryAsync(tempPath, fileName, cancellationToken);
             if (fileInfo == null)
                 return new FtpResponse(550, "Directory doesn't exist.");
             if (fileInfo.Entry != null)
             {
                 var fullName = tempPath.GetFullPath(fileInfo.FileName);
-                return new FtpResponse(553, $"File already exists ({fullName}).");
+                return new FtpResponse(553, $"Target name already exists ({fullName}).");
             }
 
             var targetDir = fileInfo.Directory;

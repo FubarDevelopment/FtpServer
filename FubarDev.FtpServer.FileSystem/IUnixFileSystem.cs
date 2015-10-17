@@ -21,6 +21,16 @@ namespace FubarDev.FtpServer.FileSystem
     public interface IUnixFileSystem : IDisposable
     {
         /// <summary>
+        /// Gets a value indicating whether this file system supports appending to a file.
+        /// </summary>
+        bool SupportsAppend { get; }
+
+        /// <summary>
+        /// Gets a value indicating whether this file system supports deletion of non-empty directories
+        /// </summary>
+        bool SupportsNonEmptyDirectoryDelete { get; }
+
+        /// <summary>
         /// Compares file system entry names
         /// </summary>
         /// <remarks>

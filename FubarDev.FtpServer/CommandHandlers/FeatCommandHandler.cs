@@ -29,12 +29,15 @@ namespace FubarDev.FtpServer.CommandHandlers
         }
 
         /// <inheritdoc/>
+        public override bool IsLoginRequired => false;
+
+        /// <inheritdoc/>
         public override async Task<FtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
         {
             if (_supportedFeatures == null)
             {
                 var features = new List<string>();
-                features.AddRange(Connection.CommandHandlers.Values.Where(x => x.SupportedExtensions != null).SelectMany(x => x.SupportedExtensions).Distinct());
+                features.AddRange(Connection.CommandHandlers.Values.SelectMany(x => x.GetSupportedExtensions()).Select(x => x.BuildInfo(Connection)).Distinct());
                 _supportedFeatures = features;
             }
 

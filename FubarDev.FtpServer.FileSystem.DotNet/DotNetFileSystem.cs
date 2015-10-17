@@ -25,17 +25,25 @@ namespace FubarDev.FtpServer.FileSystem.DotNet
         /// Initializes a new instance of the <see cref="DotNetFileSystem"/> class.
         /// </summary>
         /// <param name="rootPath">The path to use as root</param>
-        public DotNetFileSystem(string rootPath)
+        /// <param name="allowNonEmptyDirectoryDelete">Allow deletion of non-empty directories?</param>
+        public DotNetFileSystem(string rootPath, bool allowNonEmptyDirectoryDelete)
         {
             FileSystemEntryComparer = StringComparer.OrdinalIgnoreCase;
-            Root = new DotNetDirectoryEntry(Directory.CreateDirectory(rootPath));
+            Root = new DotNetDirectoryEntry(this, Directory.CreateDirectory(rootPath), true);
+            SupportsNonEmptyDirectoryDelete = allowNonEmptyDirectoryDelete;
         }
+
+        /// <inheritdoc/>
+        public bool SupportsNonEmptyDirectoryDelete { get; }
 
         /// <inheritdoc/>
         public StringComparer FileSystemEntryComparer { get; }
 
         /// <inheritdoc/>
         public IUnixDirectoryEntry Root { get; }
+
+        /// <inheritdoc/>
+        public bool SupportsAppend => true;
 
         /// <inheritdoc/>
         public Task<IReadOnlyList<IUnixFileSystemEntry>> GetEntriesAsync(IUnixDirectoryEntry directoryEntry, CancellationToken cancellationToken)
@@ -47,14 +55,14 @@ namespace FubarDev.FtpServer.FileSystem.DotNet
                 var dirInfo = info as DirectoryInfo;
                 if (dirInfo != null)
                 {
-                    result.Add(new DotNetDirectoryEntry(dirInfo));
+                    result.Add(new DotNetDirectoryEntry(this, dirInfo, false));
                 }
                 else
                 {
                     var fileInfo = info as FileInfo;
                     if (fileInfo != null)
                     {
-                        result.Add(new DotNetFileEntry(fileInfo));
+                        result.Add(new DotNetFileEntry(this, fileInfo));
                     }
                 }
             }
@@ -68,9 +76,9 @@ namespace FubarDev.FtpServer.FileSystem.DotNet
             var fullPath = Path.Combine(searchDirInfo.FullName, name);
             IUnixFileSystemEntry result;
             if (File.Exists(fullPath))
-                result = new DotNetFileEntry(new FileInfo(fullPath));
+                result = new DotNetFileEntry(this, new FileInfo(fullPath));
             else if (Directory.Exists(fullPath))
-                result = new DotNetDirectoryEntry(new DirectoryInfo(fullPath));
+                result = new DotNetDirectoryEntry(this, new DirectoryInfo(fullPath), false);
             else
                 result = null;
             return Task.FromResult(result);
@@ -86,12 +94,12 @@ namespace FubarDev.FtpServer.FileSystem.DotNet
             if (sourceFileEntry != null)
             {
                 sourceFileEntry.Info.MoveTo(targetName);
-                return Task.FromResult<IUnixFileSystemEntry>(new DotNetFileEntry(new FileInfo(targetName)));
+                return Task.FromResult<IUnixFileSystemEntry>(new DotNetFileEntry(this, new FileInfo(targetName)));
             }
 
             var sourceDirEntry = (DotNetDirectoryEntry)source;
             sourceDirEntry.Info.MoveTo(targetName);
-            return Task.FromResult<IUnixFileSystemEntry>(new DotNetDirectoryEntry(new DirectoryInfo(targetName)));
+            return Task.FromResult<IUnixFileSystemEntry>(new DotNetDirectoryEntry(this, new DirectoryInfo(targetName), false));
         }
 
         /// <inheritdoc/>
@@ -100,7 +108,7 @@ namespace FubarDev.FtpServer.FileSystem.DotNet
             var dirEntry = entry as DotNetDirectoryEntry;
             if (dirEntry != null)
             {
-                dirEntry.Info.Delete();
+                dirEntry.Info.Delete(SupportsNonEmptyDirectoryDelete);
             }
             else
             {
@@ -115,7 +123,7 @@ namespace FubarDev.FtpServer.FileSystem.DotNet
         {
             var targetEntry = (DotNetDirectoryEntry)targetDirectory;
             var newDirInfo = targetEntry.Info.CreateSubdirectory(directoryName);
-            return Task.FromResult<IUnixDirectoryEntry>(new DotNetDirectoryEntry(newDirInfo));
+            return Task.FromResult<IUnixDirectoryEntry>(new DotNetDirectoryEntry(this, newDirInfo, false));
         }
 
         /// <inheritdoc/>
