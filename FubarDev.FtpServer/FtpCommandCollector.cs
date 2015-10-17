@@ -7,7 +7,9 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Text;
 
 using JetBrains.Annotations;
@@ -23,6 +25,8 @@ namespace FubarDev.FtpServer
 
         private readonly Func<Encoding> _getActiveEncodingFunc;
 
+        private readonly FtpTelnetInputParser _telnetInputParser;
+
         private MemoryStream _buffer = new MemoryStream();
 
         private bool _skipLineFeed;
@@ -33,6 +37,7 @@ namespace FubarDev.FtpServer
         /// <param name="getActiveEncodingFunc">The delegate to get the current encoding for</param>
         public FtpCommandCollector(Func<Encoding> getActiveEncodingFunc)
         {
+            _telnetInputParser = new FtpTelnetInputParser(this);
             _getActiveEncodingFunc = getActiveEncodingFunc;
         }
 
@@ -55,6 +60,16 @@ namespace FubarDev.FtpServer
         /// <returns>The found <see cref="FtpCommand"/>s</returns>
         [NotNull, ItemNotNull]
         public IEnumerable<FtpCommand> Collect(byte[] buffer, int offset, int length)
+        {
+            Debug.WriteLine("Received bytes: {0}", string.Join(string.Empty, Enumerable.Range(offset, length).Select(x => buffer[x].ToString("X2"))));
+
+            var commands = new List<FtpCommand>();
+            commands.AddRange(_telnetInputParser.Collect(buffer, offset, length));
+            return commands;
+        }
+
+        [NotNull, ItemNotNull]
+        public IEnumerable<FtpCommand> InternalCollect(byte[] buffer, int offset, int length)
         {
             var commands = new List<FtpCommand>();
 
@@ -127,6 +142,21 @@ namespace FubarDev.FtpServer
             var commandName = spaceIndex == -1 ? message : message.Substring(0, spaceIndex);
             var commandArguments = spaceIndex == -1 ? string.Empty : message.Substring(spaceIndex + 1);
             return new FtpCommand(commandName, commandArguments);
+        }
+
+        private class FtpTelnetInputParser : TelnetInputParser<FtpCommand>
+        {
+            private readonly FtpCommandCollector _collector;
+
+            public FtpTelnetInputParser(FtpCommandCollector collector)
+            {
+                _collector = collector;
+            }
+
+            protected override IEnumerable<FtpCommand> DataReceived(byte[] data, int offset, int length)
+            {
+                return _collector.InternalCollect(data, offset, length);
+            }
         }
     }
 }
