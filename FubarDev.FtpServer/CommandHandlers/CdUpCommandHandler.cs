@@ -22,7 +22,7 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// </summary>
         /// <param name="connection">The connection to create this command handler for</param>
         public CdUpCommandHandler(FtpConnection connection)
-            : base(connection, "CDUP")
+            : base(connection, "CDUP", "XCUP")
         {
         }
 

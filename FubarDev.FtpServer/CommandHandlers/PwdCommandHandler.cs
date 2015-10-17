@@ -22,7 +22,7 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// </summary>
         /// <param name="connection">The connection to create this command handler for</param>
         public PwdCommandHandler(FtpConnection connection)
-            : base(connection, "PWD")
+            : base(connection, "PWD", "XPWD")
         {
         }
 
