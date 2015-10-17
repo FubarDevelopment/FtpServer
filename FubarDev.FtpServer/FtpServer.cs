@@ -102,6 +102,12 @@ namespace FubarDev.FtpServer
         public string OperatingSystem { get; set; }
 
         /// <summary>
+        /// Gets the FTP server statistics
+        /// </summary>
+        [NotNull]
+        public FtpServerStatistics Statistics { get; } = new FtpServerStatistics();
+
+        /// <summary>
         /// Gets the list of <see cref="IFtpCommandHandlerFactory"/> implementations to
         /// create <see cref="FtpCommandHandler"/> instances for new <see cref="FtpConnection"/> objects.
         /// </summary>
@@ -232,7 +238,7 @@ namespace FubarDev.FtpServer
                     for (; ;)
                     {
                         cancellationToken.ThrowIfCancellationRequested();
-                        await Task.Delay(50, cancellationToken);
+                        await Task.Delay(100, cancellationToken);
                     }
                 }
                 finally
@@ -247,6 +253,8 @@ namespace FubarDev.FtpServer
         private void ConnectionReceived(object sender, TcpSocketListenerConnectEventArgs args)
         {
             var connection = new FtpConnection(this, args.SocketClient, DefaultEncoding);
+            Statistics.ActiveConnections += 1;
+            Statistics.TotalConnections += 1;
             connection.Closed += ConnectionOnClosed;
             _connections.Add(connection);
             connection.Log = LogManager?.CreateLog(connection);
@@ -259,6 +267,7 @@ namespace FubarDev.FtpServer
                 return;
             var connection = (FtpConnection)sender;
             _connections.Remove(connection);
+            Statistics.ActiveConnections -= 1;
         }
     }
 }

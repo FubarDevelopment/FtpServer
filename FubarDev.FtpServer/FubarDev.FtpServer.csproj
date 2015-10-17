@@ -58,6 +58,7 @@
     <Compile Include="CommandHandlers\RetrCommandHandler.cs" />
     <Compile Include="CommandHandlers\AppeCommandHandler.cs" />
     <Compile Include="CommandHandlers\MdtmCommandHandler.cs" />
+    <Compile Include="CommandHandlers\StatCommandHandler.cs" />
     <Compile Include="CommandHandlers\XrmdCommandHandler.cs" />
     <Compile Include="CommandHandlers\XmkdCommandHandler.cs" />
     <Compile Include="CommandHandlers\XcwdCommandHandler.cs" />
@@ -93,6 +94,7 @@
     <Compile Include="FtpConnection.cs" />
     <Compile Include="FtpConnectionData.cs" />
     <Compile Include="FtpServer.cs" />
+    <Compile Include="FtpServerStatistics.cs" />
     <Compile Include="FtpTransferMode.cs" />
     <Compile Include="IFtpLog.cs" />
     <Compile Include="IFtpLogManager.cs" />
