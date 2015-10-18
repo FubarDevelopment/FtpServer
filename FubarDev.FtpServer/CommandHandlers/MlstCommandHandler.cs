@@ -109,7 +109,9 @@ namespace FubarDev.FtpServer.CommandHandlers
                             Connection.Log?.Debug(line);
                             await writer.WriteLineAsync(line);
                         }
+                        await writer.FlushAsync();
                     }
+                    await stream.FlushAsync(cancellationToken);
                 }
             }
             finally

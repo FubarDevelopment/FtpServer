@@ -1,4 +1,4 @@
-﻿//#define USE_FTPS_IMPLICIT
+﻿////#define USE_FTPS_IMPLICIT
 
 using System;
 using System.IO;
@@ -40,7 +40,7 @@ namespace TestFtpServer
 #if USE_FTPS_IMPLICIT
                 ftpServer.ConfigureConnection += (s, e) =>
                 {
-                    var sslStream = new SslStream(e.Connection.OriginalStream);
+                    var sslStream = new FixedSslStream(e.Connection.OriginalStream);
                     sslStream.AuthenticateAsServer(cert);
                     e.Connection.SocketStream = sslStream;
                 };

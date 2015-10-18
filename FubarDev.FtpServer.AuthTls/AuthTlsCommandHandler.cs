@@ -63,7 +63,7 @@ namespace FubarDev.FtpServer.AuthTls
 
             try
             {
-                var sslStream = new SslStream(Connection.OriginalStream, true);
+                var sslStream = new FixedSslStream(Connection.OriginalStream, true);
                 Connection.SocketStream = sslStream;
                 await sslStream.AuthenticateAsServerAsync(ServerCertificate);
                 return null;
