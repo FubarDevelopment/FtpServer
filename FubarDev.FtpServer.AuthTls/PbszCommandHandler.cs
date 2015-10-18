@@ -22,10 +22,10 @@ namespace FubarDev.FtpServer.AuthTls
         public override bool IsLoginRequired => false;
 
         /// <inheritdoc/>
-        public override IEnumerable<IFeatureInfo> GetSupportedExtensions()
+        public override IEnumerable<IFeatureInfo> GetSupportedFeatures()
         {
             if (AuthTlsCommandHandler.ServerCertificate != null)
-                yield return new GenericFeatureInfo("PBSZ", null, null);
+                yield return new GenericFeatureInfo("PBSZ");
         }
 
         public override Task<FtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)

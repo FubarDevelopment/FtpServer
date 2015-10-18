@@ -5,11 +5,9 @@
 // <author>Mark Junker</author>
 //-----------------------------------------------------------------------
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
+
 using JetBrains.Annotations;
 
 namespace FubarDev.FtpServer.CommandHandlers
@@ -17,7 +15,7 @@ namespace FubarDev.FtpServer.CommandHandlers
     /// <summary>
     /// The base class for all FTP command handlers
     /// </summary>
-    public abstract class FtpCommandHandler
+    public abstract class FtpCommandHandler : FtpCommandHandlerBase
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="FtpCommandHandler"/> class.
@@ -26,21 +24,9 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// <param name="name">The command name</param>
         /// <param name="alternativeNames">Alternative names</param>
         protected FtpCommandHandler([NotNull] FtpConnection connection, [NotNull] string name, [NotNull, ItemNotNull] params string[] alternativeNames)
+            : base(connection, name, alternativeNames)
         {
-            Connection = connection;
-            var names = new List<string>
-            {
-                name
-            };
-            names.AddRange(alternativeNames);
-            Names = names;
         }
-
-        /// <summary>
-        /// Gets a collection of all command names for this command
-        /// </summary>
-        [NotNull, ItemNotNull]
-        public IReadOnlyCollection<string> Names { get; }
 
         /// <summary>
         /// Gets a value indicating whether a login is required to execute this command
@@ -53,40 +39,13 @@ namespace FubarDev.FtpServer.CommandHandlers
         public virtual bool IsAbortable => false;
 
         /// <summary>
-        /// Gets the connection this command was created for
+        /// Gets a collection of command handler extensions provided by this command handler.
         /// </summary>
-        [NotNull]
-        protected FtpConnection Connection { get; }
-
-        /// <summary>
-        /// Gets the server the command belongs to
-        /// </summary>
-        [NotNull]
-        protected FtpServer Server => Connection.Server;
-
-        /// <summary>
-        /// Gets the connection data
-        /// </summary>
-        [NotNull]
-        protected FtpConnectionData Data => Connection.Data;
-
-        /// <summary>
-        /// Gets a collection of strings that will be sent as supported features.
-        /// </summary>
-        /// <returns>A list of features supported by this command handler</returns>
+        /// <returns>A collection of command handler extensions provided by this command handler</returns>
         [NotNull, ItemNotNull]
-        public virtual IEnumerable<IFeatureInfo> GetSupportedExtensions()
+        public virtual IEnumerable<FtpCommandHandlerExtension> GetExtensions()
         {
-            return Enumerable.Empty<IFeatureInfo>();
+            return Enumerable.Empty<FtpCommandHandlerExtension>();
         }
-
-        /// <summary>
-        /// Processes the command
-        /// </summary>
-        /// <param name="command">The command to process</param>
-        /// <param name="cancellationToken">The cancellation token to signal command abortion</param>
-        /// <returns>The FTP response</returns>
-        [NotNull, ItemCanBeNull]
-        public abstract Task<FtpResponse> Process([NotNull] FtpCommand command, CancellationToken cancellationToken);
     }
 }

@@ -51,7 +51,12 @@
     <Compile Include="CommandHandlers\AborCommandHandler.cs" />
     <Compile Include="CommandHandlers\AlloCommandHandler.cs" />
     <Compile Include="CommandHandlers\CdUpCommandHandler.cs" />
+    <Compile Include="CommandHandlers\FtpCommandHandlerBase.cs" />
+    <Compile Include="CommandHandlers\FtpCommandHandlerExtension.cs" />
+    <Compile Include="CommandHandlers\FtpCommandHandlerProcessDelegate.cs" />
+    <Compile Include="CommandHandlers\GenericFtpCommandHandlerExtension.cs" />
     <Compile Include="CommandHandlers\HelpCommandHandler.cs" />
+    <Compile Include="CommandHandlers\IFtpCommandHandlerExtensionHost.cs" />
     <Compile Include="CommandHandlers\MlstCommandHandler.cs" />
     <Compile Include="CommandHandlers\RestCommandHandler.cs" />
     <Compile Include="CommandHandlers\RntoCommandHandler.cs" />
@@ -86,7 +91,7 @@
     <Compile Include="CommandHandlers\UserCommandHandler.cs" />
     <Compile Include="ConnectionEventArgs.cs" />
     <Compile Include="CreateEncryptedStreamDelegate.cs" />
-    <Compile Include="DefaultFtpCommandHandlerFactory.cs" />
+    <Compile Include="AssemblyFtpCommandHandlerFactory.cs" />
     <Compile Include="CommandHandlers\FtpCommandHandler.cs" />
     <Compile Include="CommandHandlers\IFtpCommandHandlerFactory.cs" />
     <Compile Include="FeatureHandlerDelgate.cs" />
@@ -162,6 +167,9 @@
   <ItemGroup>
     <Analyzer Include="..\packages\StyleCop.Analyzers.1.0.0-beta013\analyzers\dotnet\cs\Newtonsoft.Json.dll" />
     <Analyzer Include="..\packages\StyleCop.Analyzers.1.0.0-beta013\analyzers\dotnet\cs\StyleCop.Analyzers.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="CommandExtensions\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

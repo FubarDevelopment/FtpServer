@@ -43,7 +43,7 @@ namespace FubarDev.FtpServer
         /// <param name="handler">The command handler that processes the given <paramref name="command"/></param>
         /// <param name="command">The command to process by the <paramref name="handler"/></param>
         /// <returns><code>true</code> when the command could be processed</returns>
-        public bool Execute(FtpCommandHandler handler, FtpCommand command)
+        public bool Execute(FtpCommandHandlerBase handler, FtpCommand command)
         {
             lock (_syncRoot)
             {

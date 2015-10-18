@@ -45,11 +45,17 @@ namespace FubarDev.FtpServer
             SocketStream = OriginalStream = socket.GetStream();
             Encoding = encoding;
             Data = new FtpConnectionData(this);
-            CommandHandlers = Server
-                .CommandsHandlerFactories
-                .Select(x => x.CreateCommandHandler(this))
+            var commandHandlers = Server.CommandsHandlerFactory.CreateCommandHandlers(this).ToList();
+            CommandHandlers = commandHandlers
                 .SelectMany(x => x.Names, (item, name) => new { Name = name, Item = item })
                 .ToDictionary(x => x.Name, x => x.Item, StringComparer.OrdinalIgnoreCase);
+
+            // Add stand-alone extensions
+            AddExtensions(Server.CommandsHandlerFactory.CreateCommandHandlerExtensions(this));
+
+            // Add extensions provided by command handlers
+            foreach (var commandHandler in commandHandlers)
+                AddExtensions(commandHandler.GetExtensions());
         }
 
         /// <summary>
@@ -60,7 +66,8 @@ namespace FubarDev.FtpServer
         /// <summary>
         /// Gets the dictionary of all known command handlers
         /// </summary>
-        [NotNull, ItemNotNull]
+        [NotNull]
+        [ItemNotNull]
         public IReadOnlyDictionary<string, FtpCommandHandler> CommandHandlers { get; }
 
         /// <summary>
@@ -169,7 +176,8 @@ namespace FubarDev.FtpServer
         /// Creates a response socket for e.g. LIST/NLST
         /// </summary>
         /// <returns>The data connection</returns>
-        [NotNull, ItemNotNull]
+        [NotNull]
+        [ItemNotNull]
         public async Task<ITcpSocketClient> CreateResponseSocket()
         {
             var portAddress = Data.PortAddress;
@@ -188,7 +196,8 @@ namespace FubarDev.FtpServer
         /// </summary>
         /// <param name="unencryptedStream">The stream to encrypt</param>
         /// <returns>The encrypted stream</returns>
-        [NotNull, ItemNotNull]
+        [NotNull]
+        [ItemNotNull]
         public Task<Stream> CreateEncryptedStream([NotNull] Stream unencryptedStream)
         {
             if (Data.CreateEncryptedStream == null)
@@ -209,6 +218,25 @@ namespace FubarDev.FtpServer
             _socket.Dispose();
             _cancellationTokenSource.Dispose();
             Data.Dispose();
+        }
+
+        private void AddExtensions(IEnumerable<FtpCommandHandlerExtension> extensions)
+        {
+            foreach (var extension in extensions)
+            {
+                FtpCommandHandler handler;
+                if (CommandHandlers.TryGetValue(extension.ExtensionFor, out handler))
+                {
+                    var extensionHost = handler as IFtpCommandHandlerExtensionHost;
+                    if (extensionHost != null)
+                    {
+                        foreach (var name in extension.Names)
+                        {
+                            extensionHost.Extensions.Add(name, extension);
+                        }
+                    }
+                }
+            }
         }
 
         private async Task ProcessMessages()
@@ -260,12 +288,15 @@ namespace FubarDev.FtpServer
 
         private async Task ProcessMessage(FtpCommand command)
         {
-            FtpCommandHandler handler;
             FtpResponse response;
             Log?.Trace(command);
-            if (CommandHandlers.TryGetValue(command.Name, out handler))
+            var result = FindCommandHandler(command);
+            if (result != null)
             {
-                if (handler.IsLoginRequired && !Data.IsLoggedIn)
+                var handler = result.Item2;
+                var handlerCommand = result.Item1;
+                var isLoginRequired = result.Item3;
+                if (isLoginRequired && !Data.IsLoggedIn)
                 {
                     response = new FtpResponse(530, "Not logged in.");
                 }
@@ -273,16 +304,18 @@ namespace FubarDev.FtpServer
                 {
                     try
                     {
-                        if (handler.IsAbortable)
+                        var cmdHandler = handler as FtpCommandHandler;
+                        var isAbortable = cmdHandler?.IsAbortable ?? false;
+                        if (isAbortable)
                         {
                             response =
-                                !Data.BackgroundCommandHandler.Execute(handler, command)
+                                !Data.BackgroundCommandHandler.Execute(handler, handlerCommand)
                                     ? new FtpResponse(503, "Parallel commands aren't allowed.")
                                     : null;
                         }
                         else
                         {
-                            response = await handler.Process(command, _cancellationTokenSource.Token);
+                            response = await handler.Process(handlerCommand, _cancellationTokenSource.Token);
                         }
                     }
                     catch (Exception ex)
@@ -298,6 +331,24 @@ namespace FubarDev.FtpServer
             }
             if (response != null)
                 await WriteAsync(response, _cancellationTokenSource.Token);
+        }
+
+        private Tuple<FtpCommand, FtpCommandHandlerBase, bool> FindCommandHandler(FtpCommand command)
+        {
+            FtpCommandHandler handler;
+            if (!CommandHandlers.TryGetValue(command.Name, out handler))
+                return null;
+            var extensionHost = handler as IFtpCommandHandlerExtensionHost;
+            if (!string.IsNullOrWhiteSpace(command.Argument) && extensionHost != null)
+            {
+                var extensionCommand = FtpCommand.Parse(command.Argument);
+                FtpCommandHandlerExtension extension;
+                if (extensionHost.Extensions.TryGetValue(extensionCommand.Name, out extension))
+                {
+                    return Tuple.Create(extensionCommand, (FtpCommandHandlerBase)extension, extension.IsLoginRequired ?? handler.IsLoginRequired);
+                }
+            }
+            return Tuple.Create(command, (FtpCommandHandlerBase)handler, handler.IsLoginRequired);
         }
 
         private void OnClosed()

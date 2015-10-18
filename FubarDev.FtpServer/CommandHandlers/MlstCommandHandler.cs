@@ -29,9 +29,15 @@ namespace FubarDev.FtpServer.CommandHandlers
         }
 
         /// <inheritdoc/>
-        public override IEnumerable<IFeatureInfo> GetSupportedExtensions()
+        public override IEnumerable<IFeatureInfo> GetSupportedFeatures()
         {
-            yield return new GenericFeatureInfo("MLST", FeatureHandler, FeatureStatus);
+            yield return new GenericFeatureInfo("MLST", FeatureStatus);
+        }
+
+        /// <inheritdoc/>
+        public override IEnumerable<FtpCommandHandlerExtension> GetExtensions()
+        {
+            yield return new GenericFtpCommandHandlerExtension(Connection, "OPTS", "MLST", FeatureHandler);
         }
 
         public override async Task<FtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
@@ -134,15 +140,15 @@ namespace FubarDev.FtpServer.CommandHandlers
             return result.ToString();
         }
 
-        private static Task<FtpResponse> FeatureHandler(FtpConnection connection, string argument)
+        private Task<FtpResponse> FeatureHandler(FtpCommand command, CancellationToken cancellationToken)
         {
-            var facts = argument.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
-            connection.Data.ActiveMlstFacts.Clear();
+            var facts = command.Argument.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+            Connection.Data.ActiveMlstFacts.Clear();
             foreach (var fact in facts)
             {
                 if (!_knownFacts.Contains(fact))
                     return Task.FromResult(new FtpResponse(501, "Syntax error in parameters or arguments."));
-                connection.Data.ActiveMlstFacts.Add(fact);
+                Connection.Data.ActiveMlstFacts.Add(fact);
             }
             return Task.FromResult(new FtpResponse(200, "Command okay."));
         }

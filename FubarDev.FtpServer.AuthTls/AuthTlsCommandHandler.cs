@@ -32,10 +32,10 @@ namespace FubarDev.FtpServer.AuthTls
         public override bool IsLoginRequired => false;
 
         /// <inheritdoc/>
-        public override IEnumerable<IFeatureInfo> GetSupportedExtensions()
+        public override IEnumerable<IFeatureInfo> GetSupportedFeatures()
         {
             if (ServerCertificate != null)
-                yield return new GenericFeatureInfo("AUTH", null, conn => "AUTH TLS");
+                yield return new GenericFeatureInfo("AUTH", conn => "AUTH TLS");
         }
 
         /// <inheritdoc/>

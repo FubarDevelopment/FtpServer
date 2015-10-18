@@ -37,7 +37,7 @@ namespace FubarDev.FtpServer.CommandHandlers
             if (_supportedFeatures == null)
             {
                 var features = new List<string>();
-                features.AddRange(Connection.CommandHandlers.Values.SelectMany(x => x.GetSupportedExtensions()).Select(x => x.BuildInfo(Connection)).Distinct());
+                features.AddRange(Connection.CommandHandlers.Values.SelectMany(x => x.GetSupportedFeatures()).Select(x => x.BuildInfo(Connection)).Distinct());
                 _supportedFeatures = features;
             }
 

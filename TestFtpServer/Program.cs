@@ -29,8 +29,8 @@ namespace TestFtpServer
             AuthTlsCommandHandler.ServerCertificate = cert;
             var membershipProvider = new AnonymousMembershipProvider(new NoValidation());
             var fsProvider = new DotNetFileSystemProvider(Path.Combine(Path.GetTempPath(), "TestFtpServer"));
-            var commands = DefaultFtpCommandHandlerFactory.CreateFactories(typeof(FtpServer).Assembly, typeof(AuthTlsCommandHandler).Assembly);
-            using (var ftpServer = new FtpServer(fsProvider, membershipProvider, "127.0.0.1", Port, commands)
+            var commandFactory = new AssemblyFtpCommandHandlerFactory(typeof(FtpServer).Assembly, typeof(AuthTlsCommandHandler).Assembly);
+            using (var ftpServer = new FtpServer(fsProvider, membershipProvider, "127.0.0.1", Port, commandFactory)
             {
                 DefaultEncoding = Encoding.ASCII,
                 LogManager = new FtpLogManager(),

@@ -38,7 +38,7 @@ namespace FubarDev.FtpServer
         /// <summary>
         /// Gets the command argument
         /// </summary>
-        [CanBeNull]
+        [NotNull]
         public string Argument { get; }
 
         /// <summary>

@@ -19,14 +19,8 @@ namespace FubarDev.FtpServer
         /// <remarks>
         /// Used by the <code>OPTS</code> command to find the handler of the feature to modify.
         /// </remarks>
-        [NotNull]
+        [NotNull, ItemNotNull]
         ISet<string> Names { get; }
-
-        /// <summary>
-        /// The feature handler
-        /// </summary>
-        [CanBeNull]
-        FeatureHandlerDelgate Handler { get; }
 
         /// <summary>
         /// Build an informational string to be sent by the <code>FEAT</code> command

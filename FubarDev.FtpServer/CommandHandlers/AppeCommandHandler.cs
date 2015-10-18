@@ -51,7 +51,6 @@ namespace FubarDev.FtpServer.CommandHandlers
 
                 using (var stream = await Connection.CreateEncryptedStream(responseSocket.ReadStream))
                 {
-
                     IBackgroundTransfer backgroundTransfer;
                     if ((Data.RestartPosition != null && Data.RestartPosition.Value == 0) || fileInfo.Entry == null)
                     {

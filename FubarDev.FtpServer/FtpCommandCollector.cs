@@ -7,7 +7,9 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Text;
 
 using JetBrains.Annotations;
@@ -57,6 +59,8 @@ namespace FubarDev.FtpServer
         [NotNull, ItemNotNull]
         public IEnumerable<FtpCommand> Collect(byte[] buffer, int offset, int length)
         {
+            Debug.WriteLine("Collected data: {0}", string.Join(string.Empty, Enumerable.Range(offset, length).Select(x => buffer[x].ToString("X2"))));
+
             var commands = new List<FtpCommand>();
             commands.AddRange(_telnetInputParser.Collect(buffer, offset, length));
             return commands;
@@ -65,8 +69,7 @@ namespace FubarDev.FtpServer
         /// <inheritdoc/>
         public void Dispose()
         {
-            if (_buffer != null)
-                _buffer.Dispose();
+            _buffer?.Dispose();
             _buffer = null;
         }
 

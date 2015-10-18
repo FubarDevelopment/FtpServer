@@ -28,9 +28,9 @@ namespace FubarDev.FtpServer.CommandHandlers
         }
 
         /// <inheritdoc/>
-        public override IEnumerable<IFeatureInfo> GetSupportedExtensions()
+        public override IEnumerable<IFeatureInfo> GetSupportedFeatures()
         {
-            yield return new GenericFeatureInfo("MDTM", null, null);
+            yield return new GenericFeatureInfo("MDTM");
         }
 
         /// <inheritdoc/>
