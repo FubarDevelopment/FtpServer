@@ -4,13 +4,10 @@
 
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 
 using FubarDev.FtpServer.CommandExtensions;
-
-using Sockets.Plugin.Abstractions;
 
 namespace FubarDev.FtpServer.CommandHandlers
 {
@@ -38,87 +35,12 @@ namespace FubarDev.FtpServer.CommandHandlers
             if (string.IsNullOrEmpty(command.Argument))
                 return Task.FromResult(new FtpResponse(501, "Syntax error in parameters or arguments."));
 
-            var siteCommand = FtpCommand.Parse(command.Argument);
-            switch (siteCommand.Name.ToUpperInvariant())
-            {
-                case "BLST":
-                    return ProcessCommandBlst(siteCommand, cancellationToken);
-                default:
-                    return Task.FromResult(new FtpResponse(501, "Syntax error in parameters or arguments."));
-            }
-        }
+            var argument = FtpCommand.Parse(command.Argument);
+            FtpCommandHandlerExtension extension;
+            if (!Extensions.TryGetValue(argument.Name, out extension))
+                return Task.FromResult(new FtpResponse(500, "Syntax error, command unrecognized."));
 
-        private async Task<FtpResponse> ProcessCommandBlst(FtpCommand command, CancellationToken cancellationToken)
-        {
-            string mode = (string.IsNullOrEmpty(command.Argument) ? "data" : command.Argument).ToLowerInvariant();
-
-            switch (mode)
-            {
-                case "data":
-                    return await SendBlstWithDataConnection(cancellationToken);
-                case "direct":
-                    return await SendBlstDirectly(cancellationToken);
-            }
-
-            return new FtpResponse(501, $"Mode {mode} not supported.");
-        }
-
-        private async Task<FtpResponse> SendBlstDirectly(CancellationToken cancellationToken)
-        {
-            var taskStates = Server.GetBackgroundTaskStates();
-            if (taskStates.Count == 0)
-                return new FtpResponse(211, "No background tasks");
-
-            await Connection.WriteAsync("211-Active background tasks:", cancellationToken);
-            foreach (var entry in taskStates)
-            {
-                var line = $"{entry.Item2.ToString().PadRight(12)} {entry.Item1}";
-                await Connection.WriteAsync($" {line}", cancellationToken);
-            }
-
-            return new FtpResponse(211, "END");
-        }
-
-        private async Task<FtpResponse> SendBlstWithDataConnection(CancellationToken cancellationToken)
-        {
-            await Connection.WriteAsync(new FtpResponse(150, "Opening data connection."), cancellationToken);
-            ITcpSocketClient responseSocket;
-            try
-            {
-                responseSocket = await Connection.CreateResponseSocket();
-            }
-            catch (Exception)
-            {
-                return new FtpResponse(425, "Can't open data connection.");
-            }
-
-            try
-            {
-                var encoding = Data.NlstEncoding ?? Connection.Encoding;
-                using (var stream = await Connection.CreateEncryptedStream(responseSocket.WriteStream))
-                {
-                    using (var writer = new StreamWriter(stream, encoding, 4096, true)
-                    {
-                        NewLine = "\r\n",
-                    })
-                    {
-                        var taskStates = Server.GetBackgroundTaskStates();
-                        foreach (var entry in taskStates)
-                        {
-                            var line = $"{entry.Item2.ToString().PadRight(12)} {entry.Item1}";
-                            Connection.Log?.Debug(line);
-                            await writer.WriteLineAsync(line);
-                        }
-                    }
-                }
-            }
-            finally
-            {
-                responseSocket.Dispose();
-            }
-
-            // Use 250 when the connection stays open.
-            return new FtpResponse(250, "Closing data connection.");
+            return extension.Process(argument, cancellationToken);
         }
     }
 }
