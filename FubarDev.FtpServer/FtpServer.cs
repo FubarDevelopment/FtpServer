@@ -95,6 +95,11 @@ namespace FubarDev.FtpServer
         }
 
         /// <summary>
+        /// This event is raised when the connection is ready to be configured
+        /// </summary>
+        public event EventHandler<ConnectionEventArgs> ConfigureConnection;
+
+        /// <summary>
         /// Gets or sets the returned operating system (default: UNIX)
         /// </summary>
         [NotNull]
@@ -211,9 +216,15 @@ namespace FubarDev.FtpServer
             _connections.Dispose();
         }
 
+        private void OnConfigureConnection(FtpConnection connection)
+        {
+            if (ConfigureConnection != null)
+                ConfigureConnection(this, new ConnectionEventArgs(connection));
+        }
+
         private async Task ExecuteServerListener(CancellationToken cancellationToken)
         {
-            using (var listener = new TcpSocketListener())
+            using (var listener = new TcpSocketListener(0))
             {
                 listener.ConnectionReceived = ConnectionReceived;
                 await listener.StartListeningAsync(Port);
@@ -242,6 +253,7 @@ namespace FubarDev.FtpServer
             connection.Closed += ConnectionOnClosed;
             _connections.Add(connection);
             connection.Log = LogManager?.CreateLog(connection);
+            OnConfigureConnection(connection);
             connection.Start();
         }
 

@@ -1,5 +1,8 @@
-﻿using System;
+﻿//#define USE_FTPS_IMPLICIT
+
+using System;
 using System.IO;
+using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 
@@ -15,19 +18,33 @@ namespace TestFtpServer
 {
     class Program
     {
+#if USE_FTPS_IMPLICIT
+        const int Port = 990;
+#else
+        const int Port = 21;
+#endif
+
         private static void Main()
         {
-            var cert = new X509Certificate2("TestFtpServer.pfx", "test");
+            var cert = new X509Certificate2("test.pfx");
             AuthSslCommandHandler.ServerCertificate = cert;
             var membershipProvider = new AnonymousMembershipProvider(new NoValidation());
             var fsProvider = new DotNetFileSystemProvider(Path.Combine(Path.GetTempPath(), "TestFtpServer"));
             var commands = DefaultFtpCommandHandlerFactory.CreateFactories(typeof(FtpServer).Assembly, typeof(AuthSslCommandHandler).Assembly);
-            using (var ftpServer = new FtpServer(fsProvider, membershipProvider, "127.0.0.1", 21, commands)
+            using (var ftpServer = new FtpServer(fsProvider, membershipProvider, "127.0.0.1", Port, commands)
             {
                 DefaultEncoding = Encoding.ASCII,
                 LogManager = new FtpLogManager(),
             })
             {
+#if USE_FTPS_IMPLICIT
+                ftpServer.ConfigureConnection += (s, e) =>
+                {
+                    var sslStream = new SslStream(e.Connection.OriginalStream);
+                    sslStream.AuthenticateAsServer(cert);
+                    e.Connection.SocketStream = sslStream;
+                };
+#endif
                 var log = ftpServer.LogManager?.CreateLog(typeof(Program));
 
                 try

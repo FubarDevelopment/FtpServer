@@ -112,7 +112,7 @@ namespace FubarDev.FtpServer
         /// </summary>
         public void Start()
         {
-            ProcessMessages().ConfigureAwait(false);
+            ProcessMessages().ConfigureAwait(true);
         }
 
         /// <summary>
@@ -196,7 +196,7 @@ namespace FubarDev.FtpServer
             {
                 await WriteAsync(new FtpResponse(220, "FTP Server Ready"), _cancellationTokenSource.Token);
 
-                var buffer = new byte[1];
+                var buffer = new byte[1024];
                 try
                 {
                     for (; ;)

@@ -84,6 +84,7 @@
     <Compile Include="CommandHandlers\SystCommandHandler.cs" />
     <Compile Include="CommandHandlers\TypeCommandHandler.cs" />
     <Compile Include="CommandHandlers\UserCommandHandler.cs" />
+    <Compile Include="ConnectionEventArgs.cs" />
     <Compile Include="DefaultFtpCommandHandlerFactory.cs" />
     <Compile Include="CommandHandlers\FtpCommandHandler.cs" />
     <Compile Include="CommandHandlers\IFtpCommandHandlerFactory.cs" />

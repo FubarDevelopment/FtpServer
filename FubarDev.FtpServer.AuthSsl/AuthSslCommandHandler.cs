@@ -44,7 +44,7 @@ namespace FubarDev.FtpServer.AuthSsl
         }
 
         /// <inheritdoc/>
-        public override async Task<FtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
+        public override Task<FtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
         {
             var arg = command.Argument;
             if (string.IsNullOrEmpty(arg))
@@ -53,9 +53,9 @@ namespace FubarDev.FtpServer.AuthSsl
             switch (arg.ToUpperInvariant())
             {
                 case "TLS":
-                    return await ElevateToTls(cancellationToken);
+                    return ElevateToTls(cancellationToken);
                 default:
-                    return new FtpResponse(504, $"Authentication mode {arg} not supported.");
+                    return Task.FromResult(new FtpResponse(504, $"Authentication mode {arg} not supported."));
             }
         }
 
@@ -67,8 +67,8 @@ namespace FubarDev.FtpServer.AuthSsl
             try
             {
                 var sslStream = new SslStream(Connection.OriginalStream);
-                await sslStream.AuthenticateAsServerAsync(ServerCertificate);
                 Connection.SocketStream = sslStream;
+                sslStream.AuthenticateAsServer(ServerCertificate);
                 return null;
             }
             catch (Exception ex)
