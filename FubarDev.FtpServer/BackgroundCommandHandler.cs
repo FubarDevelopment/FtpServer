@@ -6,10 +6,14 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Diagnostics.Contracts;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-using FubarDev.FtpServer.CommandHandlers;
+using JetBrains.Annotations;
 
 namespace FubarDev.FtpServer
 {
@@ -42,76 +46,87 @@ namespace FubarDev.FtpServer
         /// </summary>
         /// <param name="handler">The command handler that processes the given <paramref name="command"/></param>
         /// <param name="command">The command to process by the <paramref name="handler"/></param>
-        /// <returns><code>true</code> when the command could be processed</returns>
-        public bool Execute(FtpCommandHandlerBase handler, FtpCommand command)
+        /// <returns><code>null</code> when the command could not be processed</returns>
+        [CanBeNull]
+        public Task<FtpResponse> Execute([NotNull] FtpCommandHandlerBase handler, [NotNull] FtpCommand command)
         {
+            Contract.Ensures(Contract.Result<Task<FtpResponse>>() != null);
             lock (_syncRoot)
             {
                 if (_handlerTask != null)
-                    return false;
+                    return null;
 
                 _cancellationTokenSource = new CancellationTokenSource();
                 _handlerTask = handler.Process(command, _cancellationTokenSource.Token);
             }
 
-            _handlerTask
+            var taskCanceled = _handlerTask
                 .ContinueWith(
                     t =>
                     {
                         var response = new FtpResponse(426, "Connection closed; transfer aborted.");
-                        _connection.WriteAsync(response, _connection.CancellationToken).Wait(_connection.CancellationToken);
-                        lock (_syncRoot)
-                            _handlerTask = null;
+                        Debug.WriteLine($"Background task cancelled with response {response}");
                         return response;
                     },
                     TaskContinuationOptions.OnlyOnCanceled);
 
-            _handlerTask
+            var taskCompleted = _handlerTask
                 .ContinueWith(
                     t =>
                     {
                         var response = t.Result;
-                        try
-                        {
-                            _connection.WriteAsync(response, _connection.CancellationToken).Wait(_connection.CancellationToken);
-                        }
-                        catch (Exception ex2)
-                        {
-                            _connection.Log?.Error(ex2, "Error while sending the background command response {0}", response);
-                        }
-                        finally
-                        {
-                            lock (_syncRoot)
-                                _handlerTask = null;
-                        }
+                        Debug.WriteLine($"{DateTimeOffset.UtcNow} Background task finished successfully with response {response}");
                         return response;
                     },
                     TaskContinuationOptions.OnlyOnRanToCompletion);
 
-            _handlerTask
+            var taskFaulted = _handlerTask
                 .ContinueWith(
                     t =>
                     {
                         var ex = t.Exception;
                         _connection.Log?.Error(ex, "Error while processing background command {0}", command);
                         var response = new FtpResponse(501, "Syntax error in parameters or arguments.");
-                        try
-                        {
-                            _connection.WriteAsync(response, _connection.CancellationToken).Wait(_connection.CancellationToken);
-                        }
-                        catch (Exception ex2)
-                        {
-                            _connection.Log?.Error(ex2, "Error while sending the background command response {0}", response);
-                        }
-                        finally
-                        {
-                            lock (_syncRoot)
-                                _handlerTask = null;
-                        }
+                        Debug.WriteLine($"Background task failed with response {response}");
+                        return response;
                     },
                     TaskContinuationOptions.OnlyOnFaulted);
 
-            return true;
+            taskFaulted.ContinueWith(t => { }, TaskContinuationOptions.OnlyOnCanceled);
+            taskCompleted.ContinueWith(t => { }, TaskContinuationOptions.OnlyOnCanceled);
+            taskCanceled.ContinueWith(t => { }, TaskContinuationOptions.OnlyOnCanceled);
+
+            return Task.Run(
+                () =>
+                {
+                    var tasks = new List<Task<FtpResponse>> { taskCompleted, taskCanceled, taskFaulted };
+
+                    do
+                    {
+                        try
+                        {
+                            var waitTasks = tasks.Where(x => !x.IsCompleted).Cast<Task>().ToArray();
+                            if (waitTasks.Length != 0)
+                            {
+                                Debug.WriteLine($"Waiting for {waitTasks.Length} background tasks");
+                                Task.WaitAll(waitTasks);
+                            }
+                        }
+                        catch (AggregateException ex)
+                        {
+                            ex.Handle(e => e is TaskCanceledException);
+                        }
+                    }
+                    while (tasks.Any(t => !t.IsCompleted));
+
+                    var response = tasks.Single(x => x.Status == TaskStatus.RanToCompletion).Result;
+                    Debug.WriteLine($"{DateTimeOffset.UtcNow} Background task finished with response {response}");
+
+                    lock (_syncRoot)
+                        _handlerTask = null;
+
+                    return response;
+                });
         }
 
         /// <summary>

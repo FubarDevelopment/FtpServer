@@ -7,6 +7,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -31,6 +32,8 @@ namespace FubarDev.FtpServer
         private readonly ITcpSocketClient _socket;
 
         private bool _closed;
+
+        private Task<FtpResponse> _activeBackgroundTask;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FtpConnection"/> class.
@@ -221,6 +224,21 @@ namespace FubarDev.FtpServer
             Data.Dispose();
         }
 
+        /// <summary>
+        /// Writes a FTP response to a client
+        /// </summary>
+        /// <param name="response">The response to write to the client</param>
+        internal void Write([NotNull] FtpResponse response)
+        {
+            if (!_closed)
+            {
+                Log?.Log(response);
+                var data = Encoding.GetBytes($"{response}\r\n");
+                SocketStream.Write(data, 0, data.Length);
+                response.AfterWriteAction?.Invoke();
+            }
+        }
+
         private void AddExtensions(IEnumerable<FtpCommandHandlerExtension> extensions)
         {
             foreach (var extension in extensions)
@@ -250,15 +268,37 @@ namespace FubarDev.FtpServer
                 var buffer = new byte[1024];
                 try
                 {
+                    Task<int> readTask = null;
                     for (; ;)
                     {
-                        var bytesRead = await SocketStream.ReadAsync(buffer, 0, buffer.Length, _cancellationTokenSource.Token);
-                        if (bytesRead == 0)
-                            break;
-                        var commands = collector.Collect(buffer, 0, bytesRead);
-                        foreach (var command in commands)
+                        if (readTask == null)
+                            readTask = SocketStream.ReadAsync(buffer, 0, buffer.Length, _cancellationTokenSource.Token);
+
+                        var tasks = new List<Task>() { readTask };
+                        if (_activeBackgroundTask != null)
+                            tasks.Add(_activeBackgroundTask);
+
+                        Debug.WriteLine($"Waiting for {tasks.Count} tasks");
+                        var completedTask = Task.WaitAny(tasks.ToArray(), _cancellationTokenSource.Token);
+                        Debug.WriteLine($"Task {completedTask} completed");
+                        if (completedTask == 1)
                         {
-                            await ProcessMessage(command);
+                            var response = _activeBackgroundTask.Result;
+                            if (response != null)
+                                Write(response);
+                            _activeBackgroundTask = null;
+                        }
+                        else
+                        {
+                            var bytesRead = readTask.Result;
+                            readTask = null;
+                            if (bytesRead == 0)
+                                break;
+                            var commands = collector.Collect(buffer, 0, bytesRead);
+                            foreach (var command in commands)
+                            {
+                                await ProcessMessage(command);
+                            }
                         }
                     }
                 }
@@ -309,10 +349,16 @@ namespace FubarDev.FtpServer
                         var isAbortable = cmdHandler?.IsAbortable ?? false;
                         if (isAbortable)
                         {
-                            response =
-                                !Data.BackgroundCommandHandler.Execute(handler, handlerCommand)
-                                    ? new FtpResponse(503, "Parallel commands aren't allowed.")
-                                    : null;
+                            var newBackgroundTask = Data.BackgroundCommandHandler.Execute(handler, handlerCommand);
+                            if (newBackgroundTask != null)
+                            {
+                                _activeBackgroundTask = newBackgroundTask;
+                                response = null;
+                            }
+                            else
+                            {
+                                response = new FtpResponse(503, "Parallel commands aren't allowed.");
+                            }
                         }
                         else
                         {
