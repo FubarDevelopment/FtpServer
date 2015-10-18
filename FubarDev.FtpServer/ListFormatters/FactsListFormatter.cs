@@ -22,11 +22,14 @@ namespace FubarDev.FtpServer.ListFormatters
 
         private readonly Stack<IUnixDirectoryEntry> _pathEntries;
 
-        public FactsListFormatter(FtpUser user, IUnixFileSystem fileSystem, Stack<IUnixDirectoryEntry> pathEntries)
+        private readonly ISet<string> _activeFacts;
+
+        public FactsListFormatter(FtpUser user, IUnixFileSystem fileSystem, Stack<IUnixDirectoryEntry> pathEntries, ISet<string> activeFacts)
         {
             _user = user;
             _fileSystem = fileSystem;
             _pathEntries = pathEntries;
+            _activeFacts = activeFacts;
         }
 
         public string Format(IUnixFileSystemEntry entry)
@@ -63,7 +66,7 @@ namespace FubarDev.FtpServer.ListFormatters
         private string BuildLine([NotNull] IEnumerable<IFact> facts, string entryName)
         {
             var result = new StringBuilder();
-            foreach (var fact in facts)
+            foreach (var fact in facts.Where(fact => _activeFacts.Contains(fact.Name)))
             {
                 result.AppendFormat("{0}={1};", fact.Name, fact.Value);
             }
@@ -81,6 +84,8 @@ namespace FubarDev.FtpServer.ListFormatters
             };
             if (currentEntry.LastWriteTime.HasValue)
                 result.Add(new ModifyFact(currentEntry.LastWriteTime.Value));
+            if (currentEntry.CreatedTime.HasValue)
+                result.Add(new CreateFact(currentEntry.CreatedTime.Value));
             return result;
         }
 
@@ -95,6 +100,8 @@ namespace FubarDev.FtpServer.ListFormatters
             };
             if (entry.LastWriteTime.HasValue)
                 result.Add(new ModifyFact(entry.LastWriteTime.Value));
+            if (entry.CreatedTime.HasValue)
+                result.Add(new CreateFact(entry.CreatedTime.Value));
             return result;
         }
     }

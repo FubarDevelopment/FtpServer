@@ -19,7 +19,7 @@ namespace FubarDev.FtpServer.CommandHandlers
 {
     public class MlstCommandHandler : FtpCommandHandler
     {
-        private static readonly ISet<string> _knownFacts = new HashSet<string> { "type", "size", "perm", "modify" };
+        private static readonly ISet<string> _knownFacts = new HashSet<string> { "type", "size", "perm", "modify", "create" };
 
         public MlstCommandHandler(FtpConnection connection)
             : base(connection, "MLST", "MLSD")
@@ -79,7 +79,7 @@ namespace FubarDev.FtpServer.CommandHandlers
             }
             try
             {
-                var formatter = new FactsListFormatter(Data.User, Data.FileSystem, path);
+                var formatter = new FactsListFormatter(Data.User, Data.FileSystem, path, Data.ActiveMlstFacts);
 
                 var encoding = Data.NlstEncoding ?? Connection.Encoding;
                 using (var stream = await Connection.CreateEncryptedStream(responseSocket.WriteStream))

@@ -53,6 +53,7 @@
     <Compile Include="CommandHandlers\AborCommandHandler.cs" />
     <Compile Include="CommandHandlers\AlloCommandHandler.cs" />
     <Compile Include="CommandHandlers\CdUpCommandHandler.cs" />
+    <Compile Include="CommandHandlers\MfctCommandHandler.cs" />
     <Compile Include="CommandHandlers\MfmtCommandHandler.cs" />
     <Compile Include="FtpCommandHandlerBase.cs" />
     <Compile Include="CommandExtensions\FtpCommandHandlerExtension.cs" />
@@ -118,6 +119,7 @@
     <Compile Include="ListFormatters\Facts\CurrentDirectoryFact.cs" />
     <Compile Include="ListFormatters\Facts\GenericFact.cs" />
     <Compile Include="ListFormatters\Facts\IFact.cs" />
+    <Compile Include="ListFormatters\Facts\CreateFact.cs" />
     <Compile Include="ListFormatters\Facts\ModifyFact.cs" />
     <Compile Include="ListFormatters\Facts\ParentDirectoryFact.cs" />
     <Compile Include="ListFormatters\Facts\PermissionsFact.cs" />

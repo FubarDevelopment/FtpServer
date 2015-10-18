@@ -32,6 +32,7 @@ namespace FubarDev.FtpServer.FileSystem.DotNet
             FileSystem = fileSystem;
             Info = dirInfo;
             LastWriteTime = new DateTimeOffset(Info.LastWriteTime);
+            CreatedTime = new DateTimeOffset(Info.CreationTimeUtc);
             var accessMode = new GenericAccessMode(true, true, true);
             Permissions = new GenericUnixPermissions(accessMode, accessMode, accessMode);
             IsRoot = isRoot;
@@ -56,6 +57,9 @@ namespace FubarDev.FtpServer.FileSystem.DotNet
 
         /// <inheritdoc/>
         public DateTimeOffset? LastWriteTime { get; }
+
+        /// <inheritdoc/>
+        public DateTimeOffset? CreatedTime { get; }
 
         /// <inheritdoc/>
         public long NumberOfLinks => 1;

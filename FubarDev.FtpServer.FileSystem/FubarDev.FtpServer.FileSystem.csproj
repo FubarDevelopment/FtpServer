@@ -47,11 +47,6 @@
     <Compile Include="BackgroundTransferStatus.cs" />
     <Compile Include="FileSystemExtensions.cs" />
     <Compile Include="Generic\GenericAccessMode.cs" />
-    <Compile Include="Generic\GenericUnixDirectoryEntry.cs" />
-    <Compile Include="Generic\GenericUnixDirectoryEntryT.cs" />
-    <Compile Include="Generic\GenericUnixFileEntry.cs" />
-    <Compile Include="Generic\GenericUnixFileEntryT.cs" />
-    <Compile Include="Generic\GenericUnixFileSystemEntry.cs" />
     <Compile Include="Generic\GenericUnixPermissions.cs" />
     <Compile Include="IAccessMode.cs" />
     <Compile Include="IBackgroundTransfer.cs" />

@@ -34,6 +34,11 @@ namespace FubarDev.FtpServer.FileSystem
         DateTimeOffset? LastWriteTime { get; }
 
         /// <summary>
+        /// Gets the time of creation
+        /// </summary>
+        DateTimeOffset? CreatedTime { get; }
+
+        /// <summary>
         /// Gets the number of links
         /// </summary>
         long NumberOfLinks { get; }

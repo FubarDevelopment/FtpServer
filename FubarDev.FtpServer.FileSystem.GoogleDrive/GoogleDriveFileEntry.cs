@@ -39,6 +39,9 @@ namespace FubarDev.FtpServer.FileSystem.GoogleDrive
 
         public DateTimeOffset? LastWriteTime => File.ModifiedByMeDate ?? File.ModifiedDate ?? File.CreatedDate;
 
+        /// <inheritdoc/>
+        public DateTimeOffset? CreatedTime => File.CreatedDate;
+
         public long NumberOfLinks => 1;
 
         /// <inheritdoc/>
