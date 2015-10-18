@@ -9,7 +9,7 @@ using System.Text;
 using FubarDev.FtpServer;
 using FubarDev.FtpServer.AccountManagement;
 using FubarDev.FtpServer.AccountManagement.Anonymous;
-using FubarDev.FtpServer.AuthSsl;
+using FubarDev.FtpServer.AuthTls;
 using FubarDev.FtpServer.FileSystem.DotNet;
 
 using TestFtpServer.Logging;
@@ -27,10 +27,10 @@ namespace TestFtpServer
         private static void Main()
         {
             var cert = new X509Certificate2("test.pfx");
-            AuthSslCommandHandler.ServerCertificate = cert;
+            AuthTlsCommandHandler.ServerCertificate = cert;
             var membershipProvider = new AnonymousMembershipProvider(new NoValidation());
             var fsProvider = new DotNetFileSystemProvider(Path.Combine(Path.GetTempPath(), "TestFtpServer"));
-            var commands = DefaultFtpCommandHandlerFactory.CreateFactories(typeof(FtpServer).Assembly, typeof(AuthSslCommandHandler).Assembly);
+            var commands = DefaultFtpCommandHandlerFactory.CreateFactories(typeof(FtpServer).Assembly, typeof(AuthTlsCommandHandler).Assembly);
             using (var ftpServer = new FtpServer(fsProvider, membershipProvider, "127.0.0.1", Port, commands)
             {
                 DefaultEncoding = Encoding.ASCII,

@@ -81,9 +81,9 @@
       <Project>{2530aefe-ce85-444e-9868-58be478aefd1}</Project>
       <Name>FubarDev.FtpServer.AccountManagement</Name>
     </ProjectReference>
-    <ProjectReference Include="..\FubarDev.FtpServer.AuthSsl\FubarDev.FtpServer.AuthSsl.csproj">
+    <ProjectReference Include="..\FubarDev.FtpServer.AuthTls\FubarDev.FtpServer.AuthTls.csproj">
       <Project>{a5c36c6d-be99-44c5-870a-23fd6b76e839}</Project>
-      <Name>FubarDev.FtpServer.AuthSsl</Name>
+      <Name>FubarDev.FtpServer.AuthTls</Name>
     </ProjectReference>
     <ProjectReference Include="..\FubarDev.FtpServer.FileSystem.DotNet\FubarDev.FtpServer.FileSystem.DotNet.csproj">
       <Project>{9a83c6f5-378b-48b3-b32a-151db90b390c}</Project>

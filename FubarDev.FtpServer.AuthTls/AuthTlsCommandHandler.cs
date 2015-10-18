@@ -1,4 +1,4 @@
-﻿// <copyright file="AuthSslCommandHandler.cs" company="Fubar Development Junker">
+﻿// <copyright file="AuthTlsCommandHandler.cs" company="Fubar Development Junker">
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
@@ -12,15 +12,15 @@ using System.Threading.Tasks;
 
 using FubarDev.FtpServer.CommandHandlers;
 
-namespace FubarDev.FtpServer.AuthSsl
+namespace FubarDev.FtpServer.AuthTls
 {
-    public class AuthSslCommandHandler : FtpCommandHandler
+    public class AuthTlsCommandHandler : FtpCommandHandler
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="AuthSslCommandHandler"/> class.
+        /// Initializes a new instance of the <see cref="AuthTlsCommandHandler"/> class.
         /// </summary>
         /// <param name="connection">The connection this instance is used for</param>
-        public AuthSslCommandHandler(FtpConnection connection)
+        public AuthTlsCommandHandler(FtpConnection connection)
             : base(connection, "AUTH")
         {
         }

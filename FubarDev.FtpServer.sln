@@ -26,7 +26,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FubarDev.FtpServer.Tests", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FubarDev.FtpServer.FileSystem.GoogleDrive", "FubarDev.FtpServer.FileSystem.GoogleDrive\FubarDev.FtpServer.FileSystem.GoogleDrive.csproj", "{0336A73C-3F48-493E-9E71-64015DCC146E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FubarDev.FtpServer.AuthSsl", "FubarDev.FtpServer.AuthSsl\FubarDev.FtpServer.AuthSsl.csproj", "{A5C36C6D-BE99-44C5-870A-23FD6B76E839}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FubarDev.FtpServer.AuthTls", "FubarDev.FtpServer.AuthTls\FubarDev.FtpServer.AuthTls.csproj", "{A5C36C6D-BE99-44C5-870A-23FD6B76E839}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
