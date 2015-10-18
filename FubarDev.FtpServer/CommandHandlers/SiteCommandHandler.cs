@@ -3,9 +3,13 @@
 // </copyright>
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
+
+using FubarDev.FtpServer.CommandExtensions;
+
 using Sockets.Plugin.Abstractions;
 
 namespace FubarDev.FtpServer.CommandHandlers
@@ -13,7 +17,7 @@ namespace FubarDev.FtpServer.CommandHandlers
     /// <summary>
     /// The <code>SITE</code> command handler
     /// </summary>
-    public class SiteCommandHandler : FtpCommandHandler
+    public class SiteCommandHandler : FtpCommandHandler, IFtpCommandHandlerExtensionHost
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="SiteCommandHandler"/> class.
@@ -22,7 +26,11 @@ namespace FubarDev.FtpServer.CommandHandlers
         public SiteCommandHandler(FtpConnection connection)
             : base(connection, "SITE")
         {
+            Extensions = new Dictionary<string, FtpCommandHandlerExtension>(StringComparer.OrdinalIgnoreCase);
         }
+
+        /// <inheritdoc/>
+        public IDictionary<string, FtpCommandHandlerExtension> Extensions { get; }
 
         /// <inheritdoc/>
         public override Task<FtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)

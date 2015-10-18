@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 
+using FubarDev.FtpServer.CommandExtensions;
 using FubarDev.FtpServer.CommandHandlers;
 
 using JetBrains.Annotations;

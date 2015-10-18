@@ -8,6 +8,8 @@
 using System.Collections.Generic;
 using System.Linq;
 
+using FubarDev.FtpServer.CommandExtensions;
+
 using JetBrains.Annotations;
 
 namespace FubarDev.FtpServer.CommandHandlers

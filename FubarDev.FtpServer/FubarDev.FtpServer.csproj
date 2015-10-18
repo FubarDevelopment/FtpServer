@@ -51,10 +51,10 @@
     <Compile Include="CommandHandlers\AborCommandHandler.cs" />
     <Compile Include="CommandHandlers\AlloCommandHandler.cs" />
     <Compile Include="CommandHandlers\CdUpCommandHandler.cs" />
-    <Compile Include="CommandHandlers\FtpCommandHandlerBase.cs" />
-    <Compile Include="CommandHandlers\FtpCommandHandlerExtension.cs" />
-    <Compile Include="CommandHandlers\FtpCommandHandlerProcessDelegate.cs" />
-    <Compile Include="CommandHandlers\GenericFtpCommandHandlerExtension.cs" />
+    <Compile Include="FtpCommandHandlerBase.cs" />
+    <Compile Include="CommandExtensions\FtpCommandHandlerExtension.cs" />
+    <Compile Include="FtpCommandHandlerProcessDelegate.cs" />
+    <Compile Include="CommandExtensions\GenericFtpCommandHandlerExtension.cs" />
     <Compile Include="CommandHandlers\HelpCommandHandler.cs" />
     <Compile Include="CommandHandlers\IFtpCommandHandlerExtensionHost.cs" />
     <Compile Include="CommandHandlers\MlstCommandHandler.cs" />
@@ -93,7 +93,7 @@
     <Compile Include="CreateEncryptedStreamDelegate.cs" />
     <Compile Include="AssemblyFtpCommandHandlerFactory.cs" />
     <Compile Include="CommandHandlers\FtpCommandHandler.cs" />
-    <Compile Include="CommandHandlers\IFtpCommandHandlerFactory.cs" />
+    <Compile Include="IFtpCommandHandlerFactory.cs" />
     <Compile Include="FeatureHandlerDelgate.cs" />
     <Compile Include="GenericFeatureInfo.cs" />
     <Compile Include="FtpCommandCollector.cs" />
@@ -168,9 +168,7 @@
     <Analyzer Include="..\packages\StyleCop.Analyzers.1.0.0-beta013\analyzers\dotnet\cs\Newtonsoft.Json.dll" />
     <Analyzer Include="..\packages\StyleCop.Analyzers.1.0.0-beta013\analyzers\dotnet\cs\StyleCop.Analyzers.dll" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="CommandExtensions\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

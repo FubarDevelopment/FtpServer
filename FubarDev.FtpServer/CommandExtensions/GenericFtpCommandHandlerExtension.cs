@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 using JetBrains.Annotations;
 
-namespace FubarDev.FtpServer.CommandHandlers
+namespace FubarDev.FtpServer.CommandExtensions
 {
     public class GenericFtpCommandHandlerExtension : FtpCommandHandlerExtension
     {

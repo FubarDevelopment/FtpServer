@@ -4,6 +4,8 @@
 
 using System.Collections.Generic;
 
+using FubarDev.FtpServer.CommandExtensions;
+
 using JetBrains.Annotations;
 
 namespace FubarDev.FtpServer.CommandHandlers

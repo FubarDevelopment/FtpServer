@@ -4,7 +4,7 @@
 
 using JetBrains.Annotations;
 
-namespace FubarDev.FtpServer.CommandHandlers
+namespace FubarDev.FtpServer.CommandExtensions
 {
     public abstract class FtpCommandHandlerExtension : FtpCommandHandlerBase
     {

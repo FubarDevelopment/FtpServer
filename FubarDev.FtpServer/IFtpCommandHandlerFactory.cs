@@ -7,9 +7,12 @@
 
 using System.Collections.Generic;
 
+using FubarDev.FtpServer.CommandExtensions;
+using FubarDev.FtpServer.CommandHandlers;
+
 using JetBrains.Annotations;
 
-namespace FubarDev.FtpServer.CommandHandlers
+namespace FubarDev.FtpServer
 {
     /// <summary>
     /// A factory to create a command handler for a given connection
