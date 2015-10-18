@@ -43,6 +43,7 @@ namespace FubarDev.FtpServer
                             result.AddRange(InterruptProcess());
                             break;
                         default:
+                            Debug.WriteLine("TELNET: Unknown command received - skipping 0xFF");
                             dataOffset = index;
                             break;
                     }
