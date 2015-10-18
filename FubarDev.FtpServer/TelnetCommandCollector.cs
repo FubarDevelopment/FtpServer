@@ -43,9 +43,10 @@ namespace FubarDev.FtpServer
                             result.AddRange(InterruptProcess());
                             break;
                         default:
-                            dataOffset = offset;
+                            dataOffset = index;
                             break;
                     }
+                    _interpretAsCommandReceived = false;
                 }
                 else if (v == 0xFF)
                 {
