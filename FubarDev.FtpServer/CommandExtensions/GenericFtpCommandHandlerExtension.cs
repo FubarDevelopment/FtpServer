@@ -5,10 +5,18 @@
 using System.Threading;
 using System.Threading.Tasks;
 
+using FubarDev.FtpServer.CommandHandlers;
+
 using JetBrains.Annotations;
 
 namespace FubarDev.FtpServer.CommandExtensions
 {
+    /// <summary>
+    /// A generic FTP command extension
+    /// </summary>
+    /// <remarks>
+    /// This class is only useful when FTP commands provide their own extensions (<see cref="FtpCommandHandler.GetExtensions"/>)
+    /// </remarks>
     public class GenericFtpCommandHandlerExtension : FtpCommandHandlerExtension
     {
         private readonly FtpCommandHandlerProcessDelegate _processCommand;

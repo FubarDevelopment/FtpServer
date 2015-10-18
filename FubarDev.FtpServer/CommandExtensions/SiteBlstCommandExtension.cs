@@ -13,6 +13,9 @@ using Sockets.Plugin.Abstractions;
 
 namespace FubarDev.FtpServer.CommandExtensions
 {
+    /// <summary>
+    /// The implementation of the <code>SITE BLST</code> command.
+    /// </summary>
     public class SiteBlstCommandExtension : FtpCommandHandlerExtension
     {
         /// <summary>

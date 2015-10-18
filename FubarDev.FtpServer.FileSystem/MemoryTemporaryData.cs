@@ -29,7 +29,7 @@ namespace FubarDev.FtpServer.FileSystem
         public long Size => _data?.Length ?? 0;
 
         /// <inheritdoc/>
-        public async Task FillAsync([NotNull] Stream stream, CancellationToken cancellationToken)
+        public async Task FillAsync(Stream stream, CancellationToken cancellationToken)
         {
             _data?.Dispose();
             _data = new MemoryStream();

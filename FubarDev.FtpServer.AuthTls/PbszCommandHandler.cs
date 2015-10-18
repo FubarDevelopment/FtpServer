@@ -11,8 +11,15 @@ using FubarDev.FtpServer.CommandHandlers;
 
 namespace FubarDev.FtpServer.AuthTls
 {
+    /// <summary>
+    /// The <code>PBSZ</code> command handler
+    /// </summary>
     public class PbszCommandHandler : FtpCommandHandler
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PbszCommandHandler"/> class.
+        /// </summary>
+        /// <param name="connection">The connection to create this command handler for</param>
         public PbszCommandHandler(FtpConnection connection)
             : base(connection, "PBSZ")
         {
@@ -28,6 +35,7 @@ namespace FubarDev.FtpServer.AuthTls
                 yield return new GenericFeatureInfo("PBSZ");
         }
 
+        /// <inheritdoc/>
         public override Task<FtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
         {
             if (string.IsNullOrEmpty(command.Argument))

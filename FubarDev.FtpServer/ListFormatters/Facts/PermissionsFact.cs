@@ -11,9 +11,18 @@ using JetBrains.Annotations;
 
 namespace FubarDev.FtpServer.ListFormatters.Facts
 {
+    /// <summary>
+    /// The <code>perm</code> fact
+    /// </summary>
     public class PermissionsFact : IFact
     {
-        public PermissionsFact([NotNull] FtpUser user, [NotNull] IUnixDirectoryEntry dir, [NotNull] IUnixFileEntry entry, bool appendAllowed)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PermissionsFact"/> class.
+        /// </summary>
+        /// <param name="user">The current user</param>
+        /// <param name="dir">The current directory</param>
+        /// <param name="entry">The file to create the permissions for</param>
+        public PermissionsFact([NotNull] FtpUser user, [NotNull] IUnixDirectoryEntry dir, [NotNull] IUnixFileEntry entry)
         {
             var values = new StringBuilder();
             var entryPerm = entry.Permissions.GetAccessModeFor(entry, user);
@@ -23,7 +32,7 @@ namespace FubarDev.FtpServer.ListFormatters.Facts
                 values.Append('c');
                 if (entryPerm.Write)
                 {
-                    if (appendAllowed)
+                    if (entry.FileSystem.SupportsAppend)
                         values.Append('a');
                     values.Append('d');
                     values.Append('f');
@@ -37,6 +46,12 @@ namespace FubarDev.FtpServer.ListFormatters.Facts
             Value = values.ToString();
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PermissionsFact"/> class.
+        /// </summary>
+        /// <param name="user">The current user</param>
+        /// <param name="dir">The current directory</param>
+        /// <param name="entry">The directory entry to get the permissions for</param>
         public PermissionsFact([NotNull] FtpUser user, [CanBeNull] IUnixDirectoryEntry dir, [NotNull] IUnixDirectoryEntry entry)
         {
             var values = new StringBuilder();
@@ -66,9 +81,10 @@ namespace FubarDev.FtpServer.ListFormatters.Facts
             Value = values.ToString();
         }
 
+        /// <inheritdoc/>
         public string Name => "perm";
 
-        public string Value
-        { get; }
+        /// <inheritdoc/>
+        public string Value { get; }
     }
 }

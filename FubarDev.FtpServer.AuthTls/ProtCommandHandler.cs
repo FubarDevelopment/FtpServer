@@ -12,8 +12,15 @@ using FubarDev.FtpServer.CommandHandlers;
 
 namespace FubarDev.FtpServer.AuthTls
 {
+    /// <summary>
+    /// The <code>PROT</code> command handler
+    /// </summary>
     public class ProtCommandHandler : FtpCommandHandler
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ProtCommandHandler"/> class.
+        /// </summary>
+        /// <param name="connection">The connection to create this command handler for</param>
         public ProtCommandHandler(FtpConnection connection)
             : base(connection, "PROT")
         {
@@ -29,6 +36,7 @@ namespace FubarDev.FtpServer.AuthTls
                 yield return new GenericFeatureInfo("PROT");
         }
 
+        /// <inheritdoc/>
         public override Task<FtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
         {
             if (string.IsNullOrEmpty(command.Argument))

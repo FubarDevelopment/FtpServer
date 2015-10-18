@@ -17,10 +17,17 @@ using Sockets.Plugin.Abstractions;
 
 namespace FubarDev.FtpServer.CommandHandlers
 {
+    /// <summary>
+    /// The implementation of the <code>MLST</code> command
+    /// </summary>
     public class MlstCommandHandler : FtpCommandHandler
     {
         private static readonly ISet<string> _knownFacts = new HashSet<string> { "type", "size", "perm", "modify", "create" };
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MlstCommandHandler"/> class.
+        /// </summary>
+        /// <param name="connection">The FTP connection this command handler is created for.</param>
         public MlstCommandHandler(FtpConnection connection)
             : base(connection, "MLST", "MLSD")
         {
@@ -41,6 +48,7 @@ namespace FubarDev.FtpServer.CommandHandlers
             yield return new GenericFtpCommandHandlerExtension(Connection, "OPTS", "MLST", FeatureHandler);
         }
 
+        /// <inheritdoc/>
         public override async Task<FtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
         {
             var argument = command.Argument;

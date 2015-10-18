@@ -4,7 +4,16 @@
 
 using System.Threading.Tasks;
 
+using JetBrains.Annotations;
+
 namespace FubarDev.FtpServer
 {
-    public delegate Task<FtpResponse> FeatureHandlerDelgate(FtpConnection connection, string argument);
+    /// <summary>
+    /// The delegate to handle feature options
+    /// </summary>
+    /// <param name="connection">The connection to handle the feature options for</param>
+    /// <param name="argument">The arguments for the feature option</param>
+    /// <returns>The response to be sent to the client</returns>
+    [NotNull, ItemCanBeNull]
+    public delegate Task<FtpResponse> FeatureHandlerDelgate([NotNull] FtpConnection connection, [NotNull] string argument);
 }

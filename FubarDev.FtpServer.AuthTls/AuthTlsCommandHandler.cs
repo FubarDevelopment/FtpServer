@@ -12,6 +12,9 @@ using FubarDev.FtpServer.CommandHandlers;
 
 namespace FubarDev.FtpServer.AuthTls
 {
+    /// <summary>
+    /// The <code>AUTH TLS</code> command handler
+    /// </summary>
     public class AuthTlsCommandHandler : FtpCommandHandler
     {
         /// <summary>

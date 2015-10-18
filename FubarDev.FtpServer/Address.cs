@@ -104,6 +104,11 @@ namespace FubarDev.FtpServer
             return new Uri($"port://{IpAddress}:{IpPort}/");
         }
 
+        /// <summary>
+        /// Converts the IP address into a string
+        /// </summary>
+        /// <param name="logFormat"><code>true</code> when it should be converted to a loggable format, otherwise the FTP format is used</param>
+        /// <returns>The IP address as string</returns>
         public string ToString(bool logFormat)
         {
             if (logFormat)

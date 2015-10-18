@@ -4,8 +4,14 @@
 
 namespace FubarDev.FtpServer.ListFormatters.Facts
 {
+    /// <summary>
+    /// The <code>cdir</code> fact
+    /// </summary>
     public class CurrentDirectoryFact : TypeFact
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CurrentDirectoryFact"/> class.
+        /// </summary>
         public CurrentDirectoryFact()
             : base("cdir")
         {

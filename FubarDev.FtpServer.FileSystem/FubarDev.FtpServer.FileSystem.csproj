@@ -45,6 +45,7 @@
       <Link>Properties\GlobalAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="BackgroundTransferStatus.cs" />
+    <Compile Include="EmptyUnixFileSystem.cs" />
     <Compile Include="FileSystemExtensions.cs" />
     <Compile Include="Generic\GenericAccessMode.cs" />
     <Compile Include="Generic\GenericUnixPermissions.cs" />

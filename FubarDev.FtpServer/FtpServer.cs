@@ -14,6 +14,7 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using FubarDev.FtpServer.AccountManagement;
+using FubarDev.FtpServer.CommandExtensions;
 using FubarDev.FtpServer.CommandHandlers;
 using FubarDev.FtpServer.FileSystem;
 using FubarDev.FtpServer.Utilities;

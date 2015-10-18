@@ -2,21 +2,28 @@
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
-using FubarDev.FtpServer.FileSystem;
+using System.Globalization;
 
 namespace FubarDev.FtpServer.ListFormatters.Facts
 {
+    /// <summary>
+    /// The <code>size</code> fact
+    /// </summary>
     public class SizeFact : IFact
     {
-        private readonly IUnixFileEntry _entry;
-
-        public SizeFact(IUnixFileEntry entry)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SizeFact"/> class.
+        /// </summary>
+        /// <param name="size">The file system entry size</param>
+        public SizeFact(long size)
         {
-            _entry = entry;
+            Value = size.ToString(CultureInfo.InvariantCulture);
         }
 
+        /// <inheritdoc/>
         public string Name => "size";
 
-        public string Value => _entry.Size.ToString();
+        /// <inheritdoc/>
+        public string Value { get; }
     }
 }

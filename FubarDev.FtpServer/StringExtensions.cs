@@ -9,6 +9,9 @@ using JetBrains.Annotations;
 
 namespace FubarDev.FtpServer
 {
+    /// <summary>
+    /// Extension methods for <see cref="string"/>
+    /// </summary>
     public static class StringExtensions
     {
         /// <summary>

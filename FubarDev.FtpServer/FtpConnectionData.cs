@@ -35,6 +35,7 @@ namespace FubarDev.FtpServer
             TransferMode = new FtpTransferMode(FtpFileType.Ascii);
             BackgroundCommandHandler = new BackgroundCommandHandler(connection);
             Path = new Stack<IUnixDirectoryEntry>();
+            FileSystem = new EmptyUnixFileSystem();
         }
 
         /// <summary>
@@ -63,7 +64,7 @@ namespace FubarDev.FtpServer
         /// <summary>
         /// Gets or sets the <see cref="IUnixFileSystem"/> to use for the user.
         /// </summary>
-        [CanBeNull]
+        [NotNull]
         public IUnixFileSystem FileSystem { get; set; }
 
         /// <summary>
@@ -152,9 +153,8 @@ namespace FubarDev.FtpServer
         {
             BackgroundCommandHandler.Dispose();
             PassiveSocketClient?.Dispose();
-            FileSystem?.Dispose();
+            FileSystem.Dispose();
             PassiveSocketClient = null;
-            FileSystem = null;
         }
     }
 }

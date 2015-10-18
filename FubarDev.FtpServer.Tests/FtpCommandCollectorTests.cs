@@ -205,7 +205,7 @@ namespace FubarDev.FtpServer.Tests
                 var v = string.Compare(x.Name, y.Name, StringComparison.OrdinalIgnoreCase);
                 if (v != 0)
                     return v;
-                return StringComparer.Compare(x.Argument ?? string.Empty, y.Argument ?? string.Empty);
+                return StringComparer.Compare(x.Argument, y.Argument);
             }
 
             public bool Equals(FtpCommand x, FtpCommand y)
@@ -216,7 +216,7 @@ namespace FubarDev.FtpServer.Tests
             public int GetHashCode(FtpCommand obj)
             {
                 return StringComparer.GetHashCode(obj.Name)
-                       ^ StringComparer.GetHashCode(obj.Argument ?? string.Empty);
+                       ^ StringComparer.GetHashCode(obj.Argument);
             }
         }
     }

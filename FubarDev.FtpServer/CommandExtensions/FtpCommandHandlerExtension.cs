@@ -6,6 +6,9 @@ using JetBrains.Annotations;
 
 namespace FubarDev.FtpServer.CommandExtensions
 {
+    /// <summary>
+    /// The base class for FTP command extensions
+    /// </summary>
     public abstract class FtpCommandHandlerExtension : FtpCommandHandlerBase
     {
         /// <summary>

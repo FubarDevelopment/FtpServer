@@ -6,12 +6,19 @@ using System;
 
 namespace FubarDev.FtpServer.ListFormatters.Facts
 {
+    /// <summary>
+    /// The basic interface for a fact (<code>MLST</code>)
+    /// </summary>
     public interface IFact
     {
-        string Name
-        { get; }
+        /// <summary>
+        /// The name of the fact
+        /// </summary>
+        string Name { get; }
 
-        string Value
-        { get; }
+        /// <summary>
+        /// The value of the fact
+        /// </summary>
+        string Value { get; }
     }
 }

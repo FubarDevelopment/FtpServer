@@ -15,26 +15,62 @@ namespace FubarDev.FtpServer.AuthTls
     /// </remarks>
     public class FixedSslStream : SslStream
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FixedSslStream"/> class.
+        /// </summary>
+        /// <param name="innerStream">The inner stream</param>
         public FixedSslStream(Stream innerStream)
             : base(innerStream)
         {
         }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FixedSslStream"/> class.
+        /// </summary>
+        /// <param name="innerStream">The inner stream</param>
+        /// <param name="leaveInnerStreamOpen">Leave the inner stream open after closing this stream?</param>
         public FixedSslStream(Stream innerStream, bool leaveInnerStreamOpen)
             : base(innerStream, leaveInnerStreamOpen)
         {
         }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FixedSslStream"/> class.
+        /// </summary>
+        /// <param name="innerStream">The inner stream</param>
+        /// <param name="leaveInnerStreamOpen">Leave the inner stream open after closing this stream?</param>
+        /// <param name="userCertificateValidationCallback">The user certificate validation callback</param>
         public FixedSslStream(Stream innerStream, bool leaveInnerStreamOpen, RemoteCertificateValidationCallback userCertificateValidationCallback)
             : base(innerStream, leaveInnerStreamOpen, userCertificateValidationCallback)
         {
         }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FixedSslStream"/> class.
+        /// </summary>
+        /// <param name="innerStream">The inner stream</param>
+        /// <param name="leaveInnerStreamOpen">Leave the inner stream open after closing this stream?</param>
+        /// <param name="userCertificateValidationCallback">The user certificate validation callback</param>
+        /// <param name="userCertificateSelectionCallback">The user certificate selection callback</param>
         public FixedSslStream(Stream innerStream, bool leaveInnerStreamOpen, RemoteCertificateValidationCallback userCertificateValidationCallback, LocalCertificateSelectionCallback userCertificateSelectionCallback)
             : base(innerStream, leaveInnerStreamOpen, userCertificateValidationCallback, userCertificateSelectionCallback)
         {
         }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FixedSslStream"/> class.
+        /// </summary>
+        /// <param name="innerStream">The inner stream</param>
+        /// <param name="leaveInnerStreamOpen">Leave the inner stream open after closing this stream?</param>
+        /// <param name="userCertificateValidationCallback">The user certificate validation callback</param>
+        /// <param name="userCertificateSelectionCallback">The user certificate selection callback</param>
+        /// <param name="encryptionPolicy">The encryption policy</param>
         public FixedSslStream(Stream innerStream, bool leaveInnerStreamOpen, RemoteCertificateValidationCallback userCertificateValidationCallback, LocalCertificateSelectionCallback userCertificateSelectionCallback, EncryptionPolicy encryptionPolicy)
             : base(innerStream, leaveInnerStreamOpen, userCertificateValidationCallback, userCertificateSelectionCallback, encryptionPolicy)
         {
         }
+
+        /// <inheritdoc/>
         public override void Close()
         {
             try

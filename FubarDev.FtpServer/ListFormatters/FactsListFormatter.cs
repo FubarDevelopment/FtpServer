@@ -14,6 +14,9 @@ using JetBrains.Annotations;
 
 namespace FubarDev.FtpServer.ListFormatters
 {
+    /// <summary>
+    /// A formatter for the <code>MLST</code> command
+    /// </summary>
     public class FactsListFormatter : IListFormatter
     {
         private readonly FtpUser _user;
@@ -24,6 +27,13 @@ namespace FubarDev.FtpServer.ListFormatters
 
         private readonly ISet<string> _activeFacts;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FactsListFormatter"/> class.
+        /// </summary>
+        /// <param name="user">The user to create this formatter for</param>
+        /// <param name="fileSystem">The file system where the file system entries are from</param>
+        /// <param name="pathEntries">The current path</param>
+        /// <param name="activeFacts">The active facts to return for the entries</param>
         public FactsListFormatter(FtpUser user, IUnixFileSystem fileSystem, Stack<IUnixDirectoryEntry> pathEntries, ISet<string> activeFacts)
         {
             _user = user;
@@ -32,6 +42,7 @@ namespace FubarDev.FtpServer.ListFormatters
             _activeFacts = activeFacts;
         }
 
+        /// <inheritdoc/>
         public string Format(IUnixFileSystemEntry entry)
         {
             var currentDirEntry = _pathEntries.Count == 0 ? _fileSystem.Root : _pathEntries.Peek();
@@ -41,6 +52,7 @@ namespace FubarDev.FtpServer.ListFormatters
             return BuildLine(BuildFacts(currentDirEntry, (IUnixFileEntry)entry), entry.Name);
         }
 
+        /// <inheritdoc/>
         public IEnumerable<string> GetPrefix(IUnixDirectoryEntry directoryEntry)
         {
             var isRoot = directoryEntry.IsRoot;
@@ -58,6 +70,7 @@ namespace FubarDev.FtpServer.ListFormatters
             return result;
         }
 
+        /// <inheritdoc/>
         public IEnumerable<string> GetSuffix(IUnixDirectoryEntry directoryEntry)
         {
             return new string[0];
@@ -94,8 +107,8 @@ namespace FubarDev.FtpServer.ListFormatters
         {
             var result = new List<IFact>()
             {
-                new PermissionsFact(_user, directoryEntry, entry, _fileSystem.SupportsAppend),
-                new SizeFact(entry),
+                new PermissionsFact(_user, directoryEntry, entry),
+                new SizeFact(entry.Size),
                 new TypeFact(entry),
             };
             if (entry.LastWriteTime.HasValue)
