@@ -174,6 +174,31 @@ namespace FubarDev.FtpServer.FileSystem.DotNet
             return null;
         }
 
+        /// <summary>
+        /// Sets the modify/access/create timestamp of a file system item
+        /// </summary>
+        /// <param name="entry">The <see cref="IUnixFileSystemEntry"/> to change the timestamp for</param>
+        /// <param name="modify">The modification timestamp</param>
+        /// <param name="access">The access timestamp</param>
+        /// <param name="create">The creation timestamp</param>
+        /// <param name="cancellationToken">The cancellation token</param>
+        /// <returns>The modified <see cref="IUnixFileSystemEntry"/></returns>
+        public Task<IUnixFileSystemEntry> SetMacTime(IUnixFileSystemEntry entry, DateTimeOffset? modify, DateTimeOffset? access, DateTimeOffset? create, CancellationToken cancellationToken)
+        {
+            var dirEntry = entry as DotNetDirectoryEntry;
+            var fileEntry = entry as DotNetFileEntry;
+            var item = dirEntry == null ? (FileSystemInfo)fileEntry.Info : dirEntry.Info;
+            if (access != null)
+                item.LastAccessTimeUtc = access.Value.UtcDateTime;
+            if (modify != null)
+                item.LastWriteTimeUtc = modify.Value.UtcDateTime;
+            if (create != null)
+                item.CreationTimeUtc = create.Value.UtcDateTime;
+            if (dirEntry != null)
+                return Task.FromResult<IUnixFileSystemEntry>(new DotNetDirectoryEntry(this, (DirectoryInfo)item, dirEntry.IsRoot));
+            return Task.FromResult<IUnixFileSystemEntry>(new DotNetFileEntry(this, (FileInfo)item));
+        }
+
         /// <inheritdoc/>
         public void Dispose()
         {

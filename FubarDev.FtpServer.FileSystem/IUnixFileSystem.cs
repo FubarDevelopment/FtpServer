@@ -139,5 +139,17 @@ namespace FubarDev.FtpServer.FileSystem
         /// <returns>an optional <see cref="IBackgroundTransfer"/> when the transfer needs to happen in the background</returns>
         [NotNull, ItemCanBeNull]
         Task<IBackgroundTransfer> ReplaceAsync([NotNull] IUnixFileEntry fileEntry, [NotNull] Stream data, CancellationToken cancellationToken);
+
+        /// <summary>
+        /// Sets the modify/access/create timestamp of a file system item
+        /// </summary>
+        /// <param name="entry">The <see cref="IUnixFileSystemEntry"/> to change the timestamp for</param>
+        /// <param name="modify">The modification timestamp</param>
+        /// <param name="access">The access timestamp</param>
+        /// <param name="create">The creation timestamp</param>
+        /// <param name="cancellationToken">The cancellation token</param>
+        /// <returns>The modified <see cref="IUnixFileSystemEntry"/></returns>
+        [NotNull, ItemNotNull]
+        Task<IUnixFileSystemEntry> SetMacTime([NotNull] IUnixFileSystemEntry entry, DateTimeOffset? modify, DateTimeOffset? access, DateTimeOffset? create, CancellationToken cancellationToken);
     }
 }

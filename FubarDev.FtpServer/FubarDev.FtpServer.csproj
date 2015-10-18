@@ -49,6 +49,7 @@
     <Compile Include="BackgroundTransferQueue.cs" />
     <Compile Include="BackgroundTransferWorker.cs" />
     <Compile Include="CommandExtensions\SiteBlstCommandExtension.cs" />
+    <Compile Include="CommandExtensions\SiteUtimeCommandExtension.cs" />
     <Compile Include="CommandHandlers\AborCommandHandler.cs" />
     <Compile Include="CommandHandlers\AlloCommandHandler.cs" />
     <Compile Include="CommandHandlers\CdUpCommandHandler.cs" />

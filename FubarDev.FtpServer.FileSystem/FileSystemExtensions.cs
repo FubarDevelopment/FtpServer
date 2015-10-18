@@ -224,6 +224,22 @@ namespace FubarDev.FtpServer.FileSystem
         }
 
         /// <summary>
+        /// Returns the parent path of the <paramref name="path"/>
+        /// </summary>
+        /// <param name="path">The path to get the parent path from</param>
+        /// <returns>The parent path</returns>
+        [NotNull]
+        public static string GetParentPath([NotNull] this string path)
+        {
+            var parts = GetPathElements(path);
+            if (parts.Count == 0)
+                return path;
+            if (parts.Count == 1 && string.IsNullOrEmpty(parts[0]))
+                return path;
+            return CombinePath(null, parts.Take(parts.Count - 1));
+        }
+
+        /// <summary>
         /// Returns the <paramref name="path"/> as string
         /// </summary>
         /// <param name="path">The path to convert to string</param>

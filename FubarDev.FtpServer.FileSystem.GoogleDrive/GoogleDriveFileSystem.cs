@@ -136,9 +136,9 @@ namespace FubarDev.FtpServer.FileSystem.GoogleDrive
         /// <inheritdoc/>
         public async Task<Stream> OpenReadAsync(IUnixFileEntry fileEntry, long startPosition, CancellationToken cancellationToken)
         {
-            HttpRange range = startPosition != 0 ? new HttpRange("bytes", new HttpRangeItem(startPosition, fileEntry.Size)) : null;
+            var from = startPosition != 0 ? (long?)startPosition : null;
             var fe = (GoogleDriveFileEntry)fileEntry;
-            var response = await Service.GetDownloadResponseAsync(fe.File, range, cancellationToken);
+            var response = await Service.GetDownloadResponseAsync(fe.File, from, cancellationToken);
             return new GoogleDriveDownloadStream(response, startPosition, fe.Size);
         }
 
@@ -184,6 +184,26 @@ namespace FubarDev.FtpServer.FileSystem.GoogleDrive
                 _uploadsLock.Release();
             }
             return backgroundUploads;
+        }
+
+        /// <inheritdoc/>
+        public async Task<IUnixFileSystemEntry> SetMacTime(IUnixFileSystemEntry entry, DateTimeOffset? modify, DateTimeOffset? access, DateTimeOffset? create, CancellationToken cancellationToken)
+        {
+            var dirEntry = entry as GoogleDriveDirectoryEntry;
+            var fileEntry = entry as GoogleDriveFileEntry;
+            var item = dirEntry == null ? fileEntry.File : dirEntry.File;
+            var newItemValues = new File()
+            {
+                ModifiedDate = modify,
+                CreatedDate = create,
+                LastViewedByMeDate = access,
+            };
+            var newItem = await Service.UpdateAsync(item.Id, newItemValues, cancellationToken);
+            var fullName = dirEntry == null ? fileEntry.FullName : dirEntry.FullName;
+            var targetFullName = FileSystemExtensions.CombinePath(fullName.GetParentPath(), newItem.Title);
+            if (dirEntry != null)
+                return new GoogleDriveDirectoryEntry(this, newItem, targetFullName, dirEntry.IsRoot);
+            return new GoogleDriveFileEntry(this, newItem, fullName, fileEntry.Size);
         }
 
         /// <inheritdoc/>
