@@ -4,7 +4,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -33,7 +32,7 @@ namespace FubarDev.FtpServer.CommandExtensions
 
             var parts = new List<string>();
             string part;
-            var remaining = ChompFromEnd(command.Argument, out part);
+            var remaining = command.Argument.ChompFromEnd(out part);
             if (IsSupportedTimeZome(part))
             {
                 // 5 part format
@@ -41,7 +40,7 @@ namespace FubarDev.FtpServer.CommandExtensions
                 parts.Add(part);
                 for (int i = 0; i != 3; ++i)
                 {
-                    remaining = ChompFromEnd(remaining, out part);
+                    remaining = remaining.ChompFromEnd(out part);
                     parts.Add(remaining);
                 }
                 parts.Add(remaining);
@@ -60,39 +59,14 @@ namespace FubarDev.FtpServer.CommandExtensions
             return timezone == "UTC";
         }
 
-        private static string ChompFromEnd(string input, out string token)
-        {
-            var pos = input.LastIndexOf(' ');
-            if (pos == -1)
-            {
-                token = input;
-                return string.Empty;
-            }
-
-            var remaining = input.Substring(0, pos);
-            token = input.Substring(pos + 1);
-            return remaining;
-        }
-
-        private static bool TryParseTimestamp(string timestamp, string timezone, out DateTimeOffset result)
-        {
-            if (timestamp.Length != 12 && timestamp.Length != 14)
-                return false;
-            if (timezone != "UTC")
-                return false;
-            var format = "yyyyMMddHHmm" + (timestamp.Length == 14 ? "ss" : string.Empty);
-            result = DateTimeOffset.ParseExact(timestamp, format, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal);
-            return true;
-        }
-
         private async Task<FtpResponse> SetTimestamp5(IReadOnlyList<string> parts, CancellationToken cancellationToken)
         {
             DateTimeOffset accessTime, modificationTime, creationTime;
-            if (!TryParseTimestamp(parts[1], parts[4], out accessTime))
+            if (!parts[1].TryParseTimestamp(parts[4], out accessTime))
                 return new FtpResponse(501, "Syntax error in parameters or arguments.");
-            if (!TryParseTimestamp(parts[2], parts[4], out modificationTime))
+            if (!parts[2].TryParseTimestamp(parts[4], out modificationTime))
                 return new FtpResponse(501, "Syntax error in parameters or arguments.");
-            if (!TryParseTimestamp(parts[3], parts[4], out creationTime))
+            if (!parts[3].TryParseTimestamp(parts[4], out creationTime))
                 return new FtpResponse(501, "Syntax error in parameters or arguments.");
 
             var path = parts[0];
@@ -114,7 +88,7 @@ namespace FubarDev.FtpServer.CommandExtensions
         private async Task<FtpResponse> SetTimestamp2(IReadOnlyList<string> parts, CancellationToken cancellationToken)
         {
             DateTimeOffset modificationTime;
-            if (!TryParseTimestamp(parts[0], "UTC", out modificationTime))
+            if (!parts[0].TryParseTimestamp("UTC", out modificationTime))
                 return new FtpResponse(501, "Syntax error in parameters or arguments.");
 
             var path = parts[1];
