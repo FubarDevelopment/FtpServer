@@ -71,9 +71,19 @@ namespace FubarDev.FtpServer
                     t =>
                     {
                         var response = t.Result;
-                        _connection.WriteAsync(response, _connection.CancellationToken).Wait(_connection.CancellationToken);
-                        lock (_syncRoot)
-                            _handlerTask = null;
+                        try
+                        {
+                            _connection.WriteAsync(response, _connection.CancellationToken).Wait(_connection.CancellationToken);
+                        }
+                        catch (Exception ex2)
+                        {
+                            _connection.Log?.Error(ex2, "Error while sending the background command response {0}", response);
+                        }
+                        finally
+                        {
+                            lock (_syncRoot)
+                                _handlerTask = null;
+                        }
                         return response;
                     },
                     TaskContinuationOptions.OnlyOnRanToCompletion);
@@ -85,9 +95,19 @@ namespace FubarDev.FtpServer
                         var ex = t.Exception;
                         _connection.Log?.Error(ex, "Error while processing background command {0}", command);
                         var response = new FtpResponse(501, "Syntax error in parameters or arguments.");
-                        _connection.WriteAsync(response, _connection.CancellationToken).Wait(_connection.CancellationToken);
-                        lock (_syncRoot)
-                            _handlerTask = null;
+                        try
+                        {
+                            _connection.WriteAsync(response, _connection.CancellationToken).Wait(_connection.CancellationToken);
+                        }
+                        catch (Exception ex2)
+                        {
+                            _connection.Log?.Error(ex2, "Error while sending the background command response {0}", response);
+                        }
+                        finally
+                        {
+                            lock (_syncRoot)
+                                _handlerTask = null;
+                        }
                     },
                     TaskContinuationOptions.OnlyOnFaulted);
 

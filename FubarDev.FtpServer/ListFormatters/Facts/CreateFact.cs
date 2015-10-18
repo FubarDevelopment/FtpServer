@@ -17,6 +17,8 @@ namespace FubarDev.FtpServer.ListFormatters.Facts
 
         public string Name => "create";
 
+        public DateTimeOffset Timestamp => _timestamp;
+
         public string Value => _timestamp.ToString("yyyyMMddHHmmss.fff");
     }
 }
