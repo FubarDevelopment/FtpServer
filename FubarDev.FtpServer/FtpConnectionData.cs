@@ -126,6 +126,11 @@ namespace FubarDev.FtpServer
         public ISet<string> ActiveMlstFacts { get; } = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
         /// <summary>
+        /// Gets or sets a delegate that allows the creation of an encrypted stream.
+        /// </summary>
+        public CreateEncryptedStreamDelegate CreateEncryptedStream { get; set; }
+
+        /// <summary>
         /// Gets or sets user data as <code>dynamic</code> object
         /// </summary>
         public dynamic UserData { get; set; }

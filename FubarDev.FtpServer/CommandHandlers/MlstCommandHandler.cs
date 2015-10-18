@@ -75,37 +75,40 @@ namespace FubarDev.FtpServer.CommandHandlers
                 var formatter = new FactsListFormatter(Data.User, Data.FileSystem, path);
 
                 var encoding = Data.NlstEncoding ?? Connection.Encoding;
-                using (var writer = new StreamWriter(responseSocket.WriteStream, encoding, 4096, true)
+                using (var stream = await Connection.CreateEncryptedStream(responseSocket.WriteStream))
                 {
-                    NewLine = "\r\n",
-                })
-                {
-                    if (listDir)
+                    using (var writer = new StreamWriter(stream, encoding, 4096, true)
                     {
-                        foreach (var line in formatter.GetPrefix(dirEntry))
-                        {
-                            Connection.Log?.Debug(line);
-                            await writer.WriteLineAsync(line);
-                        }
-
-                        foreach (var entry in await Data.FileSystem.GetEntriesAsync(dirEntry, cancellationToken))
-                        {
-                            var line = formatter.Format(entry);
-                            Connection.Log?.Debug(line);
-                            await writer.WriteLineAsync(line);
-                        }
-
-                        foreach (var line in formatter.GetSuffix(dirEntry))
-                        {
-                            Connection.Log?.Debug(line);
-                            await writer.WriteLineAsync(line);
-                        }
-                    }
-                    else
+                        NewLine = "\r\n",
+                    })
                     {
-                        var line = formatter.Format(targetEntry);
-                        Connection.Log?.Debug(line);
-                        await writer.WriteLineAsync(line);
+                        if (listDir)
+                        {
+                            foreach (var line in formatter.GetPrefix(dirEntry))
+                            {
+                                Connection.Log?.Debug(line);
+                                await writer.WriteLineAsync(line);
+                            }
+
+                            foreach (var entry in await Data.FileSystem.GetEntriesAsync(dirEntry, cancellationToken))
+                            {
+                                var line = formatter.Format(entry);
+                                Connection.Log?.Debug(line);
+                                await writer.WriteLineAsync(line);
+                            }
+
+                            foreach (var line in formatter.GetSuffix(dirEntry))
+                            {
+                                Connection.Log?.Debug(line);
+                                await writer.WriteLineAsync(line);
+                            }
+                        }
+                        else
+                        {
+                            var line = formatter.Format(targetEntry);
+                            Connection.Log?.Debug(line);
+                            await writer.WriteLineAsync(line);
+                        }
                     }
                 }
             }

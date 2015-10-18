@@ -174,6 +174,18 @@ namespace FubarDev.FtpServer
             return Data.PassiveSocketClient;
         }
 
+        /// <summary>
+        /// Create an encrypted stream
+        /// </summary>
+        /// <param name="unencryptedStream">The stream to encrypt</param>
+        /// <returns>The encrypted stream</returns>
+        public Task<Stream> CreateEncryptedStream(Stream unencryptedStream)
+        {
+            if (Data.CreateEncryptedStream == null)
+                return Task.FromResult(unencryptedStream);
+            return Data.CreateEncryptedStream(unencryptedStream);
+        }
+
         /// <inheritdoc/>
         public void Dispose()
         {

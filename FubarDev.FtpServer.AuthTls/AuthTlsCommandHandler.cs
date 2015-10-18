@@ -34,9 +34,6 @@ namespace FubarDev.FtpServer.AuthTls
         public override bool IsLoginRequired => false;
 
         /// <inheritdoc/>
-        public override bool IsAbortable => false;
-
-        /// <inheritdoc/>
         public override IEnumerable<IFeatureInfo> GetSupportedExtensions()
         {
             if (ServerCertificate != null)
@@ -66,9 +63,9 @@ namespace FubarDev.FtpServer.AuthTls
 
             try
             {
-                var sslStream = new SslStream(Connection.OriginalStream);
+                var sslStream = new SslStream(Connection.OriginalStream, true);
                 Connection.SocketStream = sslStream;
-                sslStream.AuthenticateAsServer(ServerCertificate);
+                await sslStream.AuthenticateAsServerAsync(ServerCertificate);
                 return null;
             }
             catch (Exception ex)

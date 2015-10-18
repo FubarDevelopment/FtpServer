@@ -61,37 +61,41 @@ namespace FubarDev.FtpServer.CommandHandlers
                 var mask = (string.IsNullOrEmpty(argument) || argument.StartsWith("-")) ? "*" : argument;
 
                 var encoding = Data.NlstEncoding ?? Connection.Encoding;
-                using (var writer = new StreamWriter(responseSocket.WriteStream, encoding, 4096, true)
+
+                using (var stream = await Connection.CreateEncryptedStream(responseSocket.WriteStream))
                 {
-                    NewLine = "\r\n",
-                })
-                {
-                    foreach (var line in formatter.GetPrefix(Data.CurrentDirectory))
+                    using (var writer = new StreamWriter(stream, encoding, 4096, true)
                     {
-                        Connection.Log?.Debug(line);
-                        await writer.WriteLineAsync(line);
-                    }
-
-                    var mmOptions = new Options()
+                        NewLine = "\r\n",
+                    })
                     {
-                        IgnoreCase = Data.FileSystem.FileSystemEntryComparer.Equals("a", "A"),
-                        NoGlobStar = true,
-                        Dot = true,
-                    };
+                        foreach (var line in formatter.GetPrefix(Data.CurrentDirectory))
+                        {
+                            Connection.Log?.Debug(line);
+                            await writer.WriteLineAsync(line);
+                        }
 
-                    var mm = new Minimatcher(mask, mmOptions);
+                        var mmOptions = new Options()
+                        {
+                            IgnoreCase = Data.FileSystem.FileSystemEntryComparer.Equals("a", "A"),
+                            NoGlobStar = true,
+                            Dot = true,
+                        };
 
-                    foreach (var entry in (await Data.FileSystem.GetEntriesAsync(Data.CurrentDirectory, cancellationToken)).Where(x => mm.IsMatch(x.Name)))
-                    {
-                        var line = formatter.Format(entry);
-                        Connection.Log?.Debug(line);
-                        await writer.WriteLineAsync(line);
-                    }
+                        var mm = new Minimatcher(mask, mmOptions);
 
-                    foreach (var line in formatter.GetSuffix(Data.CurrentDirectory))
-                    {
-                        Connection.Log?.Debug(line);
-                        await writer.WriteLineAsync(line);
+                        foreach (var entry in (await Data.FileSystem.GetEntriesAsync(Data.CurrentDirectory, cancellationToken)).Where(x => mm.IsMatch(x.Name)))
+                        {
+                            var line = formatter.Format(entry);
+                            Connection.Log?.Debug(line);
+                            await writer.WriteLineAsync(line);
+                        }
+
+                        foreach (var line in formatter.GetSuffix(Data.CurrentDirectory))
+                        {
+                            Connection.Log?.Debug(line);
+                            await writer.WriteLineAsync(line);
+                        }
                     }
                 }
             }

@@ -87,17 +87,20 @@ namespace FubarDev.FtpServer.CommandHandlers
             try
             {
                 var encoding = Data.NlstEncoding ?? Connection.Encoding;
-                using (var writer = new StreamWriter(responseSocket.WriteStream, encoding, 4096, true)
+                using (var stream = await Connection.CreateEncryptedStream(responseSocket.WriteStream))
                 {
-                    NewLine = "\r\n",
-                })
-                {
-                    var taskStates = Server.GetBackgroundTaskStates();
-                    foreach (var entry in taskStates)
+                    using (var writer = new StreamWriter(stream, encoding, 4096, true)
                     {
-                        var line = $"{entry.Item2.ToString().PadRight(12)} {entry.Item1}";
-                        Connection.Log?.Debug(line);
-                        await writer.WriteLineAsync(line);
+                        NewLine = "\r\n",
+                    })
+                    {
+                        var taskStates = Server.GetBackgroundTaskStates();
+                        foreach (var entry in taskStates)
+                        {
+                            var line = $"{entry.Item2.ToString().PadRight(12)} {entry.Item1}";
+                            Connection.Log?.Debug(line);
+                            await writer.WriteLineAsync(line);
+                        }
                     }
                 }
             }

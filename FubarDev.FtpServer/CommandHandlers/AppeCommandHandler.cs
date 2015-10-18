@@ -45,28 +45,32 @@ namespace FubarDev.FtpServer.CommandHandlers
                 return new FtpResponse(550, "Not a valid directory.");
 
             await Connection.WriteAsync(new FtpResponse(150, "Opening connection for data transfer."), cancellationToken);
-            using (var replySocket = await Connection.CreateResponseSocket())
+            using (var responseSocket = await Connection.CreateResponseSocket())
             {
-                replySocket.ReadStream.ReadTimeout = 10000;
+                responseSocket.ReadStream.ReadTimeout = 10000;
 
-                IBackgroundTransfer backgroundTransfer;
-                if ((Data.RestartPosition != null && Data.RestartPosition.Value == 0) || fileInfo.Entry == null)
+                using (var stream = await Connection.CreateEncryptedStream(responseSocket.ReadStream))
                 {
-                    if (fileInfo.Entry == null)
+
+                    IBackgroundTransfer backgroundTransfer;
+                    if ((Data.RestartPosition != null && Data.RestartPosition.Value == 0) || fileInfo.Entry == null)
                     {
-                        backgroundTransfer = await Data.FileSystem.CreateAsync(fileInfo.Directory, fileInfo.FileName, replySocket.ReadStream, cancellationToken);
+                        if (fileInfo.Entry == null)
+                        {
+                            backgroundTransfer = await Data.FileSystem.CreateAsync(fileInfo.Directory, fileInfo.FileName, stream, cancellationToken);
+                        }
+                        else
+                        {
+                            backgroundTransfer = await Data.FileSystem.ReplaceAsync(fileInfo.Entry, stream, cancellationToken);
+                        }
                     }
                     else
                     {
-                        backgroundTransfer = await Data.FileSystem.ReplaceAsync(fileInfo.Entry, replySocket.ReadStream, cancellationToken);
+                        backgroundTransfer = await Data.FileSystem.AppendAsync(fileInfo.Entry, Data.RestartPosition, stream, cancellationToken);
                     }
+                    if (backgroundTransfer != null)
+                        Server.EnqueueBackgroundTransfer(backgroundTransfer, Connection);
                 }
-                else
-                {
-                    backgroundTransfer = await Data.FileSystem.AppendAsync(fileInfo.Entry, Data.RestartPosition, replySocket.ReadStream, cancellationToken);
-                }
-                if (backgroundTransfer != null)
-                    Server.EnqueueBackgroundTransfer(backgroundTransfer, Connection);
             }
 
             return new FtpResponse(226, "Uploaded file successfully.");
