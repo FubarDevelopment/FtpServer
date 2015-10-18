@@ -49,7 +49,7 @@ namespace FubarDev.FtpServer.AuthTls
 
         private async Task<Stream> CreateSslStream(Stream unencryptedStream)
         {
-            var sslStream = new FixedSslStream(unencryptedStream, true);
+            var sslStream = new FixedSslStream(unencryptedStream, false);
             await sslStream.AuthenticateAsServerAsync(AuthTlsCommandHandler.ServerCertificate);
             return sslStream;
         }
