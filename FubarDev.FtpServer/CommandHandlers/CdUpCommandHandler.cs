@@ -8,8 +8,6 @@
 using System.Threading;
 using System.Threading.Tasks;
 
-using FubarDev.FtpServer.FileSystem;
-
 namespace FubarDev.FtpServer.CommandHandlers
 {
     /// <summary>

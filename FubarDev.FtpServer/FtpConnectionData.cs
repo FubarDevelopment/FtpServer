@@ -40,6 +40,7 @@ namespace FubarDev.FtpServer
         /// <summary>
         /// Gets or sets the current user name
         /// </summary>
+        [CanBeNull]
         public FtpUser User { get; set; }
 
         /// <summary>
@@ -56,11 +57,13 @@ namespace FubarDev.FtpServer
         /// <summary>
         /// Gets or sets the <see cref="Encoding"/> for the <code>NLST</code> command.
         /// </summary>
+        [CanBeNull]
         public Encoding NlstEncoding { get; set; }
 
         /// <summary>
         /// Gets or sets the <see cref="IUnixFileSystem"/> to use for the user.
         /// </summary>
+        [CanBeNull]
         public IUnixFileSystem FileSystem { get; set; }
 
         /// <summary>
@@ -72,6 +75,7 @@ namespace FubarDev.FtpServer
         /// <summary>
         /// Gets the current <see cref="IUnixDirectoryEntry"/> of the current <see cref="Path"/>
         /// </summary>
+        [NotNull]
         public IUnixDirectoryEntry CurrentDirectory
         {
             get
@@ -85,21 +89,25 @@ namespace FubarDev.FtpServer
         /// <summary>
         /// Gets or sets the <see cref="FtpTransferMode"/>
         /// </summary>
+        [NotNull]
         public FtpTransferMode TransferMode { get; set; }
 
         /// <summary>
         /// Gets or sets the address to use for an active data connection.
         /// </summary>
+        [CanBeNull]
         public Uri PortAddress { get; set; }
 
         /// <summary>
         /// Gets or sets the data connection for a passive data transfer
         /// </summary>
+        [CanBeNull]
         public ITcpSocketClient PassiveSocketClient { get; set; }
 
         /// <summary>
         /// Gets the <see cref="BackgroundCommandHandler"/> that's required for the <code>ABOR</code> command.
         /// </summary>
+        [NotNull]
         public BackgroundCommandHandler BackgroundCommandHandler { get; }
 
         /// <summary>
@@ -108,6 +116,7 @@ namespace FubarDev.FtpServer
         /// <remarks>
         /// It's not allowed to use PASV when PORT was used previously - and vice versa.
         /// </remarks>
+        [CanBeNull]
         public string TransferTypeCommandUsed { get; set; }
 
         /// <summary>
@@ -118,16 +127,19 @@ namespace FubarDev.FtpServer
         /// <summary>
         /// Gets or sets the <see cref="IUnixFileEntry"/> to use for a <code>RNTO</code> operation.
         /// </summary>
+        [CanBeNull]
         public SearchResult<IUnixFileSystemEntry> RenameFrom { get; set; }
 
         /// <summary>
         /// Gets the active <see cref="IFact"/> sent by <code>MLST</code> and <code>MLSD</code>
         /// </summary>
+        [NotNull, ItemNotNull]
         public ISet<string> ActiveMlstFacts { get; } = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
         /// <summary>
         /// Gets or sets a delegate that allows the creation of an encrypted stream.
         /// </summary>
+        [CanBeNull]
         public CreateEncryptedStreamDelegate CreateEncryptedStream { get; set; }
 
         /// <summary>

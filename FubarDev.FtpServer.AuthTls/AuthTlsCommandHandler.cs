@@ -4,8 +4,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Net.Security;
-using System.Security.Authentication;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading;
 using System.Threading.Tasks;
@@ -70,7 +68,7 @@ namespace FubarDev.FtpServer.AuthTls
             }
             catch (Exception ex)
             {
-                Connection?.Log?.Warn(ex, "SSL stream authentication failed: {0}", ex.Message);
+                Connection.Log?.Warn(ex, "SSL stream authentication failed: {0}", ex.Message);
                 return new FtpResponse(421, "TLS authentication failed");
             }
         }

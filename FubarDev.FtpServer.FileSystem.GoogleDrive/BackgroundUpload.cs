@@ -5,7 +5,6 @@
 // <author>Mark Junker</author>
 //-----------------------------------------------------------------------
 
-using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 

@@ -27,7 +27,7 @@ namespace FubarDev.FtpServer.AccountManagement
         /// Returns <code>true</code> when the user is in the given group.
         /// </summary>
         /// <param name="groupName">The name of the group</param>
-        /// <returns><code>true</code> when the user is in the queries <paramref name="group"/></returns>
+        /// <returns><code>true</code> when the user is in the queries <paramref name="groupName"/></returns>
         public virtual bool IsInGroup(string groupName)
         {
             return false;

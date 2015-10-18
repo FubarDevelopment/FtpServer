@@ -21,7 +21,7 @@ namespace FubarDev.FtpServer.FileSystem
     /// </remarks>
     public class MemoryTemporaryData : ITemporaryData
     {
-        private bool _disposedValue = false;
+        private bool _disposedValue;
 
         private MemoryStream _data;
 

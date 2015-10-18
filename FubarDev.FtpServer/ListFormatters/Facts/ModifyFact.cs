@@ -4,8 +4,6 @@
 
 using System;
 
-using FubarDev.FtpServer.FileSystem;
-
 namespace FubarDev.FtpServer.ListFormatters.Facts
 {
     public class ModifyFact : IFact

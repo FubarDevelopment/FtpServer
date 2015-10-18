@@ -43,9 +43,9 @@ namespace FubarDev.FtpServer.CommandHandlers
 
         private async Task<FtpResponse> ShowHelpSite(CancellationToken cancellationToken)
         {
-            await Connection.WriteAsync($"211-HELP", cancellationToken);
+            await Connection.WriteAsync("211-HELP", cancellationToken);
 
-            await Connection.WriteAsync($" SITE BLST [DIRECT]", cancellationToken);
+            await Connection.WriteAsync(" SITE BLST [DIRECT]", cancellationToken);
 
             return new FtpResponse(211, "HELP");
         }

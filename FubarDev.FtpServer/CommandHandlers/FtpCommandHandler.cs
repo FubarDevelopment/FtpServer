@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using JetBrains.Annotations;
 
 namespace FubarDev.FtpServer.CommandHandlers
 {
@@ -24,7 +25,7 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// <param name="connection">The connection this instance is used for</param>
         /// <param name="name">The command name</param>
         /// <param name="alternativeNames">Alternative names</param>
-        protected FtpCommandHandler(FtpConnection connection, string name, params string[] alternativeNames)
+        protected FtpCommandHandler([NotNull] FtpConnection connection, [NotNull] string name, [NotNull, ItemNotNull] params string[] alternativeNames)
         {
             Connection = connection;
             var names = new List<string>
@@ -38,6 +39,7 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// <summary>
         /// Gets a collection of all command names for this command
         /// </summary>
+        [NotNull, ItemNotNull]
         public IReadOnlyCollection<string> Names { get; }
 
         /// <summary>
@@ -53,22 +55,26 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// <summary>
         /// Gets the connection this command was created for
         /// </summary>
+        [NotNull]
         protected FtpConnection Connection { get; }
 
         /// <summary>
         /// Gets the server the command belongs to
         /// </summary>
+        [NotNull]
         protected FtpServer Server => Connection.Server;
 
         /// <summary>
         /// Gets the connection data
         /// </summary>
+        [NotNull]
         protected FtpConnectionData Data => Connection.Data;
 
         /// <summary>
         /// Gets a collection of strings that will be sent as supported features.
         /// </summary>
         /// <returns>A list of features supported by this command handler</returns>
+        [NotNull, ItemNotNull]
         public virtual IEnumerable<IFeatureInfo> GetSupportedExtensions()
         {
             return Enumerable.Empty<IFeatureInfo>();
@@ -80,6 +86,7 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// <param name="command">The command to process</param>
         /// <param name="cancellationToken">The cancellation token to signal command abortion</param>
         /// <returns>The FTP response</returns>
-        public abstract Task<FtpResponse> Process(FtpCommand command, CancellationToken cancellationToken);
+        [NotNull, ItemCanBeNull]
+        public abstract Task<FtpResponse> Process([NotNull] FtpCommand command, CancellationToken cancellationToken);
     }
 }

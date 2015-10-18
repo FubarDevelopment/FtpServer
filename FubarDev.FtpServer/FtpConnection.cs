@@ -14,7 +14,7 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using FubarDev.FtpServer.CommandHandlers;
-
+using JetBrains.Annotations;
 using Sockets.Plugin;
 using Sockets.Plugin.Abstractions;
 
@@ -37,7 +37,7 @@ namespace FubarDev.FtpServer
         /// <param name="server">The server this connection belongs to</param>
         /// <param name="socket">The socket to use to communicate with the client</param>
         /// <param name="encoding">The encoding to use for the LIST/NLST commands</param>
-        public FtpConnection(FtpServer server, ITcpSocketClient socket, Encoding encoding)
+        public FtpConnection([NotNull] FtpServer server, [NotNull] ITcpSocketClient socket, [NotNull] Encoding encoding)
         {
             Server = server;
             _socket = socket;
@@ -60,36 +60,43 @@ namespace FubarDev.FtpServer
         /// <summary>
         /// Gets the dictionary of all known command handlers
         /// </summary>
+        [NotNull, ItemNotNull]
         public IReadOnlyDictionary<string, FtpCommandHandler> CommandHandlers { get; }
 
         /// <summary>
         /// Gets the server this connection belongs to
         /// </summary>
+        [NotNull]
         public FtpServer Server { get; }
 
         /// <summary>
         /// Gets or sets the encoding for the LIST/NLST commands
         /// </summary>
+        [NotNull]
         public Encoding Encoding { get; set; }
 
         /// <summary>
         /// Gets the FTP connection data
         /// </summary>
+        [NotNull]
         public FtpConnectionData Data { get; }
 
         /// <summary>
         /// Gets the FTP connection log
         /// </summary>
+        [CanBeNull]
         public IFtpLog Log { get; set; }
 
         /// <summary>
         /// Gets or sets the control connection stream
         /// </summary>
+        [NotNull]
         public Stream OriginalStream { get; }
 
         /// <summary>
         /// Gets or sets the control connection stream
         /// </summary>
+        [NotNull]
         public Stream SocketStream { get; set; }
 
         /// <summary>
@@ -100,6 +107,7 @@ namespace FubarDev.FtpServer
         /// <summary>
         /// Gets the remote address of the client
         /// </summary>
+        [NotNull]
         public Address RemoteAddress { get; }
 
         /// <summary>
@@ -130,7 +138,7 @@ namespace FubarDev.FtpServer
         /// <param name="response">The response to write to the client</param>
         /// <param name="cancellationToken">The cancellation token</param>
         /// <returns>The task</returns>
-        public async Task WriteAsync(FtpResponse response, CancellationToken cancellationToken)
+        public async Task WriteAsync([NotNull] FtpResponse response, CancellationToken cancellationToken)
         {
             if (!_closed)
             {
@@ -147,7 +155,7 @@ namespace FubarDev.FtpServer
         /// <param name="response">The response to write to the client</param>
         /// <param name="cancellationToken">The cancellation token</param>
         /// <returns>The task</returns>
-        public async Task WriteAsync(string response, CancellationToken cancellationToken)
+        public async Task WriteAsync([NotNull] string response, CancellationToken cancellationToken)
         {
             if (!_closed)
             {
@@ -161,6 +169,7 @@ namespace FubarDev.FtpServer
         /// Creates a response socket for e.g. LIST/NLST
         /// </summary>
         /// <returns>The data connection</returns>
+        [NotNull, ItemNotNull]
         public async Task<ITcpSocketClient> CreateResponseSocket()
         {
             var portAddress = Data.PortAddress;
@@ -179,7 +188,8 @@ namespace FubarDev.FtpServer
         /// </summary>
         /// <param name="unencryptedStream">The stream to encrypt</param>
         /// <returns>The encrypted stream</returns>
-        public Task<Stream> CreateEncryptedStream(Stream unencryptedStream)
+        [NotNull, ItemNotNull]
+        public Task<Stream> CreateEncryptedStream([NotNull] Stream unencryptedStream)
         {
             if (Data.CreateEncryptedStream == null)
                 return Task.FromResult(unencryptedStream);
