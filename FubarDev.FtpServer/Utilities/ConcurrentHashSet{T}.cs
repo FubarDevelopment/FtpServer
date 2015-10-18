@@ -1,5 +1,5 @@
 ﻿//-----------------------------------------------------------------------
-// <copyright file="ConcurrentHashSet.cs" company="Fubar Development Junker">
+// <copyright file="ConcurrentHashSet{T}.cs" company="Fubar Development Junker">
 //     Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 // <author>Mark Junker</author>

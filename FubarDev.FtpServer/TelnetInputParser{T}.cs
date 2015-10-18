@@ -1,4 +1,4 @@
-﻿// <copyright file="TelnetCommandCollector.cs" company="Fubar Development Junker">
+﻿// <copyright file="TelnetInputParser{T}.cs" company="Fubar Development Junker">
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 

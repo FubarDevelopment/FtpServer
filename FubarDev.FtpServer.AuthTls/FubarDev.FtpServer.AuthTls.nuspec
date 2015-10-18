@@ -3,13 +3,13 @@
   <metadata>
     <id>$id$</id>
     <version>$version$</version>
-    <title>File system for portable FTP server</title>
+    <title>SSL/TLS support for portable FTP server</title>
     <authors>Fubar Development Junker</authors>
     <owners>Fubar Development Junker</owners>
     <licenseUrl>http://opensource.org/licenses/MIT</licenseUrl>
     <projectUrl>https://github.com/FubarDevelopment/FtpServer</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>File system for portable FTP server</description>
+    <description>AUTH TLS for the portable FTP server</description>
     <releaseNotes>Reduce dependencies</releaseNotes>
     <copyright>Copyright © 2015 Fubar Development Junker</copyright>
     <tags>File system portable FTP server</tags>
