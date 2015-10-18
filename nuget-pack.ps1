@@ -1,6 +1,8 @@
 [OutputType([void])]
 param(
 	[Parameter()]
+	$version = "1.0.0-beta20",
+	[Parameter()]
 	$config = "Release"
 )
 
@@ -10,5 +12,5 @@ $nuspecFiles = get-childitem FubarDev.FtpServer*\*.nuspec
 ForEach ($nuspecFile in $nuspecFiles)
 {
 	$csFile = [System.IO.Path]::ChangeExtension($nuspecFile, ".csproj")
-	& nuget pack "$csFile" -Properties "Configuration=$config" -IncludeReferencedProjects
+	& nuget pack "$csFile" -Properties "Configuration=$config;Version=$version" -IncludeReferencedProjects
 }
