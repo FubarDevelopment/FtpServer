@@ -53,6 +53,7 @@
     <Compile Include="CommandHandlers\AborCommandHandler.cs" />
     <Compile Include="CommandHandlers\AlloCommandHandler.cs" />
     <Compile Include="CommandHandlers\CdUpCommandHandler.cs" />
+    <Compile Include="CommandHandlers\MfmtCommandHandler.cs" />
     <Compile Include="FtpCommandHandlerBase.cs" />
     <Compile Include="CommandExtensions\FtpCommandHandlerExtension.cs" />
     <Compile Include="FtpCommandHandlerProcessDelegate.cs" />
