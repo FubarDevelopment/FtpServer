@@ -302,9 +302,9 @@ namespace FubarDev.FtpServer
                         }
                     }
                 }
-                catch (TaskCanceledException)
+                catch (OperationCanceledException)
                 {
-                    // Ignore the TaskCancelledException
+                    // Ignore the OperationCanceledException
                     // This is normal during disconnects
                 }
                 catch (Exception ex)
