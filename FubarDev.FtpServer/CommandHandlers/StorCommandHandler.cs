@@ -33,6 +33,9 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// <inheritdoc/>
         public override async Task<FtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
         {
+            var restartPosition = Data.RestartPosition;
+            Data.RestartPosition = null;
+
             if (!Data.TransferMode.IsBinary && Data.TransferMode.FileType != FtpFileType.Ascii)
                 throw new NotSupportedException();
 
@@ -45,7 +48,7 @@ namespace FubarDev.FtpServer.CommandHandlers
             if (fileInfo == null)
                 return new FtpResponse(550, "Not a valid directory.");
 
-            var doReplace = Data.RestartPosition.GetValueOrDefault() == 0 && fileInfo.Entry != null;
+            var doReplace = restartPosition.GetValueOrDefault() == 0 && fileInfo.Entry != null;
 
             await Connection.WriteAsync(new FtpResponse(150, "Opening connection for data transfer."), cancellationToken);
             using (var responseSocket = await Connection.CreateResponseSocket())
@@ -59,13 +62,13 @@ namespace FubarDev.FtpServer.CommandHandlers
                     {
                         backgroundTransfer = await Data.FileSystem.ReplaceAsync(fileInfo.Entry, stream, cancellationToken);
                     }
-                    else if (Data.RestartPosition.GetValueOrDefault() == 0 || fileInfo.Entry == null)
+                    else if (restartPosition.GetValueOrDefault() == 0 || fileInfo.Entry == null)
                     {
                         backgroundTransfer = await Data.FileSystem.CreateAsync(fileInfo.Directory, fileInfo.FileName, stream, cancellationToken);
                     }
                     else
                     {
-                        backgroundTransfer = await Data.FileSystem.AppendAsync(fileInfo.Entry, Data.RestartPosition ?? 0, stream, cancellationToken);
+                        backgroundTransfer = await Data.FileSystem.AppendAsync(fileInfo.Entry, restartPosition ?? 0, stream, cancellationToken);
                     }
                     if (backgroundTransfer != null)
                         Server.EnqueueBackgroundTransfer(backgroundTransfer, Connection);

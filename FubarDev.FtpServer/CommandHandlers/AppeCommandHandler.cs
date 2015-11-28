@@ -33,6 +33,9 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// <inheritdoc/>
         public override async Task<FtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
         {
+            var restartPosition = Data.RestartPosition;
+            Data.RestartPosition = null;
+
             if (!Data.TransferMode.IsBinary && Data.TransferMode.FileType != FtpFileType.Ascii)
                 throw new NotSupportedException();
 
@@ -52,7 +55,7 @@ namespace FubarDev.FtpServer.CommandHandlers
                 using (var stream = await Connection.CreateEncryptedStream(responseSocket.ReadStream))
                 {
                     IBackgroundTransfer backgroundTransfer;
-                    if ((Data.RestartPosition != null && Data.RestartPosition.Value == 0) || fileInfo.Entry == null)
+                    if ((restartPosition != null && restartPosition.Value == 0) || fileInfo.Entry == null)
                     {
                         if (fileInfo.Entry == null)
                         {
@@ -65,7 +68,7 @@ namespace FubarDev.FtpServer.CommandHandlers
                     }
                     else
                     {
-                        backgroundTransfer = await Data.FileSystem.AppendAsync(fileInfo.Entry, Data.RestartPosition, stream, cancellationToken);
+                        backgroundTransfer = await Data.FileSystem.AppendAsync(fileInfo.Entry, restartPosition, stream, cancellationToken);
                     }
                     if (backgroundTransfer != null)
                         Server.EnqueueBackgroundTransfer(backgroundTransfer, Connection);

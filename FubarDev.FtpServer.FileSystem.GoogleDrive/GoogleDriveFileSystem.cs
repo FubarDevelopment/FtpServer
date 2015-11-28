@@ -191,12 +191,14 @@ namespace FubarDev.FtpServer.FileSystem.GoogleDrive
         {
             var dirEntry = entry as GoogleDriveDirectoryEntry;
             var fileEntry = entry as GoogleDriveFileEntry;
-            var item = dirEntry == null ? fileEntry.File : dirEntry.File;
+            var item = dirEntry == null ? fileEntry?.File : dirEntry.File;
+            if (item == null)
+                throw new InvalidOperationException();
             var newItemValues = new File()
             {
-                ModifiedDate = modify,
-                CreatedDate = create,
-                LastViewedByMeDate = access,
+                ModifiedDate = modify?.UtcDateTime,
+                CreatedDate = create?.UtcDateTime,
+                LastViewedByMeDate = access?.UtcDateTime,
             };
             var newItem = await Service.UpdateAsync(item.Id, newItemValues, cancellationToken);
             var fullName = dirEntry == null ? fileEntry.FullName : dirEntry.FullName;
@@ -212,6 +214,10 @@ namespace FubarDev.FtpServer.FileSystem.GoogleDrive
             Dispose(true);
         }
 
+        /// <summary>
+        /// Is called when the upload is finished.
+        /// </summary>
+        /// <param name="fileId">The ID of the file to be notified as finished.</param>
         internal void UploadFinished(string fileId)
         {
             _uploadsLock.Wait();

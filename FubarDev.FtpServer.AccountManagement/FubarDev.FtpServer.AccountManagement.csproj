@@ -66,23 +66,17 @@
     <Compile Include="Anonymous\SimpleMailAddressValidation.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="JetBrains.Annotations.PCL328, Version=9.2.0.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
-      <HintPath>..\packages\JetBrains.Annotations.9.2.0\lib\portable-net4+sl5+netcore45+wpa81+wp8+MonoAndroid1+MonoTouch1\JetBrains.Annotations.PCL328.dll</HintPath>
+    <Reference Include="JetBrains.Annotations.PCL328, Version=10.0.0.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
+      <HintPath>..\packages\JetBrains.Annotations.10.0.0\lib\portable-net4+sl5+netcore45+wpa81+wp8+MonoAndroid1+MonoTouch1\JetBrains.Annotations.PCL328.dll</HintPath>
       <Private>True</Private>
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Analyzer Include="..\packages\StyleCop.Analyzers.1.0.0-beta014\analyzers\dotnet\cs\Newtonsoft.Json.dll" />
-    <Analyzer Include="..\packages\StyleCop.Analyzers.1.0.0-beta014\analyzers\dotnet\cs\StyleCop.Analyzers.dll" />
+    <Analyzer Include="..\packages\StyleCop.Analyzers.1.0.0-beta017\analyzers\dotnet\cs\Newtonsoft.Json.dll" />
+    <Analyzer Include="..\packages\StyleCop.Analyzers.1.0.0-beta017\analyzers\dotnet\cs\StyleCop.Analyzers.CodeFixes.dll" />
+    <Analyzer Include="..\packages\StyleCop.Analyzers.1.0.0-beta017\analyzers\dotnet\cs\StyleCop.Analyzers.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
-  <Import Project="..\packages\StyleCop.Analyzers.1.0.0-beta014\build\StyleCop.Analyzers.targets" Condition="Exists('..\packages\StyleCop.Analyzers.1.0.0-beta014\build\StyleCop.Analyzers.targets')" />
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>Dieses Projekt verweist auf mindestens ein NuGet-Paket, das auf diesem Computer fehlt. Verwenden Sie die Wiederherstellung von NuGet-Paketen, um die fehlenden Dateien herunterzuladen. Weitere Informationen finden Sie unter "http://go.microsoft.com/fwlink/?LinkID=322105". Die fehlende Datei ist "{0}".</ErrorText>
-    </PropertyGroup>
-    <Error Condition="!Exists('..\packages\StyleCop.Analyzers.1.0.0-beta014\build\StyleCop.Analyzers.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\StyleCop.Analyzers.1.0.0-beta014\build\StyleCop.Analyzers.targets'))" />
-  </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

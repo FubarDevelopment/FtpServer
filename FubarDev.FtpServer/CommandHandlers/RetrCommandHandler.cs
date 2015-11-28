@@ -35,6 +35,9 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// <inheritdoc/>
         public override async Task<FtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
         {
+            var restartPosition = Data.RestartPosition;
+            Data.RestartPosition = null;
+
             if (!Data.TransferMode.IsBinary && Data.TransferMode.FileType != FtpFileType.Ascii)
                 throw new NotSupportedException();
 
@@ -44,7 +47,7 @@ namespace FubarDev.FtpServer.CommandHandlers
             if (fileInfo?.Entry == null)
                 return new FtpResponse(550, "File doesn't exist.");
 
-            using (var input = await Data.FileSystem.OpenReadAsync(fileInfo.Entry, Data.RestartPosition ?? 0, cancellationToken))
+            using (var input = await Data.FileSystem.OpenReadAsync(fileInfo.Entry, restartPosition ?? 0, cancellationToken))
             {
                 await Connection.WriteAsync(new FtpResponse(150, "Opening connection for data transfer."), cancellationToken);
                 using (var responseSocket = await Connection.CreateResponseSocket())

@@ -6,10 +6,7 @@
 //-----------------------------------------------------------------------
 
 using System.Reflection;
-using System.Runtime.InteropServices;
 
 [assembly: AssemblyTitle("FubarDev.FtpServer.FileSystem.GoogleDrive")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyProduct("FubarDev.FtpServer.FileSystem.GoogleDrive")]
-
-[assembly: ComVisible(false)]

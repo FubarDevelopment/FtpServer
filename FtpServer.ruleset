@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<RuleSet Name="FTPServer" ToolsVersion="14.0">
+  <Rules AnalyzerId="Microsoft.Analyzers.ManagedCodeAnalysis" RuleNamespace="Microsoft.Rules.Managed">
+    <Rule Id="CA1001" Action="Warning" />
+    <Rule Id="CA1821" Action="Warning" />
+    <Rule Id="CA2213" Action="Warning" />
+    <Rule Id="CA2231" Action="Warning" />
+  </Rules>
+  <Rules AnalyzerId="StyleCop.Analyzers" RuleNamespace="StyleCop.Analyzers">
+    <Rule Id="SA1101" Action="None" />
+    <Rule Id="SA1200" Action="None" />
+    <Rule Id="SA1309" Action="None" />
+    <Rule Id="SA1503" Action="None" />
+    <Rule Id="SA1513" Action="None" />
+    <Rule Id="SA1516" Action="None" />
+    <Rule Id="SA1652" Action="None" />
+    <Rule Id="SX1309" Action="Warning" />
+  </Rules>
+</RuleSet>

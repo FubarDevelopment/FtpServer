@@ -12,6 +12,4 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyProduct("FubarDev.FtpServer.FileSystem.DotNet")]
 
-[assembly: ComVisible(false)]
-
 [assembly: Guid("9a83c6f5-378b-48b3-b32a-151db90b390c")]

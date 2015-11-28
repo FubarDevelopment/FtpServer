@@ -15,8 +15,18 @@ using RestSharp.Portable.Google.Drive.Model;
 
 namespace FubarDev.FtpServer.FileSystem.GoogleDrive
 {
+    /// <summary>
+    /// The implementation of <see cref="IUnixFileEntry"/> for Google Drive.
+    /// </summary>
     internal class GoogleDriveFileEntry : IUnixFileEntry
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="GoogleDriveFileEntry"/> class.
+        /// </summary>
+        /// <param name="fileSystem">The file system this entry belongs to</param>
+        /// <param name="file">The underlying model</param>
+        /// <param name="fullName">The full path and file name of this entry</param>
+        /// <param name="fileSize">The file size (if it differs from the one in the model)</param>
         public GoogleDriveFileEntry([NotNull] GoogleDriveFileSystem fileSystem, [NotNull] File file, [NotNull] string fullName, long? fileSize = null)
         {
             FileSystem = fileSystem;
@@ -29,28 +39,41 @@ namespace FubarDev.FtpServer.FileSystem.GoogleDrive
             Size = fileSize ?? file.FileSize ?? 0;
         }
 
+        /// <summary>
+        /// The underlying model
+        /// </summary>
         public File File { get; }
 
+        /// <summary>
+        /// The full path to this entry
+        /// </summary>
         public string FullName { get; }
 
+        /// <inheritdoc/>
         public string Name => File.Title;
 
+        /// <inheritdoc/>
         public IUnixPermissions Permissions { get; }
 
+        /// <inheritdoc/>
         public DateTimeOffset? LastWriteTime => File.ModifiedByMeDate ?? File.ModifiedDate ?? File.CreatedDate;
 
         /// <inheritdoc/>
         public DateTimeOffset? CreatedTime => File.CreatedDate;
 
+        /// <inheritdoc/>
         public long NumberOfLinks => 1;
 
         /// <inheritdoc/>
         public IUnixFileSystem FileSystem { get; }
 
+        /// <inheritdoc/>
         public string Owner => "owner";
 
+        /// <inheritdoc/>
         public string Group => "group";
 
+        /// <inheritdoc/>
         public long Size { get; }
     }
 }
