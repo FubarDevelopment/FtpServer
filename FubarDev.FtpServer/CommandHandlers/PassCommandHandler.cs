@@ -45,7 +45,7 @@ namespace FubarDev.FtpServer.CommandHandlers
                 Connection.Data.IsAnonymous = isAnonymous;
                 Connection.Data.FileSystem = await Server.FileSystemClassFactory.Create(userId, isAnonymous);
                 Connection.Data.Path = new Stack<IUnixDirectoryEntry>();
-                return new FtpResponse(220, "Password ok, FTP server ready");
+                return new FtpResponse(230, "Password ok, FTP server ready");
             }
             return new FtpResponse(530, "Username or password incorrect");
         }
