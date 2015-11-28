@@ -187,7 +187,7 @@ namespace FubarDev.FtpServer.FileSystem.GoogleDrive
         }
 
         /// <inheritdoc/>
-        public async Task<IUnixFileSystemEntry> SetMacTime(IUnixFileSystemEntry entry, DateTimeOffset? modify, DateTimeOffset? access, DateTimeOffset? create, CancellationToken cancellationToken)
+        public async Task<IUnixFileSystemEntry> SetMacTimeAsync(IUnixFileSystemEntry entry, DateTimeOffset? modify, DateTimeOffset? access, DateTimeOffset? create, CancellationToken cancellationToken)
         {
             var dirEntry = entry as GoogleDriveDirectoryEntry;
             var fileEntry = entry as GoogleDriveFileEntry;

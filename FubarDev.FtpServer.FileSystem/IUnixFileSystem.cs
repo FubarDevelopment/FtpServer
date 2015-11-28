@@ -31,7 +31,7 @@ namespace FubarDev.FtpServer.FileSystem
         bool SupportsNonEmptyDirectoryDelete { get; }
 
         /// <summary>
-        /// Compares file system entry names
+        /// Gets a string comparer for file system entry names
         /// </summary>
         /// <remarks>
         /// Required to support case insensitive file systems
@@ -150,6 +150,6 @@ namespace FubarDev.FtpServer.FileSystem
         /// <param name="cancellationToken">The cancellation token</param>
         /// <returns>The modified <see cref="IUnixFileSystemEntry"/></returns>
         [NotNull, ItemNotNull]
-        Task<IUnixFileSystemEntry> SetMacTime([NotNull] IUnixFileSystemEntry entry, DateTimeOffset? modify, DateTimeOffset? access, DateTimeOffset? create, CancellationToken cancellationToken);
+        Task<IUnixFileSystemEntry> SetMacTimeAsync([NotNull] IUnixFileSystemEntry entry, DateTimeOffset? modify, DateTimeOffset? access, DateTimeOffset? create, CancellationToken cancellationToken);
     }
 }

@@ -40,12 +40,12 @@ namespace FubarDev.FtpServer.FileSystem.GoogleDrive
         }
 
         /// <summary>
-        /// The underlying model
+        /// Gets the underlying model
         /// </summary>
         public File File { get; }
 
         /// <summary>
-        /// The full path to this entry
+        /// Gets the full path to this entry
         /// </summary>
         public string FullName { get; }
 

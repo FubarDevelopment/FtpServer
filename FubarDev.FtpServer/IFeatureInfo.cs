@@ -14,7 +14,7 @@ namespace FubarDev.FtpServer
     public interface IFeatureInfo
     {
         /// <summary>
-        /// The name of the feature
+        /// Gets the name of the feature
         /// </summary>
         /// <remarks>
         /// Used by the <code>OPTS</code> command to find the handler of the feature to modify.

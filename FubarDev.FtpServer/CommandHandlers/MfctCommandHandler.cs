@@ -51,7 +51,7 @@ namespace FubarDev.FtpServer.CommandHandlers
             if (fileInfo?.Entry == null)
                 return new FtpResponse(550, "File not found.");
 
-            await Data.FileSystem.SetMacTime(fileInfo.Entry, null, null, createTime, cancellationToken);
+            await Data.FileSystem.SetMacTimeAsync(fileInfo.Entry, null, null, createTime, cancellationToken);
 
             var fact = new CreateFact(createTime);
             var fullName = currentPath.GetFullPath() + fileInfo.FileName;

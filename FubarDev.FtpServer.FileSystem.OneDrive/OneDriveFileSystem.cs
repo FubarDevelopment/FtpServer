@@ -228,7 +228,7 @@ namespace FubarDev.FtpServer.FileSystem.OneDrive
         }
 
         /// <inheritdoc/>
-        public async Task<IUnixFileSystemEntry> SetMacTime(IUnixFileSystemEntry entry, DateTimeOffset? modify, DateTimeOffset? access, DateTimeOffset? create, CancellationToken cancellationToken)
+        public async Task<IUnixFileSystemEntry> SetMacTimeAsync(IUnixFileSystemEntry entry, DateTimeOffset? modify, DateTimeOffset? access, DateTimeOffset? create, CancellationToken cancellationToken)
         {
             var item = ((OneDriveFileSystemEntry)entry).Item;
 

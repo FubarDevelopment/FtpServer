@@ -12,12 +12,12 @@ namespace FubarDev.FtpServer.ListFormatters.Facts
     public interface IFact
     {
         /// <summary>
-        /// The name of the fact
+        /// Gets the name of the fact
         /// </summary>
         string Name { get; }
 
         /// <summary>
-        /// The value of the fact
+        /// Gets the value of the fact
         /// </summary>
         string Value { get; }
     }

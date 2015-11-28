@@ -83,7 +83,7 @@ namespace FubarDev.FtpServer.CommandExtensions
             if (foundEntry?.Entry == null)
                 return new FtpResponse(550, "File system entry not found.");
 
-            await Data.FileSystem.SetMacTime(foundEntry.Entry, modificationTime, accessTime, creationTime, cancellationToken);
+            await Data.FileSystem.SetMacTimeAsync(foundEntry.Entry, modificationTime, accessTime, creationTime, cancellationToken);
 
             return new FtpResponse(220, "Timestamps set.");
         }
@@ -105,7 +105,7 @@ namespace FubarDev.FtpServer.CommandExtensions
             if (foundEntry?.Entry == null)
                 return new FtpResponse(550, "File system entry not found.");
 
-            await Data.FileSystem.SetMacTime(foundEntry.Entry, modificationTime, null, null, cancellationToken);
+            await Data.FileSystem.SetMacTimeAsync(foundEntry.Entry, modificationTime, null, null, cancellationToken);
 
             return new FtpResponse(220, "Modification time set.");
         }

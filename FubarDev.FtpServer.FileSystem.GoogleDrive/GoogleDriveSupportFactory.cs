@@ -46,7 +46,7 @@ namespace FubarDev.FtpServer.FileSystem.GoogleDrive
         }
 
         /// <summary>
-        /// Get or set an action that does additional HttpWebRequest configuration
+        /// Gets or sets an action that does additional HttpWebRequest configuration
         /// </summary>
         /// <remarks>
         /// This is useful to set the <code>AllowAutoRedirect</code> property which is not available for portable class libraries.

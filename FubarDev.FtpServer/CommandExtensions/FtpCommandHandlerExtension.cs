@@ -25,7 +25,7 @@ namespace FubarDev.FtpServer.CommandExtensions
         }
 
         /// <summary>
-        /// Gets a value indicating whether a login is required to execute this command
+        /// Gets or sets a value indicating whether a login is required to execute this command
         /// </summary>
         public virtual bool? IsLoginRequired { get; set; }
 

@@ -112,7 +112,7 @@ namespace FubarDev.FtpServer
         public BackgroundCommandHandler BackgroundCommandHandler { get; }
 
         /// <summary>
-        /// Gets the last used transfer type command.
+        /// Gets or sets the last used transfer type command.
         /// </summary>
         /// <remarks>
         /// It's not allowed to use PASV when PORT was used previously - and vice versa.

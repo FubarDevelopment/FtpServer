@@ -91,7 +91,7 @@ namespace FubarDev.FtpServer.FileSystem
         }
 
         /// <inheritdoc/>
-        public Task<IUnixFileSystemEntry> SetMacTime(IUnixFileSystemEntry entry, DateTimeOffset? modify, DateTimeOffset? access, DateTimeOffset? create, CancellationToken cancellationToken)
+        public Task<IUnixFileSystemEntry> SetMacTimeAsync(IUnixFileSystemEntry entry, DateTimeOffset? modify, DateTimeOffset? access, DateTimeOffset? create, CancellationToken cancellationToken)
         {
             throw new NotSupportedException();
         }

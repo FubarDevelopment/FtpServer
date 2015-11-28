@@ -36,12 +36,12 @@ namespace FubarDev.FtpServer
         public FtpFileType FileType { get; }
 
         /// <summary>
-        /// Gets or sets the interpreter mode
+        /// Gets the interpreter mode
         /// </summary>
         public FtpFileTypeInterpreterMode? InterpreterMode { get; private set; }
 
         /// <summary>
-        /// Gets or sets the bits of a binary transfer mode
+        /// Gets the bits of a binary transfer mode
         /// </summary>
         public int? Bits { get; private set; }
 

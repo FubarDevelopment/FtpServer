@@ -93,13 +93,13 @@ namespace FubarDev.FtpServer
         public FtpConnectionData Data { get; }
 
         /// <summary>
-        /// Gets the FTP connection log
+        /// Gets or sets the FTP connection log
         /// </summary>
         [CanBeNull]
         public IFtpLog Log { get; set; }
 
         /// <summary>
-        /// Gets or sets the control connection stream
+        /// Gets the control connection stream
         /// </summary>
         [NotNull]
         public Stream OriginalStream { get; }
@@ -122,7 +122,7 @@ namespace FubarDev.FtpServer
         public Address RemoteAddress { get; }
 
         /// <summary>
-        /// The cancellation token to use to signal a task cancellation
+        /// Gets the cancellation token to use to signal a task cancellation
         /// </summary>
         internal CancellationToken CancellationToken => _cancellationTokenSource.Token;
 

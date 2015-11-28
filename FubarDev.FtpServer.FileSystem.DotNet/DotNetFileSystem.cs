@@ -183,7 +183,7 @@ namespace FubarDev.FtpServer.FileSystem.DotNet
         /// <param name="create">The creation timestamp</param>
         /// <param name="cancellationToken">The cancellation token</param>
         /// <returns>The modified <see cref="IUnixFileSystemEntry"/></returns>
-        public Task<IUnixFileSystemEntry> SetMacTime(IUnixFileSystemEntry entry, DateTimeOffset? modify, DateTimeOffset? access, DateTimeOffset? create, CancellationToken cancellationToken)
+        public Task<IUnixFileSystemEntry> SetMacTimeAsync(IUnixFileSystemEntry entry, DateTimeOffset? modify, DateTimeOffset? access, DateTimeOffset? create, CancellationToken cancellationToken)
         {
             var dirEntry = entry as DotNetDirectoryEntry;
             var fileEntry = entry as DotNetFileEntry;

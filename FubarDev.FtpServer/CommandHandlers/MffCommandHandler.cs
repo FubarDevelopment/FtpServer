@@ -105,7 +105,7 @@ namespace FubarDev.FtpServer.CommandHandlers
             }
 
             if (creationTime != null || modificationTime != null)
-                await Data.FileSystem.SetMacTime(fileInfo.Entry, modificationTime, null, creationTime, cancellationToken);
+                await Data.FileSystem.SetMacTimeAsync(fileInfo.Entry, modificationTime, null, creationTime, cancellationToken);
 
             var fullName = currentPath.GetFullPath() + fileInfo.FileName;
             var responseText = new StringBuilder();

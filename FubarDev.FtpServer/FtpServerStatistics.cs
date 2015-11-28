@@ -10,13 +10,13 @@ namespace FubarDev.FtpServer
     public class FtpServerStatistics
     {
         /// <summary>
-        /// Total number of connections
+        /// Gets the total number of connections
         /// </summary>
         public long TotalConnections
         { get; internal set; }
 
         /// <summary>
-        /// Currently active number of connections
+        /// Gets the currently active number of connections
         /// </summary>
         public long ActiveConnections
         { get; internal set; }
