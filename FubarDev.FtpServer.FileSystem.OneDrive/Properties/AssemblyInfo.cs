@@ -12,3 +12,5 @@ using System.Resources;
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyProduct("FubarDev.FtpServer.FileSystem.OneDrive")]
 [assembly: NeutralResourcesLanguage("de")]
+
+[assembly: AssemblyInformationalVersion("1.1.0-beta")]

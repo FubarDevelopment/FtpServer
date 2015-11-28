@@ -10,3 +10,5 @@ using System.Reflection;
 [assembly: AssemblyTitle("FubarDev.FtpServer.FileSystem.GoogleDrive")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyProduct("FubarDev.FtpServer.FileSystem.GoogleDrive")]
+
+[assembly: AssemblyInformationalVersion("1.1.0-beta")]
