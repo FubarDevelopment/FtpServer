@@ -72,9 +72,9 @@
     <Compile Include="Utilities\SslDirectCall.cs" />
   </ItemGroup>
   <ItemGroup>
-    <AdditionalFiles Include="stylecop.json" />
-  </ItemGroup>
-  <ItemGroup>
+    <AdditionalFiles Include="..\stylecop.json">
+      <Link>stylecop.json</Link>
+    </AdditionalFiles>
     <None Include="FubarDev.FtpServer.AuthTls.nuspec" />
     <None Include="packages.config" />
   </ItemGroup>
