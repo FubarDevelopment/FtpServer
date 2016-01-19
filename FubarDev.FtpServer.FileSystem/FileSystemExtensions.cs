@@ -90,11 +90,14 @@ namespace FubarDev.FtpServer.FileSystem
                         currentPath.Pop();
                     continue;
                 }
-                var foundEntry = (IUnixDirectoryEntry)await fileSystem.GetEntryByNameAsync(currentDir, pathElement, cancellationToken);
-                if (foundEntry == null)
+
+                var foundEntry = await fileSystem.GetEntryByNameAsync(currentDir, pathElement, cancellationToken);
+                var foundDirEntry = foundEntry as IUnixDirectoryEntry;
+                if (foundDirEntry == null)
                     return null;
-                currentPath.Push(foundEntry);
-                currentDir = foundEntry;
+
+                currentPath.Push(foundDirEntry);
+                currentDir = foundDirEntry;
             }
             return currentDir;
         }
