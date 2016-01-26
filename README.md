@@ -1,5 +1,7 @@
 # Portable FTP server
 
+[![Build status](https://build.fubar-dev.de/app/rest/builds/buildType:%28id:FtpServer_ReleaseBuild%29/statusIcon)](https://build.fubar-dev.com/project.html?projectId=FtpServer)
+
 This FTP server is written as PCL and has an abstract file system
 which allows e.g. Google Drive as backend.
 
