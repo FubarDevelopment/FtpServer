@@ -20,7 +20,7 @@ The library is released under the [MIT license](http://opensource.org/licenses/M
 * Visual Studio 2013 (maybe 2012 too)
 * .NET 4.5, .NET Core 5, Windows 8, Windows Phone 8.1, Windows Phone Silverlight 8.0, Xamarin iOS/Android
 
-A NuGet package is available:
+## NuGet packages
 
 | Description				| Badge |
 |---------------------------|-------|
