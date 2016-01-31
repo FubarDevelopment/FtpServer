@@ -125,6 +125,8 @@ namespace FubarDev.FtpServer
 
         private void ParseInterpretationMode(string interpretationMode)
         {
+            interpretationMode = interpretationMode.Trim();
+
             if (FileType == FtpFileType.Ascii || FileType == FtpFileType.Ebcdic)
             {
                 if (string.IsNullOrEmpty(interpretationMode))
