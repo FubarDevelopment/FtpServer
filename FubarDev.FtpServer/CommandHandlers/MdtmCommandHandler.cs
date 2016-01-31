@@ -59,7 +59,7 @@ namespace FubarDev.FtpServer.CommandHandlers
                 foundEntry = await Data.FileSystem.SetMacTimeAsync(fileInfo.Entry, modificationTime, null, null, cancellationToken);
             }
 
-            return new FtpResponse(220, $"{foundEntry.LastWriteTime?.ToUniversalTime():yyyyMMddHHmmss.fff}");
+            return new FtpResponse(213, $"{foundEntry.LastWriteTime?.ToUniversalTime():yyyyMMddHHmmss.fff}");
         }
     }
 }
