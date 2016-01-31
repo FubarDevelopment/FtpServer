@@ -29,7 +29,7 @@ namespace FubarDev.FtpServer.CommandHandlers
         public override Task<FtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
         {
             if (string.Equals(command.Argument, "F", StringComparison.OrdinalIgnoreCase))
-                return Task.FromResult(new FtpResponse(220, "Structure set to File."));
+                return Task.FromResult(new FtpResponse(200, "Structure set to File."));
             return Task.FromResult(new FtpResponse(504, $"File structure {command.Argument} not supported."));
         }
     }
