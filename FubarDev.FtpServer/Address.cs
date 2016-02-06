@@ -56,7 +56,7 @@ namespace FubarDev.FtpServer
         public Address(int port)
         {
             _isEnhanced = true;
-            AddressFamily = FubarDev.FtpServer.AddressFamily.IPv4;
+            AddressFamily = null;
             IpAddress = null;
             IpPort = port;
         }
