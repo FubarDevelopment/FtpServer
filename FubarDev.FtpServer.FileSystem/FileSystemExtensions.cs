@@ -205,8 +205,30 @@ namespace FubarDev.FtpServer.FileSystem
             var sourceDir = await GetDirectoryAsync(fileSystem, currentPath, new ListSegment<string>(pathElements, 0, pathElements.Count - 1), cancellationToken);
             if (sourceDir == null)
                 return null;
+            IUnixFileSystemEntry foundEntry;
             var fileName = pathElements[pathElements.Count - 1];
-            var foundEntry = await fileSystem.GetEntryByNameAsync(sourceDir, fileName, cancellationToken);
+            switch (fileName)
+            {
+                case ".":
+                    fileName = null;
+                    if (currentPath.Count != 0)
+                        foundEntry = currentPath.Pop();
+                    else
+                        foundEntry = fileSystem.Root;
+                    break;
+                case "..":
+                    if (currentPath.Count != 0)
+                        currentPath.Pop();
+                    fileName = null;
+                    if (currentPath.Count != 0)
+                        foundEntry = currentPath.Pop();
+                    else
+                        foundEntry = fileSystem.Root;
+                    break;
+                default:
+                    foundEntry = await fileSystem.GetEntryByNameAsync(sourceDir, fileName, cancellationToken);
+                    break;
+            }
             return new SearchResult<IUnixFileSystemEntry>(sourceDir, foundEntry, fileName);
         }
 
