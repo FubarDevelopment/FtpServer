@@ -137,6 +137,7 @@
     <Compile Include="StringExtensions.cs" />
     <Compile Include="TelnetInputParser{T}.cs" />
     <Compile Include="Utilities\ConcurrentHashSet{T}.cs" />
+    <Compile Include="Utilities\DirectoryListingEnumerator.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\FubarDev.FtpServer.AccountManagement\FubarDev.FtpServer.AccountManagement.csproj">

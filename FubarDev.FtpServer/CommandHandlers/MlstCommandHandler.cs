@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using FubarDev.FtpServer.CommandExtensions;
 using FubarDev.FtpServer.FileSystem;
 using FubarDev.FtpServer.ListFormatters;
+using FubarDev.FtpServer.Utilities;
 
 using Sockets.Plugin.Abstractions;
 
@@ -45,7 +46,7 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// <inheritdoc/>
         public override IEnumerable<FtpCommandHandlerExtension> GetExtensions()
         {
-            yield return new GenericFtpCommandHandlerExtension(Connection, "OPTS", "MLST", FeatureHandler);
+            yield return new GenericFtpCommandHandlerExtension(Connection, "OPTS", "MLST", FeatureHandlerAsync);
         }
 
         /// <inheritdoc/>
@@ -55,10 +56,11 @@ namespace FubarDev.FtpServer.CommandHandlers
 
             var path = Data.Path.Clone();
             IUnixFileSystemEntry targetEntry;
+            IUnixDirectoryEntry dirEntry;
 
             if (string.IsNullOrEmpty(argument))
             {
-                targetEntry = path.Count == 0 ? Data.FileSystem.Root : path.Peek();
+                targetEntry = dirEntry = path.Count == 0 ? Data.FileSystem.Root : path.Peek();
             }
             else
             {
@@ -66,13 +68,13 @@ namespace FubarDev.FtpServer.CommandHandlers
                 if (foundEntry?.Entry == null)
                     return new FtpResponse(550, "File system entry not found.");
                 targetEntry = foundEntry.Entry;
+                dirEntry = targetEntry as IUnixDirectoryEntry;
+                if (dirEntry != null && !dirEntry.IsRoot)
+                    path.Push(dirEntry);
             }
 
-            var dirEntry = targetEntry as IUnixDirectoryEntry;
-            var isDirEntry = dirEntry != null;
-
             var listDir = string.Equals(command.Name, "MLSD", StringComparison.OrdinalIgnoreCase);
-            if (listDir && !isDirEntry)
+            if (listDir && dirEntry == null)
                 return new FtpResponse(501, "Not a directory.");
 
             await Connection.WriteAsync(new FtpResponse(150, "Opening data connection."), cancellationToken);
@@ -87,8 +89,6 @@ namespace FubarDev.FtpServer.CommandHandlers
             }
             try
             {
-                var formatter = new FactsListFormatter(Data.User, Data.FileSystem, path, Data.ActiveMlstFacts);
-
                 var encoding = Data.NlstEncoding ?? Connection.Encoding;
                 using (var stream = await Connection.CreateEncryptedStream(responseSocket.WriteStream))
                 {
@@ -97,30 +97,27 @@ namespace FubarDev.FtpServer.CommandHandlers
                         NewLine = "\r\n",
                     })
                     {
+                        DirectoryListingEnumerator enumerator;
                         if (listDir)
                         {
-                            foreach (var line in formatter.GetPrefix(dirEntry))
-                            {
-                                Connection.Log?.Debug(line);
-                                await writer.WriteLineAsync(line);
-                            }
-
-                            foreach (var entry in await Data.FileSystem.GetEntriesAsync(dirEntry, cancellationToken))
-                            {
-                                var line = formatter.Format(entry);
-                                Connection.Log?.Debug(line);
-                                await writer.WriteLineAsync(line);
-                            }
-
-                            foreach (var line in formatter.GetSuffix(dirEntry))
-                            {
-                                Connection.Log?.Debug(line);
-                                await writer.WriteLineAsync(line);
-                            }
+                            var entries = await Data.FileSystem.GetEntriesAsync(dirEntry, cancellationToken);
+                            enumerator = new DirectoryListingEnumerator(entries, Data.FileSystem, path, true);
                         }
                         else
                         {
-                            var line = formatter.Format(targetEntry);
+                            var entries = new List<IUnixFileSystemEntry>()
+                            {
+                                targetEntry,
+                            };
+                            enumerator = new DirectoryListingEnumerator(entries, Data.FileSystem, path, false);
+                        }
+
+                        var formatter = new FactsListFormatter(Data.User, enumerator, Data.ActiveMlstFacts);
+                        while (enumerator.MoveNext())
+                        {
+                            var name = enumerator.Name;
+                            var entry = enumerator.Entry;
+                            var line = formatter.Format(entry, name);
                             Connection.Log?.Debug(line);
                             await writer.WriteLineAsync(line);
                         }
@@ -149,7 +146,7 @@ namespace FubarDev.FtpServer.CommandHandlers
             return result.ToString();
         }
 
-        private Task<FtpResponse> FeatureHandler(FtpCommand command, CancellationToken cancellationToken)
+        private Task<FtpResponse> FeatureHandlerAsync(FtpCommand command, CancellationToken cancellationToken)
         {
             var facts = command.Argument.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
             Connection.Data.ActiveMlstFacts.Clear();

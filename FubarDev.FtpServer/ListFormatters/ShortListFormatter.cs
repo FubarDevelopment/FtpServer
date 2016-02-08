@@ -17,27 +17,9 @@ namespace FubarDev.FtpServer.ListFormatters
     public class ShortListFormatter : IListFormatter
     {
         /// <inheritdoc/>
-        public IEnumerable<string> GetPrefix(IUnixDirectoryEntry directoryEntry)
+        public string Format(IUnixFileSystemEntry entry, string name)
         {
-            var result = new List<string>
-            {
-                ".",
-            };
-            if (!directoryEntry.IsRoot)
-                result.Add("..");
-            return result;
-        }
-
-        /// <inheritdoc/>
-        public IEnumerable<string> GetSuffix(IUnixDirectoryEntry directoryEntry)
-        {
-            return new string[0];
-        }
-
-        /// <inheritdoc/>
-        public string Format(IUnixFileSystemEntry entry)
-        {
-            return entry.Name;
+            return name ?? entry.Name;
         }
     }
 }

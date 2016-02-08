@@ -15,6 +15,7 @@ using System.Threading.Tasks;
 
 using FubarDev.FtpServer.FileSystem;
 using FubarDev.FtpServer.ListFormatters;
+using FubarDev.FtpServer.Utilities;
 
 using Minimatch;
 
@@ -121,12 +122,6 @@ namespace FubarDev.FtpServer.CommandHandlers
                                 await writer.WriteLineAsync(line);
                             }
 
-                            foreach (var line in formatter.GetPrefix(currentDirEntry))
-                            {
-                                Connection.Log?.Debug(line);
-                                await writer.WriteLineAsync(line);
-                            }
-
                             var mmOptions = new Options()
                             {
                                 IgnoreCase = Data.FileSystem.FileSystemEntryComparer.Equals("a", "A"),
@@ -136,11 +131,22 @@ namespace FubarDev.FtpServer.CommandHandlers
 
                             var mm = new Minimatcher(mask, mmOptions);
 
-                            foreach (var entry in (await Data.FileSystem.GetEntriesAsync(currentDirEntry, cancellationToken)).Where(x => mm.IsMatch(x.Name)))
+                            var entries = await Data.FileSystem.GetEntriesAsync(currentDirEntry, cancellationToken);
+                            var enumerator = new DirectoryListingEnumerator(entries, Data.FileSystem, currentPath, true);
+                            while (enumerator.MoveNext())
                             {
-                                if (entry.Name.StartsWith(".") && !showHidden)
-                                    continue;
-                                if (argument.Recursive)
+                                var name = enumerator.Name;
+                                if (!enumerator.IsDotEntry)
+                                {
+                                    if (!mm.IsMatch(name))
+                                        continue;
+                                    if (name.StartsWith(".") && !showHidden)
+                                        continue;
+                                }
+
+                                var entry = enumerator.Entry;
+
+                                if (argument.Recursive && !enumerator.IsDotEntry)
                                 {
                                     var dirEntry = entry as IUnixDirectoryEntry;
                                     if (dirEntry != null)
@@ -150,13 +156,8 @@ namespace FubarDev.FtpServer.CommandHandlers
                                         directoriesToProcess.Enqueue(new DirectoryQueueItem(subDirPath, "*"));
                                     }
                                 }
-                                var line = formatter.Format(entry);
-                                Connection.Log?.Debug(line);
-                                await writer.WriteLineAsync(line);
-                            }
 
-                            foreach (var line in formatter.GetSuffix(currentDirEntry))
-                            {
+                                var line = formatter.Format(entry, name);
                                 Connection.Log?.Debug(line);
                                 await writer.WriteLineAsync(line);
                             }

@@ -58,7 +58,7 @@ namespace FubarDev.FtpServer.CommandHandlers
 
             foreach (var entry in (await Data.FileSystem.GetEntriesAsync(Data.CurrentDirectory, cancellationToken)).Where(x => mm.IsMatch(x.Name)))
             {
-                var line = formatter.Format(entry);
+                var line = formatter.Format(entry, entry.Name);
                 Connection.Log?.Debug(line);
                 await Connection.WriteAsync($" {line}", cancellationToken);
             }

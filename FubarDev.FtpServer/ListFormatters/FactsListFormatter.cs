@@ -2,6 +2,7 @@
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,6 +10,7 @@ using System.Text;
 using FubarDev.FtpServer.AccountManagement;
 using FubarDev.FtpServer.FileSystem;
 using FubarDev.FtpServer.ListFormatters.Facts;
+using FubarDev.FtpServer.Utilities;
 
 using JetBrains.Annotations;
 
@@ -21,9 +23,7 @@ namespace FubarDev.FtpServer.ListFormatters
     {
         private readonly FtpUser _user;
 
-        private readonly IUnixFileSystem _fileSystem;
-
-        private readonly Stack<IUnixDirectoryEntry> _pathEntries;
+        private readonly DirectoryListingEnumerator _enumerator;
 
         private readonly ISet<string> _activeFacts;
 
@@ -31,49 +31,43 @@ namespace FubarDev.FtpServer.ListFormatters
         /// Initializes a new instance of the <see cref="FactsListFormatter"/> class.
         /// </summary>
         /// <param name="user">The user to create this formatter for</param>
-        /// <param name="fileSystem">The file system where the file system entries are from</param>
-        /// <param name="pathEntries">The current path</param>
+        /// <param name="enumerator">The enumerator for the directory listing to format</param>
         /// <param name="activeFacts">The active facts to return for the entries</param>
-        public FactsListFormatter(FtpUser user, IUnixFileSystem fileSystem, Stack<IUnixDirectoryEntry> pathEntries, ISet<string> activeFacts)
+        public FactsListFormatter(FtpUser user, DirectoryListingEnumerator enumerator, ISet<string> activeFacts)
         {
             _user = user;
-            _fileSystem = fileSystem;
-            _pathEntries = pathEntries;
+            _enumerator = enumerator;
             _activeFacts = activeFacts;
         }
 
         /// <inheritdoc/>
-        public string Format(IUnixFileSystemEntry entry)
+        public string Format(IUnixFileSystemEntry entry, string name)
         {
-            var currentDirEntry = _pathEntries.Count == 0 ? _fileSystem.Root : _pathEntries.Peek();
+            switch (name)
+            {
+                case ".":
+                    return FormatThisDirectoryEntry();
+                case "..":
+                    return FormatParentDirectoryEntry();
+            }
+
+            var currentDirEntry = _enumerator.CurrentDirectory;
             var dirEntry = entry as IUnixDirectoryEntry;
             if (dirEntry != null)
                 return BuildLine(BuildFacts(currentDirEntry, dirEntry, new TypeFact(dirEntry)), entry.Name);
             return BuildLine(BuildFacts(currentDirEntry, (IUnixFileEntry)entry), entry.Name);
         }
 
-        /// <inheritdoc/>
-        public IEnumerable<string> GetPrefix(IUnixDirectoryEntry directoryEntry)
+        private string FormatThisDirectoryEntry()
         {
-            var isRoot = directoryEntry.IsRoot;
-            var parentDir = _pathEntries.Skip(1).FirstOrDefault() ?? (isRoot ? null : _fileSystem.Root);
-            var isParentRoot = parentDir?.IsRoot ?? true;
-            var grandParentDir = _pathEntries.Skip(2).FirstOrDefault() ?? (isParentRoot ? null : _fileSystem.Root);
-            var result = new List<string>()
-            {
-                BuildLine(BuildFacts(parentDir, directoryEntry, new CurrentDirectoryFact()), "."),
-            };
-            if (!isRoot)
-            {
-                result.Add(BuildLine(BuildFacts(grandParentDir, parentDir, new ParentDirectoryFact()), ".."));
-            }
-            return result;
+            return BuildLine(BuildFacts(_enumerator.ParentDirectory, _enumerator.CurrentDirectory, new CurrentDirectoryFact()), ".");
         }
 
-        /// <inheritdoc/>
-        public IEnumerable<string> GetSuffix(IUnixDirectoryEntry directoryEntry)
+        private string FormatParentDirectoryEntry()
         {
-            return new string[0];
+            if (_enumerator.ParentDirectory == null)
+                throw new InvalidOperationException("Internal program error: The parent directory could not be determined.");
+            return BuildLine(BuildFacts(_enumerator.GrandParentDirectory, _enumerator.ParentDirectory, new ParentDirectoryFact()), "..");
         }
 
         private string BuildLine([NotNull] IEnumerable<IFact> facts, string entryName)

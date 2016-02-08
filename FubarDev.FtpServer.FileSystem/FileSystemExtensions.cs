@@ -209,6 +209,11 @@ namespace FubarDev.FtpServer.FileSystem
             var fileName = pathElements[pathElements.Count - 1];
             switch (fileName)
             {
+                case "":
+                    currentPath.Clear();
+                    fileName = null;
+                    foundEntry = fileSystem.Root;
+                    break;
                 case ".":
                     fileName = null;
                     if (currentPath.Count != 0)
