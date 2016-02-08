@@ -233,6 +233,18 @@ namespace FubarDev.FtpServer.FileSystem
         }
 
         /// <summary>
+        /// Returns the <paramref name="path"/> as string like <see cref="GetFullPath(System.Collections.Generic.Stack{FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry})"/>, with the
+        /// difference that it doesn't add the trailing <code>/</code>.
+        /// </summary>
+        /// <param name="path">The path to convert to string</param>
+        /// <returns>The <paramref name="path"/> as string</returns>
+        [NotNull]
+        public static string ToDisplayString([NotNull, ItemNotNull] this Stack<IUnixDirectoryEntry> path)
+        {
+            return $"/{string.Join("/", path.Reverse().Select(x => x.Name))}";
+        }
+
+        /// <summary>
         /// Returns the <paramref name="path"/> as string
         /// </summary>
         /// <param name="path">The path to convert to string</param>
