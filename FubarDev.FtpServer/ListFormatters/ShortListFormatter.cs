@@ -23,7 +23,7 @@ namespace FubarDev.FtpServer.ListFormatters
             {
                 ".",
             };
-            if (!string.IsNullOrEmpty(directoryEntry.Name))
+            if (!directoryEntry.IsRoot)
                 result.Add("..");
             return result;
         }

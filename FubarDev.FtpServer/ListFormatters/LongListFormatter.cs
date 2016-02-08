@@ -24,7 +24,7 @@ namespace FubarDev.FtpServer.ListFormatters
             {
                 BuildLine(directoryEntry, null, "."),
             };
-            if (!string.IsNullOrEmpty(directoryEntry.Name))
+            if (!directoryEntry.IsRoot)
             {
                 result.Add(BuildLine(directoryEntry, null, ".."));
             }
