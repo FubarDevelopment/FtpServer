@@ -10,7 +10,11 @@
     <projectUrl>https://github.com/FubarDevelopment/FtpServer</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Portable FTP server</description>
-    <releaseNotes>Reduce dependencies</releaseNotes>
+    <releaseNotes>
+      - LIST accepts options and path
+      - MLST returns data on control connection
+      - Several fixes for relative paths
+    </releaseNotes>
     <copyright>Copyright © 2015 Fubar Development Junker</copyright>
     <tags>RestSharp Portable Google Drive</tags>
   </metadata>
