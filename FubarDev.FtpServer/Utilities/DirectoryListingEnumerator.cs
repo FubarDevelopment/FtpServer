@@ -17,6 +17,8 @@ namespace FubarDev.FtpServer.Utilities
     /// </summary>
     public class DirectoryListingEnumerator
     {
+        private readonly Stack<IUnixDirectoryEntry> _pathEntries;
+
         private readonly IEnumerator<IUnixFileSystemEntry> _entriesEnumerator;
 
         private readonly IEnumerator<Tuple<IUnixDirectoryEntry, string>> _dotEntriesEnumerator;
@@ -32,6 +34,8 @@ namespace FubarDev.FtpServer.Utilities
         /// <param name="returnDotEntries"><code>true</code> when this enumerator should return the dot entries</param>
         public DirectoryListingEnumerator(IEnumerable<IUnixFileSystemEntry> entries, IUnixFileSystem fileSystem, Stack<IUnixDirectoryEntry> pathEntries, bool returnDotEntries)
         {
+            _pathEntries = pathEntries;
+
             var topPathEntries = pathEntries.Take(3).ToList();
 
             switch (topPathEntries.Count)
@@ -117,6 +121,11 @@ namespace FubarDev.FtpServer.Utilities
                 _enumerateDotEntries = false;
             }
             return _entriesEnumerator.MoveNext();
+        }
+
+        public string GetFullPath(string name)
+        {
+            return _pathEntries.GetFullPath(name);
         }
     }
 }

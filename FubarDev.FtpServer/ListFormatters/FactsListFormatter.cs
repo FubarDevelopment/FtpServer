@@ -27,17 +27,21 @@ namespace FubarDev.FtpServer.ListFormatters
 
         private readonly ISet<string> _activeFacts;
 
+        private readonly bool _absoluteName;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="FactsListFormatter"/> class.
         /// </summary>
         /// <param name="user">The user to create this formatter for</param>
         /// <param name="enumerator">The enumerator for the directory listing to format</param>
         /// <param name="activeFacts">The active facts to return for the entries</param>
-        public FactsListFormatter(FtpUser user, DirectoryListingEnumerator enumerator, ISet<string> activeFacts)
+        /// <param name="absoluteName">Returns an absolute entry name</param>
+        public FactsListFormatter(FtpUser user, DirectoryListingEnumerator enumerator, ISet<string> activeFacts, bool absoluteName)
         {
             _user = user;
             _enumerator = enumerator;
             _activeFacts = activeFacts;
+            _absoluteName = absoluteName;
         }
 
         /// <inheritdoc/>
@@ -54,8 +58,8 @@ namespace FubarDev.FtpServer.ListFormatters
             var currentDirEntry = _enumerator.CurrentDirectory;
             var dirEntry = entry as IUnixDirectoryEntry;
             if (dirEntry != null)
-                return BuildLine(BuildFacts(currentDirEntry, dirEntry, new TypeFact(dirEntry)), entry.Name);
-            return BuildLine(BuildFacts(currentDirEntry, (IUnixFileEntry)entry), entry.Name);
+                return BuildLine(BuildFacts(currentDirEntry, dirEntry, new TypeFact(dirEntry)), dirEntry.IsRoot ? string.Empty : name ?? entry.Name);
+            return BuildLine(BuildFacts(currentDirEntry, (IUnixFileEntry)entry), name ?? entry.Name);
         }
 
         private string FormatThisDirectoryEntry()
@@ -77,7 +81,8 @@ namespace FubarDev.FtpServer.ListFormatters
             {
                 result.AppendFormat("{0}={1};", fact.Name, fact.Value);
             }
-            result.AppendFormat(" {0}", entryName);
+            var fullName = _absoluteName ? _enumerator.GetFullPath(entryName) : entryName;
+            result.AppendFormat(" {0}", fullName);
             return result.ToString();
         }
 
