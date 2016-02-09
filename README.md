@@ -7,7 +7,7 @@ which allows e.g. Google Drive as backend.
 
 # License
 
-The library is released under the [MIT license](http://opensource.org/licenses/MIT).
+The library is released under the [![MIT license](https://img.shields.io/github/license/mashape/apistatus.svg)](http://opensource.org/licenses/MIT).
 
 # Prerequisites
 
