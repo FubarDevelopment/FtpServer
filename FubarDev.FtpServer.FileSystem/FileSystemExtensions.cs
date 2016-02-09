@@ -87,7 +87,10 @@ namespace FubarDev.FtpServer.FileSystem
                 if (pathElement == "..")
                 {
                     if (currentPath.Count != 0)
+                    {
                         currentPath.Pop();
+                        currentDir = currentPath.Count == 0 ? fileSystem.Root : currentPath.Peek();
+                    }
                     continue;
                 }
 
