@@ -25,11 +25,20 @@ namespace TestFtpServer
 
         private static void Main()
         {
+            // Load server certificate
             var cert = new X509Certificate2("test.pfx");
             AuthTlsCommandHandler.ServerCertificate = cert;
+
+            // Only allow anonymous login
             var membershipProvider = new AnonymousMembershipProvider(new NoValidation());
+
+            // Use the .NET file system
             var fsProvider = new DotNetFileSystemProvider(Path.Combine(Path.GetTempPath(), "TestFtpServer"));
+
+            // Use all commands from the FtpServer assembly and the one(s) from the AuthTls assembly
             var commandFactory = new AssemblyFtpCommandHandlerFactory(typeof(FtpServer).Assembly, typeof(AuthTlsCommandHandler).Assembly);
+
+            // Initialize the FTP server
             using (var ftpServer = new FtpServer(fsProvider, membershipProvider, "127.0.0.1", Port, commandFactory)
             {
                 DefaultEncoding = Encoding.ASCII,
@@ -37,6 +46,7 @@ namespace TestFtpServer
             })
             {
 #if USE_FTPS_IMPLICIT
+                // Use an implicit SSL connection (without the AUTHTLS command)
                 ftpServer.ConfigureConnection += (s, e) =>
                 {
                     var sslStream = new FixedSslStream(e.Connection.OriginalStream);
@@ -44,13 +54,18 @@ namespace TestFtpServer
                     e.Connection.SocketStream = sslStream;
                 };
 #endif
+
+                // Create the default logger
                 var log = ftpServer.LogManager?.CreateLog(typeof(Program));
 
                 try
                 {
+                    // Start the FTP server
                     ftpServer.Start();
                     Console.WriteLine("Press ENTER/RETURN to close the test application.");
                     Console.ReadLine();
+
+                    // Stop the FTP server
                     ftpServer.Stop();
                 }
                 catch (Exception ex)
