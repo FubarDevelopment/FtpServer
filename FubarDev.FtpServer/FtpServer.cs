@@ -222,8 +222,7 @@ namespace FubarDev.FtpServer
 
         private void OnConfigureConnection(FtpConnection connection)
         {
-            if (ConfigureConnection != null)
-                ConfigureConnection(this, new ConnectionEventArgs(connection));
+            ConfigureConnection?.Invoke(this, new ConnectionEventArgs(connection));
         }
 
         private async Task ExecuteServerListener(CancellationToken cancellationToken)

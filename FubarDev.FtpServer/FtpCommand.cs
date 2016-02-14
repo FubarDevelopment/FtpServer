@@ -26,7 +26,7 @@ namespace FubarDev.FtpServer
         public FtpCommand([NotNull] string commandName, [CanBeNull] string commandArgument)
         {
             Name = commandName;
-            Argument = commandArgument;
+            Argument = commandArgument ?? string.Empty;
         }
 
         /// <summary>

@@ -16,7 +16,7 @@ namespace FubarDev.FtpServer.ListFormatters.Facts
         /// </summary>
         /// <param name="entry">The file system entry to get the <code>type</code> fact for</param>
         public TypeFact(IUnixFileSystemEntry entry)
-            : this((entry is IUnixFileEntry) ? "file" : "dir")
+            : this(entry is IUnixFileEntry ? "file" : "dir")
         {
         }
 

@@ -29,9 +29,9 @@ namespace FubarDev.FtpServer.FileSystem.OneDrive
 
         public string Group => "group";
 
-        public DateTimeOffset? LastWriteTime => Item?.FileSystemInfo?.LastModifiedDateTime ?? Item.LastModifiedDateTime ?? Item?.FileSystemInfo?.CreatedDateTime;
+        public DateTimeOffset? LastWriteTime => Item?.FileSystemInfo?.LastModifiedDateTime ?? Item?.LastModifiedDateTime ?? Item?.FileSystemInfo?.CreatedDateTime;
 
-        public string Name => Item.ParentReference == null ? null : Item.Name;
+        public string Name => Item.ParentReference == null ? string.Empty : Item.Name;
 
         public long NumberOfLinks => 1;
 

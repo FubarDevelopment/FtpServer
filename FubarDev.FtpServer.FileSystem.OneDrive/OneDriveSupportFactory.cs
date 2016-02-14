@@ -13,7 +13,6 @@ using JetBrains.Annotations;
 using RestSharp.Portable;
 using RestSharp.Portable.Authenticators;
 using RestSharp.Portable.Authenticators.OAuth2;
-using RestSharp.Portable.Authenticators.OAuth2.Infrastructure;
 using RestSharp.Portable.Microsoft.OneDrive;
 
 using IRequestFactory = RestSharp.Portable.Microsoft.OneDrive.IRequestFactory;

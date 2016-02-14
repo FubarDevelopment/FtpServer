@@ -87,7 +87,7 @@ namespace FubarDev.FtpServer.ListFormatters
         }
 
         [NotNull]
-        private IReadOnlyList<IFact> BuildFacts([NotNull] IUnixDirectoryEntry parentEntry, [NotNull] IUnixDirectoryEntry currentEntry, TypeFact typeFact)
+        private IReadOnlyList<IFact> BuildFacts([CanBeNull] IUnixDirectoryEntry parentEntry, [NotNull] IUnixDirectoryEntry currentEntry, TypeFact typeFact)
         {
             var result = new List<IFact>()
             {

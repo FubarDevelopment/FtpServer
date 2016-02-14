@@ -96,7 +96,7 @@ namespace FubarDev.FtpServer
                 var data = new byte[carriageReturnPos - offset + previousData.Length];
                 if (previousData.Length != 0)
                     Array.Copy(previousData, data, previousData.Length);
-                if ((carriageReturnPos - offset) != 0)
+                if (carriageReturnPos - offset != 0)
                     Array.Copy(buffer, offset, data, previousData.Length, carriageReturnPos - offset);
 
                 commands.Add(CreateFtpCommand(data));

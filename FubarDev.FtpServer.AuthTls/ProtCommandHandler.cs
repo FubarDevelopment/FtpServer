@@ -2,7 +2,6 @@
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading;

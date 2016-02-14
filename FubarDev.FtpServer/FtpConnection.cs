@@ -192,6 +192,9 @@ namespace FubarDev.FtpServer
                 return result;
             }
 
+            if (Data.PassiveSocketClient == null)
+                throw new InvalidOperationException("Passive connection expected, but none found");
+
             return Data.PassiveSocketClient;
         }
 
@@ -283,7 +286,7 @@ namespace FubarDev.FtpServer
                         Debug.WriteLine($"Task {completedTask} completed");
                         if (completedTask == 1)
                         {
-                            var response = _activeBackgroundTask.Result;
+                            var response = _activeBackgroundTask?.Result;
                             if (response != null)
                                 Write(response);
                             _activeBackgroundTask = null;

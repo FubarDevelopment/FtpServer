@@ -34,6 +34,8 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// <inheritdoc/>
         public override async Task<FtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
         {
+            if (Connection.Data.User == null)
+                return new FtpResponse(530, "No user name given");
             var password = command.Argument;
             var validationResult = Server.MembershipProvider.ValidateUser(Connection.Data.User.Name, password);
             if (validationResult.IsSuccess)

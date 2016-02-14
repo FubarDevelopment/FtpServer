@@ -192,7 +192,7 @@ namespace FubarDev.FtpServer.Tests
 
         private class FtpCommandComparer : IComparer<FtpCommand>, IEqualityComparer<FtpCommand>
         {
-            private static readonly StringComparer StringComparer = StringComparer.OrdinalIgnoreCase;
+            private static readonly StringComparer _stringComparer = StringComparer.OrdinalIgnoreCase;
 
             public int Compare(FtpCommand x, FtpCommand y)
             {
@@ -205,7 +205,7 @@ namespace FubarDev.FtpServer.Tests
                 var v = string.Compare(x.Name, y.Name, StringComparison.OrdinalIgnoreCase);
                 if (v != 0)
                     return v;
-                return StringComparer.Compare(x.Argument, y.Argument);
+                return _stringComparer.Compare(x.Argument, y.Argument);
             }
 
             public bool Equals(FtpCommand x, FtpCommand y)
@@ -215,8 +215,8 @@ namespace FubarDev.FtpServer.Tests
 
             public int GetHashCode(FtpCommand obj)
             {
-                return StringComparer.GetHashCode(obj.Name)
-                       ^ StringComparer.GetHashCode(obj.Argument);
+                return _stringComparer.GetHashCode(obj.Name)
+                       ^ _stringComparer.GetHashCode(obj.Argument);
             }
         }
     }
