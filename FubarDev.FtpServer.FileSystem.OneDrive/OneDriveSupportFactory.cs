@@ -82,7 +82,8 @@ namespace FubarDev.FtpServer.FileSystem.OneDrive
         /// <param name="data">The data stream to fill the temporary data storage with</param>
         /// <param name="cancellationToken">The cancellation token</param>
         /// <returns>The created temporary data storage</returns>
-        [NotNull, ItemNotNull]
+        [NotNull]
+        [ItemNotNull]
         public async Task<ITemporaryData> CreateTemporaryData([NotNull] Stream data, CancellationToken cancellationToken)
         {
             var tempData = _createTempDataFunc();

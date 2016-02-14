@@ -15,6 +15,7 @@ namespace FubarDev.FtpServer
     /// <param name="command">The command to process</param>
     /// <param name="cancellationToken">The cancellation token to signal command abortion</param>
     /// <returns>The FTP response</returns>
-    [NotNull, ItemCanBeNull]
+    [NotNull]
+    [ItemCanBeNull]
     public delegate Task<FtpResponse> FtpCommandHandlerProcessDelegate([NotNull] FtpCommand command, CancellationToken cancellationToken);
 }

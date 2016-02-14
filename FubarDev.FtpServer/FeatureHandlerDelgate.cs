@@ -14,6 +14,7 @@ namespace FubarDev.FtpServer
     /// <param name="connection">The connection to handle the feature options for</param>
     /// <param name="argument">The arguments for the feature option</param>
     /// <returns>The response to be sent to the client</returns>
-    [NotNull, ItemCanBeNull]
+    [NotNull]
+    [ItemCanBeNull]
     public delegate Task<FtpResponse> FeatureHandlerDelgate([NotNull] FtpConnection connection, [NotNull] string argument);
 }

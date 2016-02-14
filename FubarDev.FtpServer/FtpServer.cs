@@ -184,7 +184,8 @@ namespace FubarDev.FtpServer
         /// Get the background transfer states for all active <see cref="IBackgroundTransfer"/> objects.
         /// </summary>
         /// <returns>The background transfer states for all active <see cref="IBackgroundTransfer"/> objects</returns>
-        [NotNull, ItemNotNull]
+        [NotNull]
+        [ItemNotNull]
         public IReadOnlyCollection<Tuple<string, BackgroundTransferStatus>> GetBackgroundTaskStates()
         {
             return BackgroundTransferWorker.GetStates();

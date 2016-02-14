@@ -44,7 +44,8 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// Gets a collection of command handler extensions provided by this command handler.
         /// </summary>
         /// <returns>A collection of command handler extensions provided by this command handler</returns>
-        [NotNull, ItemNotNull]
+        [NotNull]
+        [ItemNotNull]
         public virtual IEnumerable<FtpCommandHandlerExtension> GetExtensions()
         {
             return Enumerable.Empty<FtpCommandHandlerExtension>();
