@@ -218,20 +218,30 @@ namespace FubarDev.FtpServer.FileSystem
                     foundEntry = fileSystem.Root;
                     break;
                 case ".":
-                    fileName = null;
                     if (currentPath.Count != 0)
+                    {
                         foundEntry = currentPath.Pop();
+                        fileName = foundEntry.Name;
+                    }
                     else
+                    {
                         foundEntry = fileSystem.Root;
+                        fileName = null;
+                    }
                     break;
                 case "..":
                     if (currentPath.Count != 0)
                         currentPath.Pop();
-                    fileName = null;
                     if (currentPath.Count != 0)
+                    {
                         foundEntry = currentPath.Pop();
+                        fileName = foundEntry.Name;
+                    }
                     else
+                    {
                         foundEntry = fileSystem.Root;
+                        fileName = null;
+                    }
                     break;
                 default:
                     foundEntry = await fileSystem.GetEntryByNameAsync(sourceDir, fileName, cancellationToken);
