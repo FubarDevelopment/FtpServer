@@ -27,7 +27,7 @@ The library is released under the [MIT license](http://opensource.org/licenses/M
 | Core library				| [![FubarDev.FtpServer](https://img.shields.io/nuget/v/FubarDev.FtpServer.svg)](https://www.nuget.org/packages/FubarDev.FtpServer) |
 | Virtual FTP file system	| [![FubarDev.FtpServer.FileSystem](https://img.shields.io/nuget/v/FubarDev.FtpServer.FileSystem.svg)](https://www.nuget.org/packages/FubarDev.FtpServer.FileSystem) |
 | Google Drive support		| [![FubarDev.FtpServer.FileSystem.GoogleDrive](https://img.shields.io/nuget/v/FubarDev.FtpServer.FileSystem.GoogleDrive.svg)](https://www.nuget.org/packages/FubarDev.FtpServer.FileSystem.GoogleDrive) |
-| OneDrive support			| [![FubarDev.FtpServer.FileSystem.OneDrive](https://img.shields.io/nuget/v/FubarDev.FtpServer.FileSystem.OneDrive.svg)](https://www.nuget.org/packages/FubarDev.FtpServer.FileSystem.OneeDrive) |
+| OneDrive support			| [![FubarDev.FtpServer.FileSystem.OneDrive](https://img.shields.io/nuget/v/FubarDev.FtpServer.FileSystem.OneDrive.svg)](https://www.nuget.org/packages/FubarDev.FtpServer.FileSystem.OneDrive) |
 | Account management		| [![FubarDev.FtpServer.AccountManagement](https://img.shields.io/nuget/v/FubarDev.FtpServer.AccountManagement.svg)](https://www.nuget.org/packages/FubarDev.FtpServer.AccountManagement) |
 | FTPS (TLS) Support       	| [![FubarDev.FtpServer.AuthTls](https://img.shields.io/nuget/v/FubarDev.FtpServer.AuthTls.svg)](https://www.nuget.org/packages/FubarDev.FtpServer.AuthTls) |
 
