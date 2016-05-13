@@ -5,7 +5,6 @@
 // <author>Mark Junker</author>
 //-----------------------------------------------------------------------
 
-using System.Collections.Generic;
 using System.Globalization;
 
 using FubarDev.FtpServer.FileSystem;
@@ -18,30 +17,10 @@ namespace FubarDev.FtpServer.ListFormatters
     public class LongListFormatter : IListFormatter
     {
         /// <inheritdoc/>
-        public IEnumerable<string> GetPrefix(IUnixDirectoryEntry directoryEntry)
-        {
-            var result = new List<string>
-            {
-                BuildLine(directoryEntry, null, "."),
-            };
-            if (!string.IsNullOrEmpty(directoryEntry.Name))
-            {
-                result.Add(BuildLine(directoryEntry, null, ".."));
-            }
-            return result;
-        }
-
-        /// <inheritdoc/>
-        public IEnumerable<string> GetSuffix(IUnixDirectoryEntry directoryEntry)
-        {
-            return new string[0];
-        }
-
-        /// <inheritdoc/>
-        public string Format(IUnixFileSystemEntry entry)
+        public string Format(IUnixFileSystemEntry entry, string name)
         {
             var fileEntry = entry as IUnixFileEntry;
-            return BuildLine(entry, fileEntry, entry.Name);
+            return BuildLine(entry, fileEntry, name ?? entry.Name);
         }
 
         private static string BuildLine(IUnixFileSystemEntry entry, IUnixFileEntry fileEntry, string name)

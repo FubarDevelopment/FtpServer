@@ -39,6 +39,8 @@ namespace FubarDev.FtpServer
 
         private ConfiguredTaskAwaitable _listenerTask;
 
+        private IFtpLog _log;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="FtpServer"/> class.
         /// </summary>
@@ -182,7 +184,8 @@ namespace FubarDev.FtpServer
         /// Get the background transfer states for all active <see cref="IBackgroundTransfer"/> objects.
         /// </summary>
         /// <returns>The background transfer states for all active <see cref="IBackgroundTransfer"/> objects</returns>
-        [NotNull, ItemNotNull]
+        [NotNull]
+        [ItemNotNull]
         public IReadOnlyCollection<Tuple<string, BackgroundTransferStatus>> GetBackgroundTaskStates()
         {
             return BackgroundTransferWorker.GetStates();
@@ -219,29 +222,36 @@ namespace FubarDev.FtpServer
 
         private void OnConfigureConnection(FtpConnection connection)
         {
-            if (ConfigureConnection != null)
-                ConfigureConnection(this, new ConnectionEventArgs(connection));
+            ConfigureConnection?.Invoke(this, new ConnectionEventArgs(connection));
         }
 
         private async Task ExecuteServerListener(CancellationToken cancellationToken)
         {
+            _log = LogManager?.CreateLog(typeof(FtpServer));
             using (var listener = new TcpSocketListener(0))
             {
                 listener.ConnectionReceived = ConnectionReceived;
-                await listener.StartListeningAsync(Port);
                 try
                 {
-                    for (; ;)
+                    await listener.StartListeningAsync(Port);
+                    try
                     {
-                        cancellationToken.ThrowIfCancellationRequested();
-                        await Task.Delay(100, cancellationToken);
+                        for (; ;)
+                        {
+                            cancellationToken.ThrowIfCancellationRequested();
+                            await Task.Delay(100, cancellationToken);
+                        }
+                    }
+                    finally
+                    {
+                        await listener.StopListeningAsync();
+                        foreach (var connection in _connections.ToArray())
+                            connection.Close();
                     }
                 }
-                finally
+                catch (Exception ex)
                 {
-                    await listener.StopListeningAsync();
-                    foreach (var connection in _connections.ToArray())
-                        connection.Close();
+                    _log?.Fatal(ex, "{0}", ex.Message);
                 }
             }
         }

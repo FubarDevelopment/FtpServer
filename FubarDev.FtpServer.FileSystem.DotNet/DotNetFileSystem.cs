@@ -187,7 +187,21 @@ namespace FubarDev.FtpServer.FileSystem.DotNet
         {
             var dirEntry = entry as DotNetDirectoryEntry;
             var fileEntry = entry as DotNetFileEntry;
-            var item = dirEntry == null ? (FileSystemInfo)fileEntry.Info : dirEntry.Info;
+
+            FileSystemInfo item;
+            if (dirEntry != null)
+            {
+                item = dirEntry.Info;
+            }
+            else if (fileEntry != null)
+            {
+                item = fileEntry.Info;
+            }
+            else
+            {
+                throw new ArgumentException("Argument must be of type DotNetDirectoryEntry or DotNetFileEntry", nameof(entry));
+            }
+
             if (access != null)
                 item.LastAccessTimeUtc = access.Value.UtcDateTime;
             if (modify != null)

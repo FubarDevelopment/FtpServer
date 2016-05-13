@@ -40,7 +40,8 @@ namespace FubarDev.FtpServer.FileSystem
         /// Opens the temporary data and returns a stream
         /// </summary>
         /// <returns>The stream containig the temporary data</returns>
-        [NotNull, ItemNotNull]
+        [NotNull]
+        [ItemNotNull]
         Task<Stream> OpenAsync();
     }
 }

@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using FubarDev.FtpServer.CommandExtensions;
 using FubarDev.FtpServer.FileSystem;
 using FubarDev.FtpServer.ListFormatters;
+using FubarDev.FtpServer.Utilities;
 
 using Sockets.Plugin.Abstractions;
 
@@ -45,14 +46,32 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// <inheritdoc/>
         public override IEnumerable<FtpCommandHandlerExtension> GetExtensions()
         {
-            yield return new GenericFtpCommandHandlerExtension(Connection, "OPTS", "MLST", FeatureHandler);
+            yield return new GenericFtpCommandHandlerExtension(Connection, "OPTS", "MLST", FeatureHandlerAsync);
         }
 
         /// <inheritdoc/>
-        public override async Task<FtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
+        public override Task<FtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
+        {
+            var listDir = string.Equals(command.Name, "MLSD", StringComparison.OrdinalIgnoreCase);
+            if (listDir)
+                return ProcessMlsdAsync(command, cancellationToken);
+            return ProcessMlstAsync(command, cancellationToken);
+        }
+
+        private static string FeatureStatus(FtpConnection connection)
+        {
+            var result = new StringBuilder();
+            result.Append("MLST ");
+            foreach (var fact in _knownFacts)
+            {
+                result.AppendFormat("{0}{1};", fact, connection.Data.ActiveMlstFacts.Contains(fact) ? "*" : string.Empty);
+            }
+            return result.ToString();
+        }
+
+        private async Task<FtpResponse> ProcessMlstAsync(FtpCommand command, CancellationToken cancellationToken)
         {
             var argument = command.Argument;
-
             var path = Data.Path.Clone();
             IUnixFileSystemEntry targetEntry;
 
@@ -68,12 +87,45 @@ namespace FubarDev.FtpServer.CommandHandlers
                 targetEntry = foundEntry.Entry;
             }
 
-            var dirEntry = targetEntry as IUnixDirectoryEntry;
-            var isDirEntry = dirEntry != null;
+            await Connection.WriteAsync($"250- {targetEntry.Name}", cancellationToken);
+            var entries = new List<IUnixFileSystemEntry>()
+            {
+                targetEntry,
+            };
+            var enumerator = new DirectoryListingEnumerator(entries, Data.FileSystem, path, false);
+            var formatter = new FactsListFormatter(Data.User, enumerator, Data.ActiveMlstFacts, true);
+            while (enumerator.MoveNext())
+            {
+                var name = enumerator.Name;
+                var entry = enumerator.Entry;
+                var line = formatter.Format(entry, name);
+                await Connection.WriteAsync($" {line}", cancellationToken);
+            }
 
-            var listDir = string.Equals(command.Name, "MLSD", StringComparison.OrdinalIgnoreCase);
-            if (listDir && !isDirEntry)
-                return new FtpResponse(501, "Not a directory.");
+            return new FtpResponse(250, "End");
+        }
+
+        private async Task<FtpResponse> ProcessMlsdAsync(FtpCommand command, CancellationToken cancellationToken)
+        {
+            var argument = command.Argument;
+            var path = Data.Path.Clone();
+            IUnixDirectoryEntry dirEntry;
+
+            if (string.IsNullOrEmpty(argument))
+            {
+                dirEntry = path.Count == 0 ? Data.FileSystem.Root : path.Peek();
+            }
+            else
+            {
+                var foundEntry = await Data.FileSystem.SearchEntryAsync(path, argument, cancellationToken);
+                if (foundEntry?.Entry == null)
+                    return new FtpResponse(550, "File system entry not found.");
+                dirEntry = foundEntry.Entry as IUnixDirectoryEntry;
+                if (dirEntry == null)
+                    return new FtpResponse(501, "Not a directory.");
+                if (!dirEntry.IsRoot)
+                    path.Push(dirEntry);
+            }
 
             await Connection.WriteAsync(new FtpResponse(150, "Opening data connection."), cancellationToken);
             ITcpSocketClient responseSocket;
@@ -85,10 +137,9 @@ namespace FubarDev.FtpServer.CommandHandlers
             {
                 return new FtpResponse(425, "Can't open data connection.");
             }
+
             try
             {
-                var formatter = new FactsListFormatter(Data.User, Data.FileSystem, path, Data.ActiveMlstFacts);
-
                 var encoding = Data.NlstEncoding ?? Connection.Encoding;
                 using (var stream = await Connection.CreateEncryptedStream(responseSocket.WriteStream))
                 {
@@ -97,30 +148,14 @@ namespace FubarDev.FtpServer.CommandHandlers
                         NewLine = "\r\n",
                     })
                     {
-                        if (listDir)
+                        var entries = await Data.FileSystem.GetEntriesAsync(dirEntry, cancellationToken);
+                        var enumerator = new DirectoryListingEnumerator(entries, Data.FileSystem, path, true);
+                        var formatter = new FactsListFormatter(Data.User, enumerator, Data.ActiveMlstFacts, false);
+                        while (enumerator.MoveNext())
                         {
-                            foreach (var line in formatter.GetPrefix(dirEntry))
-                            {
-                                Connection.Log?.Debug(line);
-                                await writer.WriteLineAsync(line);
-                            }
-
-                            foreach (var entry in await Data.FileSystem.GetEntriesAsync(dirEntry, cancellationToken))
-                            {
-                                var line = formatter.Format(entry);
-                                Connection.Log?.Debug(line);
-                                await writer.WriteLineAsync(line);
-                            }
-
-                            foreach (var line in formatter.GetSuffix(dirEntry))
-                            {
-                                Connection.Log?.Debug(line);
-                                await writer.WriteLineAsync(line);
-                            }
-                        }
-                        else
-                        {
-                            var line = formatter.Format(targetEntry);
+                            var name = enumerator.Name;
+                            var entry = enumerator.Entry;
+                            var line = formatter.Format(entry, name);
                             Connection.Log?.Debug(line);
                             await writer.WriteLineAsync(line);
                         }
@@ -138,18 +173,7 @@ namespace FubarDev.FtpServer.CommandHandlers
             return new FtpResponse(226, "Closing data connection.");
         }
 
-        private static string FeatureStatus(FtpConnection connection)
-        {
-            var result = new StringBuilder();
-            result.Append("MLST ");
-            foreach (var fact in _knownFacts)
-            {
-                result.AppendFormat("{0}{1};", fact, connection.Data.ActiveMlstFacts.Contains(fact) ? "*" : string.Empty);
-            }
-            return result.ToString();
-        }
-
-        private Task<FtpResponse> FeatureHandler(FtpCommand command, CancellationToken cancellationToken)
+        private Task<FtpResponse> FeatureHandlerAsync(FtpCommand command, CancellationToken cancellationToken)
         {
             var facts = command.Argument.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
             Connection.Data.ActiveMlstFacts.Clear();

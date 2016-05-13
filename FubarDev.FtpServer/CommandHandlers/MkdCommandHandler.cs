@@ -37,6 +37,9 @@ namespace FubarDev.FtpServer.CommandHandlers
                 return new FtpResponse(550, "Not a valid directory.");
             if (dirInfo.Entry != null)
                 return new FtpResponse(550, "Directory already exists.");
+            if (dirInfo.FileName == null)
+                return new FtpResponse(550, "File name not allowed.");
+
             try
             {
                 var targetDirectory = currentPath.Count == 0 ? Data.FileSystem.Root : currentPath.Peek();

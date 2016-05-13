@@ -26,7 +26,8 @@ namespace FubarDev.FtpServer.FileSystem
         /// </summary>
         /// <param name="path">The stack of directory entries to clone</param>
         /// <returns>the cloned <paramref name="path"/></returns>
-        [NotNull, ItemNotNull]
+        [NotNull]
+        [ItemNotNull]
         public static Stack<IUnixDirectoryEntry> Clone([NotNull, ItemNotNull] this Stack<IUnixDirectoryEntry> path)
         {
             return new Stack<IUnixDirectoryEntry>(path.Reverse());
@@ -55,7 +56,8 @@ namespace FubarDev.FtpServer.FileSystem
         /// <param name="path">The (absolute or relative) path to get the directory for</param>
         /// <param name="cancellationToken">The cancellation token</param>
         /// <returns>The found <see cref="IUnixDirectoryEntry"/> or <code>null</code></returns>
-        [NotNull, ItemCanBeNull]
+        [NotNull]
+        [ItemCanBeNull]
         public static Task<IUnixDirectoryEntry> GetDirectoryAsync([NotNull] this IUnixFileSystem fileSystem, [NotNull, ItemNotNull] Stack<IUnixDirectoryEntry> currentPath, [CanBeNull] string path, CancellationToken cancellationToken)
         {
             var pathElements = GetPathElements(path);
@@ -70,7 +72,8 @@ namespace FubarDev.FtpServer.FileSystem
         /// <param name="pathElements">The (absolute or relative) path to get the directory for</param>
         /// <param name="cancellationToken">The cancellation token</param>
         /// <returns>The found <see cref="IUnixDirectoryEntry"/> or <code>null</code></returns>
-        [NotNull, ItemCanBeNull]
+        [NotNull]
+        [ItemCanBeNull]
         public static async Task<IUnixDirectoryEntry> GetDirectoryAsync([NotNull] this IUnixFileSystem fileSystem, [NotNull, ItemNotNull] Stack<IUnixDirectoryEntry> currentPath, [NotNull, ItemNotNull] IReadOnlyList<string> pathElements, CancellationToken cancellationToken)
         {
             IUnixDirectoryEntry currentDir = currentPath.Count == 0 ? fileSystem.Root : currentPath.Peek();
@@ -87,7 +90,10 @@ namespace FubarDev.FtpServer.FileSystem
                 if (pathElement == "..")
                 {
                     if (currentPath.Count != 0)
+                    {
                         currentPath.Pop();
+                        currentDir = currentPath.Count == 0 ? fileSystem.Root : currentPath.Peek();
+                    }
                     continue;
                 }
 
@@ -110,7 +116,8 @@ namespace FubarDev.FtpServer.FileSystem
         /// <param name="path">The relative path to search for</param>
         /// <param name="cancellationToken">The cancellation token</param>
         /// <returns>The found <see cref="IUnixDirectoryEntry"/></returns>
-        [NotNull, ItemCanBeNull]
+        [NotNull]
+        [ItemCanBeNull]
         public static Task<SearchResult<IUnixDirectoryEntry>> SearchDirectoryAsync([NotNull] this IUnixFileSystem fileSystem, [NotNull, ItemNotNull] Stack<IUnixDirectoryEntry> currentPath, [CanBeNull] string path, CancellationToken cancellationToken)
         {
             var pathElements = GetPathElements(path);
@@ -125,7 +132,8 @@ namespace FubarDev.FtpServer.FileSystem
         /// <param name="pathElements">The relative path elements to search for</param>
         /// <param name="cancellationToken">The cancellation token</param>
         /// <returns>The found <see cref="IUnixDirectoryEntry"/></returns>
-        [NotNull, ItemCanBeNull]
+        [NotNull]
+        [ItemCanBeNull]
         public static async Task<SearchResult<IUnixDirectoryEntry>> SearchDirectoryAsync([NotNull] this IUnixFileSystem fileSystem, [NotNull, ItemNotNull] Stack<IUnixDirectoryEntry> currentPath, [NotNull, ItemNotNull] IReadOnlyList<string> pathElements, CancellationToken cancellationToken)
         {
             var sourceDir = await GetDirectoryAsync(fileSystem, currentPath, new ListSegment<string>(pathElements, 0, pathElements.Count - 1), cancellationToken);
@@ -147,7 +155,8 @@ namespace FubarDev.FtpServer.FileSystem
         /// <param name="path">The relative path to search for</param>
         /// <param name="cancellationToken">The cancellation token</param>
         /// <returns>The found <see cref="IUnixDirectoryEntry"/></returns>
-        [NotNull, ItemCanBeNull]
+        [NotNull]
+        [ItemCanBeNull]
         public static Task<SearchResult<IUnixFileEntry>> SearchFileAsync([NotNull] this IUnixFileSystem fileSystem, [NotNull, ItemNotNull] Stack<IUnixDirectoryEntry> currentPath, [CanBeNull] string path, CancellationToken cancellationToken)
         {
             var pathElements = GetPathElements(path);
@@ -162,7 +171,8 @@ namespace FubarDev.FtpServer.FileSystem
         /// <param name="pathElements">The relative path elements to search for</param>
         /// <param name="cancellationToken">The cancellation token</param>
         /// <returns>The found <see cref="IUnixDirectoryEntry"/></returns>
-        [NotNull, ItemCanBeNull]
+        [NotNull]
+        [ItemCanBeNull]
         public static async Task<SearchResult<IUnixFileEntry>> SearchFileAsync(this IUnixFileSystem fileSystem, [NotNull, ItemNotNull] Stack<IUnixDirectoryEntry> currentPath, [NotNull, ItemNotNull] IReadOnlyList<string> pathElements, CancellationToken cancellationToken)
         {
             var sourceDir = await GetDirectoryAsync(fileSystem, currentPath, new ListSegment<string>(pathElements, 0, pathElements.Count - 1), cancellationToken);
@@ -184,7 +194,8 @@ namespace FubarDev.FtpServer.FileSystem
         /// <param name="path">The relative path to search for</param>
         /// <param name="cancellationToken">The cancellation token</param>
         /// <returns>The found <see cref="IUnixFileSystemEntry"/></returns>
-        [NotNull, ItemCanBeNull]
+        [NotNull]
+        [ItemCanBeNull]
         public static Task<SearchResult<IUnixFileSystemEntry>> SearchEntryAsync([NotNull] this IUnixFileSystem fileSystem, [NotNull, ItemNotNull] Stack<IUnixDirectoryEntry> currentPath, [CanBeNull] string path, CancellationToken cancellationToken)
         {
             var pathElements = GetPathElements(path);
@@ -199,15 +210,65 @@ namespace FubarDev.FtpServer.FileSystem
         /// <param name="pathElements">The relative path elements to search for</param>
         /// <param name="cancellationToken">The cancellation token</param>
         /// <returns>The found <see cref="IUnixFileSystemEntry"/></returns>
-        [NotNull, ItemCanBeNull]
+        [NotNull]
+        [ItemCanBeNull]
         public static async Task<SearchResult<IUnixFileSystemEntry>> SearchEntryAsync(this IUnixFileSystem fileSystem, [NotNull, ItemNotNull] Stack<IUnixDirectoryEntry> currentPath, [NotNull, ItemNotNull] IReadOnlyList<string> pathElements, CancellationToken cancellationToken)
         {
             var sourceDir = await GetDirectoryAsync(fileSystem, currentPath, new ListSegment<string>(pathElements, 0, pathElements.Count - 1), cancellationToken);
             if (sourceDir == null)
                 return null;
+            IUnixFileSystemEntry foundEntry;
             var fileName = pathElements[pathElements.Count - 1];
-            var foundEntry = await fileSystem.GetEntryByNameAsync(sourceDir, fileName, cancellationToken);
+            switch (fileName)
+            {
+                case "":
+                    currentPath.Clear();
+                    fileName = null;
+                    foundEntry = fileSystem.Root;
+                    break;
+                case ".":
+                    if (currentPath.Count != 0)
+                    {
+                        foundEntry = currentPath.Pop();
+                        fileName = foundEntry.Name;
+                    }
+                    else
+                    {
+                        foundEntry = fileSystem.Root;
+                        fileName = null;
+                    }
+                    break;
+                case "..":
+                    if (currentPath.Count != 0)
+                        currentPath.Pop();
+                    if (currentPath.Count != 0)
+                    {
+                        foundEntry = currentPath.Pop();
+                        fileName = foundEntry.Name;
+                    }
+                    else
+                    {
+                        foundEntry = fileSystem.Root;
+                        fileName = null;
+                    }
+                    break;
+                default:
+                    foundEntry = await fileSystem.GetEntryByNameAsync(sourceDir, fileName, cancellationToken);
+                    break;
+            }
             return new SearchResult<IUnixFileSystemEntry>(sourceDir, foundEntry, fileName);
+        }
+
+        /// <summary>
+        /// Returns the <paramref name="path"/> as string like <see cref="GetFullPath(System.Collections.Generic.Stack{FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry})"/>, with the
+        /// difference that it doesn't add the trailing <code>/</code>.
+        /// </summary>
+        /// <param name="path">The path to convert to string</param>
+        /// <returns>The <paramref name="path"/> as string</returns>
+        [NotNull]
+        public static string ToDisplayString([NotNull, ItemNotNull] this Stack<IUnixDirectoryEntry> path)
+        {
+            return $"/{string.Join("/", path.Reverse().Select(x => x.Name))}";
         }
 
         /// <summary>
@@ -303,7 +364,8 @@ namespace FubarDev.FtpServer.FileSystem
         /// </summary>
         /// <param name="path">The path to split</param>
         /// <returns>The parts of the path</returns>
-        [NotNull, ItemNotNull]
+        [NotNull]
+        [ItemNotNull]
         public static IReadOnlyList<string> SplitPath([CanBeNull] string path)
         {
             var parts = new List<string>();
@@ -346,7 +408,8 @@ namespace FubarDev.FtpServer.FileSystem
             return parts;
         }
 
-        [NotNull, ItemNotNull]
+        [NotNull]
+        [ItemNotNull]
         private static IReadOnlyList<string> GetPathElements([CanBeNull] string path)
         {
             var pathElements = new List<string>();

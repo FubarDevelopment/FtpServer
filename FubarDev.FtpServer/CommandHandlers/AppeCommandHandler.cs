@@ -46,6 +46,8 @@ namespace FubarDev.FtpServer.CommandHandlers
             var fileInfo = await Data.FileSystem.SearchFileAsync(currentPath, fileName, cancellationToken);
             if (fileInfo == null)
                 return new FtpResponse(550, "Not a valid directory.");
+            if (fileInfo.FileName == null)
+                return new FtpResponse(553, "File name not allowed.");
 
             await Connection.WriteAsync(new FtpResponse(150, "Opening connection for data transfer."), cancellationToken);
             using (var responseSocket = await Connection.CreateResponseSocket())

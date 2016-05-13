@@ -76,6 +76,8 @@ namespace FubarDev.FtpServer.FileSystem.OneDrive
                 catch (OperationCanceledException)
                 {
                     withError = true;
+                    if (Item == null)
+                        throw new InvalidOperationException("The Item property must be set. The UploadFileAsync function must not return a NULL value.");
                     Item.Size = stream.Position;
                     throw;
                 }

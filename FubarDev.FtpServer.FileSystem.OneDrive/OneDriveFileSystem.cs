@@ -91,7 +91,8 @@ namespace FubarDev.FtpServer.FileSystem.OneDrive
         /// <remarks>
         /// This function uses the users default drive and its root folder.
         /// </remarks>
-        [NotNull, ItemNotNull]
+        [NotNull]
+        [ItemNotNull]
         public static async Task<OneDriveFileSystem> Create([NotNull] OneDriveService service, [NotNull] OneDriveSupportFactory supportFactory, CancellationToken cancellationToken)
         {
             var drive = await service.GetDefaultDriveAsync(cancellationToken);
@@ -106,7 +107,8 @@ namespace FubarDev.FtpServer.FileSystem.OneDrive
         /// <param name="drive">The drive to get the root folder from</param>
         /// <param name="cancellationToken">The cancellation token</param>
         /// <returns>The new <see cref="OneDriveFileSystem"/> instance</returns>
-        [NotNull, ItemNotNull]
+        [NotNull]
+        [ItemNotNull]
         public static async Task<OneDriveFileSystem> Create([NotNull] OneDriveService service, [NotNull] OneDriveSupportFactory supportFactory, [NotNull] Drive drive, CancellationToken cancellationToken)
         {
             var rootFolderInfo = await service.GetRootFolderAsync(drive.Id, cancellationToken);

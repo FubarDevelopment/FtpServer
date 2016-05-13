@@ -70,7 +70,8 @@ namespace FubarDev.FtpServer
         /// <summary>
         /// Gets or sets the current path into the <see cref="FileSystem"/>
         /// </summary>
-        [NotNull, ItemNotNull]
+        [NotNull]
+        [ItemNotNull]
         public Stack<IUnixDirectoryEntry> Path { get; set; }
 
         /// <summary>
@@ -134,7 +135,8 @@ namespace FubarDev.FtpServer
         /// <summary>
         /// Gets the active <see cref="IFact"/> sent by <code>MLST</code> and <code>MLSD</code>
         /// </summary>
-        [NotNull, ItemNotNull]
+        [NotNull]
+        [ItemNotNull]
         public ISet<string> ActiveMlstFacts { get; } = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
         /// <summary>

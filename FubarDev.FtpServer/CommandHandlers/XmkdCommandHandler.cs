@@ -35,6 +35,8 @@ namespace FubarDev.FtpServer.CommandHandlers
             var dirInfo = await Data.FileSystem.SearchDirectoryAsync(currentPath, directoryName, cancellationToken);
             if (dirInfo == null)
                 return new FtpResponse(550, "Not a valid directory.");
+            if (dirInfo.FileName == null)
+                return new FtpResponse(550, "ROOT folder not allowed.");
             if (dirInfo.Entry != null)
             {
                 await Connection.WriteAsync($"521-\"{currentPath.GetFullPath(dirInfo.FileName)}\" directory already exists", cancellationToken);

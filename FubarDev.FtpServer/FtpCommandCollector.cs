@@ -56,7 +56,8 @@ namespace FubarDev.FtpServer
         /// <param name="offset">An offset into the buffer to collect the data from</param>
         /// <param name="length">The length of the data to collect</param>
         /// <returns>The found <see cref="FtpCommand"/>s</returns>
-        [NotNull, ItemNotNull]
+        [NotNull]
+        [ItemNotNull]
         public IEnumerable<FtpCommand> Collect(byte[] buffer, int offset, int length)
         {
             Debug.WriteLine("Collected data: {0}", string.Join(string.Empty, Enumerable.Range(offset, length).Select(x => buffer[x].ToString("X2"))));
@@ -73,7 +74,8 @@ namespace FubarDev.FtpServer
             _buffer = null;
         }
 
-        [NotNull, ItemNotNull]
+        [NotNull]
+        [ItemNotNull]
         private IEnumerable<FtpCommand> InternalCollect(byte[] buffer, int offset, int length)
         {
             var commands = new List<FtpCommand>();
@@ -94,7 +96,7 @@ namespace FubarDev.FtpServer
                 var data = new byte[carriageReturnPos - offset + previousData.Length];
                 if (previousData.Length != 0)
                     Array.Copy(previousData, data, previousData.Length);
-                if ((carriageReturnPos - offset) != 0)
+                if (carriageReturnPos - offset != 0)
                     Array.Copy(buffer, offset, data, previousData.Length, carriageReturnPos - offset);
 
                 commands.Add(CreateFtpCommand(data));

@@ -18,7 +18,8 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// <summary>
         /// Gets the extensions hosted by the <see cref="FtpCommandHandler"/>
         /// </summary>
-        [NotNull, ItemNotNull]
+        [NotNull]
+        [ItemNotNull]
         IDictionary<string, FtpCommandHandlerExtension> Extensions { get; }
     }
 }

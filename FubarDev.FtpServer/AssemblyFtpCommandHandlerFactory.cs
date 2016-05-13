@@ -7,6 +7,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 
 using FubarDev.FtpServer.CommandExtensions;
@@ -38,27 +39,24 @@ namespace FubarDev.FtpServer
         /// <inheritdoc/>
         public IEnumerable<FtpCommandHandler> CreateCommandHandlers(FtpConnection connection)
         {
-            foreach (var asm in _assemblies)
-            {
-                foreach (var type in asm.DefinedTypes)
-                {
-                    if (!type.IsAbstract && type.IsSubclassOf(typeof(FtpCommandHandler)))
-                        yield return (FtpCommandHandler)Activator.CreateInstance(type.AsType(), connection);
-                }
-            }
+            return
+                from asm in _assemblies
+                from type in asm.DefinedTypes
+                where !type.IsAbstract && type.IsSubclassOf(typeof(FtpCommandHandler))
+                select (FtpCommandHandler)Activator.CreateInstance(type.AsType(), connection);
         }
 
         /// <inheritdoc/>
         public IEnumerable<FtpCommandHandlerExtension> CreateCommandHandlerExtensions(FtpConnection connection)
         {
-            foreach (var asm in _assemblies)
-            {
-                foreach (var type in asm.DefinedTypes)
-                {
-                    if (!type.IsAbstract && type.IsSubclassOf(typeof(FtpCommandHandlerExtension)) && type.AsType() != typeof(GenericFtpCommandHandlerExtension))
-                        yield return (FtpCommandHandlerExtension)Activator.CreateInstance(type.AsType(), connection);
-                }
-            }
+            return
+                from asm in _assemblies
+                from type in asm.DefinedTypes
+                where
+                    !type.IsAbstract
+                    && type.IsSubclassOf(typeof(FtpCommandHandlerExtension))
+                    && type.AsType() != typeof(GenericFtpCommandHandlerExtension)
+                select (FtpCommandHandlerExtension)Activator.CreateInstance(type.AsType(), connection);
         }
     }
 }

@@ -42,7 +42,7 @@ namespace FubarDev.FtpServer.CommandHandlers
             if (fileInfo?.Entry == null)
                 return new FtpResponse(550, $"File not found ({fileName}).");
 
-            return new FtpResponse(220, $"{fileInfo.Entry.Size}");
+            return new FtpResponse(213, $"{fileInfo.Entry.Size}");
         }
     }
 }
