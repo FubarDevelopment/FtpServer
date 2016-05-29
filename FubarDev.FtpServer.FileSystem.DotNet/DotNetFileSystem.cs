@@ -19,7 +19,11 @@ namespace FubarDev.FtpServer.FileSystem.DotNet
     /// </summary>
     public class DotNetFileSystem : IUnixFileSystem
     {
+        public static readonly int DEFAULT_STREAM_BUFFER_SIZE = 4096;
+
         private bool _disposedValue;
+
+        private int _streamBufferSize;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DotNetFileSystem"/> class.
@@ -27,10 +31,22 @@ namespace FubarDev.FtpServer.FileSystem.DotNet
         /// <param name="rootPath">The path to use as root</param>
         /// <param name="allowNonEmptyDirectoryDelete">Allow deletion of non-empty directories?</param>
         public DotNetFileSystem(string rootPath, bool allowNonEmptyDirectoryDelete)
+            : this (rootPath, allowNonEmptyDirectoryDelete, DEFAULT_STREAM_BUFFER_SIZE)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DotNetFileSystem"/> class.
+        /// </summary>
+        /// <param name="rootPath">The path to use as root</param>
+        /// <param name="allowNonEmptyDirectoryDelete">Allow deletion of non-empty directories?</param>
+        /// <param name="streamBufferSize">Buffer size to be used in async IO methods</param>
+        public DotNetFileSystem(string rootPath, bool allowNonEmptyDirectoryDelete, int streamBufferSize)
         {
             FileSystemEntryComparer = StringComparer.OrdinalIgnoreCase;
             Root = new DotNetDirectoryEntry(this, Directory.CreateDirectory(rootPath), true);
             SupportsNonEmptyDirectoryDelete = allowNonEmptyDirectoryDelete;
+            _streamBufferSize = streamBufferSize;
         }
 
         /// <inheritdoc/>
@@ -145,7 +161,7 @@ namespace FubarDev.FtpServer.FileSystem.DotNet
                 if (startPosition == null)
                     startPosition = fileInfo.Length;
                 output.Seek(startPosition.Value, SeekOrigin.Begin);
-                await data.CopyToAsync(output, 4096, cancellationToken);
+                await data.CopyToAsync(output, _streamBufferSize, cancellationToken);
             }
             return null;
         }
@@ -157,7 +173,7 @@ namespace FubarDev.FtpServer.FileSystem.DotNet
             var fileInfo = new FileInfo(Path.Combine(targetEntry.Info.FullName, fileName));
             using (var output = fileInfo.Create())
             {
-                await data.CopyToAsync(output, 4096, cancellationToken);
+                await data.CopyToAsync(output, _streamBufferSize, cancellationToken);
             }
             return null;
         }
@@ -168,7 +184,7 @@ namespace FubarDev.FtpServer.FileSystem.DotNet
             var fileInfo = ((DotNetFileEntry)fileEntry).Info;
             using (var output = fileInfo.OpenWrite())
             {
-                await data.CopyToAsync(output, 4096, cancellationToken);
+                await data.CopyToAsync(output, _streamBufferSize, cancellationToken);
                 output.SetLength(output.Position);
             }
             return null;
