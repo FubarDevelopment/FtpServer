@@ -38,6 +38,7 @@ namespace FubarDev.FtpServer
         private bool _stopped;
 
         private ConfiguredTaskAwaitable _listenerTask;
+        private AutoResetEvent _listenerTaskEvent = new AutoResetEvent(false);
 
         private IFtpLog _log;
 
@@ -165,7 +166,7 @@ namespace FubarDev.FtpServer
         {
             if (_stopped)
                 throw new InvalidOperationException("Cannot start a previously stopped FTP server");
-            _listenerTask = ExecuteServerListener(_cancellationTokenSource.Token).ConfigureAwait(false);
+            _listenerTask = ExecuteServerListener(this._listenerTaskEvent).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -177,6 +178,7 @@ namespace FubarDev.FtpServer
         public void Stop()
         {
             _cancellationTokenSource.Cancel(true);
+            _listenerTaskEvent.Set();
             _stopped = true;
         }
 
@@ -206,7 +208,10 @@ namespace FubarDev.FtpServer
         public void Dispose()
         {
             if (!_stopped)
+            {
                 Stop();
+            }
+
             try
             {
                 _listenerTask.GetAwaiter().GetResult();
@@ -215,8 +220,10 @@ namespace FubarDev.FtpServer
             {
                 // Ignorieren - alles ist OK
             }
+
             BackgroundTransferWorker.Dispose();
             _cancellationTokenSource.Dispose();
+            _listenerTaskEvent.Dispose();
             _connections.Dispose();
         }
 
@@ -225,35 +232,38 @@ namespace FubarDev.FtpServer
             ConfigureConnection?.Invoke(this, new ConnectionEventArgs(connection));
         }
 
-        private async Task ExecuteServerListener(CancellationToken cancellationToken)
+        private Task ExecuteServerListener(AutoResetEvent e)
         {
-            _log = LogManager?.CreateLog(typeof(FtpServer));
-            using (var listener = new TcpSocketListener(0))
+            return Task.Run(() =>
             {
-                listener.ConnectionReceived = ConnectionReceived;
-                try
+                _log = LogManager?.CreateLog(typeof(FtpServer));
+                using (var listener = new TcpSocketListener(0))
                 {
-                    await listener.StartListeningAsync(Port);
+                    listener.ConnectionReceived = ConnectionReceived;
                     try
                     {
-                        for (; ;)
+                        e.Reset();
+                        listener.StartListeningAsync(Port).Wait();
+                        _log?.Debug("Server listening on port {0}", Port);
+
+                        try
                         {
-                            cancellationToken.ThrowIfCancellationRequested();
-                            await Task.Delay(100, cancellationToken);
+                            e.WaitOne();
+                        }
+                        finally
+                        {
+                            listener.StopListeningAsync().Wait();
+                            foreach (var connection in _connections.ToArray())
+                                connection.Close();
                         }
                     }
-                    finally
+                    catch (Exception ex)
                     {
-                        await listener.StopListeningAsync();
-                        foreach (var connection in _connections.ToArray())
-                            connection.Close();
+                        _log?.Fatal(ex, "{0}", ex.Message);
                     }
                 }
-                catch (Exception ex)
-                {
-                    _log?.Fatal(ex, "{0}", ex.Message);
-                }
             }
+            );
         }
 
         private void ConnectionReceived(object sender, TcpSocketListenerConnectEventArgs args)
