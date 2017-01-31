@@ -31,11 +31,40 @@ namespace FubarDev.FtpServer
     /// </summary>
     public sealed class FtpServer : IDisposable
     {
+        /// <summary>
+        /// Mutext for Stopped field.
+        /// </summary>
+        private readonly object _stopLocker = new object();
+
         private readonly CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
 
         private readonly ConcurrentHashSet<FtpConnection> _connections = new ConcurrentHashSet<FtpConnection>();
 
+        /// <summary>
+        /// Don't use this directly, use the Stopped property instead. It is protected by a mutex.
+        /// </summary>
         private bool _stopped;
+
+        /// <summary>
+        /// The Stopped property. Mutexed so it can be accessed concurrently by different threads.
+        /// </summary>
+        private bool Stopped
+        {
+            get
+            {
+                lock (_stopLocker)
+                {
+                    return _stopped;
+                }
+            }
+            set
+            {
+                lock (_stopLocker)
+                {
+                    _stopped = value;
+                }
+            }
+        }
 
         private ConfiguredTaskAwaitable _listenerTask;
         private AutoResetEvent _listenerTaskEvent = new AutoResetEvent(false);
@@ -164,8 +193,9 @@ namespace FubarDev.FtpServer
         /// </summary>
         public void Start()
         {
-            if (_stopped)
+            if (Stopped)
                 throw new InvalidOperationException("Cannot start a previously stopped FTP server");
+            _listenerTaskEvent = new AutoResetEvent(false);
             _listenerTask = ExecuteServerListener(this._listenerTaskEvent).ConfigureAwait(false);
         }
 
@@ -179,7 +209,7 @@ namespace FubarDev.FtpServer
         {
             _cancellationTokenSource.Cancel(true);
             _listenerTaskEvent.Set();
-            _stopped = true;
+            Stopped = true;
         }
 
         /// <summary>
@@ -207,7 +237,7 @@ namespace FubarDev.FtpServer
         /// <inheritdoc/>
         public void Dispose()
         {
-            if (!_stopped)
+            if (!Stopped)
             {
                 Stop();
             }
@@ -248,6 +278,8 @@ namespace FubarDev.FtpServer
 
                         try
                         {
+                            // If we are already stoped, don't wait.
+                            if (Stopped) return;
                             e.WaitOne();
                         }
                         finally
@@ -280,7 +312,7 @@ namespace FubarDev.FtpServer
 
         private void ConnectionOnClosed(object sender, EventArgs eventArgs)
         {
-            if (_stopped)
+            if (Stopped)
                 return;
             var connection = (FtpConnection)sender;
             _connections.Remove(connection);
