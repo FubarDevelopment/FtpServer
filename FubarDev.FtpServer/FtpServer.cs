@@ -45,28 +45,8 @@ namespace FubarDev.FtpServer
         /// </summary>
         private bool _stopped;
 
-        /// <summary>
-        /// The Stopped property. Mutexed so it can be accessed concurrently by different threads.
-        /// </summary>
-        private bool Stopped
-        {
-            get
-            {
-                lock (_stopLocker)
-                {
-                    return _stopped;
-                }
-            }
-            set
-            {
-                lock (_stopLocker)
-                {
-                    _stopped = value;
-                }
-            }
-        }
-
         private ConfiguredTaskAwaitable _listenerTask;
+
         private AutoResetEvent _listenerTaskEvent = new AutoResetEvent(false);
 
         private IFtpLog _log;
@@ -189,6 +169,27 @@ namespace FubarDev.FtpServer
         private BackgroundTransferWorker BackgroundTransferWorker { get; }
 
         /// <summary>
+        /// The Stopped property. Mutexed so it can be accessed concurrently by different threads.
+        /// </summary>
+        private bool Stopped
+        {
+            get
+            {
+                lock (_stopLocker)
+                {
+                    return _stopped;
+                }
+            }
+            set
+            {
+                lock (_stopLocker)
+                {
+                    _stopped = value;
+                }
+            }
+        }
+
+        /// <summary>
         /// Starts the FTP server in the background
         /// </summary>
         public void Start()
@@ -279,7 +280,11 @@ namespace FubarDev.FtpServer
                         try
                         {
                             // If we are already stoped, don't wait.
-                            if (Stopped) return;
+                            if (Stopped)
+                            {
+                                return;
+                            }
+
                             e.WaitOne();
                         }
                         finally
@@ -294,8 +299,7 @@ namespace FubarDev.FtpServer
                         _log?.Fatal(ex, "{0}", ex.Message);
                     }
                 }
-            }
-            );
+            });
         }
 
         private void ConnectionReceived(object sender, TcpSocketListenerConnectEventArgs args)
