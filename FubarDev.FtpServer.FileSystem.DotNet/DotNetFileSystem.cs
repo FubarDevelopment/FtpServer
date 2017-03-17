@@ -19,7 +19,7 @@ namespace FubarDev.FtpServer.FileSystem.DotNet
     /// </summary>
     public class DotNetFileSystem : IUnixFileSystem
     {
-        public static readonly int DEFAULT_STREAM_BUFFER_SIZE = 4096;
+        public static readonly int DefaultStreamBufferSize = 4096;
 
         private bool _disposedValue;
 
@@ -31,7 +31,7 @@ namespace FubarDev.FtpServer.FileSystem.DotNet
         /// <param name="rootPath">The path to use as root</param>
         /// <param name="allowNonEmptyDirectoryDelete">Allow deletion of non-empty directories?</param>
         public DotNetFileSystem(string rootPath, bool allowNonEmptyDirectoryDelete)
-            : this(rootPath, allowNonEmptyDirectoryDelete, DEFAULT_STREAM_BUFFER_SIZE)
+            : this(rootPath, allowNonEmptyDirectoryDelete, DefaultStreamBufferSize)
         {
         }
 

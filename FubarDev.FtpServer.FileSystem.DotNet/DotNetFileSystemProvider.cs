@@ -39,7 +39,7 @@ namespace FubarDev.FtpServer.FileSystem.DotNet
         /// <param name="rootPath">The root path for all users</param>
         /// <param name="useUserIdAsSubFolder">Use the user id as subfolder?</param>
         public DotNetFileSystemProvider([NotNull] string rootPath, bool useUserIdAsSubFolder)
-            : this(rootPath, useUserIdAsSubFolder, DotNetFileSystem.DEFAULT_STREAM_BUFFER_SIZE)
+            : this(rootPath, useUserIdAsSubFolder, DotNetFileSystem.DefaultStreamBufferSize)
         {
         }
 
