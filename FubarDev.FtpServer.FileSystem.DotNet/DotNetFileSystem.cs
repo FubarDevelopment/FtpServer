@@ -31,7 +31,7 @@ namespace FubarDev.FtpServer.FileSystem.DotNet
         /// <param name="rootPath">The path to use as root</param>
         /// <param name="allowNonEmptyDirectoryDelete">Allow deletion of non-empty directories?</param>
         public DotNetFileSystem(string rootPath, bool allowNonEmptyDirectoryDelete)
-            : this (rootPath, allowNonEmptyDirectoryDelete, DEFAULT_STREAM_BUFFER_SIZE)
+            : this(rootPath, allowNonEmptyDirectoryDelete, DEFAULT_STREAM_BUFFER_SIZE)
         {
         }
 
