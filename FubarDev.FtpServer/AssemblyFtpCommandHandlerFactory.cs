@@ -37,7 +37,7 @@ namespace FubarDev.FtpServer
         }
 
         /// <inheritdoc/>
-        public IEnumerable<FtpCommandHandler> CreateCommandHandlers(FtpConnection connection)
+        public virtual IEnumerable<FtpCommandHandler> CreateCommandHandlers(FtpConnection connection)
         {
             return
                 from asm in _assemblies
@@ -47,7 +47,7 @@ namespace FubarDev.FtpServer
         }
 
         /// <inheritdoc/>
-        public IEnumerable<FtpCommandHandlerExtension> CreateCommandHandlerExtensions(FtpConnection connection)
+        public virtual IEnumerable<FtpCommandHandlerExtension> CreateCommandHandlerExtensions(FtpConnection connection)
         {
             return
                 from asm in _assemblies

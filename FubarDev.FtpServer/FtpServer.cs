@@ -31,6 +31,8 @@ namespace FubarDev.FtpServer
     /// </summary>
     public sealed class FtpServer : IDisposable
     {
+        private static object startedLock = new object();
+
         /// <summary>
         /// Mutext for Stopped field.
         /// </summary>
@@ -48,6 +50,8 @@ namespace FubarDev.FtpServer
         private ConfiguredTaskAwaitable _listenerTask;
 
         private AutoResetEvent _listenerTaskEvent = new AutoResetEvent(false);
+
+        private volatile bool _isReady = false;
 
         private IFtpLog _log;
 
@@ -166,6 +170,28 @@ namespace FubarDev.FtpServer
         [CanBeNull]
         public IFtpLogManager LogManager { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether server ready to receive incoming connectoions
+        /// </summary>
+        public bool Ready
+        {
+            get
+            {
+                lock (startedLock)
+                {
+                    return _isReady;
+                }
+            }
+
+            set
+            {
+                lock (startedLock)
+                {
+                    _isReady = value;
+                }
+            }
+        }
+
         private BackgroundTransferWorker BackgroundTransferWorker { get; }
 
         /// <summary>
@@ -270,11 +296,12 @@ namespace FubarDev.FtpServer
                 _log = LogManager?.CreateLog(typeof(FtpServer));
                 using (var listener = new TcpSocketListener(0))
                 {
-                    listener.ConnectionReceived = ConnectionReceived;
+                    listener.ConnectionReceived += ConnectionReceived;
                     try
                     {
                         e.Reset();
                         listener.StartListeningAsync(Port).Wait();
+                        Ready = true;
                         _log?.Debug("Server listening on port {0}", Port);
 
                         try
