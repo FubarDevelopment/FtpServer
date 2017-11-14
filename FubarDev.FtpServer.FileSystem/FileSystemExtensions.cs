@@ -44,7 +44,7 @@ namespace FubarDev.FtpServer.FileSystem
         {
             var fullPathOfParent = pathToTestAsParent.GetFullPath();
             var fullPathOfChild = pathToTestAsChild.GetFullPath();
-            var testPathOfChild = fullPathOfChild.Substring(0, Math.Min(fullPathOfChild.Length, fullPathOfChild.Length));
+            var testPathOfChild = fullPathOfChild.Substring(0, Math.Min(fullPathOfParent.Length, fullPathOfChild.Length));
             return fileSystem.FileSystemEntryComparer.Equals(testPathOfChild, fullPathOfParent) && fullPathOfParent.Length <= fullPathOfChild.Length;
         }
 
