@@ -29,7 +29,7 @@ namespace FubarDev.FtpServer.CommandHandlers
         public override Task<FtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
         {
             if (string.Equals(command.Argument, "S", StringComparison.OrdinalIgnoreCase))
-                return Task.FromResult(new FtpResponse(220, "Mode set to Stream."));
+                return Task.FromResult(new FtpResponse(200, "Mode set to Stream."));
             return Task.FromResult(new FtpResponse(504, $"Transfer mode {command.Argument} not supported."));
         }
     }
