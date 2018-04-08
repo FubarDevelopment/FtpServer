@@ -26,7 +26,7 @@ namespace FubarDev.FtpServer
         /// <returns>The new <see cref="FtpCommandHandler"/>s</returns>
         [NotNull]
         [ItemNotNull]
-        IEnumerable<FtpCommandHandler> CreateCommandHandlers(FtpConnection connection);
+        IEnumerable<FtpCommandHandler> CreateCommandHandlers(IFtpConnection connection);
 
         /// <summary>
         /// Create all command handler extensions for the given <paramref name="connection"/>
@@ -35,6 +35,6 @@ namespace FubarDev.FtpServer
         /// <returns>The new <see cref="FtpCommandHandlerExtension"/>s</returns>
         [NotNull]
         [ItemNotNull]
-        IEnumerable<FtpCommandHandlerExtension> CreateCommandHandlerExtensions(FtpConnection connection);
+        IEnumerable<FtpCommandHandlerExtension> CreateCommandHandlerExtensions(IFtpConnection connection);
     }
 }

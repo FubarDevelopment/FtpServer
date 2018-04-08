@@ -24,7 +24,7 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// Initializes a new instance of the <see cref="OptsCommandHandler"/> class.
         /// </summary>
         /// <param name="connection">The connection to create this command handler for</param>
-        public OptsCommandHandler(FtpConnection connection)
+        public OptsCommandHandler(IFtpConnection connection)
             : base(connection, "OPTS")
         {
             Extensions = new Dictionary<string, FtpCommandHandlerExtension>(StringComparer.OrdinalIgnoreCase);

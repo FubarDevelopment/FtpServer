@@ -17,7 +17,7 @@ namespace FubarDev.FtpServer
         /// Initializes a new instance of the <see cref="ConnectionEventArgs"/> class.
         /// </summary>
         /// <param name="connection">The connection of the event</param>
-        public ConnectionEventArgs([NotNull] FtpConnection connection)
+        public ConnectionEventArgs([NotNull] IFtpConnection connection)
         {
             Connection = connection;
         }
@@ -26,6 +26,6 @@ namespace FubarDev.FtpServer
         /// Gets the connection for this event
         /// </summary>
         [NotNull]
-        public FtpConnection Connection { get; }
+        public IFtpConnection Connection { get; }
     }
 }

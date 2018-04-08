@@ -14,7 +14,7 @@ namespace FubarDev.FtpServer
     /// </summary>
     public class GenericFeatureInfo : IFeatureInfo
     {
-        private readonly Func<FtpConnection, string> _toString;
+        private readonly Func<IFtpConnection, string> _toString;
 
         private readonly string _name;
 
@@ -34,7 +34,7 @@ namespace FubarDev.FtpServer
         /// <param name="name">The feature name</param>
         /// <param name="toString">The function to use to create a <code>FEAT</code> string</param>
         /// <param name="additionalNames">The additional feature names</param>
-        public GenericFeatureInfo([NotNull] string name, [CanBeNull] Func<FtpConnection, string> toString, [NotNull, ItemNotNull] params string[] additionalNames)
+        public GenericFeatureInfo([NotNull] string name, [CanBeNull] Func<IFtpConnection, string> toString, [NotNull, ItemNotNull] params string[] additionalNames)
         {
             _name = name;
             var names = new HashSet<string> { name };
@@ -48,7 +48,7 @@ namespace FubarDev.FtpServer
         public ISet<string> Names { get; }
 
         /// <inheritdoc/>
-        public string BuildInfo(FtpConnection connection)
+        public string BuildInfo(IFtpConnection connection)
         {
             if (_toString == null)
                 return _name;

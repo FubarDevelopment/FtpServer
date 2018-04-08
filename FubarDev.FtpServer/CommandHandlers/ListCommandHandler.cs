@@ -32,7 +32,7 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// Initializes a new instance of the <see cref="ListCommandHandler"/> class.
         /// </summary>
         /// <param name="connection">The connection to create this command handler for</param>
-        public ListCommandHandler(FtpConnection connection)
+        public ListCommandHandler(IFtpConnection connection)
             : base(connection, "LIST", "NLST", "LS")
         {
         }

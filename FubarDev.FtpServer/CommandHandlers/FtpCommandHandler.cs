@@ -25,7 +25,7 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// <param name="connection">The connection this instance is used for</param>
         /// <param name="name">The command name</param>
         /// <param name="alternativeNames">Alternative names</param>
-        protected FtpCommandHandler([NotNull] FtpConnection connection, [NotNull] string name, [NotNull, ItemNotNull] params string[] alternativeNames)
+        protected FtpCommandHandler([NotNull] IFtpConnection connection, [NotNull] string name, [NotNull, ItemNotNull] params string[] alternativeNames)
             : base(connection, name, alternativeNames)
         {
         }

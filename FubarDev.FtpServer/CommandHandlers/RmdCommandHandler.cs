@@ -22,7 +22,7 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// Initializes a new instance of the <see cref="RmdCommandHandler"/> class.
         /// </summary>
         /// <param name="connection">The connection to create this command handler for</param>
-        public RmdCommandHandler(FtpConnection connection)
+        public RmdCommandHandler(IFtpConnection connection)
             : base(connection, "RMD")
         {
         }

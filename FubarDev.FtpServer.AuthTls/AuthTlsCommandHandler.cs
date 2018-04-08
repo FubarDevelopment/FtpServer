@@ -21,7 +21,7 @@ namespace FubarDev.FtpServer.AuthTls
         /// Initializes a new instance of the <see cref="AuthTlsCommandHandler"/> class.
         /// </summary>
         /// <param name="connection">The connection this instance is used for</param>
-        public AuthTlsCommandHandler(FtpConnection connection)
+        public AuthTlsCommandHandler(IFtpConnection connection)
             : base(connection, "AUTH")
         {
         }

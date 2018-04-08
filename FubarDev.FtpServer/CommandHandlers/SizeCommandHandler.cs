@@ -22,7 +22,7 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// Initializes a new instance of the <see cref="SizeCommandHandler"/> class.
         /// </summary>
         /// <param name="connection">The connection to create this command handler for</param>
-        public SizeCommandHandler(FtpConnection connection)
+        public SizeCommandHandler(IFtpConnection connection)
             : base(connection, "SIZE")
         {
         }

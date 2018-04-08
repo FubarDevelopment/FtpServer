@@ -43,7 +43,7 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// Initializes a new instance of the <see cref="MffCommandHandler"/> class.
         /// </summary>
         /// <param name="connection">The connection to create this command handler for</param>
-        public MffCommandHandler(FtpConnection connection)
+        public MffCommandHandler(IFtpConnection connection)
             : base(connection, "MFF")
         {
         }
@@ -116,7 +116,7 @@ namespace FubarDev.FtpServer.CommandHandlers
             return new FtpResponse(213, responseText.ToString());
         }
 
-        private static string FeatureStatus(FtpConnection connection)
+        private static string FeatureStatus(IFtpConnection connection)
         {
             var result = new StringBuilder();
             result.Append("MFF ");

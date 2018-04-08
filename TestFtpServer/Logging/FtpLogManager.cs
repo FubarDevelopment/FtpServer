@@ -6,7 +6,7 @@ namespace TestFtpServer.Logging
 {
     public class FtpLogManager : IFtpLogManager
     {
-        public IFtpLog CreateLog(FtpConnection connection)
+        public IFtpLog CreateLog(IFtpConnection connection)
         {
             return new FtpLogForNLog(connection);
         }

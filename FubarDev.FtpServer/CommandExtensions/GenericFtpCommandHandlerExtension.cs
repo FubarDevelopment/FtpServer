@@ -29,7 +29,7 @@ namespace FubarDev.FtpServer.CommandExtensions
         /// <param name="name">The command name</param>
         /// <param name="processCommand">The function to process the received command with</param>
         /// <param name="alternativeNames">Alternative names</param>
-        public GenericFtpCommandHandlerExtension([NotNull] FtpConnection connection, [NotNull] string extensionFor, [NotNull] string name, FtpCommandHandlerProcessDelegate processCommand, [NotNull] params string[] alternativeNames)
+        public GenericFtpCommandHandlerExtension([NotNull] IFtpConnection connection, [NotNull] string extensionFor, [NotNull] string name, FtpCommandHandlerProcessDelegate processCommand, [NotNull] params string[] alternativeNames)
             : base(connection, extensionFor, name, alternativeNames)
         {
             _processCommand = processCommand;

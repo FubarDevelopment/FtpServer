@@ -25,7 +25,7 @@ namespace FubarDev.FtpServer
     /// <summary>
     /// This class represents a FTP connection
     /// </summary>
-    public sealed class FtpConnection : IDisposable
+    public sealed class FtpConnection : IFtpConnection
     {
         private readonly CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
 
@@ -70,44 +70,36 @@ namespace FubarDev.FtpServer
         /// <summary>
         /// Gets the dictionary of all known command handlers
         /// </summary>
-        [NotNull]
-        [ItemNotNull]
         public IReadOnlyDictionary<string, FtpCommandHandler> CommandHandlers { get; }
 
         /// <summary>
         /// Gets the server this connection belongs to
         /// </summary>
-        [NotNull]
         public FtpServer Server { get; }
 
         /// <summary>
         /// Gets or sets the encoding for the LIST/NLST commands
         /// </summary>
-        [NotNull]
         public Encoding Encoding { get; set; }
 
         /// <summary>
         /// Gets the FTP connection data
         /// </summary>
-        [NotNull]
         public FtpConnectionData Data { get; }
 
         /// <summary>
         /// Gets or sets the FTP connection log
         /// </summary>
-        [CanBeNull]
         public IFtpLog Log { get; set; }
 
         /// <summary>
         /// Gets the control connection stream
         /// </summary>
-        [NotNull]
         public Stream OriginalStream { get; }
 
         /// <summary>
         /// Gets or sets the control connection stream
         /// </summary>
-        [NotNull]
         public Stream SocketStream { get; set; }
 
         /// <summary>
@@ -118,13 +110,12 @@ namespace FubarDev.FtpServer
         /// <summary>
         /// Gets the remote address of the client
         /// </summary>
-        [NotNull]
         public Address RemoteAddress { get; }
 
         /// <summary>
         /// Gets the cancellation token to use to signal a task cancellation
         /// </summary>
-        internal CancellationToken CancellationToken => _cancellationTokenSource.Token;
+        CancellationToken IFtpConnection.CancellationToken => _cancellationTokenSource.Token;
 
         /// <summary>
         /// Starts processing of messages for this connection
@@ -149,7 +140,7 @@ namespace FubarDev.FtpServer
         /// <param name="response">The response to write to the client</param>
         /// <param name="cancellationToken">The cancellation token</param>
         /// <returns>The task</returns>
-        public async Task WriteAsync([NotNull] FtpResponse response, CancellationToken cancellationToken)
+        public async Task WriteAsync(FtpResponse response, CancellationToken cancellationToken)
         {
             if (!_closed)
             {
@@ -166,7 +157,7 @@ namespace FubarDev.FtpServer
         /// <param name="response">The response to write to the client</param>
         /// <param name="cancellationToken">The cancellation token</param>
         /// <returns>The task</returns>
-        public async Task WriteAsync([NotNull] string response, CancellationToken cancellationToken)
+        public async Task WriteAsync(string response, CancellationToken cancellationToken)
         {
             if (!_closed)
             {
@@ -203,9 +194,7 @@ namespace FubarDev.FtpServer
         /// </summary>
         /// <param name="unencryptedStream">The stream to encrypt</param>
         /// <returns>The encrypted stream</returns>
-        [NotNull]
-        [ItemNotNull]
-        public Task<Stream> CreateEncryptedStream([NotNull] Stream unencryptedStream)
+        public Task<Stream> CreateEncryptedStream(Stream unencryptedStream)
         {
             if (Data.CreateEncryptedStream == null)
                 return Task.FromResult(unencryptedStream);
@@ -231,7 +220,7 @@ namespace FubarDev.FtpServer
         /// Writes a FTP response to a client
         /// </summary>
         /// <param name="response">The response to write to the client</param>
-        internal void Write([NotNull] FtpResponse response)
+        private void Write([NotNull] FtpResponse response)
         {
             if (!_closed)
             {

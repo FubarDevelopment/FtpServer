@@ -24,7 +24,7 @@ namespace FubarDev.FtpServer
         /// <param name="connection">The connection this instance is used for</param>
         /// <param name="name">The command name</param>
         /// <param name="alternativeNames">Alternative names</param>
-        protected FtpCommandHandlerBase([NotNull] FtpConnection connection, [NotNull] string name, [NotNull, ItemNotNull] params string[] alternativeNames)
+        protected FtpCommandHandlerBase([NotNull] IFtpConnection connection, [NotNull] string name, [NotNull, ItemNotNull] params string[] alternativeNames)
         {
             Connection = connection;
             var names = new List<string>
@@ -46,7 +46,7 @@ namespace FubarDev.FtpServer
         /// Gets the connection this command was created for
         /// </summary>
         [NotNull]
-        protected FtpConnection Connection { get; }
+        protected IFtpConnection Connection { get; }
 
         /// <summary>
         /// Gets the server the command belongs to

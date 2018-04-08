@@ -19,7 +19,7 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// Initializes a new instance of the <see cref="CdUpCommandHandler"/> class.
         /// </summary>
         /// <param name="connection">The connection to create this command handler for</param>
-        public CdUpCommandHandler(FtpConnection connection)
+        public CdUpCommandHandler(IFtpConnection connection)
             : base(connection, "CDUP", "XCUP")
         {
         }

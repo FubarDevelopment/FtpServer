@@ -29,6 +29,6 @@ namespace FubarDev.FtpServer
         /// <param name="connection">The configured connection</param>
         /// <returns>the informational string to be sent by the <code>FEAT</code> command</returns>
         [NotNull]
-        string BuildInfo([NotNull] FtpConnection connection);
+        string BuildInfo([NotNull] IFtpConnection connection);
     }
 }

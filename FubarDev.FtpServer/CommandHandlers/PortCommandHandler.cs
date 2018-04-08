@@ -21,7 +21,7 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// Initializes a new instance of the <see cref="PortCommandHandler"/> class.
         /// </summary>
         /// <param name="connection">The connection to create this command handler for</param>
-        public PortCommandHandler(FtpConnection connection)
+        public PortCommandHandler(IFtpConnection connection)
             : base(connection, "PORT", "EPRT")
         {
         }

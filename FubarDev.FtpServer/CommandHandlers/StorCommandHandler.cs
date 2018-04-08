@@ -22,7 +22,7 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// Initializes a new instance of the <see cref="StorCommandHandler"/> class.
         /// </summary>
         /// <param name="connection">The connection this command handler is created for</param>
-        public StorCommandHandler(FtpConnection connection)
+        public StorCommandHandler(IFtpConnection connection)
             : base(connection, "STOR")
         {
         }

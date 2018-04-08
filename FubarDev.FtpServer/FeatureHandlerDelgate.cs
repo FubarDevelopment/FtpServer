@@ -16,5 +16,5 @@ namespace FubarDev.FtpServer
     /// <returns>The response to be sent to the client</returns>
     [NotNull]
     [ItemCanBeNull]
-    public delegate Task<FtpResponse> FeatureHandlerDelgate([NotNull] FtpConnection connection, [NotNull] string argument);
+    public delegate Task<FtpResponse> FeatureHandlerDelgate([NotNull] IFtpConnection connection, [NotNull] string argument);
 }

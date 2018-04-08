@@ -18,7 +18,7 @@ namespace FubarDev.FtpServer.CommandExtensions
         /// <param name="extensionFor">The name of the command this extension is for</param>
         /// <param name="name">The command name</param>
         /// <param name="alternativeNames">Alternative names</param>
-        protected FtpCommandHandlerExtension([NotNull] FtpConnection connection, [NotNull] string extensionFor, [NotNull] string name, [NotNull, ItemNotNull] params string[] alternativeNames)
+        protected FtpCommandHandlerExtension([NotNull] IFtpConnection connection, [NotNull] string extensionFor, [NotNull] string name, [NotNull, ItemNotNull] params string[] alternativeNames)
             : base(connection, name, alternativeNames)
         {
             ExtensionFor = extensionFor;

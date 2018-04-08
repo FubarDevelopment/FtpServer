@@ -31,6 +31,9 @@ namespace FubarDev.FtpServer
     /// </summary>
     public sealed class FtpServer : IDisposable
     {
+        [NotNull]
+        private readonly IFtpConnectionFactory _connectionFactory;
+
         private static object startedLock = new object();
 
         /// <summary>
@@ -40,7 +43,7 @@ namespace FubarDev.FtpServer
 
         private readonly CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
 
-        private readonly ConcurrentHashSet<FtpConnection> _connections = new ConcurrentHashSet<FtpConnection>();
+        private readonly ConcurrentHashSet<IFtpConnection> _connections = new ConcurrentHashSet<IFtpConnection>();
 
         /// <summary>
         /// Don't use this directly, use the Stopped property instead. It is protected by a mutex.
@@ -85,7 +88,7 @@ namespace FubarDev.FtpServer
         /// <param name="commsInterface">The <see cref="ICommsInterface"/> that identifies the public IP address (required for <code>PASV</code> and <code>EPSV</code>)</param>
         /// <param name="port">The port of the FTP server (usually 21)</param>
         /// <param name="handlerFactory">The handler factories to create <see cref="FtpCommandHandler"/> and <see cref="FtpCommandHandlerExtension"/> instances for new <see cref="FtpConnection"/> objects</param>
-        public FtpServer([NotNull] IFileSystemClassFactory fileSystemClassFactory, [NotNull] IMembershipProvider membershipProvider, [NotNull] ICommsInterface commsInterface, int port, [NotNull, ItemNotNull] IFtpCommandHandlerFactory handlerFactory)
+        public FtpServer([NotNull] IFileSystemClassFactory fileSystemClassFactory, [NotNull] IMembershipProvider membershipProvider, [NotNull] ICommsInterface commsInterface, int port, [NotNull] IFtpCommandHandlerFactory handlerFactory)
             : this(fileSystemClassFactory, membershipProvider, commsInterface.IpAddress, port, handlerFactory)
         {
         }
@@ -98,8 +101,29 @@ namespace FubarDev.FtpServer
         /// <param name="serverAddress">The public IP address (required for <code>PASV</code> and <code>EPSV</code>)</param>
         /// <param name="port">The port of the FTP server (usually 21)</param>
         /// <param name="handlerFactory">The handler factories to create <see cref="FtpCommandHandler"/> and <see cref="FtpCommandHandlerExtension"/> instances for new <see cref="FtpConnection"/> objects</param>
-        public FtpServer([NotNull] IFileSystemClassFactory fileSystemClassFactory, [NotNull] IMembershipProvider membershipProvider, [NotNull] string serverAddress, int port, [NotNull, ItemNotNull] IFtpCommandHandlerFactory handlerFactory)
+        public FtpServer([NotNull] IFileSystemClassFactory fileSystemClassFactory, [NotNull] IMembershipProvider membershipProvider, [NotNull] string serverAddress, int port, [NotNull] IFtpCommandHandlerFactory handlerFactory)
+            : this(fileSystemClassFactory, membershipProvider, serverAddress, port, handlerFactory, new FtpConnectionFactory())
         {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FtpServer"/> class.
+        /// </summary>
+        /// <param name="fileSystemClassFactory">The <see cref="IFileSystemClassFactory"/> to use to create the <see cref="IUnixFileSystem"/> for the logged in user.</param>
+        /// <param name="membershipProvider">The <see cref="IMembershipProvider"/> used to validate a login attempt</param>
+        /// <param name="serverAddress">The public IP address (required for <code>PASV</code> and <code>EPSV</code>)</param>
+        /// <param name="port">The port of the FTP server (usually 21)</param>
+        /// <param name="handlerFactory">The handler factories to create <see cref="FtpCommandHandler"/> and <see cref="FtpCommandHandlerExtension"/> instances for new <see cref="FtpConnection"/> objects</param>
+        /// <param name="connectionFactory">A factory for creating <see cref="IFtpConnection"/> instances</param>
+        public FtpServer(
+            [NotNull] IFileSystemClassFactory fileSystemClassFactory,
+            [NotNull] IMembershipProvider membershipProvider,
+            [NotNull] string serverAddress,
+            int port,
+            [NotNull] IFtpCommandHandlerFactory handlerFactory,
+            [NotNull] IFtpConnectionFactory connectionFactory)
+        {
+            _connectionFactory = connectionFactory;
             ServerAddress = serverAddress;
             DefaultEncoding = Encoding.UTF8;
             OperatingSystem = "UNIX";
@@ -258,7 +282,7 @@ namespace FubarDev.FtpServer
         /// </summary>
         /// <param name="backgroundTransfer">The background transfer to enqueue</param>
         /// <param name="connection">The connection to enqueue the background transfer for</param>
-        public void EnqueueBackgroundTransfer([NotNull] IBackgroundTransfer backgroundTransfer, [CanBeNull] FtpConnection connection)
+        public void EnqueueBackgroundTransfer([NotNull] IBackgroundTransfer backgroundTransfer, [CanBeNull] IFtpConnection connection)
         {
             var entry = new BackgroundTransferEntry(backgroundTransfer, connection?.Log);
             BackgroundTransferWorker.Enqueue(entry);
@@ -287,7 +311,7 @@ namespace FubarDev.FtpServer
             _connections.Dispose();
         }
 
-        private void OnConfigureConnection(FtpConnection connection)
+        private void OnConfigureConnection(IFtpConnection connection)
         {
             ConfigureConnection?.Invoke(this, new ConnectionEventArgs(connection));
         }
@@ -334,7 +358,7 @@ namespace FubarDev.FtpServer
 
         private void ConnectionReceived(object sender, TcpSocketListenerConnectEventArgs args)
         {
-            var connection = new FtpConnection(this, args.SocketClient, DefaultEncoding);
+            var connection = _connectionFactory.Create(this, args.SocketClient, DefaultEncoding);
             Statistics.ActiveConnections += 1;
             Statistics.TotalConnections += 1;
             connection.Closed += ConnectionOnClosed;

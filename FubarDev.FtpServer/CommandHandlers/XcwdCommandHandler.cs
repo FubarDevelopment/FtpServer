@@ -21,7 +21,7 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// Initializes a new instance of the <see cref="XcwdCommandHandler"/> class.
         /// </summary>
         /// <param name="connection">The connection to create this command handler for</param>
-        public XcwdCommandHandler(FtpConnection connection)
+        public XcwdCommandHandler(IFtpConnection connection)
             : base(connection, "XCWD")
         {
         }

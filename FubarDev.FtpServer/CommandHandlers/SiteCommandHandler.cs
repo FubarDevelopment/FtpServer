@@ -20,7 +20,7 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// Initializes a new instance of the <see cref="SiteCommandHandler"/> class.
         /// </summary>
         /// <param name="connection">The connection to create this command handler for</param>
-        public SiteCommandHandler(FtpConnection connection)
+        public SiteCommandHandler(IFtpConnection connection)
             : base(connection, "SITE")
         {
             Extensions = new Dictionary<string, FtpCommandHandlerExtension>(StringComparer.OrdinalIgnoreCase);

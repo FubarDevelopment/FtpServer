@@ -100,6 +100,7 @@
     <Compile Include="CreateEncryptedStreamDelegate.cs" />
     <Compile Include="AssemblyFtpCommandHandlerFactory.cs" />
     <Compile Include="CommandHandlers\FtpCommandHandler.cs" />
+    <Compile Include="FtpConnectionFactory.cs" />
     <Compile Include="IFtpCommandHandlerFactory.cs" />
     <Compile Include="FeatureHandlerDelgate.cs" />
     <Compile Include="GenericFeatureInfo.cs" />
@@ -115,6 +116,8 @@
     <Compile Include="FtpServerStatistics.cs" />
     <Compile Include="FtpTransferMode.cs" />
     <Compile Include="IFeatureInfo.cs" />
+    <Compile Include="IFtpConnection.cs" />
+    <Compile Include="IFtpConnectionFactory.cs" />
     <Compile Include="IFtpLog.cs" />
     <Compile Include="IFtpLogManager.cs" />
     <Compile Include="IListFormatter.cs" />

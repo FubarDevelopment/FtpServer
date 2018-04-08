@@ -19,7 +19,7 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// Initializes a new instance of the <see cref="QuitCommandHandler"/> class.
         /// </summary>
         /// <param name="connection">The connection to create this command handler for</param>
-        public QuitCommandHandler(FtpConnection connection)
+        public QuitCommandHandler(IFtpConnection connection)
             : base(connection, "QUIT", "LOGOUT")
         {
         }

@@ -23,7 +23,7 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// Initializes a new instance of the <see cref="MdtmCommandHandler"/> class.
         /// </summary>
         /// <param name="connection">The connection to create this command handler for</param>
-        public MdtmCommandHandler(FtpConnection connection)
+        public MdtmCommandHandler(IFtpConnection connection)
             : base(connection, "MDTM")
         {
         }

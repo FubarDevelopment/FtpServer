@@ -20,7 +20,7 @@ namespace FubarDev.FtpServer.AuthTls
         /// Initializes a new instance of the <see cref="PbszCommandHandler"/> class.
         /// </summary>
         /// <param name="connection">The connection to create this command handler for</param>
-        public PbszCommandHandler(FtpConnection connection)
+        public PbszCommandHandler(IFtpConnection connection)
             : base(connection, "PBSZ")
         {
         }
