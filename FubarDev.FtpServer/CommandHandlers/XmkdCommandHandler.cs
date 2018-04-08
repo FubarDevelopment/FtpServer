@@ -22,7 +22,7 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// Initializes a new instance of the <see cref="XmkdCommandHandler"/> class.
         /// </summary>
         /// <param name="connection">The connection to create this command handler for</param>
-        public XmkdCommandHandler(FtpConnection connection)
+        public XmkdCommandHandler(IFtpConnection connection)
             : base(connection, "XMKD")
         {
         }

@@ -19,7 +19,7 @@ namespace FubarDev.FtpServer
         /// </summary>
         /// <param name="connection">The connection to create the logger for</param>
         /// <returns>The new logger</returns>
-        IFtpLog CreateLog(FtpConnection connection);
+        IFtpLog CreateLog(IFtpConnection connection);
 
         /// <summary>
         /// Creates a logger using a name

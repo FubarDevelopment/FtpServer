@@ -29,7 +29,7 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// Initializes a new instance of the <see cref="MlstCommandHandler"/> class.
         /// </summary>
         /// <param name="connection">The FTP connection this command handler is created for.</param>
-        public MlstCommandHandler(FtpConnection connection)
+        public MlstCommandHandler(IFtpConnection connection)
             : base(connection, "MLST", "MLSD")
         {
             connection.Data.ActiveMlstFacts.Clear();
@@ -58,7 +58,7 @@ namespace FubarDev.FtpServer.CommandHandlers
             return ProcessMlstAsync(command, cancellationToken);
         }
 
-        private static string FeatureStatus(FtpConnection connection)
+        private static string FeatureStatus(IFtpConnection connection)
         {
             var result = new StringBuilder();
             result.Append("MLST ");

@@ -22,7 +22,7 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// Initializes a new instance of the <see cref="DeleCommandHandler"/> class.
         /// </summary>
         /// <param name="connection">The connection to create this command handler for</param>
-        public DeleCommandHandler(FtpConnection connection)
+        public DeleCommandHandler(IFtpConnection connection)
             : base(connection, "DELE")
         {
         }

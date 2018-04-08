@@ -25,7 +25,7 @@ namespace FubarDev.FtpServer
     /// </remarks>
     public sealed class BackgroundCommandHandler : IDisposable
     {
-        private readonly FtpConnection _connection;
+        private readonly IFtpConnection _connection;
 
         private readonly object _syncRoot = new object();
 
@@ -35,7 +35,7 @@ namespace FubarDev.FtpServer
 
         private Task<FtpResponse> _handlerTask;
 
-        internal BackgroundCommandHandler(FtpConnection connection)
+        internal BackgroundCommandHandler(IFtpConnection connection)
         {
             _connection = connection;
             _cancellationTokenRegistration = _connection.CancellationToken.Register(() => _cancellationTokenSource.Cancel(true));

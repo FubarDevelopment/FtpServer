@@ -22,7 +22,7 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// Initializes a new instance of the <see cref="AppeCommandHandler"/> class.
         /// </summary>
         /// <param name="connection">The connection to create this command handler for</param>
-        public AppeCommandHandler(FtpConnection connection)
+        public AppeCommandHandler(IFtpConnection connection)
             : base(connection, "APPE")
         {
         }

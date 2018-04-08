@@ -24,7 +24,7 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// Initializes a new instance of the <see cref="MfmtCommandHandler"/> class.
         /// </summary>
         /// <param name="connection">The connection to create this command handler for</param>
-        public MfmtCommandHandler(FtpConnection connection)
+        public MfmtCommandHandler(IFtpConnection connection)
             : base(connection, "MFMT")
         {
         }

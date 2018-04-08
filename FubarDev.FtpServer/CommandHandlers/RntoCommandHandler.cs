@@ -21,7 +21,7 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// Initializes a new instance of the <see cref="RntoCommandHandler"/> class.
         /// </summary>
         /// <param name="connection">The connection to create this command handler for</param>
-        public RntoCommandHandler(FtpConnection connection)
+        public RntoCommandHandler(IFtpConnection connection)
             : base(connection, "RNTO")
         {
         }

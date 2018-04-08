@@ -23,7 +23,7 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// Initializes a new instance of the <see cref="PasvCommandHandler"/> class.
         /// </summary>
         /// <param name="connection">The connection this command handler is created for</param>
-        public PasvCommandHandler(FtpConnection connection)
+        public PasvCommandHandler(IFtpConnection connection)
             : base(connection, "PASV", "EPSV")
         {
         }

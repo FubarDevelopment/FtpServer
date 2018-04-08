@@ -19,7 +19,7 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// Initializes a new instance of the <see cref="SystCommandHandler"/> class.
         /// </summary>
         /// <param name="connection">The connection to create this command handler for</param>
-        public SystCommandHandler(FtpConnection connection)
+        public SystCommandHandler(IFtpConnection connection)
             : base(connection, "SYST")
         {
         }

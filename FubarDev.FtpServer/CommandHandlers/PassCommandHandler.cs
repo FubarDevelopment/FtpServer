@@ -23,7 +23,7 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// Initializes a new instance of the <see cref="PassCommandHandler"/> class.
         /// </summary>
         /// <param name="connection">The connection to create this command handler for</param>
-        public PassCommandHandler(FtpConnection connection)
+        public PassCommandHandler(IFtpConnection connection)
             : base(connection, "PASS")
         {
         }

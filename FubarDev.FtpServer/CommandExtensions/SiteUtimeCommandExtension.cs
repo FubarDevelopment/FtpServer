@@ -22,7 +22,7 @@ namespace FubarDev.FtpServer.CommandExtensions
         /// Initializes a new instance of the <see cref="SiteUtimeCommandExtension"/> class.
         /// </summary>
         /// <param name="connection">The connection this instance is used for</param>
-        public SiteUtimeCommandExtension([NotNull] FtpConnection connection)
+        public SiteUtimeCommandExtension([NotNull] IFtpConnection connection)
             : base(connection, "SITE", "UTIME")
         {
         }

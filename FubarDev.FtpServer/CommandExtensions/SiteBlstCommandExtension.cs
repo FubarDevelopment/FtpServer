@@ -22,7 +22,7 @@ namespace FubarDev.FtpServer.CommandExtensions
         /// Initializes a new instance of the <see cref="SiteBlstCommandExtension"/> class.
         /// </summary>
         /// <param name="connection">The connection this instance is used for</param>
-        public SiteBlstCommandExtension([NotNull] FtpConnection connection)
+        public SiteBlstCommandExtension([NotNull] IFtpConnection connection)
             : base(connection, "SITE", "BLST")
         {
         }

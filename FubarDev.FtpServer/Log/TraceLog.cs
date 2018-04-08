@@ -15,13 +15,13 @@ namespace FubarDev.FtpServer.Log
     /// </summary>
     public class TraceLog : IFtpLog
     {
-        private readonly FtpConnection _connection;
+        private readonly IFtpConnection _connection;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TraceLog"/> class.
         /// </summary>
         /// <param name="connection">The connection for this log</param>
-        public TraceLog(FtpConnection connection)
+        public TraceLog(IFtpConnection connection)
         {
             _connection = connection;
         }

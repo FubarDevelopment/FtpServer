@@ -16,7 +16,7 @@ namespace TestFtpServer.Logging
 
         private readonly int? _remotePort;
 
-        public FtpLogForNLog(FtpConnection connection)
+        public FtpLogForNLog(IFtpConnection connection)
         {
             _logger = LogManager.GetLogger("FubarDev.FtpServer.FtpConnection");
             _remoteAddress = connection.RemoteAddress.ToString(true);

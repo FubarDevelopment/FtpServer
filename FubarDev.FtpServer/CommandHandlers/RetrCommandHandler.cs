@@ -24,7 +24,7 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// Initializes a new instance of the <see cref="RetrCommandHandler"/> class.
         /// </summary>
         /// <param name="connection">The connection to create this command handler for</param>
-        public RetrCommandHandler(FtpConnection connection)
+        public RetrCommandHandler(IFtpConnection connection)
             : base(connection, "RETR")
         {
         }

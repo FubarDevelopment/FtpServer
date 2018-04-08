@@ -19,7 +19,7 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// Initializes a new instance of the <see cref="AlloCommandHandler"/> class.
         /// </summary>
         /// <param name="connection">The connection to create this command handler for</param>
-        public AlloCommandHandler(FtpConnection connection)
+        public AlloCommandHandler(IFtpConnection connection)
             : base(connection, "ALLO")
         {
         }

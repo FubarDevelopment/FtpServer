@@ -29,7 +29,7 @@ namespace FubarDev.FtpServer
         /// Initializes a new instance of the <see cref="FtpConnectionData"/> class.
         /// </summary>
         /// <param name="connection">The <see cref="FtpConnection"/> to create the data for</param>
-        internal FtpConnectionData([NotNull] FtpConnection connection)
+        internal FtpConnectionData([NotNull] IFtpConnection connection)
         {
             UserData = new ExpandoObject();
             TransferMode = new FtpTransferMode(FtpFileType.Ascii);
