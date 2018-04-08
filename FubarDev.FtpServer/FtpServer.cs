@@ -195,8 +195,11 @@ namespace FubarDev.FtpServer
         private BackgroundTransferWorker BackgroundTransferWorker { get; }
 
         /// <summary>
-        /// The Stopped property. Mutexed so it can be accessed concurrently by different threads.
+        /// Gets or sets a value indicating whether the server is stopped.
         /// </summary>
+        /// <remarks>
+        /// Mutexed so it can be accessed concurrently by different threads.
+        /// </remarks>
         private bool Stopped
         {
             get

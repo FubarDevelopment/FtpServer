@@ -123,6 +123,11 @@ namespace FubarDev.FtpServer.Utilities
             return _entriesEnumerator.MoveNext();
         }
 
+        /// <summary>
+        /// Gets the full path for a given name
+        /// </summary>
+        /// <param name="name">The name to get the full path for</param>
+        /// <returns>The full path</returns>
         public string GetFullPath(string name)
         {
             return _pathEntries.GetFullPath(name);

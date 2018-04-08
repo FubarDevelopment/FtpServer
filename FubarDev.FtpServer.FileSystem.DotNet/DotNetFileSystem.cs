@@ -19,6 +19,9 @@ namespace FubarDev.FtpServer.FileSystem.DotNet
     /// </summary>
     public class DotNetFileSystem : IUnixFileSystem
     {
+        /// <summary>
+        /// The default buffer size for copying from one stream to another.
+        /// </summary>
         public static readonly int DefaultStreamBufferSize = 4096;
 
         private bool _disposedValue;
