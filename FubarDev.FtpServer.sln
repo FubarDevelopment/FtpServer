@@ -14,6 +14,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		LICENSE.md = LICENSE.md
 		nuget-pack.ps1 = nuget-pack.ps1
 		README.md = README.md
+		Global.proj = Global.proj
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FubarDev.FtpServer.FileSystem.DotNet", "FubarDev.FtpServer.FileSystem.DotNet\FubarDev.FtpServer.FileSystem.DotNet.csproj", "{9A83C6F5-378B-48B3-B32A-151DB90B390C}"
@@ -24,11 +25,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestFtpServer", "TestFtpSer
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FubarDev.FtpServer.Tests", "FubarDev.FtpServer.Tests\FubarDev.FtpServer.Tests.csproj", "{0EEB524B-D0F7-4972-838D-D4CE7963D839}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FubarDev.FtpServer.FileSystem.GoogleDrive", "FubarDev.FtpServer.FileSystem.GoogleDrive\FubarDev.FtpServer.FileSystem.GoogleDrive.csproj", "{0336A73C-3F48-493E-9E71-64015DCC146E}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FubarDev.FtpServer.AuthTls", "FubarDev.FtpServer.AuthTls\FubarDev.FtpServer.AuthTls.csproj", "{A5C36C6D-BE99-44C5-870A-23FD6B76E839}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FubarDev.FtpServer.FileSystem.OneDrive", "FubarDev.FtpServer.FileSystem.OneDrive\FubarDev.FtpServer.FileSystem.OneDrive.csproj", "{7BAF7F0F-DA61-4448-ABFD-3348B264189D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -60,18 +57,10 @@ Global
 		{0EEB524B-D0F7-4972-838D-D4CE7963D839}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0EEB524B-D0F7-4972-838D-D4CE7963D839}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0EEB524B-D0F7-4972-838D-D4CE7963D839}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0336A73C-3F48-493E-9E71-64015DCC146E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0336A73C-3F48-493E-9E71-64015DCC146E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0336A73C-3F48-493E-9E71-64015DCC146E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0336A73C-3F48-493E-9E71-64015DCC146E}.Release|Any CPU.Build.0 = Release|Any CPU
 		{A5C36C6D-BE99-44C5-870A-23FD6B76E839}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{A5C36C6D-BE99-44C5-870A-23FD6B76E839}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A5C36C6D-BE99-44C5-870A-23FD6B76E839}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A5C36C6D-BE99-44C5-870A-23FD6B76E839}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7BAF7F0F-DA61-4448-ABFD-3348B264189D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7BAF7F0F-DA61-4448-ABFD-3348B264189D}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7BAF7F0F-DA61-4448-ABFD-3348B264189D}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7BAF7F0F-DA61-4448-ABFD-3348B264189D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

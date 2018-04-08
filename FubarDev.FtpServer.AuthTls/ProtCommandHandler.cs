@@ -4,6 +4,7 @@
 
 using System.Collections.Generic;
 using System.IO;
+using System.Net.Security;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -56,7 +57,7 @@ namespace FubarDev.FtpServer.AuthTls
 
         private async Task<Stream> CreateSslStream(Stream unencryptedStream)
         {
-            var sslStream = new FixedSslStream(unencryptedStream, false);
+            var sslStream = new SslStream(unencryptedStream, false);
             await sslStream.AuthenticateAsServerAsync(AuthTlsCommandHandler.ServerCertificate);
             return sslStream;
         }

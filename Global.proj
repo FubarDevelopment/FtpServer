@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project>
+  <PropertyGroup>
+    <LangVersion>latest</LangVersion>
+    <VersionPrefix>2.0.0</VersionPrefix>
+    <Product>FTP Server</Product>
+    <Copyright>Fubar Development Junker 2015-2018</Copyright>
+    <Company>Fubar Development Junker</Company>
+    <Authors>Fubar Development Junker</Authors>
+    <PackageProjectUrl>https://github.com/FubarDevelopment/FtpServer</PackageProjectUrl>
+    <PackageLicenseUrl>https://github.com/FubarDevelopment/FtpServer/blob/master/LICENSE.md</PackageLicenseUrl>
+    <PackageReleaseNotes>https://github.com/FubarDevelopment/FtpServer/releases</PackageReleaseNotes>
+    <RepositoryUrl>https://github.com/FubarDevelopment/FtpServer.git</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <MinClientVersion>3.5</MinClientVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)GlobalAssemblyInfo.cs" Link="Properties\GlobalAssemblyInfo.cs" />
+  </ItemGroup>
+
+  <PropertyGroup Condition=" '$(OutputType)' == 'library' and '$(AssemblyName)' != 'FubarDev.FtpServer.Tests' ">
+    <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(AssemblyName)' != 'FubarDev.FtpServer.Tests' ">
+    <DebugType>portable</DebugType> <!-- Required for EmbedSources -->
+  </PropertyGroup>
+
+  <ItemGroup Condition=" '$(Configuration)' == 'Release' and '$(AssemblyName)' != 'FubarDev.FtpServer.Tests' ">
+    <PackageReference Include="SourceLink.Embed.AllSourceFiles" Version="2.8.0" PrivateAssets="all" />
+    <PackageReference Include="SourceLink.Copy.PdbFiles" Version="2.8.0" PrivateAssets="All" />
+  </ItemGroup>
+
+  <PropertyGroup Condition=" '$(OutputType)' != 'library' or '$(AssemblyName)' == 'FubarDev.FtpServer.Tests' ">
+    <DebugType>full</DebugType>
+  </PropertyGroup>
+
+</Project>

@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading;
 using System.Threading.Tasks;
@@ -64,7 +65,7 @@ namespace FubarDev.FtpServer.AuthTls
 
             try
             {
-                var sslStream = new FixedSslStream(Connection.OriginalStream, true);
+                var sslStream = new SslStream(Connection.OriginalStream, true);
                 Connection.SocketStream = sslStream;
                 await sslStream.AuthenticateAsServerAsync(ServerCertificate);
                 return null;
