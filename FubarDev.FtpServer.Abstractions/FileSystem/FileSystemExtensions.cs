@@ -341,6 +341,7 @@ namespace FubarDev.FtpServer.FileSystem
             if (!string.IsNullOrEmpty(path))
             {
                 result.Append(path);
+                // ReSharper disable once PossibleNullReferenceException
                 addSlash = !path.EndsWith("/");
             }
             else
@@ -372,6 +373,7 @@ namespace FubarDev.FtpServer.FileSystem
                 return parts;
             var isEscaped = false;
             var partCollector = new StringBuilder();
+            // ReSharper disable once PossibleNullReferenceException
             foreach (var ch in path)
             {
                 if (!isEscaped)
