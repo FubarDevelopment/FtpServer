@@ -1,8 +1,7 @@
-﻿// <copyright file="SiteUtimeCommandExtension.cs" company="Fubar Development Junker">
+// <copyright file="SiteUtimeCommandExtension.cs" company="Fubar Development Junker">
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
-using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -48,13 +47,13 @@ namespace FubarDev.FtpServer.CommandExtensions
                 }
                 parts.Add(remaining);
                 parts.Reverse();
-                return await SetTimestamp5(parts, cancellationToken);
+                return await SetTimestamp5(parts, cancellationToken).ConfigureAwait(false);
             }
 
             parts.AddRange(command.Argument.Split(new[] { ' ' }, 2));
             while (parts.Count != 2)
                 parts.Add(string.Empty);
-            return await SetTimestamp2(parts, cancellationToken);
+            return await SetTimestamp2(parts, cancellationToken).ConfigureAwait(false);
         }
 
         private static bool IsSupportedTimeZome(string timezone)
@@ -64,12 +63,11 @@ namespace FubarDev.FtpServer.CommandExtensions
 
         private async Task<FtpResponse> SetTimestamp5(IReadOnlyList<string> parts, CancellationToken cancellationToken)
         {
-            DateTimeOffset accessTime, modificationTime, creationTime;
-            if (!parts[1].TryParseTimestamp(parts[4], out accessTime))
+            if (!parts[1].TryParseTimestamp(parts[4], out var accessTime))
                 return new FtpResponse(501, "Syntax error in parameters or arguments.");
-            if (!parts[2].TryParseTimestamp(parts[4], out modificationTime))
+            if (!parts[2].TryParseTimestamp(parts[4], out var modificationTime))
                 return new FtpResponse(501, "Syntax error in parameters or arguments.");
-            if (!parts[3].TryParseTimestamp(parts[4], out creationTime))
+            if (!parts[3].TryParseTimestamp(parts[4], out var creationTime))
                 return new FtpResponse(501, "Syntax error in parameters or arguments.");
 
             var path = parts[0];
@@ -79,19 +77,18 @@ namespace FubarDev.FtpServer.CommandExtensions
                 return new FtpResponse(501, "No file name.");
 
             var currentPath = Data.Path.Clone();
-            var foundEntry = await Data.FileSystem.SearchEntryAsync(currentPath, path, cancellationToken);
+            var foundEntry = await Data.FileSystem.SearchEntryAsync(currentPath, path, cancellationToken).ConfigureAwait(false);
             if (foundEntry?.Entry == null)
                 return new FtpResponse(550, "File system entry not found.");
 
-            await Data.FileSystem.SetMacTimeAsync(foundEntry.Entry, modificationTime, accessTime, creationTime, cancellationToken);
+            await Data.FileSystem.SetMacTimeAsync(foundEntry.Entry, modificationTime, accessTime, creationTime, cancellationToken).ConfigureAwait(false);
 
             return new FtpResponse(220, "Timestamps set.");
         }
 
         private async Task<FtpResponse> SetTimestamp2(IReadOnlyList<string> parts, CancellationToken cancellationToken)
         {
-            DateTimeOffset modificationTime;
-            if (!parts[0].TryParseTimestamp("UTC", out modificationTime))
+            if (!parts[0].TryParseTimestamp("UTC", out var modificationTime))
                 return new FtpResponse(501, "Syntax error in parameters or arguments.");
 
             var path = parts[1];
@@ -101,11 +98,11 @@ namespace FubarDev.FtpServer.CommandExtensions
                 return new FtpResponse(501, "No file name.");
 
             var currentPath = Data.Path.Clone();
-            var foundEntry = await Data.FileSystem.SearchEntryAsync(currentPath, path, cancellationToken);
+            var foundEntry = await Data.FileSystem.SearchEntryAsync(currentPath, path, cancellationToken).ConfigureAwait(false);
             if (foundEntry?.Entry == null)
                 return new FtpResponse(550, "File system entry not found.");
 
-            await Data.FileSystem.SetMacTimeAsync(foundEntry.Entry, modificationTime, null, null, cancellationToken);
+            await Data.FileSystem.SetMacTimeAsync(foundEntry.Entry, modificationTime, null, null, cancellationToken).ConfigureAwait(false);
 
             return new FtpResponse(220, "Modification time set.");
         }

@@ -1,4 +1,4 @@
-﻿// <copyright file="ModifyFact.cs" company="Fubar Development Junker">
+// <copyright file="ModifyFact.cs" company="Fubar Development Junker">
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
@@ -11,15 +11,15 @@ namespace FubarDev.FtpServer.ListFormatters.Facts
     /// </summary>
     public class ModifyFact : IFact
     {
-        private readonly DateTimeOffset _timestamp;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="ModifyFact"/> class.
         /// </summary>
         /// <param name="timestamp">The modification time stamp</param>
         public ModifyFact(DateTimeOffset timestamp)
         {
-            _timestamp = timestamp.ToUniversalTime();
+            var utcTimestamp = timestamp.ToUniversalTime();
+            Timestamp = utcTimestamp;
+            Value = utcTimestamp.ToString("yyyyMMddHHmmss.fff");
         }
 
         /// <inheritdoc/>
@@ -28,9 +28,9 @@ namespace FubarDev.FtpServer.ListFormatters.Facts
         /// <summary>
         /// Gets the modification time stamp
         /// </summary>
-        public DateTimeOffset Timestamp => _timestamp;
+        public DateTimeOffset Timestamp { get; }
 
         /// <inheritdoc/>
-        public string Value => _timestamp.ToString("yyyyMMddHHmmss.fff");
+        public string Value { get; }
     }
 }

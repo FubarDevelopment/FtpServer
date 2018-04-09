@@ -2,11 +2,13 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0</TargetFrameworks>
-    <Description>Account management for the portable FTP server</Description>
-    <PackageTags>account;management;portable;FTP;server</PackageTags>
+    <Description>Interfaces for the portable FTP server</Description>
+    <RootNamespace>FubarDev.FtpServer</RootNamespace>
+    <PackageTags>portable;FTP;server</PackageTags>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="JetBrains.Annotations" Version="11.1.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="2.0.1" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.1.0-beta006" />
   </ItemGroup>
   <Import Project="$(MSBuildThisFileDirectory)../Global.proj" />

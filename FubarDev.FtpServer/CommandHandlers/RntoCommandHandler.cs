@@ -1,4 +1,4 @@
-﻿//-----------------------------------------------------------------------
+//-----------------------------------------------------------------------
 // <copyright file="RntoCommandHandler.cs" company="Fubar Development Junker">
 //     Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
@@ -39,7 +39,7 @@ namespace FubarDev.FtpServer.CommandHandlers
 
             var fileName = command.Argument;
             var tempPath = Data.Path.Clone();
-            var fileInfo = await Data.FileSystem.SearchEntryAsync(tempPath, fileName, cancellationToken);
+            var fileInfo = await Data.FileSystem.SearchEntryAsync(tempPath, fileName, cancellationToken).ConfigureAwait(false);
             if (fileInfo == null)
                 return new FtpResponse(550, "Directory doesn't exist.");
             if (fileInfo.FileName == null)
@@ -51,7 +51,7 @@ namespace FubarDev.FtpServer.CommandHandlers
             }
 
             var targetDir = fileInfo.Directory;
-            await Data.FileSystem.MoveAsync(Data.RenameFrom.Directory, Data.RenameFrom.Entry, targetDir, fileInfo.FileName, cancellationToken);
+            await Data.FileSystem.MoveAsync(Data.RenameFrom.Directory, Data.RenameFrom.Entry, targetDir, fileInfo.FileName, cancellationToken).ConfigureAwait(false);
 
             Data.RenameFrom = null;
 

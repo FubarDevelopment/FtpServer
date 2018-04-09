@@ -1,4 +1,6 @@
-﻿////#define USE_FTPS_IMPLICIT
+// <copyright file="Program.cs" company="Fubar Development Junker">
+// Copyright (c) Fubar Development Junker. All rights reserved.
+// </copyright>
 
 using System;
 using System.IO;
@@ -8,8 +10,6 @@ using System.Text;
 using FubarDev.FtpServer;
 using FubarDev.FtpServer.AccountManagement;
 using FubarDev.FtpServer.AccountManagement.Anonymous;
-using FubarDev.FtpServer.CommandExtensions;
-using FubarDev.FtpServer.FileSystem;
 using FubarDev.FtpServer.FileSystem.DotNet;
 
 using Microsoft.Extensions.DependencyInjection;
@@ -19,12 +19,12 @@ using NLog.Extensions.Logging;
 
 namespace TestFtpServer
 {
-    class Program
+    internal static class Program
     {
 #if USE_FTPS_IMPLICIT
-        const int Port = 990;
+        internal const int Port = 990;
 #else
-        const int Port = 21;
+        internal const int Port = 21;
 #endif
 
         private static void Main()
@@ -35,30 +35,28 @@ namespace TestFtpServer
             var services = new ServiceCollection();
             services.AddLogging(cfg => cfg.SetMinimumLevel(LogLevel.Trace));
             services.AddOptions();
-            
+
             services.Configure<AuthTlsOptions>(opt => opt.ServerCertificate = cert);
             services.Configure<FtpConnectionOptions>(opt => opt.DefaultEncoding = Encoding.ASCII);
             services.Configure<DotNetFileSystemOptions>(opt => opt.RootPath = Path.Combine(Path.GetTempPath(), "TestFtpServer"));
             services.Configure<FtpServerOptions>(opt =>
             {
-                opt.ServerAddress = "127.0.0.1";
+                opt.ServerAddress = "localhost";
                 opt.Port = Port;
             });
-
 
             services.AddSingleton<IAnonymousPasswordValidator, NoValidation>();
             services.AddFtpServer<DotNetFileSystemProvider, AnonymousMembershipProvider>();
 
             using (var serviceProvider = services.BuildServiceProvider())
             {
-
                 var loggerFactory = serviceProvider.GetRequiredService<ILoggerFactory>();
                 loggerFactory.AddNLog(new NLogProviderOptions { CaptureMessageTemplates = true, CaptureMessageProperties = true });
                 NLog.LogManager.LoadConfiguration("NLog.config");
 
                 var ftpServer = serviceProvider.GetRequiredService<FtpServer>();
 #if USE_FTPS_IMPLICIT
-// Use an implicit SSL connection (without the AUTHTLS command)
+                // Use an implicit SSL connection (without the AUTHTLS command)
                 ftpServer.ConfigureConnection += (s, e) =>
                 {
                     var sslStream = new SslStream(e.Connection.OriginalStream);

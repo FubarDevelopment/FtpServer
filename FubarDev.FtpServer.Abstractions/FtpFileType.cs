@@ -1,4 +1,4 @@
-﻿//-----------------------------------------------------------------------
+//-----------------------------------------------------------------------
 // <copyright file="FtpFileType.cs" company="Fubar Development Junker">
 //     Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
@@ -30,6 +30,6 @@ namespace FubarDev.FtpServer
         /// <summary>
         /// LOCAL data type (3.1.1.4.)
         /// </summary>
-        Local
+        Local,
     }
 }

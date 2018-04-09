@@ -1,4 +1,4 @@
-﻿//-----------------------------------------------------------------------
+//-----------------------------------------------------------------------
 // <copyright file="OptsCommandHandler.cs" company="Fubar Development Junker">
 //     Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
@@ -40,7 +40,7 @@ namespace FubarDev.FtpServer.CommandHandlers
         }
 
         /// <inheritdoc/>
-        public override IEnumerable<FtpCommandHandlerExtension> GetExtensions()
+        public override IEnumerable<IFtpCommandHandlerExtension> GetExtensions()
         {
             yield return new GenericFtpCommandHandlerExtension(Connection, "OPTS", "UTF8", ProcessOptionUtf8, "UTF-8");
         }
@@ -52,7 +52,7 @@ namespace FubarDev.FtpServer.CommandHandlers
             if (!Extensions.TryGetValue(argument.Name, out var extension))
                 return new FtpResponse(500, "Syntax error, command unrecognized.");
 
-            return await extension.Process(argument, cancellationToken);
+            return await extension.Process(argument, cancellationToken).ConfigureAwait(false);
         }
 
         private Task<FtpResponse> ProcessOptionUtf8(FtpCommand command, CancellationToken cancellationToken)

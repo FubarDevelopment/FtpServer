@@ -1,4 +1,4 @@
-﻿//-----------------------------------------------------------------------
+//-----------------------------------------------------------------------
 // <copyright file="FeatCommandHandler.cs" company="Fubar Development Junker">
 //     Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
@@ -46,10 +46,10 @@ namespace FubarDev.FtpServer.CommandHandlers
                 return new FtpResponse(211, "No extensions supported");
             }
 
-            await Connection.WriteAsync("211-Extensions supported:", cancellationToken);
+            await Connection.WriteAsync("211-Extensions supported:", cancellationToken).ConfigureAwait(false);
             foreach (var supportedFeature in _supportedFeatures)
             {
-                await Connection.WriteAsync($" {supportedFeature}", cancellationToken);
+                await Connection.WriteAsync($" {supportedFeature}", cancellationToken).ConfigureAwait(false);
             }
             return new FtpResponse(211, "END");
         }

@@ -1,4 +1,4 @@
-﻿//-----------------------------------------------------------------------
+//-----------------------------------------------------------------------
 // <copyright file="DeleCommandHandler.cs" company="Fubar Development Junker">
 //     Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
@@ -32,12 +32,12 @@ namespace FubarDev.FtpServer.CommandHandlers
         {
             var path = command.Argument;
             var currentPath = Data.Path.Clone();
-            var fileInfo = await Data.FileSystem.SearchFileAsync(currentPath, path, cancellationToken);
+            var fileInfo = await Data.FileSystem.SearchFileAsync(currentPath, path, cancellationToken).ConfigureAwait(false);
             if (fileInfo?.Entry == null)
                 return new FtpResponse(550, "File does not exist.");
             try
             {
-                await Data.FileSystem.UnlinkAsync(fileInfo.Entry, cancellationToken);
+                await Data.FileSystem.UnlinkAsync(fileInfo.Entry, cancellationToken).ConfigureAwait(false);
                 return new FtpResponse(250, "File deleted successfully.");
             }
             catch (Exception)

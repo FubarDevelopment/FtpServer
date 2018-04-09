@@ -1,4 +1,4 @@
-﻿// <copyright file="AnonymousFtpUser.cs" company="Fubar Development Junker">
+// <copyright file="AnonymousFtpUser.cs" company="Fubar Development Junker">
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
@@ -12,7 +12,7 @@ namespace FubarDev.FtpServer.AccountManagement
     /// <summary>
     /// An anonymous FTP user
     /// </summary>
-    public class AnonymousFtpUser : FtpUser
+    public class AnonymousFtpUser : IFtpUser
     {
         private readonly HashSet<string> _guestGroups = new HashSet<string>(new[] { "anonymous", "guest" }, StringComparer.OrdinalIgnoreCase);
 
@@ -21,10 +21,12 @@ namespace FubarDev.FtpServer.AccountManagement
         /// </summary>
         /// <param name="email">The anonymous users email address</param>
         public AnonymousFtpUser([CanBeNull] string email)
-            : base("anonymous")
         {
             Email = email;
         }
+
+        /// <inheritdoc />
+        public string Name { get; } = "anonymous";
 
         /// <summary>
         /// Gets the anonymous users email address
@@ -33,7 +35,7 @@ namespace FubarDev.FtpServer.AccountManagement
         public string Email { get; }
 
         /// <inheritdoc/>
-        public override bool IsInGroup(string groupName)
+        public bool IsInGroup(string groupName)
         {
             return _guestGroups.Contains(groupName);
         }

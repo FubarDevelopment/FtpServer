@@ -1,4 +1,4 @@
-﻿// <copyright file="PermissionsFact.cs" company="Fubar Development Junker">
+// <copyright file="PermissionsFact.cs" company="Fubar Development Junker">
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
@@ -22,7 +22,7 @@ namespace FubarDev.FtpServer.ListFormatters.Facts
         /// <param name="user">The current user</param>
         /// <param name="dir">The current directory</param>
         /// <param name="entry">The file to create the permissions for</param>
-        public PermissionsFact([NotNull] FtpUser user, [NotNull] IUnixDirectoryEntry dir, [NotNull] IUnixFileEntry entry)
+        public PermissionsFact([NotNull] IFtpUser user, [NotNull] IUnixDirectoryEntry dir, [NotNull] IUnixFileEntry entry)
         {
             var values = new StringBuilder();
             var entryPerm = entry.Permissions.GetAccessModeFor(entry, user);
@@ -52,7 +52,7 @@ namespace FubarDev.FtpServer.ListFormatters.Facts
         /// <param name="user">The current user</param>
         /// <param name="dir">The current directory</param>
         /// <param name="entry">The directory entry to get the permissions for</param>
-        public PermissionsFact([NotNull] FtpUser user, [CanBeNull] IUnixDirectoryEntry dir, [NotNull] IUnixDirectoryEntry entry)
+        public PermissionsFact([NotNull] IFtpUser user, [CanBeNull] IUnixDirectoryEntry dir, [NotNull] IUnixDirectoryEntry entry)
         {
             var values = new StringBuilder();
             var entryPerm = entry.Permissions.GetAccessModeFor(entry, user);

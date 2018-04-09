@@ -1,17 +1,15 @@
-﻿// <copyright file="SiteBlstCommandExtension.cs" company="Fubar Development Junker">
+// <copyright file="SiteBlstCommandExtension.cs" company="Fubar Development Junker">
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
-using System;
 using System.IO;
+using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
 
 using JetBrains.Annotations;
 
 using Microsoft.Extensions.Logging;
-
-using Sockets.Plugin.Abstractions;
 
 namespace FubarDev.FtpServer.CommandExtensions
 {
@@ -20,13 +18,18 @@ namespace FubarDev.FtpServer.CommandExtensions
     /// </summary>
     public class SiteBlstCommandExtension : FtpCommandHandlerExtension
     {
+        [NotNull]
+        private readonly FtpServer _server;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="SiteBlstCommandExtension"/> class.
         /// </summary>
         /// <param name="connection">The connection this instance is used for</param>
-        public SiteBlstCommandExtension([NotNull] IFtpConnection connection)
+        /// <param name="server">The FTP server</param>
+        public SiteBlstCommandExtension([NotNull] IFtpConnection connection, [NotNull] FtpServer server)
             : base(connection, "SITE", "BLST")
         {
+            _server = server;
         }
 
         /// <inheritdoc/>
@@ -40,10 +43,10 @@ namespace FubarDev.FtpServer.CommandExtensions
             switch (mode)
             {
                 case "data":
-                    return await SendBlstWithDataConnection(cancellationToken);
+                    return await SendBlstWithDataConnection(cancellationToken).ConfigureAwait(false);
                 case "control":
                 case "direct":
-                    return await SendBlstDirectly(cancellationToken);
+                    return await SendBlstDirectly(cancellationToken).ConfigureAwait(false);
             }
 
             return new FtpResponse(501, $"Mode {mode} not supported.");
@@ -51,15 +54,15 @@ namespace FubarDev.FtpServer.CommandExtensions
 
         private async Task<FtpResponse> SendBlstDirectly(CancellationToken cancellationToken)
         {
-            var taskStates = Server.GetBackgroundTaskStates();
+            var taskStates = _server.GetBackgroundTaskStates();
             if (taskStates.Count == 0)
                 return new FtpResponse(211, "No background tasks");
 
-            await Connection.WriteAsync("211-Active background tasks:", cancellationToken);
+            await Connection.WriteAsync("211-Active background tasks:", cancellationToken).ConfigureAwait(false);
             foreach (var entry in taskStates)
             {
                 var line = $"{entry.Item2.ToString().PadRight(12)} {entry.Item1}";
-                await Connection.WriteAsync($" {line}", cancellationToken);
+                await Connection.WriteAsync($" {line}", cancellationToken).ConfigureAwait(false);
             }
 
             return new FtpResponse(211, "END");
@@ -67,43 +70,33 @@ namespace FubarDev.FtpServer.CommandExtensions
 
         private async Task<FtpResponse> SendBlstWithDataConnection(CancellationToken cancellationToken)
         {
-            await Connection.WriteAsync(new FtpResponse(150, "Opening data connection."), cancellationToken);
-            ITcpSocketClient responseSocket;
-            try
-            {
-                responseSocket = await Connection.CreateResponseSocket();
-            }
-            catch (Exception)
-            {
-                return new FtpResponse(425, "Can't open data connection.");
-            }
+            await Connection.WriteAsync(new FtpResponse(150, "Opening data connection."), cancellationToken).ConfigureAwait(false);
 
-            try
+            return await Connection.SendResponseAsync(
+                ExecuteSend,
+                _ => new FtpResponse(425, "Can't open data connection.")).ConfigureAwait(false);
+        }
+
+        private async Task<FtpResponse> ExecuteSend(TcpClient responseSocket)
+        {
+            var encoding = Data.NlstEncoding ?? Connection.Encoding;
+            var responseStream = responseSocket.GetStream();
+            using (var stream = await Connection.CreateEncryptedStream(responseStream).ConfigureAwait(false))
             {
-                var encoding = Data.NlstEncoding ?? Connection.Encoding;
-                using (var stream = await Connection.CreateEncryptedStream(responseSocket.WriteStream))
+                using (var writer = new StreamWriter(stream, encoding, 4096, true)
                 {
-                    using (var writer = new StreamWriter(stream, encoding, 4096, true)
+                    NewLine = "\r\n",
+                })
+                {
+                    foreach (var entry in _server.GetBackgroundTaskStates())
                     {
-                        NewLine = "\r\n",
-                    })
-                    {
-                        var taskStates = Server.GetBackgroundTaskStates();
-                        foreach (var entry in taskStates)
-                        {
-                            var line = $"{entry.Item2.ToString().PadRight(12)} {entry.Item1}";
-                            Connection.Log?.LogDebug(line);
-                            await writer.WriteLineAsync(line);
-                        }
+                        var line = $"{entry.Item2.ToString().PadRight(12)} {entry.Item1}";
+                        Connection.Log?.LogDebug(line);
+                        await writer.WriteLineAsync(line).ConfigureAwait(false);
                     }
                 }
             }
-            finally
-            {
-                responseSocket.Dispose();
-            }
 
-            // Use 250 when the connection stays open.
             return new FtpResponse(250, "Closing data connection.");
         }
     }

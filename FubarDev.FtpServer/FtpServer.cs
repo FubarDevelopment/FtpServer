@@ -1,4 +1,4 @@
-﻿//-----------------------------------------------------------------------
+//-----------------------------------------------------------------------
 // <copyright file="FtpServer.cs" company="Fubar Development Junker">
 //     Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
@@ -9,26 +9,19 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
+using System.Net;
+using System.Net.Sockets;
 using System.Runtime.CompilerServices;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-using FubarDev.FtpServer.AccountManagement;
-using FubarDev.FtpServer.CommandExtensions;
-using FubarDev.FtpServer.CommandHandlers;
 using FubarDev.FtpServer.FileSystem;
-using FubarDev.FtpServer.Utilities;
 
 using JetBrains.Annotations;
 
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-
-using Sockets.Plugin;
-using Sockets.Plugin.Abstractions;
 
 namespace FubarDev.FtpServer
 {
@@ -37,15 +30,15 @@ namespace FubarDev.FtpServer
     /// </summary>
     public sealed class FtpServer : IDisposable
     {
-        [NotNull]
-        private readonly IServiceProvider _serviceProvider;
-
-        private static object startedLock = new object();
+        private readonly object _startedLock = new object();
 
         /// <summary>
         /// Mutext for Stopped field.
         /// </summary>
         private readonly object _stopLocker = new object();
+
+        [NotNull]
+        private readonly IServiceProvider _serviceProvider;
 
         private readonly CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
 
@@ -61,20 +54,16 @@ namespace FubarDev.FtpServer
 
         private ConfiguredTaskAwaitable _listenerTask;
 
-        private AutoResetEvent _listenerTaskEvent = new AutoResetEvent(false);
-
-        private volatile bool _isReady = false;
+        private volatile bool _isReady;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FtpServer"/> class.
         /// </summary>
-        /// <param name="fileSystemClassFactory">The <see cref="IFileSystemClassFactory"/> to use to create the <see cref="IUnixFileSystem"/> for the logged in user.</param>
-        /// <param name="membershipProvider">The <see cref="IMembershipProvider"/> used to validate a login attempt</param>
         /// <param name="serverOptions">The server options</param>
+        /// <param name="serviceProvider">The service provider used to query services</param>
+        /// <param name="logger">The FTP server logger</param>
         /// <param name="loggerFactory">Factory for loggers</param>
         public FtpServer(
-            [NotNull] IFileSystemClassFactory fileSystemClassFactory,
-            [NotNull] IMembershipProvider membershipProvider,
             [NotNull] IOptions<FtpServerOptions> serverOptions,
             [NotNull] IServiceProvider serviceProvider,
             [CanBeNull] ILogger<FtpServer> logger = null,
@@ -83,9 +72,6 @@ namespace FubarDev.FtpServer
             _serviceProvider = serviceProvider;
             _log = logger;
             ServerAddress = serverOptions.Value.ServerAddress;
-            OperatingSystem = "UNIX";
-            FileSystemClassFactory = fileSystemClassFactory;
-            MembershipProvider = membershipProvider;
             Port = serverOptions.Value.Port;
             BackgroundTransferWorker = new BackgroundTransferWorker(loggerFactory?.CreateLogger<BackgroundTransferWorker>());
             BackgroundTransferWorker.Start(_cancellationTokenSource);
@@ -95,12 +81,6 @@ namespace FubarDev.FtpServer
         /// This event is raised when the connection is ready to be configured
         /// </summary>
         public event EventHandler<ConnectionEventArgs> ConfigureConnection;
-
-        /// <summary>
-        /// Gets or sets the returned operating system (default: UNIX)
-        /// </summary>
-        [NotNull]
-        public string OperatingSystem { get; set; }
 
         /// <summary>
         /// Gets the FTP server statistics
@@ -120,25 +100,13 @@ namespace FubarDev.FtpServer
         public int Port { get; }
 
         /// <summary>
-        /// Gets the <see cref="IFileSystemClassFactory"/> to use to create the <see cref="IUnixFileSystem"/> for the logged-in user.
-        /// </summary>
-        [NotNull]
-        public IFileSystemClassFactory FileSystemClassFactory { get; }
-
-        /// <summary>
-        /// Gets the <see cref="IMembershipProvider"/> used to validate a login attempt
-        /// </summary>
-        [NotNull]
-        public IMembershipProvider MembershipProvider { get; }
-
-        /// <summary>
         /// Gets or sets a value indicating whether server ready to receive incoming connectoions
         /// </summary>
         public bool Ready
         {
             get
             {
-                lock (startedLock)
+                lock (_startedLock)
                 {
                     return _isReady;
                 }
@@ -146,7 +114,7 @@ namespace FubarDev.FtpServer
 
             set
             {
-                lock (startedLock)
+                lock (_startedLock)
                 {
                     _isReady = value;
                 }
@@ -186,8 +154,7 @@ namespace FubarDev.FtpServer
         {
             if (Stopped)
                 throw new InvalidOperationException("Cannot start a previously stopped FTP server");
-            _listenerTaskEvent = new AutoResetEvent(false);
-            _listenerTask = ExecuteServerListener(_listenerTaskEvent).ConfigureAwait(false);
+            _listenerTask = ExecuteServerListener().ConfigureAwait(false);
         }
 
         /// <summary>
@@ -199,7 +166,6 @@ namespace FubarDev.FtpServer
         public void Stop()
         {
             _cancellationTokenSource.Cancel(true);
-            _listenerTaskEvent.Set();
             Stopped = true;
         }
 
@@ -244,7 +210,6 @@ namespace FubarDev.FtpServer
 
             BackgroundTransferWorker.Dispose();
             _cancellationTokenSource.Dispose();
-            _listenerTaskEvent.Dispose();
             foreach (var connectionInfo in _connections.Values)
             {
                 connectionInfo.Scope.Dispose();
@@ -256,52 +221,53 @@ namespace FubarDev.FtpServer
             ConfigureConnection?.Invoke(this, new ConnectionEventArgs(connection));
         }
 
-        private Task ExecuteServerListener(AutoResetEvent e)
+        private Task ExecuteServerListener()
         {
-            return Task.Run(() =>
+            return Task.Run(async () =>
             {
-                using (var listener = new TcpSocketListener(0))
+                var listener = new MultiBindingTcpListener(ServerAddress, Port);
+                try
                 {
-                    listener.ConnectionReceived += ConnectionReceived;
+                    await listener.StartAsync().ConfigureAwait(false);
+
                     try
                     {
-                        e.Reset();
-                        listener.StartListeningAsync(Port).Wait();
-                        Ready = true;
-                        _log?.LogDebug("Server listening on port {0}", Port);
-
-                        try
+                        while (!Stopped)
                         {
-                            // If we are already stoped, don't wait.
-                            if (Stopped)
+                            if (listener.TryGetPending(out var tcpListener))
                             {
-                                return;
+                                var acceptTask = tcpListener.AcceptTcpClientAsync();
+                                acceptTask.Wait(_cancellationTokenSource.Token);
+                                var client = acceptTask.Result;
+                                AddClient(client);
+                                continue;
                             }
 
-                            e.WaitOne();
-                        }
-                        finally
-                        {
-                            listener.StopListeningAsync().Wait();
-                            foreach (var connection in _connections.Keys.ToList())
-                                connection.Close();
+                            Thread.Sleep(0);
                         }
                     }
-                    catch (Exception ex)
+                    finally
                     {
-                        _log?.LogCritical(ex, "{0}", ex.Message);
+                        listener.Stop();
+
+                        foreach (var connection in _connections.Keys.ToList())
+                            connection.Close();
                     }
+                }
+                catch (Exception ex)
+                {
+                    _log?.LogCritical(ex, "{0}", ex.Message);
                 }
             });
         }
 
-        private void ConnectionReceived(object sender, TcpSocketListenerConnectEventArgs args)
+        private void AddClient(TcpClient client)
         {
             try
             {
                 var scope = _serviceProvider.CreateScope();
                 var socketAccessor = scope.ServiceProvider.GetRequiredService<TcpSocketClientAccessor>();
-                socketAccessor.TcpSocketClient = args.SocketClient;
+                socketAccessor.TcpSocketClient = client;
 
                 var connection = scope.ServiceProvider.GetRequiredService<IFtpConnection>();
                 var connectionAccessor = scope.ServiceProvider.GetRequiredService<IFtpConnectionAccessor>();
@@ -333,18 +299,18 @@ namespace FubarDev.FtpServer
             var connection = (IFtpConnection)sender;
             if (!_connections.TryRemove(connection, out var info))
                 return;
-            
+
             info.Scope.Dispose();
             Statistics.ActiveConnections -= 1;
         }
-        
+
         private class FtpConnectionInfo
         {
             public FtpConnectionInfo(IServiceScope scope)
             {
                 Scope = scope;
             }
-            
+
             public IServiceScope Scope { get; }
         }
     }

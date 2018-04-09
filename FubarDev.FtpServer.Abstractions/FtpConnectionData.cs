@@ -1,4 +1,4 @@
-﻿//-----------------------------------------------------------------------
+//-----------------------------------------------------------------------
 // <copyright file="FtpConnectionData.cs" company="Fubar Development Junker">
 //     Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
@@ -8,6 +8,7 @@
 using System;
 using System.Collections.Generic;
 using System.Dynamic;
+using System.Net.Sockets;
 using System.Text;
 
 using FubarDev.FtpServer.AccountManagement;
@@ -16,24 +17,22 @@ using FubarDev.FtpServer.ListFormatters.Facts;
 
 using JetBrains.Annotations;
 
-using Sockets.Plugin.Abstractions;
-
 namespace FubarDev.FtpServer
 {
     /// <summary>
-    /// Common data for a <see cref="FtpConnection"/>
+    /// Common data for a <see cref="IFtpConnection"/>
     /// </summary>
     public sealed class FtpConnectionData : IDisposable
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="FtpConnectionData"/> class.
         /// </summary>
-        /// <param name="connection">The <see cref="FtpConnection"/> to create the data for</param>
-        internal FtpConnectionData([NotNull] IFtpConnection connection)
+        /// <param name="backgroundCommandHandler">Utility module that allows background execution of an FTP command</param>
+        public FtpConnectionData([NotNull] IBackgroundCommandHandler backgroundCommandHandler)
         {
             UserData = new ExpandoObject();
             TransferMode = new FtpTransferMode(FtpFileType.Ascii);
-            BackgroundCommandHandler = new BackgroundCommandHandler(connection);
+            BackgroundCommandHandler = backgroundCommandHandler;
             Path = new Stack<IUnixDirectoryEntry>();
             FileSystem = new EmptyUnixFileSystem();
         }
@@ -42,7 +41,7 @@ namespace FubarDev.FtpServer
         /// Gets or sets the current user name
         /// </summary>
         [CanBeNull]
-        public FtpUser User { get; set; }
+        public IFtpUser User { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the user with the <see cref="User"/>
@@ -104,13 +103,13 @@ namespace FubarDev.FtpServer
         /// Gets or sets the data connection for a passive data transfer
         /// </summary>
         [CanBeNull]
-        public ITcpSocketClient PassiveSocketClient { get; set; }
+        public TcpClient PassiveSocketClient { get; set; }
 
         /// <summary>
         /// Gets the <see cref="BackgroundCommandHandler"/> that's required for the <code>ABOR</code> command.
         /// </summary>
         [NotNull]
-        public BackgroundCommandHandler BackgroundCommandHandler { get; }
+        public IBackgroundCommandHandler BackgroundCommandHandler { get; }
 
         /// <summary>
         /// Gets or sets the last used transfer type command.
@@ -153,7 +152,6 @@ namespace FubarDev.FtpServer
         /// <inheritdoc/>
         public void Dispose()
         {
-            BackgroundCommandHandler.Dispose();
             PassiveSocketClient?.Dispose();
             FileSystem.Dispose();
             PassiveSocketClient = null;

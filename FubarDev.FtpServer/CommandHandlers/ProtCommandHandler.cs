@@ -1,4 +1,4 @@
-﻿// <copyright file="ProtCommandHandler.cs" company="Fubar Development Junker">
+// <copyright file="ProtCommandHandler.cs" company="Fubar Development Junker">
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
@@ -19,11 +19,12 @@ namespace FubarDev.FtpServer.CommandHandlers
     public class ProtCommandHandler : FtpCommandHandler
     {
         private readonly X509Certificate2 _serverCertificate;
-        
+
         /// <summary>
         /// Initializes a new instance of the <see cref="ProtCommandHandler"/> class.
         /// </summary>
         /// <param name="connection">The connection to create this command handler for</param>
+        /// <param name="options">The SSL/TLS connection options</param>
         public ProtCommandHandler(IFtpConnection connection, IOptions<AuthTlsOptions> options)
             : base(connection, "PROT")
         {
@@ -62,7 +63,7 @@ namespace FubarDev.FtpServer.CommandHandlers
         private async Task<Stream> CreateSslStream(Stream unencryptedStream)
         {
             var sslStream = new SslStream(unencryptedStream, false);
-            await sslStream.AuthenticateAsServerAsync(_serverCertificate);
+            await sslStream.AuthenticateAsServerAsync(_serverCertificate).ConfigureAwait(false);
             return sslStream;
         }
     }

@@ -1,4 +1,4 @@
-﻿//-----------------------------------------------------------------------
+//-----------------------------------------------------------------------
 // <copyright file="IFtpConnection.cs" company="Fubar Development Junker">
 //     Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
@@ -9,20 +9,21 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
+using System.Net;
+using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-
-using FubarDev.FtpServer.CommandHandlers;
 
 using JetBrains.Annotations;
 
 using Microsoft.Extensions.Logging;
 
-using Sockets.Plugin.Abstractions;
-
 namespace FubarDev.FtpServer
 {
+    /// <summary>
+    /// The interface for an FTP connection
+    /// </summary>
     public interface IFtpConnection : IDisposable
     {
         /// <summary>
@@ -37,12 +38,6 @@ namespace FubarDev.FtpServer
         IReadOnlyDictionary<string, IFtpCommandHandler> CommandHandlers { get; }
 
         /// <summary>
-        /// Gets the server this connection belongs to
-        /// </summary>
-        [NotNull]
-        FtpServer Server { get; }
-
-        /// <summary>
         /// Gets or sets the encoding for the LIST/NLST commands
         /// </summary>
         [NotNull]
@@ -55,10 +50,16 @@ namespace FubarDev.FtpServer
         FtpConnectionData Data { get; }
 
         /// <summary>
-        /// Gets or sets the FTP connection log
+        /// Gets the FTP connection logger
         /// </summary>
         [CanBeNull]
         ILogger Log { get; }
+
+        /// <summary>
+        /// Gets the local end point
+        /// </summary>
+        [NotNull]
+        IPEndPoint LocalEndPoint { get; }
 
         /// <summary>
         /// Gets the control connection stream
@@ -119,7 +120,7 @@ namespace FubarDev.FtpServer
         /// Creates a response socket for e.g. LIST/NLST
         /// </summary>
         /// <returns>The data connection</returns>
-        Task<ITcpSocketClient> CreateResponseSocket();
+        Task<TcpClient> CreateResponseSocket();
 
         /// <summary>
         /// Create an encrypted stream

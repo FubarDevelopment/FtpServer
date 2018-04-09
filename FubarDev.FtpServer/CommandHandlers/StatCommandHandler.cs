@@ -1,4 +1,4 @@
-﻿// <copyright file="StatCommandHandler.cs" company="Fubar Development Junker">
+// <copyright file="StatCommandHandler.cs" company="Fubar Development Junker">
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
@@ -8,6 +8,8 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using FubarDev.FtpServer.ListFormatters;
+
+using JetBrains.Annotations;
 
 using Microsoft.Extensions.Logging;
 
@@ -20,13 +22,18 @@ namespace FubarDev.FtpServer.CommandHandlers
     /// </summary>
     public class StatCommandHandler : FtpCommandHandler
     {
+        [NotNull]
+        private readonly FtpServer _server;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="StatCommandHandler"/> class.
         /// </summary>
         /// <param name="connection">The connection to create this command handler for</param>
-        public StatCommandHandler(IFtpConnection connection)
+        /// <param name="server">The FTP server</param>
+        public StatCommandHandler([NotNull] IFtpConnection connection, [NotNull] FtpServer server)
             : base(connection, "STAT")
         {
+            _server = server;
         }
 
         /// <inheritdoc/>
@@ -34,9 +41,9 @@ namespace FubarDev.FtpServer.CommandHandlers
         {
             if (string.IsNullOrEmpty(command.Argument))
             {
-                var taskStates = Server.GetBackgroundTaskStates();
+                var taskStates = _server.GetBackgroundTaskStates();
                 var statusMessage = new StringBuilder();
-                statusMessage.AppendFormat("Server functional, {0} open connections", Server.Statistics.ActiveConnections);
+                statusMessage.AppendFormat("Server functional, {0} open connections", _server.Statistics.ActiveConnections);
                 if (taskStates.Count != 0)
                     statusMessage.AppendFormat(", {0} active background transfers", taskStates.Count);
                 return new FtpResponse(211, statusMessage.ToString());
@@ -56,13 +63,13 @@ namespace FubarDev.FtpServer.CommandHandlers
             var mm = new Minimatcher(mask, mmOptions);
 
             var formatter = new LongListFormatter();
-            await Connection.WriteAsync($"211-STAT {command.Argument}", cancellationToken);
+            await Connection.WriteAsync($"211-STAT {command.Argument}", cancellationToken).ConfigureAwait(false);
 
-            foreach (var entry in (await Data.FileSystem.GetEntriesAsync(Data.CurrentDirectory, cancellationToken)).Where(x => mm.IsMatch(x.Name)))
+            foreach (var entry in (await Data.FileSystem.GetEntriesAsync(Data.CurrentDirectory, cancellationToken).ConfigureAwait(false)).Where(x => mm.IsMatch(x.Name)))
             {
                 var line = formatter.Format(entry, entry.Name);
                 Connection.Log?.LogDebug(line);
-                await Connection.WriteAsync($" {line}", cancellationToken);
+                await Connection.WriteAsync($" {line}", cancellationToken).ConfigureAwait(false);
             }
 
             return new FtpResponse(211, "STAT");

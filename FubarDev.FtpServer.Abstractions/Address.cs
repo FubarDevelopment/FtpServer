@@ -6,9 +6,12 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Net.Sockets;
 using System.Text;
 
 using JetBrains.Annotations;
+
+using AF = System.Net.Sockets.AddressFamily;
 
 namespace FubarDev.FtpServer
 {
@@ -41,7 +44,7 @@ namespace FubarDev.FtpServer
         public Address(string address, int port)
         {
             _isEnhanced = false;
-            AddressFamily = address.IndexOf(':') == -1 ? FubarDev.FtpServer.AddressFamily.IPv4 : FubarDev.FtpServer.AddressFamily.IPv6;
+            AddressFamily = address.IndexOf(':') == -1 ? AF.InterNetwork : AF.InterNetworkV6;
             IpAddress = address;
             IpPort = port;
         }
@@ -97,7 +100,7 @@ namespace FubarDev.FtpServer
         /// <returns>The newly created URI</returns>
         public Uri ToUri()
         {
-            if (AddressFamily != null && AddressFamily == FubarDev.FtpServer.AddressFamily.IPv6)
+            if (AddressFamily != null && AddressFamily == AF.InterNetworkV6)
             {
                 return new Uri($"port://[{IpAddress}]:{IpPort}/");
             }
@@ -113,7 +116,7 @@ namespace FubarDev.FtpServer
         {
             if (logFormat)
             {
-                if (AddressFamily != null && AddressFamily == FubarDev.FtpServer.AddressFamily.IPv6)
+                if (AddressFamily != null && AddressFamily == AF.InterNetworkV6)
                 {
                     return $"[{IpAddress}]:{IpPort}";
                 }
@@ -136,10 +139,10 @@ namespace FubarDev.FtpServer
                 {
                     switch (AddressFamily)
                     {
-                        case FubarDev.FtpServer.AddressFamily.IPv4:
+                        case AF.InterNetwork:
                             result.Append("1");
                             break;
-                        case FubarDev.FtpServer.AddressFamily.IPv6:
+                        case AF.InterNetworkV6:
                             result.Append("2");
                             break;
                         default:
@@ -203,9 +206,9 @@ namespace FubarDev.FtpServer
             switch (addressType)
             {
                 case 1:
-                    return new Address(FubarDev.FtpServer.AddressFamily.IPv4, ipAddress, port);
+                    return new Address(AF.InterNetwork, ipAddress, port);
                 case 2:
-                    return new Address(FubarDev.FtpServer.AddressFamily.IPv6, ipAddress, port);
+                    return new Address(AF.InterNetworkV6, ipAddress, port);
                 default:
                     throw new NotSupportedException($"Unknown network protocol {addressType}");
             }

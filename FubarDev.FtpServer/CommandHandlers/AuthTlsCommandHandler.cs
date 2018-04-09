@@ -1,4 +1,4 @@
-﻿// <copyright file="AuthTlsCommandHandler.cs" company="Fubar Development Junker">
+// <copyright file="AuthTlsCommandHandler.cs" company="Fubar Development Junker">
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
@@ -20,11 +20,12 @@ namespace FubarDev.FtpServer.CommandHandlers
     public class AuthTlsCommandHandler : FtpCommandHandler
     {
         private readonly X509Certificate2 _serverCertificate;
-        
+
         /// <summary>
         /// Initializes a new instance of the <see cref="AuthTlsCommandHandler"/> class.
         /// </summary>
         /// <param name="connection">The connection this instance is used for</param>
+        /// <param name="options">The SSL/TLS connection options</param>
         public AuthTlsCommandHandler(IFtpConnection connection, IOptions<AuthTlsOptions> options)
             : base(connection, "AUTH")
         {
@@ -59,14 +60,14 @@ namespace FubarDev.FtpServer.CommandHandlers
 
         private async Task<FtpResponse> ElevateToTls(CancellationToken cancellationToken)
         {
-            await Connection.WriteAsync(new FtpResponse(234, "Enabling TLS Connection"), cancellationToken);
-            await Connection.SocketStream.FlushAsync(cancellationToken);
+            await Connection.WriteAsync(new FtpResponse(234, "Enabling TLS Connection"), cancellationToken).ConfigureAwait(false);
+            await Connection.SocketStream.FlushAsync(cancellationToken).ConfigureAwait(false);
 
             try
             {
                 var sslStream = new SslStream(Connection.OriginalStream, true);
                 Connection.SocketStream = sslStream;
-                await sslStream.AuthenticateAsServerAsync(_serverCertificate);
+                await sslStream.AuthenticateAsServerAsync(_serverCertificate).ConfigureAwait(false);
                 return null;
             }
             catch (Exception ex)

@@ -1,4 +1,4 @@
-﻿//-----------------------------------------------------------------------
+//-----------------------------------------------------------------------
 // <copyright file="ListCommandHandler.cs" company="Fubar Development Junker">
 //     Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net.Sockets;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
@@ -20,8 +21,6 @@ using FubarDev.FtpServer.Utilities;
 using Microsoft.Extensions.Logging;
 
 using Minimatch;
-
-using Sockets.Plugin.Abstractions;
 
 namespace FubarDev.FtpServer.CommandHandlers
 {
@@ -42,134 +41,125 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// <inheritdoc/>
         public override async Task<FtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
         {
-            await Connection.WriteAsync(new FtpResponse(150, "Opening data connection."), cancellationToken);
-            ITcpSocketClient responseSocket;
-            try
+            await Connection.WriteAsync(new FtpResponse(150, "Opening data connection."), cancellationToken).ConfigureAwait(false);
+
+            return await Connection.SendResponseAsync(
+                    client => ExecuteSend(client, command, cancellationToken),
+                    _ => new FtpResponse(425, "Can't open data connection."))
+                .ConfigureAwait(false);
+        }
+
+        private async Task<FtpResponse> ExecuteSend(TcpClient responseSocket, FtpCommand command, CancellationToken cancellationToken)
+        {
+            // Parse arguments in a way that's compatible with broken FTP clients
+            var argument = new ListArguments(command.Argument);
+            var showHidden = argument.All;
+
+            // Instantiate the formatter
+            IListFormatter formatter;
+            if (string.Equals(command.Name, "NLST", StringComparison.OrdinalIgnoreCase))
             {
-                responseSocket = await Connection.CreateResponseSocket();
+                formatter = new ShortListFormatter();
             }
-            catch (Exception)
+            else if (string.Equals(command.Name, "LS", StringComparison.OrdinalIgnoreCase))
             {
-                return new FtpResponse(425, "Can't open data connection.");
+                formatter = new LongListFormatter();
             }
-            try
+            else
             {
-                // Parse arguments in a way that's compatible with broken FTP clients
-                var argument = new ListArguments(command.Argument);
-                var showHidden = argument.All;
+                formatter = new LongListFormatter();
+            }
 
-                // Instantiate the formatter
-                IListFormatter formatter;
-                if (string.Equals(command.Name, "NLST", StringComparison.OrdinalIgnoreCase))
-                {
-                    formatter = new ShortListFormatter();
-                }
-                else if (string.Equals(command.Name, "LS", StringComparison.OrdinalIgnoreCase))
-                {
-                    formatter = new LongListFormatter();
-                }
-                else
-                {
-                    formatter = new LongListFormatter();
-                }
+            // Parse the given path to determine the mask (e.g. when information about a file was requested)
+            var directoriesToProcess = new Queue<DirectoryQueueItem>();
 
-                // Parse the given path to determine the mask (e.g. when information about a file was requested)
-                var directoriesToProcess = new Queue<DirectoryQueueItem>();
+            // Use braces to avoid the definition of mask and path in the following parts
+            // of this function.
+            {
+                var mask = "*";
+                var path = Data.Path.Clone();
 
-                // Use braces to avoid the definition of mask and path in the following parts
-                // of this function.
+                if (!string.IsNullOrEmpty(argument.Path))
                 {
-                    var mask = "*";
-                    var path = Data.Path.Clone();
-
-                    if (!string.IsNullOrEmpty(argument.Path))
+                    var foundEntry = await Data.FileSystem.SearchEntryAsync(path, argument.Path, cancellationToken).ConfigureAwait(false);
+                    if (foundEntry?.Directory == null)
+                        return new FtpResponse(550, "File system entry not found.");
+                    if (!(foundEntry.Entry is IUnixDirectoryEntry dirEntry))
                     {
-                        var foundEntry = await Data.FileSystem.SearchEntryAsync(path, argument.Path, cancellationToken);
-                        if (foundEntry?.Directory == null)
-                            return new FtpResponse(550, "File system entry not found.");
-                        var dirEntry = foundEntry.Entry as IUnixDirectoryEntry;
-                        if (dirEntry == null)
-                        {
-                            mask = foundEntry.FileName;
-                        }
-                        else if (!dirEntry.IsRoot)
-                        {
-                            path.Push(dirEntry);
-                        }
+                        mask = foundEntry.FileName;
                     }
-                    directoriesToProcess.Enqueue(new DirectoryQueueItem(path, mask));
+                    else if (!dirEntry.IsRoot)
+                    {
+                        path.Push(dirEntry);
+                    }
                 }
+                directoriesToProcess.Enqueue(new DirectoryQueueItem(path, mask));
+            }
 
-                var encoding = Data.NlstEncoding ?? Connection.Encoding;
+            var encoding = Data.NlstEncoding ?? Connection.Encoding;
 
-                using (var stream = await Connection.CreateEncryptedStream(responseSocket.WriteStream))
+            using (var stream = await Connection.CreateEncryptedStream(responseSocket.GetStream()).ConfigureAwait(false))
+            {
+                using (var writer = new StreamWriter(stream, encoding, 4096, true)
                 {
-                    using (var writer = new StreamWriter(stream, encoding, 4096, true)
+                    NewLine = "\r\n",
+                })
+                {
+                    while (directoriesToProcess.Count != 0)
                     {
-                        NewLine = "\r\n",
-                    })
-                    {
-                        while (directoriesToProcess.Count != 0)
+                        var queueItem = directoriesToProcess.Dequeue();
+
+                        var currentPath = queueItem.Path;
+                        var mask = queueItem.Mask;
+                        var currentDirEntry = currentPath.Count != 0 ? currentPath.Peek() : Data.FileSystem.Root;
+
+                        if (argument.Recursive)
                         {
-                            var queueItem = directoriesToProcess.Dequeue();
+                            var line = currentPath.ToDisplayString() + ":";
+                            Connection.Log?.LogDebug(line);
+                            await writer.WriteLineAsync(line).ConfigureAwait(false);
+                        }
 
-                            var currentPath = queueItem.Path;
-                            var mask = queueItem.Mask;
-                            var currentDirEntry = currentPath.Count != 0 ? currentPath.Peek() : Data.FileSystem.Root;
+                        var mmOptions = new Options()
+                        {
+                            IgnoreCase = Data.FileSystem.FileSystemEntryComparer.Equals("a", "A"),
+                            NoGlobStar = true,
+                            Dot = true,
+                        };
 
-                            if (argument.Recursive)
+                        var mm = new Minimatcher(mask, mmOptions);
+
+                        var entries = await Data.FileSystem.GetEntriesAsync(currentDirEntry, cancellationToken).ConfigureAwait(false);
+                        var enumerator = new DirectoryListingEnumerator(entries, Data.FileSystem, currentPath, true);
+                        while (enumerator.MoveNext())
+                        {
+                            var name = enumerator.Name;
+                            if (!enumerator.IsDotEntry)
                             {
-                                var line = currentPath.ToDisplayString() + ":";
-                                Connection.Log?.LogDebug(line);
-                                await writer.WriteLineAsync(line);
+                                if (!mm.IsMatch(name))
+                                    continue;
+                                if (name.StartsWith(".") && !showHidden)
+                                    continue;
                             }
 
-                            var mmOptions = new Options()
+                            var entry = enumerator.Entry;
+
+                            if (argument.Recursive && !enumerator.IsDotEntry)
                             {
-                                IgnoreCase = Data.FileSystem.FileSystemEntryComparer.Equals("a", "A"),
-                                NoGlobStar = true,
-                                Dot = true,
-                            };
-
-                            var mm = new Minimatcher(mask, mmOptions);
-
-                            var entries = await Data.FileSystem.GetEntriesAsync(currentDirEntry, cancellationToken);
-                            var enumerator = new DirectoryListingEnumerator(entries, Data.FileSystem, currentPath, true);
-                            while (enumerator.MoveNext())
-                            {
-                                var name = enumerator.Name;
-                                if (!enumerator.IsDotEntry)
+                                if (entry is IUnixDirectoryEntry dirEntry)
                                 {
-                                    if (!mm.IsMatch(name))
-                                        continue;
-                                    if (name.StartsWith(".") && !showHidden)
-                                        continue;
+                                    var subDirPath = currentPath.Clone();
+                                    subDirPath.Push(dirEntry);
+                                    directoriesToProcess.Enqueue(new DirectoryQueueItem(subDirPath, "*"));
                                 }
-
-                                var entry = enumerator.Entry;
-
-                                if (argument.Recursive && !enumerator.IsDotEntry)
-                                {
-                                    var dirEntry = entry as IUnixDirectoryEntry;
-                                    if (dirEntry != null)
-                                    {
-                                        var subDirPath = currentPath.Clone();
-                                        subDirPath.Push(dirEntry);
-                                        directoriesToProcess.Enqueue(new DirectoryQueueItem(subDirPath, "*"));
-                                    }
-                                }
-
-                                var line = formatter.Format(entry, name);
-                                Connection.Log?.LogDebug(line);
-                                await writer.WriteLineAsync(line);
                             }
+
+                            var line = formatter.Format(entry, name);
+                            Connection.Log?.LogDebug(line);
+                            await writer.WriteLineAsync(line).ConfigureAwait(false);
                         }
                     }
                 }
-            }
-            finally
-            {
-                responseSocket.Dispose();
             }
 
             // Use 250 when the connection stays open.

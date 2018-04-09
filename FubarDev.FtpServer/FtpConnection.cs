@@ -1,4 +1,4 @@
-﻿//-----------------------------------------------------------------------
+//-----------------------------------------------------------------------
 // <copyright file="FtpConnection.cs" company="Fubar Development Junker">
 //     Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
@@ -10,20 +10,18 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-using FubarDev.FtpServer.CommandExtensions;
 using FubarDev.FtpServer.CommandHandlers;
 using JetBrains.Annotations;
 
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-
-using Sockets.Plugin;
-using Sockets.Plugin.Abstractions;
 
 namespace FubarDev.FtpServer
 {
@@ -34,7 +32,7 @@ namespace FubarDev.FtpServer
     {
         private readonly CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
 
-        private readonly ITcpSocketClient _socket;
+        private readonly TcpClient _socket;
 
         private readonly IDisposable _loggerScope;
 
@@ -47,17 +45,18 @@ namespace FubarDev.FtpServer
         /// <summary>
         /// Initializes a new instance of the <see cref="FtpConnection"/> class.
         /// </summary>
-        /// <param name="server">The server this connection belongs to</param>
         /// <param name="socket">The socket to use to communicate with the client</param>
-        /// <param name="encoding">The encoding to use for the LIST/NLST commands</param>
+        /// <param name="logger">The logger for the FTP connection</param>
+        /// <param name="options">The options for the FTP connection</param>
+        /// <param name="serviceProvider">The service provider used to query services</param>
         public FtpConnection(
-            [NotNull] FtpServer server,
-            [NotNull] ITcpSocketClient socket,
+            [NotNull] TcpClient socket,
             [CanBeNull] ILogger<IFtpConnection> logger,
             [NotNull] IOptions<FtpConnectionOptions> options,
             IServiceProvider serviceProvider)
         {
-            RemoteAddress = new Address(socket.RemoteAddress, socket.RemotePort);
+            var endpoint = (IPEndPoint)socket.Client.RemoteEndPoint;
+            RemoteAddress = new Address(endpoint.Address.ToString(), endpoint.Port);
 
             var properties = new Dictionary<string, object>
             {
@@ -66,14 +65,13 @@ namespace FubarDev.FtpServer
                 ["RemotePort"] = RemoteAddress.IpPort,
             };
             _loggerScope = logger?.BeginScope(properties);
-            
+
             _socket = socket;
-            Server = server;
             Log = logger;
             SocketStream = OriginalStream = socket.GetStream();
             Encoding = options.Value.DefaultEncoding ?? Encoding.ASCII;
-            Data = new FtpConnectionData(this);
-            
+            Data = new FtpConnectionData(new BackgroundCommandHandler(this));
+
             // Lazy is required, because we need access to the FTP connection in the command handler constructor
             _commandHandlersDict = new Lazy<IReadOnlyDictionary<string, IFtpCommandHandler>>(
                 () =>
@@ -82,7 +80,7 @@ namespace FubarDev.FtpServer
                     var dict = commandHandlers
                         .SelectMany(x => x.Names, (item, name) => new { Name = name, Item = item })
                         .ToDictionary(x => x.Name, x => x.Item, StringComparer.OrdinalIgnoreCase);
-                    
+
                     var extensions = serviceProvider.GetRequiredService<IEnumerable<IFtpCommandHandlerExtension>>().ToList();
                     foreach (var handler in commandHandlers)
                         extensions.AddRange(handler.GetExtensions());
@@ -106,54 +104,34 @@ namespace FubarDev.FtpServer
                 });
         }
 
-        /// <summary>
-        /// Gets or sets the event handler that is triggered when the connection is closed.
-        /// </summary>
+        /// <inheritdoc />
         public event EventHandler Closed;
 
-        /// <summary>
-        /// Gets the dictionary of all known command handlers
-        /// </summary>
+        /// <inheritdoc />
         public IReadOnlyDictionary<string, IFtpCommandHandler> CommandHandlers => _commandHandlersDict.Value;
 
-        /// <summary>
-        /// Gets the server this connection belongs to
-        /// </summary>
-        public FtpServer Server { get; }
-
-        /// <summary>
-        /// Gets or sets the encoding for the LIST/NLST commands
-        /// </summary>
+        /// <inheritdoc />
         public Encoding Encoding { get; set; }
 
-        /// <summary>
-        /// Gets the FTP connection data
-        /// </summary>
+        /// <inheritdoc />
         public FtpConnectionData Data { get; }
 
-        /// <summary>
-        /// Gets or sets the FTP connection log
-        /// </summary>
+        /// <inheritdoc />
         public ILogger Log { get; }
 
-        /// <summary>
-        /// Gets the control connection stream
-        /// </summary>
+        /// <inheritdoc />
+        public IPEndPoint LocalEndPoint => (IPEndPoint)_socket.Client.LocalEndPoint;
+
+        /// <inheritdoc />
         public Stream OriginalStream { get; }
 
-        /// <summary>
-        /// Gets or sets the control connection stream
-        /// </summary>
+        /// <inheritdoc />
         public Stream SocketStream { get; set; }
 
-        /// <summary>
-        /// Gets a value indicating whether this is a secure connection
-        /// </summary>
+        /// <inheritdoc />
         public bool IsSecure => !ReferenceEquals(SocketStream, OriginalStream);
 
-        /// <summary>
-        /// Gets the remote address of the client
-        /// </summary>
+        /// <inheritdoc />
         public Address RemoteAddress { get; }
 
         /// <summary>
@@ -166,7 +144,7 @@ namespace FubarDev.FtpServer
         /// </summary>
         public void Start()
         {
-            ProcessMessages().ConfigureAwait(true);
+            Task.Run(ProcessMessages, _cancellationTokenSource.Token);
         }
 
         /// <summary>
@@ -190,7 +168,7 @@ namespace FubarDev.FtpServer
             {
                 Log?.Log(response);
                 var data = Encoding.GetBytes($"{response}\r\n");
-                await SocketStream.WriteAsync(data, 0, data.Length, cancellationToken);
+                await SocketStream.WriteAsync(data, 0, data.Length, cancellationToken).ConfigureAwait(false);
                 response.AfterWriteAction?.Invoke();
             }
         }
@@ -207,7 +185,7 @@ namespace FubarDev.FtpServer
             {
                 Log?.LogDebug(response);
                 var data = Encoding.GetBytes($"{response}\r\n");
-                await SocketStream.WriteAsync(data, 0, data.Length, cancellationToken);
+                await SocketStream.WriteAsync(data, 0, data.Length, cancellationToken).ConfigureAwait(false);
             }
         }
 
@@ -217,13 +195,13 @@ namespace FubarDev.FtpServer
         /// <returns>The data connection</returns>
         [NotNull]
         [ItemNotNull]
-        public async Task<ITcpSocketClient> CreateResponseSocket()
+        public async Task<TcpClient> CreateResponseSocket()
         {
             var portAddress = Data.PortAddress;
             if (portAddress != null)
             {
-                var result = new TcpSocketClient();
-                await result.ConnectAsync(portAddress.Host, portAddress.Port);
+                var result = new TcpClient();
+                await result.ConnectAsync(portAddress.Host, portAddress.Port).ConfigureAwait(false);
                 return result;
             }
 
@@ -281,7 +259,7 @@ namespace FubarDev.FtpServer
             Log?.LogInformation($"Connected from {RemoteAddress.ToString(true)}");
             using (var collector = new FtpCommandCollector(() => Encoding))
             {
-                await WriteAsync(new FtpResponse(220, "FTP Server Ready"), _cancellationTokenSource.Token);
+                await WriteAsync(new FtpResponse(220, "FTP Server Ready"), _cancellationTokenSource.Token).ConfigureAwait(false);
 
                 var buffer = new byte[1024];
                 try
@@ -315,7 +293,7 @@ namespace FubarDev.FtpServer
                             var commands = collector.Collect(buffer, 0, bytesRead);
                             foreach (var command in commands)
                             {
-                                await ProcessMessage(command);
+                                await ProcessMessage(command).ConfigureAwait(false);
                             }
                         }
                     }
@@ -380,7 +358,7 @@ namespace FubarDev.FtpServer
                         }
                         else
                         {
-                            response = await handler.Process(handlerCommand, _cancellationTokenSource.Token);
+                            response = await handler.Process(handlerCommand, _cancellationTokenSource.Token).ConfigureAwait(false);
                         }
                     }
                     catch (Exception ex)
@@ -395,10 +373,10 @@ namespace FubarDev.FtpServer
                 response = new FtpResponse(500, "Syntax error, command unrecognized.");
             }
             if (response != null)
-                await WriteAsync(response, _cancellationTokenSource.Token);
+                await WriteAsync(response, _cancellationTokenSource.Token).ConfigureAwait(false);
         }
 
-        private Tuple<FtpCommand, IFtpCommandHandlerBase, bool> FindCommandHandler(FtpCommand command)
+        private Tuple<FtpCommand, IFtpCommandBase, bool> FindCommandHandler(FtpCommand command)
         {
             if (!CommandHandlers.TryGetValue(command.Name, out var handler))
                 return null;
@@ -408,10 +386,10 @@ namespace FubarDev.FtpServer
                 var extensionCommand = FtpCommand.Parse(command.Argument);
                 if (extensionHost.Extensions.TryGetValue(extensionCommand.Name, out var extension))
                 {
-                    return Tuple.Create(extensionCommand, (IFtpCommandHandlerBase)extension, extension.IsLoginRequired ?? handler.IsLoginRequired);
+                    return Tuple.Create(extensionCommand, (IFtpCommandBase)extension, extension.IsLoginRequired ?? handler.IsLoginRequired);
                 }
             }
-            return Tuple.Create(command, (IFtpCommandHandlerBase)handler, handler.IsLoginRequired);
+            return Tuple.Create(command, (IFtpCommandBase)handler, handler.IsLoginRequired);
         }
 
         private void OnClosed()

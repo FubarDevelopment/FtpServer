@@ -1,4 +1,4 @@
-﻿// <copyright file="HelpCommandHandler.cs" company="Fubar Development Junker">
+// <copyright file="HelpCommandHandler.cs" company="Fubar Development Junker">
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
@@ -42,9 +42,9 @@ namespace FubarDev.FtpServer.CommandHandlers
 
         private async Task<FtpResponse> ShowHelpSite(CancellationToken cancellationToken)
         {
-            await Connection.WriteAsync("211-HELP", cancellationToken);
+            await Connection.WriteAsync("211-HELP", cancellationToken).ConfigureAwait(false);
 
-            await Connection.WriteAsync(" SITE BLST [DIRECT]", cancellationToken);
+            await Connection.WriteAsync(" SITE BLST [DIRECT]", cancellationToken).ConfigureAwait(false);
 
             return new FtpResponse(211, "HELP");
         }

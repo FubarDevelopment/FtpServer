@@ -1,4 +1,4 @@
-﻿// <copyright file="FactsListFormatter.cs" company="Fubar Development Junker">
+// <copyright file="FactsListFormatter.cs" company="Fubar Development Junker">
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
@@ -21,7 +21,7 @@ namespace FubarDev.FtpServer.ListFormatters
     /// </summary>
     public class FactsListFormatter : IListFormatter
     {
-        private readonly FtpUser _user;
+        private readonly IFtpUser _user;
 
         private readonly DirectoryListingEnumerator _enumerator;
 
@@ -36,7 +36,7 @@ namespace FubarDev.FtpServer.ListFormatters
         /// <param name="enumerator">The enumerator for the directory listing to format</param>
         /// <param name="activeFacts">The active facts to return for the entries</param>
         /// <param name="absoluteName">Returns an absolute entry name</param>
-        public FactsListFormatter(FtpUser user, DirectoryListingEnumerator enumerator, ISet<string> activeFacts, bool absoluteName)
+        public FactsListFormatter(IFtpUser user, DirectoryListingEnumerator enumerator, ISet<string> activeFacts, bool absoluteName)
         {
             _user = user;
             _enumerator = enumerator;

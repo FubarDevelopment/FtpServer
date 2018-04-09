@@ -1,4 +1,4 @@
-﻿//-----------------------------------------------------------------------
+//-----------------------------------------------------------------------
 // <copyright file="DotNetFileSystem.cs" company="Fubar Development Junker">
 //     Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
@@ -24,9 +24,9 @@ namespace FubarDev.FtpServer.FileSystem.DotNet
         /// </summary>
         public static readonly int DefaultStreamBufferSize = 4096;
 
-        private bool _disposedValue;
+        private readonly int _streamBufferSize;
 
-        private int _streamBufferSize;
+        private bool _disposedValue;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DotNetFileSystem"/> class.
@@ -71,15 +71,13 @@ namespace FubarDev.FtpServer.FileSystem.DotNet
             var searchDirInfo = ((DotNetDirectoryEntry)directoryEntry).Info;
             foreach (var info in searchDirInfo.EnumerateFileSystemInfos())
             {
-                var dirInfo = info as DirectoryInfo;
-                if (dirInfo != null)
+                if (info is DirectoryInfo dirInfo)
                 {
                     result.Add(new DotNetDirectoryEntry(this, dirInfo, false));
                 }
                 else
                 {
-                    var fileInfo = info as FileInfo;
-                    if (fileInfo != null)
+                    if (info is FileInfo fileInfo)
                     {
                         result.Add(new DotNetFileEntry(this, fileInfo));
                     }
@@ -109,8 +107,7 @@ namespace FubarDev.FtpServer.FileSystem.DotNet
             var targetEntry = (DotNetDirectoryEntry)target;
             var targetName = Path.Combine(targetEntry.Info.FullName, fileName);
 
-            var sourceFileEntry = source as DotNetFileEntry;
-            if (sourceFileEntry != null)
+            if (source is DotNetFileEntry sourceFileEntry)
             {
                 sourceFileEntry.Info.MoveTo(targetName);
                 return Task.FromResult<IUnixFileSystemEntry>(new DotNetFileEntry(this, new FileInfo(targetName)));
@@ -124,8 +121,7 @@ namespace FubarDev.FtpServer.FileSystem.DotNet
         /// <inheritdoc/>
         public Task UnlinkAsync(IUnixFileSystemEntry entry, CancellationToken cancellationToken)
         {
-            var dirEntry = entry as DotNetDirectoryEntry;
-            if (dirEntry != null)
+            if (entry is DotNetDirectoryEntry dirEntry)
             {
                 dirEntry.Info.Delete(SupportsNonEmptyDirectoryDelete);
             }
@@ -164,7 +160,7 @@ namespace FubarDev.FtpServer.FileSystem.DotNet
                 if (startPosition == null)
                     startPosition = fileInfo.Length;
                 output.Seek(startPosition.Value, SeekOrigin.Begin);
-                await data.CopyToAsync(output, _streamBufferSize, cancellationToken);
+                await data.CopyToAsync(output, _streamBufferSize, cancellationToken).ConfigureAwait(false);
             }
             return null;
         }
@@ -176,7 +172,7 @@ namespace FubarDev.FtpServer.FileSystem.DotNet
             var fileInfo = new FileInfo(Path.Combine(targetEntry.Info.FullName, fileName));
             using (var output = fileInfo.Create())
             {
-                await data.CopyToAsync(output, _streamBufferSize, cancellationToken);
+                await data.CopyToAsync(output, _streamBufferSize, cancellationToken).ConfigureAwait(false);
             }
             return null;
         }
@@ -187,7 +183,7 @@ namespace FubarDev.FtpServer.FileSystem.DotNet
             var fileInfo = ((DotNetFileEntry)fileEntry).Info;
             using (var output = fileInfo.OpenWrite())
             {
-                await data.CopyToAsync(output, _streamBufferSize, cancellationToken);
+                await data.CopyToAsync(output, _streamBufferSize, cancellationToken).ConfigureAwait(false);
                 output.SetLength(output.Position);
             }
             return null;

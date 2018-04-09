@@ -1,4 +1,8 @@
-﻿using System.Collections.Generic;
+// <copyright file="IFtpCommandBase.cs" company="Fubar Development Junker">
+// Copyright (c) Fubar Development Junker. All rights reserved.
+// </copyright>
+
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -6,7 +10,10 @@ using JetBrains.Annotations;
 
 namespace FubarDev.FtpServer
 {
-    public interface IFtpCommandHandlerBase
+    /// <summary>
+    /// The base interface for command handlers and extensions
+    /// </summary>
+    public interface IFtpCommandBase
     {
         /// <summary>
         /// Gets a collection of all command names for this command

@@ -1,4 +1,4 @@
-﻿//-----------------------------------------------------------------------
+//-----------------------------------------------------------------------
 // <copyright file="MffCommandHandler.cs" company="Fubar Development Junker">
 //     Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
@@ -74,15 +74,14 @@ namespace FubarDev.FtpServer.CommandHandlers
 
             var path = parts[1];
             var currentPath = Data.Path.Clone();
-            var fileInfo = await Data.FileSystem.SearchFileAsync(currentPath, path, cancellationToken);
+            var fileInfo = await Data.FileSystem.SearchFileAsync(currentPath, path, cancellationToken).ConfigureAwait(false);
             if (fileInfo?.Entry == null)
                 return new FtpResponse(550, "File not found.");
 
             var facts = new List<IFact>();
             foreach (var factInfo in factInfos)
             {
-                CreateFactDelegate createFact;
-                if (!_knownFacts.TryGetValue(factInfo.Key, out createFact))
+                if (!_knownFacts.TryGetValue(factInfo.Key, out var createFact))
                     return new FtpResponse(551, $"Unsupported fact {factInfo.Key}.");
                 var fact = createFact(factInfo.Value);
                 facts.Add(fact);
@@ -105,7 +104,7 @@ namespace FubarDev.FtpServer.CommandHandlers
             }
 
             if (creationTime != null || modificationTime != null)
-                await Data.FileSystem.SetMacTimeAsync(fileInfo.Entry, modificationTime, null, creationTime, cancellationToken);
+                await Data.FileSystem.SetMacTimeAsync(fileInfo.Entry, modificationTime, null, creationTime, cancellationToken).ConfigureAwait(false);
 
             var fullName = currentPath.GetFullPath() + fileInfo.FileName;
             var responseText = new StringBuilder();

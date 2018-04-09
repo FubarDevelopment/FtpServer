@@ -1,4 +1,4 @@
-﻿//-----------------------------------------------------------------------
+//-----------------------------------------------------------------------
 // <copyright file="MemoryTemporaryData.cs" company="Fubar Development Junker">
 //     Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
@@ -31,7 +31,7 @@ namespace FubarDev.FtpServer.FileSystem
         {
             _data?.Dispose();
             _data = new MemoryStream();
-            await stream.CopyToAsync(_data, 4096, cancellationToken);
+            await stream.CopyToAsync(_data, 4096, cancellationToken).ConfigureAwait(false);
         }
 
         /// <inheritdoc/>

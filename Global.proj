@@ -13,10 +13,15 @@
     <RepositoryUrl>https://github.com/FubarDevelopment/FtpServer.git</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <MinClientVersion>3.5</MinClientVersion>
+    <CodeAnalysisRuleSet>$(MSBuildThisFileDirectory)FubarDev.FtpServer.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
 
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)GlobalAssemblyInfo.cs" Link="Properties\GlobalAssemblyInfo.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AdditionalFiles Include="$(MSBuildThisFileDirectory)stylecop.json" Link="stylecop.json" />
   </ItemGroup>
 
   <PropertyGroup Condition=" '$(OutputType)' == 'library' and '$(AssemblyName)' != 'FubarDev.FtpServer.Tests' ">

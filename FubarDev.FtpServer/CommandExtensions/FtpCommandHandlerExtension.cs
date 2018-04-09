@@ -1,4 +1,4 @@
-﻿// <copyright file="FtpCommandHandlerExtension.cs" company="Fubar Development Junker">
+// <copyright file="FtpCommandHandlerExtension.cs" company="Fubar Development Junker">
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
@@ -26,7 +26,7 @@ namespace FubarDev.FtpServer.CommandExtensions
         {
             var names = new List<string>
             {
-                name
+                name,
             };
             names.AddRange(alternativeNames);
             Names = names;
@@ -53,12 +53,6 @@ namespace FubarDev.FtpServer.CommandExtensions
         /// </summary>
         [NotNull]
         protected IFtpConnection Connection { get; }
-
-        /// <summary>
-        /// Gets the server the command belongs to
-        /// </summary>
-        [NotNull]
-        protected FtpServer Server => Connection.Server;
 
         /// <summary>
         /// Gets the connection data

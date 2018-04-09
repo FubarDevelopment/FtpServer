@@ -1,4 +1,4 @@
-﻿// <copyright file="PermissionsExtensions.cs" company="Fubar Development Junker">
+// <copyright file="PermissionsExtensions.cs" company="Fubar Development Junker">
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
@@ -25,7 +25,7 @@ namespace FubarDev.FtpServer
         /// <param name="user">The FTP user to determine the access mode for</param>
         /// <returns>The effective access mode for the <paramref name="user"/></returns>
         [NotNull]
-        public static IAccessMode GetAccessModeFor([NotNull] this IUnixPermissions permissions, [NotNull] IUnixOwner entity, [NotNull] FtpUser user)
+        public static IAccessMode GetAccessModeFor([NotNull] this IUnixPermissions permissions, [NotNull] IUnixOwner entity, [NotNull] IFtpUser user)
         {
             var isUser = string.Equals(entity.Owner, user.Name, StringComparison.OrdinalIgnoreCase);
             var isGroup = user.IsInGroup(entity.Group);

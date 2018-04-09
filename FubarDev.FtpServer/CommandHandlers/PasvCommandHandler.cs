@@ -1,4 +1,4 @@
-﻿//-----------------------------------------------------------------------
+//-----------------------------------------------------------------------
 // <copyright file="PasvCommandHandler.cs" company="Fubar Development Junker">
 //     Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
@@ -7,10 +7,14 @@
 
 using System;
 using System.Collections.Generic;
+using System.Net;
+using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
 
-using Sockets.Plugin;
+using JetBrains.Annotations;
+
+using Microsoft.Extensions.Logging;
 
 namespace FubarDev.FtpServer.CommandHandlers
 {
@@ -23,7 +27,7 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// Initializes a new instance of the <see cref="PasvCommandHandler"/> class.
         /// </summary>
         /// <param name="connection">The connection this command handler is created for</param>
-        public PasvCommandHandler(IFtpConnection connection)
+        public PasvCommandHandler([NotNull] IFtpConnection connection)
             : base(connection, "PASV", "EPSV")
         {
         }
@@ -39,7 +43,7 @@ namespace FubarDev.FtpServer.CommandHandlers
         {
             if (Data.PassiveSocketClient != null)
             {
-                await Data.PassiveSocketClient.DisconnectAsync();
+                Data.PassiveSocketClient.Close();
                 Data.PassiveSocketClient.Dispose();
                 Data.PassiveSocketClient = null;
             }
@@ -67,30 +71,38 @@ namespace FubarDev.FtpServer.CommandHandlers
 
             Data.TransferTypeCommandUsed = command.Name;
 
-            var sem = new SemaphoreSlim(0, 1);
-            var listener = new TcpSocketListener();
-            listener.ConnectionReceived += (sender, args) =>
+            var timeout = TimeSpan.FromSeconds(5);
+            var address = Connection.LocalEndPoint.Address;
+            var listener = new TcpListener(address, port);
+            listener.Start();
+            try
             {
-                Data.PassiveSocketClient = args.SocketClient;
-                sem.Release();
-            };
-            await listener.StartListeningAsync(port);
-            var localPort = listener.LocalPort;
+                var localPort = ((IPEndPoint)listener.LocalEndpoint).Port;
+                if (isEpsv || address.AddressFamily == AddressFamily.InterNetworkV6)
+                {
+                    var listenerAddress = new Address(localPort);
+                    await Connection.WriteAsync(new FtpResponse(229, $"Entering Extended Passive Mode ({listenerAddress})."), cancellationToken).ConfigureAwait(false);
+                }
+                else
+                {
+                    var listenerAddress = new Address(address.ToString(), localPort);
+                    await Connection.WriteAsync(new FtpResponse(227, $"Entering Passive Mode ({listenerAddress})."), cancellationToken).ConfigureAwait(false);
+                }
 
-            if (isEpsv || Server.ServerAddress.Contains(":"))
-            {
-                var listenerAddress = new Address(localPort);
-                await Connection.WriteAsync(new FtpResponse(229, $"Entering Extended Passive Mode ({listenerAddress})."), cancellationToken);
+                var acceptTask = listener.AcceptTcpClientAsync();
+                if (acceptTask.Wait(timeout))
+                {
+                    Data.PassiveSocketClient = acceptTask.Result;
+                }
             }
-            else
+            catch (Exception ex)
             {
-                var listenerAddress = new Address(Server.ServerAddress, localPort);
-                await Connection.WriteAsync(new FtpResponse(227, $"Entering Passive Mode ({listenerAddress})."), cancellationToken);
+                Connection.Log?.LogError(ex, ex.Message);
             }
-
-            await sem.WaitAsync(TimeSpan.FromSeconds(5), cancellationToken);
-            await listener.StopListeningAsync();
-            listener.Dispose();
+            finally
+            {
+                listener.Stop();
+            }
 
             return null;
         }

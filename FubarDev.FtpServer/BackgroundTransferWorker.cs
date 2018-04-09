@@ -1,4 +1,4 @@
-﻿//-----------------------------------------------------------------------
+//-----------------------------------------------------------------------
 // <copyright file="BackgroundTransferWorker.cs" company="Fubar Development Junker">
 //     Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
@@ -105,8 +105,10 @@ namespace FubarDev.FtpServer
         {
             var handles = new[]
             {
-                cancellationToken.WaitHandle, _event
+                cancellationToken.WaitHandle,
+                _event,
             };
+
             _log?.LogDebug("Starting background transfer worker.");
             try
             {

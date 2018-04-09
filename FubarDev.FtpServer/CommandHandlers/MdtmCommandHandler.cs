@@ -1,11 +1,10 @@
-﻿//-----------------------------------------------------------------------
+//-----------------------------------------------------------------------
 // <copyright file="MdtmCommandHandler.cs" company="Fubar Development Junker">
 //     Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 // <author>Mark Junker</author>
 //-----------------------------------------------------------------------
 
-using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -39,24 +38,23 @@ namespace FubarDev.FtpServer.CommandHandlers
         {
             var path = command.Argument;
             var currentPath = Data.Path.Clone();
-            var fileInfo = await Data.FileSystem.SearchFileAsync(currentPath, path, cancellationToken);
+            var fileInfo = await Data.FileSystem.SearchFileAsync(currentPath, path, cancellationToken).ConfigureAwait(false);
             IUnixFileSystemEntry foundEntry = fileInfo?.Entry;
             if (foundEntry == null)
             {
                 var parts = path.Split(new[] { ' ' }, 2);
                 if (parts.Length != 2)
                     return new FtpResponse(550, "File not found.");
-                DateTimeOffset modificationTime;
-                if (!parts[0].TryParseTimestamp("UTC", out modificationTime))
+                if (!parts[0].TryParseTimestamp("UTC", out var modificationTime))
                     return new FtpResponse(550, "File not found.");
 
                 path = parts[1];
                 currentPath = Data.Path.Clone();
-                fileInfo = await Data.FileSystem.SearchFileAsync(currentPath, path, cancellationToken);
+                fileInfo = await Data.FileSystem.SearchFileAsync(currentPath, path, cancellationToken).ConfigureAwait(false);
                 if (fileInfo?.Entry == null)
                     return new FtpResponse(550, "File not found.");
 
-                foundEntry = await Data.FileSystem.SetMacTimeAsync(fileInfo.Entry, modificationTime, null, null, cancellationToken);
+                foundEntry = await Data.FileSystem.SetMacTimeAsync(fileInfo.Entry, modificationTime, null, null, cancellationToken).ConfigureAwait(false);
             }
 
             return new FtpResponse(213, $"{foundEntry.LastWriteTime?.ToUniversalTime():yyyyMMddHHmmss.fff}");

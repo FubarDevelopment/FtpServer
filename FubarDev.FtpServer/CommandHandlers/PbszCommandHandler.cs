@@ -1,4 +1,4 @@
-﻿// <copyright file="PbszCommandHandler.cs" company="Fubar Development Junker">
+// <copyright file="PbszCommandHandler.cs" company="Fubar Development Junker">
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
@@ -18,11 +18,12 @@ namespace FubarDev.FtpServer.CommandHandlers
     public class PbszCommandHandler : FtpCommandHandler
     {
         private readonly X509Certificate2 _serverCertificate;
-        
+
         /// <summary>
         /// Initializes a new instance of the <see cref="PbszCommandHandler"/> class.
         /// </summary>
         /// <param name="connection">The connection to create this command handler for</param>
+        /// <param name="options">The SSL/TLS connection options</param>
         public PbszCommandHandler(IFtpConnection connection, IOptions<AuthTlsOptions> options)
             : base(connection, "PBSZ")
         {

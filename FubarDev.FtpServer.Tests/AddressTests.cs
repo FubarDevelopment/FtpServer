@@ -1,5 +1,10 @@
-﻿using System;
+// <copyright file="AddressTests.cs" company="Fubar Development Junker">
+// Copyright (c) Fubar Development Junker. All rights reserved.
+// </copyright>
+
+using System;
 using System.Collections.Generic;
+using System.Net.Sockets;
 
 using Xunit;
 
@@ -21,7 +26,7 @@ namespace FubarDev.FtpServer.Tests
         {
             var address = Address.Parse("|1|132.235.1.2|6275|");
             Assert.NotNull(address);
-            Assert.Equal(new Address(AddressFamily.IPv4, "132.235.1.2", 6275), address, new AddressComparer());
+            Assert.Equal(new Address(AddressFamily.InterNetwork, "132.235.1.2", 6275), address, new AddressComparer());
             Assert.Equal(new Uri("port://132.235.1.2:6275"), address.ToUri());
         }
 
@@ -30,7 +35,7 @@ namespace FubarDev.FtpServer.Tests
         {
             var address = Address.Parse("132,235,1,2,24,131");
             Assert.NotNull(address);
-            Assert.Equal(new Address(AddressFamily.IPv4, "132.235.1.2", 6275), address, new AddressComparer());
+            Assert.Equal(new Address(AddressFamily.InterNetwork, "132.235.1.2", 6275), address, new AddressComparer());
             Assert.Equal(new Uri("port://132.235.1.2:6275"), address.ToUri());
         }
 
@@ -39,7 +44,7 @@ namespace FubarDev.FtpServer.Tests
         {
             var address = Address.Parse("|2|1080::8:800:200C:417A|5282|");
             Assert.NotNull(address);
-            Assert.Equal(new Address(AddressFamily.IPv6, "1080::8:800:200C:417A", 5282), address, new AddressComparer());
+            Assert.Equal(new Address(AddressFamily.InterNetwork, "1080::8:800:200C:417A", 5282), address, new AddressComparer());
             Assert.Equal(new Uri("port://[1080::8:800:200C:417A]:5282"), address.ToUri());
         }
 
@@ -62,9 +67,13 @@ namespace FubarDev.FtpServer.Tests
                         return false;
                 }
                 else if (y.AddressFamily == null)
+                {
                     return false;
+                }
                 else if (x.AddressFamily != y.AddressFamily)
+                {
                     return false;
+                }
 
                 return (x.IpAddress ?? string.Empty) == (y.IpAddress ?? string.Empty)
                        && x.IpPort == y.IpPort;

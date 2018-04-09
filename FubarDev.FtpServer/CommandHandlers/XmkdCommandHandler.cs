@@ -1,4 +1,4 @@
-﻿//-----------------------------------------------------------------------
+//-----------------------------------------------------------------------
 // <copyright file="XmkdCommandHandler.cs" company="Fubar Development Junker">
 //     Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
@@ -32,21 +32,21 @@ namespace FubarDev.FtpServer.CommandHandlers
         {
             var directoryName = command.Argument;
             var currentPath = Data.Path.Clone();
-            var dirInfo = await Data.FileSystem.SearchDirectoryAsync(currentPath, directoryName, cancellationToken);
+            var dirInfo = await Data.FileSystem.SearchDirectoryAsync(currentPath, directoryName, cancellationToken).ConfigureAwait(false);
             if (dirInfo == null)
                 return new FtpResponse(550, "Not a valid directory.");
             if (dirInfo.FileName == null)
                 return new FtpResponse(550, "ROOT folder not allowed.");
             if (dirInfo.Entry != null)
             {
-                await Connection.WriteAsync($"521-\"{currentPath.GetFullPath(dirInfo.FileName)}\" directory already exists", cancellationToken);
+                await Connection.WriteAsync($"521-\"{currentPath.GetFullPath(dirInfo.FileName)}\" directory already exists", cancellationToken).ConfigureAwait(false);
                 return new FtpResponse(521, "Taking no action.");
             }
 
             try
             {
                 var targetDirectory = currentPath.Count == 0 ? Data.FileSystem.Root : currentPath.Peek();
-                var newDirectory = await Data.FileSystem.CreateDirectoryAsync(targetDirectory, dirInfo.FileName, cancellationToken);
+                var newDirectory = await Data.FileSystem.CreateDirectoryAsync(targetDirectory, dirInfo.FileName, cancellationToken).ConfigureAwait(false);
                 return new FtpResponse(257, $"\"{currentPath.GetFullPath(newDirectory.Name)}\" created.");
             }
             catch (IOException)

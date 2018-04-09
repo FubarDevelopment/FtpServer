@@ -1,4 +1,4 @@
-﻿//-----------------------------------------------------------------------
+//-----------------------------------------------------------------------
 // <copyright file="UserCommandHandler.cs" company="Fubar Development Junker">
 //     Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
@@ -33,8 +33,20 @@ namespace FubarDev.FtpServer.CommandHandlers
         public override Task<FtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
         {
             var userName = command.Argument;
-            Connection.Data.User = new FtpUser(userName);
+            Connection.Data.User = new UnauthenticatedUser(userName);
             return Task.FromResult(new FtpResponse(331, $"User {userName} logged in, needs password"));
+        }
+
+        private class UnauthenticatedUser : IFtpUser
+        {
+            public UnauthenticatedUser(string name)
+            {
+                Name = name;
+            }
+
+            public string Name { get; }
+
+            public bool IsInGroup(string groupName) => false;
         }
     }
 }

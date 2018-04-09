@@ -1,4 +1,4 @@
-﻿//-----------------------------------------------------------------------
+//-----------------------------------------------------------------------
 // <copyright file="RnfrCommandHandler.cs" company="Fubar Development Junker">
 //     Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
@@ -34,7 +34,7 @@ namespace FubarDev.FtpServer.CommandHandlers
         {
             var fileName = command.Argument;
             var tempPath = Data.Path.Clone();
-            var fileInfo = await Data.FileSystem.SearchEntryAsync(tempPath, fileName, cancellationToken);
+            var fileInfo = await Data.FileSystem.SearchEntryAsync(tempPath, fileName, cancellationToken).ConfigureAwait(false);
             if (fileInfo == null)
                 return new FtpResponse(550, "Directory doesn't exist.");
             if (fileInfo.Entry == null)

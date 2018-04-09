@@ -1,4 +1,8 @@
-﻿using System;
+// <copyright file="FtpCommandCollectorTests.cs" company="Fubar Development Junker">
+// Copyright (c) Fubar Development Junker. All rights reserved.
+// </copyright>
+
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -26,10 +30,9 @@ namespace FubarDev.FtpServer.Tests
             {
                 commands.AddRange(Collect(collector, $"{ch}"));
             }
+
             Assert.Equal(
-                new[] {
-                    new FtpCommand("USER", "anonymous"),
-                },
+                new[] { new FtpCommand("USER", "anonymous") },
                 commands,
                 new FtpCommandComparer());
         }
@@ -40,10 +43,7 @@ namespace FubarDev.FtpServer.Tests
             var collector = new FtpCommandCollector(() => Encoding.UTF8);
             var commands = Collect(collector, "TEST\r");
             Assert.Equal(
-                new[]
-                {
-                    new FtpCommand("TEST", string.Empty),
-                },
+                new[] { new FtpCommand("TEST", string.Empty) },
                 commands,
                 new FtpCommandComparer());
             Assert.True(collector.IsEmpty);
@@ -55,10 +55,7 @@ namespace FubarDev.FtpServer.Tests
             var collector = new FtpCommandCollector(() => Encoding.UTF8);
             var commands = Collect(collector, "TEST\r\n");
             Assert.Equal(
-                new[]
-                {
-                    new FtpCommand("TEST", string.Empty),
-                },
+                new[] { new FtpCommand("TEST", string.Empty) },
                 commands,
                 new FtpCommandComparer());
             Assert.True(collector.IsEmpty);
@@ -72,10 +69,7 @@ namespace FubarDev.FtpServer.Tests
             commands.AddRange(Collect(collector, "TEST\r"));
             commands.AddRange(Collect(collector, "\n"));
             Assert.Equal(
-                new[]
-                {
-                    new FtpCommand("TEST", string.Empty),
-                },
+                new[] { new FtpCommand("TEST", string.Empty), },
                 commands,
                 new FtpCommandComparer());
             Assert.True(collector.IsEmpty);
@@ -89,10 +83,7 @@ namespace FubarDev.FtpServer.Tests
             commands.AddRange(Collect(collector, "TES"));
             commands.AddRange(Collect(collector, "T\r\n"));
             Assert.Equal(
-                new[]
-                {
-                    new FtpCommand("TEST", string.Empty),
-                },
+                new[] { new FtpCommand("TEST", string.Empty), },
                 commands,
                 new FtpCommandComparer());
             Assert.True(collector.IsEmpty);
@@ -106,11 +97,7 @@ namespace FubarDev.FtpServer.Tests
             commands.AddRange(Collect(collector, "TEST1\r"));
             commands.AddRange(Collect(collector, "TEST2\r\n"));
             Assert.Equal(
-                new[]
-                {
-                    new FtpCommand("TEST1", string.Empty),
-                    new FtpCommand("TEST2", string.Empty),
-                },
+                new[] { new FtpCommand("TEST1", string.Empty), new FtpCommand("TEST2", string.Empty) },
                 commands,
                 new FtpCommandComparer());
             Assert.True(collector.IsEmpty);
@@ -123,10 +110,7 @@ namespace FubarDev.FtpServer.Tests
             var commands = new List<FtpCommand>();
             commands.AddRange(Collect(collector, "TEST1\rTEST2"));
             Assert.Equal(
-                new[]
-                {
-                    new FtpCommand("TEST1", string.Empty),
-                },
+                new[] { new FtpCommand("TEST1", string.Empty) },
                 commands,
                 new FtpCommandComparer());
             Assert.False(collector.IsEmpty);
@@ -140,11 +124,7 @@ namespace FubarDev.FtpServer.Tests
             commands.AddRange(Collect(collector, "TEST1\r"));
             commands.AddRange(Collect(collector, "\nTEST2\r\n"));
             Assert.Equal(
-                new[]
-                {
-                    new FtpCommand("TEST1", string.Empty),
-                    new FtpCommand("TEST2", string.Empty),
-                },
+                new[] { new FtpCommand("TEST1", string.Empty), new FtpCommand("TEST2", string.Empty) },
                 commands,
                 new FtpCommandComparer());
             Assert.True(collector.IsEmpty);
@@ -157,10 +137,7 @@ namespace FubarDev.FtpServer.Tests
             var commands = new List<FtpCommand>();
             commands.AddRange(Collect(collector, "TEST 1\r"));
             Assert.Equal(
-                new[]
-                {
-                    new FtpCommand("TEST", "1"),
-                },
+                new[] { new FtpCommand("TEST", "1") },
                 commands,
                 new FtpCommandComparer());
             Assert.True(collector.IsEmpty);
@@ -174,11 +151,7 @@ namespace FubarDev.FtpServer.Tests
             commands.AddRange(Collect(collector, "TEST 1\r"));
             commands.AddRange(Collect(collector, "\nTEST 2\r\n"));
             Assert.Equal(
-                new[]
-                {
-                    new FtpCommand("TEST", "1"),
-                    new FtpCommand("TEST", "2"),
-                },
+                new[] { new FtpCommand("TEST", "1"), new FtpCommand("TEST", "2") },
                 commands,
                 new FtpCommandComparer());
             Assert.True(collector.IsEmpty);

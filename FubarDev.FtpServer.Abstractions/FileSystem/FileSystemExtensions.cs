@@ -1,4 +1,4 @@
-﻿//-----------------------------------------------------------------------
+//-----------------------------------------------------------------------
 // <copyright file="FileSystemExtensions.cs" company="Fubar Development Junker">
 //     Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
@@ -97,9 +97,8 @@ namespace FubarDev.FtpServer.FileSystem
                     continue;
                 }
 
-                var foundEntry = await fileSystem.GetEntryByNameAsync(currentDir, pathElement, cancellationToken);
-                var foundDirEntry = foundEntry as IUnixDirectoryEntry;
-                if (foundDirEntry == null)
+                var foundEntry = await fileSystem.GetEntryByNameAsync(currentDir, pathElement, cancellationToken).ConfigureAwait(false);
+                if (!(foundEntry is IUnixDirectoryEntry foundDirEntry))
                     return null;
 
                 currentPath.Push(foundDirEntry);
@@ -136,11 +135,11 @@ namespace FubarDev.FtpServer.FileSystem
         [ItemCanBeNull]
         public static async Task<SearchResult<IUnixDirectoryEntry>> SearchDirectoryAsync([NotNull] this IUnixFileSystem fileSystem, [NotNull, ItemNotNull] Stack<IUnixDirectoryEntry> currentPath, [NotNull, ItemNotNull] IReadOnlyList<string> pathElements, CancellationToken cancellationToken)
         {
-            var sourceDir = await GetDirectoryAsync(fileSystem, currentPath, new ListSegment<string>(pathElements, 0, pathElements.Count - 1), cancellationToken);
+            var sourceDir = await GetDirectoryAsync(fileSystem, currentPath, new ListSegment<string>(pathElements, 0, pathElements.Count - 1), cancellationToken).ConfigureAwait(false);
             if (sourceDir == null)
                 return null;
             var fileName = pathElements[pathElements.Count - 1];
-            var foundEntry = await fileSystem.GetEntryByNameAsync(sourceDir, fileName, cancellationToken);
+            var foundEntry = await fileSystem.GetEntryByNameAsync(sourceDir, fileName, cancellationToken).ConfigureAwait(false);
             var foundDirEntry = foundEntry as IUnixDirectoryEntry;
             if (foundDirEntry == null && foundEntry != null)
                 return null;
@@ -175,11 +174,11 @@ namespace FubarDev.FtpServer.FileSystem
         [ItemCanBeNull]
         public static async Task<SearchResult<IUnixFileEntry>> SearchFileAsync(this IUnixFileSystem fileSystem, [NotNull, ItemNotNull] Stack<IUnixDirectoryEntry> currentPath, [NotNull, ItemNotNull] IReadOnlyList<string> pathElements, CancellationToken cancellationToken)
         {
-            var sourceDir = await GetDirectoryAsync(fileSystem, currentPath, new ListSegment<string>(pathElements, 0, pathElements.Count - 1), cancellationToken);
+            var sourceDir = await GetDirectoryAsync(fileSystem, currentPath, new ListSegment<string>(pathElements, 0, pathElements.Count - 1), cancellationToken).ConfigureAwait(false);
             if (sourceDir == null)
                 return null;
             var fileName = pathElements[pathElements.Count - 1];
-            var foundEntry = await fileSystem.GetEntryByNameAsync(sourceDir, fileName, cancellationToken);
+            var foundEntry = await fileSystem.GetEntryByNameAsync(sourceDir, fileName, cancellationToken).ConfigureAwait(false);
             var foundFileEntry = foundEntry as IUnixFileEntry;
             if (foundEntry != null && foundFileEntry == null)
                 return null;
@@ -214,7 +213,7 @@ namespace FubarDev.FtpServer.FileSystem
         [ItemCanBeNull]
         public static async Task<SearchResult<IUnixFileSystemEntry>> SearchEntryAsync(this IUnixFileSystem fileSystem, [NotNull, ItemNotNull] Stack<IUnixDirectoryEntry> currentPath, [NotNull, ItemNotNull] IReadOnlyList<string> pathElements, CancellationToken cancellationToken)
         {
-            var sourceDir = await GetDirectoryAsync(fileSystem, currentPath, new ListSegment<string>(pathElements, 0, pathElements.Count - 1), cancellationToken);
+            var sourceDir = await GetDirectoryAsync(fileSystem, currentPath, new ListSegment<string>(pathElements, 0, pathElements.Count - 1), cancellationToken).ConfigureAwait(false);
             if (sourceDir == null)
                 return null;
             IUnixFileSystemEntry foundEntry;
@@ -253,7 +252,7 @@ namespace FubarDev.FtpServer.FileSystem
                     }
                     break;
                 default:
-                    foundEntry = await fileSystem.GetEntryByNameAsync(sourceDir, fileName, cancellationToken);
+                    foundEntry = await fileSystem.GetEntryByNameAsync(sourceDir, fileName, cancellationToken).ConfigureAwait(false);
                     break;
             }
             return new SearchResult<IUnixFileSystemEntry>(sourceDir, foundEntry, fileName);
@@ -373,7 +372,7 @@ namespace FubarDev.FtpServer.FileSystem
                 return parts;
             var isEscaped = false;
             var partCollector = new StringBuilder();
-            foreach (var ch in path.ToCharArray())
+            foreach (var ch in path)
             {
                 if (!isEscaped)
                 {

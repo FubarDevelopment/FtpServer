@@ -25,7 +25,7 @@ namespace FubarDev.FtpServer
     /// <remarks>
     /// This allows the implementation of the <code>ABOR</code> command.
     /// </remarks>
-    public sealed class BackgroundCommandHandler : IDisposable
+    public sealed class BackgroundCommandHandler : IBackgroundCommandHandler, IDisposable
     {
         private readonly IFtpConnection _connection;
 
@@ -50,7 +50,7 @@ namespace FubarDev.FtpServer
         /// <param name="command">The command to process by the <paramref name="handler"/></param>
         /// <returns><code>null</code> when the command could not be processed</returns>
         [CanBeNull]
-        public Task<FtpResponse> Execute([NotNull] IFtpCommandHandlerBase handler, [NotNull] FtpCommand command)
+        public Task<FtpResponse> Execute([NotNull] IFtpCommandBase handler, [NotNull] FtpCommand command)
         {
             Contract.Ensures(Contract.Result<Task<FtpResponse>>() != null);
             lock (_syncRoot)

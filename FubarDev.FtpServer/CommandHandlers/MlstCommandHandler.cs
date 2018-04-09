@@ -1,10 +1,11 @@
-﻿// <copyright file="MlstCommandHandler.cs" company="Fubar Development Junker">
+// <copyright file="MlstCommandHandler.cs" company="Fubar Development Junker">
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -15,8 +16,6 @@ using FubarDev.FtpServer.ListFormatters;
 using FubarDev.FtpServer.Utilities;
 
 using Microsoft.Extensions.Logging;
-
-using Sockets.Plugin.Abstractions;
 
 namespace FubarDev.FtpServer.CommandHandlers
 {
@@ -46,7 +45,7 @@ namespace FubarDev.FtpServer.CommandHandlers
         }
 
         /// <inheritdoc/>
-        public override IEnumerable<FtpCommandHandlerExtension> GetExtensions()
+        public override IEnumerable<IFtpCommandHandlerExtension> GetExtensions()
         {
             yield return new GenericFtpCommandHandlerExtension(Connection, "OPTS", "MLST", FeatureHandlerAsync);
         }
@@ -83,13 +82,13 @@ namespace FubarDev.FtpServer.CommandHandlers
             }
             else
             {
-                var foundEntry = await Data.FileSystem.SearchEntryAsync(path, argument, cancellationToken);
+                var foundEntry = await Data.FileSystem.SearchEntryAsync(path, argument, cancellationToken).ConfigureAwait(false);
                 if (foundEntry?.Entry == null)
                     return new FtpResponse(550, "File system entry not found.");
                 targetEntry = foundEntry.Entry;
             }
 
-            await Connection.WriteAsync($"250- {targetEntry.Name}", cancellationToken);
+            await Connection.WriteAsync($"250- {targetEntry.Name}", cancellationToken).ConfigureAwait(false);
             var entries = new List<IUnixFileSystemEntry>()
             {
                 targetEntry,
@@ -101,7 +100,7 @@ namespace FubarDev.FtpServer.CommandHandlers
                 var name = enumerator.Name;
                 var entry = enumerator.Entry;
                 var line = formatter.Format(entry, name);
-                await Connection.WriteAsync($" {line}", cancellationToken);
+                await Connection.WriteAsync($" {line}", cancellationToken).ConfigureAwait(false);
             }
 
             return new FtpResponse(250, "End");
@@ -119,7 +118,7 @@ namespace FubarDev.FtpServer.CommandHandlers
             }
             else
             {
-                var foundEntry = await Data.FileSystem.SearchEntryAsync(path, argument, cancellationToken);
+                var foundEntry = await Data.FileSystem.SearchEntryAsync(path, argument, cancellationToken).ConfigureAwait(false);
                 if (foundEntry?.Entry == null)
                     return new FtpResponse(550, "File system entry not found.");
                 dirEntry = foundEntry.Entry as IUnixDirectoryEntry;
@@ -129,46 +128,42 @@ namespace FubarDev.FtpServer.CommandHandlers
                     path.Push(dirEntry);
             }
 
-            await Connection.WriteAsync(new FtpResponse(150, "Opening data connection."), cancellationToken);
-            ITcpSocketClient responseSocket;
-            try
-            {
-                responseSocket = await Connection.CreateResponseSocket();
-            }
-            catch (Exception)
-            {
-                return new FtpResponse(425, "Can't open data connection.");
-            }
+            await Connection.WriteAsync(new FtpResponse(150, "Opening data connection."), cancellationToken).ConfigureAwait(false);
 
-            try
+            return await Connection.SendResponseAsync(
+                    client => ExecuteSendAsync(client, path, dirEntry, cancellationToken),
+                    _ => new FtpResponse(425, "Can't open data connection."))
+                .ConfigureAwait(false);
+        }
+
+        private async Task<FtpResponse> ExecuteSendAsync(
+            TcpClient responseSocket,
+            Stack<IUnixDirectoryEntry> path,
+            IUnixDirectoryEntry dirEntry,
+            CancellationToken cancellationToken)
+        {
+            var encoding = Data.NlstEncoding ?? Connection.Encoding;
+            using (var stream = await Connection.CreateEncryptedStream(responseSocket.GetStream()).ConfigureAwait(false))
             {
-                var encoding = Data.NlstEncoding ?? Connection.Encoding;
-                using (var stream = await Connection.CreateEncryptedStream(responseSocket.WriteStream))
+                using (var writer = new StreamWriter(stream, encoding, 4096, true)
                 {
-                    using (var writer = new StreamWriter(stream, encoding, 4096, true)
+                    NewLine = "\r\n",
+                })
+                {
+                    var entries = await Data.FileSystem.GetEntriesAsync(dirEntry, cancellationToken).ConfigureAwait(false);
+                    var enumerator = new DirectoryListingEnumerator(entries, Data.FileSystem, path, true);
+                    var formatter = new FactsListFormatter(Data.User, enumerator, Data.ActiveMlstFacts, false);
+                    while (enumerator.MoveNext())
                     {
-                        NewLine = "\r\n",
-                    })
-                    {
-                        var entries = await Data.FileSystem.GetEntriesAsync(dirEntry, cancellationToken);
-                        var enumerator = new DirectoryListingEnumerator(entries, Data.FileSystem, path, true);
-                        var formatter = new FactsListFormatter(Data.User, enumerator, Data.ActiveMlstFacts, false);
-                        while (enumerator.MoveNext())
-                        {
-                            var name = enumerator.Name;
-                            var entry = enumerator.Entry;
-                            var line = formatter.Format(entry, name);
-                            Connection.Log?.LogDebug(line);
-                            await writer.WriteLineAsync(line);
-                        }
-                        await writer.FlushAsync();
+                        var name = enumerator.Name;
+                        var entry = enumerator.Entry;
+                        var line = formatter.Format(entry, name);
+                        Connection.Log?.LogDebug(line);
+                        await writer.WriteLineAsync(line).ConfigureAwait(false);
                     }
-                    await stream.FlushAsync(cancellationToken);
+                    await writer.FlushAsync().ConfigureAwait(false);
                 }
-            }
-            finally
-            {
-                responseSocket.Dispose();
+                await stream.FlushAsync(cancellationToken).ConfigureAwait(false);
             }
 
             // Use 250 when the connection stays open.

@@ -1,4 +1,4 @@
-﻿//-----------------------------------------------------------------------
+//-----------------------------------------------------------------------
 // <copyright file="SizeCommandHandler.cs" company="Fubar Development Junker">
 //     Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
@@ -38,7 +38,7 @@ namespace FubarDev.FtpServer.CommandHandlers
         {
             var fileName = command.Argument;
             var tempPath = Data.Path.Clone();
-            var fileInfo = await Data.FileSystem.SearchFileAsync(tempPath, fileName, cancellationToken);
+            var fileInfo = await Data.FileSystem.SearchFileAsync(tempPath, fileName, cancellationToken).ConfigureAwait(false);
             if (fileInfo?.Entry == null)
                 return new FtpResponse(550, $"File not found ({fileName}).");
 

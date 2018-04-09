@@ -1,4 +1,4 @@
-﻿//-----------------------------------------------------------------------
+//-----------------------------------------------------------------------
 // <copyright file="RmdCommandHandler.cs" company="Fubar Development Junker">
 //     Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
@@ -32,14 +32,14 @@ namespace FubarDev.FtpServer.CommandHandlers
         {
             var path = command.Argument;
             var currentPath = Data.Path.Clone();
-            var subDir = await Data.FileSystem.GetDirectoryAsync(currentPath, path, cancellationToken);
+            var subDir = await Data.FileSystem.GetDirectoryAsync(currentPath, path, cancellationToken).ConfigureAwait(false);
             if (subDir == null)
                 return new FtpResponse(550, "Not a valid directory.");
             try
             {
                 if (Data.Path.IsChildOfOrSameAs(currentPath, Data.FileSystem))
                     return new FtpResponse(550, "Not a valid directory (is same or parent of current directory).");
-                await Data.FileSystem.UnlinkAsync(subDir, cancellationToken);
+                await Data.FileSystem.UnlinkAsync(subDir, cancellationToken).ConfigureAwait(false);
                 return new FtpResponse(250, "Directory removed.");
             }
             catch (Exception)

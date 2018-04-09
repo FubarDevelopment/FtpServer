@@ -1,29 +1,29 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.23107.0
+# Visual Studio 15
+VisualStudioVersion = 15.0.27428.2027
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FubarDev.FtpServer.FileSystem", "FubarDev.FtpServer.FileSystem\FubarDev.FtpServer.FileSystem.csproj", "{6DA350B9-3B5A-49E3-BBCC-CECC140CEA6B}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FubarDev.FtpServer.AccountManagement", "FubarDev.FtpServer.AccountManagement\FubarDev.FtpServer.AccountManagement.csproj", "{2530AEFE-CE85-444E-9868-58BE478AEFD1}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FubarDev.FtpServer", "FubarDev.FtpServer\FubarDev.FtpServer.csproj", "{01EBBF94-7469-43A0-A618-07FB734B163F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FubarDev.FtpServer", "FubarDev.FtpServer\FubarDev.FtpServer.csproj", "{01EBBF94-7469-43A0-A618-07FB734B163F}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{52EFD82B-3CC2-486D-849B-199D9670C487}"
 	ProjectSection(SolutionItems) = preProject
+		FubarDev.FtpServer.ruleset = FubarDev.FtpServer.ruleset
+		Global.proj = Global.proj
 		LICENSE.md = LICENSE.md
 		nuget-pack.ps1 = nuget-pack.ps1
 		README.md = README.md
-		Global.proj = Global.proj
+		stylecop.json = stylecop.json
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FubarDev.FtpServer.FileSystem.DotNet", "FubarDev.FtpServer.FileSystem.DotNet\FubarDev.FtpServer.FileSystem.DotNet.csproj", "{9A83C6F5-378B-48B3-B32A-151DB90B390C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FubarDev.FtpServer.FileSystem.DotNet", "FubarDev.FtpServer.FileSystem.DotNet\FubarDev.FtpServer.FileSystem.DotNet.csproj", "{9A83C6F5-378B-48B3-B32A-151DB90B390C}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Samples", "Samples", "{7004709E-5C0D-4D3E-AF27-89968FA47C19}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestFtpServer", "TestFtpServer\TestFtpServer.csproj", "{4DFC0694-0212-491C-A102-38203A74B09F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestFtpServer", "TestFtpServer\TestFtpServer.csproj", "{4DFC0694-0212-491C-A102-38203A74B09F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FubarDev.FtpServer.Tests", "FubarDev.FtpServer.Tests\FubarDev.FtpServer.Tests.csproj", "{0EEB524B-D0F7-4972-838D-D4CE7963D839}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FubarDev.FtpServer.Tests", "FubarDev.FtpServer.Tests\FubarDev.FtpServer.Tests.csproj", "{0EEB524B-D0F7-4972-838D-D4CE7963D839}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FubarDev.FtpServer.Abstractions", "FubarDev.FtpServer.Abstractions\FubarDev.FtpServer.Abstractions.csproj", "{37CE4218-FAC3-4201-82A0-54945698C6AD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -31,14 +31,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{6DA350B9-3B5A-49E3-BBCC-CECC140CEA6B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6DA350B9-3B5A-49E3-BBCC-CECC140CEA6B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6DA350B9-3B5A-49E3-BBCC-CECC140CEA6B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6DA350B9-3B5A-49E3-BBCC-CECC140CEA6B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{2530AEFE-CE85-444E-9868-58BE478AEFD1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2530AEFE-CE85-444E-9868-58BE478AEFD1}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2530AEFE-CE85-444E-9868-58BE478AEFD1}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2530AEFE-CE85-444E-9868-58BE478AEFD1}.Release|Any CPU.Build.0 = Release|Any CPU
 		{01EBBF94-7469-43A0-A618-07FB734B163F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{01EBBF94-7469-43A0-A618-07FB734B163F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{01EBBF94-7469-43A0-A618-07FB734B163F}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -55,11 +47,18 @@ Global
 		{0EEB524B-D0F7-4972-838D-D4CE7963D839}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0EEB524B-D0F7-4972-838D-D4CE7963D839}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0EEB524B-D0F7-4972-838D-D4CE7963D839}.Release|Any CPU.Build.0 = Release|Any CPU
+		{37CE4218-FAC3-4201-82A0-54945698C6AD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{37CE4218-FAC3-4201-82A0-54945698C6AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{37CE4218-FAC3-4201-82A0-54945698C6AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{37CE4218-FAC3-4201-82A0-54945698C6AD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{4DFC0694-0212-491C-A102-38203A74B09F} = {7004709E-5C0D-4D3E-AF27-89968FA47C19}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {DAA7D00E-C61D-4640-A54E-D307E4682263}
 	EndGlobalSection
 EndGlobal

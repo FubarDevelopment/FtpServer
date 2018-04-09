@@ -1,4 +1,4 @@
-﻿// <copyright file="MemberValidationResult.cs" company="Fubar Development Junker">
+// <copyright file="MemberValidationResult.cs" company="Fubar Development Junker">
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
@@ -11,7 +11,7 @@ namespace FubarDev.FtpServer.AccountManagement
     /// </summary>
     public class MemberValidationResult
     {
-        private readonly FtpUser _user;
+        private readonly IFtpUser _user;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MemberValidationResult"/> class.
@@ -29,14 +29,12 @@ namespace FubarDev.FtpServer.AccountManagement
         /// </summary>
         /// <param name="status">The success status for the validation</param>
         /// <param name="user">The validated user</param>
-        public MemberValidationResult(MemberValidationStatus status, FtpUser user)
+        public MemberValidationResult(MemberValidationStatus status, IFtpUser user)
         {
-            if (user == null)
-                throw new ArgumentNullException(nameof(user));
             if (status != MemberValidationStatus.Anonymous && status != MemberValidationStatus.AuthenticatedUser)
                 throw new ArgumentOutOfRangeException(nameof(status), "User object must only be specified when validation was successful.");
             Status = status;
-            _user = user;
+            _user = user ?? throw new ArgumentNullException(nameof(user));
         }
 
         /// <summary>
@@ -53,7 +51,7 @@ namespace FubarDev.FtpServer.AccountManagement
         /// <summary>
         /// Gets the authenticated user.
         /// </summary>
-        public FtpUser User
+        public IFtpUser User
         {
             get
             {

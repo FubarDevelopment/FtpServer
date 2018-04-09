@@ -1,4 +1,4 @@
-﻿//-----------------------------------------------------------------------
+//-----------------------------------------------------------------------
 // <copyright file="CwdCommandHandler.cs" company="Fubar Development Junker">
 //     Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
@@ -44,7 +44,7 @@ namespace FubarDev.FtpServer.CommandHandlers
             else
             {
                 var tempPath = Data.Path.Clone();
-                var newTargetDir = await Data.FileSystem.GetDirectoryAsync(tempPath, path, cancellationToken);
+                var newTargetDir = await Data.FileSystem.GetDirectoryAsync(tempPath, path, cancellationToken).ConfigureAwait(false);
                 if (newTargetDir == null)
                     return new FtpResponse(550, "Not a valid directory.");
                 Data.Path = tempPath;
