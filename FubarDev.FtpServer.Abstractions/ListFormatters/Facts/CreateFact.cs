@@ -11,15 +11,15 @@ namespace FubarDev.FtpServer.ListFormatters.Facts
     /// </summary>
     public class CreateFact : IFact
     {
-        private readonly DateTimeOffset _timestamp;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="CreateFact"/> class.
         /// </summary>
         /// <param name="timestamp">The creation timestamp</param>
         public CreateFact(DateTimeOffset timestamp)
         {
-            _timestamp = timestamp.ToUniversalTime();
+            var utcTimestamp = timestamp.ToUniversalTime();
+            Timestamp = utcTimestamp;
+            Value = utcTimestamp.ToString("yyyyMMddHHmmss.fff");
         }
 
         /// <inheritdoc/>
@@ -28,9 +28,9 @@ namespace FubarDev.FtpServer.ListFormatters.Facts
         /// <summary>
         /// Gets the creation time stamp
         /// </summary>
-        public DateTimeOffset Timestamp => _timestamp;
+        public DateTimeOffset Timestamp { get; }
 
         /// <inheritdoc/>
-        public string Value => _timestamp.ToString("yyyyMMddHHmmss.fff");
+        public string Value { get; }
     }
 }

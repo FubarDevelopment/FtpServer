@@ -8,12 +8,9 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-
-using JetBrains.Annotations;
 
 using Microsoft.Extensions.Logging;
 
@@ -43,16 +40,9 @@ namespace FubarDev.FtpServer
             _cancellationTokenRegistration = _connection.CancellationToken.Register(() => _cancellationTokenSource.Cancel(true));
         }
 
-        /// <summary>
-        /// Executes the FTP <paramref name="command"/> with the given FTP command <paramref name="handler"/>.
-        /// </summary>
-        /// <param name="handler">The command handler that processes the given <paramref name="command"/></param>
-        /// <param name="command">The command to process by the <paramref name="handler"/></param>
-        /// <returns><code>null</code> when the command could not be processed</returns>
-        [CanBeNull]
-        public Task<FtpResponse> Execute([NotNull] IFtpCommandBase handler, [NotNull] FtpCommand command)
+        /// <inheritdoc />
+        public Task<FtpResponse> Execute(IFtpCommandBase handler, FtpCommand command)
         {
-            Contract.Ensures(Contract.Result<Task<FtpResponse>>() != null);
             lock (_syncRoot)
             {
                 if (_handlerTask != null)

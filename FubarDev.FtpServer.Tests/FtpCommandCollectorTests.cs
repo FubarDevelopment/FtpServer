@@ -171,7 +171,7 @@ namespace FubarDev.FtpServer.Tests
             {
                 if (ReferenceEquals(x, y))
                     return 0;
-                if (ReferenceEquals(x, null) && !ReferenceEquals(y, null))
+                if (ReferenceEquals(x, null))
                     return -1;
                 if (ReferenceEquals(y, null))
                     return 1;

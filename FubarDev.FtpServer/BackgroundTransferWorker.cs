@@ -1,4 +1,4 @@
-//-----------------------------------------------------------------------
+﻿//-----------------------------------------------------------------------
 // <copyright file="BackgroundTransferWorker.cs" company="Fubar Development Junker">
 //     Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
@@ -7,7 +7,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -125,7 +124,6 @@ namespace FubarDev.FtpServer
                         BackgroundTransferEntry backgroundTransferEntry;
                         while ((backgroundTransferEntry = GetNextEntry()) != null)
                         {
-                            Debug.Assert(backgroundTransferEntry != null, "backgroundTransferEntry must not be null (internal error)");
                             var log = backgroundTransferEntry.Log;
                             var backgroundTransfer = backgroundTransferEntry.BackgroundTransfer;
                             try

@@ -10,8 +10,6 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-using FubarDev.FtpServer.CommandExtensions;
-
 using JetBrains.Annotations;
 
 namespace FubarDev.FtpServer.CommandHandlers

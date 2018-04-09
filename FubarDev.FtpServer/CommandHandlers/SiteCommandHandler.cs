@@ -7,8 +7,6 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-using FubarDev.FtpServer.CommandExtensions;
-
 namespace FubarDev.FtpServer.CommandHandlers
 {
     /// <summary>

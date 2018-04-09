@@ -37,15 +37,10 @@ namespace FubarDev.FtpServer.CommandExtensions
         /// <inheritdoc />
         public IReadOnlyCollection<string> Names { get; }
 
-        /// <summary>
-        /// Gets or sets a value indicating whether a login is required to execute this command
-        /// </summary>
+        /// <inheritdoc />
         public virtual bool? IsLoginRequired { get; set; }
 
-        /// <summary>
-        /// Gets a name of the command this extension is for.
-        /// </summary>
-        [NotNull]
+        /// <inheritdoc />
         public string ExtensionFor { get; }
 
         /// <summary>
