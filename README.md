@@ -2,8 +2,8 @@
 
 [![Build status](https://build.fubar-dev.de/app/rest/builds/buildType:%28id:FtpServer_ReleaseBuild%29/statusIcon)](https://build.fubar-dev.com/project.html?projectId=FtpServer)
 
-This FTP server is written as PCL and has an abstract file system
-which allows e.g. Google Drive as backend.
+This FTP server is written as .NET Standard 2.0 library and has an
+abstract file system which allows e.g. Google Drive as backend.
 
 # License
 
@@ -13,12 +13,12 @@ The library is released under the [![MIT license](https://img.shields.io/github/
 
 ## Compilation
 
-* Visual Studio 2015 / C# 6
+* Visual Studio 2017 / C# 7.2
 
 ## Using
 
-* Visual Studio 2013 (maybe 2012 too)
-* .NET 4.5, .NET Core 5, Windows 8, Windows Phone 8.1, Windows Phone Silverlight 8.0, Xamarin iOS/Android
+* Visual Studio 2017
+* .NET Standard 2.0
 
 ## NuGet packages
 
@@ -34,21 +34,33 @@ The library is released under the [![MIT license](https://img.shields.io/github/
 # Example FTP server
 
 ```csharp
-// allow only anonymous logins
-var membershipProvider = new AnonymousMembershipProvider();
+// Setup dependency injection
+var services = new ServiceCollection();
 
 // use %TEMP%/TestFtpServer as root folder
-var fsProvider = new DotNetFileSystemProvider(Path.Combine(Path.GetTempPath(), "TestFtpServer"), false);
+services.Configure<DotNetFileSystemOptions>(opt => opt.RootPath = Path.Combine(Path.GetTempPath(), "TestFtpServer"));
 
-// Initialize the FTP server
-var ftpServer = new FtpServer(fsProvider, membershipProvider, "127.0.0.1");
+// Add FTP server services
+// DotNetFileSystemProvider = Use the .NET file system functionality
+// AnonymousMembershipProvider = allow only anonymous logins
+services.AddFtpServer<DotNetFileSystemProvider, AnonymousMembershipProvider>();
 
-// Start the FTP server
-ftpServer.Start();
+// Configure the FTP server
+services.Configure<FtpServerOptions>(opt => opt.ServerAddress = "127.0.0.1");
 
-Console.WriteLine("Press ENTER/RETURN to close the test application.");
-Console.ReadLine();
+// Build the service provider
+using (var serviceProvider = services.BuildServiceProvider()) {
 
-// Stop the FTP server
-ftpServer.Stop();
+    // Initialize the FTP server
+    var ftpServer = serviceProvider.GetRequiredService<FtpServer>();
+
+    // Start the FTP server
+    ftpServer.Start();
+    
+    Console.WriteLine("Press ENTER/RETURN to close the test application.");
+    Console.ReadLine();
+    
+    // Stop the FTP server
+    ftpServer.Stop();
+}
 ```
