@@ -71,7 +71,7 @@ namespace FubarDev.FtpServer
             Server = server;
             Log = logger;
             SocketStream = OriginalStream = socket.GetStream();
-            Encoding = options.Value.DefaultEncoding;
+            Encoding = options.Value.DefaultEncoding ?? Encoding.ASCII;
             Data = new FtpConnectionData(this);
             
             // Lazy is required, because we need access to the FTP connection in the command handler constructor
