@@ -9,6 +9,8 @@ using System.Threading.Tasks;
 
 using FubarDev.FtpServer.ListFormatters;
 
+using Microsoft.Extensions.Logging;
+
 using Minimatch;
 
 namespace FubarDev.FtpServer.CommandHandlers
@@ -59,7 +61,7 @@ namespace FubarDev.FtpServer.CommandHandlers
             foreach (var entry in (await Data.FileSystem.GetEntriesAsync(Data.CurrentDirectory, cancellationToken)).Where(x => mm.IsMatch(x.Name)))
             {
                 var line = formatter.Format(entry, entry.Name);
-                Connection.Log?.Debug(line);
+                Connection.Log?.LogDebug(line);
                 await Connection.WriteAsync($" {line}", cancellationToken);
             }
 

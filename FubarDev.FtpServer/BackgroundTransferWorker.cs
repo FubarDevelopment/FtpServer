@@ -14,21 +14,23 @@ using System.Threading.Tasks;
 
 using FubarDev.FtpServer.FileSystem;
 
+using Microsoft.Extensions.Logging;
+
 namespace FubarDev.FtpServer
 {
     internal class BackgroundTransferWorker : IDisposable
     {
         private readonly ManualResetEvent _event = new ManualResetEvent(false);
 
-        private readonly IFtpLog _log;
+        private readonly ILogger _log;
 
         private CancellationTokenSource _cancellationTokenSource;
 
         private bool _disposedValue;
 
-        public BackgroundTransferWorker(FtpServer server)
+        public BackgroundTransferWorker(ILogger<BackgroundTransferWorker> logger)
         {
-            _log = server?.LogManager?.CreateLog(GetType());
+            _log = logger;
             Queue = new BackgroundTransferQueue(_event);
         }
 
@@ -105,7 +107,7 @@ namespace FubarDev.FtpServer
             {
                 cancellationToken.WaitHandle, _event
             };
-            _log?.Debug("Starting background transfer worker.");
+            _log?.LogDebug("Starting background transfer worker.");
             try
             {
                 while (!cancellationToken.IsCancellationRequested)
@@ -127,7 +129,7 @@ namespace FubarDev.FtpServer
                             try
                             {
                                 var bt = backgroundTransfer;
-                                log?.Info("Starting background transfer {0}", bt.TransferId);
+                                log?.LogInformation("Starting background transfer {0}", bt.TransferId);
                                 backgroundTransferEntry.Status = BackgroundTransferStatus.Transferring;
                                 var task = bt.Start(cancellationToken);
                                 var cancelledTask = task
@@ -135,14 +137,14 @@ namespace FubarDev.FtpServer
                                         t =>
                                         {
                                             // Nothing to do
-                                            log?.Warn("Background transfer {0} cancelled", bt.TransferId);
+                                            log?.LogWarning("Background transfer {0} cancelled", bt.TransferId);
                                         },
                                         TaskContinuationOptions.OnlyOnCanceled);
                                 var faultedTask = task
                                     .ContinueWith(
                                         t =>
                                         {
-                                            log?.Error(t.Exception, "Background transfer {0} faulted", bt.TransferId);
+                                            log?.LogError(t.Exception, "Background transfer {0} faulted", bt.TransferId);
                                         },
                                         TaskContinuationOptions.OnlyOnFaulted);
                                 var completedTask = task
@@ -150,7 +152,7 @@ namespace FubarDev.FtpServer
                                         t =>
                                         {
                                             // Nothing to do
-                                            log?.Info("Completed background transfer {0}", bt.TransferId);
+                                            log?.LogInformation("Completed background transfer {0}", bt.TransferId);
                                         },
                                         TaskContinuationOptions.NotOnCanceled);
 
@@ -163,11 +165,11 @@ namespace FubarDev.FtpServer
                                     // Ignore AggregateException when it only contains TaskCancelledException
                                 }
 
-                                log?.Trace("Background transfer {0} finished", bt.TransferId);
+                                log?.LogTrace("Background transfer {0} finished", bt.TransferId);
                             }
                             catch (Exception ex)
                             {
-                                log?.Error(ex, "Error during execution of background transfer {0}", backgroundTransfer.TransferId);
+                                log?.LogError(ex, "Error during execution of background transfer {0}", backgroundTransfer.TransferId);
                             }
                             finally
                             {
@@ -183,11 +185,11 @@ namespace FubarDev.FtpServer
                         HasData = false;
                     }
                 }
-                _log?.Info("Cancellation requested - stopping background transfer worker.");
+                _log?.LogInformation("Cancellation requested - stopping background transfer worker.");
             }
             finally
             {
-                _log?.Debug("Background transfer worker stopped.");
+                _log?.LogDebug("Background transfer worker stopped.");
                 Queue.Dispose();
             }
         }

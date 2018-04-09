@@ -27,11 +27,11 @@ namespace FubarDev.FtpServer.CommandHandlers
         public OptsCommandHandler(IFtpConnection connection)
             : base(connection, "OPTS")
         {
-            Extensions = new Dictionary<string, FtpCommandHandlerExtension>(StringComparer.OrdinalIgnoreCase);
+            Extensions = new Dictionary<string, IFtpCommandHandlerExtension>(StringComparer.OrdinalIgnoreCase);
         }
 
         /// <inheritdoc/>
-        public IDictionary<string, FtpCommandHandlerExtension> Extensions { get; }
+        public IDictionary<string, IFtpCommandHandlerExtension> Extensions { get; }
 
         /// <inheritdoc/>
         public override IEnumerable<IFeatureInfo> GetSupportedFeatures()
@@ -49,8 +49,7 @@ namespace FubarDev.FtpServer.CommandHandlers
         public override async Task<FtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
         {
             var argument = FtpCommand.Parse(command.Argument);
-            FtpCommandHandlerExtension extension;
-            if (!Extensions.TryGetValue(argument.Name, out extension))
+            if (!Extensions.TryGetValue(argument.Name, out var extension))
                 return new FtpResponse(500, "Syntax error, command unrecognized.");
 
             return await extension.Process(argument, cancellationToken);

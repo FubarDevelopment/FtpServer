@@ -7,6 +7,8 @@
 
 using JetBrains.Annotations;
 
+using Microsoft.Extensions.Logging;
+
 namespace FubarDev.FtpServer
 {
     /// <summary>
@@ -17,73 +19,73 @@ namespace FubarDev.FtpServer
         /// <summary>
         /// Logs a trace message with the data of the <see cref="FtpCommand"/>
         /// </summary>
-        /// <param name="log">The <see cref="IFtpLog"/> to use</param>
+        /// <param name="log">The <see cref="ILogger"/> to use</param>
         /// <param name="command">The <see cref="FtpCommand"/> to log</param>
-        public static void Trace([NotNull] this IFtpLog log, [NotNull] FtpCommand command)
+        public static void Trace([NotNull] this ILogger log, [NotNull] FtpCommand command)
         {
-            log.Trace("{0}", command);
+            log.LogTrace("{0}", command);
         }
 
         /// <summary>
         /// Logs a trace message with the data of the <see cref="FtpResponse"/>
         /// </summary>
-        /// <param name="log">The <see cref="IFtpLog"/> to use</param>
+        /// <param name="log">The <see cref="ILogger"/> to use</param>
         /// <param name="response">The <see cref="FtpResponse"/> to log</param>
-        public static void Trace([NotNull] this IFtpLog log, [NotNull] FtpResponse response)
+        public static void Trace([NotNull] this ILogger log, [NotNull] FtpResponse response)
         {
-            log.Trace("{0}", response);
+            log.LogTrace("{0}", response);
         }
 
         /// <summary>
         /// Logs a debug message with the data of the <see cref="FtpResponse"/>
         /// </summary>
-        /// <param name="log">The <see cref="IFtpLog"/> to use</param>
+        /// <param name="log">The <see cref="ILogger"/> to use</param>
         /// <param name="response">The <see cref="FtpResponse"/> to log</param>
-        public static void Debug([NotNull] this IFtpLog log, [NotNull] FtpResponse response)
+        public static void Debug([NotNull] this ILogger log, [NotNull] FtpResponse response)
         {
-            log.Debug("{0}", response);
+            log.LogDebug("{0}", response);
         }
 
         /// <summary>
         /// Logs a info message with the data of the <see cref="FtpResponse"/>
         /// </summary>
-        /// <param name="log">The <see cref="IFtpLog"/> to use</param>
+        /// <param name="log">The <see cref="ILogger"/> to use</param>
         /// <param name="response">The <see cref="FtpResponse"/> to log</param>
-        public static void Info([NotNull] this IFtpLog log, [NotNull] FtpResponse response)
+        public static void Info([NotNull] this ILogger log, [NotNull] FtpResponse response)
         {
-            log.Debug("{0}", response);
+            log.LogDebug("{0}", response);
         }
 
         /// <summary>
         /// Logs a warning message with the data of the <see cref="FtpResponse"/>
         /// </summary>
-        /// <param name="log">The <see cref="IFtpLog"/> to use</param>
+        /// <param name="log">The <see cref="ILogger"/> to use</param>
         /// <param name="response">The <see cref="FtpResponse"/> to log</param>
-        public static void Warn([NotNull] this IFtpLog log, [NotNull] FtpResponse response)
+        public static void Warn([NotNull] this ILogger log, [NotNull] FtpResponse response)
         {
-            log.Warn("{0}", response);
+            log.LogWarning("{0}", response);
         }
 
         /// <summary>
         /// Logs an error message with the data of the <see cref="FtpResponse"/>
         /// </summary>
-        /// <param name="log">The <see cref="IFtpLog"/> to use</param>
+        /// <param name="log">The <see cref="ILogger"/> to use</param>
         /// <param name="response">The <see cref="FtpResponse"/> to log</param>
-        public static void Error([NotNull] this IFtpLog log, [NotNull] FtpResponse response)
+        public static void Error([NotNull] this ILogger log, [NotNull] FtpResponse response)
         {
-            log.Error("{0}", response);
+            log.LogError("{0}", response);
         }
 
         /// <summary>
         /// Logs a message with the data of the <see cref="FtpResponse"/>
         /// </summary>
-        /// <param name="log">The <see cref="IFtpLog"/> to use</param>
+        /// <param name="log">The <see cref="ILogger"/> to use</param>
         /// <param name="response">The <see cref="FtpResponse"/> to log</param>
         /// <remarks>
         /// It logs either a trace, debug, or warning message depending on the
         /// <see cref="FtpResponse.Code"/>.
         /// </remarks>
-        public static void Log([NotNull] this IFtpLog log, [NotNull] FtpResponse response)
+        public static void Log([NotNull] this ILogger log, [NotNull] FtpResponse response)
         {
             if (response.Code >= 200 && response.Code < 300)
             {

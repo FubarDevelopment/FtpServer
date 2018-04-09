@@ -17,6 +17,8 @@ using FubarDev.FtpServer.CommandHandlers;
 
 using JetBrains.Annotations;
 
+using Microsoft.Extensions.Logging;
+
 using Sockets.Plugin.Abstractions;
 
 namespace FubarDev.FtpServer
@@ -32,7 +34,7 @@ namespace FubarDev.FtpServer
         /// Gets the dictionary of all known command handlers
         /// </summary>
         [NotNull]
-        IReadOnlyDictionary<string, FtpCommandHandler> CommandHandlers { get; }
+        IReadOnlyDictionary<string, IFtpCommandHandler> CommandHandlers { get; }
 
         /// <summary>
         /// Gets the server this connection belongs to
@@ -56,7 +58,7 @@ namespace FubarDev.FtpServer
         /// Gets or sets the FTP connection log
         /// </summary>
         [CanBeNull]
-        IFtpLog Log { get; set; }
+        ILogger Log { get; }
 
         /// <summary>
         /// Gets the control connection stream

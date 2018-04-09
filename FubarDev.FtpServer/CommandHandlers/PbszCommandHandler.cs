@@ -4,25 +4,29 @@
 
 using System;
 using System.Collections.Generic;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading;
 using System.Threading.Tasks;
 
-using FubarDev.FtpServer.CommandHandlers;
+using Microsoft.Extensions.Options;
 
-namespace FubarDev.FtpServer.AuthTls
+namespace FubarDev.FtpServer.CommandHandlers
 {
     /// <summary>
     /// The <code>PBSZ</code> command handler
     /// </summary>
     public class PbszCommandHandler : FtpCommandHandler
     {
+        private readonly X509Certificate2 _serverCertificate;
+        
         /// <summary>
         /// Initializes a new instance of the <see cref="PbszCommandHandler"/> class.
         /// </summary>
         /// <param name="connection">The connection to create this command handler for</param>
-        public PbszCommandHandler(IFtpConnection connection)
+        public PbszCommandHandler(IFtpConnection connection, IOptions<AuthTlsOptions> options)
             : base(connection, "PBSZ")
         {
+            _serverCertificate = options.Value.ServerCertificate;
         }
 
         /// <inheritdoc/>
@@ -31,7 +35,7 @@ namespace FubarDev.FtpServer.AuthTls
         /// <inheritdoc/>
         public override IEnumerable<IFeatureInfo> GetSupportedFeatures()
         {
-            if (AuthTlsCommandHandler.ServerCertificate != null)
+            if (_serverCertificate != null)
                 yield return new GenericFeatureInfo("PBSZ");
         }
 

@@ -5,25 +5,29 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Net.Security;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading;
 using System.Threading.Tasks;
 
-using FubarDev.FtpServer.CommandHandlers;
+using Microsoft.Extensions.Options;
 
-namespace FubarDev.FtpServer.AuthTls
+namespace FubarDev.FtpServer.CommandHandlers
 {
     /// <summary>
     /// The <code>PROT</code> command handler
     /// </summary>
     public class ProtCommandHandler : FtpCommandHandler
     {
+        private readonly X509Certificate2 _serverCertificate;
+        
         /// <summary>
         /// Initializes a new instance of the <see cref="ProtCommandHandler"/> class.
         /// </summary>
         /// <param name="connection">The connection to create this command handler for</param>
-        public ProtCommandHandler(IFtpConnection connection)
+        public ProtCommandHandler(IFtpConnection connection, IOptions<AuthTlsOptions> options)
             : base(connection, "PROT")
         {
+            _serverCertificate = options.Value.ServerCertificate;
         }
 
         /// <inheritdoc/>
@@ -32,7 +36,7 @@ namespace FubarDev.FtpServer.AuthTls
         /// <inheritdoc/>
         public override IEnumerable<IFeatureInfo> GetSupportedFeatures()
         {
-            if (AuthTlsCommandHandler.ServerCertificate != null)
+            if (_serverCertificate != null)
                 yield return new GenericFeatureInfo("PROT");
         }
 
@@ -58,7 +62,7 @@ namespace FubarDev.FtpServer.AuthTls
         private async Task<Stream> CreateSslStream(Stream unencryptedStream)
         {
             var sslStream = new SslStream(unencryptedStream, false);
-            await sslStream.AuthenticateAsServerAsync(AuthTlsCommandHandler.ServerCertificate);
+            await sslStream.AuthenticateAsServerAsync(_serverCertificate);
             return sslStream;
         }
     }

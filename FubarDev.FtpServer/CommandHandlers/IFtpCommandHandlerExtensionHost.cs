@@ -13,13 +13,12 @@ namespace FubarDev.FtpServer.CommandHandlers
     /// <summary>
     /// Interface indicating that a command handler can act as an extension host.
     /// </summary>
-    public interface IFtpCommandHandlerExtensionHost
+    public interface IFtpCommandHandlerExtensionHost : IFtpCommandHandler
     {
         /// <summary>
         /// Gets the extensions hosted by the <see cref="FtpCommandHandler"/>
         /// </summary>
         [NotNull]
-        [ItemNotNull]
-        IDictionary<string, FtpCommandHandlerExtension> Extensions { get; }
+        IDictionary<string, IFtpCommandHandlerExtension> Extensions { get; }
     }
 }

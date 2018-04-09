@@ -17,6 +17,8 @@ using FubarDev.FtpServer.FileSystem;
 using FubarDev.FtpServer.ListFormatters;
 using FubarDev.FtpServer.Utilities;
 
+using Microsoft.Extensions.Logging;
+
 using Minimatch;
 
 using Sockets.Plugin.Abstractions;
@@ -118,7 +120,7 @@ namespace FubarDev.FtpServer.CommandHandlers
                             if (argument.Recursive)
                             {
                                 var line = currentPath.ToDisplayString() + ":";
-                                Connection.Log?.Debug(line);
+                                Connection.Log?.LogDebug(line);
                                 await writer.WriteLineAsync(line);
                             }
 
@@ -158,7 +160,7 @@ namespace FubarDev.FtpServer.CommandHandlers
                                 }
 
                                 var line = formatter.Format(entry, name);
-                                Connection.Log?.Debug(line);
+                                Connection.Log?.LogDebug(line);
                                 await writer.WriteLineAsync(line);
                             }
                         }

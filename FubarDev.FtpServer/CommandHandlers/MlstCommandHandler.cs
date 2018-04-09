@@ -14,6 +14,8 @@ using FubarDev.FtpServer.FileSystem;
 using FubarDev.FtpServer.ListFormatters;
 using FubarDev.FtpServer.Utilities;
 
+using Microsoft.Extensions.Logging;
+
 using Sockets.Plugin.Abstractions;
 
 namespace FubarDev.FtpServer.CommandHandlers
@@ -156,7 +158,7 @@ namespace FubarDev.FtpServer.CommandHandlers
                             var name = enumerator.Name;
                             var entry = enumerator.Entry;
                             var line = formatter.Format(entry, name);
-                            Connection.Log?.Debug(line);
+                            Connection.Log?.LogDebug(line);
                             await writer.WriteLineAsync(line);
                         }
                         await writer.FlushAsync();

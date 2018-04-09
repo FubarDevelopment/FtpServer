@@ -9,6 +9,8 @@ using System.Threading.Tasks;
 
 using JetBrains.Annotations;
 
+using Microsoft.Extensions.Logging;
+
 using Sockets.Plugin.Abstractions;
 
 namespace FubarDev.FtpServer.CommandExtensions
@@ -90,7 +92,7 @@ namespace FubarDev.FtpServer.CommandExtensions
                         foreach (var entry in taskStates)
                         {
                             var line = $"{entry.Item2.ToString().PadRight(12)} {entry.Item1}";
-                            Connection.Log?.Debug(line);
+                            Connection.Log?.LogDebug(line);
                             await writer.WriteLineAsync(line);
                         }
                     }

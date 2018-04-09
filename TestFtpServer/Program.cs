@@ -8,10 +8,14 @@ using System.Text;
 using FubarDev.FtpServer;
 using FubarDev.FtpServer.AccountManagement;
 using FubarDev.FtpServer.AccountManagement.Anonymous;
-using FubarDev.FtpServer.AuthTls;
+using FubarDev.FtpServer.CommandExtensions;
+using FubarDev.FtpServer.FileSystem;
 using FubarDev.FtpServer.FileSystem.DotNet;
 
-using TestFtpServer.Logging;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+
+using NLog.Extensions.Logging;
 
 namespace TestFtpServer
 {
@@ -27,37 +31,41 @@ namespace TestFtpServer
         {
             // Load server certificate
             var cert = new X509Certificate2("test.pfx");
-            AuthTlsCommandHandler.ServerCertificate = cert;
 
-            // Only allow anonymous login
-            var membershipProvider = new AnonymousMembershipProvider(new NoValidation());
-
-            // Use the .NET file system
-            var fsProvider = new DotNetFileSystemProvider(Path.Combine(Path.GetTempPath(), "TestFtpServer"));
-
-            // Use all commands from the FtpServer assembly and the one(s) from the AuthTls assembly
-            var commandFactory = new AssemblyFtpCommandHandlerFactory(typeof(FtpServer).Assembly, typeof(AuthTlsCommandHandler).Assembly);
-
-            // Initialize the FTP server
-            using (var ftpServer = new FtpServer(fsProvider, membershipProvider, "127.0.0.1", Port, commandFactory)
+            var services = new ServiceCollection();
+            services.AddLogging(cfg => cfg.SetMinimumLevel(LogLevel.Trace));
+            services.AddOptions();
+            
+            services.Configure<AuthTlsOptions>(opt => opt.ServerCertificate = cert);
+            services.Configure<FtpConnectionOptions>(opt => opt.DefaultEncoding = Encoding.ASCII);
+            services.Configure<DotNetFileSystemOptions>(opt => opt.RootPath = Path.Combine(Path.GetTempPath(), "TestFtpServer"));
+            services.Configure<FtpServerOptions>(opt =>
             {
-                DefaultEncoding = Encoding.ASCII,
-                LogManager = new FtpLogManager(),
-            })
+                opt.ServerAddress = "127.0.0.1";
+                opt.Port = Port;
+            });
+
+
+            services.AddSingleton<IAnonymousPasswordValidator, NoValidation>();
+            services.AddFtpServer<DotNetFileSystemProvider, AnonymousMembershipProvider>();
+
+            using (var serviceProvider = services.BuildServiceProvider())
             {
+
+                var loggerFactory = serviceProvider.GetRequiredService<ILoggerFactory>();
+                loggerFactory.AddNLog(new NLogProviderOptions { CaptureMessageTemplates = true, CaptureMessageProperties = true });
+                NLog.LogManager.LoadConfiguration("NLog.config");
+
+                var ftpServer = serviceProvider.GetRequiredService<FtpServer>();
 #if USE_FTPS_IMPLICIT
-                // Use an implicit SSL connection (without the AUTHTLS command)
+// Use an implicit SSL connection (without the AUTHTLS command)
                 ftpServer.ConfigureConnection += (s, e) =>
                 {
-                    var sslStream = new FixedSslStream(e.Connection.OriginalStream);
+                    var sslStream = new SslStream(e.Connection.OriginalStream);
                     sslStream.AuthenticateAsServer(cert);
                     e.Connection.SocketStream = sslStream;
                 };
 #endif
-
-                // Create the default logger
-                var log = ftpServer.LogManager?.CreateLog(typeof(Program));
-
                 try
                 {
                     // Start the FTP server
@@ -70,7 +78,7 @@ namespace TestFtpServer
                 }
                 catch (Exception ex)
                 {
-                    log?.Error(ex, "Error during main FTP server loop");
+                    Console.Error.WriteLine(ex);
                 }
             }
         }

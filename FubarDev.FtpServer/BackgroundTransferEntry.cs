@@ -9,11 +9,13 @@ using FubarDev.FtpServer.FileSystem;
 
 using JetBrains.Annotations;
 
+using Microsoft.Extensions.Logging;
+
 namespace FubarDev.FtpServer
 {
     internal class BackgroundTransferEntry
     {
-        public BackgroundTransferEntry([NotNull] IBackgroundTransfer backgroundTransfer, [CanBeNull] IFtpLog log)
+        public BackgroundTransferEntry([NotNull] IBackgroundTransfer backgroundTransfer, [CanBeNull] ILogger log)
         {
             BackgroundTransfer = backgroundTransfer;
             Log = log;
@@ -24,7 +26,7 @@ namespace FubarDev.FtpServer
         public IBackgroundTransfer BackgroundTransfer { get; }
 
         [CanBeNull]
-        public IFtpLog Log { get; }
+        public ILogger Log { get; }
 
         public BackgroundTransferStatus Status { get; set; }
     }

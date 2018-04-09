@@ -10,6 +10,8 @@ using System.Threading.Tasks;
 
 using JetBrains.Annotations;
 
+using Microsoft.Extensions.Options;
+
 namespace FubarDev.FtpServer.FileSystem.DotNet
 {
     /// <summary>
@@ -24,42 +26,19 @@ namespace FubarDev.FtpServer.FileSystem.DotNet
 
         private readonly int _streamBufferSize;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="DotNetFileSystemProvider"/> class.
-        /// </summary>
-        /// <param name="rootPath">The root path for all users</param>
-        public DotNetFileSystemProvider([NotNull] string rootPath)
-            : this(rootPath, false)
-        {
-        }
+        private readonly bool _allowNonEmptyDirectoryDelete;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DotNetFileSystemProvider"/> class.
         /// </summary>
-        /// <param name="rootPath">The root path for all users</param>
-        /// <param name="useUserIdAsSubFolder">Use the user id as subfolder?</param>
-        public DotNetFileSystemProvider([NotNull] string rootPath, bool useUserIdAsSubFolder)
-            : this(rootPath, useUserIdAsSubFolder, DotNetFileSystem.DefaultStreamBufferSize)
+        /// <param name="options">The file system options</param>
+        public DotNetFileSystemProvider([NotNull] IOptions<DotNetFileSystemOptions> options)
         {
+            _rootPath = options.Value.RootPath;
+            _useUserIdAsSubFolder = options.Value.UseUserIdAsSubFolder;
+            _streamBufferSize = options.Value.StreamBufferSize ?? DotNetFileSystem.DefaultStreamBufferSize;
+            _allowNonEmptyDirectoryDelete = options.Value.AllowNonEmptyDirectoryDelete;
         }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="DotNetFileSystemProvider"/> class.
-        /// </summary>
-        /// <param name="rootPath">The root path for all users</param>
-        /// <param name="useUserIdAsSubFolder">Use the user id as subfolder?</param>
-        /// <param name="streamBufferSize">Buffer size to be used in async IO methods</param>
-        public DotNetFileSystemProvider([NotNull] string rootPath, bool useUserIdAsSubFolder, int streamBufferSize)
-        {
-            _rootPath = rootPath;
-            _useUserIdAsSubFolder = useUserIdAsSubFolder;
-            _streamBufferSize = streamBufferSize;
-        }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether deletion of non-empty directories is allowed.
-        /// </summary>
-        public bool AllowNonEmptyDirectoryDelete { get; set; }
 
         /// <inheritdoc/>
         public Task<IUnixFileSystem> Create(string userId, bool isAnonymous)
@@ -72,7 +51,7 @@ namespace FubarDev.FtpServer.FileSystem.DotNet
                 path = Path.Combine(path, userId);
             }
 
-            return Task.FromResult<IUnixFileSystem>(new DotNetFileSystem(path, AllowNonEmptyDirectoryDelete, _streamBufferSize));
+            return Task.FromResult<IUnixFileSystem>(new DotNetFileSystem(path, _allowNonEmptyDirectoryDelete, _streamBufferSize));
         }
     }
 }

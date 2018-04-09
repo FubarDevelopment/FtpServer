@@ -2,6 +2,10 @@
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
+using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
+
 using JetBrains.Annotations;
 
 namespace FubarDev.FtpServer.CommandExtensions
@@ -9,7 +13,7 @@ namespace FubarDev.FtpServer.CommandExtensions
     /// <summary>
     /// The base class for FTP command extensions
     /// </summary>
-    public abstract class FtpCommandHandlerExtension : FtpCommandHandlerBase
+    public abstract class FtpCommandHandlerExtension : IFtpCommandHandlerExtension
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="FtpCommandHandlerExtension"/> class.
@@ -19,10 +23,19 @@ namespace FubarDev.FtpServer.CommandExtensions
         /// <param name="name">The command name</param>
         /// <param name="alternativeNames">Alternative names</param>
         protected FtpCommandHandlerExtension([NotNull] IFtpConnection connection, [NotNull] string extensionFor, [NotNull] string name, [NotNull, ItemNotNull] params string[] alternativeNames)
-            : base(connection, name, alternativeNames)
         {
+            var names = new List<string>
+            {
+                name
+            };
+            names.AddRange(alternativeNames);
+            Names = names;
             ExtensionFor = extensionFor;
+            Connection = connection;
         }
+
+        /// <inheritdoc />
+        public IReadOnlyCollection<string> Names { get; }
 
         /// <summary>
         /// Gets or sets a value indicating whether a login is required to execute this command
@@ -34,5 +47,26 @@ namespace FubarDev.FtpServer.CommandExtensions
         /// </summary>
         [NotNull]
         public string ExtensionFor { get; }
+
+        /// <summary>
+        /// Gets the connection this command was created for
+        /// </summary>
+        [NotNull]
+        protected IFtpConnection Connection { get; }
+
+        /// <summary>
+        /// Gets the server the command belongs to
+        /// </summary>
+        [NotNull]
+        protected FtpServer Server => Connection.Server;
+
+        /// <summary>
+        /// Gets the connection data
+        /// </summary>
+        [NotNull]
+        protected FtpConnectionData Data => Connection.Data;
+
+        /// <inheritdoc />
+        public abstract Task<FtpResponse> Process(FtpCommand command, CancellationToken cancellationToken);
     }
 }

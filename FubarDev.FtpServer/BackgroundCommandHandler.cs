@@ -15,6 +15,8 @@ using System.Threading.Tasks;
 
 using JetBrains.Annotations;
 
+using Microsoft.Extensions.Logging;
+
 namespace FubarDev.FtpServer
 {
     /// <summary>
@@ -48,7 +50,7 @@ namespace FubarDev.FtpServer
         /// <param name="command">The command to process by the <paramref name="handler"/></param>
         /// <returns><code>null</code> when the command could not be processed</returns>
         [CanBeNull]
-        public Task<FtpResponse> Execute([NotNull] FtpCommandHandlerBase handler, [NotNull] FtpCommand command)
+        public Task<FtpResponse> Execute([NotNull] IFtpCommandHandlerBase handler, [NotNull] FtpCommand command)
         {
             Contract.Ensures(Contract.Result<Task<FtpResponse>>() != null);
             lock (_syncRoot)
@@ -85,7 +87,7 @@ namespace FubarDev.FtpServer
                     t =>
                     {
                         var ex = t.Exception;
-                        _connection.Log?.Error(ex, "Error while processing background command {0}", command);
+                        _connection.Log?.LogError(ex, "Error while processing background command {0}", command);
                         var response = new FtpResponse(501, "Syntax error in parameters or arguments.");
                         Debug.WriteLine($"Background task failed with response {response}");
                         return response;

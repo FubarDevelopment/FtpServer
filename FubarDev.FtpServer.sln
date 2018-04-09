@@ -25,8 +25,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestFtpServer", "TestFtpSer
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FubarDev.FtpServer.Tests", "FubarDev.FtpServer.Tests\FubarDev.FtpServer.Tests.csproj", "{0EEB524B-D0F7-4972-838D-D4CE7963D839}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FubarDev.FtpServer.AuthTls", "FubarDev.FtpServer.AuthTls\FubarDev.FtpServer.AuthTls.csproj", "{A5C36C6D-BE99-44C5-870A-23FD6B76E839}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -57,10 +55,6 @@ Global
 		{0EEB524B-D0F7-4972-838D-D4CE7963D839}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0EEB524B-D0F7-4972-838D-D4CE7963D839}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0EEB524B-D0F7-4972-838D-D4CE7963D839}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A5C36C6D-BE99-44C5-870A-23FD6B76E839}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A5C36C6D-BE99-44C5-870A-23FD6B76E839}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A5C36C6D-BE99-44C5-870A-23FD6B76E839}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A5C36C6D-BE99-44C5-870A-23FD6B76E839}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

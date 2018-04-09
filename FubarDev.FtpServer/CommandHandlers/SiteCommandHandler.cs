@@ -23,11 +23,11 @@ namespace FubarDev.FtpServer.CommandHandlers
         public SiteCommandHandler(IFtpConnection connection)
             : base(connection, "SITE")
         {
-            Extensions = new Dictionary<string, FtpCommandHandlerExtension>(StringComparer.OrdinalIgnoreCase);
+            Extensions = new Dictionary<string, IFtpCommandHandlerExtension>(StringComparer.OrdinalIgnoreCase);
         }
 
         /// <inheritdoc/>
-        public IDictionary<string, FtpCommandHandlerExtension> Extensions { get; }
+        public IDictionary<string, IFtpCommandHandlerExtension> Extensions { get; }
 
         /// <inheritdoc/>
         public override Task<FtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
@@ -36,8 +36,7 @@ namespace FubarDev.FtpServer.CommandHandlers
                 return Task.FromResult(new FtpResponse(501, "Syntax error in parameters or arguments."));
 
             var argument = FtpCommand.Parse(command.Argument);
-            FtpCommandHandlerExtension extension;
-            if (!Extensions.TryGetValue(argument.Name, out extension))
+            if (!Extensions.TryGetValue(argument.Name, out var extension))
                 return Task.FromResult(new FtpResponse(500, "Syntax error, command unrecognized."));
 
             return extension.Process(argument, cancellationToken);

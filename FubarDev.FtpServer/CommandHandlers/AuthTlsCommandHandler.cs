@@ -9,28 +9,27 @@ using System.Security.Cryptography.X509Certificates;
 using System.Threading;
 using System.Threading.Tasks;
 
-using FubarDev.FtpServer.CommandHandlers;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
-namespace FubarDev.FtpServer.AuthTls
+namespace FubarDev.FtpServer.CommandHandlers
 {
     /// <summary>
     /// The <code>AUTH TLS</code> command handler
     /// </summary>
     public class AuthTlsCommandHandler : FtpCommandHandler
     {
+        private readonly X509Certificate2 _serverCertificate;
+        
         /// <summary>
         /// Initializes a new instance of the <see cref="AuthTlsCommandHandler"/> class.
         /// </summary>
         /// <param name="connection">The connection this instance is used for</param>
-        public AuthTlsCommandHandler(IFtpConnection connection)
+        public AuthTlsCommandHandler(IFtpConnection connection, IOptions<AuthTlsOptions> options)
             : base(connection, "AUTH")
         {
+            _serverCertificate = options.Value.ServerCertificate;
         }
-
-        /// <summary>
-        /// Gets or sets the server certificate
-        /// </summary>
-        public static X509Certificate ServerCertificate { get; set; }
 
         /// <inheritdoc/>
         public override bool IsLoginRequired => false;
@@ -38,7 +37,7 @@ namespace FubarDev.FtpServer.AuthTls
         /// <inheritdoc/>
         public override IEnumerable<IFeatureInfo> GetSupportedFeatures()
         {
-            if (ServerCertificate != null)
+            if (_serverCertificate != null)
                 yield return new GenericFeatureInfo("AUTH", conn => "AUTH TLS");
         }
 
@@ -67,12 +66,12 @@ namespace FubarDev.FtpServer.AuthTls
             {
                 var sslStream = new SslStream(Connection.OriginalStream, true);
                 Connection.SocketStream = sslStream;
-                await sslStream.AuthenticateAsServerAsync(ServerCertificate);
+                await sslStream.AuthenticateAsServerAsync(_serverCertificate);
                 return null;
             }
             catch (Exception ex)
             {
-                Connection.Log?.Warn(ex, "SSL stream authentication failed: {0}", ex.Message);
+                Connection.Log?.LogWarning(ex, "SSL stream authentication failed: {0}", ex.Message);
                 return new FtpResponse(421, "TLS authentication failed");
             }
         }
