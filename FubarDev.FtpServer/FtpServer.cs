@@ -82,6 +82,18 @@ namespace FubarDev.FtpServer
         /// </summary>
         /// <param name="fileSystemClassFactory">The <see cref="IFileSystemClassFactory"/> to use to create the <see cref="IUnixFileSystem"/> for the logged in user.</param>
         /// <param name="membershipProvider">The <see cref="IMembershipProvider"/> used to validate a login attempt</param>
+        /// <param name="serverAddress">The public IP address (required for <code>PASV</code> and <code>EPSV</code>)</param>
+        /// <param name="port">The port of the FTP server (usually 21)</param>
+        public FtpServer([NotNull] IFileSystemClassFactory fileSystemClassFactory, [NotNull] IMembershipProvider membershipProvider, [NotNull] string serverAddress, int port)
+            : this(fileSystemClassFactory, membershipProvider, serverAddress, port, new AssemblyFtpCommandHandlerFactory(typeof(FtpServer).GetTypeInfo().Assembly))
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FtpServer"/> class.
+        /// </summary>
+        /// <param name="fileSystemClassFactory">The <see cref="IFileSystemClassFactory"/> to use to create the <see cref="IUnixFileSystem"/> for the logged in user.</param>
+        /// <param name="membershipProvider">The <see cref="IMembershipProvider"/> used to validate a login attempt</param>
         /// <param name="commsInterface">The <see cref="ICommsInterface"/> that identifies the public IP address (required for <code>PASV</code> and <code>EPSV</code>)</param>
         /// <param name="port">The port of the FTP server (usually 21)</param>
         /// <param name="handlerFactory">The handler factories to create <see cref="FtpCommandHandler"/> and <see cref="FtpCommandHandlerExtension"/> instances for new <see cref="FtpConnection"/> objects</param>
