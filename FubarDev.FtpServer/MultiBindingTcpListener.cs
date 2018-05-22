@@ -28,7 +28,7 @@ namespace FubarDev.FtpServer
         public MultiBindingTcpListener(string address, int port)
         {
             if (port < 1 || port > 65535)
-                throw new ArgumentOutOfRangeException("The port argument is out of range");
+                throw new ArgumentOutOfRangeException(nameof(port), "The port argument is out of range");
 
             _address = address;
             _port = port;
