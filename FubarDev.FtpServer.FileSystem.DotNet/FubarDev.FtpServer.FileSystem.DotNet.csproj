@@ -13,5 +13,5 @@
   <ItemGroup>
     <ProjectReference Include="..\FubarDev.FtpServer.Abstractions\FubarDev.FtpServer.Abstractions.csproj" />
   </ItemGroup>
-  <Import Project="$(MSBuildThisFileDirectory)../Global.proj" />
+  <Import Project="$(MSBuildThisFileDirectory)../Global.props" />
 </Project>

@@ -11,5 +11,5 @@
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="2.0.1" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.1.0-beta006" />
   </ItemGroup>
-  <Import Project="$(MSBuildThisFileDirectory)../Global.proj" />
+  <Import Project="$(MSBuildThisFileDirectory)../Global.props" />
 </Project>

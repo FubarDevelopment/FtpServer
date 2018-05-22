@@ -15,7 +15,7 @@
     <ProjectReference Include="..\FubarDev.FtpServer.FileSystem.DotNet\FubarDev.FtpServer.FileSystem.DotNet.csproj" />
     <ProjectReference Include="..\FubarDev.FtpServer\FubarDev.FtpServer.csproj" />
   </ItemGroup>
-  <Import Project="$(MSBuildThisFileDirectory)../Global.proj" />
+  <Import Project="$(MSBuildThisFileDirectory)../Global.props" />
   <ItemGroup>
     <Content Include="NLog.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
