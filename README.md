@@ -1,6 +1,6 @@
 # Portable FTP server
 
-[![Build status](https://build.fubar-dev.de/app/rest/builds/buildType:%28id:FtpServer_ReleaseBuild%29/statusIcon)](https://build.fubar-dev.com/project.html?projectId=FtpServer)
+[![Build status](https://build.fubar-dev.de/app/rest/builds/buildType:%28id:FtpServer_ReleaseBuild%29/statusIcon.svg)](https://build.fubar-dev.com/project.html?projectId=FtpServer)
 
 This FTP server is written as .NET Standard 2.0 library and has an
 abstract file system which allows e.g. Google Drive as backend.
@@ -24,14 +24,22 @@ The library is released under the [![MIT license](https://img.shields.io/github/
 
 | Description				| Badge |
 |---------------------------|-------|
-| Core library				| [![FubarDev.FtpServer](https://img.shields.io/nuget/v/FubarDev.FtpServer.svg)](https://www.nuget.org/packages/FubarDev.FtpServer) |
-| Virtual FTP file system	| [![FubarDev.FtpServer.FileSystem](https://img.shields.io/nuget/v/FubarDev.FtpServer.FileSystem.svg)](https://www.nuget.org/packages/FubarDev.FtpServer.FileSystem) |
-| Google Drive support		| [![FubarDev.FtpServer.FileSystem.GoogleDrive](https://img.shields.io/nuget/v/FubarDev.FtpServer.FileSystem.GoogleDrive.svg)](https://www.nuget.org/packages/FubarDev.FtpServer.FileSystem.GoogleDrive) |
-| OneDrive support			| [![FubarDev.FtpServer.FileSystem.OneDrive](https://img.shields.io/nuget/v/FubarDev.FtpServer.FileSystem.OneDrive.svg)](https://www.nuget.org/packages/FubarDev.FtpServer.FileSystem.OneDrive) |
-| Account management		| [![FubarDev.FtpServer.AccountManagement](https://img.shields.io/nuget/v/FubarDev.FtpServer.AccountManagement.svg)](https://www.nuget.org/packages/FubarDev.FtpServer.AccountManagement) |
-| FTPS (TLS) Support       	| [![FubarDev.FtpServer.AuthTls](https://img.shields.io/nuget/v/FubarDev.FtpServer.AuthTls.svg)](https://www.nuget.org/packages/FubarDev.FtpServer.AuthTls) |
+| `FubarDev.FtpServer`: Core library				| [![FubarDev.FtpServer](https://img.shields.io/nuget/v/FubarDev.FtpServer.svg)](https://www.nuget.org/packages/FubarDev.FtpServer) |
+| `FD.FS.Abstractions`: Basic types				| [![FubarDev.FtpServer.Abstractions](https://img.shields.io/nuget/v/FubarDev.FtpServer.Abstractions.svg)](https://www.nuget.org/packages/FubarDev.FtpServer.Abstractions) |
+| `FD.FS.FileSystem.DotNet`: `System.IO`-based file system	| [![FubarDev.FtpServer.FileSystem.DotNet](https://img.shields.io/nuget/v/FubarDev.FtpServer.FileSystem.DotNet.svg)](https://www.nuget.org/packages/FubarDev.FtpServer.FileSystem.DotNet) |
 
 # Example FTP server
+
+## Creating the project
+
+```bash
+dotnet new console
+dotnet add package FubarDev.FtpServer.FileSystem.DotNet
+dotnet add package FubarDev.FtpServer
+dotnet add package Microsoft.Extensions.DependencyInjection
+```
+
+## Contents of `Main` in Program.cs
 
 ```csharp
 // Setup dependency injection
