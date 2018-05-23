@@ -11,11 +11,9 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-using FubarDev.FtpServer.FileSystem;
-
 using Microsoft.Extensions.Logging;
 
-namespace FubarDev.FtpServer
+namespace FubarDev.FtpServer.BackgroundTransfer
 {
     internal class BackgroundTransferWorker : IDisposable
     {
@@ -55,20 +53,20 @@ namespace FubarDev.FtpServer
             }
         }
 
-        public IReadOnlyCollection<Tuple<string, BackgroundTransferStatus>> GetStates()
+        public IReadOnlyCollection<BackgroundTransferInfo> GetStates()
         {
-            var result = new List<Tuple<string, BackgroundTransferStatus>>();
+            var result = new List<BackgroundTransferInfo>();
             lock (Queue)
             {
                 var current = CurrentEntry;
                 if (current != null)
                 {
-                    result.Add(Tuple.Create(current.BackgroundTransfer.TransferId, current.Status));
+                    result.Add(GetInfo(current));
                 }
-                result.AddRange(
-                    Queue.GetEntries()
-                        .Select(entry => Tuple.Create(entry.BackgroundTransfer.TransferId, entry.Status)));
+
+                result.AddRange(Queue.GetEntries().Select(GetInfo));
             }
+
             return result;
         }
 
@@ -131,7 +129,8 @@ namespace FubarDev.FtpServer
                                 var bt = backgroundTransfer;
                                 log?.LogInformation("Starting background transfer {0}", bt.TransferId);
                                 backgroundTransferEntry.Status = BackgroundTransferStatus.Transferring;
-                                var task = bt.Start(cancellationToken);
+                                var progress = new ActionProgress(sent => backgroundTransferEntry.Transferred = sent);
+                                var task = bt.Start(progress, cancellationToken);
                                 var cancelledTask = task
                                     .ContinueWith(
                                         t =>
@@ -191,6 +190,26 @@ namespace FubarDev.FtpServer
             {
                 _log?.LogDebug("Background transfer worker stopped.");
                 Queue.Dispose();
+            }
+        }
+
+        private static BackgroundTransferInfo GetInfo(BackgroundTransferEntry entry)
+        {
+            return new BackgroundTransferInfo(entry.Status, entry.BackgroundTransfer.TransferId, entry.Transferred);
+        }
+
+        private class ActionProgress : IProgress<long>
+        {
+            private readonly Action<long> _progressAction;
+
+            public ActionProgress(Action<long> progressAction)
+            {
+                _progressAction = progressAction;
+            }
+
+            public void Report(long value)
+            {
+                _progressAction(value);
             }
         }
     }

@@ -11,6 +11,8 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 
+using FubarDev.FtpServer.BackgroundTransfer;
+
 namespace FubarDev.FtpServer.FileSystem.DotNet
 {
     /// <summary>

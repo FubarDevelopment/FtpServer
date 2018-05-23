@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 using Microsoft.Extensions.Logging;
 
-namespace FubarDev.FtpServer
+namespace FubarDev.FtpServer.BackgroundTransfer
 {
     /// <summary>
     /// Asynchronous processing of an FTP command

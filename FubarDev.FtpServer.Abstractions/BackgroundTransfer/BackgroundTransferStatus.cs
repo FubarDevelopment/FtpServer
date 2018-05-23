@@ -5,7 +5,7 @@
 // <author>Mark Junker</author>
 //-----------------------------------------------------------------------
 
-namespace FubarDev.FtpServer.FileSystem
+namespace FubarDev.FtpServer.BackgroundTransfer
 {
     /// <summary>
     /// The status of a single <see cref="IBackgroundTransfer"/>

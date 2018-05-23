@@ -11,6 +11,8 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 
+using FubarDev.FtpServer.BackgroundTransfer;
+
 using JetBrains.Annotations;
 
 namespace FubarDev.FtpServer.FileSystem

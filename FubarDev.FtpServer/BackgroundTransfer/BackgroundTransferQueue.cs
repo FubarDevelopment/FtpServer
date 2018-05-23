@@ -11,7 +11,7 @@ using System.Threading;
 
 using JetBrains.Annotations;
 
-namespace FubarDev.FtpServer
+namespace FubarDev.FtpServer.BackgroundTransfer
 {
     internal class BackgroundTransferQueue : IDisposable
     {

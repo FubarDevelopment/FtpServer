@@ -7,12 +7,11 @@
 
 using System;
 using System.IO;
-using System.Threading;
 using System.Threading.Tasks;
 
 using JetBrains.Annotations;
 
-namespace FubarDev.FtpServer.FileSystem
+namespace FubarDev.FtpServer.BackgroundTransfer
 {
     /// <summary>
     /// Temporary data holder
@@ -26,15 +25,6 @@ namespace FubarDev.FtpServer.FileSystem
         /// Gets the size of the temporary data
         /// </summary>
         long Size { get; }
-
-        /// <summary>
-        /// Loads the temporary data from a stream
-        /// </summary>
-        /// <param name="stream">The stream to load the data from</param>
-        /// <param name="cancellationToken">The cancellation token</param>
-        /// <returns>The task the loading happens on</returns>
-        [NotNull]
-        Task FillAsync([NotNull] Stream stream, CancellationToken cancellationToken);
 
         /// <summary>
         /// Opens the temporary data and returns a stream

@@ -14,6 +14,7 @@ using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 
+using FubarDev.FtpServer.BackgroundTransfer;
 using FubarDev.FtpServer.FileSystem;
 
 using JetBrains.Annotations;
@@ -174,7 +175,7 @@ namespace FubarDev.FtpServer
         /// <returns>The background transfer states for all active <see cref="IBackgroundTransfer"/> objects</returns>
         [NotNull]
         [ItemNotNull]
-        public IReadOnlyCollection<Tuple<string, BackgroundTransferStatus>> GetBackgroundTaskStates()
+        public IReadOnlyCollection<BackgroundTransferInfo> GetBackgroundTaskStates()
         {
             return BackgroundTransferWorker.GetStates();
         }

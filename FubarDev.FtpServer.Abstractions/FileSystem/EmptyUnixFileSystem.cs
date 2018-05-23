@@ -8,6 +8,7 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 
+using FubarDev.FtpServer.BackgroundTransfer;
 using FubarDev.FtpServer.FileSystem.Generic;
 
 namespace FubarDev.FtpServer.FileSystem

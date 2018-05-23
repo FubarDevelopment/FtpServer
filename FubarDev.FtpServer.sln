@@ -8,11 +8,11 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{52EFD82B-3CC2-486D-849B-199D9670C487}"
 	ProjectSection(SolutionItems) = preProject
 		FubarDev.FtpServer.ruleset = FubarDev.FtpServer.ruleset
-		Global.proj = Global.proj
 		LICENSE.md = LICENSE.md
 		nuget-pack.ps1 = nuget-pack.ps1
 		README.md = README.md
 		stylecop.json = stylecop.json
+		Global.props = Global.props
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FubarDev.FtpServer.FileSystem.DotNet", "FubarDev.FtpServer.FileSystem.DotNet\FubarDev.FtpServer.FileSystem.DotNet.csproj", "{9A83C6F5-378B-48B3-B32A-151DB90B390C}"
@@ -24,6 +24,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FubarDev.FtpServer.Tests", "FubarDev.FtpServer.Tests\FubarDev.FtpServer.Tests.csproj", "{0EEB524B-D0F7-4972-838D-D4CE7963D839}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FubarDev.FtpServer.Abstractions", "FubarDev.FtpServer.Abstractions\FubarDev.FtpServer.Abstractions.csproj", "{37CE4218-FAC3-4201-82A0-54945698C6AD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FubarDev.FtpServer.FileSystem.GoogleDrive", "FubarDev.FtpServer.FileSystem.GoogleDrive\FubarDev.FtpServer.FileSystem.GoogleDrive.csproj", "{474BD381-5B80-4580-BFB1-D41BEB70C458}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,6 +53,10 @@ Global
 		{37CE4218-FAC3-4201-82A0-54945698C6AD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{37CE4218-FAC3-4201-82A0-54945698C6AD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{37CE4218-FAC3-4201-82A0-54945698C6AD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{474BD381-5B80-4580-BFB1-D41BEB70C458}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{474BD381-5B80-4580-BFB1-D41BEB70C458}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{474BD381-5B80-4580-BFB1-D41BEB70C458}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{474BD381-5B80-4580-BFB1-D41BEB70C458}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

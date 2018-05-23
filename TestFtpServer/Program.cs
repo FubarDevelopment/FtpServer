@@ -6,11 +6,18 @@ using System;
 using System.IO;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 
 using FubarDev.FtpServer;
 using FubarDev.FtpServer.AccountManagement;
 using FubarDev.FtpServer.AccountManagement.Anonymous;
 using FubarDev.FtpServer.FileSystem.DotNet;
+using FubarDev.FtpServer.FileSystem.GoogleDrive;
+
+using Google.Apis.Auth.OAuth2;
+using Google.Apis.Drive.v3;
+using Google.Apis.Services;
 
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -27,7 +34,7 @@ namespace TestFtpServer
         internal const int Port = 21;
 #endif
 
-        private static void Main()
+        private static async Task Main()
         {
             // Load server certificate
             var cert = new X509Certificate2("test.pfx");
@@ -38,7 +45,6 @@ namespace TestFtpServer
 
             services.Configure<AuthTlsOptions>(opt => opt.ServerCertificate = cert);
             services.Configure<FtpConnectionOptions>(opt => opt.DefaultEncoding = Encoding.ASCII);
-            services.Configure<DotNetFileSystemOptions>(opt => opt.RootPath = Path.Combine(Path.GetTempPath(), "TestFtpServer"));
             services.Configure<FtpServerOptions>(opt =>
             {
                 opt.ServerAddress = "localhost";
@@ -46,7 +52,51 @@ namespace TestFtpServer
             });
 
             services.AddSingleton<IAnonymousPasswordValidator, NoValidation>();
-            services.AddFtpServer<DotNetFileSystemProvider, AnonymousMembershipProvider>();
+
+            var provider = "filesystem";
+            if (provider == "filesystem")
+            {
+                services.Configure<DotNetFileSystemOptions>(opt => opt.RootPath = Path.Combine(Path.GetTempPath(), "TestFtpServer"));
+                services.AddFtpServer<DotNetFileSystemProvider, AnonymousMembershipProvider>();
+            }
+            else if (provider == "google-service")
+            {
+                var credential = GoogleCredential
+                    .FromFile(@"service-credential.json")
+                    .CreateScoped(DriveService.Scope.Drive, DriveService.Scope.DriveFile);
+
+                services.AddSingleton(_ => new DriveService(new BaseClientService.Initializer()
+                {
+                    ApplicationName = "Test FTP-Server",
+                    HttpClientInitializer = credential,
+                }));
+
+                services.AddSingleton<IGoogleDriveServiceProvider, GoogleDriveServiceProvider>();
+                services.AddFtpServer<GoogleDriveFileSystemProvider, AnonymousMembershipProvider>();
+            }
+            else if (provider == "google-user")
+            {
+                string userEmail = string.Empty;
+                UserCredential credential;
+                using (var secretsSource = new FileStream("client_secrets.json",
+                    FileMode.Open))
+                {
+                    var secrets = GoogleClientSecrets.Load(secretsSource);
+                    credential = await GoogleWebAuthorizationBroker.AuthorizeAsync(
+                        secrets.Secrets,
+                        new[] { DriveService.Scope.DriveFile, DriveService.Scope.Drive },
+                        userEmail, CancellationToken.None);
+                }
+
+                services.AddSingleton(_ => new DriveService(new BaseClientService.Initializer()
+                {
+                    ApplicationName = "Test FTP-Server",
+                    HttpClientInitializer = credential,
+                }));
+
+                services.AddSingleton<IGoogleDriveServiceProvider, GoogleDriveServiceProvider>();
+                services.AddFtpServer<GoogleDriveFileSystemProvider, AnonymousMembershipProvider>();
+            }
 
             using (var serviceProvider = services.BuildServiceProvider())
             {

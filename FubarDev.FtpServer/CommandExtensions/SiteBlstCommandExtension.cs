@@ -2,10 +2,14 @@
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
+using System.Collections.Generic;
 using System.IO;
 using System.Net.Sockets;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+
+using FubarDev.FtpServer.BackgroundTransfer;
 
 using JetBrains.Annotations;
 
@@ -59,9 +63,8 @@ namespace FubarDev.FtpServer.CommandExtensions
                 return new FtpResponse(211, "No background tasks");
 
             await Connection.WriteAsync("211-Active background tasks:", cancellationToken).ConfigureAwait(false);
-            foreach (var entry in taskStates)
+            foreach (var line in GetLines(taskStates))
             {
-                var line = $"{entry.Item2.ToString().PadRight(12)} {entry.Item1}";
                 await Connection.WriteAsync($" {line}", cancellationToken).ConfigureAwait(false);
             }
 
@@ -88,9 +91,8 @@ namespace FubarDev.FtpServer.CommandExtensions
                     NewLine = "\r\n",
                 })
                 {
-                    foreach (var entry in _server.GetBackgroundTaskStates())
+                    foreach (var line in GetLines(_server.GetBackgroundTaskStates()))
                     {
-                        var line = $"{entry.Item2.ToString().PadRight(12)} {entry.Item1}";
                         Connection.Log?.LogDebug(line);
                         await writer.WriteLineAsync(line).ConfigureAwait(false);
                     }
@@ -98,6 +100,20 @@ namespace FubarDev.FtpServer.CommandExtensions
             }
 
             return new FtpResponse(250, "Closing data connection.");
+        }
+
+        private IEnumerable<string> GetLines(IEnumerable<BackgroundTransferInfo> entries)
+        {
+            foreach (var entry in entries)
+            {
+                var line = new StringBuilder($"{entry.Status.ToString().PadRight(12)} {entry.FileName}");
+                if (entry.Status == BackgroundTransferStatus.Transferring)
+                {
+                    line.Append($" ({entry.Transferred})");
+                }
+
+                yield return line.ToString();
+            }
         }
     }
 }

@@ -13,6 +13,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\FubarDev.FtpServer.FileSystem.DotNet\FubarDev.FtpServer.FileSystem.DotNet.csproj" />
+    <ProjectReference Include="..\FubarDev.FtpServer.FileSystem.GoogleDrive\FubarDev.FtpServer.FileSystem.GoogleDrive.csproj" />
     <ProjectReference Include="..\FubarDev.FtpServer\FubarDev.FtpServer.csproj" />
   </ItemGroup>
   <Import Project="$(MSBuildThisFileDirectory)../Global.props" />
