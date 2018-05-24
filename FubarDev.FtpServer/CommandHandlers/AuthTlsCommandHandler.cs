@@ -43,7 +43,7 @@ namespace FubarDev.FtpServer.CommandHandlers
         {
             if (_serverCertificate != null)
             {
-                yield return new GenericFeatureInfo("AUTH", conn => "AUTH TLS");
+                yield return new GenericFeatureInfo("AUTH", conn => "AUTH TLS", false);
             }
         }
 

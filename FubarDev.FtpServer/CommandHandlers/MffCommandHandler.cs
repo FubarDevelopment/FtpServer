@@ -57,7 +57,7 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// <inheritdoc/>
         public override IEnumerable<IFeatureInfo> GetSupportedFeatures()
         {
-            yield return new GenericFeatureInfo("MFF", FeatureStatus);
+            yield return new GenericFeatureInfo("MFF", FeatureStatus, IsLoginRequired);
         }
 
         /// <inheritdoc/>

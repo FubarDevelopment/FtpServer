@@ -36,7 +36,7 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// <inheritdoc/>
         public override IEnumerable<IFeatureInfo> GetSupportedFeatures()
         {
-            yield return new GenericFeatureInfo("UTF8", "UTF-8");
+            yield return new GenericFeatureInfo("UTF8", false, "UTF-8");
         }
 
         /// <inheritdoc/>

@@ -38,7 +38,7 @@ namespace FubarDev.FtpServer.CommandHandlers
         {
             if (_serverCertificate != null)
             {
-                yield return new GenericFeatureInfo("PBSZ");
+                yield return new GenericFeatureInfo("PBSZ", IsLoginRequired);
             }
         }
 

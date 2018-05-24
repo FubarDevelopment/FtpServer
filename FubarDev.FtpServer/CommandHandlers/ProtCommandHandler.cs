@@ -39,7 +39,7 @@ namespace FubarDev.FtpServer.CommandHandlers
         {
             if (_serverCertificate != null)
             {
-                yield return new GenericFeatureInfo("PROT");
+                yield return new GenericFeatureInfo("PROT", IsLoginRequired);
             }
         }
 

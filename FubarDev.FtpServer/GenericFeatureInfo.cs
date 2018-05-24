@@ -22,9 +22,10 @@ namespace FubarDev.FtpServer
         /// Initializes a new instance of the <see cref="GenericFeatureInfo"/> class.
         /// </summary>
         /// <param name="name">The feature name.</param>
+        /// <param name="requiresAuthentication">Indicates whether this extension requires an authenticated user.</param>
         /// <param name="additionalNames">The additional feature names.</param>
-        public GenericFeatureInfo([NotNull] string name, [NotNull, ItemNotNull] params string[] additionalNames)
-            : this(name, null, additionalNames)
+        public GenericFeatureInfo([NotNull] string name, bool requiresAuthentication, [NotNull, ItemNotNull] params string[] additionalNames)
+            : this(name, null, requiresAuthentication, additionalNames)
         {
         }
 
@@ -33,8 +34,9 @@ namespace FubarDev.FtpServer
         /// </summary>
         /// <param name="name">The feature name.</param>
         /// <param name="toString">The function to use to create a <code>FEAT</code> string.</param>
+        /// <param name="requiresAuthentication">Indicates whether this extension requires an authenticated user.</param>
         /// <param name="additionalNames">The additional feature names.</param>
-        public GenericFeatureInfo([NotNull] string name, [CanBeNull] Func<IFtpConnection, string> toString, [NotNull, ItemNotNull] params string[] additionalNames)
+        public GenericFeatureInfo([NotNull] string name, [CanBeNull] Func<IFtpConnection, string> toString, bool requiresAuthentication, [NotNull, ItemNotNull] params string[] additionalNames)
         {
             _name = name;
             var names = new HashSet<string> { name };
@@ -45,10 +47,14 @@ namespace FubarDev.FtpServer
 
             Names = names;
             _toString = toString;
+            RequiresAuthentication = requiresAuthentication;
         }
 
         /// <inheritdoc/>
         public ISet<string> Names { get; }
+
+        /// <inheritdoc />
+        public bool RequiresAuthentication { get; }
 
         /// <inheritdoc/>
         public string BuildInfo(IFtpConnection connection)

@@ -24,6 +24,11 @@ namespace FubarDev.FtpServer
         ISet<string> Names { get; }
 
         /// <summary>
+        /// Gets a value indicating whether this extension requires authentication.
+        /// </summary>
+        bool RequiresAuthentication { get; }
+
+        /// <summary>
         /// Build an informational string to be sent by the <code>FEAT</code> command.
         /// </summary>
         /// <param name="connection">The configured connection.</param>

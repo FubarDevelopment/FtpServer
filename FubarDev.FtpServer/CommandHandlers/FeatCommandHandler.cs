@@ -17,8 +17,6 @@ namespace FubarDev.FtpServer.CommandHandlers
     /// </summary>
     public class FeatCommandHandler : FtpCommandHandler
     {
-        private IReadOnlyCollection<string> _supportedFeatures;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="FeatCommandHandler"/> class.
         /// </summary>
@@ -34,20 +32,28 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// <inheritdoc/>
         public override async Task<FtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
         {
-            if (_supportedFeatures == null)
+            var supportedFeatures = Connection
+                .CommandHandlers.Values
+                .SelectMany(x => x.GetSupportedFeatures());
+
+            if (!Data.IsLoggedIn)
             {
-                var features = new List<string>();
-                features.AddRange(Connection.CommandHandlers.Values.SelectMany(x => x.GetSupportedFeatures()).Select(x => x.BuildInfo(Connection)).Distinct());
-                _supportedFeatures = features;
+                supportedFeatures = supportedFeatures
+                    .Where(f => !f.RequiresAuthentication);
             }
 
-            if (_supportedFeatures.Count == 0)
+            var features = supportedFeatures
+                .Select(x => x.BuildInfo(Connection))
+                .Distinct()
+                .ToList();
+
+            if (features.Count == 0)
             {
                 return new FtpResponse(211, "No extensions supported");
             }
 
             await Connection.WriteAsync("211-Extensions supported:", cancellationToken).ConfigureAwait(false);
-            foreach (var supportedFeature in _supportedFeatures)
+            foreach (var supportedFeature in features)
             {
                 await Connection.WriteAsync($" {supportedFeature}", cancellationToken).ConfigureAwait(false);
             }

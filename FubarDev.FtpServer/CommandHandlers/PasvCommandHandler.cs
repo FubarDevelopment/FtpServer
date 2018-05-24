@@ -37,7 +37,7 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// <inheritdoc/>
         public override IEnumerable<IFeatureInfo> GetSupportedFeatures()
         {
-            yield return new GenericFeatureInfo("EPSV");
+            yield return new GenericFeatureInfo("EPSV", IsLoginRequired);
         }
 
         /// <inheritdoc/>

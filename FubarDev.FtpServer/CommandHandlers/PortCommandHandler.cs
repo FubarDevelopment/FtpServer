@@ -29,7 +29,7 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// <inheritdoc/>
         public override IEnumerable<IFeatureInfo> GetSupportedFeatures()
         {
-            yield return new GenericFeatureInfo("EPRT");
+            yield return new GenericFeatureInfo("EPRT", IsLoginRequired);
         }
 
         /// <inheritdoc/>

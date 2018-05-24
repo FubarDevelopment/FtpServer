@@ -29,7 +29,7 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// <inheritdoc/>
         public override IEnumerable<IFeatureInfo> GetSupportedFeatures()
         {
-            yield return new GenericFeatureInfo("REST", conn => "REST STREAM");
+            yield return new GenericFeatureInfo("REST", conn => "REST STREAM", IsLoginRequired);
         }
 
         /// <inheritdoc/>
