@@ -80,7 +80,8 @@ namespace FubarDev.FtpServer
                     var commandHandlers = serviceProvider.GetRequiredService<IEnumerable<IFtpCommandHandler>>().ToList();
                     var dict = commandHandlers
                         .SelectMany(x => x.Names, (item, name) => new { Name = name, Item = item })
-                        .ToDictionary(x => x.Name, x => x.Item, StringComparer.OrdinalIgnoreCase);
+                        .ToLookup(x => x.Name, x => x.Item, StringComparer.OrdinalIgnoreCase)
+                        .ToDictionary(x => x.Key, x => x.Last());
 
                     var extensions = serviceProvider.GetRequiredService<IEnumerable<IFtpCommandHandlerExtension>>().ToList();
                     foreach (var handler in commandHandlers)
