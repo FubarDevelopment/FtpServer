@@ -24,9 +24,10 @@ The library is released under the [![MIT license](https://img.shields.io/github/
 
 | Description				| Badge |
 |---------------------------|-------|
-| `FubarDev.FtpServer`: Core library				| [![FubarDev.FtpServer](https://img.shields.io/nuget/v/FubarDev.FtpServer.svg)](https://www.nuget.org/packages/FubarDev.FtpServer) |
-| `FD.FS.Abstractions`: Basic types				| [![FubarDev.FtpServer.Abstractions](https://img.shields.io/nuget/v/FubarDev.FtpServer.Abstractions.svg)](https://www.nuget.org/packages/FubarDev.FtpServer.Abstractions) |
-| `FD.FS.FileSystem.DotNet`: `System.IO`-based file system	| [![FubarDev.FtpServer.FileSystem.DotNet](https://img.shields.io/nuget/v/FubarDev.FtpServer.FileSystem.DotNet.svg)](https://www.nuget.org/packages/FubarDev.FtpServer.FileSystem.DotNet) |
+| `FubarDev.FtpServer`: Core library				| [![FubarDev.FtpServer](https://img.shields.io/nuget/vpre/FubarDev.FtpServer.svg)](https://www.nuget.org/packages/FubarDev.FtpServer) |
+| `FD.FS.Abstractions`: Basic types				| [![FubarDev.FtpServer.Abstractions](https://img.shields.io/nuget/vpre/FubarDev.FtpServer.Abstractions.svg)](https://www.nuget.org/packages/FubarDev.FtpServer.Abstractions) |
+| `FD.FS.FileSystem.DotNet`: `System.IO`-based file system	| [![FubarDev.FtpServer.FileSystem.DotNet](https://img.shields.io/nuget/vpre/FubarDev.FtpServer.FileSystem.DotNet.svg)](https://www.nuget.org/packages/FubarDev.FtpServer.FileSystem.DotNet) |
+| `FD.FS.FileSystem.GoogleDrive`: Google Drive as file system	| [![FubarDev.FtpServer.FileSystem.GoogleDrive](https://img.shields.io/nuget/vpre/FubarDev.FtpServer.FileSystem.GoogleDrive.svg)](https://www.nuget.org/packages/FubarDev.FtpServer.FileSystem.GoogleDrive) |
 
 # Example FTP server
 
@@ -46,19 +47,22 @@ dotnet add package Microsoft.Extensions.DependencyInjection
 var services = new ServiceCollection();
 
 // use %TEMP%/TestFtpServer as root folder
-services.Configure<DotNetFileSystemOptions>(opt => opt.RootPath = Path.Combine(Path.GetTempPath(), "TestFtpServer"));
+services.Configure<DotNetFileSystemOptions>(opt => opt
+    .RootPath = Path.Combine(Path.GetTempPath(), "TestFtpServer"));
 
 // Add FTP server services
 // DotNetFileSystemProvider = Use the .NET file system functionality
 // AnonymousMembershipProvider = allow only anonymous logins
-services.AddFtpServer<DotNetFileSystemProvider, AnonymousMembershipProvider>();
+services.AddFtpServer(builder => builder
+    .UseDotNetFileSystem() // Use the .NET file system functionality
+    .EnableAnonymousAuthentication()); // allow anonymous logins
 
 // Configure the FTP server
 services.Configure<FtpServerOptions>(opt => opt.ServerAddress = "127.0.0.1");
 
 // Build the service provider
-using (var serviceProvider = services.BuildServiceProvider()) {
-
+using (var serviceProvider = services.BuildServiceProvider())
+{
     // Initialize the FTP server
     var ftpServer = serviceProvider.GetRequiredService<FtpServer>();
 
