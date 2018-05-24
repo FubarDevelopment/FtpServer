@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "TestFtpServer": {
+      "commandName": "Project",
+      "commandLineArgs": "filesystem"
+    }
+  }
+}
