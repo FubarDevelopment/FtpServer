@@ -29,8 +29,10 @@ namespace FubarDev.FtpServer
         /// <returns>the server builder used to configure the FTP server.</returns>
         public static IFtpServerBuilder UseGoogleDrive(this IFtpServerBuilder builder, Func<IServiceProvider, DriveService> createDriveService)
         {
-            builder.Services.AddSingleton(createDriveService);
-            builder.Services.AddSingleton<IFileSystemClassFactory, GoogleDriveFileSystemProvider>();
+            builder.Services
+                .AddSingleton(createDriveService)
+                .AddSingleton<IGoogleDriveServiceProvider, GoogleDriveServiceProvider>()
+                .AddSingleton<IFileSystemClassFactory, GoogleDriveFileSystemProvider>();
             return builder;
         }
 
