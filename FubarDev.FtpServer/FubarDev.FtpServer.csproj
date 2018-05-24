@@ -25,5 +25,8 @@
   <ItemGroup>
     <ProjectReference Include="..\FubarDev.FtpServer.Abstractions\FubarDev.FtpServer.Abstractions.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="ListFormatters\" />
+  </ItemGroup>
   <Import Project="../PackageLibrary.props" />
 </Project>
