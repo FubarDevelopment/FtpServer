@@ -22,7 +22,7 @@ namespace FubarDev.FtpServer.CommandHandlers
     public class PassCommandHandler : FtpCommandHandler
     {
         [NotNull]
-        private readonly IMembershipProvider _membershipProvider;
+        private readonly IEnumerable<IMembershipProvider> _membershipProviders;
 
         [NotNull]
         private readonly IFileSystemClassFactory _fileSystemClassFactory;
@@ -31,15 +31,15 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// Initializes a new instance of the <see cref="PassCommandHandler"/> class.
         /// </summary>
         /// <param name="connection">The connection to create this command handler for.</param>
-        /// <param name="membershipProvider">The membership provider.</param>
+        /// <param name="membershipProviders">The membership providers.</param>
         /// <param name="fileSystemClassFactory">The file system access factory.</param>
         public PassCommandHandler(
             [NotNull] IFtpConnection connection,
-            [NotNull] IMembershipProvider membershipProvider,
+            [NotNull] IEnumerable<IMembershipProvider> membershipProviders,
             [NotNull] IFileSystemClassFactory fileSystemClassFactory)
             : base(connection, "PASS")
         {
-            _membershipProvider = membershipProvider;
+            _membershipProviders = membershipProviders;
             _fileSystemClassFactory = fileSystemClassFactory;
         }
 
@@ -55,18 +55,23 @@ namespace FubarDev.FtpServer.CommandHandlers
             }
 
             var password = command.Argument;
-            var validationResult = _membershipProvider.ValidateUser(Connection.Data.User.Name, password);
-            if (validationResult.IsSuccess)
+            foreach (var membershipProvider in _membershipProviders)
             {
-                var isAnonymous = validationResult.Status == MemberValidationStatus.Anonymous;
-                var userId = isAnonymous ? password : Connection.Data.User.Name;
-                Connection.Data.User = validationResult.User;
-                Connection.Data.IsLoggedIn = true;
-                Connection.Data.IsAnonymous = isAnonymous;
-                Connection.Data.FileSystem = await _fileSystemClassFactory.Create(userId, isAnonymous).ConfigureAwait(false);
-                Connection.Data.Path = new Stack<IUnixDirectoryEntry>();
-                return new FtpResponse(230, "Password ok, FTP server ready");
+                var validationResult = membershipProvider.ValidateUser(Connection.Data.User.Name, password);
+                if (validationResult.IsSuccess)
+                {
+                    var isAnonymous = validationResult.Status == MemberValidationStatus.Anonymous;
+                    var userId = isAnonymous ? password : Connection.Data.User.Name;
+                    Connection.Data.User = validationResult.User;
+                    Connection.Data.IsLoggedIn = true;
+                    Connection.Data.AuthenticatedBy = membershipProvider;
+                    Connection.Data.IsAnonymous = isAnonymous;
+                    Connection.Data.FileSystem = await _fileSystemClassFactory.Create(userId, isAnonymous).ConfigureAwait(false);
+                    Connection.Data.Path = new Stack<IUnixDirectoryEntry>();
+                    return new FtpResponse(230, "Password ok, FTP server ready");
+                }
             }
+
             return new FtpResponse(530, "Username or password incorrect");
         }
     }

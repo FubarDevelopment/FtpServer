@@ -50,6 +50,12 @@ namespace FubarDev.FtpServer
         public bool IsLoggedIn { get; set; }
 
         /// <summary>
+        /// Gets or sets the membership provider that was used to authenticate the user.
+        /// </summary>
+        [CanBeNull]
+        public IMembershipProvider AuthenticatedBy { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether the current user is anonymous.
         /// </summary>
         public bool IsAnonymous { get; set; }
