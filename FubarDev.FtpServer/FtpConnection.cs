@@ -62,8 +62,8 @@ namespace FubarDev.FtpServer
             var properties = new Dictionary<string, object>
             {
                 ["RemoteAddress"] = RemoteAddress.ToString(true),
-                ["RemoteIp"] = RemoteAddress.IpAddress,
-                ["RemotePort"] = RemoteAddress.IpPort,
+                ["RemoteIp"] = RemoteAddress.IPAddress?.ToString(),
+                ["RemotePort"] = RemoteAddress.Port,
             };
             _loggerScope = logger?.BeginScope(properties);
 
@@ -204,8 +204,8 @@ namespace FubarDev.FtpServer
             var portAddress = Data.PortAddress;
             if (portAddress != null)
             {
-                var result = new TcpClient();
-                await result.ConnectAsync(portAddress.Host, portAddress.Port).ConfigureAwait(false);
+                var result = new TcpClient(portAddress.AddressFamily ?? AddressFamily.InterNetwork);
+                await result.ConnectAsync(portAddress.IPAddress, portAddress.Port).ConfigureAwait(false);
                 return result;
             }
 

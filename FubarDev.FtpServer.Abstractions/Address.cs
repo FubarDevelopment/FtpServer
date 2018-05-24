@@ -6,7 +6,7 @@
 //-----------------------------------------------------------------------
 
 using System;
-using System.Net.Sockets;
+using System.Net;
 using System.Text;
 
 using JetBrains.Annotations;
@@ -25,28 +25,13 @@ namespace FubarDev.FtpServer
         /// <summary>
         /// Initializes a new instance of the <see cref="Address"/> class.
         /// </summary>
-        /// <param name="addressFamily">The IP address family.</param>
-        /// <param name="address">The IP address.</param>
-        /// <param name="port">The port.</param>
-        public Address(AddressFamily addressFamily, string address, int port)
-        {
-            _isEnhanced = true;
-            AddressFamily = addressFamily;
-            IpAddress = address;
-            IpPort = port;
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Address"/> class.
-        /// </summary>
         /// <param name="address">IPv4 address.</param>
         /// <param name="port">The port.</param>
         public Address(string address, int port)
         {
             _isEnhanced = false;
-            AddressFamily = address.IndexOf(':') == -1 ? AF.InterNetwork : AF.InterNetworkV6;
-            IpAddress = address;
-            IpPort = port;
+            IPAddress = IPAddress.Parse(address);
+            Port = port;
         }
 
         /// <summary>
@@ -59,26 +44,25 @@ namespace FubarDev.FtpServer
         public Address(int port)
         {
             _isEnhanced = true;
-            AddressFamily = null;
-            IpAddress = null;
-            IpPort = port;
+            IPAddress = null;
+            Port = port;
         }
 
         /// <summary>
         /// Gets the IP address family.
         /// </summary>
-        public AddressFamily? AddressFamily { get; }
+        public AF? AddressFamily => IPAddress?.AddressFamily;
 
         /// <summary>
         /// Gets the IP address.
         /// </summary>
         [CanBeNull]
-        public string IpAddress { get; }
+        public IPAddress IPAddress { get; }
 
         /// <summary>
         /// Gets the port.
         /// </summary>
-        public int IpPort { get; }
+        public int Port { get; }
 
         /// <summary>
         /// Parses an IP address.
@@ -105,9 +89,9 @@ namespace FubarDev.FtpServer
         {
             if (AddressFamily != null && AddressFamily == AF.InterNetworkV6)
             {
-                return new Uri($"port://[{IpAddress}]:{IpPort}/");
+                return new Uri($"port://[{IPAddress}]:{Port}/");
             }
-            return new Uri($"port://{IpAddress}:{IpPort}/");
+            return new Uri($"port://{IPAddress}:{Port}/");
         }
 
         /// <summary>
@@ -121,9 +105,9 @@ namespace FubarDev.FtpServer
             {
                 if (AddressFamily != null && AddressFamily == AF.InterNetworkV6)
                 {
-                    return $"[{IpAddress}]:{IpPort}";
+                    return $"[{IPAddress}]:{Port}";
                 }
-                return $"{IpAddress}:{IpPort}";
+                return $"{IPAddress}:{Port}";
             }
             return ToString();
         }
@@ -152,16 +136,16 @@ namespace FubarDev.FtpServer
                             return string.Empty;
                     }
                 }
-                result.Append($"|{IpAddress}|{IpPort}|");
+                result.Append($"|{IPAddress}|{Port}|");
             }
             else
             {
                 result
-                    .Append(IpAddress?.Replace('.', ','))
+                    .Append(IPAddress?.ToString().Replace('.', ','))
                     .Append(',')
-                    .Append(IpPort / 256)
+                    .Append(Port / 256)
                     .Append(',')
-                    .Append(IpPort & 0xFF);
+                    .Append(Port & 0xFF);
             }
             return result.ToString();
         }
@@ -215,9 +199,8 @@ namespace FubarDev.FtpServer
             switch (addressType)
             {
                 case 1:
-                    return new Address(AF.InterNetwork, ipAddress, port);
                 case 2:
-                    return new Address(AF.InterNetworkV6, ipAddress, port);
+                    return new Address(ipAddress, port);
                 default:
                     throw new NotSupportedException($"Unknown network protocol {addressType}");
             }

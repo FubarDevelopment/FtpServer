@@ -106,7 +106,7 @@ namespace FubarDev.FtpServer
         /// Gets or sets the address to use for an active data connection.
         /// </summary>
         [CanBeNull]
-        public Uri PortAddress { get; set; }
+        public Address PortAddress { get; set; }
 
         /// <summary>
         /// Gets or sets the data connection for a passive data transfer.

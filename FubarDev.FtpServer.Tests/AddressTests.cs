@@ -26,7 +26,7 @@ namespace FubarDev.FtpServer.Tests
         {
             var address = Address.Parse("|1|132.235.1.2|6275|");
             Assert.NotNull(address);
-            Assert.Equal(new Address(AddressFamily.InterNetwork, "132.235.1.2", 6275), address, new AddressComparer());
+            Assert.Equal(new Address("132.235.1.2", 6275), address, new AddressComparer());
             Assert.Equal(new Uri("port://132.235.1.2:6275"), address.ToUri());
         }
 
@@ -35,7 +35,7 @@ namespace FubarDev.FtpServer.Tests
         {
             var address = Address.Parse("132,235,1,2,24,131");
             Assert.NotNull(address);
-            Assert.Equal(new Address(AddressFamily.InterNetwork, "132.235.1.2", 6275), address, new AddressComparer());
+            Assert.Equal(new Address("132.235.1.2", 6275), address, new AddressComparer());
             Assert.Equal(new Uri("port://132.235.1.2:6275"), address.ToUri());
         }
 
@@ -44,7 +44,7 @@ namespace FubarDev.FtpServer.Tests
         {
             var address = Address.Parse("|2|1080::8:800:200C:417A|5282|");
             Assert.NotNull(address);
-            Assert.Equal(new Address(AddressFamily.InterNetworkV6, "1080::8:800:200C:417A", 5282), address, new AddressComparer());
+            Assert.Equal(new Address("1080::8:800:200C:417A", 5282), address, new AddressComparer());
             Assert.Equal(new Uri("port://[1080::8:800:200C:417A]:5282"), address.ToUri());
         }
 
@@ -64,7 +64,9 @@ namespace FubarDev.FtpServer.Tests
                 if (x.AddressFamily == null)
                 {
                     if (y.AddressFamily != null)
+                    {
                         return false;
+                    }
                 }
                 else if (y.AddressFamily == null)
                 {
@@ -75,15 +77,15 @@ namespace FubarDev.FtpServer.Tests
                     return false;
                 }
 
-                return (x.IpAddress ?? string.Empty) == (y.IpAddress ?? string.Empty)
-                       && x.IpPort == y.IpPort;
+                return (x.IPAddress?.ToString() ?? string.Empty) == (y.IPAddress?.ToString() ?? string.Empty)
+                       && x.Port == y.Port;
             }
 
             public int GetHashCode(Address obj)
             {
                 return (obj.AddressFamily?.GetHashCode() ?? 0)
-                       ^ (obj.IpAddress ?? string.Empty).GetHashCode()
-                       ^ obj.IpPort.GetHashCode();
+                       ^ (obj.IPAddress?.GetHashCode() ?? 0)
+                       ^ obj.Port.GetHashCode();
             }
         }
     }
