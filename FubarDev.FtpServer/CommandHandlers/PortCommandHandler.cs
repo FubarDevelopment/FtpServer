@@ -48,7 +48,7 @@ namespace FubarDev.FtpServer.CommandHandlers
                     return Task.FromResult(new FtpResponse(501, "Syntax error in parameters or arguments."));
                 }
 
-                Data.PortAddress = address.ToUri();
+                Data.PortAddress = address;
             }
             catch (NotSupportedException ex)
             {
