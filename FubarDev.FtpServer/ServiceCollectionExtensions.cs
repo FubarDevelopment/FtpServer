@@ -2,13 +2,16 @@
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
-using FubarDev.FtpServer.AccountManagement;
+using System;
+
+using FubarDev.FtpServer;
+using FubarDev.FtpServer.BackgroundTransfer;
 using FubarDev.FtpServer.CommandExtensions;
-using FubarDev.FtpServer.FileSystem;
 
-using Microsoft.Extensions.DependencyInjection;
+using JetBrains.Annotations;
 
-namespace FubarDev.FtpServer
+// ReSharper disable once CheckNamespace
+namespace Microsoft.Extensions.DependencyInjection
 {
     /// <summary>
     /// Extension methods for <see cref="IServiceCollection"/>.
@@ -18,18 +21,15 @@ namespace FubarDev.FtpServer
         /// <summary>
         /// Adds the FTP server services to the collection.
         /// </summary>
-        /// <typeparam name="TFileSystemFactory">The file system factory implementation.</typeparam>
-        /// <typeparam name="TMembershipProvider">The membership provider implementation.</typeparam>
         /// <param name="services">The service collection to add the FTP server services to.</param>
+        /// <param name="configure">Configuration of the FTP server services.</param>
         /// <returns>The service collection.</returns>
-        public static IServiceCollection AddFtpServer<TFileSystemFactory, TMembershipProvider>(this IServiceCollection services)
-            where TFileSystemFactory : class, IFileSystemClassFactory
-            where TMembershipProvider : class, IMembershipProvider
+        public static IServiceCollection AddFtpServer(
+            this IServiceCollection services,
+            [NotNull] Action<IFtpServerBuilder> configure)
         {
-            services.AddSingleton<IFileSystemClassFactory, TFileSystemFactory>();
-            services.AddSingleton<IMembershipProvider, TMembershipProvider>();
-
             services.AddSingleton<FtpServer>();
+            services.AddSingleton<ITemporaryDataFactory, TemporaryDataFactory>();
 
             services.AddScoped<IFtpConnectionAccessor, FtpConnectionAccessor>();
             services.AddScoped<TcpSocketClientAccessor>();
@@ -42,7 +42,24 @@ namespace FubarDev.FtpServer
                     .AddClasses(filter => filter.AssignableTo<IFtpCommandHandler>()).As<IFtpCommandHandler>().WithScopedLifetime()
                     .AddClasses(filter => filter.AssignableTo<IFtpCommandHandlerExtension>().Where(t => t != typeof(GenericFtpCommandHandlerExtension))).As<IFtpCommandHandlerExtension>().WithScopedLifetime());
 
+            configure(new FtpServerBuilder(services));
+
             return services;
+        }
+
+        private class FtpServerBuilder : IFtpServerBuilder
+        {
+            /// <summary>
+            /// Initializes a new instance of the <see cref="FtpServerBuilder"/> class.
+            /// </summary>
+            /// <param name="services">The service collection.</param>
+            public FtpServerBuilder(IServiceCollection services)
+            {
+                Services = services;
+            }
+
+            /// <inheritdoc />
+            public IServiceCollection Services { get; }
         }
     }
 }

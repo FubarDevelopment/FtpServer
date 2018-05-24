@@ -10,14 +10,11 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using FubarDev.FtpServer;
-using FubarDev.FtpServer.AccountManagement;
 using FubarDev.FtpServer.AccountManagement.Anonymous;
 using FubarDev.FtpServer.FileSystem.DotNet;
-using FubarDev.FtpServer.FileSystem.GoogleDrive;
 
 using Google.Apis.Auth.OAuth2;
 using Google.Apis.Drive.v3;
-using Google.Apis.Services;
 
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -57,7 +54,7 @@ namespace TestFtpServer
             if (provider == "filesystem")
             {
                 services.Configure<DotNetFileSystemOptions>(opt => opt.RootPath = Path.Combine(Path.GetTempPath(), "TestFtpServer"));
-                services.AddFtpServer<DotNetFileSystemProvider, AnonymousMembershipProvider>();
+                services.AddFtpServer(sb => sb.UseDotNetFileSystem().EnableAnonymousAuthentication());
             }
             else if (provider == "google-service")
             {
@@ -65,14 +62,13 @@ namespace TestFtpServer
                     .FromFile(@"service-credential.json")
                     .CreateScoped(DriveService.Scope.Drive, DriveService.Scope.DriveFile);
 
-                services.AddSingleton(_ => new DriveService(new BaseClientService.Initializer()
-                {
-                    ApplicationName = "Test FTP-Server",
-                    HttpClientInitializer = credential,
-                }));
-
-                services.AddSingleton<IGoogleDriveServiceProvider, GoogleDriveServiceProvider>();
-                services.AddFtpServer<GoogleDriveFileSystemProvider, AnonymousMembershipProvider>();
+                services.AddFtpServer(
+                    sb =>
+                    {
+                        sb
+                            .UseGoogleDrive(credential)
+                            .EnableAnonymousAuthentication();
+                    });
             }
             else if (provider == "google-user")
             {
@@ -88,14 +84,13 @@ namespace TestFtpServer
                         userEmail, CancellationToken.None);
                 }
 
-                services.AddSingleton(_ => new DriveService(new BaseClientService.Initializer()
-                {
-                    ApplicationName = "Test FTP-Server",
-                    HttpClientInitializer = credential,
-                }));
-
-                services.AddSingleton<IGoogleDriveServiceProvider, GoogleDriveServiceProvider>();
-                services.AddFtpServer<GoogleDriveFileSystemProvider, AnonymousMembershipProvider>();
+                services.AddFtpServer(
+                    sb =>
+                    {
+                        sb
+                            .UseGoogleDrive(credential)
+                            .EnableAnonymousAuthentication();
+                    });
             }
 
             using (var serviceProvider = services.BuildServiceProvider())

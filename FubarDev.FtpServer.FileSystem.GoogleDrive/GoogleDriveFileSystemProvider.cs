@@ -29,10 +29,10 @@ namespace FubarDev.FtpServer.FileSystem.GoogleDrive
         /// <param name="temporaryDataFactory">The factory to create temporary data objects.</param>
         public GoogleDriveFileSystemProvider(
             [NotNull] IGoogleDriveServiceProvider serviceProvider,
-            ITemporaryDataFactory temporaryDataFactory = null)
+            [NotNull] ITemporaryDataFactory temporaryDataFactory)
         {
             _serviceProvider = serviceProvider;
-            _temporaryDataFactory = temporaryDataFactory ?? new TemporaryDataFactory();
+            _temporaryDataFactory = temporaryDataFactory;
         }
 
         /// <inheritdoc />
