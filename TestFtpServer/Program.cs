@@ -61,6 +61,7 @@ namespace TestFtpServer
                         Options = new OptionSet()
                         {
                             "usage: ftpserver google-drive user <CLIENT-SECRETS-FILE> <USERNAME>",
+                            { "r|refresh", "Refresh the access token", v => options.RefreshToken = v != null },
                         },
                         Run = a => RunWithGoogleDriveUser(a.ToArray(), options).Wait(),
                     },
@@ -109,6 +110,10 @@ namespace TestFtpServer
                     new[] { DriveService.Scope.DriveFile, DriveService.Scope.Drive },
                     userName,
                     CancellationToken.None);
+                if (options.RefreshToken)
+                {
+                    await credential.RefreshTokenAsync(CancellationToken.None);
+                }
             }
 
             var services = CreateServices(options)
