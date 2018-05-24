@@ -26,13 +26,17 @@ namespace FubarDev.FtpServer.CommandHandlers
     {
         private static readonly ISet<string> _knownFacts = new HashSet<string> { "type", "size", "perm", "modify", "create" };
 
+        private readonly ILogger<MlstCommandHandler> _logger;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="MlstCommandHandler"/> class.
         /// </summary>
         /// <param name="connection">The FTP connection this command handler is created for.</param>
-        public MlstCommandHandler(IFtpConnection connection)
+        /// <param name="logger">The logger.</param>
+        public MlstCommandHandler(IFtpConnection connection, ILogger<MlstCommandHandler> logger)
             : base(connection, "MLST", "MLSD")
         {
+            _logger = logger;
             connection.Data.ActiveMlstFacts.Clear();
             foreach (var knownFact in _knownFacts)
             {
@@ -148,7 +152,11 @@ namespace FubarDev.FtpServer.CommandHandlers
 
             return await Connection.SendResponseAsync(
                     client => ExecuteSendAsync(client, path, dirEntry, cancellationToken),
-                    _ => new FtpResponse(425, "Can't open data connection."))
+                    ex =>
+                    {
+                        _logger.LogError(ex, ex.Message);
+                        return new FtpResponse(425, "Can't open data connection.");
+                    })
                 .ConfigureAwait(false);
         }
 

@@ -28,13 +28,17 @@ namespace FubarDev.FtpServer.CommandHandlers
     /// </summary>
     public class ListCommandHandler : FtpCommandHandler
     {
+        private readonly ILogger<ListCommandHandler> _logger;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="ListCommandHandler"/> class.
         /// </summary>
         /// <param name="connection">The connection to create this command handler for.</param>
-        public ListCommandHandler(IFtpConnection connection)
+        /// <param name="logger">The logger.</param>
+        public ListCommandHandler(IFtpConnection connection, ILogger<ListCommandHandler> logger)
             : base(connection, "LIST", "NLST", "LS")
         {
+            _logger = logger;
         }
 
         /// <inheritdoc/>
@@ -44,7 +48,11 @@ namespace FubarDev.FtpServer.CommandHandlers
 
             return await Connection.SendResponseAsync(
                     client => ExecuteSend(client, command, cancellationToken),
-                    _ => new FtpResponse(425, "Can't open data connection."))
+                    ex =>
+                    {
+                        _logger.LogError(ex, ex.Message);
+                        return new FtpResponse(425, "Can't open data connection.");
+                    })
                 .ConfigureAwait(false);
         }
 
