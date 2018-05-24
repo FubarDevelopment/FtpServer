@@ -10,7 +10,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Sockets;
-using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -63,7 +62,14 @@ namespace FubarDev.FtpServer.CommandHandlers
             }
             else if (string.Equals(command.Name, "LS", StringComparison.OrdinalIgnoreCase))
             {
-                formatter = new LongListFormatter();
+                if (argument.PreferLong)
+                {
+                    formatter = new LongListFormatter();
+                }
+                else
+                {
+                    formatter = new ShortListFormatter();
+                }
             }
             else
             {
@@ -79,9 +85,9 @@ namespace FubarDev.FtpServer.CommandHandlers
                 var mask = "*";
                 var path = Data.Path.Clone();
 
-                if (!string.IsNullOrEmpty(argument.Path))
+                foreach (var searchPath in argument.Paths)
                 {
-                    var foundEntry = await Data.FileSystem.SearchEntryAsync(path, argument.Path, cancellationToken).ConfigureAwait(false);
+                    var foundEntry = await Data.FileSystem.SearchEntryAsync(path, searchPath, cancellationToken).ConfigureAwait(false);
                     if (foundEntry?.Directory == null)
                     {
                         return new FtpResponse(550, "File system entry not found.");
@@ -96,6 +102,7 @@ namespace FubarDev.FtpServer.CommandHandlers
                         path.Push(dirEntry);
                     }
                 }
+
                 directoriesToProcess.Enqueue(new DirectoryQueueItem(path, mask));
             }
 
@@ -202,38 +209,24 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// </summary>
         private class ListArguments
         {
-            private static readonly Regex _arguments = new Regex(@"^(?<arg>-[lra]+)((\s+)|$)", RegexOptions.IgnoreCase);
-
             public ListArguments(string arguments)
             {
-                var match = _arguments.Match(arguments);
-                while (match.Success)
+                var preferLong = false;
+                var showAll = false;
+                var recursive = false;
+
+                var options = new OptionSet()
                 {
-                    var text = match.Groups["arg"].Value;
-                    foreach (var flag in text.ToCharArray().Skip(1))
-                    {
-                        switch (flag)
-                        {
-                            case 'A':
-                            case 'a':
-                                All = true;
-                                break;
-                            case 'R':
-                            case 'r':
-                                Recursive = true;
-                                break;
-                            case 'L':
-                            case 'l':
-                                // Ignore
-                                break;
-                        }
-                    }
+                    { "l|L", v => preferLong = v != null },
+                    { "r|R", v => recursive = v != null },
+                    { "a|A", v => showAll = v != null },
+                };
 
-                    arguments = arguments.Substring(match.Length);
-                    match = _arguments.Match(arguments);
-                }
-
-                Path = arguments;
+                var args = ArgumentSource.GetArguments(new StringReader(arguments));
+                Paths = options.Parse(args).ToList();
+                PreferLong = preferLong;
+                All = showAll;
+                Recursive = recursive;
             }
 
             /// <summary>
@@ -247,9 +240,14 @@ namespace FubarDev.FtpServer.CommandHandlers
             public bool Recursive { get; }
 
             /// <summary>
+            /// Gets a value indicating whether the long output is preferred.
+            /// </summary>
+            public bool PreferLong { get; }
+
+            /// <summary>
             /// Gets the path argument (optionally with wildcard).
             /// </summary>
-            public string Path { get; }
+            public IReadOnlyCollection<string> Paths { get; }
         }
     }
 }
