@@ -1,4 +1,4 @@
-﻿// <copyright file="GoogleDriveFileSystem.cs" company="Fubar Development Junker">
+// <copyright file="GoogleDriveFileSystem.cs" company="Fubar Development Junker">
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
@@ -22,11 +22,13 @@ using File = Google.Apis.Drive.v3.Data.File;
 namespace FubarDev.FtpServer.FileSystem.GoogleDrive
 {
     /// <summary>
-    /// The <see cref="IUnixFileSystem"/> implementation that uses Google Drive
+    /// The <see cref="IUnixFileSystem"/> implementation that uses Google Drive.
     /// </summary>
     public sealed class GoogleDriveFileSystem : IUnixFileSystem
     {
-        [NotNull] private readonly ITemporaryDataFactory _temporaryDataFactory;
+        [NotNull]
+        private readonly ITemporaryDataFactory _temporaryDataFactory;
+
         private readonly Dictionary<string, BackgroundUpload> _uploads = new Dictionary<string, BackgroundUpload>();
 
         private readonly SemaphoreSlim _uploadsLock = new SemaphoreSlim(1);
@@ -36,9 +38,9 @@ namespace FubarDev.FtpServer.FileSystem.GoogleDrive
         /// <summary>
         /// Initializes a new instance of the <see cref="GoogleDriveFileSystem"/> class.
         /// </summary>
-        /// <param name="service">The <see cref="DriveService"/> instance to use to access the Google Drive</param>
-        /// <param name="rootFolderInfo">The <see cref="Google.Apis.Drive.v3.Data.File"/> to use as root folder</param>
-        /// <param name="temporaryDataFactory">The factory to create temporary data objects</param>
+        /// <param name="service">The <see cref="DriveService"/> instance to use to access the Google Drive.</param>
+        /// <param name="rootFolderInfo">The <see cref="Google.Apis.Drive.v3.Data.File"/> to use as root folder.</param>
+        /// <param name="temporaryDataFactory">The factory to create temporary data objects.</param>
         public GoogleDriveFileSystem(
             [NotNull] DriveService service,
             [NotNull] File rootFolderInfo,
@@ -50,7 +52,7 @@ namespace FubarDev.FtpServer.FileSystem.GoogleDrive
         }
 
         /// <summary>
-        /// Gets the <see cref="DriveService"/> instance to use to access the Google Drive
+        /// Gets the <see cref="DriveService"/> instance to use to access the Google Drive.
         /// </summary>
         [NotNull]
         public DriveService Service { get; }
@@ -68,7 +70,8 @@ namespace FubarDev.FtpServer.FileSystem.GoogleDrive
         public bool SupportsAppend => false;
 
         /// <inheritdoc/>
-        public async Task<IReadOnlyList<IUnixFileSystemEntry>> GetEntriesAsync(IUnixDirectoryEntry directoryEntry,
+        public async Task<IReadOnlyList<IUnixFileSystemEntry>> GetEntriesAsync(
+            IUnixDirectoryEntry directoryEntry,
             CancellationToken cancellationToken)
         {
             var dirEntry = (GoogleDriveDirectoryEntry)directoryEntry;
@@ -80,7 +83,9 @@ namespace FubarDev.FtpServer.FileSystem.GoogleDrive
         }
 
         /// <inheritdoc/>
-        public async Task<IUnixFileSystemEntry> GetEntryByNameAsync(IUnixDirectoryEntry directoryEntry, string name,
+        public async Task<IUnixFileSystemEntry> GetEntryByNameAsync(
+            IUnixDirectoryEntry directoryEntry,
+            string name,
             CancellationToken cancellationToken)
         {
             var dirEntry = (GoogleDriveDirectoryEntry)directoryEntry;
@@ -92,8 +97,12 @@ namespace FubarDev.FtpServer.FileSystem.GoogleDrive
         }
 
         /// <inheritdoc/>
-        public async Task<IUnixFileSystemEntry> MoveAsync(IUnixDirectoryEntry parent, IUnixFileSystemEntry source,
-            IUnixDirectoryEntry target, string fileName, CancellationToken cancellationToken)
+        public async Task<IUnixFileSystemEntry> MoveAsync(
+            IUnixDirectoryEntry parent,
+            IUnixFileSystemEntry source,
+            IUnixDirectoryEntry target,
+            string fileName,
+            CancellationToken cancellationToken)
         {
             var parentEntry = (GoogleDriveDirectoryEntry)parent;
             var targetEntry = (GoogleDriveDirectoryEntry)target;
@@ -101,15 +110,23 @@ namespace FubarDev.FtpServer.FileSystem.GoogleDrive
 
             if (source is GoogleDriveFileEntry sourceFileEntry)
             {
-                var newFile = await MoveItem(parentEntry.File.Id, targetEntry.File.Id, sourceFileEntry.File.Id,
-                    fileName, cancellationToken);
+                var newFile = await MoveItem(
+                    parentEntry.File.Id,
+                    targetEntry.File.Id,
+                    sourceFileEntry.File.Id,
+                    fileName,
+                    cancellationToken);
                 return new GoogleDriveFileEntry(this, newFile, targetName);
             }
             else
             {
-                var sourceDirEntry = ((GoogleDriveDirectoryEntry)source);
-                var newDir = await MoveItem(parentEntry.File.Id, targetEntry.File.Id, sourceDirEntry.File.Id,
-                    fileName, cancellationToken);
+                var sourceDirEntry = (GoogleDriveDirectoryEntry)source;
+                var newDir = await MoveItem(
+                    parentEntry.File.Id,
+                    targetEntry.File.Id,
+                    sourceDirEntry.File.Id,
+                    fileName,
+                    cancellationToken);
                 return new GoogleDriveDirectoryEntry(this, newDir, targetName);
             }
         }
@@ -134,8 +151,10 @@ namespace FubarDev.FtpServer.FileSystem.GoogleDrive
         }
 
         /// <inheritdoc/>
-        public async Task<IUnixDirectoryEntry> CreateDirectoryAsync(IUnixDirectoryEntry targetDirectory,
-            string directoryName, CancellationToken cancellationToken)
+        public async Task<IUnixDirectoryEntry> CreateDirectoryAsync(
+            IUnixDirectoryEntry targetDirectory,
+            string directoryName,
+            CancellationToken cancellationToken)
         {
             var dirEntry = (GoogleDriveDirectoryEntry)targetDirectory;
             var body = new File
@@ -143,20 +162,24 @@ namespace FubarDev.FtpServer.FileSystem.GoogleDrive
                 Name = directoryName,
                 Parents = new List<string>()
                 {
-                    dirEntry.File.Id
-                }
+                    dirEntry.File.Id,
+                },
             }.AsDirectory();
 
             var request = Service.Files.Create(body);
             request.Fields = FileExtensions.DefaultFileFields;
             var newDir = await request.ExecuteAsync(cancellationToken);
 
-            return new GoogleDriveDirectoryEntry(this, newDir,
+            return new GoogleDriveDirectoryEntry(
+                this,
+                newDir,
                 FileSystemExtensions.CombinePath(dirEntry.FullName, newDir.Name));
         }
 
         /// <inheritdoc/>
-        public async Task<Stream> OpenReadAsync(IUnixFileEntry fileEntry, long startPosition,
+        public async Task<Stream> OpenReadAsync(
+            IUnixFileEntry fileEntry,
+            long startPosition,
             CancellationToken cancellationToken)
         {
             var from = startPosition != 0 ? (long?)startPosition : null;
@@ -196,15 +219,21 @@ namespace FubarDev.FtpServer.FileSystem.GoogleDrive
         }
 
         /// <inheritdoc/>
-        public Task<IBackgroundTransfer> AppendAsync(IUnixFileEntry fileEntry, long? startPosition, Stream data,
+        public Task<IBackgroundTransfer> AppendAsync(
+            IUnixFileEntry fileEntry,
+            long? startPosition,
+            Stream data,
             CancellationToken cancellationToken)
         {
             throw new NotSupportedException();
         }
 
         /// <inheritdoc/>
-        public async Task<IBackgroundTransfer> CreateAsync(IUnixDirectoryEntry targetDirectory, string fileName,
-            Stream data, CancellationToken cancellationToken)
+        public async Task<IBackgroundTransfer> CreateAsync(
+            IUnixDirectoryEntry targetDirectory,
+            string fileName,
+            Stream data,
+            CancellationToken cancellationToken)
         {
             var targetEntry = (GoogleDriveDirectoryEntry)targetDirectory;
 
@@ -213,8 +242,8 @@ namespace FubarDev.FtpServer.FileSystem.GoogleDrive
                 Name = fileName,
                 Parents = new List<string>()
                 {
-                    targetEntry.File.Id
-                }
+                    targetEntry.File.Id,
+                },
             };
 
             var request = Service.Files.Create(body);
@@ -239,7 +268,9 @@ namespace FubarDev.FtpServer.FileSystem.GoogleDrive
         }
 
         /// <inheritdoc/>
-        public async Task<IBackgroundTransfer> ReplaceAsync(IUnixFileEntry fileEntry, Stream data,
+        public async Task<IBackgroundTransfer> ReplaceAsync(
+            IUnixFileEntry fileEntry,
+            Stream data,
             CancellationToken cancellationToken)
         {
             var fe = (GoogleDriveFileEntry)fileEntry;
@@ -260,14 +291,21 @@ namespace FubarDev.FtpServer.FileSystem.GoogleDrive
         }
 
         /// <inheritdoc/>
-        public async Task<IUnixFileSystemEntry> SetMacTimeAsync(IUnixFileSystemEntry entry, DateTimeOffset? modify,
-            DateTimeOffset? access, DateTimeOffset? create, CancellationToken cancellationToken)
+        public async Task<IUnixFileSystemEntry> SetMacTimeAsync(
+            IUnixFileSystemEntry entry,
+            DateTimeOffset? modify,
+            DateTimeOffset? access,
+            DateTimeOffset? create,
+            CancellationToken cancellationToken)
         {
             var dirEntry = entry as GoogleDriveDirectoryEntry;
             var fileEntry = entry as GoogleDriveFileEntry;
             var item = dirEntry == null ? fileEntry?.File : dirEntry.File;
             if (item == null)
+            {
                 throw new InvalidOperationException();
+            }
+
             var newItemValues = new File()
             {
                 ModifiedTime = modify?.UtcDateTime,
@@ -282,7 +320,10 @@ namespace FubarDev.FtpServer.FileSystem.GoogleDrive
             var fullName = dirEntry == null ? fileEntry.FullName : dirEntry.FullName;
             var targetFullName = FileSystemExtensions.CombinePath(fullName.GetParentPath(), newItem.Name);
             if (dirEntry != null)
+            {
                 return new GoogleDriveDirectoryEntry(this, newItem, targetFullName, dirEntry.IsRoot);
+            }
+
             return new GoogleDriveFileEntry(this, newItem, fullName, fileEntry.Size);
         }
 
@@ -310,9 +351,9 @@ namespace FubarDev.FtpServer.FileSystem.GoogleDrive
         }
 
         /// <summary>
-        /// Dispose the object
+        /// Dispose the object.
         /// </summary>
-        /// <param name="disposing"><code>true</code> when called from <see cref="Dispose()"/></param>
+        /// <param name="disposing"><code>true</code> when called from <see cref="Dispose()"/>.</param>
         private void Dispose(bool disposing)
         {
             if (!_disposedValue)
@@ -326,8 +367,10 @@ namespace FubarDev.FtpServer.FileSystem.GoogleDrive
             }
         }
 
-        private async Task<IReadOnlyList<IUnixFileSystemEntry>> ConvertEntries(GoogleDriveDirectoryEntry dirEntry,
-            Func<Task<IReadOnlyCollection<File>>> getEntriesFunc, CancellationToken cancellationToken)
+        private async Task<IReadOnlyList<IUnixFileSystemEntry>> ConvertEntries(
+            GoogleDriveDirectoryEntry dirEntry,
+            Func<Task<IReadOnlyCollection<File>>> getEntriesFunc,
+            CancellationToken cancellationToken)
         {
             var result = new List<IUnixFileSystemEntry>();
             await _uploadsLock.WaitAsync(cancellationToken);
@@ -386,7 +429,11 @@ namespace FubarDev.FtpServer.FileSystem.GoogleDrive
             return response.Files as IReadOnlyList<File> ?? response.Files.ToList();
         }
 
-        private Task<File> MoveItem(string oldParentId, string newParentId, string fileId, string fileName,
+        private Task<File> MoveItem(
+            string oldParentId,
+            string newParentId,
+            string fileId,
+            string fileName,
             CancellationToken cancellationToken)
         {
             var body = new File

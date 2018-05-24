@@ -8,27 +8,27 @@
 namespace FubarDev.FtpServer
 {
     /// <summary>
-    /// FTP data type (3.1.1)
+    /// FTP data type (3.1.1).
     /// </summary>
     public enum FtpFileType
     {
         /// <summary>
-        /// ASCII data type (3.1.1.1.)
+        /// ASCII data type (3.1.1.1.).
         /// </summary>
         Ascii,
 
         /// <summary>
-        /// EBCDIC data type (3.1.1.2.)
+        /// EBCDIC data type (3.1.1.2.).
         /// </summary>
         Ebcdic,
 
         /// <summary>
-        /// IMAGE data type (3.1.1.3.)
+        /// IMAGE data type (3.1.1.3.).
         /// </summary>
         Image,
 
         /// <summary>
-        /// LOCAL data type (3.1.1.4.)
+        /// LOCAL data type (3.1.1.4.).
         /// </summary>
         Local,
     }

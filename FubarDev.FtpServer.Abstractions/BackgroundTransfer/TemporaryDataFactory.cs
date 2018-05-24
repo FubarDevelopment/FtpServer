@@ -1,4 +1,4 @@
-﻿// <copyright file="TemporaryDataFactory.cs" company="Fubar Development Junker">
+// <copyright file="TemporaryDataFactory.cs" company="Fubar Development Junker">
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
@@ -13,17 +13,10 @@ using FubarDev.FtpServer.FileSystem;
 namespace FubarDev.FtpServer.BackgroundTransfer
 {
     /// <summary>
-    /// Factory to create <see cref="ITemporaryData"/> objects
+    /// Factory to create <see cref="ITemporaryData"/> objects.
     /// </summary>
     public class TemporaryDataFactory : ITemporaryDataFactory
     {
-        /// <summary>
-        /// The delegate to create temporary data objects
-        /// </summary>
-        /// <param name="input">The data for the temporary data objects</param>
-        /// <param name="cancellationToken">The cancellation token</param>
-        protected delegate Task<ITemporaryData> CreateAsyncDelegate(Stream input, CancellationToken cancellationToken);
-
         private readonly List<TemporaryDataCreator> _creators = new List<TemporaryDataCreator>();
 
         /// <summary>
@@ -37,6 +30,14 @@ namespace FubarDev.FtpServer.BackgroundTransfer
             // Temporary file for data sizes > 4MB
             _creators.Add(new TemporaryDataCreator(4194304, int.MinValue, CreateTempFileAsync));
         }
+
+        /// <summary>
+        /// The delegate to create temporary data objects.
+        /// </summary>
+        /// <param name="input">The data for the temporary data objects.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        protected delegate Task<ITemporaryData> CreateAsyncDelegate(Stream input, CancellationToken cancellationToken);
 
         /// <inheritdoc />
         public Task<ITemporaryData> CreateAsync(Stream input, long? expectedSize, CancellationToken cancellationToken)
@@ -66,10 +67,10 @@ namespace FubarDev.FtpServer.BackgroundTransfer
         }
 
         /// <summary>
-        /// Adds a creator for the given minimum size
+        /// Adds a creator for the given minimum size.
         /// </summary>
-        /// <param name="minimumSize">The minimum size required to use the passed creation function</param>
-        /// <param name="createAsyncDelegate">The creation function when the expected size exceeds the minimum size</param>
+        /// <param name="minimumSize">The minimum size required to use the passed creation function.</param>
+        /// <param name="createAsyncDelegate">The creation function when the expected size exceeds the minimum size.</param>
         protected void AddCreator(long minimumSize, CreateAsyncDelegate createAsyncDelegate)
         {
             _creators.Add(new TemporaryDataCreator(minimumSize, 0, createAsyncDelegate));

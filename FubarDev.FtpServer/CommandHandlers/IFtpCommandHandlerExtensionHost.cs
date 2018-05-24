@@ -1,4 +1,4 @@
-﻿// <copyright file="IFtpCommandHandlerExtensionHost.cs" company="Fubar Development Junker">
+// <copyright file="IFtpCommandHandlerExtensionHost.cs" company="Fubar Development Junker">
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
@@ -14,7 +14,7 @@ namespace FubarDev.FtpServer.CommandHandlers
     public interface IFtpCommandHandlerExtensionHost : IFtpCommandHandler
     {
         /// <summary>
-        /// Gets the extensions hosted by the <see cref="FtpCommandHandler"/>
+        /// Gets the extensions hosted by the <see cref="FtpCommandHandler"/>.
         /// </summary>
         [NotNull]
         IDictionary<string, IFtpCommandHandlerExtension> Extensions { get; }

@@ -1,4 +1,4 @@
-﻿// <copyright file="GenericFeatureInfo.cs" company="Fubar Development Junker">
+// <copyright file="GenericFeatureInfo.cs" company="Fubar Development Junker">
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
@@ -10,7 +10,7 @@ using JetBrains.Annotations;
 namespace FubarDev.FtpServer
 {
     /// <summary>
-    /// Generic feature information
+    /// Generic feature information.
     /// </summary>
     public class GenericFeatureInfo : IFeatureInfo
     {
@@ -21,8 +21,8 @@ namespace FubarDev.FtpServer
         /// <summary>
         /// Initializes a new instance of the <see cref="GenericFeatureInfo"/> class.
         /// </summary>
-        /// <param name="name">The feature name</param>
-        /// <param name="additionalNames">The additional feature names</param>
+        /// <param name="name">The feature name.</param>
+        /// <param name="additionalNames">The additional feature names.</param>
         public GenericFeatureInfo([NotNull] string name, [NotNull, ItemNotNull] params string[] additionalNames)
             : this(name, null, additionalNames)
         {
@@ -31,15 +31,18 @@ namespace FubarDev.FtpServer
         /// <summary>
         /// Initializes a new instance of the <see cref="GenericFeatureInfo"/> class.
         /// </summary>
-        /// <param name="name">The feature name</param>
-        /// <param name="toString">The function to use to create a <code>FEAT</code> string</param>
-        /// <param name="additionalNames">The additional feature names</param>
+        /// <param name="name">The feature name.</param>
+        /// <param name="toString">The function to use to create a <code>FEAT</code> string.</param>
+        /// <param name="additionalNames">The additional feature names.</param>
         public GenericFeatureInfo([NotNull] string name, [CanBeNull] Func<IFtpConnection, string> toString, [NotNull, ItemNotNull] params string[] additionalNames)
         {
             _name = name;
             var names = new HashSet<string> { name };
             foreach (var additionalName in additionalNames)
+            {
                 names.Add(additionalName);
+            }
+
             Names = names;
             _toString = toString;
         }
@@ -51,7 +54,10 @@ namespace FubarDev.FtpServer
         public string BuildInfo(IFtpConnection connection)
         {
             if (_toString == null)
+            {
                 return _name;
+            }
+
             return _toString(connection);
         }
     }

@@ -13,17 +13,17 @@ using JetBrains.Annotations;
 namespace FubarDev.FtpServer
 {
     /// <summary>
-    /// Extension methods for <see cref="IUnixPermissions"/>
+    /// Extension methods for <see cref="IUnixPermissions"/>.
     /// </summary>
     public static class PermissionsExtensions
     {
         /// <summary>
-        /// Gets the effective access mode for an <paramref name="entity"/> for the given <paramref name="user"/>
+        /// Gets the effective access mode for an <paramref name="entity"/> for the given <paramref name="user"/>.
         /// </summary>
-        /// <param name="permissions">The permissions used to build the access mode</param>
-        /// <param name="entity">The entity owner information</param>
-        /// <param name="user">The FTP user to determine the access mode for</param>
-        /// <returns>The effective access mode for the <paramref name="user"/></returns>
+        /// <param name="permissions">The permissions used to build the access mode.</param>
+        /// <param name="entity">The entity owner information.</param>
+        /// <param name="user">The FTP user to determine the access mode for.</param>
+        /// <returns>The effective access mode for the <paramref name="user"/>.</returns>
         [NotNull]
         public static IAccessMode GetAccessModeFor([NotNull] this IUnixPermissions permissions, [NotNull] IUnixOwner entity, [NotNull] IFtpUser user)
         {

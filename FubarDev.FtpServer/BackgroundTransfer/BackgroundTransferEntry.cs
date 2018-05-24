@@ -36,12 +36,16 @@ namespace FubarDev.FtpServer.BackgroundTransfer
             get
             {
                 lock (_sync)
+                {
                     return _transferred;
+                }
             }
             set
             {
                 lock (_sync)
+                {
                     _transferred = value;
+                }
             }
         }
     }

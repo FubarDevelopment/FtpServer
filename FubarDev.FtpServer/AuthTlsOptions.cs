@@ -7,12 +7,12 @@ using System.Security.Cryptography.X509Certificates;
 namespace FubarDev.FtpServer
 {
     /// <summary>
-    /// Options for SSL/TLS connections
+    /// Options for SSL/TLS connections.
     /// </summary>
     public class AuthTlsOptions
     {
         /// <summary>
-        /// Gets or sets the server certificate
+        /// Gets or sets the server certificate.
         /// </summary>
         public X509Certificate2 ServerCertificate { get; set; }
     }

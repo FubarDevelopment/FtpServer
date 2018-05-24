@@ -25,8 +25,8 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// <summary>
         /// Initializes a new instance of the <see cref="DeleCommandHandler"/> class.
         /// </summary>
-        /// <param name="connection">The connection to create this command handler for</param>
-        /// <param name="logger">The logger</param>
+        /// <param name="connection">The connection to create this command handler for.</param>
+        /// <param name="logger">The logger.</param>
         public DeleCommandHandler(IFtpConnection connection, ILogger<DeleCommandHandler> logger)
             : base(connection, "DELE")
         {
@@ -40,7 +40,10 @@ namespace FubarDev.FtpServer.CommandHandlers
             var currentPath = Data.Path.Clone();
             var fileInfo = await Data.FileSystem.SearchFileAsync(currentPath, path, cancellationToken).ConfigureAwait(false);
             if (fileInfo?.Entry == null)
+            {
                 return new FtpResponse(550, "File does not exist.");
+            }
+
             try
             {
                 await Data.FileSystem.UnlinkAsync(fileInfo.Entry, cancellationToken).ConfigureAwait(false);

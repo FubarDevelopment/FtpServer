@@ -11,17 +11,17 @@ using JetBrains.Annotations;
 namespace FubarDev.FtpServer.CommandExtensions
 {
     /// <summary>
-    /// The base class for FTP command extensions
+    /// The base class for FTP command extensions.
     /// </summary>
     public abstract class FtpCommandHandlerExtension : IFtpCommandHandlerExtension
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="FtpCommandHandlerExtension"/> class.
         /// </summary>
-        /// <param name="connection">The connection this instance is used for</param>
-        /// <param name="extensionFor">The name of the command this extension is for</param>
-        /// <param name="name">The command name</param>
-        /// <param name="alternativeNames">Alternative names</param>
+        /// <param name="connection">The connection this instance is used for.</param>
+        /// <param name="extensionFor">The name of the command this extension is for.</param>
+        /// <param name="name">The command name.</param>
+        /// <param name="alternativeNames">Alternative names.</param>
         protected FtpCommandHandlerExtension([NotNull] IFtpConnection connection, [NotNull] string extensionFor, [NotNull] string name, [NotNull, ItemNotNull] params string[] alternativeNames)
         {
             var names = new List<string>
@@ -44,13 +44,13 @@ namespace FubarDev.FtpServer.CommandExtensions
         public string ExtensionFor { get; }
 
         /// <summary>
-        /// Gets the connection this command was created for
+        /// Gets the connection this command was created for.
         /// </summary>
         [NotNull]
         protected IFtpConnection Connection { get; }
 
         /// <summary>
-        /// Gets the connection data
+        /// Gets the connection data.
         /// </summary>
         [NotNull]
         protected FtpConnectionData Data => Connection.Data;

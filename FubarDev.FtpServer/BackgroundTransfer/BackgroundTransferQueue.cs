@@ -43,7 +43,10 @@ namespace FubarDev.FtpServer.BackgroundTransfer
             lock (_syncRoot)
             {
                 if (_disposedValue)
+                {
                     throw new ObjectDisposedException("_queue");
+                }
+
                 _queue.Enqueue(transfer);
                 _event.Set();
             }
@@ -55,10 +58,16 @@ namespace FubarDev.FtpServer.BackgroundTransfer
             lock (_syncRoot)
             {
                 if (_queue.Count == 0)
+                {
                     return null;
+                }
+
                 var result = _queue.Dequeue();
                 if (_queue.Count == 0)
+                {
                     _event.Reset();
+                }
+
                 return result;
             }
         }

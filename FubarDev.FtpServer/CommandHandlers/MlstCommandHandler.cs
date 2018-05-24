@@ -20,7 +20,7 @@ using Microsoft.Extensions.Logging;
 namespace FubarDev.FtpServer.CommandHandlers
 {
     /// <summary>
-    /// The implementation of the <code>MLST</code> command
+    /// The implementation of the <code>MLST</code> command.
     /// </summary>
     public class MlstCommandHandler : FtpCommandHandler
     {
@@ -35,7 +35,9 @@ namespace FubarDev.FtpServer.CommandHandlers
         {
             connection.Data.ActiveMlstFacts.Clear();
             foreach (var knownFact in _knownFacts)
+            {
                 connection.Data.ActiveMlstFacts.Add(knownFact);
+            }
         }
 
         /// <inheritdoc/>
@@ -55,7 +57,10 @@ namespace FubarDev.FtpServer.CommandHandlers
         {
             var listDir = string.Equals(command.Name, "MLSD", StringComparison.OrdinalIgnoreCase);
             if (listDir)
+            {
                 return ProcessMlsdAsync(command, cancellationToken);
+            }
+
             return ProcessMlstAsync(command, cancellationToken);
         }
 
@@ -84,7 +89,10 @@ namespace FubarDev.FtpServer.CommandHandlers
             {
                 var foundEntry = await Data.FileSystem.SearchEntryAsync(path, argument, cancellationToken).ConfigureAwait(false);
                 if (foundEntry?.Entry == null)
+                {
                     return new FtpResponse(550, "File system entry not found.");
+                }
+
                 targetEntry = foundEntry.Entry;
             }
 
@@ -120,12 +128,20 @@ namespace FubarDev.FtpServer.CommandHandlers
             {
                 var foundEntry = await Data.FileSystem.SearchEntryAsync(path, argument, cancellationToken).ConfigureAwait(false);
                 if (foundEntry?.Entry == null)
+                {
                     return new FtpResponse(550, "File system entry not found.");
+                }
+
                 dirEntry = foundEntry.Entry as IUnixDirectoryEntry;
                 if (dirEntry == null)
+                {
                     return new FtpResponse(501, "Not a directory.");
+                }
+
                 if (!dirEntry.IsRoot)
+                {
                     path.Push(dirEntry);
+                }
             }
 
             await Connection.WriteAsync(new FtpResponse(150, "Opening data connection."), cancellationToken).ConfigureAwait(false);
@@ -177,7 +193,10 @@ namespace FubarDev.FtpServer.CommandHandlers
             foreach (var fact in facts)
             {
                 if (!_knownFacts.Contains(fact))
+                {
                     return Task.FromResult(new FtpResponse(501, "Syntax error in parameters or arguments."));
+                }
+
                 Connection.Data.ActiveMlstFacts.Add(fact);
             }
             return Task.FromResult(new FtpResponse(200, "Command okay."));

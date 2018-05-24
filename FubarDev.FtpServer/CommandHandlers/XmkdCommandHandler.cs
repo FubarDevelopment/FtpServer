@@ -21,7 +21,7 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// <summary>
         /// Initializes a new instance of the <see cref="XmkdCommandHandler"/> class.
         /// </summary>
-        /// <param name="connection">The connection to create this command handler for</param>
+        /// <param name="connection">The connection to create this command handler for.</param>
         public XmkdCommandHandler(IFtpConnection connection)
             : base(connection, "XMKD")
         {
@@ -34,9 +34,15 @@ namespace FubarDev.FtpServer.CommandHandlers
             var currentPath = Data.Path.Clone();
             var dirInfo = await Data.FileSystem.SearchDirectoryAsync(currentPath, directoryName, cancellationToken).ConfigureAwait(false);
             if (dirInfo == null)
+            {
                 return new FtpResponse(550, "Not a valid directory.");
+            }
+
             if (dirInfo.FileName == null)
+            {
                 return new FtpResponse(550, "ROOT folder not allowed.");
+            }
+
             if (dirInfo.Entry != null)
             {
                 await Connection.WriteAsync($"521-\"{currentPath.GetFullPath(dirInfo.FileName)}\" directory already exists", cancellationToken).ConfigureAwait(false);

@@ -1,4 +1,4 @@
-﻿//-----------------------------------------------------------------------
+//-----------------------------------------------------------------------
 // <copyright file="BackgroundCommandHandler.cs" company="Fubar Development Junker">
 //     Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
@@ -12,12 +12,14 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
+#if !NETSTANDARD1_3
 using Microsoft.Extensions.Logging;
+#endif
 
 namespace FubarDev.FtpServer.BackgroundTransfer
 {
     /// <summary>
-    /// Asynchronous processing of an FTP command
+    /// Asynchronous processing of an FTP command.
     /// </summary>
     /// <remarks>
     /// This allows the implementation of the <code>ABOR</code> command.
@@ -46,7 +48,9 @@ namespace FubarDev.FtpServer.BackgroundTransfer
             lock (_syncRoot)
             {
                 if (_handlerTask != null)
+                {
                     return null;
+                }
 
                 _cancellationTokenSource = new CancellationTokenSource();
                 _handlerTask = handler.Process(command, _cancellationTokenSource.Token);
@@ -115,22 +119,27 @@ namespace FubarDev.FtpServer.BackgroundTransfer
                     Debug.WriteLine($"{DateTimeOffset.UtcNow} Background task finished with response {response}");
 
                     lock (_syncRoot)
+                    {
                         _handlerTask = null;
+                    }
 
                     return response;
                 });
         }
 
         /// <summary>
-        /// Cancels the processing of the current command
+        /// Cancels the processing of the current command.
         /// </summary>
-        /// <returns><code>true</code> when there was a command execution that could be cancelled</returns>
+        /// <returns><code>true</code> when there was a command execution that could be cancelled.</returns>
         public bool Cancel()
         {
             lock (_syncRoot)
             {
                 if (_handlerTask == null)
+                {
                     return false;
+                }
+
                 _cancellationTokenSource.Cancel(true);
                 return true;
             }
@@ -140,7 +149,10 @@ namespace FubarDev.FtpServer.BackgroundTransfer
         public void Dispose()
         {
             if (!_cancellationTokenSource.IsCancellationRequested)
+            {
                 _cancellationTokenSource.Cancel(true);
+            }
+
             _cancellationTokenRegistration.Dispose();
             _cancellationTokenSource.Dispose();
         }

@@ -1,11 +1,11 @@
-﻿// <copyright file="CurrentDirectoryFact.cs" company="Fubar Development Junker">
+// <copyright file="CurrentDirectoryFact.cs" company="Fubar Development Junker">
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
 namespace FubarDev.FtpServer.ListFormatters.Facts
 {
     /// <summary>
-    /// The <code>cdir</code> fact
+    /// The <code>cdir</code> fact.
     /// </summary>
     public class CurrentDirectoryFact : TypeFact
     {

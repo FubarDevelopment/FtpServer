@@ -1,8 +1,7 @@
-﻿// <copyright file="FileExtensions.cs" company="Fubar Development Junker">
+// <copyright file="FileExtensions.cs" company="Fubar Development Junker">
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
-using Google.Apis.Drive.v3;
 using Google.Apis.Drive.v3.Data;
 
 namespace FubarDev.FtpServer.FileSystem.GoogleDrive

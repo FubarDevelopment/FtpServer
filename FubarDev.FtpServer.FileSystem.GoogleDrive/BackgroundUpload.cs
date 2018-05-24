@@ -1,4 +1,4 @@
-﻿// <copyright file="BackgroundUpload.cs" company="Fubar Development Junker">
+// <copyright file="BackgroundUpload.cs" company="Fubar Development Junker">
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
@@ -16,7 +16,7 @@ using JetBrains.Annotations;
 namespace FubarDev.FtpServer.FileSystem.GoogleDrive
 {
     /// <summary>
-    /// This class performs the upload in the background
+    /// This class performs the upload in the background.
     /// </summary>
     internal class BackgroundUpload : IBackgroundTransfer
     {
@@ -31,10 +31,10 @@ namespace FubarDev.FtpServer.FileSystem.GoogleDrive
         /// <summary>
         /// Initializes a new instance of the <see cref="BackgroundUpload"/> class.
         /// </summary>
-        /// <param name="fullPath">The full path to this item</param>
-        /// <param name="file">The file to upload to</param>
-        /// <param name="tempData">The temporary data used to read from</param>
-        /// <param name="fileSystem">The file system that initiated this background upload</param>
+        /// <param name="fullPath">The full path to this item.</param>
+        /// <param name="file">The file to upload to.</param>
+        /// <param name="tempData">The temporary data used to read from.</param>
+        /// <param name="fileSystem">The file system that initiated this background upload.</param>
         public BackgroundUpload([NotNull] string fullPath, [NotNull] File file, [NotNull] ITemporaryData tempData, [NotNull] GoogleDriveFileSystem fileSystem)
         {
             TransferId = fullPath;
@@ -44,12 +44,12 @@ namespace FubarDev.FtpServer.FileSystem.GoogleDrive
         }
 
         /// <summary>
-        /// Gets the file to upload to
+        /// Gets the file to upload to.
         /// </summary>
         public File File { get; }
 
         /// <summary>
-        /// Gets the file size
+        /// Gets the file size.
         /// </summary>
         public long FileSize => _tempData.Size;
 
@@ -67,7 +67,9 @@ namespace FubarDev.FtpServer.FileSystem.GoogleDrive
                     upload.ProgressChanged += (uploadProgress) => { progress.Report(uploadProgress.BytesSent); };
                     var result = await upload.UploadAsync(cancellationToken);
                     if (result.Status == UploadStatus.Failed)
+                    {
                         throw new Exception(result.Exception.Message, result.Exception);
+                    }
                 }
                 finally
                 {
@@ -84,9 +86,9 @@ namespace FubarDev.FtpServer.FileSystem.GoogleDrive
         }
 
         /// <summary>
-        /// Dispose the object
+        /// Dispose the object.
         /// </summary>
-        /// <param name="disposing"><code>true</code> when called from <see cref="Dispose()"/></param>
+        /// <param name="disposing"><code>true</code> when called from <see cref="Dispose()"/>.</param>
         protected virtual void Dispose(bool disposing)
         {
             if (!_disposedValue)
@@ -95,7 +97,9 @@ namespace FubarDev.FtpServer.FileSystem.GoogleDrive
                 {
                     _tempData.Dispose();
                     if (!_notifiedAsFinished)
+                    {
                         _fileSystem.UploadFinished(File.Id);
+                    }
                 }
                 _disposedValue = true;
             }

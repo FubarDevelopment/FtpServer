@@ -27,7 +27,7 @@ using Microsoft.Extensions.Options;
 namespace FubarDev.FtpServer
 {
     /// <summary>
-    /// This class represents a FTP connection
+    /// This class represents a FTP connection.
     /// </summary>
     public sealed class FtpConnection : IFtpConnection
     {
@@ -46,10 +46,10 @@ namespace FubarDev.FtpServer
         /// <summary>
         /// Initializes a new instance of the <see cref="FtpConnection"/> class.
         /// </summary>
-        /// <param name="socket">The socket to use to communicate with the client</param>
-        /// <param name="logger">The logger for the FTP connection</param>
-        /// <param name="options">The options for the FTP connection</param>
-        /// <param name="serviceProvider">The service provider used to query services</param>
+        /// <param name="socket">The socket to use to communicate with the client.</param>
+        /// <param name="logger">The logger for the FTP connection.</param>
+        /// <param name="options">The options for the FTP connection.</param>
+        /// <param name="serviceProvider">The service provider used to query services.</param>
         public FtpConnection(
             [NotNull] TcpClient socket,
             [CanBeNull] ILogger<IFtpConnection> logger,
@@ -84,7 +84,9 @@ namespace FubarDev.FtpServer
 
                     var extensions = serviceProvider.GetRequiredService<IEnumerable<IFtpCommandHandlerExtension>>().ToList();
                     foreach (var handler in commandHandlers)
+                    {
                         extensions.AddRange(handler.GetExtensions());
+                    }
 
                     // Register extensions with commands
                     foreach (var extension in extensions)
@@ -136,12 +138,12 @@ namespace FubarDev.FtpServer
         public Address RemoteAddress { get; }
 
         /// <summary>
-        /// Gets the cancellation token to use to signal a task cancellation
+        /// Gets the cancellation token to use to signal a task cancellation.
         /// </summary>
         CancellationToken IFtpConnection.CancellationToken => _cancellationTokenSource.Token;
 
         /// <summary>
-        /// Starts processing of messages for this connection
+        /// Starts processing of messages for this connection.
         /// </summary>
         public void Start()
         {
@@ -149,7 +151,7 @@ namespace FubarDev.FtpServer
         }
 
         /// <summary>
-        /// Closes the connection
+        /// Closes the connection.
         /// </summary>
         public void Close()
         {
@@ -158,11 +160,11 @@ namespace FubarDev.FtpServer
         }
 
         /// <summary>
-        /// Writes a FTP response to a client
+        /// Writes a FTP response to a client.
         /// </summary>
-        /// <param name="response">The response to write to the client</param>
-        /// <param name="cancellationToken">The cancellation token</param>
-        /// <returns>The task</returns>
+        /// <param name="response">The response to write to the client.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <returns>The task.</returns>
         public async Task WriteAsync(FtpResponse response, CancellationToken cancellationToken)
         {
             if (!_closed)
@@ -175,11 +177,11 @@ namespace FubarDev.FtpServer
         }
 
         /// <summary>
-        /// Writes response to a client
+        /// Writes response to a client.
         /// </summary>
-        /// <param name="response">The response to write to the client</param>
-        /// <param name="cancellationToken">The cancellation token</param>
-        /// <returns>The task</returns>
+        /// <param name="response">The response to write to the client.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <returns>The task.</returns>
         public async Task WriteAsync(string response, CancellationToken cancellationToken)
         {
             if (!_closed)
@@ -191,9 +193,9 @@ namespace FubarDev.FtpServer
         }
 
         /// <summary>
-        /// Creates a response socket for e.g. LIST/NLST
+        /// Creates a response socket for e.g. LIST/NLST.
         /// </summary>
-        /// <returns>The data connection</returns>
+        /// <returns>The data connection.</returns>
         [NotNull]
         [ItemNotNull]
         public async Task<TcpClient> CreateResponseSocket()
@@ -207,20 +209,25 @@ namespace FubarDev.FtpServer
             }
 
             if (Data.PassiveSocketClient == null)
+            {
                 throw new InvalidOperationException("Passive connection expected, but none found");
+            }
 
             return Data.PassiveSocketClient;
         }
 
         /// <summary>
-        /// Create an encrypted stream
+        /// Create an encrypted stream.
         /// </summary>
-        /// <param name="unencryptedStream">The stream to encrypt</param>
-        /// <returns>The encrypted stream</returns>
+        /// <param name="unencryptedStream">The stream to encrypt.</param>
+        /// <returns>The encrypted stream.</returns>
         public Task<Stream> CreateEncryptedStream(Stream unencryptedStream)
         {
             if (Data.CreateEncryptedStream == null)
+            {
                 return Task.FromResult(unencryptedStream);
+            }
+
             return Data.CreateEncryptedStream(unencryptedStream);
         }
 
@@ -228,7 +235,10 @@ namespace FubarDev.FtpServer
         public void Dispose()
         {
             if (!_closed)
+            {
                 Close();
+            }
+
             if (!ReferenceEquals(SocketStream, OriginalStream))
             {
                 SocketStream.Dispose();
@@ -241,9 +251,9 @@ namespace FubarDev.FtpServer
         }
 
         /// <summary>
-        /// Writes a FTP response to a client
+        /// Writes a FTP response to a client.
         /// </summary>
-        /// <param name="response">The response to write to the client</param>
+        /// <param name="response">The response to write to the client.</param>
         private void Write([NotNull] FtpResponse response)
         {
             if (!_closed)
@@ -269,11 +279,15 @@ namespace FubarDev.FtpServer
                     for (; ;)
                     {
                         if (readTask == null)
+                        {
                             readTask = SocketStream.ReadAsync(buffer, 0, buffer.Length, _cancellationTokenSource.Token);
+                        }
 
                         var tasks = new List<Task>() { readTask };
                         if (_activeBackgroundTask != null)
+                        {
                             tasks.Add(_activeBackgroundTask);
+                        }
 
                         Debug.WriteLine($"Waiting for {tasks.Count} tasks");
                         var completedTask = Task.WaitAny(tasks.ToArray(), _cancellationTokenSource.Token);
@@ -282,7 +296,10 @@ namespace FubarDev.FtpServer
                         {
                             var response = _activeBackgroundTask?.Result;
                             if (response != null)
+                            {
                                 Write(response);
+                            }
+
                             _activeBackgroundTask = null;
                         }
                         else
@@ -290,7 +307,10 @@ namespace FubarDev.FtpServer
                             var bytesRead = readTask.Result;
                             readTask = null;
                             if (bytesRead == 0)
+                            {
                                 break;
+                            }
+
                             var commands = collector.Collect(buffer, 0, bytesRead);
                             foreach (var command in commands)
                             {
@@ -374,13 +394,18 @@ namespace FubarDev.FtpServer
                 response = new FtpResponse(500, "Syntax error, command unrecognized.");
             }
             if (response != null)
+            {
                 await WriteAsync(response, _cancellationTokenSource.Token).ConfigureAwait(false);
+            }
         }
 
         private Tuple<FtpCommand, IFtpCommandBase, bool> FindCommandHandler(FtpCommand command)
         {
             if (!CommandHandlers.TryGetValue(command.Name, out var handler))
+            {
                 return null;
+            }
+
             var extensionHost = handler as IFtpCommandHandlerExtensionHost;
             if (!string.IsNullOrWhiteSpace(command.Argument) && extensionHost != null)
             {

@@ -28,8 +28,8 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// <summary>
         /// Initializes a new instance of the <see cref="AppeCommandHandler"/> class.
         /// </summary>
-        /// <param name="connection">The connection to create this command handler for</param>
-        /// <param name="server">The FTP server</param>
+        /// <param name="connection">The connection to create this command handler for.</param>
+        /// <param name="server">The FTP server.</param>
         public AppeCommandHandler([NotNull] IFtpConnection connection, [NotNull] FtpServer server)
             : base(connection, "APPE")
         {
@@ -46,17 +46,27 @@ namespace FubarDev.FtpServer.CommandHandlers
             Data.RestartPosition = null;
 
             if (!Data.TransferMode.IsBinary && Data.TransferMode.FileType != FtpFileType.Ascii)
+            {
                 throw new NotSupportedException();
+            }
 
             var fileName = command.Argument;
             if (string.IsNullOrEmpty(fileName))
+            {
                 return new FtpResponse(501, "No file name specified");
+            }
+
             var currentPath = Data.Path.Clone();
             var fileInfo = await Data.FileSystem.SearchFileAsync(currentPath, fileName, cancellationToken).ConfigureAwait(false);
             if (fileInfo == null)
+            {
                 return new FtpResponse(550, "Not a valid directory.");
+            }
+
             if (fileInfo.FileName == null)
+            {
                 return new FtpResponse(553, "File name not allowed.");
+            }
 
             await Connection.WriteAsync(new FtpResponse(150, "Opening connection for data transfer."), cancellationToken).ConfigureAwait(false);
 
@@ -100,7 +110,9 @@ namespace FubarDev.FtpServer.CommandHandlers
                 }
 
                 if (backgroundTransfer != null)
+                {
                     _server.EnqueueBackgroundTransfer(backgroundTransfer, Connection);
+                }
             }
 
             return new FtpResponse(226, "Uploaded file successfully.");

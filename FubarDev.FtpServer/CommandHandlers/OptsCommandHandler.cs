@@ -23,7 +23,7 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// <summary>
         /// Initializes a new instance of the <see cref="OptsCommandHandler"/> class.
         /// </summary>
-        /// <param name="connection">The connection to create this command handler for</param>
+        /// <param name="connection">The connection to create this command handler for.</param>
         public OptsCommandHandler(IFtpConnection connection)
             : base(connection, "OPTS")
         {
@@ -50,7 +50,9 @@ namespace FubarDev.FtpServer.CommandHandlers
         {
             var argument = FtpCommand.Parse(command.Argument);
             if (!Extensions.TryGetValue(argument.Name, out var extension))
+            {
                 return new FtpResponse(500, "Syntax error, command unrecognized.");
+            }
 
             return await extension.Process(argument, cancellationToken).ConfigureAwait(false);
         }

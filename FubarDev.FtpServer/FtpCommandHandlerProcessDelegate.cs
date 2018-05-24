@@ -1,4 +1,4 @@
-﻿// <copyright file="FtpCommandHandlerProcessDelegate.cs" company="Fubar Development Junker">
+// <copyright file="FtpCommandHandlerProcessDelegate.cs" company="Fubar Development Junker">
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
@@ -10,11 +10,11 @@ using JetBrains.Annotations;
 namespace FubarDev.FtpServer
 {
     /// <summary>
-    /// Processes the command
+    /// Processes the command.
     /// </summary>
-    /// <param name="command">The command to process</param>
-    /// <param name="cancellationToken">The cancellation token to signal command abortion</param>
-    /// <returns>The FTP response</returns>
+    /// <param name="command">The command to process.</param>
+    /// <param name="cancellationToken">The cancellation token to signal command abortion.</param>
+    /// <returns>The FTP response.</returns>
     [NotNull]
     [ItemCanBeNull]
     public delegate Task<FtpResponse> FtpCommandHandlerProcessDelegate([NotNull] FtpCommand command, CancellationToken cancellationToken);

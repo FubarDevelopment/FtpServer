@@ -7,12 +7,12 @@ using JetBrains.Annotations;
 namespace FubarDev.FtpServer
 {
     /// <summary>
-    /// Interface for command handler extensions
+    /// Interface for command handler extensions.
     /// </summary>
     public interface IFtpCommandHandlerExtension : IFtpCommandBase
     {
         /// <summary>
-        /// Gets a value indicating whether a login is required to execute this command
+        /// Gets a value indicating whether a login is required to execute this command.
         /// </summary>
         bool? IsLoginRequired { get; }
 

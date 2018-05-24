@@ -14,13 +14,13 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
+using DotNet.Globbing;
+
 using FubarDev.FtpServer.FileSystem;
 using FubarDev.FtpServer.ListFormatters;
 using FubarDev.FtpServer.Utilities;
 
 using Microsoft.Extensions.Logging;
-
-using Minimatch;
 
 namespace FubarDev.FtpServer.CommandHandlers
 {
@@ -32,7 +32,7 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// <summary>
         /// Initializes a new instance of the <see cref="ListCommandHandler"/> class.
         /// </summary>
-        /// <param name="connection">The connection to create this command handler for</param>
+        /// <param name="connection">The connection to create this command handler for.</param>
         public ListCommandHandler(IFtpConnection connection)
             : base(connection, "LIST", "NLST", "LS")
         {
@@ -83,7 +83,10 @@ namespace FubarDev.FtpServer.CommandHandlers
                 {
                     var foundEntry = await Data.FileSystem.SearchEntryAsync(path, argument.Path, cancellationToken).ConfigureAwait(false);
                     if (foundEntry?.Directory == null)
+                    {
                         return new FtpResponse(550, "File system entry not found.");
+                    }
+
                     if (!(foundEntry.Entry is IUnixDirectoryEntry dirEntry))
                     {
                         mask = foundEntry.FileName;
@@ -120,14 +123,10 @@ namespace FubarDev.FtpServer.CommandHandlers
                             await writer.WriteLineAsync(line).ConfigureAwait(false);
                         }
 
-                        var mmOptions = new Options()
-                        {
-                            IgnoreCase = Data.FileSystem.FileSystemEntryComparer.Equals("a", "A"),
-                            NoGlobStar = true,
-                            Dot = true,
-                        };
+                        var globOptions = new GlobOptions();
+                        globOptions.Evaluation.CaseInsensitive = Data.FileSystem.FileSystemEntryComparer.Equals("a", "A");
 
-                        var mm = new Minimatcher(mask, mmOptions);
+                        var glob = Glob.Parse(mask, globOptions);
 
                         var entries = await Data.FileSystem.GetEntriesAsync(currentDirEntry, cancellationToken).ConfigureAwait(false);
                         var enumerator = new DirectoryListingEnumerator(entries, Data.FileSystem, currentPath, true);
@@ -136,10 +135,15 @@ namespace FubarDev.FtpServer.CommandHandlers
                             var name = enumerator.Name;
                             if (!enumerator.IsDotEntry)
                             {
-                                if (!mm.IsMatch(name))
+                                if (!glob.IsMatch(name))
+                                {
                                     continue;
+                                }
+
                                 if (name.StartsWith(".") && !showHidden)
+                                {
                                     continue;
+                                }
                             }
 
                             var entry = enumerator.Entry;
@@ -167,15 +171,15 @@ namespace FubarDev.FtpServer.CommandHandlers
         }
 
         /// <summary>
-        /// Directory to process during recursive directory listing
+        /// Directory to process during recursive directory listing.
         /// </summary>
         private class DirectoryQueueItem
         {
             /// <summary>
             /// Initializes a new instance of the <see cref="DirectoryQueueItem"/> class.
             /// </summary>
-            /// <param name="path">The path to list</param>
-            /// <param name="mask">The file mask to list</param>
+            /// <param name="path">The path to list.</param>
+            /// <param name="mask">The file mask to list.</param>
             public DirectoryQueueItem(Stack<IUnixDirectoryEntry> path, string mask)
             {
                 Path = path;
@@ -183,18 +187,18 @@ namespace FubarDev.FtpServer.CommandHandlers
             }
 
             /// <summary>
-            /// Gets the path to list
+            /// Gets the path to list.
             /// </summary>
             public Stack<IUnixDirectoryEntry> Path { get; }
 
             /// <summary>
-            /// Gets the file mask to list
+            /// Gets the file mask to list.
             /// </summary>
             public string Mask { get; }
         }
 
         /// <summary>
-        /// LIST command arguments
+        /// LIST command arguments.
         /// </summary>
         private class ListArguments
         {
@@ -233,17 +237,17 @@ namespace FubarDev.FtpServer.CommandHandlers
             }
 
             /// <summary>
-            /// Gets a value indicating whether <code>LIST</code> returns all entries (including <code>.</code> and <code>..</code>)
+            /// Gets a value indicating whether <code>LIST</code> returns all entries (including <code>.</code> and <code>..</code>).
             /// </summary>
             public bool All { get; }
 
             /// <summary>
-            /// Gets a value indicating whether <code>LIST</code> returns all file system entries recursively
+            /// Gets a value indicating whether <code>LIST</code> returns all file system entries recursively.
             /// </summary>
             public bool Recursive { get; }
 
             /// <summary>
-            /// Gets the path argument (optionally with wildcard)
+            /// Gets the path argument (optionally with wildcard).
             /// </summary>
             public string Path { get; }
         }

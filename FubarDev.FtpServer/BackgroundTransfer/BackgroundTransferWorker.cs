@@ -1,4 +1,4 @@
-﻿//-----------------------------------------------------------------------
+//-----------------------------------------------------------------------
 // <copyright file="BackgroundTransferWorker.cs" company="Fubar Development Junker">
 //     Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
@@ -40,7 +40,10 @@ namespace FubarDev.FtpServer.BackgroundTransfer
         public Task Start(CancellationTokenSource cts)
         {
             if (_cancellationTokenSource != null)
+            {
                 throw new InvalidOperationException("Background transfer worker already started");
+            }
+
             _cancellationTokenSource = cts;
             return Task.Run(() => ProcessQueue(cts.Token), cts.Token);
         }
@@ -88,6 +91,11 @@ namespace FubarDev.FtpServer.BackgroundTransfer
             }
         }
 
+        private static BackgroundTransferInfo GetInfo(BackgroundTransferEntry entry)
+        {
+            return new BackgroundTransferInfo(entry.Status, entry.BackgroundTransfer.TransferId, entry.Transferred);
+        }
+
         private BackgroundTransferEntry GetNextEntry()
         {
             lock (Queue)
@@ -113,7 +121,9 @@ namespace FubarDev.FtpServer.BackgroundTransfer
                 {
                     var handleIndex = WaitHandle.WaitAny(handles);
                     if (handleIndex == 0)
+                    {
                         break;
+                    }
 
                     HasData = true;
 
@@ -129,6 +139,8 @@ namespace FubarDev.FtpServer.BackgroundTransfer
                                 var bt = backgroundTransfer;
                                 log?.LogInformation("Starting background transfer {0}", bt.TransferId);
                                 backgroundTransferEntry.Status = BackgroundTransferStatus.Transferring;
+
+                                // ReSharper disable once AccessToModifiedClosure
                                 var progress = new ActionProgress(sent => backgroundTransferEntry.Transferred = sent);
                                 var task = bt.Start(progress, cancellationToken);
                                 var cancelledTask = task
@@ -191,11 +203,6 @@ namespace FubarDev.FtpServer.BackgroundTransfer
                 _log?.LogDebug("Background transfer worker stopped.");
                 Queue.Dispose();
             }
-        }
-
-        private static BackgroundTransferInfo GetInfo(BackgroundTransferEntry entry)
-        {
-            return new BackgroundTransferInfo(entry.Status, entry.BackgroundTransfer.TransferId, entry.Transferred);
         }
 
         private class ActionProgress : IProgress<long>

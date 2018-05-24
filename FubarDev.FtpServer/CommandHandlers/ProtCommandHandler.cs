@@ -14,7 +14,7 @@ using Microsoft.Extensions.Options;
 namespace FubarDev.FtpServer.CommandHandlers
 {
     /// <summary>
-    /// The <code>PROT</code> command handler
+    /// The <code>PROT</code> command handler.
     /// </summary>
     public class ProtCommandHandler : FtpCommandHandler
     {
@@ -23,8 +23,8 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// <summary>
         /// Initializes a new instance of the <see cref="ProtCommandHandler"/> class.
         /// </summary>
-        /// <param name="connection">The connection to create this command handler for</param>
-        /// <param name="options">The SSL/TLS connection options</param>
+        /// <param name="connection">The connection to create this command handler for.</param>
+        /// <param name="options">The SSL/TLS connection options.</param>
         public ProtCommandHandler(IFtpConnection connection, IOptions<AuthTlsOptions> options)
             : base(connection, "PROT")
         {
@@ -38,14 +38,19 @@ namespace FubarDev.FtpServer.CommandHandlers
         public override IEnumerable<IFeatureInfo> GetSupportedFeatures()
         {
             if (_serverCertificate != null)
+            {
                 yield return new GenericFeatureInfo("PROT");
+            }
         }
 
         /// <inheritdoc/>
         public override Task<FtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
         {
             if (string.IsNullOrEmpty(command.Argument))
+            {
                 return Task.FromResult(new FtpResponse(501, "Data channel protection level not specified."));
+            }
+
             switch (command.Argument.ToUpperInvariant())
             {
                 case "C":

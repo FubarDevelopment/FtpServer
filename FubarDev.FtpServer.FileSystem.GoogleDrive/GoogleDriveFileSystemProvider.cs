@@ -1,4 +1,4 @@
-﻿// <copyright file="GoogleDriveServiceProvider.cs" company="Fubar Development Junker">
+// <copyright file="GoogleDriveFileSystemProvider.cs" company="Fubar Development Junker">
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
@@ -12,7 +12,7 @@ using JetBrains.Annotations;
 namespace FubarDev.FtpServer.FileSystem.GoogleDrive
 {
     /// <summary>
-    /// A file system provider for Google Drive
+    /// A file system provider for Google Drive.
     /// </summary>
     public class GoogleDriveFileSystemProvider : IFileSystemClassFactory
     {
@@ -25,8 +25,8 @@ namespace FubarDev.FtpServer.FileSystem.GoogleDrive
         /// <summary>
         /// Initializes a new instance of the <see cref="GoogleDriveFileSystemProvider"/> class.
         /// </summary>
-        /// <param name="serviceProvider">The google drive service provider</param>
-        /// <param name="temporaryDataFactory">The factory to create temporary data objects</param>
+        /// <param name="serviceProvider">The google drive service provider.</param>
+        /// <param name="temporaryDataFactory">The factory to create temporary data objects.</param>
         public GoogleDriveFileSystemProvider(
             [NotNull] IGoogleDriveServiceProvider serviceProvider,
             ITemporaryDataFactory temporaryDataFactory = null)

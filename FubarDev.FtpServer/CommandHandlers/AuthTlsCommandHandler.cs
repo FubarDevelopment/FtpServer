@@ -9,13 +9,16 @@ using System.Security.Cryptography.X509Certificates;
 using System.Threading;
 using System.Threading.Tasks;
 
+#if !NETSTANDARD1_3
 using Microsoft.Extensions.Logging;
+#endif
+
 using Microsoft.Extensions.Options;
 
 namespace FubarDev.FtpServer.CommandHandlers
 {
     /// <summary>
-    /// The <code>AUTH TLS</code> command handler
+    /// The <code>AUTH TLS</code> command handler.
     /// </summary>
     public class AuthTlsCommandHandler : FtpCommandHandler
     {
@@ -24,8 +27,8 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// <summary>
         /// Initializes a new instance of the <see cref="AuthTlsCommandHandler"/> class.
         /// </summary>
-        /// <param name="connection">The connection this instance is used for</param>
-        /// <param name="options">The SSL/TLS connection options</param>
+        /// <param name="connection">The connection this instance is used for.</param>
+        /// <param name="options">The SSL/TLS connection options.</param>
         public AuthTlsCommandHandler(IFtpConnection connection, IOptions<AuthTlsOptions> options)
             : base(connection, "AUTH")
         {
@@ -39,7 +42,9 @@ namespace FubarDev.FtpServer.CommandHandlers
         public override IEnumerable<IFeatureInfo> GetSupportedFeatures()
         {
             if (_serverCertificate != null)
+            {
                 yield return new GenericFeatureInfo("AUTH", conn => "AUTH TLS");
+            }
         }
 
         /// <inheritdoc/>
@@ -47,7 +52,9 @@ namespace FubarDev.FtpServer.CommandHandlers
         {
             var arg = command.Argument;
             if (string.IsNullOrEmpty(arg))
+            {
                 arg = "TLS";
+            }
 
             switch (arg.ToUpperInvariant())
             {

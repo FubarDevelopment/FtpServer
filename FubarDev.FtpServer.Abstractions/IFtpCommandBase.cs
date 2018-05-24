@@ -11,23 +11,23 @@ using JetBrains.Annotations;
 namespace FubarDev.FtpServer
 {
     /// <summary>
-    /// The base interface for command handlers and extensions
+    /// The base interface for command handlers and extensions.
     /// </summary>
     public interface IFtpCommandBase
     {
         /// <summary>
-        /// Gets a collection of all command names for this command
+        /// Gets a collection of all command names for this command.
         /// </summary>
         [NotNull]
         [ItemNotNull]
         IReadOnlyCollection<string> Names { get; }
 
         /// <summary>
-        /// Processes the command
+        /// Processes the command.
         /// </summary>
-        /// <param name="command">The command to process</param>
-        /// <param name="cancellationToken">The cancellation token to signal command abortion</param>
-        /// <returns>The FTP response</returns>
+        /// <param name="command">The command to process.</param>
+        /// <param name="cancellationToken">The cancellation token to signal command abortion.</param>
+        /// <returns>The FTP response.</returns>
         [NotNull]
         [ItemCanBeNull]
         Task<FtpResponse> Process([NotNull] FtpCommand command, CancellationToken cancellationToken);

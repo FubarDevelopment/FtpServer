@@ -1,4 +1,4 @@
-﻿//-----------------------------------------------------------------------
+//-----------------------------------------------------------------------
 // <copyright file="ShortListFormatter.cs" company="Fubar Development Junker">
 //     Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
@@ -10,7 +10,7 @@ using FubarDev.FtpServer.FileSystem;
 namespace FubarDev.FtpServer.ListFormatters
 {
     /// <summary>
-    /// The <see cref="IListFormatter"/> for the short directory listing format (name only)
+    /// The <see cref="IListFormatter"/> for the short directory listing format (name only).
     /// </summary>
     public class ShortListFormatter : IListFormatter
     {

@@ -5,12 +5,12 @@
 namespace FubarDev.FtpServer
 {
     /// <summary>
-    /// Options for the SYST command
+    /// Options for the SYST command.
     /// </summary>
     public class SystCommandOptions
     {
         /// <summary>
-        /// Gets or sets the operating system returned by the SYST command
+        /// Gets or sets the operating system returned by the SYST command.
         /// </summary>
         public string OperatingSystem { get; set; } = "UNIX";
     }

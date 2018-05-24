@@ -20,7 +20,7 @@ namespace FubarDev.FtpServer.CommandExtensions
         /// <summary>
         /// Initializes a new instance of the <see cref="SiteUtimeCommandExtension"/> class.
         /// </summary>
-        /// <param name="connection">The connection this instance is used for</param>
+        /// <param name="connection">The connection this instance is used for.</param>
         public SiteUtimeCommandExtension([NotNull] IFtpConnection connection)
             : base(connection, "SITE", "UTIME")
         {
@@ -30,17 +30,18 @@ namespace FubarDev.FtpServer.CommandExtensions
         public override async Task<FtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
         {
             if (string.IsNullOrEmpty(command.Argument))
+            {
                 return new FtpResponse(501, "No file name.");
+            }
 
             var parts = new List<string>();
-            string part;
-            var remaining = command.Argument.ChompFromEnd(out part);
+            var remaining = command.Argument.ChompFromEnd(out var part);
             if (IsSupportedTimeZome(part))
             {
                 // 5 part format
                 // SITE <sp> UTIME <sp> filename <sp> datetime1 <sp> datetime2 <sp> datetime3 <sp> UTC
                 parts.Add(part);
-                for (int i = 0; i != 3; ++i)
+                for (var i = 0; i != 3; ++i)
                 {
                     remaining = remaining.ChompFromEnd(out part);
                     parts.Add(remaining);
@@ -52,7 +53,10 @@ namespace FubarDev.FtpServer.CommandExtensions
 
             parts.AddRange(command.Argument.Split(new[] { ' ' }, 2));
             while (parts.Count != 2)
+            {
                 parts.Add(string.Empty);
+            }
+
             return await SetTimestamp2(parts, cancellationToken).ConfigureAwait(false);
         }
 
@@ -64,22 +68,37 @@ namespace FubarDev.FtpServer.CommandExtensions
         private async Task<FtpResponse> SetTimestamp5(IReadOnlyList<string> parts, CancellationToken cancellationToken)
         {
             if (!parts[1].TryParseTimestamp(parts[4], out var accessTime))
+            {
                 return new FtpResponse(501, "Syntax error in parameters or arguments.");
+            }
+
             if (!parts[2].TryParseTimestamp(parts[4], out var modificationTime))
+            {
                 return new FtpResponse(501, "Syntax error in parameters or arguments.");
+            }
+
             if (!parts[3].TryParseTimestamp(parts[4], out var creationTime))
+            {
                 return new FtpResponse(501, "Syntax error in parameters or arguments.");
+            }
 
             var path = parts[0];
             if (path.Length >= 2 && path.StartsWith("\"") && path.EndsWith("\""))
+            {
                 path = path.Substring(1, path.Length - 2);
+            }
+
             if (string.IsNullOrEmpty(path))
+            {
                 return new FtpResponse(501, "No file name.");
+            }
 
             var currentPath = Data.Path.Clone();
             var foundEntry = await Data.FileSystem.SearchEntryAsync(currentPath, path, cancellationToken).ConfigureAwait(false);
             if (foundEntry?.Entry == null)
+            {
                 return new FtpResponse(550, "File system entry not found.");
+            }
 
             await Data.FileSystem.SetMacTimeAsync(foundEntry.Entry, modificationTime, accessTime, creationTime, cancellationToken).ConfigureAwait(false);
 
@@ -89,18 +108,27 @@ namespace FubarDev.FtpServer.CommandExtensions
         private async Task<FtpResponse> SetTimestamp2(IReadOnlyList<string> parts, CancellationToken cancellationToken)
         {
             if (!parts[0].TryParseTimestamp("UTC", out var modificationTime))
+            {
                 return new FtpResponse(501, "Syntax error in parameters or arguments.");
+            }
 
             var path = parts[1];
             if (path.Length >= 2 && path.StartsWith("\"") && path.EndsWith("\""))
+            {
                 path = path.Substring(1, path.Length - 2);
+            }
+
             if (string.IsNullOrEmpty(path))
+            {
                 return new FtpResponse(501, "No file name.");
+            }
 
             var currentPath = Data.Path.Clone();
             var foundEntry = await Data.FileSystem.SearchEntryAsync(currentPath, path, cancellationToken).ConfigureAwait(false);
             if (foundEntry?.Entry == null)
+            {
                 return new FtpResponse(550, "File system entry not found.");
+            }
 
             await Data.FileSystem.SetMacTimeAsync(foundEntry.Entry, modificationTime, null, null, cancellationToken).ConfigureAwait(false);
 

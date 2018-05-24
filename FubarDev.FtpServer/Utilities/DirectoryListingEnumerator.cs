@@ -1,9 +1,10 @@
-﻿// <copyright file="DirectoryListingEnumerator.cs" company="Fubar Development Junker">
+// <copyright file="DirectoryListingEnumerator.cs" company="Fubar Development Junker">
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 using FubarDev.FtpServer.FileSystem;
@@ -13,7 +14,7 @@ using JetBrains.Annotations;
 namespace FubarDev.FtpServer.Utilities
 {
     /// <summary>
-    /// Helps to enumerate a directory with virtual <code>.</code> and <code>..</code> entries
+    /// Helps to enumerate a directory with virtual <code>.</code> and <code>..</code> entries.
     /// </summary>
     public class DirectoryListingEnumerator
     {
@@ -28,10 +29,10 @@ namespace FubarDev.FtpServer.Utilities
         /// <summary>
         /// Initializes a new instance of the <see cref="DirectoryListingEnumerator"/> class.
         /// </summary>
-        /// <param name="entries">The file system entries to enumerate</param>
-        /// <param name="fileSystem">The file system of the file system entries</param>
-        /// <param name="pathEntries">The path entries of the current directory</param>
-        /// <param name="returnDotEntries"><code>true</code> when this enumerator should return the dot entries</param>
+        /// <param name="entries">The file system entries to enumerate.</param>
+        /// <param name="fileSystem">The file system of the file system entries.</param>
+        /// <param name="pathEntries">The path entries of the current directory.</param>
+        /// <param name="returnDotEntries"><code>true</code> when this enumerator should return the dot entries.</param>
         public DirectoryListingEnumerator(IEnumerable<IUnixFileSystemEntry> entries, IUnixFileSystem fileSystem, Stack<IUnixDirectoryEntry> pathEntries, bool returnDotEntries)
         {
             _pathEntries = pathEntries;
@@ -66,7 +67,9 @@ namespace FubarDev.FtpServer.Utilities
             {
                 dotEntries.Add(Tuple.Create(CurrentDirectory, "."));
                 if (ParentDirectory != null)
+                {
                     dotEntries.Add(Tuple.Create(ParentDirectory, ".."));
+                }
             }
 
             _dotEntriesEnumerator = dotEntries.GetEnumerator();
@@ -74,19 +77,19 @@ namespace FubarDev.FtpServer.Utilities
         }
 
         /// <summary>
-        /// Gets the current directory
+        /// Gets the current directory.
         /// </summary>
         [NotNull]
         public IUnixDirectoryEntry CurrentDirectory { get; }
 
         /// <summary>
-        /// Gets the parent directory
+        /// Gets the parent directory.
         /// </summary>
         [CanBeNull]
         public IUnixDirectoryEntry ParentDirectory { get; }
 
         /// <summary>
-        /// Gets the grand parent directory
+        /// Gets the grand parent directory.
         /// </summary>
         [CanBeNull]
         public IUnixDirectoryEntry GrandParentDirectory { get; }
@@ -95,13 +98,39 @@ namespace FubarDev.FtpServer.Utilities
         /// Gets the name of the entry which might be different from the original entries name.
         /// </summary>
         [NotNull]
-        public string Name => _enumerateDotEntries ? _dotEntriesEnumerator.Current.Item2 : _entriesEnumerator.Current.Name;
+        public string Name
+        {
+            get
+            {
+                if (_enumerateDotEntries)
+                {
+                    Debug.Assert(_dotEntriesEnumerator.Current != null, "_dotEntriesEnumerator.Current != null");
+                    return _dotEntriesEnumerator.Current.Item2;
+                }
+
+                Debug.Assert(_entriesEnumerator.Current != null, "_entriesEnumerator.Current != null");
+                return _entriesEnumerator.Current.Name;
+            }
+        }
 
         /// <summary>
-        /// Gets the file system entry
+        /// Gets the file system entry.
         /// </summary>
         [NotNull]
-        public IUnixFileSystemEntry Entry => _enumerateDotEntries ? _dotEntriesEnumerator.Current.Item1 : _entriesEnumerator.Current;
+        public IUnixFileSystemEntry Entry
+        {
+            get
+            {
+                if (_enumerateDotEntries)
+                {
+                    Debug.Assert(_dotEntriesEnumerator.Current != null, "_dotEntriesEnumerator.Current != null");
+                    return _dotEntriesEnumerator.Current.Item1;
+                }
+
+                Debug.Assert(_entriesEnumerator.Current != null, "_entriesEnumerator.Current != null");
+                return _entriesEnumerator.Current;
+            }
+        }
 
         /// <summary>
         /// Gets a value indicating whether the current entry is either the <code>.</code> or <code>..</code> entry.
@@ -111,23 +140,26 @@ namespace FubarDev.FtpServer.Utilities
         /// <summary>
         /// Called to enumerate the next directory listing entry.
         /// </summary>
-        /// <returns><code>true</code> when there is a value for <see cref="Entry"/> and <see cref="Name"/></returns>
+        /// <returns><code>true</code> when there is a value for <see cref="Entry"/> and <see cref="Name"/>.</returns>
         public bool MoveNext()
         {
             if (_enumerateDotEntries)
             {
                 if (_dotEntriesEnumerator.MoveNext())
+                {
                     return true;
+                }
+
                 _enumerateDotEntries = false;
             }
             return _entriesEnumerator.MoveNext();
         }
 
         /// <summary>
-        /// Gets the full path for a given name
+        /// Gets the full path for a given name.
         /// </summary>
-        /// <param name="name">The name to get the full path for</param>
-        /// <returns>The full path</returns>
+        /// <param name="name">The name to get the full path for.</param>
+        /// <returns>The full path.</returns>
         public string GetFullPath(string name)
         {
             return _pathEntries.GetFullPath(name);

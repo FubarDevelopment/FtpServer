@@ -25,7 +25,7 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// <summary>
         /// Initializes a new instance of the <see cref="RetrCommandHandler"/> class.
         /// </summary>
-        /// <param name="connection">The connection to create this command handler for</param>
+        /// <param name="connection">The connection to create this command handler for.</param>
         public RetrCommandHandler(IFtpConnection connection)
             : base(connection, "RETR")
         {
@@ -41,13 +41,17 @@ namespace FubarDev.FtpServer.CommandHandlers
             Data.RestartPosition = null;
 
             if (!Data.TransferMode.IsBinary && Data.TransferMode.FileType != FtpFileType.Ascii)
+            {
                 throw new NotSupportedException();
+            }
 
             var fileName = command.Argument;
             var currentPath = Data.Path.Clone();
             var fileInfo = await Data.FileSystem.SearchFileAsync(currentPath, fileName, cancellationToken).ConfigureAwait(false);
             if (fileInfo?.Entry == null)
+            {
                 return new FtpResponse(550, "File doesn't exist.");
+            }
 
             using (var input = await Data.FileSystem.OpenReadAsync(fileInfo.Entry, restartPosition ?? 0, cancellationToken).ConfigureAwait(false))
             {

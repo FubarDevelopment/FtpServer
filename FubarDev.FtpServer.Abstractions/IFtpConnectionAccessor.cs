@@ -10,7 +10,7 @@ namespace FubarDev.FtpServer
     public interface IFtpConnectionAccessor
     {
         /// <summary>
-        /// Gets or sets the current FTP connection
+        /// Gets or sets the current FTP connection.
         /// </summary>
         IFtpConnection FtpConnection { get; set; }
     }

@@ -25,16 +25,20 @@ namespace FubarDev.FtpServer.CommandHandlers
         {
             ["modify"] = value =>
             {
-                DateTimeOffset dto;
-                if (!value.TryParseTimestamp("UTC", out dto))
+                if (!value.TryParseTimestamp("UTC", out var dto))
+                {
                     return null;
+                }
+
                 return new ModifyFact(dto);
             },
             ["create"] = value =>
             {
-                DateTimeOffset dto;
-                if (!value.TryParseTimestamp("UTC", out dto))
+                if (!value.TryParseTimestamp("UTC", out var dto))
+                {
                     return null;
+                }
+
                 return new CreateFact(dto);
             },
         };
@@ -42,7 +46,7 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// <summary>
         /// Initializes a new instance of the <see cref="MffCommandHandler"/> class.
         /// </summary>
-        /// <param name="connection">The connection to create this command handler for</param>
+        /// <param name="connection">The connection to create this command handler for.</param>
         public MffCommandHandler(IFtpConnection connection)
             : base(connection, "MFF")
         {
@@ -61,14 +65,19 @@ namespace FubarDev.FtpServer.CommandHandlers
         {
             var parts = command.Argument.Split(new[] { ' ' }, 2);
             if (parts.Length != 2)
+            {
                 return new FtpResponse(551, "Facts or file name missing.");
+            }
 
             var factInfos = new Dictionary<string, string>();
             foreach (var factEntry in parts[0].Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries))
             {
                 var keyValue = factEntry.Split(new[] { '=' }, 2);
                 if (keyValue.Length != 2)
+                {
                     return new FtpResponse(551, $"Invalid format for fact {factEntry}.");
+                }
+
                 factInfos.Add(keyValue[0], keyValue[1]);
             }
 
@@ -76,13 +85,18 @@ namespace FubarDev.FtpServer.CommandHandlers
             var currentPath = Data.Path.Clone();
             var fileInfo = await Data.FileSystem.SearchFileAsync(currentPath, path, cancellationToken).ConfigureAwait(false);
             if (fileInfo?.Entry == null)
+            {
                 return new FtpResponse(550, "File not found.");
+            }
 
             var facts = new List<IFact>();
             foreach (var factInfo in factInfos)
             {
                 if (!_knownFacts.TryGetValue(factInfo.Key, out var createFact))
+                {
                     return new FtpResponse(551, $"Unsupported fact {factInfo.Key}.");
+                }
+
                 var fact = createFact(factInfo.Value);
                 facts.Add(fact);
             }
@@ -104,12 +118,17 @@ namespace FubarDev.FtpServer.CommandHandlers
             }
 
             if (creationTime != null || modificationTime != null)
+            {
                 await Data.FileSystem.SetMacTimeAsync(fileInfo.Entry, modificationTime, null, creationTime, cancellationToken).ConfigureAwait(false);
+            }
 
             var fullName = currentPath.GetFullPath() + fileInfo.FileName;
             var responseText = new StringBuilder();
             foreach (var fact in facts)
+            {
                 responseText.AppendFormat("{0}={1};", fact.Name, fact.Value);
+            }
+
             responseText.AppendFormat(" {0}", fullName);
 
             return new FtpResponse(213, responseText.ToString());

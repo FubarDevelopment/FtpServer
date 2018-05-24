@@ -18,7 +18,7 @@ using JetBrains.Annotations;
 namespace FubarDev.FtpServer.CommandHandlers
 {
     /// <summary>
-    /// This class implements the STOR command (4.1.3.)
+    /// This class implements the STOR command (4.1.3.).
     /// </summary>
     public class StorCommandHandler : FtpCommandHandler
     {
@@ -28,8 +28,8 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// <summary>
         /// Initializes a new instance of the <see cref="StorCommandHandler"/> class.
         /// </summary>
-        /// <param name="connection">The connection this command handler is created for</param>
-        /// <param name="server">The FTP server</param>
+        /// <param name="connection">The connection this command handler is created for.</param>
+        /// <param name="server">The FTP server.</param>
         public StorCommandHandler([NotNull] IFtpConnection connection, [NotNull] FtpServer server)
             : base(connection, "STOR")
         {
@@ -46,18 +46,27 @@ namespace FubarDev.FtpServer.CommandHandlers
             Data.RestartPosition = null;
 
             if (!Data.TransferMode.IsBinary && Data.TransferMode.FileType != FtpFileType.Ascii)
+            {
                 throw new NotSupportedException();
+            }
 
             var fileName = command.Argument;
             if (string.IsNullOrEmpty(fileName))
+            {
                 return new FtpResponse(501, "No file name specified");
+            }
 
             var currentPath = Data.Path.Clone();
             var fileInfo = await Data.FileSystem.SearchFileAsync(currentPath, fileName, cancellationToken).ConfigureAwait(false);
             if (fileInfo == null)
+            {
                 return new FtpResponse(550, "Not a valid directory.");
+            }
+
             if (fileInfo.FileName == null)
+            {
                 return new FtpResponse(553, "File name not allowed.");
+            }
 
             var doReplace = restartPosition.GetValueOrDefault() == 0 && fileInfo.Entry != null;
 
@@ -102,7 +111,9 @@ namespace FubarDev.FtpServer.CommandHandlers
                 }
 
                 if (backgroundTransfer != null)
+                {
                     _server.EnqueueBackgroundTransfer(backgroundTransfer, Connection);
+                }
             }
 
             return new FtpResponse(226, "Uploaded file successfully.");

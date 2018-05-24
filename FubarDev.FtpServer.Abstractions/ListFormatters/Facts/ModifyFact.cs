@@ -7,14 +7,14 @@ using System;
 namespace FubarDev.FtpServer.ListFormatters.Facts
 {
     /// <summary>
-    /// The <code>modify</code> fact
+    /// The <code>modify</code> fact.
     /// </summary>
     public class ModifyFact : IFact
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="ModifyFact"/> class.
         /// </summary>
-        /// <param name="timestamp">The modification time stamp</param>
+        /// <param name="timestamp">The modification time stamp.</param>
         public ModifyFact(DateTimeOffset timestamp)
         {
             var utcTimestamp = timestamp.ToUniversalTime();
@@ -26,7 +26,7 @@ namespace FubarDev.FtpServer.ListFormatters.Facts
         public string Name => "modify";
 
         /// <summary>
-        /// Gets the modification time stamp
+        /// Gets the modification time stamp.
         /// </summary>
         public DateTimeOffset Timestamp { get; }
 

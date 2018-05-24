@@ -20,14 +20,14 @@ using JetBrains.Annotations;
 namespace FubarDev.FtpServer
 {
     /// <summary>
-    /// Common data for a <see cref="IFtpConnection"/>
+    /// Common data for a <see cref="IFtpConnection"/>.
     /// </summary>
     public sealed class FtpConnectionData : IDisposable
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="FtpConnectionData"/> class.
         /// </summary>
-        /// <param name="backgroundCommandHandler">Utility module that allows background execution of an FTP command</param>
+        /// <param name="backgroundCommandHandler">Utility module that allows background execution of an FTP command.</param>
         public FtpConnectionData([NotNull] IBackgroundCommandHandler backgroundCommandHandler)
         {
             UserData = new ExpandoObject();
@@ -38,13 +38,13 @@ namespace FubarDev.FtpServer
         }
 
         /// <summary>
-        /// Gets or sets the current user name
+        /// Gets or sets the current user name.
         /// </summary>
         [CanBeNull]
         public IFtpUser User { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether the user with the <see cref="User"/>
+        /// Gets or sets a value indicating whether the user with the <see cref="User"/>.
         /// is logged in.
         /// </summary>
         public bool IsLoggedIn { get; set; }
@@ -67,14 +67,14 @@ namespace FubarDev.FtpServer
         public IUnixFileSystem FileSystem { get; set; }
 
         /// <summary>
-        /// Gets or sets the current path into the <see cref="FileSystem"/>
+        /// Gets or sets the current path into the <see cref="FileSystem"/>.
         /// </summary>
         [NotNull]
         [ItemNotNull]
         public Stack<IUnixDirectoryEntry> Path { get; set; }
 
         /// <summary>
-        /// Gets the current <see cref="IUnixDirectoryEntry"/> of the current <see cref="Path"/>
+        /// Gets the current <see cref="IUnixDirectoryEntry"/> of the current <see cref="Path"/>.
         /// </summary>
         [NotNull]
         public IUnixDirectoryEntry CurrentDirectory
@@ -82,13 +82,16 @@ namespace FubarDev.FtpServer
             get
             {
                 if (Path.Count == 0)
+                {
                     return FileSystem.Root;
+                }
+
                 return Path.Peek();
             }
         }
 
         /// <summary>
-        /// Gets or sets the <see cref="FtpTransferMode"/>
+        /// Gets or sets the <see cref="FtpTransferMode"/>.
         /// </summary>
         [NotNull]
         public FtpTransferMode TransferMode { get; set; }
@@ -100,7 +103,7 @@ namespace FubarDev.FtpServer
         public Uri PortAddress { get; set; }
 
         /// <summary>
-        /// Gets or sets the data connection for a passive data transfer
+        /// Gets or sets the data connection for a passive data transfer.
         /// </summary>
         [CanBeNull]
         public TcpClient PassiveSocketClient { get; set; }
@@ -132,7 +135,7 @@ namespace FubarDev.FtpServer
         public SearchResult<IUnixFileSystemEntry> RenameFrom { get; set; }
 
         /// <summary>
-        /// Gets the active <see cref="IFact"/> sent by <code>MLST</code> and <code>MLSD</code>
+        /// Gets the active <see cref="IFact"/> sent by <code>MLST</code> and <code>MLSD</code>.
         /// </summary>
         [NotNull]
         [ItemNotNull]
@@ -145,7 +148,7 @@ namespace FubarDev.FtpServer
         public CreateEncryptedStreamDelegate CreateEncryptedStream { get; set; }
 
         /// <summary>
-        /// Gets or sets user data as <code>dynamic</code> object
+        /// Gets or sets user data as <code>dynamic</code> object.
         /// </summary>
         public dynamic UserData { get; set; }
 

@@ -5,17 +5,17 @@
 namespace FubarDev.FtpServer
 {
     /// <summary>
-    /// The FTP server options
+    /// The FTP server options.
     /// </summary>
     public class FtpServerOptions
     {
         /// <summary>
-        /// Gets or sets the server address
+        /// Gets or sets the server address.
         /// </summary>
         public string ServerAddress { get; set; } = "localhost";
 
         /// <summary>
-        /// Gets or sets the server port
+        /// Gets or sets the server port.
         /// </summary>
         public int Port { get; set; } = 21;
     }

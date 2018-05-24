@@ -23,26 +23,28 @@ namespace FubarDev.FtpServer
         /// <summary>
         /// Initializes a new instance of the <see cref="MultiBindingTcpListener"/> class.
         /// </summary>
-        /// <param name="address">The address/host name to bind to</param>
-        /// <param name="port">The listener port</param>
+        /// <param name="address">The address/host name to bind to.</param>
+        /// <param name="port">The listener port.</param>
         public MultiBindingTcpListener(string address, int port)
         {
             if (port < 1 || port > 65535)
+            {
                 throw new ArgumentOutOfRangeException(nameof(port), "The port argument is out of range");
+            }
 
             _address = address;
             _port = port;
         }
 
         /// <summary>
-        /// Gets the port this listener is bound to
+        /// Gets the port this listener is bound to.
         /// </summary>
         public int? Port { get; private set; }
 
         /// <summary>
-        /// Start all listeners
+        /// Start all listeners.
         /// </summary>
-        /// <returns>the task</returns>
+        /// <returns>the task.</returns>
         public async Task StartAsync()
         {
             var dnsAddresses = await Dns.GetHostAddressesAsync(_address).ConfigureAwait(false);
@@ -62,7 +64,7 @@ namespace FubarDev.FtpServer
         }
 
         /// <summary>
-        /// Stops all listeners
+        /// Stops all listeners.
         /// </summary>
         public void Stop()
         {
@@ -76,10 +78,10 @@ namespace FubarDev.FtpServer
         }
 
         /// <summary>
-        /// Tries to get a listener that has pending client connections
+        /// Tries to get a listener that has pending client connections.
         /// </summary>
-        /// <param name="listener">The listener that has pending client connections</param>
-        /// <returns><c>true</c> when a listener with pending client connections could be found</returns>
+        /// <param name="listener">The listener that has pending client connections.</param>
+        /// <returns><c>true</c> when a listener with pending client connections could be found.</returns>
         public bool TryGetPending(out TcpListener listener)
         {
             foreach (var tcpListener in _listeners)
@@ -97,7 +99,7 @@ namespace FubarDev.FtpServer
 
         private int StartListening(IEnumerable<IPAddress> addresses, int port)
         {
-            int selectedPort = port;
+            var selectedPort = port;
             foreach (var address in addresses)
             {
                 var listener = new TcpListener(address, selectedPort);

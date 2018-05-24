@@ -21,7 +21,7 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// <summary>
         /// Initializes a new instance of the <see cref="MkdCommandHandler"/> class.
         /// </summary>
-        /// <param name="connection">The connection to create this command handler for</param>
+        /// <param name="connection">The connection to create this command handler for.</param>
         public MkdCommandHandler(IFtpConnection connection)
             : base(connection, "MKD")
         {
@@ -34,11 +34,19 @@ namespace FubarDev.FtpServer.CommandHandlers
             var currentPath = Data.Path.Clone();
             var dirInfo = await Data.FileSystem.SearchDirectoryAsync(currentPath, directoryName, cancellationToken).ConfigureAwait(false);
             if (dirInfo == null)
+            {
                 return new FtpResponse(550, "Not a valid directory.");
+            }
+
             if (dirInfo.Entry != null)
+            {
                 return new FtpResponse(550, "Directory already exists.");
+            }
+
             if (dirInfo.FileName == null)
+            {
                 return new FtpResponse(550, "File name not allowed.");
+            }
 
             try
             {

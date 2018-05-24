@@ -20,7 +20,7 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// <summary>
         /// Initializes a new instance of the <see cref="RntoCommandHandler"/> class.
         /// </summary>
-        /// <param name="connection">The connection to create this command handler for</param>
+        /// <param name="connection">The connection to create this command handler for.</param>
         public RntoCommandHandler(IFtpConnection connection)
             : base(connection, "RNTO")
         {
@@ -33,17 +33,28 @@ namespace FubarDev.FtpServer.CommandHandlers
         public override async Task<FtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
         {
             if (Data.RenameFrom == null)
+            {
                 return new FtpResponse(503, "RNTO must be preceded by a RNFR.");
+            }
+
             if (Data.RenameFrom.Entry == null)
+            {
                 return new FtpResponse(550, "Item specified for RNFR doesn't exist.");
+            }
 
             var fileName = command.Argument;
             var tempPath = Data.Path.Clone();
             var fileInfo = await Data.FileSystem.SearchEntryAsync(tempPath, fileName, cancellationToken).ConfigureAwait(false);
             if (fileInfo == null)
+            {
                 return new FtpResponse(550, "Directory doesn't exist.");
+            }
+
             if (fileInfo.FileName == null)
+            {
                 return new FtpResponse(550, "ROOT folder not allowed.");
+            }
+
             if (fileInfo.Entry != null)
             {
                 var fullName = tempPath.GetFullPath(fileInfo.FileName);

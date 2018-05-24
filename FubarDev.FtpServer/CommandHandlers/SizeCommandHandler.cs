@@ -21,7 +21,7 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// <summary>
         /// Initializes a new instance of the <see cref="SizeCommandHandler"/> class.
         /// </summary>
-        /// <param name="connection">The connection to create this command handler for</param>
+        /// <param name="connection">The connection to create this command handler for.</param>
         public SizeCommandHandler(IFtpConnection connection)
             : base(connection, "SIZE")
         {
@@ -40,7 +40,9 @@ namespace FubarDev.FtpServer.CommandHandlers
             var tempPath = Data.Path.Clone();
             var fileInfo = await Data.FileSystem.SearchFileAsync(tempPath, fileName, cancellationToken).ConfigureAwait(false);
             if (fileInfo?.Entry == null)
+            {
                 return new FtpResponse(550, $"File not found ({fileName}).");
+            }
 
             return new FtpResponse(213, $"{fileInfo.Entry.Size}");
         }

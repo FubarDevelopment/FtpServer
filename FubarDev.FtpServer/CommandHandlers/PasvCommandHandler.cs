@@ -14,19 +14,21 @@ using System.Threading.Tasks;
 
 using JetBrains.Annotations;
 
+#if !NETSTANDARD1_3
 using Microsoft.Extensions.Logging;
+#endif
 
 namespace FubarDev.FtpServer.CommandHandlers
 {
     /// <summary>
-    /// The command handler for the <code>PASV</code> (4.1.2.) and <code>EPSV</code> commands
+    /// The command handler for the <code>PASV</code> (4.1.2.) and <code>EPSV</code> commands.
     /// </summary>
     public class PasvCommandHandler : FtpCommandHandler
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="PasvCommandHandler"/> class.
         /// </summary>
-        /// <param name="connection">The connection this command handler is created for</param>
+        /// <param name="connection">The connection this command handler is created for.</param>
         public PasvCommandHandler([NotNull] IFtpConnection connection)
             : base(connection, "PASV", "EPSV")
         {
@@ -43,13 +45,14 @@ namespace FubarDev.FtpServer.CommandHandlers
         {
             if (Data.PassiveSocketClient != null)
             {
-                Data.PassiveSocketClient.Close();
                 Data.PassiveSocketClient.Dispose();
                 Data.PassiveSocketClient = null;
             }
 
             if (Data.TransferTypeCommandUsed != null && !string.Equals(command.Name, Data.TransferTypeCommandUsed, StringComparison.OrdinalIgnoreCase))
+            {
                 return new FtpResponse(500, $"Cannot use {command.Name} when {Data.TransferTypeCommandUsed} was used before.");
+            }
 
             int port;
             var isEpsv = string.Equals(command.Name, "EPSV", StringComparison.OrdinalIgnoreCase);

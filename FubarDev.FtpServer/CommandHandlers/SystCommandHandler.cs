@@ -22,8 +22,8 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// <summary>
         /// Initializes a new instance of the <see cref="SystCommandHandler"/> class.
         /// </summary>
-        /// <param name="connection">The connection to create this command handler for</param>
-        /// <param name="options">Options for the SYST command</param>
+        /// <param name="connection">The connection to create this command handler for.</param>
+        /// <param name="options">Options for the SYST command.</param>
         public SystCommandHandler(IFtpConnection connection, IOptions<SystCommandOptions> options)
             : base(connection, "SYST")
         {

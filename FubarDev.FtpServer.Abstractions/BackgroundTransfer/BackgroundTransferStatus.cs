@@ -1,4 +1,4 @@
-﻿//-----------------------------------------------------------------------
+//-----------------------------------------------------------------------
 // <copyright file="BackgroundTransferStatus.cs" company="Fubar Development Junker">
 //     Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
@@ -8,22 +8,22 @@
 namespace FubarDev.FtpServer.BackgroundTransfer
 {
     /// <summary>
-    /// The status of a single <see cref="IBackgroundTransfer"/>
+    /// The status of a single <see cref="IBackgroundTransfer"/>.
     /// </summary>
     public enum BackgroundTransferStatus
     {
         /// <summary>
-        /// Added to transfer queue
+        /// Added to transfer queue.
         /// </summary>
         Enqueued,
 
         /// <summary>
-        /// Transferring the data
+        /// Transferring the data.
         /// </summary>
         Transferring,
 
         /// <summary>
-        /// Transfer finished
+        /// Transfer finished.
         /// </summary>
         Finished,
     }

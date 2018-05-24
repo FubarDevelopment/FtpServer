@@ -20,7 +20,7 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// <summary>
         /// Initializes a new instance of the <see cref="CwdCommandHandler"/> class.
         /// </summary>
-        /// <param name="connection">The connection to create this command handler for</param>
+        /// <param name="connection">The connection to create this command handler for.</param>
         public CwdCommandHandler(IFtpConnection connection)
             : base(connection, "CWD")
         {
@@ -38,7 +38,10 @@ namespace FubarDev.FtpServer.CommandHandlers
             {
                 // CDUP
                 if (Data.CurrentDirectory.IsRoot)
+                {
                     return new FtpResponse(550, "Not a valid directory.");
+                }
+
                 Data.Path.Pop();
             }
             else
@@ -46,7 +49,10 @@ namespace FubarDev.FtpServer.CommandHandlers
                 var tempPath = Data.Path.Clone();
                 var newTargetDir = await Data.FileSystem.GetDirectoryAsync(tempPath, path, cancellationToken).ConfigureAwait(false);
                 if (newTargetDir == null)
+                {
                     return new FtpResponse(550, "Not a valid directory.");
+                }
+
                 Data.Path = tempPath;
             }
             return new FtpResponse(250, $"Successful ({Data.Path.GetFullPath()})");

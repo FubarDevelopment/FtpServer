@@ -1,4 +1,4 @@
-﻿//-----------------------------------------------------------------------
+//-----------------------------------------------------------------------
 // <copyright file="FtpCommandCollector.cs" company="Fubar Development Junker">
 //     Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
@@ -17,7 +17,7 @@ using JetBrains.Annotations;
 namespace FubarDev.FtpServer
 {
     /// <summary>
-    /// Collects FTP commands using the current <see cref="System.Text.Encoding"/>
+    /// Collects FTP commands using the current <see cref="System.Text.Encoding"/>.
     /// </summary>
     public sealed class FtpCommandCollector : IDisposable
     {
@@ -32,7 +32,7 @@ namespace FubarDev.FtpServer
         /// <summary>
         /// Initializes a new instance of the <see cref="FtpCommandCollector"/> class.
         /// </summary>
-        /// <param name="getActiveEncodingFunc">The delegate to get the current encoding for</param>
+        /// <param name="getActiveEncodingFunc">The delegate to get the current encoding for.</param>
         public FtpCommandCollector(Func<Encoding> getActiveEncodingFunc)
         {
             _telnetInputParser = new FtpTelnetInputParser(this);
@@ -40,22 +40,22 @@ namespace FubarDev.FtpServer
         }
 
         /// <summary>
-        /// Gets the currently active <see cref="System.Text.Encoding"/>
+        /// Gets the currently active <see cref="System.Text.Encoding"/>.
         /// </summary>
         public Encoding Encoding => _getActiveEncodingFunc();
 
         /// <summary>
-        /// Gets a value indicating whether this collector contains unused data
+        /// Gets a value indicating whether this collector contains unused data.
         /// </summary>
         public bool IsEmpty => _buffer.Length == 0;
 
         /// <summary>
         /// Collects the data from the <paramref name="buffer"/> and tries to build <see cref="FtpCommand"/> objects from it.
         /// </summary>
-        /// <param name="buffer">The buffer to collect the data from</param>
-        /// <param name="offset">An offset into the buffer to collect the data from</param>
-        /// <param name="length">The length of the data to collect</param>
-        /// <returns>The found <see cref="FtpCommand"/>s</returns>
+        /// <param name="buffer">The buffer to collect the data from.</param>
+        /// <param name="offset">An offset into the buffer to collect the data from.</param>
+        /// <param name="length">The length of the data to collect.</param>
+        /// <returns>The found <see cref="FtpCommand"/>s.</returns>
         [NotNull]
         [ItemNotNull]
         public IEnumerable<FtpCommand> Collect(byte[] buffer, int offset, int length)
@@ -89,15 +89,22 @@ namespace FubarDev.FtpServer
             {
                 var carriageReturnPos = Array.IndexOf(buffer, (byte)'\r', offset, length);
                 if (carriageReturnPos == -1)
+                {
                     break;
+                }
 
                 _skipLineFeed = true;
                 var previousData = _buffer.ToArray();
                 var data = new byte[carriageReturnPos - offset + previousData.Length];
                 if (previousData.Length != 0)
+                {
                     Array.Copy(previousData, data, previousData.Length);
+                }
+
                 if (carriageReturnPos - offset != 0)
+                {
                     Array.Copy(buffer, offset, data, previousData.Length, carriageReturnPos - offset);
+                }
 
                 commands.Add(CreateFtpCommand(data));
 
@@ -120,7 +127,9 @@ namespace FubarDev.FtpServer
                     length = tempBuffer.Length;
                     offset = 0;
                     if (length == 0)
+                    {
                         _buffer = new MemoryStream();
+                    }
                 }
                 else
                 {
@@ -130,7 +139,10 @@ namespace FubarDev.FtpServer
             while (length != 0);
 
             if (length != 0)
+            {
                 _buffer.Write(buffer, offset, length);
+            }
+
             return commands;
         }
 

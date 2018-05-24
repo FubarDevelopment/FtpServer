@@ -33,8 +33,8 @@ namespace FubarDev.FtpServer.FileSystem.DotNet
         /// <summary>
         /// Initializes a new instance of the <see cref="DotNetFileSystem"/> class.
         /// </summary>
-        /// <param name="rootPath">The path to use as root</param>
-        /// <param name="allowNonEmptyDirectoryDelete">Allow deletion of non-empty directories?</param>
+        /// <param name="rootPath">The path to use as root.</param>
+        /// <param name="allowNonEmptyDirectoryDelete">Defines whether the deletion of non-empty directories is allowed.</param>
         public DotNetFileSystem(string rootPath, bool allowNonEmptyDirectoryDelete)
             : this(rootPath, allowNonEmptyDirectoryDelete, DefaultStreamBufferSize)
         {
@@ -43,9 +43,9 @@ namespace FubarDev.FtpServer.FileSystem.DotNet
         /// <summary>
         /// Initializes a new instance of the <see cref="DotNetFileSystem"/> class.
         /// </summary>
-        /// <param name="rootPath">The path to use as root</param>
-        /// <param name="allowNonEmptyDirectoryDelete">Allow deletion of non-empty directories?</param>
-        /// <param name="streamBufferSize">Buffer size to be used in async IO methods</param>
+        /// <param name="rootPath">The path to use as root.</param>
+        /// <param name="allowNonEmptyDirectoryDelete">Defines whether the deletion of non-empty directories is allowed.</param>
+        /// <param name="streamBufferSize">Buffer size to be used in async IO methods.</param>
         public DotNetFileSystem(string rootPath, bool allowNonEmptyDirectoryDelete, int streamBufferSize)
         {
             FileSystemEntryComparer = StringComparer.OrdinalIgnoreCase;
@@ -95,11 +95,18 @@ namespace FubarDev.FtpServer.FileSystem.DotNet
             var fullPath = Path.Combine(searchDirInfo.FullName, name);
             IUnixFileSystemEntry result;
             if (File.Exists(fullPath))
+            {
                 result = new DotNetFileEntry(this, new FileInfo(fullPath));
+            }
             else if (Directory.Exists(fullPath))
+            {
                 result = new DotNetDirectoryEntry(this, new DirectoryInfo(fullPath), false);
+            }
             else
+            {
                 result = null;
+            }
+
             return Task.FromResult(result);
         }
 
@@ -149,7 +156,10 @@ namespace FubarDev.FtpServer.FileSystem.DotNet
             var fileInfo = ((DotNetFileEntry)fileEntry).Info;
             var input = fileInfo.OpenRead();
             if (startPosition != 0)
+            {
                 input.Seek(startPosition, SeekOrigin.Begin);
+            }
+
             return Task.FromResult<Stream>(input);
         }
 
@@ -160,7 +170,10 @@ namespace FubarDev.FtpServer.FileSystem.DotNet
             using (var output = fileInfo.OpenWrite())
             {
                 if (startPosition == null)
+                {
                     startPosition = fileInfo.Length;
+                }
+
                 output.Seek(startPosition.Value, SeekOrigin.Begin);
                 await data.CopyToAsync(output, _streamBufferSize, cancellationToken).ConfigureAwait(false);
             }
@@ -192,14 +205,14 @@ namespace FubarDev.FtpServer.FileSystem.DotNet
         }
 
         /// <summary>
-        /// Sets the modify/access/create timestamp of a file system item
+        /// Sets the modify/access/create timestamp of a file system item.
         /// </summary>
-        /// <param name="entry">The <see cref="IUnixFileSystemEntry"/> to change the timestamp for</param>
-        /// <param name="modify">The modification timestamp</param>
-        /// <param name="access">The access timestamp</param>
-        /// <param name="create">The creation timestamp</param>
-        /// <param name="cancellationToken">The cancellation token</param>
-        /// <returns>The modified <see cref="IUnixFileSystemEntry"/></returns>
+        /// <param name="entry">The <see cref="IUnixFileSystemEntry"/> to change the timestamp for.</param>
+        /// <param name="modify">The modification timestamp.</param>
+        /// <param name="access">The access timestamp.</param>
+        /// <param name="create">The creation timestamp.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <returns>The modified <see cref="IUnixFileSystemEntry"/>.</returns>
         public Task<IUnixFileSystemEntry> SetMacTimeAsync(IUnixFileSystemEntry entry, DateTimeOffset? modify, DateTimeOffset? access, DateTimeOffset? create, CancellationToken cancellationToken)
         {
             var dirEntry = entry as DotNetDirectoryEntry;
@@ -220,13 +233,25 @@ namespace FubarDev.FtpServer.FileSystem.DotNet
             }
 
             if (access != null)
+            {
                 item.LastAccessTimeUtc = access.Value.UtcDateTime;
+            }
+
             if (modify != null)
+            {
                 item.LastWriteTimeUtc = modify.Value.UtcDateTime;
+            }
+
             if (create != null)
+            {
                 item.CreationTimeUtc = create.Value.UtcDateTime;
+            }
+
             if (dirEntry != null)
+            {
                 return Task.FromResult<IUnixFileSystemEntry>(new DotNetDirectoryEntry(this, (DirectoryInfo)item, dirEntry.IsRoot));
+            }
+
             return Task.FromResult<IUnixFileSystemEntry>(new DotNetFileEntry(this, (FileInfo)item));
         }
 
@@ -237,9 +262,9 @@ namespace FubarDev.FtpServer.FileSystem.DotNet
         }
 
         /// <summary>
-        /// Dispose the object
+        /// Dispose the object.
         /// </summary>
-        /// <param name="disposing"><code>true</code> when called from <see cref="Dispose()"/></param>
+        /// <param name="disposing"><code>true</code> when called from <see cref="Dispose()"/>.</param>
         protected virtual void Dispose(bool disposing)
         {
             if (!_disposedValue)

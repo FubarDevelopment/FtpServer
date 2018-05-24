@@ -11,17 +11,17 @@ using Microsoft.Extensions.DependencyInjection;
 namespace FubarDev.FtpServer
 {
     /// <summary>
-    /// Extension methods for <see cref="IServiceCollection"/>
+    /// Extension methods for <see cref="IServiceCollection"/>.
     /// </summary>
     public static class ServiceCollectionExtensions
     {
         /// <summary>
-        /// Adds the FTP server services to the collection
+        /// Adds the FTP server services to the collection.
         /// </summary>
-        /// <typeparam name="TFileSystemFactory">The file system factory implementation</typeparam>
-        /// <typeparam name="TMembershipProvider">The membership provider implementation</typeparam>
-        /// <param name="services">The service collection to add the FTP server services to</param>
-        /// <returns>The service collection</returns>
+        /// <typeparam name="TFileSystemFactory">The file system factory implementation.</typeparam>
+        /// <typeparam name="TMembershipProvider">The membership provider implementation.</typeparam>
+        /// <param name="services">The service collection to add the FTP server services to.</param>
+        /// <returns>The service collection.</returns>
         public static IServiceCollection AddFtpServer<TFileSystemFactory, TMembershipProvider>(this IServiceCollection services)
             where TFileSystemFactory : class, IFileSystemClassFactory
             where TMembershipProvider : class, IMembershipProvider

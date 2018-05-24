@@ -30,9 +30,9 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// <summary>
         /// Initializes a new instance of the <see cref="PassCommandHandler"/> class.
         /// </summary>
-        /// <param name="connection">The connection to create this command handler for</param>
-        /// <param name="membershipProvider">The membership provider</param>
-        /// <param name="fileSystemClassFactory">The file system access factory</param>
+        /// <param name="connection">The connection to create this command handler for.</param>
+        /// <param name="membershipProvider">The membership provider.</param>
+        /// <param name="fileSystemClassFactory">The file system access factory.</param>
         public PassCommandHandler(
             [NotNull] IFtpConnection connection,
             [NotNull] IMembershipProvider membershipProvider,
@@ -50,7 +50,10 @@ namespace FubarDev.FtpServer.CommandHandlers
         public override async Task<FtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
         {
             if (Connection.Data.User == null)
+            {
                 return new FtpResponse(530, "No user name given");
+            }
+
             var password = command.Argument;
             var validationResult = _membershipProvider.ValidateUser(Connection.Data.User.Name, password);
             if (validationResult.IsSuccess)

@@ -1,4 +1,4 @@
-﻿//-----------------------------------------------------------------------
+//-----------------------------------------------------------------------
 // <copyright file="DotNetFileSystemProvider.cs" company="Fubar Development Junker">
 //     Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
@@ -31,7 +31,7 @@ namespace FubarDev.FtpServer.FileSystem.DotNet
         /// <summary>
         /// Initializes a new instance of the <see cref="DotNetFileSystemProvider"/> class.
         /// </summary>
-        /// <param name="options">The file system options</param>
+        /// <param name="options">The file system options.</param>
         public DotNetFileSystemProvider([NotNull] IOptions<DotNetFileSystemOptions> options)
         {
             _rootPath = options.Value.RootPath;
@@ -47,7 +47,10 @@ namespace FubarDev.FtpServer.FileSystem.DotNet
             if (_useUserIdAsSubFolder)
             {
                 if (isAnonymous)
+                {
                     userId = "anonymous";
+                }
+
                 path = Path.Combine(path, userId);
             }
 

@@ -1,4 +1,4 @@
-﻿//-----------------------------------------------------------------------
+//-----------------------------------------------------------------------
 // <copyright file="FtpTransferMode.cs" company="Fubar Development Junker">
 //     Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
@@ -11,14 +11,14 @@ using System.Text;
 namespace FubarDev.FtpServer
 {
     /// <summary>
-    /// FTP transfer mode (RFC 959, 3.4.)
+    /// FTP transfer mode (RFC 959, 3.4.).
     /// </summary>
     public sealed class FtpTransferMode
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="FtpTransferMode"/> class.
         /// </summary>
-        /// <param name="fileType">The file data type of this transfer mode</param>
+        /// <param name="fileType">The file data type of this transfer mode.</param>
         public FtpTransferMode(FtpFileType fileType)
         {
             FileType = fileType;
@@ -31,17 +31,17 @@ namespace FubarDev.FtpServer
         }
 
         /// <summary>
-        /// Gets the file data type
+        /// Gets the file data type.
         /// </summary>
         public FtpFileType FileType { get; }
 
         /// <summary>
-        /// Gets the interpreter mode
+        /// Gets the interpreter mode.
         /// </summary>
         public FtpFileTypeInterpreterMode? InterpreterMode { get; private set; }
 
         /// <summary>
-        /// Gets the bits of a binary transfer mode
+        /// Gets the bits of a binary transfer mode.
         /// </summary>
         public int? Bits { get; private set; }
 
@@ -51,10 +51,10 @@ namespace FubarDev.FtpServer
         public bool IsBinary => FileType == FtpFileType.Image || (FileType == FtpFileType.Local && Bits.GetValueOrDefault() == 8);
 
         /// <summary>
-        /// Parses a transfer mode
+        /// Parses a transfer mode.
         /// </summary>
-        /// <param name="type">The transfer mode to parse</param>
-        /// <returns>The new <see cref="FtpTransferMode"/></returns>
+        /// <param name="type">The transfer mode to parse.</param>
+        /// <returns>The new <see cref="FtpTransferMode"/>.</returns>
         public static FtpTransferMode Parse(string type)
         {
             var fileType = ParseFileType(type[0]);

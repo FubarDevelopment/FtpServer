@@ -15,16 +15,16 @@ using JetBrains.Annotations;
 namespace FubarDev.FtpServer.CommandHandlers
 {
     /// <summary>
-    /// The base class for all FTP command handlers
+    /// The base class for all FTP command handlers.
     /// </summary>
     public abstract class FtpCommandHandler : IFtpCommandHandler
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="FtpCommandHandler"/> class.
         /// </summary>
-        /// <param name="connection">The connection this instance is used for</param>
-        /// <param name="name">The command name</param>
-        /// <param name="alternativeNames">Alternative names</param>
+        /// <param name="connection">The connection this instance is used for.</param>
+        /// <param name="name">The command name.</param>
+        /// <param name="alternativeNames">Alternative names.</param>
         protected FtpCommandHandler([NotNull] IFtpConnection connection, [NotNull] string name, [NotNull, ItemNotNull] params string[] alternativeNames)
         {
             Connection = connection;
@@ -46,13 +46,13 @@ namespace FubarDev.FtpServer.CommandHandlers
         public virtual bool IsAbortable => false;
 
         /// <summary>
-        /// Gets the connection this command was created for
+        /// Gets the connection this command was created for.
         /// </summary>
         [NotNull]
         protected IFtpConnection Connection { get; }
 
         /// <summary>
-        /// Gets the connection data
+        /// Gets the connection data.
         /// </summary>
         [NotNull]
         protected FtpConnectionData Data => Connection.Data;

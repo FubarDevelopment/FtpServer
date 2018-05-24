@@ -15,7 +15,6 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using FubarDev.FtpServer.BackgroundTransfer;
-using FubarDev.FtpServer.FileSystem;
 
 using JetBrains.Annotations;
 
@@ -26,7 +25,7 @@ using Microsoft.Extensions.Options;
 namespace FubarDev.FtpServer
 {
     /// <summary>
-    /// The portable FTP server
+    /// The portable FTP server.
     /// </summary>
     public sealed class FtpServer : IDisposable
     {
@@ -59,10 +58,10 @@ namespace FubarDev.FtpServer
         /// <summary>
         /// Initializes a new instance of the <see cref="FtpServer"/> class.
         /// </summary>
-        /// <param name="serverOptions">The server options</param>
-        /// <param name="serviceProvider">The service provider used to query services</param>
-        /// <param name="logger">The FTP server logger</param>
-        /// <param name="loggerFactory">Factory for loggers</param>
+        /// <param name="serverOptions">The server options.</param>
+        /// <param name="serviceProvider">The service provider used to query services.</param>
+        /// <param name="logger">The FTP server logger.</param>
+        /// <param name="loggerFactory">Factory for loggers.</param>
         public FtpServer(
             [NotNull] IOptions<FtpServerOptions> serverOptions,
             [NotNull] IServiceProvider serviceProvider,
@@ -78,29 +77,29 @@ namespace FubarDev.FtpServer
         }
 
         /// <summary>
-        /// This event is raised when the connection is ready to be configured
+        /// This event is raised when the connection is ready to be configured.
         /// </summary>
         public event EventHandler<ConnectionEventArgs> ConfigureConnection;
 
         /// <summary>
-        /// Gets the FTP server statistics
+        /// Gets the FTP server statistics.
         /// </summary>
         [NotNull]
         public FtpServerStatistics Statistics { get; } = new FtpServerStatistics();
 
         /// <summary>
-        /// Gets the public IP address (required for <code>PASV</code> and <code>EPSV</code>)
+        /// Gets the public IP address (required for <code>PASV</code> and <code>EPSV</code>).
         /// </summary>
         [NotNull]
         public string ServerAddress { get; }
 
         /// <summary>
-        /// Gets the port on which the FTP server is listening for incoming connections
+        /// Gets the port on which the FTP server is listening for incoming connections.
         /// </summary>
         public int Port { get; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether server ready to receive incoming connectoions
+        /// Gets or sets a value indicating whether server ready to receive incoming connectoions.
         /// </summary>
         public bool Ready
         {
@@ -148,17 +147,20 @@ namespace FubarDev.FtpServer
         }
 
         /// <summary>
-        /// Starts the FTP server in the background
+        /// Starts the FTP server in the background.
         /// </summary>
         public void Start()
         {
             if (Stopped)
+            {
                 throw new InvalidOperationException("Cannot start a previously stopped FTP server");
+            }
+
             _listenerTask = ExecuteServerListener().ConfigureAwait(false);
         }
 
         /// <summary>
-        /// Stops the FTP server
+        /// Stops the FTP server.
         /// </summary>
         /// <remarks>
         /// The FTP server cannot be started again after it was stopped.
@@ -172,7 +174,7 @@ namespace FubarDev.FtpServer
         /// <summary>
         /// Get the background transfer states for all active <see cref="IBackgroundTransfer"/> objects.
         /// </summary>
-        /// <returns>The background transfer states for all active <see cref="IBackgroundTransfer"/> objects</returns>
+        /// <returns>The background transfer states for all active <see cref="IBackgroundTransfer"/> objects.</returns>
         [NotNull]
         [ItemNotNull]
         public IReadOnlyCollection<BackgroundTransferInfo> GetBackgroundTaskStates()
@@ -181,10 +183,10 @@ namespace FubarDev.FtpServer
         }
 
         /// <summary>
-        /// Enqueue a new <see cref="IBackgroundTransfer"/> for the given <paramref name="connection"/>
+        /// Enqueue a new <see cref="IBackgroundTransfer"/> for the given <paramref name="connection"/>.
         /// </summary>
-        /// <param name="backgroundTransfer">The background transfer to enqueue</param>
-        /// <param name="connection">The connection to enqueue the background transfer for</param>
+        /// <param name="backgroundTransfer">The background transfer to enqueue.</param>
+        /// <param name="connection">The connection to enqueue the background transfer for.</param>
         public void EnqueueBackgroundTransfer([NotNull] IBackgroundTransfer backgroundTransfer, [CanBeNull] IFtpConnection connection)
         {
             var entry = new BackgroundTransferEntry(backgroundTransfer, connection?.Log);
@@ -251,7 +253,9 @@ namespace FubarDev.FtpServer
                         listener.Stop();
 
                         foreach (var connection in _connections.Keys.ToList())
+                        {
                             connection.Close();
+                        }
                     }
                 }
                 catch (Exception ex)
@@ -287,18 +291,22 @@ namespace FubarDev.FtpServer
             }
             catch (Exception ex)
             {
-                _log.LogError(ex, ex.Message);
+                _log?.LogError(ex, ex.Message);
             }
         }
 
         private void ConnectionOnClosed(object sender, EventArgs eventArgs)
         {
             if (Stopped)
+            {
                 return;
+            }
 
             var connection = (IFtpConnection)sender;
             if (!_connections.TryRemove(connection, out var info))
+            {
                 return;
+            }
 
             info.Scope.Dispose();
             Statistics.ActiveConnections -= 1;

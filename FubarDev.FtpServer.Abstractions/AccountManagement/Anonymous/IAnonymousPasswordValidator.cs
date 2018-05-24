@@ -1,4 +1,4 @@
-﻿//-----------------------------------------------------------------------
+//-----------------------------------------------------------------------
 // <copyright file="IAnonymousPasswordValidator.cs" company="Fubar Development Junker">
 //     Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
@@ -13,10 +13,10 @@ namespace FubarDev.FtpServer.AccountManagement.Anonymous
     public interface IAnonymousPasswordValidator
     {
         /// <summary>
-        /// Is this password valid for anonymous login?
+        /// Determines whether this password is valid for an anonymous login.
         /// </summary>
-        /// <param name="password">The password to validate</param>
-        /// <returns><code>true</code> when the password is valid for this kind of anonymous authentication</returns>
+        /// <param name="password">The password to validate.</param>
+        /// <returns><code>true</code> when the password is valid for this kind of anonymous authentication.</returns>
         bool IsValid(string password);
     }
 }

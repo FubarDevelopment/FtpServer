@@ -14,10 +14,10 @@ using FubarDev.FtpServer.BackgroundTransfer;
 namespace FubarDev.FtpServer.FileSystem
 {
     /// <summary>
-    /// Stores the temporary data in a memory stream
+    /// Stores the temporary data in a memory stream.
     /// </summary>
     /// <remarks>
-    /// This is not recommended in a production environment!
+    /// This is not recommended in a production environment.
     /// </remarks>
     public class MemoryTemporaryData : ITemporaryData
     {
@@ -28,7 +28,12 @@ namespace FubarDev.FtpServer.FileSystem
         /// <inheritdoc/>
         public long Size => _data?.Length ?? 0;
 
-        /// <inheritdoc/>
+        /// <summary>
+        /// Copies the <paramref name="stream"/> data into the temporary data store.
+        /// </summary>
+        /// <param name="stream">The data to copy.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <returns>The task.</returns>
         public async Task FillAsync(Stream stream, CancellationToken cancellationToken)
         {
             _data?.Dispose();
@@ -50,9 +55,9 @@ namespace FubarDev.FtpServer.FileSystem
         }
 
         /// <summary>
-        /// Dispose the object
+        /// Dispose the object.
         /// </summary>
-        /// <param name="disposing"><code>true</code> when called from <see cref="Dispose()"/></param>
+        /// <param name="disposing"><code>true</code> when called from the <see cref="Dispose()"/> function.</param>
         protected virtual void Dispose(bool disposing)
         {
             if (!_disposedValue)

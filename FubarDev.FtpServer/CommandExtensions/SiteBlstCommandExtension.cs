@@ -28,8 +28,8 @@ namespace FubarDev.FtpServer.CommandExtensions
         /// <summary>
         /// Initializes a new instance of the <see cref="SiteBlstCommandExtension"/> class.
         /// </summary>
-        /// <param name="connection">The connection this instance is used for</param>
-        /// <param name="server">The FTP server</param>
+        /// <param name="connection">The connection this instance is used for.</param>
+        /// <param name="server">The FTP server.</param>
         public SiteBlstCommandExtension([NotNull] IFtpConnection connection, [NotNull] FtpServer server)
             : base(connection, "SITE", "BLST")
         {
@@ -42,7 +42,7 @@ namespace FubarDev.FtpServer.CommandExtensions
         /// <inheritdoc/>
         public override async Task<FtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
         {
-            string mode = (string.IsNullOrEmpty(command.Argument) ? "data" : command.Argument).ToLowerInvariant();
+            var mode = (string.IsNullOrEmpty(command.Argument) ? "data" : command.Argument).ToLowerInvariant();
 
             switch (mode)
             {
@@ -60,7 +60,9 @@ namespace FubarDev.FtpServer.CommandExtensions
         {
             var taskStates = _server.GetBackgroundTaskStates();
             if (taskStates.Count == 0)
+            {
                 return new FtpResponse(211, "No background tasks");
+            }
 
             await Connection.WriteAsync("211-Active background tasks:", cancellationToken).ConfigureAwait(false);
             foreach (var line in GetLines(taskStates))

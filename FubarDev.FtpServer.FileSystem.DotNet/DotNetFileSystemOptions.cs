@@ -7,12 +7,12 @@ using System.IO;
 namespace FubarDev.FtpServer.FileSystem.DotNet
 {
     /// <summary>
-    /// Options for the .NET API based file system access
+    /// Options for the .NET API based file system access.
     /// </summary>
     public class DotNetFileSystemOptions
     {
         /// <summary>
-        /// Gets or sets the root path for all users
+        /// Gets or sets the root path for all users.
         /// </summary>
         public string RootPath { get; set; } = Path.GetTempPath();
 
@@ -22,7 +22,7 @@ namespace FubarDev.FtpServer.FileSystem.DotNet
         public bool UseUserIdAsSubFolder { get; set; }
 
         /// <summary>
-        /// Gets or sets the buffer size to be used in async IO methods
+        /// Gets or sets the buffer size to be used in async IO methods.
         /// </summary>
         public int? StreamBufferSize { get; set; }
 

@@ -5,7 +5,7 @@
 namespace FubarDev.FtpServer
 {
     /// <summary>
-    /// Accessor for the active FTP connection
+    /// Accessor for the active FTP connection.
     /// </summary>
     public class FtpConnectionAccessor : IFtpConnectionAccessor
     {

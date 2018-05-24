@@ -1,4 +1,4 @@
-﻿// <copyright file="GoogleDriveDirectoryEntry.cs" company="Fubar Development Junker">
+// <copyright file="GoogleDriveDirectoryEntry.cs" company="Fubar Development Junker">
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
@@ -13,17 +13,17 @@ using JetBrains.Annotations;
 namespace FubarDev.FtpServer.FileSystem.GoogleDrive
 {
    /// <summary>
-    /// Implementatio of <see cref="IUnixDirectoryEntry"/> for Google Drive
+    /// Implementatio of <see cref="IUnixDirectoryEntry"/> for Google Drive.
     /// </summary>
     internal class GoogleDriveDirectoryEntry : IUnixDirectoryEntry
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="GoogleDriveDirectoryEntry"/> class.
         /// </summary>
-        /// <param name="fileSystem">The file system this instance belongs to</param>
-        /// <param name="file">The directory this entry belongs to</param>
-        /// <param name="fullPath">The full path</param>
-        /// <param name="isRoot">Is this a root directory?</param>
+        /// <param name="fileSystem">The file system this instance belongs to.</param>
+        /// <param name="file">The directory this entry belongs to.</param>
+        /// <param name="fullPath">The full path.</param>
+        /// <param name="isRoot">Determines whether this a root directory.</param>
         public GoogleDriveDirectoryEntry([NotNull] GoogleDriveFileSystem fileSystem, [NotNull] File file, [NotNull] string fullPath, bool isRoot = false)
         {
             FileSystem = fileSystem;
@@ -45,12 +45,12 @@ namespace FubarDev.FtpServer.FileSystem.GoogleDrive
         public bool IsDeletable => !IsRoot;
 
         /// <summary>
-        /// Gets the internal model data for Google Drive
+        /// Gets the internal model data for Google Drive.
         /// </summary>
         public File File { get; }
 
         /// <summary>
-        /// Gets the full path relative to the drive root
+        /// Gets the full path relative to the drive root.
         /// </summary>
         public string FullName { get; }
 

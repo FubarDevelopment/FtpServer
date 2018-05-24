@@ -35,7 +35,9 @@ namespace FubarDev.FtpServer.Utilities
                 finally
                 {
                     if (_lock.IsReadLockHeld)
+                    {
                         _lock.ExitReadLock();
+                    }
                 }
             }
         }
@@ -50,7 +52,9 @@ namespace FubarDev.FtpServer.Utilities
             finally
             {
                 if (_lock.IsWriteLockHeld)
+                {
                     _lock.ExitWriteLock();
+                }
             }
         }
 
@@ -64,7 +68,9 @@ namespace FubarDev.FtpServer.Utilities
             finally
             {
                 if (_lock.IsWriteLockHeld)
+                {
                     _lock.ExitWriteLock();
+                }
             }
         }
 
@@ -78,7 +84,9 @@ namespace FubarDev.FtpServer.Utilities
             finally
             {
                 if (_lock.IsReadLockHeld)
+                {
                     _lock.ExitReadLock();
+                }
             }
         }
 
@@ -92,7 +100,9 @@ namespace FubarDev.FtpServer.Utilities
             finally
             {
                 if (_lock.IsWriteLockHeld)
+                {
                     _lock.ExitWriteLock();
+                }
             }
         }
 
@@ -106,7 +116,9 @@ namespace FubarDev.FtpServer.Utilities
             finally
             {
                 if (_lock.IsReadLockHeld)
+                {
                     _lock.ExitReadLock();
+                }
             }
         }
 
@@ -120,7 +132,9 @@ namespace FubarDev.FtpServer.Utilities
         protected virtual void Dispose(bool disposing)
         {
             if (disposing)
+            {
                 _lock?.Dispose();
+            }
         }
     }
 }

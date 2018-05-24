@@ -1,4 +1,4 @@
-﻿//-----------------------------------------------------------------------
+//-----------------------------------------------------------------------
 // <copyright file="Address.cs" company="Fubar Development Junker">
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
@@ -16,7 +16,7 @@ using AF = System.Net.Sockets.AddressFamily;
 namespace FubarDev.FtpServer
 {
     /// <summary>
-    /// Abstraction for an IP address
+    /// Abstraction for an IP address.
     /// </summary>
     public class Address
     {
@@ -25,9 +25,9 @@ namespace FubarDev.FtpServer
         /// <summary>
         /// Initializes a new instance of the <see cref="Address"/> class.
         /// </summary>
-        /// <param name="addressFamily">The IP address family</param>
-        /// <param name="address">The IP address</param>
-        /// <param name="port">The port</param>
+        /// <param name="addressFamily">The IP address family.</param>
+        /// <param name="address">The IP address.</param>
+        /// <param name="port">The port.</param>
         public Address(AddressFamily addressFamily, string address, int port)
         {
             _isEnhanced = true;
@@ -39,8 +39,8 @@ namespace FubarDev.FtpServer
         /// <summary>
         /// Initializes a new instance of the <see cref="Address"/> class.
         /// </summary>
-        /// <param name="address">IPv4 address</param>
-        /// <param name="port">The port</param>
+        /// <param name="address">IPv4 address.</param>
+        /// <param name="port">The port.</param>
         public Address(string address, int port)
         {
             _isEnhanced = false;
@@ -52,7 +52,7 @@ namespace FubarDev.FtpServer
         /// <summary>
         /// Initializes a new instance of the <see cref="Address"/> class.
         /// </summary>
-        /// <param name="port">The port</param>
+        /// <param name="port">The port.</param>
         /// <remarks>
         /// This constructor omits the address part.
         /// </remarks>
@@ -65,39 +65,42 @@ namespace FubarDev.FtpServer
         }
 
         /// <summary>
-        /// Gets the IP address family
+        /// Gets the IP address family.
         /// </summary>
         public AddressFamily? AddressFamily { get; }
 
         /// <summary>
-        /// Gets the IP address
+        /// Gets the IP address.
         /// </summary>
         [CanBeNull]
         public string IpAddress { get; }
 
         /// <summary>
-        /// Gets the port
+        /// Gets the port.
         /// </summary>
         public int IpPort { get; }
 
         /// <summary>
-        /// Parses an IP address
+        /// Parses an IP address.
         /// </summary>
-        /// <param name="address">The IP address to parse</param>
-        /// <returns>The parsed IP address</returns>
+        /// <param name="address">The IP address to parse.</param>
+        /// <returns>The parsed IP address.</returns>
         public static Address Parse(string address)
         {
             if (string.IsNullOrEmpty(address))
+            {
                 return null;
+            }
+
             return IsEnhancedAddress(address)
                        ? ParseEnhanced(address)
                        : ParseLegacy(address);
         }
 
         /// <summary>
-        /// Converts this address to an URI
+        /// Converts this address to an URI.
         /// </summary>
-        /// <returns>The newly created URI</returns>
+        /// <returns>The newly created URI.</returns>
         public Uri ToUri()
         {
             if (AddressFamily != null && AddressFamily == AF.InterNetworkV6)
@@ -108,10 +111,10 @@ namespace FubarDev.FtpServer
         }
 
         /// <summary>
-        /// Converts the IP address into a string
+        /// Converts the IP address into a string.
         /// </summary>
-        /// <param name="logFormat"><code>true</code> when it should be converted to a loggable format, otherwise the FTP format is used</param>
-        /// <returns>The IP address as string</returns>
+        /// <param name="logFormat"><code>true</code> when it should be converted to a loggable format, otherwise the FTP format is used.</param>
+        /// <returns>The IP address as string.</returns>
         public string ToString(bool logFormat)
         {
             if (logFormat)
@@ -126,9 +129,9 @@ namespace FubarDev.FtpServer
         }
 
         /// <summary>
-        /// Converts the IP address to a string as required by the PASV command
+        /// Converts the IP address to a string as required by the PASV command.
         /// </summary>
-        /// <returns>The IP address as string</returns>
+        /// <returns>The IP address as string.</returns>
         public override string ToString()
         {
             var result = new StringBuilder();
@@ -173,7 +176,10 @@ namespace FubarDev.FtpServer
         {
             var addressParts = address.Split(',');
             if (addressParts.Length != 6)
+            {
                 return null;
+            }
+
             var port = (Convert.ToInt32(addressParts[4], 10) * 256) + Convert.ToInt32(addressParts[5], 10);
             var ipAddress = string.Join(".", addressParts, 0, 4);
             return new Address(ipAddress, port);
@@ -184,7 +190,10 @@ namespace FubarDev.FtpServer
             var dividerChar = address[0];
             var addressParts = address.Substring(1, address.Length - 2).Split(dividerChar);
             if (addressParts.Length != 3)
+            {
                 return null;
+            }
+
             var port = Convert.ToInt32(addressParts[2], 10);
             var ipAddress = addressParts[1];
 

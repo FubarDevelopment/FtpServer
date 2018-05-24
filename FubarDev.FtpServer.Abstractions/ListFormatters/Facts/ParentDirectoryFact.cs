@@ -1,11 +1,11 @@
-﻿// <copyright file="ParentDirectoryFact.cs" company="Fubar Development Junker">
+// <copyright file="ParentDirectoryFact.cs" company="Fubar Development Junker">
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
 namespace FubarDev.FtpServer.ListFormatters.Facts
 {
     /// <summary>
-    /// The <code>pdir</code> fact
+    /// The <code>pdir</code> fact.
     /// </summary>
     public class ParentDirectoryFact : TypeFact
     {

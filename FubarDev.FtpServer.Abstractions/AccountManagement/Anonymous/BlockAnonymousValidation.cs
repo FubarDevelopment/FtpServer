@@ -1,4 +1,4 @@
-﻿//-----------------------------------------------------------------------
+//-----------------------------------------------------------------------
 // <copyright file="BlockAnonymousValidation.cs" company="Fubar Development Junker">
 //     Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
@@ -8,7 +8,7 @@
 namespace FubarDev.FtpServer.AccountManagement.Anonymous
 {
     /// <summary>
-    /// Disallow anonymous logins
+    /// Disallow anonymous logins.
     /// </summary>
     public class BlockAnonymousValidation : IAnonymousPasswordValidator
     {

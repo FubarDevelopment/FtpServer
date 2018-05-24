@@ -1,4 +1,4 @@
-﻿// <copyright file="GoogleDriveFileEntry.cs" company="Fubar Development Junker">
+// <copyright file="GoogleDriveFileEntry.cs" company="Fubar Development Junker">
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
@@ -20,12 +20,15 @@ namespace FubarDev.FtpServer.FileSystem.GoogleDrive
         /// <summary>
         /// Initializes a new instance of the <see cref="GoogleDriveFileEntry"/> class.
         /// </summary>
-        /// <param name="fileSystem">The file system this entry belongs to</param>
-        /// <param name="file">The underlying model</param>
-        /// <param name="fullName">The full path and file name of this entry</param>
-        /// <param name="fileSize">The file size (if it differs from the one in the model)</param>
-        public GoogleDriveFileEntry([NotNull] GoogleDriveFileSystem fileSystem, [NotNull] File file,
-            [NotNull] string fullName, long? fileSize = null)
+        /// <param name="fileSystem">The file system this entry belongs to.</param>
+        /// <param name="file">The underlying model.</param>
+        /// <param name="fullName">The full path and file name of this entry.</param>
+        /// <param name="fileSize">The file size (if it differs from the one in the model).</param>
+        public GoogleDriveFileEntry(
+            [NotNull] GoogleDriveFileSystem fileSystem,
+            [NotNull] File file,
+            [NotNull] string fullName,
+            long? fileSize = null)
         {
             FileSystem = fileSystem;
             File = file;
@@ -39,12 +42,12 @@ namespace FubarDev.FtpServer.FileSystem.GoogleDrive
         }
 
         /// <summary>
-        /// Gets the underlying model
+        /// Gets the underlying model.
         /// </summary>
         public File File { get; }
 
         /// <summary>
-        /// Gets the full path to this entry
+        /// Gets the full path to this entry.
         /// </summary>
         public string FullName { get; }
 

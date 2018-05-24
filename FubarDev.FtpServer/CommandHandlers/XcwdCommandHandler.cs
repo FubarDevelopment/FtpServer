@@ -20,7 +20,7 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// <summary>
         /// Initializes a new instance of the <see cref="XcwdCommandHandler"/> class.
         /// </summary>
-        /// <param name="connection">The connection to create this command handler for</param>
+        /// <param name="connection">The connection to create this command handler for.</param>
         public XcwdCommandHandler(IFtpConnection connection)
             : base(connection, "XCWD")
         {
@@ -33,7 +33,10 @@ namespace FubarDev.FtpServer.CommandHandlers
             var currentPath = Data.Path.Clone();
             var subDir = await Data.FileSystem.GetDirectoryAsync(currentPath, path, cancellationToken).ConfigureAwait(false);
             if (subDir == null)
+            {
                 return new FtpResponse(550, "Not a valid directory.");
+            }
+
             Data.Path = currentPath;
             return new FtpResponse(200, $"Directory changed to {currentPath.GetFullPath()}");
         }

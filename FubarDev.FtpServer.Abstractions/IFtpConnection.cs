@@ -22,7 +22,7 @@ using Microsoft.Extensions.Logging;
 namespace FubarDev.FtpServer
 {
     /// <summary>
-    /// The interface for an FTP connection
+    /// The interface for an FTP connection.
     /// </summary>
     public interface IFtpConnection : IDisposable
     {
@@ -32,101 +32,101 @@ namespace FubarDev.FtpServer
         event EventHandler Closed;
 
         /// <summary>
-        /// Gets the dictionary of all known command handlers
+        /// Gets the dictionary of all known command handlers.
         /// </summary>
         [NotNull]
         IReadOnlyDictionary<string, IFtpCommandHandler> CommandHandlers { get; }
 
         /// <summary>
-        /// Gets or sets the encoding for the LIST/NLST commands
+        /// Gets or sets the encoding for the LIST/NLST commands.
         /// </summary>
         [NotNull]
         Encoding Encoding { get; set; }
 
         /// <summary>
-        /// Gets the FTP connection data
+        /// Gets the FTP connection data.
         /// </summary>
         [NotNull]
         FtpConnectionData Data { get; }
 
         /// <summary>
-        /// Gets the FTP connection logger
+        /// Gets the FTP connection logger.
         /// </summary>
         [CanBeNull]
         ILogger Log { get; }
 
         /// <summary>
-        /// Gets the local end point
+        /// Gets the local end point.
         /// </summary>
         [NotNull]
         IPEndPoint LocalEndPoint { get; }
 
         /// <summary>
-        /// Gets the control connection stream
+        /// Gets the control connection stream.
         /// </summary>
         [NotNull]
         Stream OriginalStream { get; }
 
         /// <summary>
-        /// Gets or sets the control connection stream
+        /// Gets or sets the control connection stream.
         /// </summary>
         [NotNull]
         Stream SocketStream { get; set; }
 
         /// <summary>
-        /// Gets a value indicating whether this is a secure connection
+        /// Gets a value indicating whether this is a secure connection.
         /// </summary>
         bool IsSecure { get; }
 
         /// <summary>
-        /// Gets the remote address of the client
+        /// Gets the remote address of the client.
         /// </summary>
         [NotNull]
         Address RemoteAddress { get; }
 
         /// <summary>
-        /// Gets the cancellation token to use to signal a task cancellation
+        /// Gets the cancellation token to use to signal a task cancellation.
         /// </summary>
         [EditorBrowsable(EditorBrowsableState.Never)]
         CancellationToken CancellationToken { get; }
 
         /// <summary>
-        /// Starts processing of messages for this connection
+        /// Starts processing of messages for this connection.
         /// </summary>
         void Start();
 
         /// <summary>
-        /// Closes the connection
+        /// Closes the connection.
         /// </summary>
         void Close();
 
         /// <summary>
-        /// Writes a FTP response to a client
+        /// Writes a FTP response to a client.
         /// </summary>
-        /// <param name="response">The response to write to the client</param>
-        /// <param name="cancellationToken">The cancellation token</param>
-        /// <returns>The task</returns>
+        /// <param name="response">The response to write to the client.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <returns>The task.</returns>
         Task WriteAsync([NotNull] FtpResponse response, CancellationToken cancellationToken);
 
         /// <summary>
-        /// Writes response to a client
+        /// Writes response to a client.
         /// </summary>
-        /// <param name="response">The response to write to the client</param>
-        /// <param name="cancellationToken">The cancellation token</param>
-        /// <returns>The task</returns>
+        /// <param name="response">The response to write to the client.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <returns>The task.</returns>
         Task WriteAsync([NotNull] string response, CancellationToken cancellationToken);
 
         /// <summary>
-        /// Creates a response socket for e.g. LIST/NLST
+        /// Creates a response socket for e.g. LIST/NLST.
         /// </summary>
-        /// <returns>The data connection</returns>
+        /// <returns>The data connection.</returns>
         Task<TcpClient> CreateResponseSocket();
 
         /// <summary>
-        /// Create an encrypted stream
+        /// Create an encrypted stream.
         /// </summary>
-        /// <param name="unencryptedStream">The stream to encrypt</param>
-        /// <returns>The encrypted stream</returns>
+        /// <param name="unencryptedStream">The stream to encrypt.</param>
+        /// <returns>The encrypted stream.</returns>
         [NotNull]
         [ItemNotNull]
         Task<Stream> CreateEncryptedStream([NotNull] Stream unencryptedStream);

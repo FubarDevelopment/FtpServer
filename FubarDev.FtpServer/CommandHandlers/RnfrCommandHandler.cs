@@ -20,7 +20,7 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// <summary>
         /// Initializes a new instance of the <see cref="RnfrCommandHandler"/> class.
         /// </summary>
-        /// <param name="connection">The connection to create this command handler for</param>
+        /// <param name="connection">The connection to create this command handler for.</param>
         public RnfrCommandHandler(IFtpConnection connection)
             : base(connection, "RNFR")
         {
@@ -36,9 +36,14 @@ namespace FubarDev.FtpServer.CommandHandlers
             var tempPath = Data.Path.Clone();
             var fileInfo = await Data.FileSystem.SearchEntryAsync(tempPath, fileName, cancellationToken).ConfigureAwait(false);
             if (fileInfo == null)
+            {
                 return new FtpResponse(550, "Directory doesn't exist.");
+            }
+
             if (fileInfo.Entry == null)
+            {
                 return new FtpResponse(550, "Source entry doesn't exist.");
+            }
 
             Data.RenameFrom = fileInfo;
 

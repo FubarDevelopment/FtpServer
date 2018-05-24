@@ -21,7 +21,7 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// <summary>
         /// Initializes a new instance of the <see cref="XrmdCommandHandler"/> class.
         /// </summary>
-        /// <param name="connection">The connection to create this command handler for</param>
+        /// <param name="connection">The connection to create this command handler for.</param>
         public XrmdCommandHandler(IFtpConnection connection)
             : base(connection, "XRMD")
         {
@@ -34,11 +34,17 @@ namespace FubarDev.FtpServer.CommandHandlers
             var currentPath = Data.Path.Clone();
             var subDir = await Data.FileSystem.GetDirectoryAsync(currentPath, path, cancellationToken).ConfigureAwait(false);
             if (subDir == null)
+            {
                 return new FtpResponse(550, "Not a valid directory.");
+            }
+
             try
             {
                 if (Data.Path.IsChildOfOrSameAs(currentPath, Data.FileSystem))
+                {
                     return new FtpResponse(550, "Not a valid directory (is same or parent of current directory).");
+                }
+
                 await Data.FileSystem.UnlinkAsync(subDir, cancellationToken).ConfigureAwait(false);
                 return new FtpResponse(250, "Directory removed.");
             }

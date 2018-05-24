@@ -1,4 +1,4 @@
-﻿//-----------------------------------------------------------------------
+//-----------------------------------------------------------------------
 // <copyright file="DotNetDirectoryEntry.cs" company="Fubar Development Junker">
 //     Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
@@ -24,9 +24,9 @@ namespace FubarDev.FtpServer.FileSystem.DotNet
         /// <summary>
         /// Initializes a new instance of the <see cref="DotNetDirectoryEntry"/> class.
         /// </summary>
-        /// <param name="fileSystem">The file system this entry belongs to</param>
-        /// <param name="dirInfo">The <see cref="DirectoryInfo"/> to extract the information from</param>
-        /// <param name="isRoot">Is this the root directory?</param>
+        /// <param name="fileSystem">The file system this entry belongs to.</param>
+        /// <param name="dirInfo">The <see cref="DirectoryInfo"/> to extract the information from.</param>
+        /// <param name="isRoot">Defines whether this the root directory.</param>
         public DotNetDirectoryEntry([NotNull] DotNetFileSystem fileSystem, [NotNull] DirectoryInfo dirInfo, bool isRoot)
         {
             FileSystem = fileSystem;
@@ -39,7 +39,7 @@ namespace FubarDev.FtpServer.FileSystem.DotNet
         }
 
         /// <summary>
-        /// Gets the underlying <see cref="DirectoryInfo"/>
+        /// Gets the underlying <see cref="DirectoryInfo"/>.
         /// </summary>
         public DirectoryInfo Info { get; }
 

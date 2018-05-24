@@ -1,4 +1,4 @@
-﻿//-----------------------------------------------------------------------
+//-----------------------------------------------------------------------
 // <copyright file="PwdCommandHandler.cs" company="Fubar Development Junker">
 //     Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
@@ -20,7 +20,7 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// <summary>
         /// Initializes a new instance of the <see cref="PwdCommandHandler"/> class.
         /// </summary>
-        /// <param name="connection">The connection to create this command handler for</param>
+        /// <param name="connection">The connection to create this command handler for.</param>
         public PwdCommandHandler(IFtpConnection connection)
             : base(connection, "PWD", "XPWD")
         {
@@ -31,7 +31,10 @@ namespace FubarDev.FtpServer.CommandHandlers
         {
             var path = Connection.Data.Path.GetFullPath();
             if (path.EndsWith("/") && path.Length > 1)
+            {
                 path = path.Substring(0, path.Length - 1);
+            }
+
             return Task.FromResult(new FtpResponse(257, $"\"{path}\""));
         }
     }

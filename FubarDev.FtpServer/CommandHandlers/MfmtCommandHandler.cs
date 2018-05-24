@@ -22,7 +22,7 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// <summary>
         /// Initializes a new instance of the <see cref="MfmtCommandHandler"/> class.
         /// </summary>
-        /// <param name="connection">The connection to create this command handler for</param>
+        /// <param name="connection">The connection to create this command handler for.</param>
         public MfmtCommandHandler(IFtpConnection connection)
             : base(connection, "MFMT")
         {
@@ -39,15 +39,22 @@ namespace FubarDev.FtpServer.CommandHandlers
         {
             var parts = command.Argument.Split(new[] { ' ' }, 2);
             if (parts.Length != 2)
+            {
                 return new FtpResponse(551, "Timestamp or file name missing.");
+            }
+
             if (!parts[0].TryParseTimestamp("UTC", out var modificationTime))
+            {
                 return new FtpResponse(551, "Invalid timestamp.");
+            }
 
             var path = parts[1];
             var currentPath = Data.Path.Clone();
             var fileInfo = await Data.FileSystem.SearchFileAsync(currentPath, path, cancellationToken).ConfigureAwait(false);
             if (fileInfo?.Entry == null)
+            {
                 return new FtpResponse(550, "File not found.");
+            }
 
             await Data.FileSystem.SetMacTimeAsync(fileInfo.Entry, modificationTime, null, null, cancellationToken).ConfigureAwait(false);
 

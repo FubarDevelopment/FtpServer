@@ -1,4 +1,4 @@
-﻿//-----------------------------------------------------------------------
+//-----------------------------------------------------------------------
 // <copyright file="LongListFormatter.cs" company="Fubar Development Junker">
 //     Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
@@ -13,7 +13,7 @@ using FubarDev.FtpServer.FileSystem;
 namespace FubarDev.FtpServer.ListFormatters
 {
     /// <summary>
-    /// The <see cref="IListFormatter"/> for the long directory listing format
+    /// The <see cref="IListFormatter"/> for the long directory listing format.
     /// </summary>
     public class LongListFormatter : IListFormatter
     {

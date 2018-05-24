@@ -11,17 +11,17 @@ using JetBrains.Annotations;
 namespace FubarDev.FtpServer
 {
     /// <summary>
-    /// Extension methods for <see cref="IFtpConnection"/>
+    /// Extension methods for <see cref="IFtpConnection"/>.
     /// </summary>
     public static class ConnectionExtensions
     {
         /// <summary>
-        /// Provides a wrapper for safe disposal of a response socket
+        /// Provides a wrapper for safe disposal of a response socket.
         /// </summary>
-        /// <param name="connection">The connection to get the response socket from</param>
-        /// <param name="asyncSendAction">The action to perform with a working response socket</param>
-        /// <param name="createConnectionErrorFunc">Function to be called when opening the response socket failed</param>
-        /// <returns>The task with the FTP response</returns>
+        /// <param name="connection">The connection to get the response socket from.</param>
+        /// <param name="asyncSendAction">The action to perform with a working response socket.</param>
+        /// <param name="createConnectionErrorFunc">Function to be called when opening the response socket failed.</param>
+        /// <returns>The task with the FTP response.</returns>
         [NotNull]
         [ItemNotNull]
         public static async Task<FtpResponse> SendResponseAsync(

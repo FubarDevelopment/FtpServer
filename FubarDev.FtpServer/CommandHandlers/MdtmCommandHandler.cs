@@ -21,7 +21,7 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// <summary>
         /// Initializes a new instance of the <see cref="MdtmCommandHandler"/> class.
         /// </summary>
-        /// <param name="connection">The connection to create this command handler for</param>
+        /// <param name="connection">The connection to create this command handler for.</param>
         public MdtmCommandHandler(IFtpConnection connection)
             : base(connection, "MDTM")
         {
@@ -44,15 +44,22 @@ namespace FubarDev.FtpServer.CommandHandlers
             {
                 var parts = path.Split(new[] { ' ' }, 2);
                 if (parts.Length != 2)
+                {
                     return new FtpResponse(550, "File not found.");
+                }
+
                 if (!parts[0].TryParseTimestamp("UTC", out var modificationTime))
+                {
                     return new FtpResponse(550, "File not found.");
+                }
 
                 path = parts[1];
                 currentPath = Data.Path.Clone();
                 fileInfo = await Data.FileSystem.SearchFileAsync(currentPath, path, cancellationToken).ConfigureAwait(false);
                 if (fileInfo?.Entry == null)
+                {
                     return new FtpResponse(550, "File not found.");
+                }
 
                 foundEntry = await Data.FileSystem.SetMacTimeAsync(fileInfo.Entry, modificationTime, null, null, cancellationToken).ConfigureAwait(false);
             }

@@ -1,4 +1,4 @@
-﻿// <copyright file="GenericFtpCommandHandlerExtension.cs" company="Fubar Development Junker">
+// <copyright file="GenericFtpCommandHandlerExtension.cs" company="Fubar Development Junker">
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
@@ -12,10 +12,10 @@ using JetBrains.Annotations;
 namespace FubarDev.FtpServer.CommandExtensions
 {
     /// <summary>
-    /// A generic FTP command extension
+    /// A generic FTP command extension.
     /// </summary>
     /// <remarks>
-    /// This class is only useful when FTP commands provide their own extensions (<see cref="FtpCommandHandler.GetExtensions"/>)
+    /// This class is only useful when FTP commands provide their own extensions (<see cref="FtpCommandHandler.GetExtensions"/>).
     /// </remarks>
     public class GenericFtpCommandHandlerExtension : FtpCommandHandlerExtension
     {
@@ -24,11 +24,11 @@ namespace FubarDev.FtpServer.CommandExtensions
         /// <summary>
         /// Initializes a new instance of the <see cref="GenericFtpCommandHandlerExtension"/> class.
         /// </summary>
-        /// <param name="connection">The connection this instance is used for</param>
-        /// <param name="extensionFor">The name of the command this extension is for</param>
-        /// <param name="name">The command name</param>
-        /// <param name="processCommand">The function to process the received command with</param>
-        /// <param name="alternativeNames">Alternative names</param>
+        /// <param name="connection">The connection this instance is used for.</param>
+        /// <param name="extensionFor">The name of the command this extension is for.</param>
+        /// <param name="name">The command name.</param>
+        /// <param name="processCommand">The function to process the received command with.</param>
+        /// <param name="alternativeNames">Alternative names.</param>
         public GenericFtpCommandHandlerExtension([NotNull] IFtpConnection connection, [NotNull] string extensionFor, [NotNull] string name, FtpCommandHandlerProcessDelegate processCommand, [NotNull] params string[] alternativeNames)
             : base(connection, extensionFor, name, alternativeNames)
         {
@@ -36,11 +36,11 @@ namespace FubarDev.FtpServer.CommandExtensions
         }
 
         /// <summary>
-        /// Processes the command
+        /// Processes the command.
         /// </summary>
-        /// <param name="command">The command to process</param>
-        /// <param name="cancellationToken">The cancellation token to signal command abortion</param>
-        /// <returns>The FTP response</returns>
+        /// <param name="command">The command to process.</param>
+        /// <param name="cancellationToken">The cancellation token to signal command abortion.</param>
+        /// <returns>The FTP response.</returns>
         public override Task<FtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
         {
             return _processCommand(command, cancellationToken);

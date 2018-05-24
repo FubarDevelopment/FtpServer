@@ -44,7 +44,7 @@ namespace FubarDev.FtpServer.Tests
         {
             var address = Address.Parse("|2|1080::8:800:200C:417A|5282|");
             Assert.NotNull(address);
-            Assert.Equal(new Address(AddressFamily.InterNetwork, "1080::8:800:200C:417A", 5282), address, new AddressComparer());
+            Assert.Equal(new Address(AddressFamily.InterNetworkV6, "1080::8:800:200C:417A", 5282), address, new AddressComparer());
             Assert.Equal(new Uri("port://[1080::8:800:200C:417A]:5282"), address.ToUri());
         }
 

@@ -10,7 +10,7 @@ using JetBrains.Annotations;
 namespace FubarDev.FtpServer.AccountManagement
 {
     /// <summary>
-    /// An anonymous FTP user
+    /// An anonymous FTP user.
     /// </summary>
     public class AnonymousFtpUser : IFtpUser
     {
@@ -19,7 +19,7 @@ namespace FubarDev.FtpServer.AccountManagement
         /// <summary>
         /// Initializes a new instance of the <see cref="AnonymousFtpUser"/> class.
         /// </summary>
-        /// <param name="email">The anonymous users email address</param>
+        /// <param name="email">The anonymous users email address.</param>
         public AnonymousFtpUser([CanBeNull] string email)
         {
             Email = email;
@@ -29,7 +29,7 @@ namespace FubarDev.FtpServer.AccountManagement
         public string Name { get; } = "anonymous";
 
         /// <summary>
-        /// Gets the anonymous users email address
+        /// Gets the anonymous users email address.
         /// </summary>
         [CanBeNull]
         public string Email { get; }

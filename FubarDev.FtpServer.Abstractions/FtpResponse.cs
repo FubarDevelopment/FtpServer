@@ -1,4 +1,4 @@
-﻿//-----------------------------------------------------------------------
+//-----------------------------------------------------------------------
 // <copyright file="FtpResponse.cs" company="Fubar Development Junker">
 //     Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
@@ -12,15 +12,15 @@ using JetBrains.Annotations;
 namespace FubarDev.FtpServer
 {
     /// <summary>
-    /// FTP response
+    /// FTP response.
     /// </summary>
     public class FtpResponse
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="FtpResponse"/> class.
         /// </summary>
-        /// <param name="code">The response code</param>
-        /// <param name="message">The response message</param>
+        /// <param name="code">The response code.</param>
+        /// <param name="message">The response message.</param>
         public FtpResponse(int code, [CanBeNull] string message)
         {
             Code = code;
@@ -28,12 +28,12 @@ namespace FubarDev.FtpServer
         }
 
         /// <summary>
-        /// Gets the response code
+        /// Gets the response code.
         /// </summary>
         public int Code { get; }
 
         /// <summary>
-        /// Gets the response message
+        /// Gets the response message.
         /// </summary>
         [CanBeNull]
         public string Message { get; }

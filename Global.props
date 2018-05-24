@@ -1,5 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project>
+  <Import Project="DotNetSdkMono.props" />
+
   <PropertyGroup>
     <LangVersion>latest</LangVersion>
     <VersionPrefix>2.0.0</VersionPrefix>
@@ -24,21 +26,12 @@
     <AdditionalFiles Include="$(MSBuildThisFileDirectory)stylecop.json" Link="stylecop.json" />
   </ItemGroup>
 
-  <PropertyGroup Condition=" '$(OutputType)' == 'library' and '$(AssemblyName)' != 'FubarDev.FtpServer.Tests' ">
-    <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
-  </PropertyGroup>
-
-  <PropertyGroup Condition=" '$(AssemblyName)' != 'FubarDev.FtpServer.Tests' ">
-    <DebugType>portable</DebugType> <!-- Required for EmbedSources -->
-  </PropertyGroup>
-
-  <ItemGroup Condition=" '$(Configuration)' == 'Release' and '$(AssemblyName)' != 'FubarDev.FtpServer.Tests' ">
-    <PackageReference Include="SourceLink.Embed.AllSourceFiles" Version="2.8.0" PrivateAssets="all" />
-    <PackageReference Include="SourceLink.Copy.PdbFiles" Version="2.8.0" PrivateAssets="All" />
+  <ItemGroup>
+    <PackageReference Include="JetBrains.Annotations" Version="11.1.0" PrivateAssets="All" />
   </ItemGroup>
 
-  <PropertyGroup Condition=" '$(OutputType)' != 'library' or '$(AssemblyName)' == 'FubarDev.FtpServer.Tests' ">
-    <DebugType>full</DebugType>
+  <PropertyGroup Condition="'$(TargetFramework)'=='net461'">
+    <DefineConstants>$(DefineConstants);NETFRAMEWORK</DefineConstants>
   </PropertyGroup>
 
 </Project>
