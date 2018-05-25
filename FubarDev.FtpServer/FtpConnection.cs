@@ -245,6 +245,7 @@ namespace FubarDev.FtpServer
                 SocketStream.Dispose();
                 SocketStream = OriginalStream;
             }
+
             _socket.Dispose();
             _cancellationTokenSource.Dispose();
             Data.Dispose();
