@@ -3,6 +3,12 @@
   "settings": {
     "documentationRules": {
       "companyName": "Fubar Development Junker"
+    },
+    "orderingRules": {
+        "usingDirectivesPlacement": "outsideNamespace"
+    },
+    "layoutRules": {
+        "newlineAtEndOfFile": "require"
     }
   }
 }

@@ -1,9 +1,9 @@
 # Portable FTP server
 
-[![Build status](https://build.fubar-dev.de/app/rest/builds/buildType:%28id:FtpServer_ReleaseBuild%29/statusIcon)](https://build.fubar-dev.com/project.html?projectId=FtpServer)
+[![Build status](https://build.fubar-dev.de/app/rest/builds/buildType:%28id:FtpServer_ReleaseBuild%29/statusIcon.svg)](https://build.fubar-dev.com/project.html?projectId=FtpServer)
 
-This FTP server is written as PCL and has an abstract file system
-which allows e.g. Google Drive as backend.
+This FTP server is written as .NET Standard 2.0 library and has an
+abstract file system which allows e.g. Google Drive as backend.
 
 # License
 
@@ -13,42 +13,66 @@ The library is released under the [![MIT license](https://img.shields.io/github/
 
 ## Compilation
 
-* Visual Studio 2015 / C# 6
+* Visual Studio 2017 / C# 7.2
 
 ## Using
 
-* Visual Studio 2013 (maybe 2012 too)
-* .NET 4.5, .NET Core 5, Windows 8, Windows Phone 8.1, Windows Phone Silverlight 8.0, Xamarin iOS/Android
+* Visual Studio 2017
+* .NET Standard 2.0
 
 ## NuGet packages
 
 | Description				| Badge |
 |---------------------------|-------|
-| Core library				| [![FubarDev.FtpServer](https://img.shields.io/nuget/v/FubarDev.FtpServer.svg)](https://www.nuget.org/packages/FubarDev.FtpServer) |
-| Virtual FTP file system	| [![FubarDev.FtpServer.FileSystem](https://img.shields.io/nuget/v/FubarDev.FtpServer.FileSystem.svg)](https://www.nuget.org/packages/FubarDev.FtpServer.FileSystem) |
-| Google Drive support		| [![FubarDev.FtpServer.FileSystem.GoogleDrive](https://img.shields.io/nuget/v/FubarDev.FtpServer.FileSystem.GoogleDrive.svg)](https://www.nuget.org/packages/FubarDev.FtpServer.FileSystem.GoogleDrive) |
-| OneDrive support			| [![FubarDev.FtpServer.FileSystem.OneDrive](https://img.shields.io/nuget/v/FubarDev.FtpServer.FileSystem.OneDrive.svg)](https://www.nuget.org/packages/FubarDev.FtpServer.FileSystem.OneDrive) |
-| Account management		| [![FubarDev.FtpServer.AccountManagement](https://img.shields.io/nuget/v/FubarDev.FtpServer.AccountManagement.svg)](https://www.nuget.org/packages/FubarDev.FtpServer.AccountManagement) |
-| FTPS (TLS) Support       	| [![FubarDev.FtpServer.AuthTls](https://img.shields.io/nuget/v/FubarDev.FtpServer.AuthTls.svg)](https://www.nuget.org/packages/FubarDev.FtpServer.AuthTls) |
+| `FubarDev.FtpServer`: Core library				| [![FubarDev.FtpServer](https://img.shields.io/nuget/vpre/FubarDev.FtpServer.svg)](https://www.nuget.org/packages/FubarDev.FtpServer) |
+| `FD.FS.Abstractions`: Basic types				| [![FubarDev.FtpServer.Abstractions](https://img.shields.io/nuget/vpre/FubarDev.FtpServer.Abstractions.svg)](https://www.nuget.org/packages/FubarDev.FtpServer.Abstractions) |
+| `FD.FS.FileSystem.DotNet`: `System.IO`-based file system	| [![FubarDev.FtpServer.FileSystem.DotNet](https://img.shields.io/nuget/vpre/FubarDev.FtpServer.FileSystem.DotNet.svg)](https://www.nuget.org/packages/FubarDev.FtpServer.FileSystem.DotNet) |
+| `FD.FS.FileSystem.GoogleDrive`: Google Drive as file system	| [![FubarDev.FtpServer.FileSystem.GoogleDrive](https://img.shields.io/nuget/vpre/FubarDev.FtpServer.FileSystem.GoogleDrive.svg)](https://www.nuget.org/packages/FubarDev.FtpServer.FileSystem.GoogleDrive) |
 
 # Example FTP server
 
+## Creating the project
+
+```bash
+dotnet new console
+dotnet add package FubarDev.FtpServer.FileSystem.DotNet
+dotnet add package FubarDev.FtpServer
+dotnet add package Microsoft.Extensions.DependencyInjection
+```
+
+## Contents of `Main` in Program.cs
+
 ```csharp
-// allow only anonymous logins
-var membershipProvider = new AnonymousMembershipProvider();
+// Setup dependency injection
+var services = new ServiceCollection();
 
 // use %TEMP%/TestFtpServer as root folder
-var fsProvider = new DotNetFileSystemProvider(Path.Combine(Path.GetTempPath(), "TestFtpServer"), false);
+services.Configure<DotNetFileSystemOptions>(opt => opt
+    .RootPath = Path.Combine(Path.GetTempPath(), "TestFtpServer"));
 
-// Initialize the FTP server
-var ftpServer = new FtpServer(fsProvider, membershipProvider, "127.0.0.1");
+// Add FTP server services
+// DotNetFileSystemProvider = Use the .NET file system functionality
+// AnonymousMembershipProvider = allow only anonymous logins
+services.AddFtpServer(builder => builder
+    .UseDotNetFileSystem() // Use the .NET file system functionality
+    .EnableAnonymousAuthentication()); // allow anonymous logins
 
-// Start the FTP server
-ftpServer.Start();
+// Configure the FTP server
+services.Configure<FtpServerOptions>(opt => opt.ServerAddress = "127.0.0.1");
 
-Console.WriteLine("Press ENTER/RETURN to close the test application.");
-Console.ReadLine();
+// Build the service provider
+using (var serviceProvider = services.BuildServiceProvider())
+{
+    // Initialize the FTP server
+    var ftpServer = serviceProvider.GetRequiredService<FtpServer>();
 
-// Stop the FTP server
-ftpServer.Stop();
+    // Start the FTP server
+    ftpServer.Start();
+    
+    Console.WriteLine("Press ENTER/RETURN to close the test application.");
+    Console.ReadLine();
+    
+    // Stop the FTP server
+    ftpServer.Stop();
+}
 ```
