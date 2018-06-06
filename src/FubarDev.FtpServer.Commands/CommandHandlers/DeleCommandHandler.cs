@@ -11,6 +11,8 @@ using System.Threading.Tasks;
 
 using FubarDev.FtpServer.FileSystem;
 
+using JetBrains.Annotations;
+
 using Microsoft.Extensions.Logging;
 
 namespace FubarDev.FtpServer.CommandHandlers
@@ -20,6 +22,7 @@ namespace FubarDev.FtpServer.CommandHandlers
     /// </summary>
     public class DeleCommandHandler : FtpCommandHandler
     {
+        [CanBeNull]
         private readonly ILogger<DeleCommandHandler> _logger;
 
         /// <summary>
@@ -27,7 +30,7 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// </summary>
         /// <param name="connection">The connection to create this command handler for.</param>
         /// <param name="logger">The logger.</param>
-        public DeleCommandHandler(IFtpConnection connection, ILogger<DeleCommandHandler> logger)
+        public DeleCommandHandler([NotNull] IFtpConnection connection, [CanBeNull] ILogger<DeleCommandHandler> logger = null)
             : base(connection, "DELE")
         {
             _logger = logger;
@@ -51,7 +54,7 @@ namespace FubarDev.FtpServer.CommandHandlers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, ex.Message);
+                _logger?.LogError(ex, ex.Message);
                 return new FtpResponse(550, "Couldn't delete file.");
             }
         }

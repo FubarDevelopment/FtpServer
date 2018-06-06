@@ -11,6 +11,8 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
+using JetBrains.Annotations;
+
 using Microsoft.Extensions.Logging;
 
 namespace FubarDev.FtpServer.BackgroundTransfer
@@ -19,13 +21,14 @@ namespace FubarDev.FtpServer.BackgroundTransfer
     {
         private readonly ManualResetEvent _event = new ManualResetEvent(false);
 
+        [CanBeNull]
         private readonly ILogger _log;
 
         private CancellationTokenSource _cancellationTokenSource;
 
         private bool _disposedValue;
 
-        public BackgroundTransferWorker(ILogger<BackgroundTransferWorker> logger)
+        public BackgroundTransferWorker(ILogger<BackgroundTransferWorker> logger = null)
         {
             _log = logger;
             Queue = new BackgroundTransferQueue(_event);

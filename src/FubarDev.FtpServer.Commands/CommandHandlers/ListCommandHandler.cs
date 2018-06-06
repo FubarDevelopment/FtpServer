@@ -19,6 +19,8 @@ using FubarDev.FtpServer.FileSystem;
 using FubarDev.FtpServer.ListFormatters;
 using FubarDev.FtpServer.Utilities;
 
+using JetBrains.Annotations;
+
 using Microsoft.Extensions.Logging;
 
 namespace FubarDev.FtpServer.CommandHandlers
@@ -28,6 +30,7 @@ namespace FubarDev.FtpServer.CommandHandlers
     /// </summary>
     public class ListCommandHandler : FtpCommandHandler
     {
+        [CanBeNull]
         private readonly ILogger<ListCommandHandler> _logger;
 
         /// <summary>
@@ -35,7 +38,7 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// </summary>
         /// <param name="connection">The connection to create this command handler for.</param>
         /// <param name="logger">The logger.</param>
-        public ListCommandHandler(IFtpConnection connection, ILogger<ListCommandHandler> logger)
+        public ListCommandHandler([NotNull] IFtpConnection connection, [CanBeNull] ILogger<ListCommandHandler> logger = null)
             : base(connection, "LIST", "NLST", "LS")
         {
             _logger = logger;
@@ -50,7 +53,7 @@ namespace FubarDev.FtpServer.CommandHandlers
                     client => ExecuteSend(client, command, cancellationToken),
                     ex =>
                     {
-                        _logger.LogError(ex, ex.Message);
+                        _logger?.LogError(ex, ex.Message);
                         return new FtpResponse(425, "Can't open data connection.");
                     })
                 .ConfigureAwait(false);

@@ -25,6 +25,7 @@ namespace FubarDev.FtpServer.CommandExtensions
         [NotNull]
         private readonly IFtpServer _server;
 
+        [CanBeNull]
         private readonly ILogger<SiteBlstCommandExtension> _logger;
 
         /// <summary>
@@ -33,7 +34,7 @@ namespace FubarDev.FtpServer.CommandExtensions
         /// <param name="connection">The connection this instance is used for.</param>
         /// <param name="server">The FTP server.</param>
         /// <param name="logger">The logger.</param>
-        public SiteBlstCommandExtension([NotNull] IFtpConnection connection, [NotNull] IFtpServer server, ILogger<SiteBlstCommandExtension> logger)
+        public SiteBlstCommandExtension([NotNull] IFtpConnection connection, [NotNull] IFtpServer server, [CanBeNull] ILogger<SiteBlstCommandExtension> logger = null)
             : base(connection, "SITE", "BLST")
         {
             _server = server;
@@ -85,7 +86,7 @@ namespace FubarDev.FtpServer.CommandExtensions
                 ExecuteSend,
                 ex =>
                 {
-                    _logger.LogError(ex, ex.Message);
+                    _logger?.LogError(ex, ex.Message);
                     return new FtpResponse(425, "Can't open data connection.");
                 }).ConfigureAwait(false);
         }

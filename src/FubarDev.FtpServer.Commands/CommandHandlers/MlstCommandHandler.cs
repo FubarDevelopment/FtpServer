@@ -15,6 +15,8 @@ using FubarDev.FtpServer.FileSystem;
 using FubarDev.FtpServer.ListFormatters;
 using FubarDev.FtpServer.Utilities;
 
+using JetBrains.Annotations;
+
 using Microsoft.Extensions.Logging;
 
 namespace FubarDev.FtpServer.CommandHandlers
@@ -26,6 +28,7 @@ namespace FubarDev.FtpServer.CommandHandlers
     {
         private static readonly ISet<string> _knownFacts = new HashSet<string> { "type", "size", "perm", "modify", "create" };
 
+        [CanBeNull]
         private readonly ILogger<MlstCommandHandler> _logger;
 
         /// <summary>
@@ -33,7 +36,7 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// </summary>
         /// <param name="connection">The FTP connection this command handler is created for.</param>
         /// <param name="logger">The logger.</param>
-        public MlstCommandHandler(IFtpConnection connection, ILogger<MlstCommandHandler> logger)
+        public MlstCommandHandler([NotNull] IFtpConnection connection, [CanBeNull] ILogger<MlstCommandHandler> logger = null)
             : base(connection, "MLST", "MLSD")
         {
             _logger = logger;
@@ -154,7 +157,7 @@ namespace FubarDev.FtpServer.CommandHandlers
                     client => ExecuteSendAsync(client, path, dirEntry, cancellationToken),
                     ex =>
                     {
-                        _logger.LogError(ex, ex.Message);
+                        _logger?.LogError(ex, ex.Message);
                         return new FtpResponse(425, "Can't open data connection.");
                     })
                 .ConfigureAwait(false);

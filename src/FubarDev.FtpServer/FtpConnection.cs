@@ -52,9 +52,9 @@ namespace FubarDev.FtpServer
         /// <param name="serviceProvider">The service provider used to query services.</param>
         public FtpConnection(
             [NotNull] TcpClient socket,
-            [CanBeNull] ILogger<IFtpConnection> logger,
             [NotNull] IOptions<FtpConnectionOptions> options,
-            IServiceProvider serviceProvider)
+            [NotNull] IServiceProvider serviceProvider,
+            [CanBeNull] ILogger<IFtpConnection> logger = null)
         {
             var endpoint = (IPEndPoint)socket.Client.RemoteEndPoint;
             RemoteAddress = new Address(endpoint.Address.ToString(), endpoint.Port);
