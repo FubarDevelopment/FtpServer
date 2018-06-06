@@ -23,7 +23,10 @@ namespace FubarDev.FtpServer
         /// <param name="command">The <see cref="FtpCommand"/> to log.</param>
         public static void Trace([NotNull] this ILogger log, [NotNull] FtpCommand command)
         {
-            log.LogTrace("{0}", command);
+            var arguments = string.Equals(command.Name, "PASS", System.StringComparison.OrdinalIgnoreCase)
+                ? @"**************** (password omitted)"
+                : command.Argument;
+            log.LogTrace("{name} {arguments}", command.Name, arguments);
         }
 
         /// <summary>
@@ -33,7 +36,7 @@ namespace FubarDev.FtpServer
         /// <param name="response">The <see cref="FtpResponse"/> to log.</param>
         public static void Trace([NotNull] this ILogger log, [NotNull] FtpResponse response)
         {
-            log.LogTrace("{0}", response);
+            log.LogTrace("{code} {message}", response.Code, response.Message);
         }
 
         /// <summary>
@@ -43,7 +46,7 @@ namespace FubarDev.FtpServer
         /// <param name="response">The <see cref="FtpResponse"/> to log.</param>
         public static void Debug([NotNull] this ILogger log, [NotNull] FtpResponse response)
         {
-            log.LogDebug("{0}", response);
+            log.LogDebug("{code} {message}", response.Code, response.Message);
         }
 
         /// <summary>
@@ -53,7 +56,7 @@ namespace FubarDev.FtpServer
         /// <param name="response">The <see cref="FtpResponse"/> to log.</param>
         public static void Info([NotNull] this ILogger log, [NotNull] FtpResponse response)
         {
-            log.LogDebug("{0}", response);
+            log.LogInformation("{code} {message}", response.Code, response.Message);
         }
 
         /// <summary>
@@ -63,7 +66,7 @@ namespace FubarDev.FtpServer
         /// <param name="response">The <see cref="FtpResponse"/> to log.</param>
         public static void Warn([NotNull] this ILogger log, [NotNull] FtpResponse response)
         {
-            log.LogWarning("{0}", response);
+            log.LogWarning("{code} {message}", response.Code, response.Message);
         }
 
         /// <summary>
@@ -73,7 +76,7 @@ namespace FubarDev.FtpServer
         /// <param name="response">The <see cref="FtpResponse"/> to log.</param>
         public static void Error([NotNull] this ILogger log, [NotNull] FtpResponse response)
         {
-            log.LogError("{0}", response);
+            log.LogError("{code} {message}", response.Code, response.Message);
         }
 
         /// <summary>
