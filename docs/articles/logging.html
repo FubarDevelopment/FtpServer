@@ -1,0 +1,310 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>FTP Server logging | FTP Server documentation </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="FTP Server logging | FTP Server documentation ">
+    <meta name="generator" content="docfx 2.36.1.0">
+    
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    <meta property="docfx:rel" content="../">
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div class="container body-content">
+        
+        <div id="search-results">
+          <div class="search-list"></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination"></ul>
+        </div>
+      </div>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="logging">
+<h1 id="introduction">Introduction</h1>
+
+<p>The FTP server utilizes <a href="https://docs.microsoft.com/aspnet/core/fundamentals/logging"><code>Microsoft.Extensions.Logging</code></a> which provides an interface to many logging frameworks (e.g. <a href="https://github.com/NLog/NLog/wiki">NLog</a>).</p>
+<h1 id="example-using-serilog">Example: Using SeriLog</h1>
+<h2 id="adding-serilog-to-the-project">Adding SeriLog to the project</h2>
+<p>Go to the quickstart project created during the <a href="xref:quickstart.md">Quickstart</a> tutorial and add the following NuGet packages:</p>
+<pre><code class="lang-bash"># Serilog.Extensions.Logging
+dotnet add package Serilog.Extensions.Logging
+# Serilog.Sinks.Console
+dotnet add package Serilog.Sinks.Console
+</code></pre>
+<h2 id="configure-serilog-in-programcs">Configure serilog in Program.cs</h2>
+<p>Add the highlighted lines to your Program.cs:</p>
+<pre><code class="lang-cs" name="Program.cs" title="The FTP server" highlight-lines="9-10,17-23,27-29">using System;
+using System.IO;
+
+using FubarDev.FtpServer;
+using FubarDev.FtpServer.FileSystem.DotNet;
+
+using Microsoft.Extensions.DependencyInjection;
+
+using Serilog;
+
+namespace QuickStart
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            // Configure Serilog
+            Log.Logger = new LoggerConfiguration()
+                .MinimumLevel.Verbose()
+                .Enrich.FromLogContext()
+                .WriteTo.Console()
+                .CreateLogger();
+
+            // Setup dependency injection
+            var services = new ServiceCollection();
+
+            // Add Serilog as logger provider
+            services.AddLogging(lb =&gt; lb.AddSerilog());
+
+            // use %TEMP%/TestFtpServer as root folder
+            services.Configure&lt;DotNetFileSystemOptions&gt;(opt =&gt; opt
+                .RootPath = Path.Combine(Path.GetTempPath(), &quot;TestFtpServer&quot;));
+
+            // Add FTP server services
+            // DotNetFileSystemProvider = Use the .NET file system functionality
+            // AnonymousMembershipProvider = allow only anonymous logins
+            services.AddFtpServer(builder =&gt; builder
+                .UseDotNetFileSystem() // Use the .NET file system functionality
+                .EnableAnonymousAuthentication()); // allow anonymous logins
+
+            // Configure the FTP server
+            services.Configure&lt;FtpServerOptions&gt;(opt =&gt; opt.ServerAddress = &quot;127.0.0.1&quot;);
+
+            // Build the service provider
+            using (var serviceProvider = services.BuildServiceProvider())
+            {
+                // Initialize the FTP server
+                var ftpServer = serviceProvider.GetRequiredService&lt;IFtpServer&gt;();
+
+                // Start the FTP server
+                ftpServer.Start();
+
+                Console.WriteLine(&quot;Press ENTER/RETURN to close the test application.&quot;);
+                Console.ReadLine();
+
+                // Stop the FTP server
+                ftpServer.Stop();
+            }
+        }
+    }
+}
+</code></pre>
+<p>Now you can see all the log messages from the FTP server.</p>
+<h1 id="example-using-nlog">Example: Using NLog</h1>
+<h2 id="adding-nlog-to-the-project">Adding NLog to the project</h2>
+<p>Go to the quickstart project created during the <a href="xref:quickstart.md">Quickstart</a> tutorial and add the following NuGet package:</p>
+<pre><code class="lang-bash"># Add NLog
+dotnet add package NLog.Extensions.Logging
+</code></pre>
+<h2 id="add-the-nlog-configuration">Add the NLog configuration</h2>
+<p>Now add a file called <code>nlog.config</code> with the following contents:</p>
+<pre><code class="lang-xml" name="nlog.config" title="NLog configuration">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot; ?&gt;
+&lt;nlog xmlns=&quot;http://www.nlog-project.org/schemas/NLog.xsd&quot;
+      xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+      xsi:schemaLocation=&quot;http://www.nlog-project.org/schemas/NLog.xsd NLog.xsd&quot;
+      autoReload=&quot;true&quot;
+      throwExceptions=&quot;false&quot;&gt;
+
+  &lt;targets&gt;
+    &lt;target xsi:type=&quot;ColoredConsole&quot; name=&quot;console&quot; layout=&quot;${longdate} ${uppercase:${level}} ${mdlc:item=RemoteAddress} ${message} ${exception:format=tostring}&quot;/&gt;
+  &lt;/targets&gt;
+
+  &lt;rules&gt;
+    &lt;logger name=&quot;*&quot; minlevel=&quot;Trace&quot; writeTo=&quot;console&quot; /&gt;
+  &lt;/rules&gt;
+&lt;/nlog&gt;
+</code></pre><h2 id="add-the-configuration-to-the-project">Add the configuration to the project</h2>
+<p>Change the <code>csproj</code> file by adding the following lines:</p>
+<pre><code class="lang-xml" name="QuickStart.csproj" title="Project file" highlight-lines="13-18">&lt;Project Sdk=&quot;Microsoft.NET.Sdk&quot;&gt;
+
+  &lt;ItemGroup&gt;
+    &lt;ProjectReference Include=&quot;..\..\..\src\FubarDev.FtpServer\FubarDev.FtpServer.csproj&quot; /&gt;
+    &lt;ProjectReference Include=&quot;..\..\..\src\FubarDev.FtpServer.FileSystem.DotNet\FubarDev.FtpServer.FileSystem.DotNet.csproj&quot; /&gt;
+  &lt;/ItemGroup&gt;
+
+  &lt;ItemGroup&gt;
+    &lt;PackageReference Include=&quot;Microsoft.Extensions.DependencyInjection&quot; Version=&quot;2.1.0&quot; /&gt;
+    &lt;PackageReference Include=&quot;NLog.Extensions.Logging&quot; Version=&quot;1.1.0&quot; /&gt;
+  &lt;/ItemGroup&gt;
+
+  &lt;ItemGroup&gt;
+    &lt;Content Include=&quot;nlog.config&quot;&gt;
+      &lt;CopyToOutputDirectory&gt;PreserveNewest&lt;/CopyToOutputDirectory&gt;
+    &lt;/Content&gt;
+  &lt;/ItemGroup&gt;
+
+  &lt;PropertyGroup&gt;
+    &lt;OutputType&gt;Exe&lt;/OutputType&gt;
+    &lt;TargetFramework&gt;netcoreapp2.1&lt;/TargetFramework&gt;
+    &lt;RootNamespace&gt;QuickStart&lt;/RootNamespace&gt;
+  &lt;/PropertyGroup&gt;
+
+&lt;/Project&gt;
+</code></pre>
+<p>This ensures that the <code>nlog.config</code> file gets copied into the build output folder and is available for the application.</p>
+<h2 id="registering-nlog-in-programcs">Registering NLog in Program.cs</h2>
+<pre><code class="lang-cs" name="Program.cs" title="The FTP server" highlight-lines="8-10,21-23,41-46">using System;
+using System.IO;
+
+using FubarDev.FtpServer;
+using FubarDev.FtpServer.FileSystem.DotNet;
+
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+
+using NLog.Extensions.Logging;
+
+namespace QuickStart
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            // Setup dependency injection
+            var services = new ServiceCollection();
+
+            // Add logging
+            services.AddLogging(lb =&gt; lb.SetMinimumLevel(LogLevel.Trace));
+
+            // use %TEMP%/TestFtpServer as root folder
+            services.Configure&lt;DotNetFileSystemOptions&gt;(opt =&gt; opt
+                .RootPath = Path.Combine(Path.GetTempPath(), &quot;TestFtpServer&quot;));
+
+            // Add FTP server services
+            // DotNetFileSystemProvider = Use the .NET file system functionality
+            // AnonymousMembershipProvider = allow only anonymous logins
+            services.AddFtpServer(builder =&gt; builder
+                .UseDotNetFileSystem() // Use the .NET file system functionality
+                .EnableAnonymousAuthentication()); // allow anonymous logins
+
+            // Configure the FTP server
+            services.Configure&lt;FtpServerOptions&gt;(opt =&gt; opt.ServerAddress = &quot;127.0.0.1&quot;);
+
+            // Build the service provider
+            using (var serviceProvider = services.BuildServiceProvider())
+            {
+                var loggerFactory = serviceProvider.GetRequiredService&lt;ILoggerFactory&gt;();
+
+                //configure NLog
+                loggerFactory.AddNLog(new NLogProviderOptions { CaptureMessageTemplates = true, CaptureMessageProperties = true });
+                NLog.LogManager.LoadConfiguration(&quot;nlog.config&quot;);
+
+                // Initialize the FTP server
+                var ftpServer = serviceProvider.GetRequiredService&lt;IFtpServer&gt;();
+
+                // Start the FTP server
+                ftpServer.Start();
+
+                Console.WriteLine(&quot;Press ENTER/RETURN to close the test application.&quot;);
+                Console.ReadLine();
+
+                // Stop the FTP server
+                ftpServer.Stop();
+            }
+        }
+    }
+}
+</code></pre>
+<p>Now you can see all the log messages from the FTP server.</p>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/FubarDevelopment/FtpServer/blob/master/docfx_project/articles/logging.md/#L1" class="contribution-link">Improve this Doc</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            <table border='0'><tr><td><span>Copyright © 2018 Fubar Development Junker<br>Generated by <strong>DocFX</strong></span></td><td><a rel='license' href='http://creativecommons.org/licenses/by-sa/4.0/'><img alt='Creative Commons License' style='border-width:0' src='https://i.creativecommons.org/l/by-sa/4.0/88x31.png'></a><br><span xmlns:dct='http://purl.org/dc/terms/' property='dct:title'>FluentMigrator Documentation</span> by <a xmlns:cc='http://creativecommons.org/ns#' href='https://fluentmigrator.github.io' property='cc:attributionName' rel='cc:attributionURL'>FluentMigrator Project</a> is licensed under a <a rel='license' href='http://creativecommons.org/licenses/by-sa/4.0/'>Creative Commons Attribution-ShareAlike 4.0 International License</a>.</td></tr></table>
+            
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>

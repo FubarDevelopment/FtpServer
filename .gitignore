@@ -213,3 +213,5 @@ ModelManifest.xml
 /nuget-push.ps1
 /push.ps1
 .idea/
+
+\.vscode/

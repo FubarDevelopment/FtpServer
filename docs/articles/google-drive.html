@@ -1,0 +1,183 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Gooogle Drive-based virtual file system | FTP Server documentation </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Gooogle Drive-based virtual file system | FTP Server documentation ">
+    <meta name="generator" content="docfx 2.36.1.0">
+    
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    <meta property="docfx:rel" content="../">
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div class="container body-content">
+        
+        <div id="search-results">
+          <div class="search-list"></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination"></ul>
+        </div>
+      </div>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="google-drive">
+<h1 id="introduction">Introduction</h1>
+
+<p>This is an example of a virtual file system that uses Google Drive as backend.</p>
+<div class="IMPORTANT">
+<h5>Important</h5>
+<p>It is a basic requirement that you know how to use the
+Google developer console to register your application
+and get the necessary credentials/information.</p>
+</div>
+<p>The Google Drive support uses <a href="https://github.com/google/google-api-dotnet-client">Googles .NET API</a> which is
+an advantage for people already familiar with it.</p>
+<h1 id="adding-the-package-to-your-project">Adding the package to your project</h1>
+<pre><code class="lang-bash">dotnet add package FubarDev.FtpServer.FileSystem.GoogleDrive
+</code></pre>
+<h2 id="using-a-users-drive">Using a users drive</h2>
+<p>This is what other applications do when they want to access your Google Drive and the easiest to configure/use.</p>
+<h2 id="getting-the-client-secret">Getting the client secret</h2>
+<ol>
+<li>Open the <a href="https://console.developers.google.com">Google Developer Console</a></li>
+<li>Create a project</li>
+<li>Allow the project to use the Google Drive API</li>
+<li>Create an OAuth 2.0 client (Other)</li>
+<li>Download the client secrets file</li>
+</ol>
+<p>The client secrets file should look like this:</p>
+<pre><code class="lang-json">{
+  &quot;installed&quot;: {
+    &quot;client_id&quot;: &quot;redacted.apps.googleusercontent.com&quot;,
+    &quot;project_id&quot;: &quot;your-project-id-123456&quot;,
+    &quot;auth_uri&quot;: &quot;https://accounts.google.com/o/oauth2/auth&quot;,
+    &quot;token_uri&quot;: &quot;https://accounts.google.com/o/oauth2/token&quot;,
+    &quot;auth_provider_x509_cert_url&quot;: &quot;https://www.googleapis.com/oauth2/v1/certs&quot;,
+    &quot;client_secret&quot;: &quot;redacted&quot;,
+    &quot;redirect_uris&quot;: [
+      &quot;urn:ietf:wg:oauth:2.0:oob&quot;,
+      &quot;http://localhost&quot;
+    ]
+  }
+}
+</code></pre>
+<h2 id="configuring-google-drive-as-virtual-file-system">Configuring Google Drive as virtual file system</h2>
+<pre><code class="lang-csharp">// Configuration
+var userName = &quot;your-user-name@gmail.com&quot;;
+var clientSecretsFile = &quot;client_secret_redacted.apps.googleusercontent.com.json&quot;;
+
+// Loading the credentials
+UserCredential credential;
+using (var secretsSource = new System.IO.FileStream(clientSecretsFile, FileMode.Open))
+{
+    var secrets = GoogleClientSecrets.Load(secretsSource);
+    credential = await GoogleWebAuthorizationBroker.AuthorizeAsync(
+        secrets.Secrets,
+        new[] { DriveService.Scope.DriveFile, DriveService.Scope.Drive },
+        userName,
+        CancellationToken.None);
+}
+
+// Adding the FTP server using Google Drive
+services
+    .AddFtpServer(sb =&gt; sb
+        .UseGoogleDrive(credential)
+        .EnableAnonymousAuthentication());
+</code></pre>
+<h2 id="starting-the-server">Starting the server</h2>
+<p>Upon start, the FTP server loads the credentials and - if not already authenticated - opens the web page to authenticate your server to access the users Google Drive.</p>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/FubarDevelopment/FtpServer/blob/master/docfx_project/articles/google-drive.md/#L1" class="contribution-link">Improve this Doc</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            <table border='0'><tr><td><span>Copyright © 2018 Fubar Development Junker<br>Generated by <strong>DocFX</strong></span></td><td><a rel='license' href='http://creativecommons.org/licenses/by-sa/4.0/'><img alt='Creative Commons License' style='border-width:0' src='https://i.creativecommons.org/l/by-sa/4.0/88x31.png'></a><br><span xmlns:dct='http://purl.org/dc/terms/' property='dct:title'>FluentMigrator Documentation</span> by <a xmlns:cc='http://creativecommons.org/ns#' href='https://fluentmigrator.github.io' property='cc:attributionName' rel='cc:attributionURL'>FluentMigrator Project</a> is licensed under a <a rel='license' href='http://creativecommons.org/licenses/by-sa/4.0/'>Creative Commons Attribution-ShareAlike 4.0 International License</a>.</td></tr></table>
+            
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>

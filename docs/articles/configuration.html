@@ -1,0 +1,161 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>FTP Server Configuration | FTP Server documentation </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="FTP Server Configuration | FTP Server documentation ">
+    <meta name="generator" content="docfx 2.36.1.0">
+    
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    <meta property="docfx:rel" content="../">
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div class="container body-content">
+        
+        <div id="search-results">
+          <div class="search-list"></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination"></ul>
+        </div>
+      </div>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="configuration">
+<h1 id="introduction">Introduction</h1>
+
+<p>The configuration is split into several parts:</p>
+<ul>
+<li>Services</li>
+<li><a href="FubarDev.FtpServer.IFtpServerBuilder">IFtpServerBuilder</a> is the FTP Server configuration builder</li>
+<li><a class="xref" href="../api/FubarDev.FtpServer.FtpServerOptions.html">FtpServerOptions</a> for the FTP server transport configuration</li>
+<li><a class="xref" href="../api/FubarDev.FtpServer.FtpConnectionOptions.html">FtpConnectionOptions</a> to configure the default control connection text encoding</li>
+<li><a class="xref" href="../api/FubarDev.FtpServer.AuthTlsOptions.html">AuthTlsOptions</a> for the FTPS configuration</li>
+<li><a class="xref" href="../api/FubarDev.FtpServer.FileSystem.DotNet.DotNetFileSystemOptions.html">DotNetFileSystemOptions</a> to configure the file system access</li>
+<li><a href="FubarDev.FtpServer.SystCommandOptions">SystCommandOptions</a> to specify the behavior of the SYST command</li>
+</ul>
+<h1 id="services">Services</h1>
+<p>You use a <code>ServiceCollection</code> and add your services to, e.g.:</p>
+<pre><code class="lang-csharp">var services = new ServiceCollection()
+    .AddFtpServer(builder =&gt; builder
+        .EnableAnonymousAuthentication()
+        .UseDotNetFileSystem());
+</code></pre>
+<p>This is also the absolute minimum configuration for the FTP server.</p>
+<h1 id="iftpserverbuilder"><a href="FubarDev.FtpServer.IFtpServerBuilder">IFtpServerBuilder</a></h1>
+<p>This is the place where other services are configured that will be used by the FTP server. This are the options currently available:</p>
+<ul>
+<li><code>builder.EnableAnonymousAuthentication()</code>: Enables anonymous authentication</li>
+<li><code>builder.UseDotNetFileSystem()</code>: Uses a System.IO-based file systme</li>
+<li><code>builder.UseGoogleDrive(...)</code>: Uses Google Drive as virtual file system</li>
+</ul>
+<h1 id="ftpserveroptions"><a class="xref" href="../api/FubarDev.FtpServer.FtpServerOptions.html">FtpServerOptions</a></h1>
+<p>This configures the address/host/port used by the server to listen for connections.</p>
+<p>The default value is <code>localhost</code> as address (IPv4 and IPv6 - if available) and 21 as port.</p>
+<h1 id="ftpconnectionoptions"><a class="xref" href="../api/FubarDev.FtpServer.FtpConnectionOptions.html">FtpConnectionOptions</a></h1>
+<p>This may be used to configure a different default character encoding. The default value is ASCII.</p>
+<h1 id="authtlsoptions"><a class="xref" href="../api/FubarDev.FtpServer.AuthTlsOptions.html">AuthTlsOptions</a></h1>
+<p>This configuration option allows the specification of an <code>X509Certificate2</code> (with private key) that will be used to initiate encrypted connections.</p>
+<h1 id="dotnetfilesystemoptions"><a class="xref" href="../api/FubarDev.FtpServer.FileSystem.DotNet.DotNetFileSystemOptions.html">DotNetFileSystemOptions</a></h1>
+<p>Used to configure the behavior of the System.IO-based file system access, like:</p>
+<ul>
+<li>The path to the root directory</li>
+<li>Usage of the user ID as subdirectory</li>
+<li>Is deletion of non-empty directories allowed?</li>
+</ul>
+<h1 id="systcommandoptions"><a href="FubarDev.FtpServer.SystCommandOptions">SystCommandOptions</a></h1>
+<p>Here you can specify the operating system to be returned by the SYST command.</p>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/FubarDevelopment/FtpServer/blob/master/docfx_project/articles/configuration.md/#L1" class="contribution-link">Improve this Doc</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            <table border='0'><tr><td><span>Copyright © 2018 Fubar Development Junker<br>Generated by <strong>DocFX</strong></span></td><td><a rel='license' href='http://creativecommons.org/licenses/by-sa/4.0/'><img alt='Creative Commons License' style='border-width:0' src='https://i.creativecommons.org/l/by-sa/4.0/88x31.png'></a><br><span xmlns:dct='http://purl.org/dc/terms/' property='dct:title'>FluentMigrator Documentation</span> by <a xmlns:cc='http://creativecommons.org/ns#' href='https://fluentmigrator.github.io' property='cc:attributionName' rel='cc:attributionURL'>FluentMigrator Project</a> is licensed under a <a rel='license' href='http://creativecommons.org/licenses/by-sa/4.0/'>Creative Commons Attribution-ShareAlike 4.0 International License</a>.</td></tr></table>
+            
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>
