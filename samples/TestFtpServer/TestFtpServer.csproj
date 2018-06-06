@@ -14,11 +14,11 @@
     <PackageReference Include="NLog.Extensions.Logging" Version="1.0.2" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\FubarDev.FtpServer.FileSystem.DotNet\FubarDev.FtpServer.FileSystem.DotNet.csproj" />
-    <ProjectReference Include="..\FubarDev.FtpServer.FileSystem.GoogleDrive\FubarDev.FtpServer.FileSystem.GoogleDrive.csproj" />
-    <ProjectReference Include="..\FubarDev.FtpServer\FubarDev.FtpServer.csproj" />
+    <ProjectReference Include="..\..\src\FubarDev.FtpServer.FileSystem.DotNet\FubarDev.FtpServer.FileSystem.DotNet.csproj" />
+    <ProjectReference Include="..\..\src\FubarDev.FtpServer.FileSystem.GoogleDrive\FubarDev.FtpServer.FileSystem.GoogleDrive.csproj" />
+    <ProjectReference Include="..\..\src\FubarDev.FtpServer\FubarDev.FtpServer.csproj" />
   </ItemGroup>
-  <Import Project="../Global.props" />
+  <Import Project="../../Global.props" />
   <ItemGroup>
     <Content Include="NLog.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

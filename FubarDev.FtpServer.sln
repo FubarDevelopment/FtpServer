@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27428.2027
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FubarDev.FtpServer", "FubarDev.FtpServer\FubarDev.FtpServer.csproj", "{01EBBF94-7469-43A0-A618-07FB734B163F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FubarDev.FtpServer", "src\FubarDev.FtpServer\FubarDev.FtpServer.csproj", "{01EBBF94-7469-43A0-A618-07FB734B163F}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{52EFD82B-3CC2-486D-849B-199D9670C487}"
 	ProjectSection(SolutionItems) = preProject
@@ -15,17 +15,21 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		stylecop.json = stylecop.json
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FubarDev.FtpServer.FileSystem.DotNet", "FubarDev.FtpServer.FileSystem.DotNet\FubarDev.FtpServer.FileSystem.DotNet.csproj", "{9A83C6F5-378B-48B3-B32A-151DB90B390C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FubarDev.FtpServer.FileSystem.DotNet", "src\FubarDev.FtpServer.FileSystem.DotNet\FubarDev.FtpServer.FileSystem.DotNet.csproj", "{9A83C6F5-378B-48B3-B32A-151DB90B390C}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Samples", "Samples", "{7004709E-5C0D-4D3E-AF27-89968FA47C19}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{7004709E-5C0D-4D3E-AF27-89968FA47C19}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestFtpServer", "TestFtpServer\TestFtpServer.csproj", "{4DFC0694-0212-491C-A102-38203A74B09F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestFtpServer", "samples\TestFtpServer\TestFtpServer.csproj", "{4DFC0694-0212-491C-A102-38203A74B09F}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FubarDev.FtpServer.Tests", "FubarDev.FtpServer.Tests\FubarDev.FtpServer.Tests.csproj", "{0EEB524B-D0F7-4972-838D-D4CE7963D839}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FubarDev.FtpServer.Tests", "test\FubarDev.FtpServer.Tests\FubarDev.FtpServer.Tests.csproj", "{0EEB524B-D0F7-4972-838D-D4CE7963D839}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FubarDev.FtpServer.Abstractions", "FubarDev.FtpServer.Abstractions\FubarDev.FtpServer.Abstractions.csproj", "{37CE4218-FAC3-4201-82A0-54945698C6AD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FubarDev.FtpServer.Abstractions", "src\FubarDev.FtpServer.Abstractions\FubarDev.FtpServer.Abstractions.csproj", "{37CE4218-FAC3-4201-82A0-54945698C6AD}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FubarDev.FtpServer.FileSystem.GoogleDrive", "FubarDev.FtpServer.FileSystem.GoogleDrive\FubarDev.FtpServer.FileSystem.GoogleDrive.csproj", "{474BD381-5B80-4580-BFB1-D41BEB70C458}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FubarDev.FtpServer.FileSystem.GoogleDrive", "src\FubarDev.FtpServer.FileSystem.GoogleDrive\FubarDev.FtpServer.FileSystem.GoogleDrive.csproj", "{474BD381-5B80-4580-BFB1-D41BEB70C458}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{118460ED-4F14-4FF3-BFBF-11497DFB80B6}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{B0D91078-FA02-4ADD-8EDE-831243BE9794}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -62,7 +66,12 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
+		{01EBBF94-7469-43A0-A618-07FB734B163F} = {118460ED-4F14-4FF3-BFBF-11497DFB80B6}
+		{9A83C6F5-378B-48B3-B32A-151DB90B390C} = {118460ED-4F14-4FF3-BFBF-11497DFB80B6}
 		{4DFC0694-0212-491C-A102-38203A74B09F} = {7004709E-5C0D-4D3E-AF27-89968FA47C19}
+		{0EEB524B-D0F7-4972-838D-D4CE7963D839} = {B0D91078-FA02-4ADD-8EDE-831243BE9794}
+		{37CE4218-FAC3-4201-82A0-54945698C6AD} = {118460ED-4F14-4FF3-BFBF-11497DFB80B6}
+		{474BD381-5B80-4580-BFB1-D41BEB70C458} = {118460ED-4F14-4FF3-BFBF-11497DFB80B6}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {DAA7D00E-C61D-4640-A54E-D307E4682263}

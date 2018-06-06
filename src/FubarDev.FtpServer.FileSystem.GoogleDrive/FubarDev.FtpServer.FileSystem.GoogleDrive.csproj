@@ -14,5 +14,5 @@
   <ItemGroup>
     <ProjectReference Include="..\FubarDev.FtpServer.Abstractions\FubarDev.FtpServer.Abstractions.csproj" />
   </ItemGroup>
-  <Import Project="../PackageLibrary.props" />
+  <Import Project="../../PackageLibrary.props" />
 </Project>
