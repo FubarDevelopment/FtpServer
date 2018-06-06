@@ -23,14 +23,14 @@ namespace FubarDev.FtpServer.CommandHandlers
     public class StatCommandHandler : FtpCommandHandler
     {
         [NotNull]
-        private readonly FtpServer _server;
+        private readonly IFtpServer _server;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="StatCommandHandler"/> class.
         /// </summary>
         /// <param name="connection">The connection to create this command handler for.</param>
         /// <param name="server">The FTP server.</param>
-        public StatCommandHandler([NotNull] IFtpConnection connection, [NotNull] FtpServer server)
+        public StatCommandHandler([NotNull] IFtpConnection connection, [NotNull] IFtpServer server)
             : base(connection, "STAT")
         {
             _server = server;

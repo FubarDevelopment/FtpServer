@@ -31,6 +31,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{118460ED-4F1
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{B0D91078-FA02-4ADD-8EDE-831243BE9794}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FubarDev.FtpServer.Commands", "src\FubarDev.FtpServer.Commands\FubarDev.FtpServer.Commands.csproj", "{7E3F81E2-764E-4075-992F-E53BF50F9623}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -61,6 +63,10 @@ Global
 		{474BD381-5B80-4580-BFB1-D41BEB70C458}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{474BD381-5B80-4580-BFB1-D41BEB70C458}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{474BD381-5B80-4580-BFB1-D41BEB70C458}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7E3F81E2-764E-4075-992F-E53BF50F9623}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7E3F81E2-764E-4075-992F-E53BF50F9623}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7E3F81E2-764E-4075-992F-E53BF50F9623}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7E3F81E2-764E-4075-992F-E53BF50F9623}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -72,6 +78,7 @@ Global
 		{0EEB524B-D0F7-4972-838D-D4CE7963D839} = {B0D91078-FA02-4ADD-8EDE-831243BE9794}
 		{37CE4218-FAC3-4201-82A0-54945698C6AD} = {118460ED-4F14-4FF3-BFBF-11497DFB80B6}
 		{474BD381-5B80-4580-BFB1-D41BEB70C458} = {118460ED-4F14-4FF3-BFBF-11497DFB80B6}
+		{7E3F81E2-764E-4075-992F-E53BF50F9623} = {118460ED-4F14-4FF3-BFBF-11497DFB80B6}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {DAA7D00E-C61D-4640-A54E-D307E4682263}

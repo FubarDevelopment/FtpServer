@@ -1,5 +1,5 @@
 //-----------------------------------------------------------------------
-// <copyright file="AppeCommandHandler.cs" company="Fubar Development Junker">
+// <copyright file="StorCommandHandler.cs" company="Fubar Development Junker">
 //     Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 // <author>Mark Junker</author>
@@ -18,20 +18,20 @@ using JetBrains.Annotations;
 namespace FubarDev.FtpServer.CommandHandlers
 {
     /// <summary>
-    /// Implements the <code>APPE</code> command.
+    /// This class implements the STOR command (4.1.3.).
     /// </summary>
-    public class AppeCommandHandler : FtpCommandHandler
+    public class StorCommandHandler : FtpCommandHandler
     {
         [NotNull]
-        private readonly FtpServer _server;
+        private readonly IFtpServer _server;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="AppeCommandHandler"/> class.
+        /// Initializes a new instance of the <see cref="StorCommandHandler"/> class.
         /// </summary>
-        /// <param name="connection">The connection to create this command handler for.</param>
+        /// <param name="connection">The connection this command handler is created for.</param>
         /// <param name="server">The FTP server.</param>
-        public AppeCommandHandler([NotNull] IFtpConnection connection, [NotNull] FtpServer server)
-            : base(connection, "APPE")
+        public StorCommandHandler([NotNull] IFtpConnection connection, [NotNull] IFtpServer server)
+            : base(connection, "STOR")
         {
             _server = server;
         }
@@ -68,44 +68,45 @@ namespace FubarDev.FtpServer.CommandHandlers
                 return new FtpResponse(553, "File name not allowed.");
             }
 
+            var doReplace = restartPosition.GetValueOrDefault() == 0 && fileInfo.Entry != null;
+
             await Connection.WriteAsync(new FtpResponse(150, "Opening connection for data transfer."), cancellationToken).ConfigureAwait(false);
 
             return await Connection
-                .SendResponseAsync(client => ExecuteSend(client, fileInfo, restartPosition, cancellationToken))
+                .SendResponseAsync(
+                    client => ExecuteSendAsync(client, doReplace, fileInfo, restartPosition, cancellationToken))
                 .ConfigureAwait(false);
         }
 
-        private async Task<FtpResponse> ExecuteSend(
+        private async Task<FtpResponse> ExecuteSendAsync(
             TcpClient responseSocket,
-            [NotNull] SearchResult<IUnixFileEntry> fileInfo,
+            bool doReplace,
+            SearchResult<IUnixFileEntry> fileInfo,
             long? restartPosition,
             CancellationToken cancellationToken)
         {
-            var responseStream = responseSocket.GetStream();
-            responseStream.ReadTimeout = 10000;
+            var readStream = responseSocket.GetStream();
+            readStream.ReadTimeout = 10000;
 
-            using (var stream = await Connection.CreateEncryptedStream(responseStream).ConfigureAwait(false))
+            using (var stream = await Connection.CreateEncryptedStream(readStream).ConfigureAwait(false))
             {
                 IBackgroundTransfer backgroundTransfer;
-                if ((restartPosition != null && restartPosition.Value == 0) || fileInfo.Entry == null)
+                if (doReplace && fileInfo.Entry != null)
                 {
-                    if (fileInfo.Entry == null)
-                    {
-                        var fileName = fileInfo.FileName ?? throw new InvalidOperationException();
-                        backgroundTransfer = await Data.FileSystem
-                            .CreateAsync(fileInfo.Directory, fileName, stream, cancellationToken)
-                            .ConfigureAwait(false);
-                    }
-                    else
-                    {
-                        backgroundTransfer = await Data.FileSystem
-                            .ReplaceAsync(fileInfo.Entry, stream, cancellationToken).ConfigureAwait(false);
-                    }
+                    backgroundTransfer = await Data.FileSystem
+                        .ReplaceAsync(fileInfo.Entry, stream, cancellationToken).ConfigureAwait(false);
+                }
+                else if (restartPosition.GetValueOrDefault() == 0 || fileInfo.Entry == null)
+                {
+                    var fileName = fileInfo.FileName ?? throw new InvalidOperationException();
+                    backgroundTransfer = await Data.FileSystem
+                        .CreateAsync(fileInfo.Directory, fileName, stream, cancellationToken)
+                        .ConfigureAwait(false);
                 }
                 else
                 {
                     backgroundTransfer = await Data.FileSystem
-                        .AppendAsync(fileInfo.Entry, restartPosition, stream, cancellationToken)
+                        .AppendAsync(fileInfo.Entry, restartPosition ?? 0, stream, cancellationToken)
                         .ConfigureAwait(false);
                 }
 

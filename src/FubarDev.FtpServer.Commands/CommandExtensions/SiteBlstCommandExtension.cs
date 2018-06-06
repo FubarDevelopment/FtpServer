@@ -23,7 +23,7 @@ namespace FubarDev.FtpServer.CommandExtensions
     public class SiteBlstCommandExtension : FtpCommandHandlerExtension
     {
         [NotNull]
-        private readonly FtpServer _server;
+        private readonly IFtpServer _server;
 
         private readonly ILogger<SiteBlstCommandExtension> _logger;
 
@@ -33,7 +33,7 @@ namespace FubarDev.FtpServer.CommandExtensions
         /// <param name="connection">The connection this instance is used for.</param>
         /// <param name="server">The FTP server.</param>
         /// <param name="logger">The logger.</param>
-        public SiteBlstCommandExtension([NotNull] IFtpConnection connection, [NotNull] FtpServer server, ILogger<SiteBlstCommandExtension> logger)
+        public SiteBlstCommandExtension([NotNull] IFtpConnection connection, [NotNull] IFtpServer server, ILogger<SiteBlstCommandExtension> logger)
             : base(connection, "SITE", "BLST")
         {
             _server = server;

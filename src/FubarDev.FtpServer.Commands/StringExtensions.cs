@@ -12,7 +12,7 @@ namespace FubarDev.FtpServer
     /// <summary>
     /// Extension methods for <see cref="string"/>.
     /// </summary>
-    public static class StringExtensions
+    internal static class StringExtensions
     {
         /// <summary>
         /// Try to parse a timestamp from the parameter <paramref name="timestamp"/>.
@@ -41,7 +41,7 @@ namespace FubarDev.FtpServer
         }
 
         [NotNull]
-        internal static string ChompFromEnd([NotNull] this string input, out string token)
+        public static string ChompFromEnd([NotNull] this string input, out string token)
         {
             var pos = input.LastIndexOf(' ');
             if (pos == -1)

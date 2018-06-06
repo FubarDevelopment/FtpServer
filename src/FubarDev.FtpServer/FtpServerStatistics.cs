@@ -7,18 +7,12 @@ namespace FubarDev.FtpServer
     /// <summary>
     /// Statistics about the FTP server.
     /// </summary>
-    public class FtpServerStatistics
+    public class FtpServerStatistics : IFtpServerStatistics
     {
-        /// <summary>
-        /// Gets the total number of connections.
-        /// </summary>
-        public long TotalConnections
-        { get; internal set; }
+        /// <inheritdoc />
+        public long TotalConnections { get; internal set; }
 
-        /// <summary>
-        /// Gets the currently active number of connections.
-        /// </summary>
-        public long ActiveConnections
-        { get; internal set; }
+        /// <inheritdoc />
+        public long ActiveConnections { get; internal set; }
     }
 }

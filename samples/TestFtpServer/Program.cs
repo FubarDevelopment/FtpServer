@@ -147,7 +147,7 @@ namespace TestFtpServer
                 loggerFactory.AddNLog(new NLogProviderOptions { CaptureMessageTemplates = true, CaptureMessageProperties = true });
                 NLog.LogManager.LoadConfiguration("NLog.config");
 
-                var ftpServer = serviceProvider.GetRequiredService<FtpServer>();
+                var ftpServer = serviceProvider.GetRequiredService<IFtpServer>();
 
                 if (options.ImplicitFtps)
                 {

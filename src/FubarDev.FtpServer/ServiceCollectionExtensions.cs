@@ -7,7 +7,7 @@ using System;
 using FubarDev.FtpServer;
 using FubarDev.FtpServer.BackgroundTransfer;
 using FubarDev.FtpServer.CommandExtensions;
-
+using FubarDev.FtpServer.CommandHandlers;
 using JetBrains.Annotations;
 
 // ReSharper disable once CheckNamespace
@@ -28,7 +28,7 @@ namespace Microsoft.Extensions.DependencyInjection
             this IServiceCollection services,
             [NotNull] Action<IFtpServerBuilder> configure)
         {
-            services.AddSingleton<FtpServer>();
+            services.AddSingleton<IFtpServer, FtpServer>();
             services.AddSingleton<ITemporaryDataFactory, TemporaryDataFactory>();
 
             services.AddScoped<IFtpConnectionAccessor, FtpConnectionAccessor>();
@@ -38,7 +38,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddScoped<IFtpConnection, FtpConnection>();
 
             services.Scan(
-                sel => sel.FromAssemblyOf<FtpServer>()
+                sel => sel.FromAssemblyOf<PassCommandHandler>()
                     .AddClasses(filter => filter.AssignableTo<IFtpCommandHandler>()).As<IFtpCommandHandler>().WithScopedLifetime()
                     .AddClasses(filter => filter.AssignableTo<IFtpCommandHandlerExtension>().Where(t => t != typeof(GenericFtpCommandHandlerExtension))).As<IFtpCommandHandlerExtension>().WithScopedLifetime());
 
