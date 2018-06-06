@@ -64,7 +64,7 @@ services.Configure<FtpServerOptions>(opt => opt.ServerAddress = "127.0.0.1");
 using (var serviceProvider = services.BuildServiceProvider())
 {
     // Initialize the FTP server
-    var ftpServer = serviceProvider.GetRequiredService<FtpServer>();
+    var ftpServer = serviceProvider.GetRequiredService<IFtpServer>();
 
     // Start the FTP server
     ftpServer.Start();
