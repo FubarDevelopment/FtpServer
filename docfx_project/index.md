@@ -1,4 +1,20 @@
-# This is the **HOMEPAGE**.
-Refer to [Markdown](http://daringfireball.net/projects/markdown/) for how to write markdown files.
-## Quick Start Notes:
-1. Add images to the *images* folder if the file is referencing an image.
+# FTP Server
+
+This FTP Server is a pure .NET implementation with the following goals:
+
+- Easy to use
+- Extensible
+- Virtual file system support
+- User-defined authentication
+
+## Getting started
+
+There is a [quickstart tutorial](xref:quickstart) available.
+
+## What does it look like?
+
+[!code-cs[Program.cs](code-snippets/quickstart/Program.cs#L15-L46 "Main program code")]
+
+## Further Information
+
+You find more information on the [articles overview](articles/intro.md).

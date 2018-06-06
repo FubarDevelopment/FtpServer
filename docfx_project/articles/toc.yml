@@ -1,2 +1,26 @@
 - name: Introduction
   href: intro.md
+- name: Quickstart
+  href: xref:quickstart
+- name: Basics
+  items:
+  - name: Configuration
+    href: xref:configuration
+  - name: Logging
+    href: xref:logging
+  - name: Authentication
+    href: xref:authentication
+  - name: File Systems
+    href: xref:file-systems
+- name: Advanced Topics
+  items:
+  - name: Logging
+    href: xref:logging
+  - name: FTPS
+    href: xref:ftps
+  - name: Google Drive
+    href: xref:google-drive
+  - name: Custom File System
+    href: xref:custom-file-system
+  - name: Custom Authentication
+    href: xref:custom-authentication

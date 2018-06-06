@@ -1,0 +1,157 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>FTP Server | FTP Server documentation </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="FTP Server | FTP Server documentation ">
+    <meta name="generator" content="docfx 2.36.1.0">
+    
+    <link rel="shortcut icon" href="favicon.ico">
+    <link rel="stylesheet" href="styles/docfx.vendor.css">
+    <link rel="stylesheet" href="styles/docfx.css">
+    <link rel="stylesheet" href="styles/main.css">
+    <meta property="docfx:navrel" content="toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    <meta property="docfx:rel" content="">
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="index.html">
+                <img id="logo" class="svg" src="logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div class="container body-content">
+        
+        <div id="search-results">
+          <div class="search-list"></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination"></ul>
+        </div>
+      </div>
+      <div role="main" class="container body-content hide-when-search">
+        <div class="article row grid">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="">
+<h1 id="ftp-server">FTP Server</h1>
+
+<p>This FTP Server is a pure .NET implementation with the following goals:</p>
+<ul>
+<li>Easy to use</li>
+<li>Extensible</li>
+<li>Virtual file system support</li>
+<li>User-defined authentication</li>
+</ul>
+<h2 id="getting-started">Getting started</h2>
+<p>There is a <a class="xref" href="articles/quickstart.html">quickstart tutorial</a> available.</p>
+<h2 id="what-does-it-look-like">What does it look like?</h2>
+<pre><code class="lang-cs" name="Program.cs" title="Main program code">// Setup dependency injection
+var services = new ServiceCollection();
+
+// use %TEMP%/TestFtpServer as root folder
+services.Configure&lt;DotNetFileSystemOptions&gt;(opt =&gt; opt
+    .RootPath = Path.Combine(Path.GetTempPath(), &quot;TestFtpServer&quot;));
+
+// Add FTP server services
+// DotNetFileSystemProvider = Use the .NET file system functionality
+// AnonymousMembershipProvider = allow only anonymous logins
+services.AddFtpServer(builder =&gt; builder
+    .UseDotNetFileSystem() // Use the .NET file system functionality
+    .EnableAnonymousAuthentication()); // allow anonymous logins
+
+// Configure the FTP server
+services.Configure&lt;FtpServerOptions&gt;(opt =&gt; opt.ServerAddress = &quot;127.0.0.1&quot;);
+
+// Build the service provider
+using (var serviceProvider = services.BuildServiceProvider())
+{
+    // Initialize the FTP server
+    var ftpServer = serviceProvider.GetRequiredService&lt;IFtpServer&gt;();
+
+    // Start the FTP server
+    ftpServer.Start();
+
+    Console.WriteLine(&quot;Press ENTER/RETURN to close the test application.&quot;);
+    Console.ReadLine();
+
+    // Stop the FTP server
+    ftpServer.Stop();
+}
+</code></pre><h2 id="further-information">Further Information</h2>
+<p>You find more information on the <a href="articles/intro.html">articles overview</a>.</p>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/FubarDevelopment/FtpServer/blob/master/docfx_project/index.md/#L1" class="contribution-link">Improve this Doc</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            <table border='0'><tr><td><span>Copyright © 2018 Fubar Development Junker<br>Generated by <strong>DocFX</strong></span></td><td><a rel='license' href='http://creativecommons.org/licenses/by-sa/4.0/'><img alt='Creative Commons License' style='border-width:0' src='https://i.creativecommons.org/l/by-sa/4.0/88x31.png'></a><br><span xmlns:dct='http://purl.org/dc/terms/' property='dct:title'>FluentMigrator Documentation</span> by <a xmlns:cc='http://creativecommons.org/ns#' href='https://fluentmigrator.github.io' property='cc:attributionName' rel='cc:attributionURL'>FluentMigrator Project</a> is licensed under a <a rel='license' href='http://creativecommons.org/licenses/by-sa/4.0/'>Creative Commons Attribution-ShareAlike 4.0 International License</a>.</td></tr></table>
+            
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="styles/docfx.js"></script>
+    <script type="text/javascript" src="styles/main.js"></script>
+  </body>
+</html>
