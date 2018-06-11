@@ -14,7 +14,7 @@ namespace FubarDev.FtpServer.FileSystem.DotNet
         /// <summary>
         /// Gets or sets the root path for all users.
         /// </summary>
-        public string RootPath { get; set; } = Path.GetTempPath();
+        public string RootPath { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the user ID should be used as sub directory.

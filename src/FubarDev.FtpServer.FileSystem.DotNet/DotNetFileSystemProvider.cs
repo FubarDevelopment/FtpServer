@@ -34,7 +34,7 @@ namespace FubarDev.FtpServer.FileSystem.DotNet
         /// <param name="options">The file system options.</param>
         public DotNetFileSystemProvider([NotNull] IOptions<DotNetFileSystemOptions> options)
         {
-            _rootPath = options.Value.RootPath;
+            _rootPath = options.Value.RootPath ?? Path.GetTempPath();
             _useUserIdAsSubFolder = options.Value.UseUserIdAsSubFolder;
             _streamBufferSize = options.Value.StreamBufferSize ?? DotNetFileSystem.DefaultStreamBufferSize;
             _allowNonEmptyDirectoryDelete = options.Value.AllowNonEmptyDirectoryDelete;
