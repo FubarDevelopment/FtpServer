@@ -28,6 +28,8 @@ namespace Microsoft.Extensions.DependencyInjection
             this IServiceCollection services,
             [NotNull] Action<IFtpServerBuilder> configure)
         {
+            services.AddOptions();
+
             services.AddSingleton<IFtpServer, FtpServer>();
             services.AddSingleton<ITemporaryDataFactory, TemporaryDataFactory>();
 
