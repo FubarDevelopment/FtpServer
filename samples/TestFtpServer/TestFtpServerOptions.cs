@@ -4,6 +4,8 @@
 
 using System;
 
+using FubarDev.FtpServer.AccountManagement;
+
 namespace TestFtpServer
 {
     public class TestFtpServerOptions
@@ -16,6 +18,7 @@ namespace TestFtpServer
         public string ServerCertificateFile { get; set; }
         public string ServerCertificatePassword { get; set; }
         public bool RefreshToken { get; set; }
+        public MembershipProviderType MembershipProviderType { get; set; } = MembershipProviderType.Anonymous;
 
         public int GetPort()
         {
@@ -29,5 +32,11 @@ namespace TestFtpServer
                 throw new Exception("Implicit FTPS requires a server certificate.");
             }
         }
+    }
+
+    public enum MembershipProviderType
+    {
+        Custom,
+        Anonymous,
     }
 }

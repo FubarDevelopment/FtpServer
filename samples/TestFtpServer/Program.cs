@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using System.Xml;
 
 using FubarDev.FtpServer;
+using FubarDev.FtpServer.AccountManagement;
 using FubarDev.FtpServer.FileSystem.DotNet;
 
 using Google.Apis.Auth.OAuth2;
@@ -38,6 +39,22 @@ namespace TestFtpServer
             {
                 "usage: ftpserver [OPTIONS] <COMMAND> [COMMAND-OPTIONS]",
                 { "h|?|help", "Show help", v => options.ShowHelp = v != null },
+                "Authentication",
+                { "authentication=", "Sets the authentication (custom, anonymous)", v =>
+                    {
+                        switch (v)
+                        {
+                            case "custom":
+                                options.MembershipProviderType = MembershipProviderType.Custom;
+                                break;
+                            case "anonymous":
+                                options.MembershipProviderType = MembershipProviderType.Anonymous;
+                                break;
+                            default:
+                                throw new ApplicationException("Invalid authentication module");
+                        }
+                    }
+                },
                 "Server",
                 { "a|address=", "Sets the IP address or host name", v => options.ServerAddress = v },
                 { "p|port=", "Sets the listen port", v => options.Port = Convert.ToInt32(v) },
@@ -86,7 +103,7 @@ namespace TestFtpServer
                 args.Length != 0 ? args[0] : Path.Combine(Path.GetTempPath(), "TestFtpServer");
             var services = CreateServices(options)
                 .Configure<DotNetFileSystemOptions>(opt => opt.RootPath = rootDir)
-                .AddFtpServer(sb => Configure(sb).UseDotNetFileSystem());
+                .AddFtpServer(sb => Configure(sb, options).UseDotNetFileSystem());
             Run(services, options);
         }
 
@@ -117,7 +134,7 @@ namespace TestFtpServer
             }
 
             var services = CreateServices(options)
-                .AddFtpServer(sb => Configure(sb).UseGoogleDrive(credential));
+                .AddFtpServer(sb => Configure(sb, options).UseGoogleDrive(credential));
             Run(services, options);
         }
 
@@ -135,7 +152,7 @@ namespace TestFtpServer
                 .CreateScoped(DriveService.Scope.Drive, DriveService.Scope.DriveFile);
 
             var services = CreateServices(options)
-                .AddFtpServer(sb => Configure(sb).UseGoogleDrive(credential));
+                .AddFtpServer(sb => Configure(sb, options).UseGoogleDrive(credential));
             Run(services, options);
         }
 
@@ -204,9 +221,20 @@ namespace TestFtpServer
             return services;
         }
 
-        private static IFtpServerBuilder Configure(IFtpServerBuilder builder)
+        private static IFtpServerBuilder Configure(IFtpServerBuilder builder, TestFtpServerOptions options)
         {
-            return builder.EnableAnonymousAuthentication();
+            switch (options.MembershipProviderType)
+            {
+                case MembershipProviderType.Anonymous:
+                    return builder.EnableAnonymousAuthentication();
+                case MembershipProviderType.Custom:
+                    builder.Services.AddSingleton<IMembershipProvider, CustomMembershipProvider>();
+                    break;
+                default:
+                    throw new InvalidOperationException($"Unknown membership provider {options.MembershipProviderType}");
+            }
+
+            return builder;
         }
     }
 }
