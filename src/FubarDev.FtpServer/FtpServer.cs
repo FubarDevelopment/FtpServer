@@ -214,11 +214,15 @@ namespace FubarDev.FtpServer
                     {
                         while (!Stopped)
                         {
-                            var acceptTask = listener.AcceptAnyTcpClientAsync(_cancellationTokenSource.Token);
+                            var acceptTask = listener.WaitAnyTcpClientAsync(_cancellationTokenSource.Token);
                             var client = acceptTask.Result;
                             AddClient(client);
                             continue;
                         }
+                    }
+                    catch(OperationCanceledException)
+                    {
+                        // Ignorieren - alles ist OK
                     }
                     finally
                     {

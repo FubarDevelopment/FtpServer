@@ -99,12 +99,16 @@ namespace FubarDev.FtpServer
             return false;
         }
 
-        public Task<TcpClient> AcceptAnyTcpClientAsync(CancellationToken token)
+        /// <summary>
+        /// Wait for any client on all listeners
+        /// </summary>
+        /// <param name="token">Cancellation token</param>
+        /// <returns></returns>
+        public Task<TcpClient> WaitAnyTcpClientAsync(CancellationToken token)
         {
             var index=Task.WaitAny(_acceptors.ToArray(), token);
             var retVal = _acceptors[index];
             _acceptors[index] = _listeners[index].AcceptTcpClientAsync();
-            retVal.Wait(token);
             return retVal;
         }
 
