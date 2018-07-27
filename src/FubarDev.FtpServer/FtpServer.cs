@@ -206,6 +206,7 @@ namespace FubarDev.FtpServer
                 try
                 {
                     await listener.StartAsync().ConfigureAwait(false);
+                    listener.StartAccepting();
 
                     Ready = true;
 
@@ -213,16 +214,10 @@ namespace FubarDev.FtpServer
                     {
                         while (!Stopped)
                         {
-                            if (listener.TryGetPending(out var tcpListener))
-                            {
-                                var acceptTask = tcpListener.AcceptTcpClientAsync();
-                                acceptTask.Wait(_cancellationTokenSource.Token);
-                                var client = acceptTask.Result;
-                                AddClient(client);
-                                continue;
-                            }
-
-                            Thread.Sleep(0);
+                            var acceptTask = listener.AcceptAnyTcpClientAsync(_cancellationTokenSource.Token);
+                            var client = acceptTask.Result;
+                            AddClient(client);
+                            continue;
                         }
                     }
                     finally

@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace FubarDev.FtpServer
@@ -19,6 +20,7 @@ namespace FubarDev.FtpServer
         private readonly string _address;
         private readonly int _port;
         private readonly IList<TcpListener> _listeners = new List<TcpListener>();
+        private readonly IList<Task<TcpClient>> _acceptors = new List<Task<TcpClient>>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MultiBindingTcpListener"/> class.
@@ -54,7 +56,7 @@ namespace FubarDev.FtpServer
                 .ToList();
             try
             {
-                Port = StartListening(addresses, _port);
+                Port = StartListening(addresses, _port);               
             }
             catch
             {
@@ -97,6 +99,15 @@ namespace FubarDev.FtpServer
             return false;
         }
 
+        public Task<TcpClient> AcceptAnyTcpClientAsync(CancellationToken token)
+        {
+            var index=Task.WaitAny(_acceptors.ToArray(), token);
+            var retVal = _acceptors[index];
+            _acceptors[index] = _listeners[index].AcceptTcpClientAsync();
+            retVal.Wait(token);
+            return retVal;
+        }
+
         private int StartListening(IEnumerable<IPAddress> addresses, int port)
         {
             var selectedPort = port;
@@ -109,11 +120,15 @@ namespace FubarDev.FtpServer
                 {
                     selectedPort = ((IPEndPoint)listener.LocalEndpoint).Port;
                 }
-
                 _listeners.Add(listener);
             }
 
             return selectedPort;
+        }
+
+        public void StartAccepting()
+        {
+            _listeners.ToList().ForEach(x => _acceptors.Add(x.AcceptTcpClientAsync()));          
         }
     }
 }
