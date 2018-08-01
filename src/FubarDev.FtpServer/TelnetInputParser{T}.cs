@@ -42,6 +42,10 @@ namespace FubarDev.FtpServer
                         case 0xF4:
                             result.AddRange(InterruptProcess());
                             break;
+                        case 0xFF:
+                            // Double-Escape
+                            result.AddRange(DataReceived(data, index, length: 1));
+                            break;
                         default:
                             Debug.WriteLine("TELNET: Unknown command received - skipping 0xFF");
                             dataOffset = index;
