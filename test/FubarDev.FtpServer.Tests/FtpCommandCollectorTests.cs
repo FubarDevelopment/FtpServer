@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 using Xunit;
@@ -157,10 +158,57 @@ namespace FubarDev.FtpServer.Tests
             Assert.True(collector.IsEmpty);
         }
 
-        private IEnumerable<FtpCommand> Collect(FtpCommandCollector collector, string data)
+        [Fact]
+        public void TestWithCyrillicTextWithWindows1251Encoding()
+        {
+            var encoding = CodePagesEncodingProvider.Instance.GetEncoding(codepage: 1251);
+            var collector = new FtpCommandCollector(() => encoding);
+
+            const string cyrillicSymbols = "абвгдеёжзийклмнопрстуфхцчшщыъьэюя";
+
+            var expectedCommands = new[] { new FtpCommand("TEST", cyrillicSymbols) };
+
+            var stringToTest = string.Format("TEST {0}\r\n", cyrillicSymbols);
+            var actualCommands = Collect(collector, stringToTest).ToArray();
+
+            // Test failed
+            // TELNET: Unknown command received - skipping 0xFF
+            // 0xFF == 'я' (maybe?)
+            Assert.Equal(expectedCommands, actualCommands, new FtpCommandComparer());
+            Assert.True(collector.IsEmpty);
+        }
+
+        private static IEnumerable<ReadOnlyMemory<byte>> EscapeIAC(byte[] data)
+        {
+            var startIndex = 0;
+            for (var i = 0; i != data.Length; ++i)
+            {
+                if (data[i] == 0xFF)
+                {
+                    var length = i - startIndex + 1;
+                    yield return new ReadOnlyMemory<byte>(data, startIndex, length);
+                    startIndex = i;
+                }
+            }
+
+            var remaining = data.Length - startIndex;
+            if (remaining != 0)
+            {
+                yield return new ReadOnlyMemory<byte>(data, startIndex, remaining);
+            }
+        }
+
+        private static IEnumerable<FtpCommand> Collect(FtpCommandCollector collector, string data)
         {
             var temp = collector.Encoding.GetBytes(data);
-            return collector.Collect(temp, 0, temp.Length);
+            foreach (var escapedData in EscapeIAC(temp).Select(x => x.Span.ToArray()))
+            {
+                var collected = collector.Collect(escapedData, 0, escapedData.Length);
+                foreach (var command in collected)
+                {
+                    yield return command;
+                }
+            }
         }
 
         private class FtpCommandComparer : IComparer<FtpCommand>, IEqualityComparer<FtpCommand>
