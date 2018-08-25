@@ -228,7 +228,7 @@ namespace TestFtpServer
                 case MembershipProviderType.Anonymous:
                     return builder.EnableAnonymousAuthentication();
                 case MembershipProviderType.Custom:
-                    builder.Services.AddSingleton<IMembershipProvider, CustomMembershipProvider>();
+                    builder.Services.AddSingleton<IBaseMembershipProvider, CustomMembershipProvider>();
                     break;
                 default:
                     throw new InvalidOperationException($"Unknown membership provider {options.MembershipProviderType}");

@@ -20,7 +20,7 @@ namespace FubarDev.FtpServer
         /// <returns>the server builder used to configure the FTP server.</returns>
         public static IFtpServerBuilder EnableAnonymousAuthentication(this IFtpServerBuilder builder)
         {
-            builder.Services.AddSingleton<IMembershipProvider, AnonymousMembershipProvider>();
+            builder.Services.AddSingleton<IBaseMembershipProvider, AnonymousMembershipProvider>();
             return builder;
         }
     }

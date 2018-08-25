@@ -1,21 +1,15 @@
-//-----------------------------------------------------------------------
-// <copyright file="IMembershipProvider.cs" company="Fubar Development Junker">
-//     Copyright (c) Fubar Development Junker. All rights reserved.
-// </copyright>
-// <author>Mark Junker</author>
-//-----------------------------------------------------------------------
-
+using System.Threading.Tasks;
 using JetBrains.Annotations;
 
 namespace FubarDev.FtpServer.AccountManagement
 {
     /// <summary>
-    /// Membership provider interface.
+    /// Membership provider interface for asynchronous usage.
     /// </summary>
     /// <remarks>
     /// This interface must be implemented to allow the username/password authentication.
     /// </remarks>
-    public interface IMembershipProvider : IBaseMembershipProvider
+    public interface IAsyncMembershipProvider : IBaseMembershipProvider
     {
         /// <summary>
         /// Validates if the combination of <paramref name="username"/> and <paramref name="password"/> is valid.
@@ -23,6 +17,6 @@ namespace FubarDev.FtpServer.AccountManagement
         /// <param name="username">The user name.</param>
         /// <param name="password">The password.</param>
         /// <returns>The result of the validation.</returns>
-        MemberValidationResult ValidateUser([NotNull] string username, [NotNull] string password);
+        Task<MemberValidationResult> ValidateUserAsync([NotNull] string username, [NotNull] string password);
     }
 }

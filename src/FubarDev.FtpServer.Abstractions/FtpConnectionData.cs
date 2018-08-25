@@ -53,7 +53,7 @@ namespace FubarDev.FtpServer
         /// Gets or sets the membership provider that was used to authenticate the user.
         /// </summary>
         [CanBeNull]
-        public IMembershipProvider AuthenticatedBy { get; set; }
+        public IBaseMembershipProvider AuthenticatedBy { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the current user is anonymous.
