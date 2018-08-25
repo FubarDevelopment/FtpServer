@@ -182,7 +182,7 @@ namespace FubarDev.FtpServer
             }
             catch (TaskCanceledException)
             {
-                // Ignorieren - alles ist OK
+                // Ignore - everything is fine
             }
 
             BackgroundTransferWorker.Dispose();
@@ -222,7 +222,7 @@ namespace FubarDev.FtpServer
                     }
                     catch(OperationCanceledException)
                     {
-                        // Ignorieren - alles ist OK
+                        // Ignore - everything is fine
                     }
                     finally
                     {
