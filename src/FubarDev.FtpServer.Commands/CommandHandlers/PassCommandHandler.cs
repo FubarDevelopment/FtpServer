@@ -58,7 +58,7 @@ namespace FubarDev.FtpServer.CommandHandlers
             var password = command.Argument;
             foreach (var membershipProvider in _membershipProviders)
             {
-                var validationResult = await ValidateUser(membershipProvider, Connection.Data.User.Name, password);
+                var validationResult = await ValidateUser(membershipProvider, Connection.Data.User.Name, password).ConfigureAwait(false);
 
                 if (validationResult.IsSuccess)
                 {
@@ -86,7 +86,7 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// <param name="password">The password of the user.</param>
         /// <returns>Returns the <see cref="MemberValidationResult"/> with the result of the validation.</returns>
         /// <exception cref="NotSupportedException">The given membership provider type is not supported.</exception>
-        private async Task<MemberValidationResult> ValidateUser(IBaseMembershipProvider membershipProvider, string username, string password)
+        private static async Task<MemberValidationResult> ValidateUser(IBaseMembershipProvider membershipProvider, string username, string password)
         {
             MemberValidationResult validationResult;
             switch (membershipProvider)
