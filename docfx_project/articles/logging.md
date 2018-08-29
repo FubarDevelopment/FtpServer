@@ -11,7 +11,7 @@ The FTP server utilizes [`Microsoft.Extensions.Logging`](https://docs.microsoft.
 
 ## Adding SeriLog to the project
 
-Go to the quickstart project created during the [Quickstart](xref:quickstart.md) tutorial and add the following NuGet packages:
+Go to the quickstart project created during the [Quickstart](xref:quickstart) tutorial and add the following NuGet packages:
 
 ```bash
 # Serilog.Extensions.Logging
@@ -32,7 +32,7 @@ Now you can see all the log messages from the FTP server.
 
 ## Adding NLog to the project
 
-Go to the quickstart project created during the [Quickstart](xref:quickstart.md) tutorial and add the following NuGet package:
+Go to the quickstart project created during the [Quickstart](xref:quickstart) tutorial and add the following NuGet package:
 
 ```bash
 # Add NLog

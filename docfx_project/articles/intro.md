@@ -12,7 +12,7 @@ FubarDev.FtpServer.FileSystem.GoogleDrive | Google Drive as virtual file system
 
 ## Getting Started
 
-* Check out the tour of FluentMigrator in our [Quickstart](xref:quickstart.md)
+* Check out the tour of FluentMigrator in our [Quickstart](xref:quickstart)
 
 ## Basic topics
 

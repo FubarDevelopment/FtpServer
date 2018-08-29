@@ -8,12 +8,12 @@ title: FTP Server Configuration
 The configuration is split into several parts:
 
 * Services
-* [IFtpServerBuilder](FubarDev.FtpServer.IFtpServerBuilder) is the FTP Server configuration builder
+* [IFtpServerBuilder](xref:FubarDev.FtpServer.IFtpServerBuilder) is the FTP Server configuration builder
 * [FtpServerOptions](xref:FubarDev.FtpServer.FtpServerOptions) for the FTP server transport configuration
 * [FtpConnectionOptions](xref:FubarDev.FtpServer.FtpConnectionOptions) to configure the default control connection text encoding
 * [AuthTlsOptions](xref:FubarDev.FtpServer.AuthTlsOptions) for the FTPS configuration
 * [DotNetFileSystemOptions](xref:FubarDev.FtpServer.FileSystem.DotNet.DotNetFileSystemOptions) to configure the file system access
-* [SystCommandOptions](FubarDev.FtpServer.SystCommandOptions) to specify the behavior of the SYST command
+* [SystCommandOptions](xref:FubarDev.FtpServer.SystCommandOptions) to specify the behavior of the SYST command
 
 # Services
 
@@ -28,7 +28,7 @@ var services = new ServiceCollection()
 
 This is also the absolute minimum configuration for the FTP server.
 
-# [IFtpServerBuilder](FubarDev.FtpServer.IFtpServerBuilder)
+# [IFtpServerBuilder](xref:FubarDev.FtpServer.IFtpServerBuilder)
 
 This is the place where other services are configured that will be used by the FTP server. This are the options currently available:
 
@@ -58,6 +58,6 @@ Used to configure the behavior of the System.IO-based file system access, like:
 - Usage of the user ID as subdirectory
 - Is deletion of non-empty directories allowed?
 
-# [SystCommandOptions](FubarDev.FtpServer.SystCommandOptions)
+# [SystCommandOptions](xref:FubarDev.FtpServer.SystCommandOptions)
 
 Here you can specify the operating system to be returned by the SYST command.

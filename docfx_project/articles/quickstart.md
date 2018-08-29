@@ -15,13 +15,13 @@ dotnet new console
 
 ```bash
 # For dependency injection support (required)
-dotnet add package Microsoft.Extensions.DependencyInjection -v 2.1.0
+dotnet add package Microsoft.Extensions.DependencyInjection
 
 # For the main FTP server
-dotnet add package FubarDev.FtpServer -v 2.0.0-beta.36
+dotnet add package FubarDev.FtpServer
 
 # For the System.IO-based file system access
-dotnet add package FubarDev.FtpServer.FileSystem.DotNet -v 2.0.0-beta.36
+dotnet add package FubarDev.FtpServer.FileSystem.DotNet
 ```
 
 # Using the FTP server
