@@ -33,6 +33,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{B0D91078-F
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FubarDev.FtpServer.Commands", "src\FubarDev.FtpServer.Commands\FubarDev.FtpServer.Commands.csproj", "{7E3F81E2-764E-4075-992F-E53BF50F9623}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "third-party", "third-party", "{441F13FB-D457-402E-8DAC-4B6485AFCE30}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "DotNet.Glob", "third-party\DotNet.Glob\DotNet.Glob.shproj", "{A45290B4-20F7-48E9-8543-C69240BFB9F8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -79,6 +83,7 @@ Global
 		{37CE4218-FAC3-4201-82A0-54945698C6AD} = {118460ED-4F14-4FF3-BFBF-11497DFB80B6}
 		{474BD381-5B80-4580-BFB1-D41BEB70C458} = {118460ED-4F14-4FF3-BFBF-11497DFB80B6}
 		{7E3F81E2-764E-4075-992F-E53BF50F9623} = {118460ED-4F14-4FF3-BFBF-11497DFB80B6}
+		{A45290B4-20F7-48E9-8543-C69240BFB9F8} = {441F13FB-D457-402E-8DAC-4B6485AFCE30}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {DAA7D00E-C61D-4640-A54E-D307E4682263}

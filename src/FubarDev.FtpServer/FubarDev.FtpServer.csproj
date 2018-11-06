@@ -6,7 +6,6 @@
     <PackageTags>portable;FTP;server</PackageTags>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="DotNet.Glob" Version="2.0.0" />
     <PackageReference Include="Scrutor" Version="2.0.0" />
   </ItemGroup>
   <ItemGroup Condition=" '$(TargetFramework)' != 'netstandard1.3' ">

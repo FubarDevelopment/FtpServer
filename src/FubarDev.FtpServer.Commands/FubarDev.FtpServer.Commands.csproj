@@ -9,9 +9,6 @@
   <ItemGroup>
     <ProjectReference Include="..\FubarDev.FtpServer.Abstractions\FubarDev.FtpServer.Abstractions.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="DotNet.Glob" Version="2.0.0" />
-  </ItemGroup>
   <ItemGroup Condition=" '$(TargetFramework)' != 'netstandard1.3' ">
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="2.0.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="2.0.0" />
@@ -23,4 +20,5 @@
     <PackageReference Include="Microsoft.Extensions.Options" Version="1.0.0" />
     <PackageReference Include="System.Net.Security" Version="4.0.0" />
   </ItemGroup>
+  <Import Project="..\..\third-party\DotNet.Glob\DotNet.Glob.projitems" Label="Shared" />
 </Project>

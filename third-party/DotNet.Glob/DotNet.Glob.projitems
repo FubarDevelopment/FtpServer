@@ -1,0 +1,66 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>A0F35BDF-5483-4AC8-B2F4-620EC4F81F4C</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>DotNet.Glob</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)EvaluationOptions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Evaluation\AnyCharacterTokenEvaluator.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Evaluation\CharacterListTokenEvaluator.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Evaluation\CharacterListTokenEvaluatorCaseInsensitive.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Evaluation\CompositeTokenEvaluator.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Evaluation\GlobTokenEvaluator.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Evaluation\GlobTokenEvaluatorFactory.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Evaluation\GlobTokenMatchAnalysisEvaluator.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Evaluation\IGlobTokenEvaluator.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Evaluation\IGlobTokenEvaluatorFactory.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Evaluation\LetterRangeTokenEvaluator.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Evaluation\LetterRangeTokenEvaluatorCaseInsensitive.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Evaluation\LiteralTokenEvaluator.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Evaluation\LiteralTokenEvaluatorCaseInsensitive.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Evaluation\NumberRangeTokenEvaluator.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Evaluation\PathSeperatorTokenEvaluator.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Evaluation\WildcardDirectoryTokenEvaluator.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Evaluation\WildcardTokenEvaluator.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Formatting\GlobTokenFormatter.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Generation\AnyCharacterTokenMatchGenerator.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Generation\CharacterListTokenMatchGenerator.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Generation\CompositeTokenMatchGenerator.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Generation\GlobMatchGeneratorExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Generation\GlobTestMatchGenerator.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Generation\IMatchGenerator.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Generation\LetterRangeTokenMatchGenerator.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Generation\LiteralTokenMatchGenerator.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Generation\NumberRangeTokenMatchGenerator.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Generation\PathSeperatorMatchGenerator.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Generation\WildcardDirectoryTokenMatchGenerator.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Generation\WildcardTokenMatchGenerator.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Glob.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)GlobBuilder.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)GlobOptions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)GlobStringReader.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)GlobTokeniser.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)GlobTokenMatch.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IGlobBuilder.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IGlobTokenVisitor.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)MatchInfo.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)PathSeperatorKind.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Token\AnyCharacterToken.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Token\CharacterListToken.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Token\IGlobToken.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Token\INegatableToken.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Token\IVisitable.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Token\LetterRangeToken.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Token\LiteralToken.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Token\NumberRangeToken.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Token\PathSeperatorToken.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Token\RangeToken.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Token\WildcardDirectoryToken.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Token\WildcardToken.cs" />
+  </ItemGroup>
+</Project>
