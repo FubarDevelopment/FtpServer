@@ -220,7 +220,7 @@ namespace FubarDev.FtpServer
                             continue;
                         }
                     }
-                    catch(OperationCanceledException)
+                    catch (OperationCanceledException)
                     {
                         // Ignore - everything is fine
                     }
