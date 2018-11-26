@@ -51,16 +51,16 @@ namespace FubarDev.FtpServer
             if (_address == IPAddress.Any.ToString())
             {
                 // "0.0.0.0"
-                addresses = new List<IPAddress>() { IPAddress.Any };
+                addresses = new List<IPAddress> { IPAddress.Any };
             }
             else if (_address == IPAddress.IPv6Any.ToString())
             {
                 // "::"
-                addresses = new List<IPAddress>() { IPAddress.IPv6Any };
+                addresses = new List<IPAddress> { IPAddress.IPv6Any };
             }
             else if (_address == "*")
             {
-                addresses = new List<IPAddress>() { IPAddress.Any, IPAddress.IPv6Any };
+                addresses = new List<IPAddress> { IPAddress.Any, IPAddress.IPv6Any };
             }
             else
             {
