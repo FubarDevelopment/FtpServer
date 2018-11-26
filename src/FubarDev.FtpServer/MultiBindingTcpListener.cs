@@ -47,11 +47,29 @@ namespace FubarDev.FtpServer
         /// <returns>the task.</returns>
         public async Task StartAsync()
         {
-            var dnsAddresses = await Dns.GetHostAddressesAsync(_address).ConfigureAwait(false);
-            var addresses = dnsAddresses
-                .Where(x => x.AddressFamily == AddressFamily.InterNetwork ||
-                            x.AddressFamily == AddressFamily.InterNetworkV6)
-                .ToList();
+            List<IPAddress> addresses;
+            if (_address == IPAddress.Any.ToString())
+            {
+                // "0.0.0.0"
+                addresses = new List<IPAddress>() { IPAddress.Any };
+            }
+            else if (_address == IPAddress.IPv6Any.ToString())
+            {
+                // "::"
+                addresses = new List<IPAddress>() { IPAddress.IPv6Any };
+            }
+            else if (_address == "*")
+            {
+                addresses = new List<IPAddress>() { IPAddress.Any, IPAddress.IPv6Any };
+            }
+            else
+            {
+                var dnsAddresses = await Dns.GetHostAddressesAsync(_address).ConfigureAwait(false);
+                addresses = dnsAddresses
+                    .Where(x => x.AddressFamily == AddressFamily.InterNetwork ||
+                                x.AddressFamily == AddressFamily.InterNetworkV6)
+                    .ToList();
+            }
             try
             {
                 Port = StartListening(addresses, _port);
