@@ -214,7 +214,7 @@ namespace TestFtpServer
             services.Configure<FtpConnectionOptions>(opt => opt.DefaultEncoding = Encoding.ASCII);
             services.Configure<FtpServerOptions>(opt =>
             {
-                opt.ServerAddress = options.ServerAddress ?? "localhost";
+                opt.ServerAddress = options.ServerAddress;
                 opt.Port = options.GetPort();
             });
 
