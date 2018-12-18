@@ -12,7 +12,7 @@ namespace TestFtpServer
     {
         public bool ShowHelp { get;set; }
 
-        public string ServerAddress { get; set; } = "localhost";
+        public string ServerAddress { get; set; }
         public int? Port { get; set; }
         public bool ImplicitFtps { get; set; }
         public string ServerCertificateFile { get; set; }
