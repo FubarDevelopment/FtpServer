@@ -64,7 +64,7 @@ namespace FubarDev.FtpServer
                 return desiredPort;
             }
 
-            await _mutex.WaitAsync();
+            await _mutex.WaitAsync().ConfigureAwait(false);
 
             try
             {
@@ -119,7 +119,7 @@ namespace FubarDev.FtpServer
         {
             if (_pasvPorts != null)
             {
-                await _mutex.WaitAsync();
+                await _mutex.WaitAsync().ConfigureAwait(false);
 
                 try
                 {
