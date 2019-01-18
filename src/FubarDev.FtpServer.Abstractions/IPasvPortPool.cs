@@ -8,6 +8,7 @@
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
+using System.Net;
 using System.Threading.Tasks;
 
 namespace FubarDev.FtpServer
@@ -32,5 +33,10 @@ namespace FubarDev.FtpServer
         /// </summary>
         /// <param name="port"></param>
         Task ReturnPasvPort(int port);
+
+        /// <summary>
+        /// The address that should be advertised by the PASV command. May be null to use a different address
+        /// </summary>
+        IPAddress PasvAddress { get; }
     }
 }
