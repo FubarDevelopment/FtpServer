@@ -15,7 +15,7 @@ namespace FubarDev.FtpServer
     /// <summary>
     /// Handles a pool of ports for use with PASV
     /// </summary>
-    public class PasvPortPool : IPasvPortPool
+    public class PasvPortPool : IPasvPortPool, IDisposable
     {
         private readonly ILogger<PasvPortPool> _log;
 
@@ -23,7 +23,7 @@ namespace FubarDev.FtpServer
 
         private readonly SemaphoreSlim _mutex;
 
-        private int _pasvPortsAvailable = 0;
+        private int _pasvPortsAvailable;
 
         private readonly Random _prng = new Random();
 
@@ -46,22 +46,30 @@ namespace FubarDev.FtpServer
             }
         }
 
+        /// <inheritdoc />
+        public Task<int> LeasePasvPort()
+        {
+            return LeasePasvPort(0);
+        }
 
         /// <summary>
         /// Return a random free passive port.
         /// </summary>
-        /// <param name="port">If set to != 0, get this specific port, not the next free one</param>
+        /// <param name="desiredPort">If set to != 0, get this specific port, not the next free one</param>
         /// <returns>A free port, or 0 if any port can be chosen, or -1 if there is no free port</returns>
-        public async Task<int> LeasePasvPort(int port = 0)
+        public async Task<int> LeasePasvPort(int desiredPort)
         {
             if (_pasvPorts == null)
-                return port;
+            {
+                return desiredPort;
+            }
 
             await _mutex.WaitAsync();
 
             try
             {
-                if (port == 0)
+                int port;
+                if (desiredPort == 0)
                 {
                     if (_pasvPortsAvailable == 0)
                     {
@@ -77,16 +85,18 @@ namespace FubarDev.FtpServer
                 {
                     // we want a specific port
 
-                    if (!_pasvPorts.ContainsKey(port))
+                    if (!_pasvPorts.ContainsKey(desiredPort))
                     {
-                        _log.LogWarning($"Requested PASV port number {port} outside of available range");
+                        _log.LogWarning($"Requested PASV port number {desiredPort} outside of available range");
                         return -1;
                     }
 
-                    if (!_pasvPorts[port])
+                    if (!_pasvPorts[desiredPort])
                     {
                         return -1;
                     }
+
+                    port = desiredPort;
                 }
 
                 _pasvPorts[port] = false;
@@ -129,5 +139,10 @@ namespace FubarDev.FtpServer
         }
 
 
+        /// <inheritdoc />
+        public void Dispose()
+        {
+            _mutex.Dispose();
+        }
     }
 }
