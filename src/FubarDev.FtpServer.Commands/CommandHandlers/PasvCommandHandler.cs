@@ -25,13 +25,17 @@ namespace FubarDev.FtpServer.CommandHandlers
     /// </summary>
     public class PasvCommandHandler : FtpCommandHandler
     {
+        private readonly IPasvPortPool _pasvPortPool;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="PasvCommandHandler"/> class.
         /// </summary>
         /// <param name="connection">The connection this command handler is created for.</param>
-        public PasvCommandHandler([NotNull] IFtpConnection connection)
+        /// <param name="pasvPortPool">The provider for passive ports</param>
+        public PasvCommandHandler([NotNull] IFtpConnection connection, IPasvPortPool pasvPortPool)
             : base(connection, "PASV", "EPSV")
         {
+            _pasvPortPool = pasvPortPool;
         }
 
         /// <inheritdoc/>
@@ -54,22 +58,26 @@ namespace FubarDev.FtpServer.CommandHandlers
                 return new FtpResponse(500, $"Cannot use {command.Name} when {Data.TransferTypeCommandUsed} was used before.");
             }
 
-            int port;
+            var desiredPort = 0;
             var isEpsv = string.Equals(command.Name, "EPSV", StringComparison.OrdinalIgnoreCase);
             if (isEpsv)
             {
                 if (string.IsNullOrEmpty(command.Argument) || string.Equals(command.Argument, "ALL", StringComparison.OrdinalIgnoreCase))
                 {
-                    port = 0;
+                    desiredPort = 0;
                 }
                 else
                 {
-                    port = Convert.ToInt32(command.Argument, 10);
+                    desiredPort = Convert.ToInt32(command.Argument, 10);
                 }
+
             }
-            else
+
+            var port = await _pasvPortPool.LeasePasvPort(desiredPort);
+
+            if (port < 0)
             {
-                port = 0;
+                return new FtpResponse(425, $"Port not available for data connection");
             }
 
             Data.TransferTypeCommandUsed = command.Name;
@@ -105,6 +113,7 @@ namespace FubarDev.FtpServer.CommandHandlers
             finally
             {
                 listener.Stop();
+                await _pasvPortPool.ReturnPasvPort(port);
             }
 
             return null;
