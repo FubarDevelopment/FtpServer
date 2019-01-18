@@ -18,5 +18,18 @@ namespace FubarDev.FtpServer
         /// Gets or sets the server port.
         /// </summary>
         public int Port { get; set; } = 21;
+
+        /// <summary>
+        /// Gets or sets minimum port number to use for passive ftp.
+        /// Only active if PasvMaxPort is set, too).
+        /// If set, needs to be larger than 1023.
+        /// </summary>
+        public int PasvMinPort { get; set; } = 0;
+
+        /// <summary>
+        /// Gets or sets maximum port number to use for passive ftp.
+        /// If set, needs to be larger than PasvMinPort.
+        /// </summary>
+        public int PasvMaxPort { get; set; } = 0;
     }
 }
