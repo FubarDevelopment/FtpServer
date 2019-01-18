@@ -83,8 +83,8 @@ namespace FubarDev.FtpServer.CommandHandlers
             Data.TransferTypeCommandUsed = command.Name;
 
             var timeout = TimeSpan.FromSeconds(5);
-            var address = Connection.LocalEndPoint.Address;
-            var listener = new TcpListener(address, port);
+            var listener = new TcpListener(Connection.LocalEndPoint.Address, port);
+            var address = _pasvPortPool.PasvAddress ?? Connection.LocalEndPoint.Address;     // we may need to advertise a different address than the one we bind to
             listener.Start();
             try
             {

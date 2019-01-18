@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
@@ -44,6 +45,8 @@ namespace FubarDev.FtpServer
 
                 _mutex = new SemaphoreSlim(1, 1);
             }
+
+            PasvAddress = !string.IsNullOrWhiteSpace(serverOptions.Value.PasvAddress) ? IPAddress.Parse(serverOptions.Value.PasvAddress) : null;
         }
 
         /// <inheritdoc />
@@ -138,6 +141,9 @@ namespace FubarDev.FtpServer
             }
         }
 
+
+        /// <inheritdoc />
+        public IPAddress PasvAddress { get; }
 
         /// <inheritdoc />
         public void Dispose()
