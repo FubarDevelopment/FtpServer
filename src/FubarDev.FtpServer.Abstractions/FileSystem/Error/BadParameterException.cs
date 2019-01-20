@@ -2,6 +2,8 @@
 // Copyright (c) 40three GmbH. All rights reserved.
 // </copyright>
 
+using System;
+
 namespace FubarDev.FtpServer.FileSystem.Error
 {
     /// <summary>
@@ -9,6 +11,23 @@ namespace FubarDev.FtpServer.FileSystem.Error
     /// </summary>
     public class BadParameterException : FileSystemException
     {
+        /// <inheritdoc />
+        public BadParameterException()
+        {
+        }
+
+        /// <inheritdoc />
+        public BadParameterException(string message)
+            : base(message)
+        {
+        }
+
+        /// <inheritdoc />
+        public BadParameterException(string message, Exception innerException)
+            : base(message, innerException)
+        {
+        }
+
         /// <inheritdoc />
         public override int FtpErrorCode { get; } = 504;
 
