@@ -1,5 +1,6 @@
-// <copyright file="PasvListener.cs" company="Fubar Development Junker">
-// Copyright (c) Fubar Development Junker. All rights reserved.
+// <copyright file="PasvListener.cs" company="40three GmbH">
+// Copyright (c) 2019 40three GmbH. All rights reserved.
+// Licensed under the MIT License.
 // </copyright>
 
 using System;
@@ -15,10 +16,10 @@ namespace FubarDev.FtpServer
         private bool _disposed;
 
         /// <summary>
-        /// Construct a new PasvListener.
+        /// Initializes a new instance of the <see cref="PasvListener"/> class.
         /// </summary>
-        /// <param name="listenAddress">On which address to listen</param>
-        /// <param name="port">Port to listen on, or 0 for any</param>
+        /// <param name="listenAddress">On which address to listen.</param>
+        /// <param name="port">Port to listen on, or 0 for any.</param>
         /// <param name="externalAddress">which external address should be advertised to clients. Use null to use the listener's address.</param>
         /// <exception cref="ArgumentNullException">listenAddress is null.</exception>
         /// <exception cref="ArgumentOutOfRangeException">port is out of range.</exception>

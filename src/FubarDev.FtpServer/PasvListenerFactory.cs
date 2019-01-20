@@ -1,3 +1,8 @@
+// <copyright file="PasvListenerFactory.cs" company="40three GmbH">
+// Copyright (c) 2019 40three GmbH. All rights reserved.
+// Licensed under the MIT License.
+// </copyright>
+
 using System;
 using System.Linq;
 using System.Net;
@@ -9,13 +14,11 @@ using Microsoft.Extensions.Options;
 namespace FubarDev.FtpServer
 {
     /// <summary>
-    /// Handles a pool of ports for use with PASV
+    /// Creates TcpListeners for use with PASV commands.
     /// </summary>
-    public class PasvListernerFactory : IPasvListernerFactory
+    public class PasvListenerFactory : IPasvListenerFactory
     {
-        private readonly ILogger<PasvListernerFactory> _log;
-
-        private const int ErrorEndpointInUse = 10048;
+        private readonly ILogger<PasvListenerFactory> _log;
 
         private readonly int _pasvMinPort;
         private readonly int _pasvMaxPort;
@@ -24,7 +27,7 @@ namespace FubarDev.FtpServer
 
         private readonly Random _prng = new Random();
 
-        public PasvListernerFactory(IOptions<FtpServerOptions> serverOptions, ILogger<PasvListernerFactory> logger)
+        public PasvListenerFactory(IOptions<FtpServerOptions> serverOptions, ILogger<PasvListenerFactory> logger)
         {
             _log = logger;
             if (serverOptions.Value.PasvMinPort > 1023 &&
@@ -40,6 +43,8 @@ namespace FubarDev.FtpServer
                 ? IPAddress.Parse(serverOptions.Value.PasvAddress)
                 : null;
         }
+
+        protected IPAddress PasvExternalAddress { get; }
 
         /// <inheritdoc />
         public Task<IPasvListener> CreateTcpLister(IFtpConnection connection)
@@ -75,11 +80,11 @@ namespace FubarDev.FtpServer
         }
 
         /// <summary>
-        /// Gets a listener on a port within the assigned port range
+        /// Gets a listener on a port within the assigned port range.
         /// </summary>
-        /// <param name="connection"></param>
-        /// <returns></returns>
-        /// <exception cref="SocketException"></exception>
+        /// <param name="connection">Connection for which to create the listener.</param>
+        /// <returns>Configured PasvListener.</returns>
+        /// <exception cref="SocketException">When no free port could be found, or other bad things happen. See <see cref="SocketError"/>.</exception>
         private IPasvListener CreateListenerInRange(IFtpConnection connection)
         {
             lock (_pasvPorts)
@@ -106,7 +111,5 @@ namespace FubarDev.FtpServer
                 throw new SocketException((int)SocketError.AddressAlreadyInUse);
             }
         }
-
-        protected IPAddress PasvExternalAddress { get; }
     }
 }

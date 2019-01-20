@@ -10,7 +10,7 @@ namespace FubarDev.FtpServer
     public class FtpServerOptions
     {
         /// <summary>
-        /// The address the server listens on.
+        /// Gets or sets the address the server listens on.
         /// Leave empty to listen on all interfaces.
         /// </summary>
         public string ServerAddress { get; set; }
@@ -34,8 +34,8 @@ namespace FubarDev.FtpServer
         public int PasvMaxPort { get; set; }
 
         /// <summary>
-        /// The address published to clients for PASV connections.
-        /// This may be necessary if you are behind a forwarding firewall, for example
+        /// Gets or sets the address published to clients for PASV connections.
+        /// This may be necessary if you are behind a forwarding firewall, for example.
         /// </summary>
         public string PasvAddress { get; set; }
     }

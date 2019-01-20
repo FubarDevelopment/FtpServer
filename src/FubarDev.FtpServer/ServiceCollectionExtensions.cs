@@ -32,7 +32,7 @@ namespace Microsoft.Extensions.DependencyInjection
 
             services.AddSingleton<IFtpServer, FtpServer>();
             services.AddSingleton<ITemporaryDataFactory, TemporaryDataFactory>();
-            services.AddSingleton<IPasvListernerFactory, PasvListernerFactory>();
+            services.AddSingleton<IPasvListenerFactory, PasvListenerFactory>();
 
             services.AddScoped<IFtpConnectionAccessor, FtpConnectionAccessor>();
             services.AddScoped<TcpSocketClientAccessor>();

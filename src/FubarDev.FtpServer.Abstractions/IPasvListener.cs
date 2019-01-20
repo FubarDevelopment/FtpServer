@@ -1,3 +1,8 @@
+// <copyright file="IPasvListener.cs" company="40three GmbH">
+// Copyright (c) 2019 40three GmbH. All rights reserved.
+// Licensed under the MIT License.
+// </copyright>
+
 using System;
 using System.Net;
 using System.Net.Sockets;
@@ -19,8 +24,8 @@ namespace FubarDev.FtpServer
         /// Accept a client from a PASV command.
         /// </summary>
         /// <returns>A TcpClient with which to communicate with the client.</returns>
-        /// <exception cref="SocketException">Network error.</exception>
-        /// <exception cref="ObjectDisposedException">Listener was disposed of</exception>
+        /// <exception cref="SocketException">Network error, see <see cref="SocketError"/>.</exception>
+        /// <exception cref="ObjectDisposedException">Listener was disposed of.</exception>
         Task<TcpClient> AcceptPasvClientAsync();
     }
 }

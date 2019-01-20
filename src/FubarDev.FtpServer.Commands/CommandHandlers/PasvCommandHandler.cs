@@ -26,17 +26,17 @@ namespace FubarDev.FtpServer.CommandHandlers
     /// </summary>
     public class PasvCommandHandler : FtpCommandHandler
     {
-        private readonly IPasvListernerFactory _pasvListernerFactory;
+        private readonly IPasvListenerFactory _pasvListenerFactory;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PasvCommandHandler"/> class.
         /// </summary>
         /// <param name="connection">The connection this command handler is created for.</param>
-        /// <param name="pasvListernerFactory">The provider for passive ports</param>
-        public PasvCommandHandler([NotNull] IFtpConnection connection, IPasvListernerFactory pasvListernerFactory)
+        /// <param name="pasvListenerFactory">The provider for passive ports.</param>
+        public PasvCommandHandler([NotNull] IFtpConnection connection, IPasvListenerFactory pasvListenerFactory)
             : base(connection, "PASV", "EPSV")
         {
-            _pasvListernerFactory = pasvListernerFactory;
+            _pasvListenerFactory = pasvListenerFactory;
         }
 
         /// <inheritdoc/>
@@ -79,7 +79,6 @@ namespace FubarDev.FtpServer.CommandHandlers
                 {
                     desiredPort = Convert.ToInt32(command.Argument, 10);
                 }
-
             }
 
             Data.TransferTypeCommandUsed = command.Name;
@@ -87,7 +86,7 @@ namespace FubarDev.FtpServer.CommandHandlers
             var timeout = TimeSpan.FromSeconds(5);
             try
             {
-                using (var listener = await _pasvListernerFactory.CreateTcpLister(Connection, desiredPort))
+                using (var listener = await _pasvListenerFactory.CreateTcpLister(Connection, desiredPort))
                 {
                     var address = listener.PasvEndPoint.Address;
 
