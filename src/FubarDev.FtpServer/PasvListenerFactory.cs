@@ -102,12 +102,14 @@ namespace FubarDev.FtpServer
                         // retry if the socket is already in use, else throw the underlying exception
                         if (se.SocketErrorCode != SocketError.AddressAlreadyInUse)
                         {
+                            _log.LogError(se, "Could not create listener");
                             throw;
                         }
                     }
                 }
 
                 // if we reach this point, we have not been able to create a listener within range
+                _log.LogWarning("No free ports available for data connection");
                 throw new SocketException((int)SocketError.AddressAlreadyInUse);
             }
         }
