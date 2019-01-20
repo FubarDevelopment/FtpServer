@@ -388,8 +388,8 @@ namespace FubarDev.FtpServer
                     }
                     catch (FileSystemException fse)
                     {
-                        var message = fse.Message ?? "Command not executed";
-                        Log?.LogInformation($"Rejected command ({command}) with error {fse.FtpErrorCode}: {message}");
+                        var message = fse.Message != null ? $"{fse.FtpErrorName}: {fse.Message}" : fse.FtpErrorName;
+                        Log?.LogInformation($"Rejected command ({command}) with error {fse.FtpErrorCode} {message}");
                         response = new FtpResponse(fse.FtpErrorCode, message);
                     }
                     catch (NotSupportedException nse)

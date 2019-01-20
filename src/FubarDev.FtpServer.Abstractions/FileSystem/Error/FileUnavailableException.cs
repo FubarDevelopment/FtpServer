@@ -11,5 +11,8 @@ namespace FubarDev.FtpServer.FileSystem.Error
     {
         /// <inheritdoc />
         public override int FtpErrorCode { get; } = 550;
+
+        /// <inheritdoc />
+        public override string FtpErrorName { get; } = "File unavailable";
     }
 }

@@ -11,5 +11,8 @@ namespace FubarDev.FtpServer.FileSystem.Error
     {
         /// <inheritdoc />
         public override int FtpErrorCode { get; } = 504;
+
+        /// <inheritdoc />
+        public override string FtpErrorName { get; } = "Command not implemented for that parameter";
     }
 }

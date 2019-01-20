@@ -25,5 +25,7 @@ namespace FubarDev.FtpServer.FileSystem.Error
         }
 
         public abstract int FtpErrorCode { get; }
+
+        public abstract string FtpErrorName { get; }
     }
 }
