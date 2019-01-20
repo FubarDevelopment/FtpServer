@@ -25,17 +25,17 @@ namespace FubarDev.FtpServer.CommandHandlers
     /// </summary>
     public class PasvCommandHandler : FtpCommandHandler
     {
-        private readonly IPasvPortPool _pasvPortPool;
+        private readonly IPasvListenerFactory _pasvListenerFactory;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PasvCommandHandler"/> class.
         /// </summary>
         /// <param name="connection">The connection this command handler is created for.</param>
-        /// <param name="pasvPortPool">The provider for passive ports</param>
-        public PasvCommandHandler([NotNull] IFtpConnection connection, IPasvPortPool pasvPortPool)
+        /// <param name="pasvListenerFactory">The provider for passive ports.</param>
+        public PasvCommandHandler([NotNull] IFtpConnection connection, IPasvListenerFactory pasvListenerFactory)
             : base(connection, "PASV", "EPSV")
         {
-            _pasvPortPool = pasvPortPool;
+            _pasvListenerFactory = pasvListenerFactory;
         }
 
         /// <inheritdoc/>
@@ -53,16 +53,24 @@ namespace FubarDev.FtpServer.CommandHandlers
                 Data.PassiveSocketClient = null;
             }
 
-            if (Data.TransferTypeCommandUsed != null && !string.Equals(command.Name, Data.TransferTypeCommandUsed, StringComparison.OrdinalIgnoreCase))
+            if (Data.TransferTypeCommandUsed != null && !string.Equals(
+                    command.Name,
+                    Data.TransferTypeCommandUsed,
+                    StringComparison.OrdinalIgnoreCase))
             {
-                return new FtpResponse(500, $"Cannot use {command.Name} when {Data.TransferTypeCommandUsed} was used before.");
+                return new FtpResponse(
+                    500,
+                    $"Cannot use {command.Name} when {Data.TransferTypeCommandUsed} was used before.");
             }
 
             var desiredPort = 0;
             var isEpsv = string.Equals(command.Name, "EPSV", StringComparison.OrdinalIgnoreCase);
             if (isEpsv)
             {
-                if (string.IsNullOrEmpty(command.Argument) || string.Equals(command.Argument, "ALL", StringComparison.OrdinalIgnoreCase))
+                if (string.IsNullOrEmpty(command.Argument) || string.Equals(
+                        command.Argument,
+                        "ALL",
+                        StringComparison.OrdinalIgnoreCase))
                 {
                     desiredPort = 0;
                 }
@@ -70,53 +78,47 @@ namespace FubarDev.FtpServer.CommandHandlers
                 {
                     desiredPort = Convert.ToInt32(command.Argument, 10);
                 }
-
-            }
-
-            var port = await _pasvPortPool.LeasePasvPort(desiredPort);
-
-            if (port < 0)
-            {
-                return new FtpResponse(425, $"Port not available for data connection");
             }
 
             Data.TransferTypeCommandUsed = command.Name;
 
             var timeout = TimeSpan.FromSeconds(5);
-            var listener = new TcpListener(Connection.LocalEndPoint.Address, port);
-            var address = _pasvPortPool.PasvAddress ?? Connection.LocalEndPoint.Address;     // we may need to advertise a different address than the one we bind to
-            listener.Start();
             try
             {
-                var localPort = ((IPEndPoint)listener.LocalEndpoint).Port;
-                if (isEpsv || address.AddressFamily == AddressFamily.InterNetworkV6)
+                using (var listener = await _pasvListenerFactory.CreateTcpLister(Connection, desiredPort))
                 {
-                    var listenerAddress = new Address(localPort);
-                    await Connection.WriteAsync(new FtpResponse(229, $"Entering Extended Passive Mode ({listenerAddress})."), cancellationToken).ConfigureAwait(false);
-                }
-                else
-                {
-                    var listenerAddress = new Address(address.ToString(), localPort);
-                    await Connection.WriteAsync(new FtpResponse(227, $"Entering Passive Mode ({listenerAddress})."), cancellationToken).ConfigureAwait(false);
-                }
+                    var address = listener.PasvEndPoint.Address;
 
-                var acceptTask = listener.AcceptTcpClientAsync();
-                if (acceptTask.Wait(timeout))
-                {
-                    Data.PassiveSocketClient = acceptTask.Result;
+                    var localPort = listener.PasvEndPoint.Port;
+                    if (isEpsv || address.AddressFamily == AddressFamily.InterNetworkV6)
+                    {
+                        var listenerAddress = new Address(localPort);
+                        await Connection.WriteAsync(
+                            new FtpResponse(229, $"Entering Extended Passive Mode ({listenerAddress})."),
+                            cancellationToken).ConfigureAwait(false);
+                    }
+                    else
+                    {
+                        var listenerAddress = new Address(address.ToString(), localPort);
+                        await Connection.WriteAsync(
+                            new FtpResponse(227, $"Entering Passive Mode ({listenerAddress})."),
+                            cancellationToken).ConfigureAwait(false);
+                    }
+
+                    var acceptTask = listener.AcceptPasvClientAsync();
+                    if (acceptTask.Wait(timeout))
+                    {
+                        Data.PassiveSocketClient = acceptTask.Result;
+                    }
                 }
             }
             catch (Exception ex)
             {
                 Connection.Log?.LogError(ex, ex.Message);
-            }
-            finally
-            {
-                listener.Stop();
-                await _pasvPortPool.ReturnPasvPort(port);
+                return new FtpResponse(425, "Could not open data connection");
             }
 
             return null;
-        }
+    }
     }
 }
