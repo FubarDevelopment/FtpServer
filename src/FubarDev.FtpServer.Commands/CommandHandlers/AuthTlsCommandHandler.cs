@@ -56,6 +56,11 @@ namespace FubarDev.FtpServer.CommandHandlers
                 arg = "TLS";
             }
 
+            if (_serverCertificate == null)
+            {
+                return Task.FromResult(new FtpResponse(502, "TLS not configured"));
+            }
+
             switch (arg.ToUpperInvariant())
             {
                 case "TLS":
