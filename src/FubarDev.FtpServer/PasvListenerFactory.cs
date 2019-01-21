@@ -47,13 +47,13 @@ namespace FubarDev.FtpServer
         protected IPAddress PasvExternalAddress { get; }
 
         /// <inheritdoc />
-        public Task<IPasvListener> CreateTcpLister(IFtpConnection connection)
+        public Task<IPasvListener> CreateTcpListener(IFtpConnection connection)
         {
-            return CreateTcpLister(connection, 0);
+            return CreateTcpListener(connection, 0);
         }
 
         /// <inheritdoc />
-        public Task<IPasvListener> CreateTcpLister(IFtpConnection connection, int port)
+        public Task<IPasvListener> CreateTcpListener(IFtpConnection connection, int port)
         {
             IPasvListener listener;
 
