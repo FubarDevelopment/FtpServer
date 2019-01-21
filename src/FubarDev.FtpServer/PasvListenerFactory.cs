@@ -27,6 +27,11 @@ namespace FubarDev.FtpServer
 
         private readonly Random _prng = new Random();
 
+        /// <summary>
+        ///
+        /// </summary>
+        /// <param name="serverOptions"></param>
+        /// <param name="logger"></param>
         public PasvListenerFactory(IOptions<FtpServerOptions> serverOptions, ILogger<PasvListenerFactory> logger)
         {
             _log = logger;
@@ -44,7 +49,7 @@ namespace FubarDev.FtpServer
                 : null;
         }
 
-        protected IPAddress PasvExternalAddress { get; }
+        private IPAddress PasvExternalAddress { get; }
 
         /// <inheritdoc />
         public Task<IPasvListener> CreateTcpLister(IFtpConnection connection)

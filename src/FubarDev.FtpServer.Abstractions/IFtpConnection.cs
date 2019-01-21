@@ -44,6 +44,13 @@ namespace FubarDev.FtpServer
         Encoding Encoding { get; set; }
 
         /// <summary>
+        /// Gets a value indicating whether to accept PASV connections from any source.
+        /// If false (default), connections to a PASV port will only be accepted from the same IP that issued
+        /// the respective PASV command.
+        /// </summary>
+        bool PromiscuousPasv { get; }
+
+        /// <summary>
         /// Gets the FTP connection data.
         /// </summary>
         [NotNull]
