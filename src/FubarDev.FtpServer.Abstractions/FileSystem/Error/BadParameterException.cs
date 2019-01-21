@@ -11,18 +11,27 @@ namespace FubarDev.FtpServer.FileSystem.Error
     /// </summary>
     public class BadParameterException : FileSystemException
     {
-        /// <inheritdoc />
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BadParameterException"/> class.
+        /// </summary>
         public BadParameterException()
         {
         }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BadParameterException"/> class.
+        /// </summary>
+        /// <param name="message">The error message.</param>
         public BadParameterException(string message)
             : base(message)
         {
         }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BadParameterException"/> class.
+        /// </summary>
+        /// <param name="message">The error message.</param>
+        /// <param name="innerException">The inner exception.</param>
         public BadParameterException(string message, Exception innerException)
             : base(message, innerException)
         {
