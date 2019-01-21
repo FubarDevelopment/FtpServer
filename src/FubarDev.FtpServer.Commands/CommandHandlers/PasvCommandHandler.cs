@@ -11,12 +11,8 @@ using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
-
 using JetBrains.Annotations;
-
-#if !NETSTANDARD1_3
 using Microsoft.Extensions.Logging;
-#endif
 
 namespace FubarDev.FtpServer.CommandHandlers
 {
@@ -85,7 +81,7 @@ namespace FubarDev.FtpServer.CommandHandlers
             var timeout = TimeSpan.FromSeconds(5);
             try
             {
-                using (var listener = await _pasvListenerFactory.CreateTcpLister(Connection, desiredPort))
+                using (var listener = await _pasvListenerFactory.CreateTcpListener(Connection, desiredPort))
                 {
                     var address = listener.PasvEndPoint.Address;
 
@@ -108,6 +104,19 @@ namespace FubarDev.FtpServer.CommandHandlers
                     var acceptTask = listener.AcceptPasvClientAsync();
                     if (acceptTask.Wait(timeout))
                     {
+                        var pasvRemoteAddress = ((IPEndPoint)acceptTask.Result.Client.RemoteEndPoint).Address;
+
+                        if (!Connection.PromiscuousPasv
+                            && !Equals(Connection.RemoteAddress.IPAddress, pasvRemoteAddress))
+                        {
+                            Connection.Log?.LogWarning(
+                                $"Data connection attempt from {pasvRemoteAddress} for control connection from {Connection.RemoteAddress.IPAddress}, data connection rejected");
+
+                            return new FtpResponse(
+                                425,
+                                "Data connection must be opened from same IP address as control connection");
+                        }
+                        Connection.Log?.LogInformation($"Data connection accepted from {pasvRemoteAddress}");
                         Data.PassiveSocketClient = acceptTask.Result;
                     }
                 }
@@ -119,6 +128,6 @@ namespace FubarDev.FtpServer.CommandHandlers
             }
 
             return null;
-    }
+        }
     }
 }

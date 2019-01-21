@@ -72,6 +72,7 @@ namespace FubarDev.FtpServer
             Log = logger;
             SocketStream = OriginalStream = socket.GetStream();
             Encoding = options.Value.DefaultEncoding ?? Encoding.ASCII;
+            PromiscuousPasv = options.Value.PromiscuousPasv;
             Data = new FtpConnectionData(new BackgroundCommandHandler(this));
 
             // Lazy is required, because we need access to the FTP connection in the command handler constructor
@@ -117,6 +118,9 @@ namespace FubarDev.FtpServer
 
         /// <inheritdoc />
         public Encoding Encoding { get; set; }
+
+        /// <inheritdoc />
+        public bool PromiscuousPasv { get; }
 
         /// <inheritdoc />
         public FtpConnectionData Data { get; }

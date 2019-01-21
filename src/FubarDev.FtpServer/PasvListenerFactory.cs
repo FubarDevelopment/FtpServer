@@ -27,6 +27,11 @@ namespace FubarDev.FtpServer
 
         private readonly Random _prng = new Random();
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PasvListenerFactory"/> class.
+        /// </summary>
+        /// <param name="serverOptions">FTPServer options.</param>
+        /// <param name="logger">Logger instance.</param>
         public PasvListenerFactory(IOptions<FtpServerOptions> serverOptions, ILogger<PasvListenerFactory> logger)
         {
             _log = logger;
@@ -44,16 +49,20 @@ namespace FubarDev.FtpServer
                 : null;
         }
 
+        /// <summary>
+        /// Gets the IP address where clients should direct PASV connection attempts. If null, the control connection
+        /// interface's IP is used.
+        /// </summary>
         protected IPAddress PasvExternalAddress { get; }
 
         /// <inheritdoc />
-        public Task<IPasvListener> CreateTcpLister(IFtpConnection connection)
+        public Task<IPasvListener> CreateTcpListener(IFtpConnection connection)
         {
-            return CreateTcpLister(connection, 0);
+            return CreateTcpListener(connection, 0);
         }
 
         /// <inheritdoc />
-        public Task<IPasvListener> CreateTcpLister(IFtpConnection connection, int port)
+        public Task<IPasvListener> CreateTcpListener(IFtpConnection connection, int port)
         {
             IPasvListener listener;
 
@@ -102,12 +111,14 @@ namespace FubarDev.FtpServer
                         // retry if the socket is already in use, else throw the underlying exception
                         if (se.SocketErrorCode != SocketError.AddressAlreadyInUse)
                         {
+                            _log.LogError(se, "Could not create listener");
                             throw;
                         }
                     }
                 }
 
                 // if we reach this point, we have not been able to create a listener within range
+                _log.LogWarning("No free ports available for data connection");
                 throw new SocketException((int)SocketError.AddressAlreadyInUse);
             }
         }
