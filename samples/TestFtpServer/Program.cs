@@ -58,6 +58,25 @@ namespace TestFtpServer
                 "Server",
                 { "a|address=", "Sets the IP address or host name", v => options.ServerAddress = v },
                 { "p|port=", "Sets the listen port", v => options.Port = Convert.ToInt32(v) },
+                { "s|pasv=", "Sets the range for PASV ports, specify as FIRST:LAST", v =>
+                    {
+                        var sPorts = v.Split(":", StringSplitOptions.RemoveEmptyEntries);
+
+                        if (sPorts.Length != 2)
+                        {
+                            throw new ApplicationException("Need exactly two ports for PASV port range");
+                        }
+
+                        var iPorts = sPorts.Select(s => Convert.ToInt32(s)).ToArray();
+
+                        if (iPorts[1] < iPorts[0])
+                        {
+                            throw new ApplicationException("PASV start port must be smaller than end port");
+                        }
+
+                        options.PassivePortRange = (iPorts[0], iPorts[1]) ;
+                    }
+                },
                 "FTPS",
                 { "c|certificate=", "Set the SSL certificate", v => options.ServerCertificateFile =v },
                 { "P|password=", "Password for the SSL certificate", v => options.ServerCertificatePassword = v },
@@ -216,6 +235,12 @@ namespace TestFtpServer
             {
                 opt.ServerAddress = options.ServerAddress;
                 opt.Port = options.GetPort();
+
+                if (options.PassivePortRange != null)
+                {
+                    opt.PasvMinPort = options.PassivePortRange.Value.Item1;
+                    opt.PasvMaxPort = options.PassivePortRange.Value.Item2;
+                }
             });
 
             return services;
