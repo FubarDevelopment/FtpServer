@@ -12,8 +12,7 @@ namespace FubarDev.FtpServer.FileSystem.Error
         /// <summary>
         ///  Initializes a new instance of the <see cref="FileSystemException"/> class.
         /// </summary>
-        public FileSystemException()
-            : base()
+        protected FileSystemException()
         {
         }
 
@@ -21,7 +20,7 @@ namespace FubarDev.FtpServer.FileSystem.Error
         ///  Initializes a new instance of the <see cref="FileSystemException"/> class.
         /// </summary>
         /// <param name="message">Error message</param>
-        public FileSystemException(string message)
+        protected FileSystemException(string message)
             : base(message)
         {
         }
@@ -31,7 +30,7 @@ namespace FubarDev.FtpServer.FileSystem.Error
         /// </summary>
         /// <param name="message">Error message</param>
         /// <param name="innerException">Underlying exception</param>
-        public FileSystemException(string message, System.Exception innerException)
+        protected FileSystemException(string message, System.Exception innerException)
             : base(message, innerException)
         {
         }
