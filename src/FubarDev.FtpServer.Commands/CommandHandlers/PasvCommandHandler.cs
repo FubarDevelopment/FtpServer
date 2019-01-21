@@ -81,7 +81,7 @@ namespace FubarDev.FtpServer.CommandHandlers
             var timeout = TimeSpan.FromSeconds(5);
             try
             {
-                using (var listener = await _pasvListenerFactory.CreateTcpLister(Connection, desiredPort))
+                using (var listener = await _pasvListenerFactory.CreateTcpListener(Connection, desiredPort))
                 {
                     var address = listener.PasvEndPoint.Address;
 
