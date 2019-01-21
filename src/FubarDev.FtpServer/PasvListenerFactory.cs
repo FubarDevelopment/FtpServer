@@ -27,6 +27,11 @@ namespace FubarDev.FtpServer
 
         private readonly Random _prng = new Random();
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PasvListenerFactory"/> class.
+        /// </summary>
+        /// <param name="serverOptions">FTPServer options.</param>
+        /// <param name="logger">Logger instance.</param>
         public PasvListenerFactory(IOptions<FtpServerOptions> serverOptions, ILogger<PasvListenerFactory> logger)
         {
             _log = logger;
@@ -44,6 +49,10 @@ namespace FubarDev.FtpServer
                 : null;
         }
 
+        /// <summary>
+        /// Gets the IP address where clients should direct PASV connection attempts. If null, the control connection
+        /// interface's IP is used.
+        /// </summary>
         protected IPAddress PasvExternalAddress { get; }
 
         /// <inheritdoc />

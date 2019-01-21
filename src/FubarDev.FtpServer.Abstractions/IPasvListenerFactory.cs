@@ -10,6 +10,9 @@ using System.Threading.Tasks;
 
 namespace FubarDev.FtpServer
 {
+    /// <summary>
+    /// Creates correctly configured <see cref="IPasvListener">PASV data connection listeners</see>.
+    /// </summary>
     public interface IPasvListenerFactory
     {
         /// <summary>
