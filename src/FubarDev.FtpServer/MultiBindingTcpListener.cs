@@ -131,6 +131,9 @@ namespace FubarDev.FtpServer
             return retVal;
         }
 
+        /// <summary>
+        /// Start the asynchronous acception for all listeners.
+        /// </summary>
         public void StartAccepting()
         {
             _listeners.ToList().ForEach(x => _acceptors.Add(x.AcceptTcpClientAsync()));
