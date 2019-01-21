@@ -120,6 +120,6 @@ namespace FubarDev.FtpServer.CommandHandlers
             }
 
             return null;
-    }
+        }
     }
 }
