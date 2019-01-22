@@ -18,6 +18,7 @@ using System.Threading.Tasks;
 
 using FubarDev.FtpServer.BackgroundTransfer;
 using FubarDev.FtpServer.CommandHandlers;
+using FubarDev.FtpServer.FileSystem.Error;
 using JetBrains.Annotations;
 
 using Microsoft.Extensions.DependencyInjection;
@@ -381,8 +382,21 @@ namespace FubarDev.FtpServer
                         }
                         else
                         {
-                            response = await handler.Process(handlerCommand, _cancellationTokenSource.Token).ConfigureAwait(false);
+                            response = await handler.Process(handlerCommand, _cancellationTokenSource.Token)
+                                .ConfigureAwait(false);
                         }
+                    }
+                    catch (FileSystemException fse)
+                    {
+                        var message = fse.Message != null ? $"{fse.FtpErrorName}: {fse.Message}" : fse.FtpErrorName;
+                        Log?.LogInformation($"Rejected command ({command}) with error {fse.FtpErrorCode} {message}");
+                        response = new FtpResponse(fse.FtpErrorCode, message);
+                    }
+                    catch (NotSupportedException nse)
+                    {
+                        var message = nse.Message ?? $"Command {command} not supported";
+                        Log?.LogInformation(message);
+                        response = new FtpResponse(502, message);
                     }
                     catch (Exception ex)
                     {

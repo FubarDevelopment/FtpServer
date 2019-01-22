@@ -25,6 +25,8 @@ namespace TestFtpServer
             return Port ?? (ImplicitFtps ? 990 : 21);
         }
 
+        public (int, int)? PassivePortRange { get; set; } = null;
+
         public void Validate()
         {
             if (ImplicitFtps && !string.IsNullOrEmpty(ServerCertificateFile))
