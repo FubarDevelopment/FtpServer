@@ -8,7 +8,6 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
 using System.Linq;
 using System.Text;
 
@@ -19,13 +18,13 @@ namespace FubarDev.FtpServer
     /// <summary>
     /// Collects FTP commands using the current <see cref="System.Text.Encoding"/>.
     /// </summary>
-    public sealed class FtpCommandCollector : IDisposable
+    public sealed class FtpCommandCollector
     {
         private readonly Func<Encoding> _getActiveEncodingFunc;
 
         private readonly FtpTelnetInputParser _telnetInputParser;
 
-        private MemoryStream _buffer = new MemoryStream();
+        private readonly List<byte[]> _buffer = new List<byte[]>();
 
         private bool _skipLineFeed;
 
@@ -47,106 +46,110 @@ namespace FubarDev.FtpServer
         /// <summary>
         /// Gets a value indicating whether this collector contains unused data.
         /// </summary>
-        public bool IsEmpty => _buffer.Length == 0;
+        public bool IsEmpty => _buffer.Count == 0;
 
         /// <summary>
         /// Collects the data from the <paramref name="buffer"/> and tries to build <see cref="FtpCommand"/> objects from it.
         /// </summary>
         /// <param name="buffer">The buffer to collect the data from.</param>
-        /// <param name="offset">An offset into the buffer to collect the data from.</param>
-        /// <param name="length">The length of the data to collect.</param>
         /// <returns>The found <see cref="FtpCommand"/>s.</returns>
         [NotNull]
         [ItemNotNull]
-        public IEnumerable<FtpCommand> Collect(byte[] buffer, int offset, int length)
+        public IEnumerable<FtpCommand> Collect(ReadOnlySpan<byte> buffer)
         {
-            Debug.WriteLine("Collected data: {0}", string.Join(string.Empty, Enumerable.Range(offset, length).Select(x => buffer[x].ToString("X2"))));
+#if DEBUG
+            var collectedData = new StringBuilder();
+            for (var i = 0; i < buffer.Length; i++)
+            {
+                collectedData.Append(buffer[i].ToString("X2"));
+            }
+
+            Debug.WriteLine("Collected data: {0}", collectedData);
+#endif
 
             var commands = new List<FtpCommand>();
-            commands.AddRange(_telnetInputParser.Collect(buffer, offset, length));
+            commands.AddRange(_telnetInputParser.Collect(buffer));
             return commands;
-        }
-
-        /// <inheritdoc/>
-        public void Dispose()
-        {
-            _buffer?.Dispose();
-            _buffer = null;
         }
 
         [NotNull]
         [ItemNotNull]
-        private IEnumerable<FtpCommand> InternalCollect(byte[] buffer, int offset, int length)
+        private IEnumerable<FtpCommand> InternalCollect(ReadOnlySpan<byte> buffer)
         {
             var commands = new List<FtpCommand>();
 
-            var skipLineFeedOffset = _skipLineFeed && buffer[offset] == '\n' ? 1 : 0;
-            offset += skipLineFeedOffset;
-            length -= skipLineFeedOffset;
+            if (buffer.Length == 0)
+            {
+                return commands;
+            }
+
+            if (_skipLineFeed && buffer[0] == '\n')
+            {
+                buffer = buffer.Slice(1);
+            }
+
             _skipLineFeed = false;
 
             do
             {
-                var carriageReturnPos = Array.IndexOf(buffer, (byte)'\r', offset, length);
+                var carriageReturnPos = buffer.IndexOf((byte)'\r');
                 if (carriageReturnPos == -1)
                 {
                     break;
                 }
 
                 _skipLineFeed = true;
-                var previousData = _buffer.ToArray();
-                var data = new byte[carriageReturnPos - offset + previousData.Length];
-                if (previousData.Length != 0)
+                if (carriageReturnPos != 0)
                 {
-                    Array.Copy(previousData, data, previousData.Length);
+                    // Store the found data into the buffer
+                    _buffer.Add(buffer.Slice(0, carriageReturnPos).ToArray());
                 }
 
-                if (carriageReturnPos - offset != 0)
+                if (_buffer.Count != 0)
                 {
-                    Array.Copy(buffer, offset, data, previousData.Length, carriageReturnPos - offset);
-                }
-
-                commands.Add(CreateFtpCommand(data));
-
-                var copyLength = carriageReturnPos - offset;
-                offset += copyLength + 1;
-                length -= copyLength + 1;
-
-                if (length == 0)
-                {
-                    _buffer = new MemoryStream();
-                    _skipLineFeed = true;
-                    break;
-                }
-
-                if (buffer[offset] == '\n')
-                {
-                    var tempBuffer = new byte[length - 1];
-                    Array.Copy(buffer, offset + 1, tempBuffer, 0, tempBuffer.Length);
-                    buffer = tempBuffer;
-                    length = tempBuffer.Length;
-                    offset = 0;
-                    if (length == 0)
+                    // We've got a non-empty line
+                    var bufferLength = _buffer.Sum(x => x.Length);
+                    var data = new byte[bufferLength];
+                    var dataIndex = 0;
+                    foreach (var item in _buffer)
                     {
-                        _buffer = new MemoryStream();
+                        Array.Copy(item, 0, data, dataIndex, item.Length);
+                        dataIndex += item.Length;
+                    }
+
+                    _buffer.Clear();
+
+                    commands.Add(CreateFtpCommand(data));
+                }
+
+                if (carriageReturnPos < buffer.Length - 1)
+                {
+                    if (buffer[carriageReturnPos + 1] == '\n')
+                    {
+                        buffer = buffer.Slice(carriageReturnPos + 2);
+                        _skipLineFeed = false;
+                    }
+                    else
+                    {
+                        buffer = buffer.Slice(carriageReturnPos + 1);
                     }
                 }
                 else
                 {
-                    _skipLineFeed = true;
+                    buffer = ReadOnlySpan<byte>.Empty;
                 }
             }
-            while (length != 0);
+            while (buffer.Length != 0);
 
-            if (length != 0)
+            if (buffer.Length != 0)
             {
-                _buffer.Write(buffer, offset, length);
+                _buffer.Add(buffer.ToArray());
             }
 
             return commands;
         }
 
-        private FtpCommand CreateFtpCommand(byte[] command)
+        private FtpCommand CreateFtpCommand([NotNull] byte[] command)
         {
             var message = Encoding.GetString(command, 0, command.Length);
             return FtpCommand.Parse(message);
@@ -161,9 +164,9 @@ namespace FubarDev.FtpServer
                 _collector = collector;
             }
 
-            protected override IEnumerable<FtpCommand> DataReceived(byte[] data, int offset, int length)
+            protected override IEnumerable<FtpCommand> DataReceived(ReadOnlySpan<byte> data)
             {
-                return _collector.InternalCollect(data, offset, length);
+                return _collector.InternalCollect(data);
             }
         }
     }

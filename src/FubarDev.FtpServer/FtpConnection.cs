@@ -271,79 +271,77 @@ namespace FubarDev.FtpServer
         private async Task ProcessMessages()
         {
             Log?.LogInformation($"Connected from {RemoteAddress.ToString(true)}");
-            using (var collector = new FtpCommandCollector(() => Encoding))
+            var collector = new FtpCommandCollector(() => Encoding);
+            await WriteAsync(new FtpResponse(220, "FTP Server Ready"), _cancellationTokenSource.Token).ConfigureAwait(false);
+
+            var buffer = new byte[1024];
+            try
             {
-                await WriteAsync(new FtpResponse(220, "FTP Server Ready"), _cancellationTokenSource.Token).ConfigureAwait(false);
-
-                var buffer = new byte[1024];
-                try
+                Task<int> readTask = null;
+                for (; ;)
                 {
-                    Task<int> readTask = null;
-                    for (; ;)
+                    if (readTask == null)
                     {
-                        if (readTask == null)
+                        readTask = SocketStream.ReadAsync(buffer, 0, buffer.Length, _cancellationTokenSource.Token);
+                    }
+
+                    var tasks = new List<Task>() { readTask };
+                    if (_activeBackgroundTask != null)
+                    {
+                        tasks.Add(_activeBackgroundTask);
+                    }
+
+                    Debug.WriteLine($"Waiting for {tasks.Count} tasks");
+                    var completedTask = Task.WaitAny(tasks.ToArray(), _cancellationTokenSource.Token);
+                    Debug.WriteLine($"Task {completedTask} completed");
+                    if (completedTask == 1)
+                    {
+                        var response = _activeBackgroundTask?.Result;
+                        if (response != null)
                         {
-                            readTask = SocketStream.ReadAsync(buffer, 0, buffer.Length, _cancellationTokenSource.Token);
+                            Write(response);
                         }
 
-                        var tasks = new List<Task>() { readTask };
-                        if (_activeBackgroundTask != null)
+                        _activeBackgroundTask = null;
+                    }
+                    else
+                    {
+                        var bytesRead = readTask.Result;
+                        readTask = null;
+                        if (bytesRead == 0)
                         {
-                            tasks.Add(_activeBackgroundTask);
+                            break;
                         }
 
-                        Debug.WriteLine($"Waiting for {tasks.Count} tasks");
-                        var completedTask = Task.WaitAny(tasks.ToArray(), _cancellationTokenSource.Token);
-                        Debug.WriteLine($"Task {completedTask} completed");
-                        if (completedTask == 1)
+                        var commands = collector.Collect(buffer.AsSpan(0, bytesRead));
+                        foreach (var command in commands)
                         {
-                            var response = _activeBackgroundTask?.Result;
-                            if (response != null)
-                            {
-                                Write(response);
-                            }
-
-                            _activeBackgroundTask = null;
-                        }
-                        else
-                        {
-                            var bytesRead = readTask.Result;
-                            readTask = null;
-                            if (bytesRead == 0)
-                            {
-                                break;
-                            }
-
-                            var commands = collector.Collect(buffer, 0, bytesRead);
-                            foreach (var command in commands)
-                            {
-                                await ProcessMessage(command).ConfigureAwait(false);
-                            }
+                            await ProcessMessage(command).ConfigureAwait(false);
                         }
                     }
                 }
-                catch (OperationCanceledException)
+            }
+            catch (OperationCanceledException)
+            {
+                // Ignore the OperationCanceledException
+                // This is normal during disconnects
+            }
+            catch (Exception ex)
+            {
+                Log?.LogError(ex, "Failed to process connection");
+            }
+            finally
+            {
+                Log?.LogInformation($"Disconnection from {RemoteAddress.ToString(true)}");
+                _closed = true;
+                Data.BackgroundCommandHandler.Cancel();
+                if (!ReferenceEquals(SocketStream, OriginalStream))
                 {
-                    // Ignore the OperationCanceledException
-                    // This is normal during disconnects
+                    SocketStream.Dispose();
+                    SocketStream = OriginalStream;
                 }
-                catch (Exception ex)
-                {
-                    Log?.LogError(ex, "Failed to process connection");
-                }
-                finally
-                {
-                    Log?.LogInformation($"Disconnection from {RemoteAddress.ToString(true)}");
-                    _closed = true;
-                    Data.BackgroundCommandHandler.Cancel();
-                    if (!ReferenceEquals(SocketStream, OriginalStream))
-                    {
-                        SocketStream.Dispose();
-                        SocketStream = OriginalStream;
-                    }
-                    _socket.Dispose();
-                    OnClosed();
-                }
+                _socket.Dispose();
+                OnClosed();
             }
         }
 
