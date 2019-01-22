@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 namespace FubarDev.FtpServer
 {
     /// <summary>
-    /// Wraps a TCPListener so we can easily use it in our
+    /// Wraps a TCPListener so we can easily use it in our commands that require a passive data connection.
     /// </summary>
     public interface IPasvListener : IDisposable
     {

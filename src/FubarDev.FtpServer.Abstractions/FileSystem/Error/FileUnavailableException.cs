@@ -11,18 +11,27 @@ namespace FubarDev.FtpServer.FileSystem.Error
     /// </summary>
     public class FileUnavailableException : FileSystemException
     {
-        /// <inheritdoc />
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FileUnavailableException"/> class.
+        /// </summary>
         public FileUnavailableException()
         {
         }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FileUnavailableException"/> class.
+        /// </summary>
+        /// <param name="message">The error message.</param>
         public FileUnavailableException(string message)
             : base(message)
         {
         }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FileUnavailableException"/> class.
+        /// </summary>
+        /// <param name="message">The error message.</param>
+        /// <param name="innerException">The underlying exception.</param>
         public FileUnavailableException(string message, Exception innerException)
             : base(message, innerException)
         {

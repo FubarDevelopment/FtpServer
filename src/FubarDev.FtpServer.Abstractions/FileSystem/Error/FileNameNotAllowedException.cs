@@ -11,18 +11,27 @@ namespace FubarDev.FtpServer.FileSystem.Error
     /// </summary>
     public class FileNameNotAllowedException : FileSystemException
     {
-        /// <inheritdoc />
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FileNameNotAllowedException"/> class.
+        /// </summary>
         public FileNameNotAllowedException()
         {
         }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FileNameNotAllowedException"/> class.
+        /// </summary>
+        /// <param name="message">The error message.</param>
         public FileNameNotAllowedException(string message)
             : base(message)
         {
         }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FileNameNotAllowedException"/> class.
+        /// </summary>
+        /// <param name="message">The error message.</param>
+        /// <param name="innerException">The underlying exception.</param>
         public FileNameNotAllowedException(string message, Exception innerException)
             : base(message, innerException)
         {
