@@ -37,6 +37,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "third-party", "third-party"
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "DotNet.Glob", "third-party\DotNet.Glob\DotNet.Glob.shproj", "{A45290B4-20F7-48E9-8543-C69240BFB9F8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FubarDev.FtpServer.FileSystem.InMemory", "src\FubarDev.FtpServer.FileSystem.InMemory\FubarDev.FtpServer.FileSystem.InMemory.csproj", "{E0626E77-87B7-492B-8421-9BB4910252D7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -71,6 +73,10 @@ Global
 		{7E3F81E2-764E-4075-992F-E53BF50F9623}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7E3F81E2-764E-4075-992F-E53BF50F9623}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7E3F81E2-764E-4075-992F-E53BF50F9623}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E0626E77-87B7-492B-8421-9BB4910252D7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E0626E77-87B7-492B-8421-9BB4910252D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E0626E77-87B7-492B-8421-9BB4910252D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E0626E77-87B7-492B-8421-9BB4910252D7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -84,6 +90,7 @@ Global
 		{474BD381-5B80-4580-BFB1-D41BEB70C458} = {118460ED-4F14-4FF3-BFBF-11497DFB80B6}
 		{7E3F81E2-764E-4075-992F-E53BF50F9623} = {118460ED-4F14-4FF3-BFBF-11497DFB80B6}
 		{A45290B4-20F7-48E9-8543-C69240BFB9F8} = {441F13FB-D457-402E-8DAC-4B6485AFCE30}
+		{E0626E77-87B7-492B-8421-9BB4910252D7} = {118460ED-4F14-4FF3-BFBF-11497DFB80B6}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {DAA7D00E-C61D-4640-A54E-D307E4682263}

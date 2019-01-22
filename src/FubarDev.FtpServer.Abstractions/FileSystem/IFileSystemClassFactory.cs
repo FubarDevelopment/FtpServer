@@ -23,7 +23,7 @@ namespace FubarDev.FtpServer.FileSystem
         /// <param name="isAnonymous">Specify whether we have an anonymous login.</param>
         /// <returns>The new <see cref="IUnixFileSystem"/> for the <paramref name="userId"/>.</returns>
         /// <remarks>
-        /// When the login is anonymous, the <paramref name="userId"/> is the given password.
+        /// When the login is anonymous, the <paramref name="user"/> may be of type <see cref="IAnonymousFtpUser"/>.
         /// </remarks>
         Task<IUnixFileSystem> Create(IFtpUser user, bool isAnonymous);
     }

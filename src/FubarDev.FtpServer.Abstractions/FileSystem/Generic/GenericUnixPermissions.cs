@@ -19,12 +19,12 @@ namespace FubarDev.FtpServer.FileSystem.Generic
         /// </summary>
         /// <param name="user">The user permissions.</param>
         /// <param name="group">The group permissions.</param>
-        /// <param name="owner">The owner permissions.</param>
-        public GenericUnixPermissions([NotNull] IAccessMode user, [NotNull] IAccessMode group, [NotNull] IAccessMode owner)
+        /// <param name="other">The other permissions.</param>
+        public GenericUnixPermissions([NotNull] IAccessMode user, [NotNull] IAccessMode group, [NotNull] IAccessMode other)
         {
             User = user;
             Group = group;
-            Other = owner;
+            Other = other;
         }
 
         /// <inheritdoc/>

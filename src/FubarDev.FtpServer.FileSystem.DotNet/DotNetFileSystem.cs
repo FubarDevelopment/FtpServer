@@ -139,6 +139,7 @@ namespace FubarDev.FtpServer.FileSystem.DotNet
                 var fileEntry = (DotNetFileEntry)entry;
                 fileEntry.Info.Delete();
             }
+
             return Task.FromResult(0);
         }
 
@@ -177,6 +178,7 @@ namespace FubarDev.FtpServer.FileSystem.DotNet
                 output.Seek(startPosition.Value, SeekOrigin.Begin);
                 await data.CopyToAsync(output, _streamBufferSize, cancellationToken).ConfigureAwait(false);
             }
+
             return null;
         }
 
@@ -189,6 +191,7 @@ namespace FubarDev.FtpServer.FileSystem.DotNet
             {
                 await data.CopyToAsync(output, _streamBufferSize, cancellationToken).ConfigureAwait(false);
             }
+
             return null;
         }
 
@@ -201,6 +204,7 @@ namespace FubarDev.FtpServer.FileSystem.DotNet
                 await data.CopyToAsync(output, _streamBufferSize, cancellationToken).ConfigureAwait(false);
                 output.SetLength(output.Position);
             }
+
             return null;
         }
 
@@ -273,6 +277,7 @@ namespace FubarDev.FtpServer.FileSystem.DotNet
                 {
                     // Nothing to dispose
                 }
+
                 _disposedValue = true;
             }
         }

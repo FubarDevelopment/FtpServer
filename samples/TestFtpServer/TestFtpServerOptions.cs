@@ -15,6 +15,7 @@ namespace TestFtpServer
         public bool ImplicitFtps { get; set; }
         public string ServerCertificateFile { get; set; }
         public string ServerCertificatePassword { get; set; }
+        public bool KeepAnonymousInMemoryFileSystem { get; set; }
         public bool RefreshToken { get; set; }
         public MembershipProviderType MembershipProviderType { get; set; } = MembershipProviderType.Anonymous;
 
