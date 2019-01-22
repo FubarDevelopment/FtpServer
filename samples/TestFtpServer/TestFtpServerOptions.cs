@@ -4,8 +4,6 @@
 
 using System;
 
-using FubarDev.FtpServer.AccountManagement;
-
 namespace TestFtpServer
 {
     public class TestFtpServerOptions

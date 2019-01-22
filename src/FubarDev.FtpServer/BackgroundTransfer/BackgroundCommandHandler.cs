@@ -30,7 +30,7 @@ namespace FubarDev.FtpServer.BackgroundTransfer
 
         private readonly object _syncRoot = new object();
 
-        private CancellationTokenRegistration _cancellationTokenRegistration;
+        private readonly CancellationTokenRegistration _cancellationTokenRegistration;
 
         private CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
 

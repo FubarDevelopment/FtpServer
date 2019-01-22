@@ -217,7 +217,6 @@ namespace FubarDev.FtpServer
                             var acceptTask = listener.WaitAnyTcpClientAsync(_cancellationTokenSource.Token);
                             var client = acceptTask.Result;
                             AddClient(client);
-                            continue;
                         }
                     }
                     catch (OperationCanceledException)
