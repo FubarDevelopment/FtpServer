@@ -2,6 +2,8 @@
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
+using System.Threading.Tasks;
+
 using FubarDev.FtpServer.AccountManagement;
 
 namespace TestFtpServer
@@ -12,16 +14,17 @@ namespace TestFtpServer
     public class CustomMembershipProvider : IMembershipProvider
     {
         /// <inheritdoc />
-        public MemberValidationResult ValidateUser(string username, string password)
+        public Task<MemberValidationResult> ValidateUserAsync(string username, string password)
         {
             if (username == "tester" && password == "testing")
             {
-                return new MemberValidationResult(
-                    MemberValidationStatus.AuthenticatedUser,
-                    new CustomFtpUser(username));
+                return Task.FromResult(
+                    new MemberValidationResult(
+                        MemberValidationStatus.AuthenticatedUser,
+                        new CustomFtpUser(username)));
             }
 
-            return new MemberValidationResult(MemberValidationStatus.InvalidLogin);
+            return Task.FromResult(new MemberValidationResult(MemberValidationStatus.InvalidLogin));
         }
 
         /// <summary>

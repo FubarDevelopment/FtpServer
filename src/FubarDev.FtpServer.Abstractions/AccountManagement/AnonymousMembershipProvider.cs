@@ -5,6 +5,8 @@
 // <author>Mark Junker</author>
 //-----------------------------------------------------------------------
 
+using System.Threading.Tasks;
+
 using FubarDev.FtpServer.AccountManagement.Anonymous;
 
 using JetBrains.Annotations;
@@ -40,19 +42,20 @@ namespace FubarDev.FtpServer.AccountManagement
         }
 
         /// <inheritdoc/>
-        public MemberValidationResult ValidateUser(string username, string password)
+        public Task<MemberValidationResult> ValidateUserAsync(string username, string password)
         {
             if (string.Equals(username, "anonymous"))
             {
                 if (_anonymousPasswordValidator.IsValid(password))
                 {
-                    return new MemberValidationResult(MemberValidationStatus.Anonymous, new AnonymousFtpUser(password));
+                    return Task.FromResult(
+                        new MemberValidationResult(MemberValidationStatus.Anonymous, new AnonymousFtpUser(password)));
                 }
 
-                return new MemberValidationResult(MemberValidationStatus.InvalidAnonymousEmail);
+                return Task.FromResult(new MemberValidationResult(MemberValidationStatus.InvalidAnonymousEmail));
             }
 
-            return new MemberValidationResult(MemberValidationStatus.InvalidLogin);
+            return Task.FromResult(new MemberValidationResult(MemberValidationStatus.InvalidLogin));
         }
     }
 }

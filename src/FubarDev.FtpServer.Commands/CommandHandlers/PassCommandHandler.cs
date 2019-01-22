@@ -57,7 +57,7 @@ namespace FubarDev.FtpServer.CommandHandlers
             var password = command.Argument;
             foreach (var membershipProvider in _membershipProviders)
             {
-                var validationResult = membershipProvider.ValidateUser(Connection.Data.User.Name, password);
+                var validationResult = await membershipProvider.ValidateUserAsync(Connection.Data.User.Name, password);
                 if (validationResult.IsSuccess)
                 {
                     var isAnonymous = validationResult.Status == MemberValidationStatus.Anonymous;
