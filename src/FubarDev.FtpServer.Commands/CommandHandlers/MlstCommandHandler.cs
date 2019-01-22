@@ -10,7 +10,6 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-using FubarDev.FtpServer.CommandExtensions;
 using FubarDev.FtpServer.FileSystem;
 using FubarDev.FtpServer.ListFormatters;
 using FubarDev.FtpServer.Utilities;
@@ -26,7 +25,7 @@ namespace FubarDev.FtpServer.CommandHandlers
     /// </summary>
     public class MlstCommandHandler : FtpCommandHandler
     {
-        private static readonly ISet<string> _knownFacts = new HashSet<string> { "type", "size", "perm", "modify", "create" };
+        public static readonly ISet<string> KnownFacts = new HashSet<string> { "type", "size", "perm", "modify", "create" };
 
         [CanBeNull]
         private readonly ILogger<MlstCommandHandler> _logger;
@@ -34,29 +33,18 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// <summary>
         /// Initializes a new instance of the <see cref="MlstCommandHandler"/> class.
         /// </summary>
-        /// <param name="connection">The FTP connection this command handler is created for.</param>
+        /// <param name="connectionAccessor">The accessor to get the connection that is active during the <see cref="Process"/> method execution.</param>
         /// <param name="logger">The logger.</param>
-        public MlstCommandHandler([NotNull] IFtpConnection connection, [CanBeNull] ILogger<MlstCommandHandler> logger = null)
-            : base(connection, "MLST", "MLSD")
+        public MlstCommandHandler([NotNull] IFtpConnectionAccessor connectionAccessor, [CanBeNull] ILogger<MlstCommandHandler> logger = null)
+            : base(connectionAccessor, "MLST", "MLSD")
         {
             _logger = logger;
-            connection.Data.ActiveMlstFacts.Clear();
-            foreach (var knownFact in _knownFacts)
-            {
-                connection.Data.ActiveMlstFacts.Add(knownFact);
-            }
         }
 
         /// <inheritdoc/>
         public override IEnumerable<IFeatureInfo> GetSupportedFeatures()
         {
             yield return new GenericFeatureInfo("MLST", FeatureStatus, IsLoginRequired);
-        }
-
-        /// <inheritdoc/>
-        public override IEnumerable<IFtpCommandHandlerExtension> GetExtensions()
-        {
-            yield return new GenericFtpCommandHandlerExtension(Connection, "OPTS", "MLST", FeatureHandlerAsync);
         }
 
         /// <inheritdoc/>
@@ -75,7 +63,7 @@ namespace FubarDev.FtpServer.CommandHandlers
         {
             var result = new StringBuilder();
             result.Append("MLST ");
-            foreach (var fact in _knownFacts)
+            foreach (var fact in KnownFacts)
             {
                 result.AppendFormat("{0}{1};", fact, connection.Data.ActiveMlstFacts.Contains(fact) ? "*" : string.Empty);
             }
@@ -195,22 +183,6 @@ namespace FubarDev.FtpServer.CommandHandlers
 
             // Use 250 when the connection stays open.
             return new FtpResponse(226, "Closing data connection.");
-        }
-
-        private Task<FtpResponse> FeatureHandlerAsync(FtpCommand command, CancellationToken cancellationToken)
-        {
-            var facts = command.Argument.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
-            Connection.Data.ActiveMlstFacts.Clear();
-            foreach (var fact in facts)
-            {
-                if (!_knownFacts.Contains(fact))
-                {
-                    return Task.FromResult(new FtpResponse(501, "Syntax error in parameters or arguments."));
-                }
-
-                Connection.Data.ActiveMlstFacts.Add(fact);
-            }
-            return Task.FromResult(new FtpResponse(200, "Command okay."));
         }
     }
 }

@@ -7,11 +7,12 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-using FubarDev.FtpServer.CommandExtensions;
+using JetBrains.Annotations;
 
 namespace FubarDev.FtpServer.CommandHandlers
 {
@@ -23,11 +24,17 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// <summary>
         /// Initializes a new instance of the <see cref="OptsCommandHandler"/> class.
         /// </summary>
-        /// <param name="connection">The connection to create this command handler for.</param>
-        public OptsCommandHandler(IFtpConnection connection)
-            : base(connection, "OPTS")
+        /// <param name="connectionAccessor">The accessor to get the connection that is active during the <see cref="Process"/> method execution.</param>
+        /// <param name="extensions">All registered extensions.</param>
+        public OptsCommandHandler(
+            [NotNull] IFtpConnectionAccessor connectionAccessor,
+            [NotNull, ItemNotNull] IEnumerable<IFtpCommandHandlerExtension> extensions)
+            : base(connectionAccessor, "OPTS")
         {
-            Extensions = new Dictionary<string, IFtpCommandHandlerExtension>(StringComparer.OrdinalIgnoreCase);
+            Extensions = extensions
+                .Where(x => Names.Any(name => string.Equals(name, x.ExtensionFor, StringComparison.OrdinalIgnoreCase)))
+                .SelectMany(x => x.Names.Select(n => new { Name = n, Extension = x }))
+                .ToDictionary(x => x.Name, x => x.Extension, StringComparer.OrdinalIgnoreCase);
         }
 
         /// <inheritdoc/>
@@ -37,12 +44,6 @@ namespace FubarDev.FtpServer.CommandHandlers
         public override IEnumerable<IFeatureInfo> GetSupportedFeatures()
         {
             yield return new GenericFeatureInfo("UTF8", false, "UTF-8");
-        }
-
-        /// <inheritdoc/>
-        public override IEnumerable<IFtpCommandHandlerExtension> GetExtensions()
-        {
-            yield return new GenericFtpCommandHandlerExtension(Connection, "OPTS", "UTF8", ProcessOptionUtf8, "UTF-8");
         }
 
         /// <inheritdoc/>

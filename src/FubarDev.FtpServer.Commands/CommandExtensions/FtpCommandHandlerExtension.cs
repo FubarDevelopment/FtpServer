@@ -2,6 +2,7 @@
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -15,15 +16,19 @@ namespace FubarDev.FtpServer.CommandExtensions
     /// </summary>
     public abstract class FtpCommandHandlerExtension : IFtpCommandHandlerExtension
     {
+        [NotNull]
+        private readonly IFtpConnectionAccessor _connectionAccessor;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="FtpCommandHandlerExtension"/> class.
         /// </summary>
-        /// <param name="connection">The connection this instance is used for.</param>
+        /// <param name="connectionAccessor">The accessor to get the connection that is active during the <see cref="Process"/> method execution.</param>
         /// <param name="extensionFor">The name of the command this extension is for.</param>
         /// <param name="name">The command name.</param>
         /// <param name="alternativeNames">Alternative names.</param>
-        protected FtpCommandHandlerExtension([NotNull] IFtpConnection connection, [NotNull] string extensionFor, [NotNull] string name, [NotNull, ItemNotNull] params string[] alternativeNames)
+        protected FtpCommandHandlerExtension([NotNull] IFtpConnectionAccessor connectionAccessor, [NotNull] string extensionFor, [NotNull] string name, [NotNull, ItemNotNull] params string[] alternativeNames)
         {
+            _connectionAccessor = connectionAccessor;
             var names = new List<string>
             {
                 name,
@@ -31,7 +36,6 @@ namespace FubarDev.FtpServer.CommandExtensions
             names.AddRange(alternativeNames);
             Names = names;
             ExtensionFor = extensionFor;
-            Connection = connection;
         }
 
         /// <inheritdoc />
@@ -47,13 +51,16 @@ namespace FubarDev.FtpServer.CommandExtensions
         /// Gets the connection this command was created for.
         /// </summary>
         [NotNull]
-        protected IFtpConnection Connection { get; }
+        protected IFtpConnection Connection => _connectionAccessor.FtpConnection ?? throw new InvalidOperationException("The connection information was used outside of an active connection.");
 
         /// <summary>
         /// Gets the connection data.
         /// </summary>
         [NotNull]
         protected FtpConnectionData Data => Connection.Data;
+
+        /// <inheritdoc />
+        public abstract void InitializeConnectionData();
 
         /// <inheritdoc />
         public abstract Task<FtpResponse> Process(FtpCommand command, CancellationToken cancellationToken);

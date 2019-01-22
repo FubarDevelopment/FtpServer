@@ -28,10 +28,10 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// <summary>
         /// Initializes a new instance of the <see cref="StorCommandHandler"/> class.
         /// </summary>
-        /// <param name="connection">The connection this command handler is created for.</param>
+        /// <param name="connectionAccessor">The accessor to get the connection that is active during the <see cref="Process"/> method execution.</param>
         /// <param name="server">The FTP server.</param>
-        public StorCommandHandler([NotNull] IFtpConnection connection, [NotNull] IFtpServer server)
-            : base(connection, "STOR")
+        public StorCommandHandler([NotNull] IFtpConnectionAccessor connectionAccessor, [NotNull] IFtpServer server)
+            : base(connectionAccessor, "STOR")
         {
             _server = server;
         }

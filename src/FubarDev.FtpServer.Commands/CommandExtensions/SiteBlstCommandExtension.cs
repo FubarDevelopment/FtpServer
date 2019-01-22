@@ -31,11 +31,11 @@ namespace FubarDev.FtpServer.CommandExtensions
         /// <summary>
         /// Initializes a new instance of the <see cref="SiteBlstCommandExtension"/> class.
         /// </summary>
-        /// <param name="connection">The connection this instance is used for.</param>
+        /// <param name="connectionAccessor">The accessor to get the connection that is active during the <see cref="Process"/> method execution.</param>
         /// <param name="server">The FTP server.</param>
         /// <param name="logger">The logger.</param>
-        public SiteBlstCommandExtension([NotNull] IFtpConnection connection, [NotNull] IFtpServer server, [CanBeNull] ILogger<SiteBlstCommandExtension> logger = null)
-            : base(connection, "SITE", "BLST")
+        public SiteBlstCommandExtension([NotNull] IFtpConnectionAccessor connectionAccessor, [NotNull] IFtpServer server, [CanBeNull] ILogger<SiteBlstCommandExtension> logger = null)
+            : base(connectionAccessor, "SITE", "BLST")
         {
             _server = server;
             _logger = logger;
@@ -43,6 +43,11 @@ namespace FubarDev.FtpServer.CommandExtensions
 
         /// <inheritdoc/>
         public override bool? IsLoginRequired { get; set; } = true;
+
+        /// <inheritdoc />
+        public override void InitializeConnectionData()
+        {
+        }
 
         /// <inheritdoc/>
         public override async Task<FtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)

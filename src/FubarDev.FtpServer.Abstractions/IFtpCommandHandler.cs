@@ -30,13 +30,5 @@ namespace FubarDev.FtpServer
         [NotNull]
         [ItemNotNull]
         IEnumerable<IFeatureInfo> GetSupportedFeatures();
-
-        /// <summary>
-        /// Gets a collection of command handler extensions provided by this command handler.
-        /// </summary>
-        /// <returns>A collection of command handler extensions provided by this command handler.</returns>
-        [NotNull]
-        [ItemNotNull]
-        IEnumerable<IFtpCommandHandlerExtension> GetExtensions();
     }
 }

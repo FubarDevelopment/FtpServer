@@ -1,8 +1,8 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>netstandard1.3;netstandard2.0;net461</TargetFrameworks>
-    <Description>File system for the portable FTP server</Description>
+    <Description>TCP-based FTP server implementation</Description>
     <PackageTags>portable;FTP;server</PackageTags>
   </PropertyGroup>
   <ItemGroup>

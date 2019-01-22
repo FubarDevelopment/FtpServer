@@ -22,10 +22,10 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// <summary>
         /// Initializes a new instance of the <see cref="SystCommandHandler"/> class.
         /// </summary>
-        /// <param name="connection">The connection to create this command handler for.</param>
+        /// <param name="connectionAccessor">The accessor to get the connection that is active during the <see cref="Process"/> method execution.</param>
         /// <param name="options">Options for the SYST command.</param>
-        public SystCommandHandler(IFtpConnection connection, IOptions<SystCommandOptions> options)
-            : base(connection, "SYST")
+        public SystCommandHandler(IFtpConnectionAccessor connectionAccessor, IOptions<SystCommandOptions> options)
+            : base(connectionAccessor, "SYST")
         {
             _operatingSystem = options.Value.OperatingSystem ?? "UNIX";
         }

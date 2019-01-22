@@ -21,5 +21,10 @@ namespace FubarDev.FtpServer
         /// </summary>
         [NotNull]
         string ExtensionFor { get; }
+
+        /// <summary>
+        /// Called to initialize the connection data.
+        /// </summary>
+        void InitializeConnectionData();
     }
 }
