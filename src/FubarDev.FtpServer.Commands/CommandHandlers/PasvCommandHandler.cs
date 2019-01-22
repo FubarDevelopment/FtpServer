@@ -7,15 +7,12 @@
 
 using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
-
 using JetBrains.Annotations;
-
-#if !NETSTANDARD1_3
 using Microsoft.Extensions.Logging;
-#endif
 
 namespace FubarDev.FtpServer.CommandHandlers
 {
@@ -107,6 +104,19 @@ namespace FubarDev.FtpServer.CommandHandlers
                     var acceptTask = listener.AcceptPasvClientAsync();
                     if (acceptTask.Wait(timeout))
                     {
+                        var pasvRemoteAddress = ((IPEndPoint)acceptTask.Result.Client.RemoteEndPoint).Address;
+
+                        if (!Connection.PromiscuousPasv
+                            && !Equals(Connection.RemoteAddress.IPAddress, pasvRemoteAddress))
+                        {
+                            Connection.Log?.LogWarning(
+                                $"Data connection attempt from {pasvRemoteAddress} for control connection from {Connection.RemoteAddress.IPAddress}, data connection rejected");
+
+                            return new FtpResponse(
+                                425,
+                                "Data connection must be opened from same IP address as control connection");
+                        }
+                        Connection.Log?.LogDebug("Data connection accepted from {0}", pasvRemoteAddress);
                         Data.PassiveSocketClient = acceptTask.Result;
                     }
                 }
