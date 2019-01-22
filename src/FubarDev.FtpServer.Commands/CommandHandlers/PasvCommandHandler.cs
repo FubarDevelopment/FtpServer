@@ -116,7 +116,7 @@ namespace FubarDev.FtpServer.CommandHandlers
                                 425,
                                 "Data connection must be opened from same IP address as control connection");
                         }
-                        Connection.Log?.LogDebug($"Data connection accepted from {pasvRemoteAddress}");
+                        Connection.Log?.LogDebug("Data connection accepted from {0}", pasvRemoteAddress);
                         Data.PassiveSocketClient = acceptTask.Result;
                     }
                 }
