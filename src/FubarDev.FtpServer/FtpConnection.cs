@@ -426,8 +426,7 @@ namespace FubarDev.FtpServer
                 return null;
             }
 
-            var extensionHost = handler as IFtpCommandHandlerExtensionHost;
-            if (!string.IsNullOrWhiteSpace(command.Argument) && extensionHost != null)
+            if (!string.IsNullOrWhiteSpace(command.Argument) && handler is IFtpCommandHandlerExtensionHost extensionHost)
             {
                 var extensionCommand = FtpCommand.Parse(command.Argument);
                 if (extensionHost.Extensions.TryGetValue(extensionCommand.Name, out var extension))
@@ -435,6 +434,7 @@ namespace FubarDev.FtpServer
                     return Tuple.Create(extensionCommand, (IFtpCommandBase)extension, extension.IsLoginRequired ?? handler.IsLoginRequired);
                 }
             }
+
             return Tuple.Create(command, (IFtpCommandBase)handler, handler.IsLoginRequired);
         }
 

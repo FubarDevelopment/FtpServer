@@ -218,14 +218,26 @@ namespace FubarDev.FtpServer.Tests
             public int Compare(FtpCommand x, FtpCommand y)
             {
                 if (ReferenceEquals(x, y))
+                {
                     return 0;
-                if (ReferenceEquals(x, null))
+                }
+
+                if (x == null)
+                {
                     return -1;
-                if (ReferenceEquals(y, null))
+                }
+
+                if (y == null)
+                {
                     return 1;
+                }
+
                 var v = string.Compare(x.Name, y.Name, StringComparison.OrdinalIgnoreCase);
                 if (v != 0)
+                {
                     return v;
+                }
+
                 return _stringComparer.Compare(x.Argument, y.Argument);
             }
 

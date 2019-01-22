@@ -5,9 +5,11 @@
 // <author>Mark Junker</author>
 //-----------------------------------------------------------------------
 
+#if NETSTANDARD1_3
 using JetBrains.Annotations;
 
 using Microsoft.Extensions.Logging;
+#endif
 
 namespace FubarDev.FtpServer
 {
