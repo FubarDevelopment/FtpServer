@@ -49,19 +49,28 @@ namespace FubarDev.FtpServer
         /// <returns>the task.</returns>
         public async Task StartAsync()
         {
-            IEnumerable<IPAddress> addresses;
-
-            if (!string.IsNullOrEmpty(_address))
+            List<IPAddress> addresses;
+            if (string.IsNullOrEmpty(_address) || _address == IPAddress.Any.ToString())
+            {
+                // "0.0.0.0"
+                addresses = new List<IPAddress> { IPAddress.Any };
+            }
+            else if (_address == IPAddress.IPv6Any.ToString())
+            {
+                // "::"
+                addresses = new List<IPAddress> { IPAddress.IPv6Any };
+            }
+            else if (_address == "*")
+            {
+                addresses = new List<IPAddress> { IPAddress.Any, IPAddress.IPv6Any };
+            }
+            else
             {
                 var dnsAddresses = await Dns.GetHostAddressesAsync(_address).ConfigureAwait(false);
                 addresses = dnsAddresses
                     .Where(x => x.AddressFamily == AddressFamily.InterNetwork ||
                                 x.AddressFamily == AddressFamily.InterNetworkV6)
                     .ToList();
-            }
-            else
-            {
-                addresses = new IPAddress[] { IPAddress.Any };
             }
 
             try
@@ -122,6 +131,9 @@ namespace FubarDev.FtpServer
             return retVal;
         }
 
+        /// <summary>
+        /// Start the asynchronous acception for all listeners.
+        /// </summary>
         public void StartAccepting()
         {
             _listeners.ToList().ForEach(x => _acceptors.Add(x.AcceptTcpClientAsync()));

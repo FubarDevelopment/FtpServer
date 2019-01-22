@@ -16,6 +16,7 @@
     <RepositoryType>git</RepositoryType>
     <MinClientVersion>3.5</MinClientVersion>
     <CodeAnalysisRuleSet>$(MSBuildThisFileDirectory)FubarDev.FtpServer.ruleset</CodeAnalysisRuleSet>
+    <NoWarn>SA1636;SA1641;$(NoWarn)</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>

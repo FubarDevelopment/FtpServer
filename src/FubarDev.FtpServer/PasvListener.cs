@@ -10,6 +10,9 @@ using System.Threading.Tasks;
 
 namespace FubarDev.FtpServer
 {
+    /// <summary>
+    /// The default implementation of the <see cref="IPasvListener"/> interface.
+    /// </summary>
     public class PasvListener : IPasvListener
     {
         private readonly TcpListener _tcpListener;

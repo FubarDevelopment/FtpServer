@@ -8,6 +8,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Threading.Tasks;
+
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
@@ -54,12 +55,6 @@ namespace FubarDev.FtpServer
         /// interface's IP is used.
         /// </summary>
         protected IPAddress PasvExternalAddress { get; }
-
-        /// <inheritdoc />
-        public Task<IPasvListener> CreateTcpListener(IFtpConnection connection)
-        {
-            return CreateTcpListener(connection, 0);
-        }
 
         /// <inheritdoc />
         public Task<IPasvListener> CreateTcpListener(IFtpConnection connection, int port)
