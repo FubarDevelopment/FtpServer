@@ -7,6 +7,8 @@
 
 using System.Threading.Tasks;
 
+using FubarDev.FtpServer.AccountManagement;
+
 namespace FubarDev.FtpServer.FileSystem
 {
     /// <summary>
@@ -17,12 +19,12 @@ namespace FubarDev.FtpServer.FileSystem
         /// <summary>
         /// Creates a <see cref="IUnixFileSystem"/> implementation for a given <paramref name="userId"/>.
         /// </summary>
-        /// <param name="userId">The user ID to create the <see cref="IUnixFileSystem"/> for.</param>
+        /// <param name="user">The FTP user to create the <see cref="IUnixFileSystem"/> for.</param>
         /// <param name="isAnonymous">Specify whether we have an anonymous login.</param>
         /// <returns>The new <see cref="IUnixFileSystem"/> for the <paramref name="userId"/>.</returns>
         /// <remarks>
-        /// When the login is anonymous, the <paramref name="userId"/> is the given password.
+        /// When the login is anonymous, the <paramref name="user"/> may be of type <see cref="IAnonymousFtpUser"/>.
         /// </remarks>
-        Task<IUnixFileSystem> Create(string userId, bool isAnonymous);
+        Task<IUnixFileSystem> Create(IFtpUser user, bool isAnonymous);
     }
 }

@@ -8,6 +8,8 @@
 using System.IO;
 using System.Threading.Tasks;
 
+using FubarDev.FtpServer.AccountManagement;
+
 using JetBrains.Annotations;
 
 using Microsoft.Extensions.Options;
@@ -41,17 +43,12 @@ namespace FubarDev.FtpServer.FileSystem.DotNet
         }
 
         /// <inheritdoc/>
-        public Task<IUnixFileSystem> Create(string userId, bool isAnonymous)
+        public Task<IUnixFileSystem> Create(IFtpUser user, bool isAnonymous)
         {
             var path = _rootPath;
             if (_useUserIdAsSubFolder)
             {
-                if (isAnonymous)
-                {
-                    userId = "anonymous";
-                }
-
-                path = Path.Combine(path, userId);
+                path = Path.Combine(path, user.Name);
             }
 
             return Task.FromResult<IUnixFileSystem>(new DotNetFileSystem(path, _allowNonEmptyDirectoryDelete, _streamBufferSize));

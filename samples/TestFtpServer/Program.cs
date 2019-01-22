@@ -15,6 +15,7 @@ using System.Xml;
 using FubarDev.FtpServer;
 using FubarDev.FtpServer.AccountManagement;
 using FubarDev.FtpServer.FileSystem.DotNet;
+using FubarDev.FtpServer.FileSystem.InMemory;
 
 using Google.Apis.Auth.OAuth2;
 using Google.Apis.Drive.v3;
@@ -90,6 +91,15 @@ namespace TestFtpServer
                     },
                     Run = a => RunWithFileSystem(a.ToArray(), options),
                 },
+                new Command("in-memory", "Use the in-memory file system access")
+                {
+                    Options = new OptionSet()
+                    {
+                        "usage: ftpserver in-memory [OPTIONS]",
+                        { "keep-anonymous", "Keep anonymous in-memory file sysytems", v => options.KeepAnonymousInMemoryFileSystem = v != null }
+                    },
+                    Run = a => RunWithInMemoryFileSystem(options),
+                },
                 new CommandSet("google-drive")
                 {
                     new Command("user", "Use a users Google Drive as file system")
@@ -113,6 +123,15 @@ namespace TestFtpServer
             };
 
             return optionSet.Run(args);
+        }
+
+        private static void RunWithInMemoryFileSystem(TestFtpServerOptions options)
+        {
+            options.Validate();
+            var services = CreateServices(options)
+                .Configure<InMemoryFileSystemOptions>(opt => opt.KeepAnonymousFileSystem = options.KeepAnonymousInMemoryFileSystem)
+                .AddFtpServer(sb => Configure(sb, options).UseInMemoryFileSystem());
+            Run(services, options);
         }
 
         private static void RunWithFileSystem(string[] args, TestFtpServerOptions options)

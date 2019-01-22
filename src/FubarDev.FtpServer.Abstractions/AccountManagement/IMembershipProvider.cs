@@ -5,6 +5,8 @@
 // <author>Mark Junker</author>
 //-----------------------------------------------------------------------
 
+using System.Threading.Tasks;
+
 using JetBrains.Annotations;
 
 namespace FubarDev.FtpServer.AccountManagement
@@ -23,6 +25,6 @@ namespace FubarDev.FtpServer.AccountManagement
         /// <param name="username">The user name.</param>
         /// <param name="password">The password.</param>
         /// <returns>The result of the validation.</returns>
-        MemberValidationResult ValidateUser([NotNull] string username, [NotNull] string password);
+        Task<MemberValidationResult> ValidateUserAsync([NotNull] string username, [NotNull] string password);
     }
 }

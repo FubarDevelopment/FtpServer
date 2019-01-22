@@ -16,6 +16,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\FubarDev.FtpServer.FileSystem.DotNet\FubarDev.FtpServer.FileSystem.DotNet.csproj" />
     <ProjectReference Include="..\..\src\FubarDev.FtpServer.FileSystem.GoogleDrive\FubarDev.FtpServer.FileSystem.GoogleDrive.csproj" />
+    <ProjectReference Include="..\..\src\FubarDev.FtpServer.FileSystem.InMemory\FubarDev.FtpServer.FileSystem.InMemory.csproj" />
     <ProjectReference Include="..\..\src\FubarDev.FtpServer\FubarDev.FtpServer.csproj" />
   </ItemGroup>
   <Import Project="../../Global.props" />

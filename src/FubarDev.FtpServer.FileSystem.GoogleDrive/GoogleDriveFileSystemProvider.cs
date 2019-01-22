@@ -5,6 +5,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 
+using FubarDev.FtpServer.AccountManagement;
 using FubarDev.FtpServer.BackgroundTransfer;
 
 using JetBrains.Annotations;
@@ -36,8 +37,11 @@ namespace FubarDev.FtpServer.FileSystem.GoogleDrive
         }
 
         /// <inheritdoc />
-        public async Task<IUnixFileSystem> Create(string userId, bool isAnonymous)
+        public async Task<IUnixFileSystem> Create(IFtpUser user, bool isAnonymous)
         {
+            var userId = user is IAnonymousFtpUser anonymousFtpUser
+                ? anonymousFtpUser.Email
+                : user.Name;
             var (driveService, rootItem) = await _serviceProvider.GetUserRootAsync(
                 userId, isAnonymous, CancellationToken.None);
             return new GoogleDriveFileSystem(driveService, rootItem, _temporaryDataFactory);
