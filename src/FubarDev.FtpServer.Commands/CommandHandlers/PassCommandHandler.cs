@@ -18,7 +18,7 @@ using JetBrains.Annotations;
 namespace FubarDev.FtpServer.CommandHandlers
 {
     /// <summary>
-    /// Implements the <code>PASS</code> command.
+    /// Implements the <c>PASS</c> command.
     /// </summary>
     public class PassCommandHandler : FtpCommandHandler
     {

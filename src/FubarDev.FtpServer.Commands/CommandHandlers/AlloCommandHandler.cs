@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 namespace FubarDev.FtpServer.CommandHandlers
 {
     /// <summary>
-    /// Implements the <code>ALLO</code> command.
+    /// Implements the <c>ALLO</c> command.
     /// </summary>
     public class AlloCommandHandler : FtpCommandHandler
     {

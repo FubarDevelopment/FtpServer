@@ -16,7 +16,7 @@ using FubarDev.FtpServer.FileSystem;
 namespace FubarDev.FtpServer.CommandHandlers
 {
     /// <summary>
-    /// Implements the <code>RETR</code> command.
+    /// Implements the <c>RETR</c> command.
     /// </summary>
     public class RetrCommandHandler : FtpCommandHandler
     {

@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 namespace FubarDev.FtpServer.CommandHandlers
 {
     /// <summary>
-    /// Implements the <code>NOOP</code> command.
+    /// Implements the <c>NOOP</c> command.
     /// </summary>
     public class NoOpCommandHandler : FtpCommandHandler
     {

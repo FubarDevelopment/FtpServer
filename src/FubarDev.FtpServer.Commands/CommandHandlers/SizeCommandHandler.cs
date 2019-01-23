@@ -14,7 +14,7 @@ using FubarDev.FtpServer.FileSystem;
 namespace FubarDev.FtpServer.CommandHandlers
 {
     /// <summary>
-    /// Implements the <code>SIZE</code> command.
+    /// Implements the <c>SIZE</c> command.
     /// </summary>
     public class SizeCommandHandler : FtpCommandHandler
     {

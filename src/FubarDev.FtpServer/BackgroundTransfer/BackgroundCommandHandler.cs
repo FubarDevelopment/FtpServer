@@ -22,7 +22,7 @@ namespace FubarDev.FtpServer.BackgroundTransfer
     /// Asynchronous processing of an FTP command.
     /// </summary>
     /// <remarks>
-    /// This allows the implementation of the <code>ABOR</code> command.
+    /// This allows the implementation of the <c>ABOR</c> command.
     /// </remarks>
     public sealed class BackgroundCommandHandler : IBackgroundCommandHandler, IDisposable
     {

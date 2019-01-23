@@ -11,7 +11,7 @@ using Google.Apis.Drive.v3.Data;
 namespace FubarDev.FtpServer.FileSystem.GoogleDrive
 {
     /// <summary>
-    /// An interface to get the Google Drive service for the given user
+    /// An interface to get the Google Drive service for the given user.
     /// </summary>
     public interface IGoogleDriveServiceProvider
     {

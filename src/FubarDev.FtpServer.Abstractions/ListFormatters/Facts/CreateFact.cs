@@ -7,7 +7,7 @@ using System;
 namespace FubarDev.FtpServer.ListFormatters.Facts
 {
     /// <summary>
-    /// The <code>create</code> fact.
+    /// The <c>create</c> fact.
     /// </summary>
     public class CreateFact : IFact
     {

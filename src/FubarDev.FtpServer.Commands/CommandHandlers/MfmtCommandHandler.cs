@@ -15,7 +15,7 @@ using FubarDev.FtpServer.ListFormatters.Facts;
 namespace FubarDev.FtpServer.CommandHandlers
 {
     /// <summary>
-    /// Implements the <code>MFMT</code> command.
+    /// Implements the <c>MFMT</c> command.
     /// </summary>
     public class MfmtCommandHandler : FtpCommandHandler
     {

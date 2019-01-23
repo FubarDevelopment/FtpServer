@@ -5,7 +5,7 @@
 namespace FubarDev.FtpServer.ListFormatters.Facts
 {
     /// <summary>
-    /// The basic interface for a fact (<code>MLST</code>).
+    /// The basic interface for a fact (<c>MLST</c>).
     /// </summary>
     public interface IFact
     {

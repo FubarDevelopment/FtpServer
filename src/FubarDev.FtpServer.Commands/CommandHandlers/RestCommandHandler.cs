@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 namespace FubarDev.FtpServer.CommandHandlers
 {
     /// <summary>
-    /// Implements the <code>REST</code> command.
+    /// Implements the <c>REST</c> command.
     /// </summary>
     public class RestCommandHandler : FtpCommandHandler
     {

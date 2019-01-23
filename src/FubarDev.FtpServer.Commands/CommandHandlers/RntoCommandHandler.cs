@@ -13,7 +13,7 @@ using FubarDev.FtpServer.FileSystem;
 namespace FubarDev.FtpServer.CommandHandlers
 {
     /// <summary>
-    /// Implements the <code>RNTO</code> command.
+    /// Implements the <c>RNTO</c> command.
     /// </summary>
     public class RntoCommandHandler : FtpCommandHandler
     {

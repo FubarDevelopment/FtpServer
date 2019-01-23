@@ -55,7 +55,7 @@ namespace FubarDev.FtpServer.FileSystem
         /// <param name="currentPath">The current path.</param>
         /// <param name="path">The (absolute or relative) path to get the directory for.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
-        /// <returns>The found <see cref="IUnixDirectoryEntry"/> or <code>null</code>.</returns>
+        /// <returns>The found <see cref="IUnixDirectoryEntry"/> or <c>null</c>.</returns>
         [NotNull]
         [ItemCanBeNull]
         public static Task<IUnixDirectoryEntry> GetDirectoryAsync([NotNull] this IUnixFileSystem fileSystem, [NotNull, ItemNotNull] Stack<IUnixDirectoryEntry> currentPath, [CanBeNull] string path, CancellationToken cancellationToken)
@@ -71,7 +71,7 @@ namespace FubarDev.FtpServer.FileSystem
         /// <param name="currentPath">The current path.</param>
         /// <param name="pathElements">The (absolute or relative) path to get the directory for.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
-        /// <returns>The found <see cref="IUnixDirectoryEntry"/> or <code>null</code>.</returns>
+        /// <returns>The found <see cref="IUnixDirectoryEntry"/> or <c>null</c>.</returns>
         [NotNull]
         [ItemCanBeNull]
         public static async Task<IUnixDirectoryEntry> GetDirectoryAsync([NotNull] this IUnixFileSystem fileSystem, [NotNull, ItemNotNull] Stack<IUnixDirectoryEntry> currentPath, [NotNull, ItemNotNull] IReadOnlyList<string> pathElements, CancellationToken cancellationToken)
@@ -288,7 +288,7 @@ namespace FubarDev.FtpServer.FileSystem
 
         /// <summary>
         /// Returns the <paramref name="path"/> as string like <see cref="GetFullPath(System.Collections.Generic.Stack{FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry})"/>, with the
-        /// difference that it doesn't add the trailing <code>/</code>.
+        /// difference that it doesn't add the trailing <c>/</c>.
         /// </summary>
         /// <param name="path">The path to convert to string.</param>
         /// <returns>The <paramref name="path"/> as string.</returns>

@@ -1,4 +1,4 @@
-﻿//-----------------------------------------------------------------------
+//-----------------------------------------------------------------------
 // <copyright file="SimpleMailAddressValidation.cs" company="Fubar Development Junker">
 //     Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
@@ -11,7 +11,7 @@ namespace FubarDev.FtpServer.AccountManagement.Anonymous
     /// The password must have the form of a valid email address.
     /// </summary>
     /// <remarks>
-    /// A <code>@</code> is required and the host name must contain a dot.
+    /// A <c>@</c> is required and the host name must contain a dot.
     /// </remarks>
     public class SimpleMailAddressValidation : IAnonymousPasswordValidator
     {

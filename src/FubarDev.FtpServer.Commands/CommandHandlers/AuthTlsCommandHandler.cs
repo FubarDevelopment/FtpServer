@@ -18,7 +18,7 @@ using Microsoft.Extensions.Options;
 namespace FubarDev.FtpServer.CommandHandlers
 {
     /// <summary>
-    /// The <code>AUTH TLS</code> command handler.
+    /// The <c>AUTH TLS</c> command handler.
     /// </summary>
     public class AuthTlsCommandHandler : FtpCommandHandler
     {

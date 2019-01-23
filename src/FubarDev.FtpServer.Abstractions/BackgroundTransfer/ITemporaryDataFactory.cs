@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace FubarDev.FtpServer.BackgroundTransfer
 {
     /// <summary>
-    /// Factory for temporary data objects
+    /// Factory for temporary data objects.
     /// </summary>
     public interface ITemporaryDataFactory
     {

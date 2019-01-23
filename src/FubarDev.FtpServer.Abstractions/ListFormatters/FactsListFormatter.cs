@@ -17,7 +17,7 @@ using JetBrains.Annotations;
 namespace FubarDev.FtpServer.ListFormatters
 {
     /// <summary>
-    /// A formatter for the <code>MLST</code> command.
+    /// A formatter for the <c>MLST</c> command.
     /// </summary>
     public class FactsListFormatter : IListFormatter
     {

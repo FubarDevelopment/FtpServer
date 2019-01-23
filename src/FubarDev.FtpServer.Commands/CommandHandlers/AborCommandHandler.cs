@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 namespace FubarDev.FtpServer.CommandHandlers
 {
     /// <summary>
-    /// Implements the <code>ABOR</code> command.
+    /// Implements the <c>ABOR</c> command.
     /// </summary>
     public class AborCommandHandler : FtpCommandHandler
     {

@@ -17,7 +17,7 @@ using JetBrains.Annotations;
 namespace FubarDev.FtpServer.CommandHandlers
 {
     /// <summary>
-    /// Implements the <code>OPTS</code> command.
+    /// Implements the <c>OPTS</c> command.
     /// </summary>
     public class OptsCommandHandler : FtpCommandHandler, IFtpCommandHandlerExtensionHost
     {
@@ -56,24 +56,6 @@ namespace FubarDev.FtpServer.CommandHandlers
             }
 
             return await extension.Process(argument, cancellationToken).ConfigureAwait(false);
-        }
-
-        private Task<FtpResponse> ProcessOptionUtf8(FtpCommand command, CancellationToken cancellationToken)
-        {
-            switch (command.Argument.ToUpperInvariant())
-            {
-                case "ON":
-                    Connection.Encoding = Encoding.UTF8;
-                    return Task.FromResult(new FtpResponse(200, "Command okay."));
-                case "":
-                    Connection.Data.NlstEncoding = null;
-                    return Task.FromResult(new FtpResponse(200, "Command okay."));
-                case "NLST":
-                    Connection.Data.NlstEncoding = Encoding.UTF8;
-                    return Task.FromResult(new FtpResponse(200, "Command okay."));
-                default:
-                    return Task.FromResult(new FtpResponse(501, "Syntax error in parameters or arguments."));
-            }
         }
     }
 }

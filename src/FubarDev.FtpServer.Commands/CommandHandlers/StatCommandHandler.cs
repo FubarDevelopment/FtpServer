@@ -19,7 +19,7 @@ using Microsoft.Extensions.Logging;
 namespace FubarDev.FtpServer.CommandHandlers
 {
     /// <summary>
-    /// The <code>STAT</code> command handler.
+    /// The <c>STAT</c> command handler.
     /// </summary>
     public class StatCommandHandler : FtpCommandHandler
     {

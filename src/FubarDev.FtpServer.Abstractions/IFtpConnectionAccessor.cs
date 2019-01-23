@@ -5,7 +5,7 @@
 namespace FubarDev.FtpServer
 {
     /// <summary>
-    /// Accessor to get/set the current (scoped) FTP connection
+    /// Accessor to get/set the current (scoped) FTP connection.
     /// </summary>
     public interface IFtpConnectionAccessor
     {

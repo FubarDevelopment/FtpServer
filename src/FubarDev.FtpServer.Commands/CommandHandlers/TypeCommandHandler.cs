@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 namespace FubarDev.FtpServer.CommandHandlers
 {
     /// <summary>
-    /// Implements the <code>TYPE</code> command.
+    /// Implements the <c>TYPE</c> command.
     /// </summary>
     public class TypeCommandHandler : FtpCommandHandler
     {

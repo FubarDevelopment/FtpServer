@@ -13,7 +13,7 @@ using JetBrains.Annotations;
 namespace FubarDev.FtpServer.CommandHandlers
 {
     /// <summary>
-    /// The <code>SITE</code> command handler.
+    /// The <c>SITE</c> command handler.
     /// </summary>
     public class SiteCommandHandler : FtpCommandHandler, IFtpCommandHandlerExtensionHost
     {

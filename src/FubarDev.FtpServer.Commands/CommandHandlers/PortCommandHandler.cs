@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 namespace FubarDev.FtpServer.CommandHandlers
 {
     /// <summary>
-    /// Implements the <code>PORT</code> and <code>EPRT</code> commands.
+    /// Implements the <c>PORT</c> and <c>EPRT</c> commands.
     /// </summary>
     public class PortCommandHandler : FtpCommandHandler
     {

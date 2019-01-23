@@ -9,7 +9,7 @@ using JetBrains.Annotations;
 namespace FubarDev.FtpServer.FileSystem.GoogleDrive
 {
     /// <summary>
-    /// Interface that needs to be implemented by a Google Drive-backed file system
+    /// Interface that needs to be implemented by a Google Drive-backed file system.
     /// </summary>
     internal interface IGoogleDriveFileSystem : IUnixFileSystem
     {

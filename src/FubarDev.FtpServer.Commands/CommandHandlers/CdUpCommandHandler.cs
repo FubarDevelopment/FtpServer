@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 namespace FubarDev.FtpServer.CommandHandlers
 {
     /// <summary>
-    /// Implements the <code>CDUP</code> command.
+    /// Implements the <c>CDUP</c> command.
     /// </summary>
     public class CdUpCommandHandler : FtpCommandHandler
     {

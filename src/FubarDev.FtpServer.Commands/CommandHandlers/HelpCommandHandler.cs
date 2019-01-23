@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace FubarDev.FtpServer.CommandHandlers
 {
     /// <summary>
-    /// The <code>HELP</code> command handler.
+    /// The <c>HELP</c> command handler.
     /// </summary>
     public class HelpCommandHandler : FtpCommandHandler
     {

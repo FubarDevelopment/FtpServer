@@ -26,7 +26,7 @@ using Microsoft.Extensions.Logging;
 namespace FubarDev.FtpServer.CommandHandlers
 {
     /// <summary>
-    /// Implements the <code>LIST</code> and <code>NLST</code> commands.
+    /// Implements the <c>LIST</c> and <c>NLST</c> commands.
     /// </summary>
     public class ListCommandHandler : FtpCommandHandler
     {
@@ -245,12 +245,12 @@ namespace FubarDev.FtpServer.CommandHandlers
             }
 
             /// <summary>
-            /// Gets a value indicating whether <code>LIST</code> returns all entries (including <code>.</code> and <code>..</code>).
+            /// Gets a value indicating whether <c>LIST</c> returns all entries (including <c>.</c> and <c>..</c>).
             /// </summary>
             public bool All { get; }
 
             /// <summary>
-            /// Gets a value indicating whether <code>LIST</code> returns all file system entries recursively.
+            /// Gets a value indicating whether <c>LIST</c> returns all file system entries recursively.
             /// </summary>
             public bool Recursive { get; }
 

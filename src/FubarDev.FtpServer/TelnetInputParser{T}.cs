@@ -17,7 +17,7 @@ namespace FubarDev.FtpServer
         private bool _interpretAsCommandReceived;
 
         /// <summary>
-        /// Collects data and handles the <code>Synch</code> and <code>Interrupt Process</code> TELNET commands.
+        /// Collects data and handles the <c>Synch</c> and <c>Interrupt Process</c> TELNET commands.
         /// </summary>
         /// <param name="data">The data buffer.</param>
         /// <returns>The list of items found inside the collected data.</returns>
@@ -86,7 +86,7 @@ namespace FubarDev.FtpServer
         protected abstract IEnumerable<T> DataReceived(ReadOnlySpan<byte> data);
 
         /// <summary>
-        /// Handles the <code>Synch</code> command.
+        /// Handles the <c>Synch</c> command.
         /// </summary>
         /// <returns>The collected items.</returns>
         protected virtual IEnumerable<T> Synch()
@@ -96,7 +96,7 @@ namespace FubarDev.FtpServer
         }
 
         /// <summary>
-        /// Handles the <code>Interrupt Process</code> command.
+        /// Handles the <c>Interrupt Process</c> command.
         /// </summary>
         /// <returns>The collected items.</returns>
         protected virtual IEnumerable<T> InterruptProcess()

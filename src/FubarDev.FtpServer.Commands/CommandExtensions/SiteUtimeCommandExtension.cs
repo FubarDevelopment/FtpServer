@@ -13,7 +13,7 @@ using JetBrains.Annotations;
 namespace FubarDev.FtpServer.CommandExtensions
 {
     /// <summary>
-    /// The implementation of the <code>SITE UTIME</code> command.
+    /// The implementation of the <c>SITE UTIME</c> command.
     /// </summary>
     public class SiteUtimeCommandExtension : FtpCommandHandlerExtension
     {

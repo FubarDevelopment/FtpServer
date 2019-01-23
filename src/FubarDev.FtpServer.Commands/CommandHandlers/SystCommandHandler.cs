@@ -13,7 +13,7 @@ using Microsoft.Extensions.Options;
 namespace FubarDev.FtpServer.CommandHandlers
 {
     /// <summary>
-    /// Implements the <code>SYST</code> command.
+    /// Implements the <c>SYST</c> command.
     /// </summary>
     public class SystCommandHandler : FtpCommandHandler
     {

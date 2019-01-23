@@ -14,7 +14,7 @@ using Microsoft.Extensions.Options;
 namespace FubarDev.FtpServer.CommandHandlers
 {
     /// <summary>
-    /// The <code>PROT</code> command handler.
+    /// The <c>PROT</c> command handler.
     /// </summary>
     public class ProtCommandHandler : FtpCommandHandler
     {

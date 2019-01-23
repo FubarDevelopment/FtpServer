@@ -443,7 +443,9 @@ namespace FubarDev.FtpServer.FileSystem.GoogleDrive
                 get
                 {
                     if (_lyingFinished)
+                    {
                         return _innerStream.CanSeek;
+                    }
 
                     if (!_lyingEnumerator.MoveNext())
                     {

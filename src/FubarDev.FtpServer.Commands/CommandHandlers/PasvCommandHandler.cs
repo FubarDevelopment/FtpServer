@@ -19,7 +19,7 @@ using Microsoft.Extensions.Logging;
 namespace FubarDev.FtpServer.CommandHandlers
 {
     /// <summary>
-    /// The command handler for the <code>PASV</code> (4.1.2.) and <code>EPSV</code> commands.
+    /// The command handler for the <c>PASV</c> (4.1.2.) and <c>EPSV</c> commands.
     /// </summary>
     public class PasvCommandHandler : FtpCommandHandler
     {

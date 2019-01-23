@@ -8,7 +8,7 @@
 namespace FubarDev.FtpServer.FileSystem
 {
     /// <summary>
-    /// A unix style access mode interface
+    /// A unix style access mode interface.
     /// </summary>
     public interface IAccessMode
     {

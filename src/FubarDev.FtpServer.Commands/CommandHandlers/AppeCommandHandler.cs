@@ -18,7 +18,7 @@ using JetBrains.Annotations;
 namespace FubarDev.FtpServer.CommandHandlers
 {
     /// <summary>
-    /// Implements the <code>APPE</code> command.
+    /// Implements the <c>APPE</c> command.
     /// </summary>
     public class AppeCommandHandler : FtpCommandHandler
     {

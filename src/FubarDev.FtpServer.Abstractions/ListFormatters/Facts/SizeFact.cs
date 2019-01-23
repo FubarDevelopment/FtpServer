@@ -7,7 +7,7 @@ using System.Globalization;
 namespace FubarDev.FtpServer.ListFormatters.Facts
 {
     /// <summary>
-    /// The <code>size</code> fact.
+    /// The <c>size</c> fact.
     /// </summary>
     public class SizeFact : IFact
     {

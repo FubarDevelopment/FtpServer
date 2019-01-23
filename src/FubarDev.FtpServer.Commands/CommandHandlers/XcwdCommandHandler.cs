@@ -13,7 +13,7 @@ using FubarDev.FtpServer.FileSystem;
 namespace FubarDev.FtpServer.CommandHandlers
 {
     /// <summary>
-    /// Implements the <code>XCWD</code> command.
+    /// Implements the <c>XCWD</c> command.
     /// </summary>
     public class XcwdCommandHandler : FtpCommandHandler
     {

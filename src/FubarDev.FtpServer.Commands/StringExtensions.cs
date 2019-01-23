@@ -18,7 +18,7 @@ namespace FubarDev.FtpServer
         /// Try to parse a timestamp from the parameter <paramref name="timestamp"/>.
         /// </summary>
         /// <param name="timestamp">The time stamp to parse.</param>
-        /// <param name="timezone">The time zone of the timestamp (must always be <code>UTC</code>).</param>
+        /// <param name="timezone">The time zone of the timestamp (must always be <c>UTC</c>).</param>
         /// <param name="result">The parsed timestamp.</param>
         /// <returns><code>true</code> when timestamp and timezone were valid.</returns>
         public static bool TryParseTimestamp([NotNull] this string timestamp, [NotNull] string timezone, out DateTimeOffset result)

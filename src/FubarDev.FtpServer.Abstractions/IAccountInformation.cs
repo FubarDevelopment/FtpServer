@@ -9,7 +9,7 @@ using JetBrains.Annotations;
 namespace FubarDev.FtpServer
 {
     /// <summary>
-    /// Information about the account associated to a connection
+    /// Information about the account associated to a connection.
     /// </summary>
     public interface IAccountInformation
     {

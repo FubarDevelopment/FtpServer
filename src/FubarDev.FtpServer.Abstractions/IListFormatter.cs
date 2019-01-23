@@ -12,7 +12,7 @@ using JetBrains.Annotations;
 namespace FubarDev.FtpServer
 {
     /// <summary>
-    /// Interface that provides the text to output for the <code>LIST</code> and <code>NLST</code> commands.
+    /// Interface that provides the text to output for the <c>LIST</c> and <c>NLST</c> commands.
     /// </summary>
     public interface IListFormatter
     {

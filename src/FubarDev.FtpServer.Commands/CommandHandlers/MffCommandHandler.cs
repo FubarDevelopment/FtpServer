@@ -17,7 +17,7 @@ using FubarDev.FtpServer.ListFormatters.Facts;
 namespace FubarDev.FtpServer.CommandHandlers
 {
     /// <summary>
-    /// Implements the <code>MFF</code> command.
+    /// Implements the <c>MFF</c> command.
     /// </summary>
     public class MffCommandHandler : FtpCommandHandler
     {

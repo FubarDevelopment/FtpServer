@@ -18,7 +18,7 @@ namespace FubarDev.FtpServer.AccountManagement
         string Name { get; }
 
         /// <summary>
-        /// Returns <code>true</code> when the user is in the given group.
+        /// Returns <c>true</c> when the user is in the given group.
         /// </summary>
         /// <param name="groupName">The name of the group.</param>
         /// <returns><c>true</c> when the user is in the queries <paramref name="groupName"/>.</returns>

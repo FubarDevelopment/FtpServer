@@ -18,7 +18,7 @@ using Microsoft.Extensions.Logging;
 namespace FubarDev.FtpServer.CommandExtensions
 {
     /// <summary>
-    /// The implementation of the <code>SITE BLST</code> command.
+    /// The implementation of the <c>SITE BLST</c> command.
     /// </summary>
     public class SiteBlstCommandExtension : FtpCommandHandlerExtension
     {

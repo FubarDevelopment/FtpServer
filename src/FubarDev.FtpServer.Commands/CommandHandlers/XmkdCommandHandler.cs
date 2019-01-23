@@ -14,7 +14,7 @@ using FubarDev.FtpServer.FileSystem;
 namespace FubarDev.FtpServer.CommandHandlers
 {
     /// <summary>
-    /// Implements the <code>XMKD</code> command.
+    /// Implements the <c>XMKD</c> command.
     /// </summary>
     public class XmkdCommandHandler : FtpCommandHandler
     {

@@ -17,7 +17,7 @@ namespace FubarDev.FtpServer
         /// Gets the name of the feature.
         /// </summary>
         /// <remarks>
-        /// Used by the <code>OPTS</code> command to find the handler of the feature to modify.
+        /// Used by the <c>OPTS</c> command to find the handler of the feature to modify.
         /// </remarks>
         [NotNull]
         [ItemNotNull]
@@ -29,10 +29,10 @@ namespace FubarDev.FtpServer
         bool RequiresAuthentication { get; }
 
         /// <summary>
-        /// Build an informational string to be sent by the <code>FEAT</code> command.
+        /// Build an informational string to be sent by the <c>FEAT</c> command.
         /// </summary>
         /// <param name="connection">The configured connection.</param>
-        /// <returns>the informational string to be sent by the <code>FEAT</code> command.</returns>
+        /// <returns>the informational string to be sent by the <c>FEAT</c> command.</returns>
         [NotNull]
         string BuildInfo([NotNull] IFtpConnection connection);
     }

@@ -13,7 +13,7 @@ using FubarDev.FtpServer.AccountManagement;
 namespace FubarDev.FtpServer.CommandHandlers
 {
     /// <summary>
-    /// Implements the <code>USER</code> command.
+    /// Implements the <c>USER</c> command.
     /// </summary>
     public class UserCommandHandler : FtpCommandHandler
     {

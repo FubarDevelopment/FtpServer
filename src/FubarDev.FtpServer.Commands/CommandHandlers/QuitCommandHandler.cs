@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 namespace FubarDev.FtpServer.CommandHandlers
 {
     /// <summary>
-    /// Implements the <code>QUIT</code> command.
+    /// Implements the <c>QUIT</c> command.
     /// </summary>
     public class QuitCommandHandler : FtpCommandHandler
     {

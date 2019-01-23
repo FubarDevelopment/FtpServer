@@ -18,7 +18,7 @@ using Microsoft.Extensions.Logging;
 namespace FubarDev.FtpServer.CommandHandlers
 {
     /// <summary>
-    /// Implements the <code>DELE</code> command.
+    /// Implements the <c>DELE</c> command.
     /// </summary>
     public class DeleCommandHandler : FtpCommandHandler
     {

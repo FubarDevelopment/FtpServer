@@ -14,7 +14,7 @@ using FubarDev.FtpServer.FileSystem;
 namespace FubarDev.FtpServer.CommandHandlers
 {
     /// <summary>
-    /// Implements the <code>MDTM</code> command.
+    /// Implements the <c>MDTM</c> command.
     /// </summary>
     public class MdtmCommandHandler : FtpCommandHandler
     {

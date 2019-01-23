@@ -13,7 +13,7 @@ using FubarDev.FtpServer.FileSystem;
 namespace FubarDev.FtpServer.CommandHandlers
 {
     /// <summary>
-    /// Implements the <code>RNFR</code> command.
+    /// Implements the <c>RNFR</c> command.
     /// </summary>
     public class RnfrCommandHandler : FtpCommandHandler
     {

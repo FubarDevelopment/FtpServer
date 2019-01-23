@@ -11,7 +11,7 @@ using JetBrains.Annotations;
 namespace FubarDev.FtpServer.CommandExtensions
 {
     /// <summary>
-    /// The implementation of the <code>OPTS UTF8</code> command.
+    /// The implementation of the <c>OPTS UTF8</c> command.
     /// </summary>
     public class OptsUtf8CommandExtension : FtpCommandHandlerExtension
     {

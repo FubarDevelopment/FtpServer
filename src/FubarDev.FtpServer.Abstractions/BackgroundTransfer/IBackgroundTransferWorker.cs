@@ -9,7 +9,7 @@ using JetBrains.Annotations;
 namespace FubarDev.FtpServer.BackgroundTransfer
 {
     /// <summary>
-    /// A background transfer worker
+    /// A background transfer worker.
     /// </summary>
     public interface IBackgroundTransferWorker
     {

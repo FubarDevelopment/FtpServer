@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 namespace FubarDev.FtpServer.CommandHandlers
 {
     /// <summary>
-    /// Implements the <code>STRU</code> command.
+    /// Implements the <c>STRU</c> command.
     /// </summary>
     public class StruCommandHandler : FtpCommandHandler
     {

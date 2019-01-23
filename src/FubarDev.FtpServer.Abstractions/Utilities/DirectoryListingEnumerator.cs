@@ -14,7 +14,7 @@ using JetBrains.Annotations;
 namespace FubarDev.FtpServer.Utilities
 {
     /// <summary>
-    /// Helps to enumerate a directory with virtual <code>.</code> and <code>..</code> entries.
+    /// Helps to enumerate a directory with virtual <c>.</c> and <c>..</c> entries.
     /// </summary>
     public class DirectoryListingEnumerator
     {
@@ -133,7 +133,7 @@ namespace FubarDev.FtpServer.Utilities
         }
 
         /// <summary>
-        /// Gets a value indicating whether the current entry is either the <code>.</code> or <code>..</code> entry.
+        /// Gets a value indicating whether the current entry is either the <c>.</c> or <c>..</c> entry.
         /// </summary>
         public bool IsDotEntry => _enumerateDotEntries;
 

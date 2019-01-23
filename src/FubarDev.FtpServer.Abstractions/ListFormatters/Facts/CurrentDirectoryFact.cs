@@ -5,7 +5,7 @@
 namespace FubarDev.FtpServer.ListFormatters.Facts
 {
     /// <summary>
-    /// The <code>cdir</code> fact.
+    /// The <c>cdir</c> fact.
     /// </summary>
     public class CurrentDirectoryFact : TypeFact
     {

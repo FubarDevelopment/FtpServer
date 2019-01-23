@@ -8,7 +8,7 @@
 namespace FubarDev.FtpServer.AccountManagement.Anonymous
 {
     /// <summary>
-    /// This interface validates the password for an anonymous login
+    /// This interface validates the password for an anonymous login.
     /// </summary>
     public interface IAnonymousPasswordValidator
     {

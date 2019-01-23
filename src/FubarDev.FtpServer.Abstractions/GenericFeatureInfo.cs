@@ -33,7 +33,7 @@ namespace FubarDev.FtpServer
         /// Initializes a new instance of the <see cref="GenericFeatureInfo"/> class.
         /// </summary>
         /// <param name="name">The feature name.</param>
-        /// <param name="toString">The function to use to create a <code>FEAT</code> string.</param>
+        /// <param name="toString">The function to use to create a <c>FEAT</c> string.</param>
         /// <param name="requiresAuthentication">Indicates whether this extension requires an authenticated user.</param>
         /// <param name="additionalNames">The additional feature names.</param>
         public GenericFeatureInfo([NotNull] string name, [CanBeNull] Func<IFtpConnection, string> toString, bool requiresAuthentication, [NotNull, ItemNotNull] params string[] additionalNames)

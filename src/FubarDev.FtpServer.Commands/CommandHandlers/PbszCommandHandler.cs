@@ -13,7 +13,7 @@ using Microsoft.Extensions.Options;
 namespace FubarDev.FtpServer.CommandHandlers
 {
     /// <summary>
-    /// The <code>PBSZ</code> command handler.
+    /// The <c>PBSZ</c> command handler.
     /// </summary>
     public class PbszCommandHandler : FtpCommandHandler
     {

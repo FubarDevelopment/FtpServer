@@ -9,7 +9,7 @@ using JetBrains.Annotations;
 namespace FubarDev.FtpServer
 {
     /// <summary>
-    /// The interface that must be implemented by the FTP server
+    /// The interface that must be implemented by the FTP server.
     /// </summary>
     public interface IFtpServer
     {
@@ -19,7 +19,7 @@ namespace FubarDev.FtpServer
         event EventHandler<ConnectionEventArgs> ConfigureConnection;
 
         /// <summary>
-        /// Gets the public IP address (required for <code>PASV</code> and <code>EPSV</code>).
+        /// Gets the public IP address (required for <c>PASV</c> and <c>EPSV</c>).
         /// </summary>
         [NotNull]
         string ServerAddress { get; }

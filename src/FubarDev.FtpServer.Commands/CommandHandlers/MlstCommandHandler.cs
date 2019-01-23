@@ -21,7 +21,7 @@ using Microsoft.Extensions.Logging;
 namespace FubarDev.FtpServer.CommandHandlers
 {
     /// <summary>
-    /// The implementation of the <code>MLST</code> command.
+    /// The implementation of the <c>MLST</c> command.
     /// </summary>
     public class MlstCommandHandler : FtpCommandHandler
     {

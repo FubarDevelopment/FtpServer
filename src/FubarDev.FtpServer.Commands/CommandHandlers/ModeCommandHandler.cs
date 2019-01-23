@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 namespace FubarDev.FtpServer.CommandHandlers
 {
     /// <summary>
-    /// Implements the <code>MODE</code> command.
+    /// Implements the <c>MODE</c> command.
     /// </summary>
     public class ModeCommandHandler : FtpCommandHandler
     {

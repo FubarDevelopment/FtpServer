@@ -14,7 +14,7 @@ using FubarDev.FtpServer.FileSystem;
 namespace FubarDev.FtpServer.CommandHandlers
 {
     /// <summary>
-    /// Implements the <code>RMD</code> command.
+    /// Implements the <c>RMD</c> command.
     /// </summary>
     public class RmdCommandHandler : FtpCommandHandler
     {

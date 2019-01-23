@@ -12,7 +12,7 @@ using JetBrains.Annotations;
 namespace FubarDev.FtpServer.ListFormatters.Facts
 {
     /// <summary>
-    /// The <code>perm</code> fact.
+    /// The <c>perm</c> fact.
     /// </summary>
     public class PermissionsFact : IFact
     {
