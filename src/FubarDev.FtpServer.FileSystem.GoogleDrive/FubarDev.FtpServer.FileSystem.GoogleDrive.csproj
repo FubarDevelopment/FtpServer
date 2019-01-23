@@ -8,6 +8,12 @@
   <ItemGroup>
     <PackageReference Include="Google.Apis.Drive.v3" Version="1.33.1.1225" />
   </ItemGroup>
+  <ItemGroup Condition=" '$(TargetFramework)' != 'netstandard1.3' ">
+    <PackageReference Include="Microsoft.Extensions.Options" Version="2.0.0" />
+  </ItemGroup>
+  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard1.3' ">
+    <PackageReference Include="Microsoft.Extensions.Options" Version="1.0.0" />
+  </ItemGroup>
   <ItemGroup Condition=" '$(TargetFramework)' != 'netstandard2.0' ">
     <PackageReference Include="System.ValueTuple" Version="4.3.0" />
   </ItemGroup>

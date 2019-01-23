@@ -10,6 +10,8 @@ using FubarDev.FtpServer.BackgroundTransfer;
 
 using JetBrains.Annotations;
 
+using Microsoft.Extensions.Options;
+
 namespace FubarDev.FtpServer.FileSystem.GoogleDrive
 {
     /// <summary>
@@ -23,17 +25,23 @@ namespace FubarDev.FtpServer.FileSystem.GoogleDrive
         [NotNull]
         private readonly ITemporaryDataFactory _temporaryDataFactory;
 
+        [NotNull]
+        private readonly GoogleDriveOptions _options;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="GoogleDriveFileSystemProvider"/> class.
         /// </summary>
         /// <param name="serviceProvider">The google drive service provider.</param>
         /// <param name="temporaryDataFactory">The factory to create temporary data objects.</param>
+        /// <param name="options">Options for the Google Drive file system.</param>
         public GoogleDriveFileSystemProvider(
             [NotNull] IGoogleDriveServiceProvider serviceProvider,
-            [NotNull] ITemporaryDataFactory temporaryDataFactory)
+            [NotNull] ITemporaryDataFactory temporaryDataFactory,
+            [NotNull] IOptions<GoogleDriveOptions> options)
         {
             _serviceProvider = serviceProvider;
             _temporaryDataFactory = temporaryDataFactory;
+            _options = options.Value;
         }
 
         /// <inheritdoc />
@@ -45,6 +53,14 @@ namespace FubarDev.FtpServer.FileSystem.GoogleDrive
                 : (userId: user.Name, isAnonymous: false);
             var (driveService, rootItem) = await _serviceProvider.GetUserRootAsync(
                 userId, isAnonymous, CancellationToken.None);
+
+            if (_options.UseDirectUpload)
+            {
+                return new GoogleDriveDirectFileSystem(
+                    driveService,
+                    rootItem);
+            }
+
             return new GoogleDriveFileSystem(driveService, rootItem, _temporaryDataFactory);
         }
     }

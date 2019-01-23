@@ -25,7 +25,7 @@ namespace FubarDev.FtpServer.FileSystem.GoogleDrive
         /// <param name="fullName">The full path and file name of this entry.</param>
         /// <param name="fileSize">The file size (if it differs from the one in the model).</param>
         public GoogleDriveFileEntry(
-            [NotNull] GoogleDriveFileSystem fileSystem,
+            [NotNull] IUnixFileSystem fileSystem,
             [NotNull] File file,
             [NotNull] string fullName,
             long? fileSize = null)

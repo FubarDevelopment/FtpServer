@@ -24,7 +24,7 @@ namespace FubarDev.FtpServer.FileSystem.GoogleDrive
         /// <param name="file">The directory this entry belongs to.</param>
         /// <param name="fullPath">The full path.</param>
         /// <param name="isRoot">Determines whether this a root directory.</param>
-        public GoogleDriveDirectoryEntry([NotNull] GoogleDriveFileSystem fileSystem, [NotNull] File file, [NotNull] string fullPath, bool isRoot = false)
+        public GoogleDriveDirectoryEntry([NotNull] IUnixFileSystem fileSystem, [NotNull] File file, [NotNull] string fullPath, bool isRoot = false)
         {
             FileSystem = fileSystem;
             File = file;

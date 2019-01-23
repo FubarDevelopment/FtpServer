@@ -1,4 +1,4 @@
-// <copyright file="GoogleDriveFileSystem.cs" company="Fubar Development Junker">
+// <copyright file="GoogleDriveDirectFileSystem.cs" company="Fubar Development Junker">
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
@@ -14,6 +14,7 @@ using System.Threading.Tasks;
 using FubarDev.FtpServer.BackgroundTransfer;
 
 using Google.Apis.Drive.v3;
+using Google.Apis.Upload;
 
 using JetBrains.Annotations;
 
@@ -22,31 +23,23 @@ using File = Google.Apis.Drive.v3.Data.File;
 namespace FubarDev.FtpServer.FileSystem.GoogleDrive
 {
     /// <summary>
-    /// The <see cref="IUnixFileSystem"/> implementation that uses Google Drive.
+    /// The <see cref="IUnixFileSystem"/> implementation that uses Google Drive using direct upload.
     /// </summary>
-    public sealed class GoogleDriveFileSystem : IGoogleDriveFileSystem, IDisposable
+    public sealed class GoogleDriveDirectFileSystem : IGoogleDriveFileSystem, IDisposable
     {
-        [NotNull]
-        private readonly ITemporaryDataFactory _temporaryDataFactory;
-
-        private readonly Dictionary<string, BackgroundUpload> _uploads = new Dictionary<string, BackgroundUpload>();
-
         private readonly SemaphoreSlim _uploadsLock = new SemaphoreSlim(1);
 
         private bool _disposedValue;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="GoogleDriveFileSystem"/> class.
+        /// Initializes a new instance of the <see cref="GoogleDriveDirectFileSystem"/> class.
         /// </summary>
         /// <param name="service">The <see cref="DriveService"/> instance to use to access the Google Drive.</param>
         /// <param name="rootFolderInfo">The <see cref="Google.Apis.Drive.v3.Data.File"/> to use as root folder.</param>
-        /// <param name="temporaryDataFactory">The factory to create temporary data objects.</param>
-        public GoogleDriveFileSystem(
+        public GoogleDriveDirectFileSystem(
             [NotNull] DriveService service,
-            [NotNull] File rootFolderInfo,
-            [NotNull] ITemporaryDataFactory temporaryDataFactory)
+            [NotNull] File rootFolderInfo)
         {
-            _temporaryDataFactory = temporaryDataFactory;
             Service = service;
             Root = new GoogleDriveDirectoryEntry(this, rootFolderInfo, "/", true);
         }
@@ -222,7 +215,7 @@ namespace FubarDev.FtpServer.FileSystem.GoogleDrive
             Stream data,
             CancellationToken cancellationToken)
         {
-            throw new NotSupportedException("Resuming uploads is not supported for non-seekable streams.");
+                throw new NotSupportedException("Resuming uploads is not supported for non-seekable streams.");
         }
 
         /// <inheritdoc/>
@@ -232,6 +225,13 @@ namespace FubarDev.FtpServer.FileSystem.GoogleDrive
             Stream data,
             CancellationToken cancellationToken)
         {
+            IEnumerable<bool> GetLies()
+            {
+                yield return data.CanSeek;
+                yield return true;
+                yield return true;
+            }
+
             var targetEntry = (GoogleDriveDirectoryEntry)targetDirectory;
 
             var body = new File
@@ -246,22 +246,14 @@ namespace FubarDev.FtpServer.FileSystem.GoogleDrive
             var request = Service.Files.Create(body);
             request.Fields = FileExtensions.DefaultFileFields;
             var newFileEntry = await request.ExecuteAsync(cancellationToken);
-
-            var expectedSize = data.CanSeek ? data.Length : (long?)null;
-            var tempData = await _temporaryDataFactory.CreateAsync(data, expectedSize, cancellationToken);
-            var fullPath = FileSystemExtensions.CombinePath(targetEntry.FullName, fileName);
-            var backgroundUploads = new BackgroundUpload(fullPath, newFileEntry, tempData, this);
-            await _uploadsLock.WaitAsync(cancellationToken);
-            try
+            var upload = Service.Files.Update(new File(), newFileEntry.Id, new LyingStream(data, GetLies()), "application/octet-stream");
+            var result = await upload.UploadAsync(cancellationToken);
+            if (result.Status == UploadStatus.Failed)
             {
-                _uploads.Add(backgroundUploads.File.Id, backgroundUploads);
-            }
-            finally
-            {
-                _uploadsLock.Release();
+                throw new Exception(result.Exception.Message, result.Exception);
             }
 
-            return backgroundUploads;
+            return null;
         }
 
         /// <inheritdoc/>
@@ -270,21 +262,23 @@ namespace FubarDev.FtpServer.FileSystem.GoogleDrive
             Stream data,
             CancellationToken cancellationToken)
         {
-            var fe = (GoogleDriveFileEntry)fileEntry;
-            var expectedSize = data.CanSeek ? data.Length : (long?)null;
-            var tempData = await _temporaryDataFactory.CreateAsync(data, expectedSize, cancellationToken);
-            var backgroundUploads = new BackgroundUpload(fe.FullName, fe.File, tempData, this);
-            await _uploadsLock.WaitAsync(cancellationToken);
-            try
+            IEnumerable<bool> GetLies()
             {
-                _uploads.Add(backgroundUploads.File.Id, backgroundUploads);
-            }
-            finally
-            {
-                _uploadsLock.Release();
+                yield return data.CanSeek;
+                yield return true;
+                yield return true;
             }
 
-            return backgroundUploads;
+            var fe = (GoogleDriveFileEntry)fileEntry;
+
+            var upload = Service.Files.Update(new File(), fe.File.Id, new LyingStream(data, GetLies()), "application/octet-stream");
+            var result = await upload.UploadAsync(cancellationToken);
+            if (result.Status == UploadStatus.Failed)
+            {
+                throw new Exception(result.Exception.Message, result.Exception);
+            }
+
+            return null;
         }
 
         /// <inheritdoc/>
@@ -330,21 +324,10 @@ namespace FubarDev.FtpServer.FileSystem.GoogleDrive
             Dispose(true);
         }
 
-        /// <summary>
-        /// Is called when the upload is finished.
-        /// </summary>
-        /// <param name="fileId">The ID of the file to be notified as finished.</param>
+        /// <inheritdoc />
         void IGoogleDriveFileSystem.UploadFinished(string fileId)
         {
-            _uploadsLock.Wait();
-            try
-            {
-                _uploads.Remove(fileId);
-            }
-            finally
-            {
-                _uploadsLock.Release();
-            }
+            // Nothing to do here...
         }
 
         /// <summary>
@@ -383,17 +366,7 @@ namespace FubarDev.FtpServer.FileSystem.GoogleDrive
                     }
                     else
                     {
-                        long? fileSize;
-                        if (_uploads.TryGetValue(child.Id, out var uploader))
-                        {
-                            fileSize = uploader.FileSize;
-                        }
-                        else
-                        {
-                            fileSize = null;
-                        }
-
-                        result.Add(new GoogleDriveFileEntry(this, child, fullName, fileSize));
+                        result.Add(new GoogleDriveFileEntry(this, child, fullName));
                     }
                 }
             }
@@ -445,6 +418,85 @@ namespace FubarDev.FtpServer.FileSystem.GoogleDrive
             request.Fields = FileExtensions.DefaultFileFields;
 
             return request.ExecuteAsync(cancellationToken);
+        }
+
+        private class LyingStream : Stream
+        {
+            private readonly Stream _innerStream;
+
+            private readonly IEnumerator<bool> _lyingEnumerator;
+
+            private bool _lyingFinished;
+
+            public LyingStream(Stream innerStream, IEnumerable<bool> lyingSequence)
+            {
+                _lyingEnumerator = lyingSequence.GetEnumerator();
+                _innerStream = innerStream;
+            }
+
+            /// <inheritdoc />
+            public override bool CanRead => _innerStream.CanRead;
+
+            /// <inheritdoc />
+            public override bool CanSeek
+            {
+                get
+                {
+                    if (_lyingFinished)
+                        return _innerStream.CanSeek;
+
+                    if (!_lyingEnumerator.MoveNext())
+                    {
+                        _lyingFinished = true;
+                        return _innerStream.CanSeek;
+                    }
+
+                    return _lyingEnumerator.Current;
+                }
+            }
+
+            /// <inheritdoc />
+            public override bool CanWrite => _innerStream.CanWrite;
+
+            /// <inheritdoc />
+            public override long Length => _innerStream.Length;
+
+            /// <inheritdoc />
+            public override long Position
+            {
+                get => _innerStream.Position;
+                set => _innerStream.Position = value;
+            }
+
+            /// <inheritdoc />
+            public override void Flush()
+            {
+                _innerStream.Flush();
+            }
+
+            /// <inheritdoc />
+            public override int Read(byte[] buffer, int offset, int count)
+            {
+                return _innerStream.Read(buffer, offset, count);
+            }
+
+            /// <inheritdoc />
+            public override long Seek(long offset, SeekOrigin origin)
+            {
+                return _innerStream.Seek(offset, origin);
+            }
+
+            /// <inheritdoc />
+            public override void SetLength(long value)
+            {
+                _innerStream.SetLength(value);
+            }
+
+            /// <inheritdoc />
+            public override void Write(byte[] buffer, int offset, int count)
+            {
+                _innerStream.Write(buffer, offset, count);
+            }
         }
     }
 }

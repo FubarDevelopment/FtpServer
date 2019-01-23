@@ -16,6 +16,7 @@ using System.Xml;
 using FubarDev.FtpServer;
 using FubarDev.FtpServer.AccountManagement;
 using FubarDev.FtpServer.FileSystem.DotNet;
+using FubarDev.FtpServer.FileSystem.GoogleDrive;
 using FubarDev.FtpServer.FileSystem.InMemory;
 
 using Google.Apis.Auth.OAuth2;
@@ -80,7 +81,7 @@ namespace TestFtpServer
                     }
                 },
                 "FTPS",
-                { "c|certificate=", "Set the SSL certificate", v => options.ServerCertificateFile =v },
+                { "c|certificate=", "Set the SSL certificate", v => options.ServerCertificateFile = v },
                 { "P|password=", "Password for the SSL certificate", v => options.ServerCertificatePassword = v },
                 { "i|implicit", "Use implicit FTPS", v => options.ImplicitFtps = XmlConvert.ToBoolean(v.ToLowerInvariant()) },
                 "Backends",
@@ -103,6 +104,7 @@ namespace TestFtpServer
                 },
                 new CommandSet("google-drive")
                 {
+                    { "d|direct", "Use direct upload", v => options.UseDirectUpload = v != null },
                     new Command("user", "Use a users Google Drive as file system")
                     {
                         Options = new OptionSet()
@@ -132,7 +134,7 @@ namespace TestFtpServer
             var services = CreateServices(options)
                 .Configure<InMemoryFileSystemOptions>(opt => opt.KeepAnonymousFileSystem = options.KeepAnonymousInMemoryFileSystem)
                 .AddFtpServer(sb => Configure(sb, options).UseInMemoryFileSystem());
-            return RunAsync(services, options);
+            return RunAsync(services);
         }
 
         private static Task RunWithFileSystemAsync(string[] args, TestFtpServerOptions options)
@@ -143,7 +145,7 @@ namespace TestFtpServer
             var services = CreateServices(options)
                 .Configure<DotNetFileSystemOptions>(opt => opt.RootPath = rootDir)
                 .AddFtpServer(sb => Configure(sb, options).UseDotNetFileSystem());
-            return RunAsync(services, options);
+            return RunAsync(services);
         }
 
         private static async Task RunWithGoogleDriveUserAsync(string[] args, TestFtpServerOptions options)
@@ -174,7 +176,7 @@ namespace TestFtpServer
 
             var services = CreateServices(options)
                 .AddFtpServer(sb => Configure(sb, options).UseGoogleDrive(credential));
-            await RunAsync(services, options).ConfigureAwait(false);
+            await RunAsync(services).ConfigureAwait(false);
         }
 
         private static Task RunWithGoogleDriveServiceAsync(string[] args, TestFtpServerOptions options)
@@ -192,30 +194,16 @@ namespace TestFtpServer
 
             var services = CreateServices(options)
                 .AddFtpServer(sb => Configure(sb, options).UseGoogleDrive(credential));
-            return RunAsync(services, options);
+            return RunAsync(services);
         }
 
-        private static async Task RunAsync(IServiceCollection services, TestFtpServerOptions options)
+        private static async Task RunAsync(IServiceCollection services)
         {
             using (var serviceProvider = services.BuildServiceProvider())
             {
                 var loggerFactory = serviceProvider.GetRequiredService<ILoggerFactory>();
                 loggerFactory.AddNLog(new NLogProviderOptions { CaptureMessageTemplates = true, CaptureMessageProperties = true });
                 NLog.LogManager.LoadConfiguration("NLog.config");
-
-                var ftpServer = serviceProvider.GetRequiredService<IFtpServer>();
-
-                if (options.ImplicitFtps)
-                {
-                    var authTlsOptions = serviceProvider.GetRequiredService<IOptions<AuthTlsOptions>>();
-                    // Use an implicit SSL connection (without the AUTHTLS command)
-                    ftpServer.ConfigureConnection += (s, e) =>
-                    {
-                        var sslStream = new SslStream(e.Connection.OriginalStream);
-                        sslStream.AuthenticateAsServer(authTlsOptions.Value.ServerCertificate);
-                        e.Connection.SocketStream = sslStream;
-                    };
-                }
 
                 try
                 {
@@ -244,32 +232,52 @@ namespace TestFtpServer
 
         private static IServiceCollection CreateServices(TestFtpServerOptions options)
         {
-            var services = new ServiceCollection();
-            services.AddLogging(cfg => cfg.SetMinimumLevel(LogLevel.Trace));
-            services.AddOptions();
+            var services = new ServiceCollection()
+                .AddLogging(cfg => cfg.SetMinimumLevel(LogLevel.Trace))
+                .AddOptions()
+                .Configure<AuthTlsOptions>(
+                    opt =>
+                    {
+                        if (options.ServerCertificateFile != null)
+                        {
+                            opt.ServerCertificate = new X509Certificate2(
+                                options.ServerCertificateFile,
+                                options.ServerCertificatePassword);
+                        }
+                    })
+                .Configure<FtpConnectionOptions>(opt => opt.DefaultEncoding = Encoding.ASCII)
+                .Configure<FtpServerOptions>(
+                    opt =>
+                    {
+                        opt.ServerAddress = options.ServerAddress;
+                        opt.Port = options.GetPort();
 
-            services.Configure<AuthTlsOptions>(opt =>
+                        if (options.PassivePortRange != null)
+                        {
+                            opt.PasvMinPort = options.PassivePortRange.Value.Item1;
+                            opt.PasvMaxPort = options.PassivePortRange.Value.Item2;
+                        }
+                    })
+                .Configure<GoogleDriveOptions>(opt => opt.UseDirectUpload = options.UseDirectUpload);
+
+            if (options.ImplicitFtps)
             {
-                if (options.ServerCertificateFile != null)
-                {
-                    opt.ServerCertificate = new X509Certificate2(
-                        options.ServerCertificateFile,
-                        options.ServerCertificatePassword);
-                }
-            });
+                services.Decorate<IFtpServer>(
+                    (ftpServer, serviceProvider) =>
+                    {
+                        var authTlsOptions = serviceProvider.GetRequiredService<IOptions<AuthTlsOptions>>();
 
-            services.Configure<FtpConnectionOptions>(opt => opt.DefaultEncoding = Encoding.ASCII);
-            services.Configure<FtpServerOptions>(opt =>
-            {
-                opt.ServerAddress = options.ServerAddress;
-                opt.Port = options.GetPort();
+                        // Use an implicit SSL connection (without the AUTHTLS command)
+                        ftpServer.ConfigureConnection += (s, e) =>
+                        {
+                            var sslStream = new SslStream(e.Connection.OriginalStream);
+                            sslStream.AuthenticateAsServer(authTlsOptions.Value.ServerCertificate);
+                            e.Connection.SocketStream = sslStream;
+                        };
 
-                if (options.PassivePortRange != null)
-                {
-                    opt.PasvMinPort = options.PassivePortRange.Value.Item1;
-                    opt.PasvMaxPort = options.PassivePortRange.Value.Item2;
-                }
-            });
+                        return ftpServer;
+                    });
+            }
 
             return services;
         }
