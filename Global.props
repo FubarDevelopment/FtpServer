@@ -1,12 +1,12 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project>
   <Import Project="DotNetSdkMono.props" />
 
   <PropertyGroup>
     <LangVersion>latest</LangVersion>
-    <VersionPrefix>2.0.0</VersionPrefix>
+    <VersionPrefix>3.0.0</VersionPrefix>
     <Product>FTP Server</Product>
-    <Copyright>Fubar Development Junker 2015-2018</Copyright>
+    <Copyright>Fubar Development Junker 2015-2019</Copyright>
     <Company>Fubar Development Junker</Company>
     <Authors>Fubar Development Junker</Authors>
     <PackageProjectUrl>https://github.com/FubarDevelopment/FtpServer</PackageProjectUrl>
