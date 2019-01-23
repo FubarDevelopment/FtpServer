@@ -43,7 +43,7 @@ namespace FubarDev.FtpServer.FileSystem.DotNet
         }
 
         /// <inheritdoc/>
-        public Task<IUnixFileSystem> Create(IFtpUser user, bool isAnonymous)
+        public Task<IUnixFileSystem> Create(IFtpUser user)
         {
             var path = _rootPath;
             if (_useUserIdAsSubFolder)

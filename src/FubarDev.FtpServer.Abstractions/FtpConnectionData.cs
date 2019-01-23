@@ -56,11 +56,6 @@ namespace FubarDev.FtpServer
         public IMembershipProvider AuthenticatedBy { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether the current user is anonymous.
-        /// </summary>
-        public bool IsAnonymous { get; set; }
-
-        /// <summary>
         /// Gets or sets the <see cref="Encoding"/> for the <code>NLST</code> command.
         /// </summary>
         [CanBeNull]

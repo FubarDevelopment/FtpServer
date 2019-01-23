@@ -1,4 +1,4 @@
-﻿// <copyright file="InMemoryFileSystemProvider.cs" company="Fubar Development Junker">
+// <copyright file="InMemoryFileSystemProvider.cs" company="Fubar Development Junker">
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
@@ -33,56 +33,52 @@ namespace FubarDev.FtpServer.FileSystem.InMemory
         }
 
         /// <inheritdoc />
-        public Task<IUnixFileSystem> Create(IFtpUser user, bool isAnonymous)
+        public Task<IUnixFileSystem> Create(IFtpUser user)
         {
+            var fsComparer = _options.FileSystemComparer;
             InMemoryFileSystem fileSystem;
-            if (isAnonymous)
+            string userId;
+
+            if (user is IAnonymousFtpUser anonymousFtpUser)
             {
+                userId = string.IsNullOrEmpty(anonymousFtpUser.Email)
+                    ? anonymousFtpUser.Name
+                    : anonymousFtpUser.Email;
+
                 if (_options.KeepAnonymousFileSystem)
                 {
-                    string userId;
-                    if (user is IAnonymousFtpUser anonymousFtpUser)
-                    {
-                        userId = string.IsNullOrEmpty(anonymousFtpUser.Email)
-                            ? anonymousFtpUser.Name
-                            : anonymousFtpUser.Email;
-                    }
-                    else
-                    {
-                        userId = user.Name;
-                    }
-
                     lock (_anonymousFileSystemLock)
                     {
                         if (!_anonymousFileSystems.TryGetValue(userId, out fileSystem))
                         {
-                            fileSystem = new InMemoryFileSystem(_options.FileSystemComparer);
+                            fileSystem = new InMemoryFileSystem(fsComparer);
                             _anonymousFileSystems.Add(userId, fileSystem);
                         }
                     }
                 }
                 else
                 {
-                    fileSystem = new InMemoryFileSystem(_options.FileSystemComparer);
+                    fileSystem = new InMemoryFileSystem(fsComparer);
                 }
             }
             else
             {
+                userId = user.Name;
+
                 if (_options.KeepAuthenticatedUserFileSystem)
                 {
                     lock (_authUserFileSystemLock)
                     {
-                        var userId = user.Name;
                         if (!_authUserFileSystems.TryGetValue(userId, out fileSystem))
                         {
-                            fileSystem = new InMemoryFileSystem(_options.FileSystemComparer);
+                            fileSystem = new InMemoryFileSystem(fsComparer);
                             _authUserFileSystems.Add(userId, fileSystem);
                         }
                     }
                 }
                 else
                 {
-                    fileSystem = new InMemoryFileSystem(_options.FileSystemComparer);
+                    fileSystem = new InMemoryFileSystem(fsComparer);
                 }
             }
 
