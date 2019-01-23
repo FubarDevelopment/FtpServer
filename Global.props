@@ -6,11 +6,11 @@
     <LangVersion>latest</LangVersion>
     <VersionPrefix>3.0.0</VersionPrefix>
     <Product>FTP Server</Product>
-    <Copyright>Fubar Development Junker 2015-2019</Copyright>
+    <Copyright>Fubar Development Junker 2015-2019, 40three GmbH 2019</Copyright>
     <Company>Fubar Development Junker</Company>
     <Authors>Fubar Development Junker</Authors>
     <PackageProjectUrl>https://github.com/FubarDevelopment/FtpServer</PackageProjectUrl>
-    <PackageLicenseUrl>https://github.com/FubarDevelopment/FtpServer/blob/master/LICENSE.md</PackageLicenseUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageReleaseNotes>https://github.com/FubarDevelopment/FtpServer/releases</PackageReleaseNotes>
     <RepositoryUrl>https://github.com/FubarDevelopment/FtpServer.git</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
