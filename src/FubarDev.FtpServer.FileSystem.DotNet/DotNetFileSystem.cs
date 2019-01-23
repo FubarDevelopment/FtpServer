@@ -217,17 +217,15 @@ namespace FubarDev.FtpServer.FileSystem.DotNet
         /// <returns>The modified <see cref="IUnixFileSystemEntry"/>.</returns>
         public Task<IUnixFileSystemEntry> SetMacTimeAsync(IUnixFileSystemEntry entry, DateTimeOffset? modify, DateTimeOffset? access, DateTimeOffset? create, CancellationToken cancellationToken)
         {
-            var dirEntry = entry as DotNetDirectoryEntry;
-            var fileEntry = entry as DotNetFileEntry;
-
             FileSystemInfo item;
-            if (dirEntry != null)
+            if (entry is DotNetDirectoryEntry dirEntry)
             {
                 item = dirEntry.Info;
             }
-            else if (fileEntry != null)
+            else if (entry is DotNetFileEntry fileEntry)
             {
                 item = fileEntry.Info;
+                dirEntry = null;
             }
             else
             {

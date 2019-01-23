@@ -153,6 +153,7 @@ namespace FubarDev.FtpServer.BackgroundTransfer
                 _cancellationTokenSource.Cancel(true);
             }
 
+            // ReSharper disable once ImpureMethodCallOnReadonlyValueField
             _cancellationTokenRegistration.Dispose();
             _cancellationTokenSource.Dispose();
         }

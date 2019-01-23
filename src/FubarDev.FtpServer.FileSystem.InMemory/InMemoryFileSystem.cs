@@ -131,8 +131,11 @@ namespace FubarDev.FtpServer.FileSystem.InMemory
         public Task<Stream> OpenReadAsync(IUnixFileEntry fileEntry, long startPosition, CancellationToken cancellationToken)
         {
             var entry = (InMemoryFileEntry)fileEntry;
-            var stream = new MemoryStream(entry.Data);
-            stream.Position = startPosition;
+            var stream = new MemoryStream(entry.Data)
+            {
+                Position = startPosition,
+            };
+
             return Task.FromResult<Stream>(stream);
         }
 
@@ -146,9 +149,9 @@ namespace FubarDev.FtpServer.FileSystem.InMemory
             temp.Write(entry.Data, 0, entry.Data.Length);
 
             // Set new write position (if given)
-            if (!(startPosition is null))
+            if (startPosition is long startPos)
             {
-                temp.Position = startPosition.Value;
+                temp.Position = startPos;
             }
 
             // Copy given data

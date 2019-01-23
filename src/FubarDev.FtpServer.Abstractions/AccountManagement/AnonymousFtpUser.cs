@@ -31,7 +31,6 @@ namespace FubarDev.FtpServer.AccountManagement
         /// <summary>
         /// Gets the anonymous users email address.
         /// </summary>
-        [CanBeNull]
         public string Email { get; }
 
         /// <inheritdoc/>
