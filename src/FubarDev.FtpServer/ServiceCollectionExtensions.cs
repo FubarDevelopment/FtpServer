@@ -47,7 +47,10 @@ namespace Microsoft.Extensions.DependencyInjection
 
             services.Scan(
                 sel => sel.FromAssemblyOf<PassCommandHandler>()
-                    .AddClasses(filter => filter.AssignableTo<IFtpCommandHandler>()).As<IFtpCommandHandler>().WithScopedLifetime()
+                    .AddClasses(filter => filter.AssignableTo<IFtpCommandHandler>()).As<IFtpCommandHandler>().WithScopedLifetime());
+
+            services.Scan(
+                sel => sel.FromAssemblyOf<PassCommandHandler>()
                     .AddClasses(filter => filter.AssignableTo<IFtpCommandHandlerExtension>().Where(t => t != typeof(GenericFtpCommandHandlerExtension))).As<IFtpCommandHandlerExtension>().WithScopedLifetime());
 
             configure(new FtpServerBuilder(services));
