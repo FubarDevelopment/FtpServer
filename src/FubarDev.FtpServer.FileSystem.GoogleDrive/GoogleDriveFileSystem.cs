@@ -296,7 +296,7 @@ namespace FubarDev.FtpServer.FileSystem.GoogleDrive
                 var result = await upload.UploadAsync(cancellationToken);
                 if (result.Status == UploadStatus.Failed)
                 {
-                    throw new Exception(result.Exception.Message, result.Exception);
+                    throw new IOException(result.Exception.Message, result.Exception);
                 }
 
                 return null;

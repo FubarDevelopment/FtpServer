@@ -68,7 +68,7 @@ namespace FubarDev.FtpServer.FileSystem.DotNet
         public Task<IReadOnlyList<IUnixFileSystemEntry>> GetEntriesAsync(IUnixDirectoryEntry directoryEntry, CancellationToken cancellationToken)
         {
             var result = new List<IUnixFileSystemEntry>();
-            var searchDirInfo = ((DotNetDirectoryEntry)directoryEntry).Info;
+            var searchDirInfo = ((DotNetDirectoryEntry)directoryEntry).DirectoryInfo;
             foreach (var info in searchDirInfo.EnumerateFileSystemInfos())
             {
                 if (info is DirectoryInfo dirInfo)
@@ -116,12 +116,12 @@ namespace FubarDev.FtpServer.FileSystem.DotNet
 
             if (source is DotNetFileEntry sourceFileEntry)
             {
-                sourceFileEntry.Info.MoveTo(targetName);
+                sourceFileEntry.FileInfo.MoveTo(targetName);
                 return Task.FromResult<IUnixFileSystemEntry>(new DotNetFileEntry(this, new FileInfo(targetName)));
             }
 
             var sourceDirEntry = (DotNetDirectoryEntry)source;
-            sourceDirEntry.Info.MoveTo(targetName);
+            sourceDirEntry.DirectoryInfo.MoveTo(targetName);
             return Task.FromResult<IUnixFileSystemEntry>(new DotNetDirectoryEntry(this, new DirectoryInfo(targetName), false));
         }
 
@@ -130,7 +130,7 @@ namespace FubarDev.FtpServer.FileSystem.DotNet
         {
             if (entry is DotNetDirectoryEntry dirEntry)
             {
-                dirEntry.Info.Delete(SupportsNonEmptyDirectoryDelete);
+                dirEntry.DirectoryInfo.Delete(SupportsNonEmptyDirectoryDelete);
             }
             else
             {
@@ -145,14 +145,14 @@ namespace FubarDev.FtpServer.FileSystem.DotNet
         public Task<IUnixDirectoryEntry> CreateDirectoryAsync(IUnixDirectoryEntry targetDirectory, string directoryName, CancellationToken cancellationToken)
         {
             var targetEntry = (DotNetDirectoryEntry)targetDirectory;
-            var newDirInfo = targetEntry.Info.CreateSubdirectory(directoryName);
+            var newDirInfo = targetEntry.DirectoryInfo.CreateSubdirectory(directoryName);
             return Task.FromResult<IUnixDirectoryEntry>(new DotNetDirectoryEntry(this, newDirInfo, false));
         }
 
         /// <inheritdoc/>
         public Task<Stream> OpenReadAsync(IUnixFileEntry fileEntry, long startPosition, CancellationToken cancellationToken)
         {
-            var fileInfo = ((DotNetFileEntry)fileEntry).Info;
+            var fileInfo = ((DotNetFileEntry)fileEntry).FileInfo;
             var input = fileInfo.OpenRead();
             if (startPosition != 0)
             {
@@ -165,7 +165,7 @@ namespace FubarDev.FtpServer.FileSystem.DotNet
         /// <inheritdoc/>
         public async Task<IBackgroundTransfer> AppendAsync(IUnixFileEntry fileEntry, long? startPosition, Stream data, CancellationToken cancellationToken)
         {
-            var fileInfo = ((DotNetFileEntry)fileEntry).Info;
+            var fileInfo = ((DotNetFileEntry)fileEntry).FileInfo;
             using (var output = fileInfo.OpenWrite())
             {
                 if (startPosition == null)
@@ -196,7 +196,7 @@ namespace FubarDev.FtpServer.FileSystem.DotNet
         /// <inheritdoc/>
         public async Task<IBackgroundTransfer> ReplaceAsync(IUnixFileEntry fileEntry, Stream data, CancellationToken cancellationToken)
         {
-            var fileInfo = ((DotNetFileEntry)fileEntry).Info;
+            var fileInfo = ((DotNetFileEntry)fileEntry).FileInfo;
             using (var output = fileInfo.OpenWrite())
             {
                 await data.CopyToAsync(output, _streamBufferSize, cancellationToken).ConfigureAwait(false);
@@ -217,20 +217,7 @@ namespace FubarDev.FtpServer.FileSystem.DotNet
         /// <returns>The modified <see cref="IUnixFileSystemEntry"/>.</returns>
         public Task<IUnixFileSystemEntry> SetMacTimeAsync(IUnixFileSystemEntry entry, DateTimeOffset? modify, DateTimeOffset? access, DateTimeOffset? create, CancellationToken cancellationToken)
         {
-            FileSystemInfo item;
-            if (entry is DotNetDirectoryEntry dirEntry)
-            {
-                item = dirEntry.Info;
-            }
-            else if (entry is DotNetFileEntry fileEntry)
-            {
-                item = fileEntry.Info;
-                dirEntry = null;
-            }
-            else
-            {
-                throw new ArgumentException("Argument must be of type DotNetDirectoryEntry or DotNetFileEntry", nameof(entry));
-            }
+            var item = ((DotNetFileSystemEntry)entry).Info;
 
             if (access != null)
             {
@@ -247,7 +234,7 @@ namespace FubarDev.FtpServer.FileSystem.DotNet
                 item.CreationTimeUtc = create.Value.UtcDateTime;
             }
 
-            if (dirEntry != null)
+            if (entry is DotNetDirectoryEntry dirEntry)
             {
                 return Task.FromResult<IUnixFileSystemEntry>(new DotNetDirectoryEntry(this, (DirectoryInfo)item, dirEntry.IsRoot));
             }

@@ -62,10 +62,6 @@ namespace FubarDev.FtpServer.CommandHandlers
                     .ConfigureAwait(false);
                 if (validationResult.IsSuccess)
                 {
-                    var accountInformation = new DefaultAccountInformation(
-                        validationResult.User ?? throw new InvalidOperationException("The user property must be set if validation succeeded."),
-                        membershipProvider);
-
                     Connection.Data.User = validationResult.User;
 
 #pragma warning disable 618
@@ -75,7 +71,10 @@ namespace FubarDev.FtpServer.CommandHandlers
                     Connection.Data.IsLoggedIn = true;
                     Connection.Data.AuthenticatedBy = membershipProvider;
                     Connection.Data.FileSystem = await _fileSystemClassFactory
-                        .Create(accountInformation)
+                        .Create(
+                            new DefaultAccountInformation(
+                                validationResult.User ?? throw new InvalidOperationException("The user property must be set if validation succeeded."),
+                                membershipProvider))
                         .ConfigureAwait(false);
                     Connection.Data.Path = new Stack<IUnixDirectoryEntry>();
                     return new FtpResponse(230, "Password ok, FTP server ready");

@@ -3,15 +3,17 @@
 // </copyright>
 
 using System;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 
 using FubarDev.FtpServer.BackgroundTransfer;
 
-using Google.Apis.Drive.v3.Data;
 using Google.Apis.Upload;
 
 using JetBrains.Annotations;
+
+using File = Google.Apis.Drive.v3.Data.File;
 
 namespace FubarDev.FtpServer.FileSystem.GoogleDrive
 {
@@ -78,7 +80,7 @@ namespace FubarDev.FtpServer.FileSystem.GoogleDrive
                     var result = await upload.UploadAsync(cancellationToken);
                     if (result.Status == UploadStatus.Failed)
                     {
-                        throw new Exception(result.Exception.Message, result.Exception);
+                        throw new IOException(result.Exception.Message, result.Exception);
                     }
                 }
                 finally

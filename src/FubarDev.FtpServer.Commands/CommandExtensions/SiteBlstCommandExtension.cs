@@ -64,9 +64,9 @@ namespace FubarDev.FtpServer.CommandExtensions
                 case "control":
                 case "direct":
                     return await SendBlstDirectly(cancellationToken).ConfigureAwait(false);
+                default:
+                    return new FtpResponse(501, $"Mode {mode} not supported.");
             }
-
-            return new FtpResponse(501, $"Mode {mode} not supported.");
         }
 
         private async Task<FtpResponse> SendBlstDirectly(CancellationToken cancellationToken)

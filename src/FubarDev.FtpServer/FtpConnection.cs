@@ -75,12 +75,17 @@ namespace FubarDev.FtpServer
                 ["RemoteIp"] = RemoteAddress.IPAddress?.ToString(),
                 ["RemotePort"] = RemoteAddress.Port,
             };
+
             _loggerScope = logger?.BeginScope(properties);
 
             _socket = socket;
             _connectionAccessor = connectionAccessor;
+
+            var socketStream = socket.GetStream();
+
+            SocketStream = socketStream;
+            OriginalStream = socketStream;
             Log = logger;
-            SocketStream = OriginalStream = socket.GetStream();
             Encoding = options.Value.DefaultEncoding ?? Encoding.ASCII;
             PromiscuousPasv = options.Value.PromiscuousPasv;
             Data = new FtpConnectionData(new BackgroundCommandHandler(this));

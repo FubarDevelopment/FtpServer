@@ -2,6 +2,7 @@
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -16,9 +17,14 @@ namespace FubarDev.FtpServer.FileSystem.InMemory
     /// </summary>
     public class InMemoryFileSystemProvider : IFileSystemClassFactory
     {
-        private readonly InMemoryFileSystemOptions _options;
+        private readonly bool _keepAnonymousFileSystem;
+
+        private readonly bool _keepAuthenticatedUserFileSystem;
+
+        private readonly StringComparer _fileSystemComparer;
 
         private readonly object _anonymousFileSystemLock = new object();
+
         private readonly object _authUserFileSystemLock = new object();
 
         private readonly Dictionary<string, InMemoryFileSystem> _anonymousFileSystems;
@@ -31,15 +37,16 @@ namespace FubarDev.FtpServer.FileSystem.InMemory
         /// <param name="options">The provider options.</param>
         public InMemoryFileSystemProvider(IOptions<InMemoryFileSystemOptions> options)
         {
-            _options = options.Value;
-            _anonymousFileSystems = new Dictionary<string, InMemoryFileSystem>(_options.AnonymousComparer);
-            _authUserFileSystems = new Dictionary<string, InMemoryFileSystem>(_options.UserNameComparer);
+            _fileSystemComparer = options.Value.FileSystemComparer;
+            _keepAnonymousFileSystem = options.Value.KeepAnonymousFileSystem;
+            _keepAuthenticatedUserFileSystem = options.Value.KeepAuthenticatedUserFileSystem;
+            _anonymousFileSystems = new Dictionary<string, InMemoryFileSystem>(options.Value.AnonymousComparer);
+            _authUserFileSystems = new Dictionary<string, InMemoryFileSystem>(options.Value.UserNameComparer);
         }
 
         /// <inheritdoc />
         public Task<IUnixFileSystem> Create(IAccountInformation accountInformation)
         {
-            var fsComparer = _options.FileSystemComparer;
             var user = accountInformation.User;
             InMemoryFileSystem fileSystem;
             string userId;
@@ -50,40 +57,40 @@ namespace FubarDev.FtpServer.FileSystem.InMemory
                     ? anonymousFtpUser.Name
                     : anonymousFtpUser.Email;
 
-                if (_options.KeepAnonymousFileSystem)
+                if (_keepAnonymousFileSystem)
                 {
                     lock (_anonymousFileSystemLock)
                     {
                         if (!_anonymousFileSystems.TryGetValue(userId, out fileSystem))
                         {
-                            fileSystem = new InMemoryFileSystem(fsComparer);
+                            fileSystem = new InMemoryFileSystem(_fileSystemComparer);
                             _anonymousFileSystems.Add(userId, fileSystem);
                         }
                     }
                 }
                 else
                 {
-                    fileSystem = new InMemoryFileSystem(fsComparer);
+                    fileSystem = new InMemoryFileSystem(_fileSystemComparer);
                 }
             }
             else
             {
                 userId = user.Name;
 
-                if (_options.KeepAuthenticatedUserFileSystem)
+                if (_keepAuthenticatedUserFileSystem)
                 {
                     lock (_authUserFileSystemLock)
                     {
                         if (!_authUserFileSystems.TryGetValue(userId, out fileSystem))
                         {
-                            fileSystem = new InMemoryFileSystem(fsComparer);
+                            fileSystem = new InMemoryFileSystem(_fileSystemComparer);
                             _authUserFileSystems.Add(userId, fileSystem);
                         }
                     }
                 }
                 else
                 {
-                    fileSystem = new InMemoryFileSystem(fsComparer);
+                    fileSystem = new InMemoryFileSystem(_fileSystemComparer);
                 }
             }
 

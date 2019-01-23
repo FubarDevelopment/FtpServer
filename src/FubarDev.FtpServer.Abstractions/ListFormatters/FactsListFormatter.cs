@@ -53,15 +53,17 @@ namespace FubarDev.FtpServer.ListFormatters
                     return FormatThisDirectoryEntry();
                 case "..":
                     return FormatParentDirectoryEntry();
-            }
+                default:
+                {
+                    var currentDirEntry = _enumerator.CurrentDirectory;
+                    if (entry is IUnixDirectoryEntry dirEntry)
+                    {
+                        return BuildLine(BuildFacts(currentDirEntry, dirEntry, new TypeFact(dirEntry)), dirEntry.IsRoot ? string.Empty : name ?? entry.Name);
+                    }
 
-            var currentDirEntry = _enumerator.CurrentDirectory;
-            if (entry is IUnixDirectoryEntry dirEntry)
-            {
-                return BuildLine(BuildFacts(currentDirEntry, dirEntry, new TypeFact(dirEntry)), dirEntry.IsRoot ? string.Empty : name ?? entry.Name);
+                    return BuildLine(BuildFacts(currentDirEntry, (IUnixFileEntry)entry), name ?? entry.Name);
+                }
             }
-
-            return BuildLine(BuildFacts(currentDirEntry, (IUnixFileEntry)entry), name ?? entry.Name);
         }
 
         private string FormatThisDirectoryEntry()

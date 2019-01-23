@@ -43,7 +43,8 @@ namespace FubarDev.FtpServer.Utilities
             {
                 case 0:
                     CurrentDirectory = fileSystem.Root;
-                    ParentDirectory = GrandParentDirectory = null;
+                    ParentDirectory = null;
+                    GrandParentDirectory = null;
                     break;
                 case 1:
                     CurrentDirectory = topPathEntries[0];

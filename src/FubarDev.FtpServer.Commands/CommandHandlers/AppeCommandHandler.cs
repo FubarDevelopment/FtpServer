@@ -93,9 +93,12 @@ namespace FubarDev.FtpServer.CommandHandlers
                 {
                     if (fileInfo.Entry == null)
                     {
-                        var fileName = fileInfo.FileName ?? throw new InvalidOperationException();
                         backgroundTransfer = await Data.FileSystem
-                            .CreateAsync(fileInfo.Directory, fileName, stream, cancellationToken)
+                            .CreateAsync(
+                                fileInfo.Directory,
+                                fileInfo.FileName ?? throw new InvalidOperationException(),
+                                stream,
+                                cancellationToken)
                             .ConfigureAwait(false);
                     }
                     else
