@@ -8,8 +8,6 @@
 using System.IO;
 using System.Threading.Tasks;
 
-using FubarDev.FtpServer.AccountManagement;
-
 using JetBrains.Annotations;
 
 using Microsoft.Extensions.Options;
