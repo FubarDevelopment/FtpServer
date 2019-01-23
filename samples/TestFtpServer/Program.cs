@@ -3,7 +3,6 @@
 // </copyright>
 
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Security;
@@ -208,20 +207,14 @@ namespace TestFtpServer
                 try
                 {
                     // Start the FTP server
-                    var ftpServices = serviceProvider.GetRequiredService<IEnumerable<IFtpService>>().ToList();
-                    foreach (var ftpService in ftpServices)
-                    {
-                        await ftpService.StartAsync(CancellationToken.None).ConfigureAwait(false);
-                    }
+                    var ftpServerHost = serviceProvider.GetRequiredService<IFtpServerHost>();
+                    await ftpServerHost.StartAsync(CancellationToken.None).ConfigureAwait(false);
 
                     Console.WriteLine("Press ENTER/RETURN to close the test application.");
                     Console.ReadLine();
 
                     // Stop the FTP server
-                    foreach (var ftpService in ftpServices)
-                    {
-                        await ftpService.StopAsync(CancellationToken.None).ConfigureAwait(false);
-                    }
+                    await ftpServerHost.StopAsync(CancellationToken.None).ConfigureAwait(false);
                 }
                 catch (Exception ex)
                 {

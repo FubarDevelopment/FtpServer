@@ -7,6 +7,7 @@
 
 using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net.Sockets;
 using System.Threading;
@@ -133,8 +134,25 @@ namespace FubarDev.FtpServer
             }
         }
 
+        /// <inheritdoc/>
+        public void Dispose()
+        {
+            if (!Stopped)
+            {
+                ((IFtpService)this).StopAsync(CancellationToken.None).Wait();
+            }
+
+            _cancellationTokenSource.Dispose();
+            foreach (var connectionInfo in _connections.Values)
+            {
+                connectionInfo.Scope.Dispose();
+            }
+
+            _stoppedSemaphore.Dispose();
+        }
+
         /// <inheritdoc />
-        public async Task StartAsync(CancellationToken cancellationToken)
+        async Task IFtpService.StartAsync(CancellationToken cancellationToken)
         {
             if (Stopped)
             {
@@ -150,28 +168,11 @@ namespace FubarDev.FtpServer
         }
 
         /// <inheritdoc />
-        public Task StopAsync(CancellationToken cancellationToken)
+        Task IFtpService.StopAsync(CancellationToken cancellationToken)
         {
             _cancellationTokenSource.Cancel(true);
             Stopped = true;
             return _stoppedSemaphore.WaitAsync(cancellationToken);
-        }
-
-        /// <inheritdoc/>
-        public void Dispose()
-        {
-            if (!Stopped)
-            {
-                StopAsync(CancellationToken.None).Wait();
-            }
-
-            _cancellationTokenSource.Dispose();
-            foreach (var connectionInfo in _connections.Values)
-            {
-                connectionInfo.Scope.Dispose();
-            }
-
-            _stoppedSemaphore.Dispose();
         }
 
         private void OnConfigureConnection(IFtpConnection connection)

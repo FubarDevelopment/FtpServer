@@ -45,6 +45,8 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddSingleton(sp => (IFtpService)sp.GetRequiredService<IFtpServer>());
             services.AddSingleton(sp => (IFtpService)sp.GetRequiredService<IBackgroundTransferWorker>());
 
+            services.AddSingleton<IFtpServerHost, FtpServerHost>();
+
             services.Scan(
                 sel => sel.FromAssemblyOf<PassCommandHandler>()
                     .AddClasses(filter => filter.AssignableTo<IFtpCommandHandlerExtension>()).As<IFtpCommandHandlerExtension>().WithSingletonLifetime());
