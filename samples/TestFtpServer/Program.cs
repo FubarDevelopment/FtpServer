@@ -104,7 +104,7 @@ namespace TestFtpServer
                 },
                 new CommandSet("google-drive")
                 {
-                    { "d|direct", "Use direct upload", v => options.UseDirectUpload = v != null },
+                    { "b|background|background-upload", "Use background upload", v => options.UseBackgroundUpload = v != null },
                     new Command("user", "Use a users Google Drive as file system")
                     {
                         Options = new OptionSet()
@@ -258,7 +258,7 @@ namespace TestFtpServer
                             opt.PasvMaxPort = options.PassivePortRange.Value.Item2;
                         }
                     })
-                .Configure<GoogleDriveOptions>(opt => opt.UseDirectUpload = options.UseDirectUpload);
+                .Configure<GoogleDriveOptions>(opt => opt.UseBackgroundUpload = options.UseBackgroundUpload);
 
             if (options.ImplicitFtps)
             {

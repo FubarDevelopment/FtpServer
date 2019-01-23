@@ -52,9 +52,9 @@ namespace TestFtpServer
         public bool RefreshToken { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether direct Google Drive upload should be used (no background task).
+        /// Gets or sets a value indicating whether background upload should be used.
         /// </summary>
-        public bool UseDirectUpload { get; set; }
+        public bool UseBackgroundUpload { get; set; }
 
         /// <summary>
         /// Gets or sets the membership provider to be used.
@@ -64,7 +64,7 @@ namespace TestFtpServer
         /// <summary>
         /// Gets or sets the passive port range.
         /// </summary>
-        public (int, int)? PassivePortRange { get; set; } = null;
+        public (int, int)? PassivePortRange { get; set; }
 
         /// <summary>
         /// Gets the requested or the default port.

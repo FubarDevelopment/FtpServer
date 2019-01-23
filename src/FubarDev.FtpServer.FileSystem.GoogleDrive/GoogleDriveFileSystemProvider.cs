@@ -47,21 +47,9 @@ namespace FubarDev.FtpServer.FileSystem.GoogleDrive
         /// <inheritdoc />
         public async Task<IUnixFileSystem> Create(IAccountInformation accountInformation)
         {
-            var user = accountInformation.User;
-            var (userId, isAnonymous) = user is IAnonymousFtpUser anonymousFtpUser
-                ? (userId: anonymousFtpUser.Email, isAnonymous: true)
-                : (userId: user.Name, isAnonymous: false);
             var (driveService, rootItem) = await _serviceProvider.GetUserRootAsync(
-                userId, isAnonymous, CancellationToken.None);
-
-            if (_options.UseDirectUpload)
-            {
-                return new GoogleDriveDirectFileSystem(
-                    driveService,
-                    rootItem);
-            }
-
-            return new GoogleDriveFileSystem(driveService, rootItem, _temporaryDataFactory);
+                accountInformation, CancellationToken.None);
+            return new GoogleDriveFileSystem(driveService, rootItem, _temporaryDataFactory, _options.UseBackgroundUpload);
         }
     }
 }

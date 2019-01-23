@@ -10,11 +10,11 @@ namespace FubarDev.FtpServer.FileSystem.GoogleDrive
     public class GoogleDriveOptions
     {
         /// <summary>
-        /// Gets or sets a value indicating whether a direct upload should be used.
+        /// Gets or sets a value indicating whether a background upload should be used.
         /// </summary>
         /// <remarks>
-        /// If this is set to false, then the background upload is used.
+        /// If this is set to false, then the direct upload is used.
         /// </remarks>
-        public bool UseDirectUpload { get; set; }
+        public bool UseBackgroundUpload { get; set; }
     }
 }

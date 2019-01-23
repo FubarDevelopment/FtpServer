@@ -14,6 +14,7 @@ using System.Threading.Tasks;
 using FubarDev.FtpServer.BackgroundTransfer;
 
 using Google.Apis.Drive.v3;
+using Google.Apis.Upload;
 
 using JetBrains.Annotations;
 
@@ -29,6 +30,8 @@ namespace FubarDev.FtpServer.FileSystem.GoogleDrive
         [NotNull]
         private readonly ITemporaryDataFactory _temporaryDataFactory;
 
+        private readonly bool _useBackgroundUpload;
+
         private readonly Dictionary<string, BackgroundUpload> _uploads = new Dictionary<string, BackgroundUpload>();
 
         private readonly SemaphoreSlim _uploadsLock = new SemaphoreSlim(1);
@@ -41,12 +44,15 @@ namespace FubarDev.FtpServer.FileSystem.GoogleDrive
         /// <param name="service">The <see cref="DriveService"/> instance to use to access the Google Drive.</param>
         /// <param name="rootFolderInfo">The <see cref="Google.Apis.Drive.v3.Data.File"/> to use as root folder.</param>
         /// <param name="temporaryDataFactory">The factory to create temporary data objects.</param>
+        /// <param name="useBackgroundUpload">Use the Google Drive uploader instead of the background uploader.</param>
         public GoogleDriveFileSystem(
             [NotNull] DriveService service,
             [NotNull] File rootFolderInfo,
-            [NotNull] ITemporaryDataFactory temporaryDataFactory)
+            [NotNull] ITemporaryDataFactory temporaryDataFactory,
+            bool useBackgroundUpload)
         {
             _temporaryDataFactory = temporaryDataFactory;
+            _useBackgroundUpload = useBackgroundUpload;
             Service = service;
             Root = new GoogleDriveDirectoryEntry(this, rootFolderInfo, "/", true);
         }
@@ -247,6 +253,18 @@ namespace FubarDev.FtpServer.FileSystem.GoogleDrive
             request.Fields = FileExtensions.DefaultFileFields;
             var newFileEntry = await request.ExecuteAsync(cancellationToken);
 
+            if (!_useBackgroundUpload)
+            {
+                var upload = Service.Files.Update(new File(), newFileEntry.Id, data, "application/octet-stream");
+                var result = await upload.UploadAsync(cancellationToken);
+                if (result.Status == UploadStatus.Failed)
+                {
+                    throw new Exception(result.Exception.Message, result.Exception);
+                }
+
+                return null;
+            }
+
             var expectedSize = data.CanSeek ? data.Length : (long?)null;
             var tempData = await _temporaryDataFactory.CreateAsync(data, expectedSize, cancellationToken);
             var fullPath = FileSystemExtensions.CombinePath(targetEntry.FullName, fileName);
@@ -271,6 +289,19 @@ namespace FubarDev.FtpServer.FileSystem.GoogleDrive
             CancellationToken cancellationToken)
         {
             var fe = (GoogleDriveFileEntry)fileEntry;
+
+            if (!_useBackgroundUpload)
+            {
+                var upload = Service.Files.Update(new File(), fe.File.Id, data, "application/octet-stream");
+                var result = await upload.UploadAsync(cancellationToken);
+                if (result.Status == UploadStatus.Failed)
+                {
+                    throw new Exception(result.Exception.Message, result.Exception);
+                }
+
+                return null;
+            }
+
             var expectedSize = data.CanSeek ? data.Length : (long?)null;
             var tempData = await _temporaryDataFactory.CreateAsync(data, expectedSize, cancellationToken);
             var backgroundUploads = new BackgroundUpload(fe.FullName, fe.File, tempData, this);
@@ -336,6 +367,12 @@ namespace FubarDev.FtpServer.FileSystem.GoogleDrive
         /// <param name="fileId">The ID of the file to be notified as finished.</param>
         void IGoogleDriveFileSystem.UploadFinished(string fileId)
         {
+            if (!_useBackgroundUpload)
+            {
+                // Nothing to do here...
+                return;
+            }
+
             _uploadsLock.Wait();
             try
             {
