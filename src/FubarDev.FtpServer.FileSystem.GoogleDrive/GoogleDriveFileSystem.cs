@@ -24,7 +24,7 @@ namespace FubarDev.FtpServer.FileSystem.GoogleDrive
     /// <summary>
     /// The <see cref="IUnixFileSystem"/> implementation that uses Google Drive.
     /// </summary>
-    public sealed class GoogleDriveFileSystem : IUnixFileSystem
+    public sealed class GoogleDriveFileSystem : IUnixFileSystem, IDisposable
     {
         [NotNull]
         private readonly ITemporaryDataFactory _temporaryDataFactory;

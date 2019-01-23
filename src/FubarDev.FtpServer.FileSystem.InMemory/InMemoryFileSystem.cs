@@ -45,11 +45,6 @@ namespace FubarDev.FtpServer.FileSystem.InMemory
         public IUnixDirectoryEntry Root { get; }
 
         /// <inheritdoc />
-        public void Dispose()
-        {
-        }
-
-        /// <inheritdoc />
         public Task<IReadOnlyList<IUnixFileSystemEntry>> GetEntriesAsync(
             IUnixDirectoryEntry directoryEntry,
             CancellationToken cancellationToken)

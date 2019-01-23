@@ -1,4 +1,4 @@
-﻿// <copyright file="EmptyUnixFileSystem.cs" company="Fubar Development Junker">
+// <copyright file="EmptyUnixFileSystem.cs" company="Fubar Development Junker">
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
@@ -54,11 +54,6 @@ namespace FubarDev.FtpServer.FileSystem
         public Task<IUnixDirectoryEntry> CreateDirectoryAsync(IUnixDirectoryEntry targetDirectory, string directoryName, CancellationToken cancellationToken)
         {
             throw new NotSupportedException();
-        }
-
-        /// <inheritdoc/>
-        public void Dispose()
-        {
         }
 
         /// <inheritdoc/>

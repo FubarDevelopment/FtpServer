@@ -20,7 +20,7 @@ namespace FubarDev.FtpServer.FileSystem
     /// <summary>
     /// The unix file system abstraction used by the FTP server.
     /// </summary>
-    public interface IUnixFileSystem : IDisposable
+    public interface IUnixFileSystem
     {
         /// <summary>
         /// Gets a value indicating whether this file system supports appending to a file.

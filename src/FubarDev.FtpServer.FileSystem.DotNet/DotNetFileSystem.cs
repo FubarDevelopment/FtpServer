@@ -28,8 +28,6 @@ namespace FubarDev.FtpServer.FileSystem.DotNet
 
         private readonly int _streamBufferSize;
 
-        private bool _disposedValue;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="DotNetFileSystem"/> class.
         /// </summary>
@@ -257,29 +255,6 @@ namespace FubarDev.FtpServer.FileSystem.DotNet
             }
 
             return Task.FromResult<IUnixFileSystemEntry>(new DotNetFileEntry(this, (FileInfo)item));
-        }
-
-        /// <inheritdoc/>
-        public void Dispose()
-        {
-            Dispose(true);
-        }
-
-        /// <summary>
-        /// Dispose the object.
-        /// </summary>
-        /// <param name="disposing"><code>true</code> when called from <see cref="Dispose()"/>.</param>
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!_disposedValue)
-            {
-                if (disposing)
-                {
-                    // Nothing to dispose
-                }
-
-                _disposedValue = true;
-            }
         }
     }
 }
