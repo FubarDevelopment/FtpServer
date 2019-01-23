@@ -67,6 +67,12 @@ namespace FubarDev.FtpServer.CommandHandlers
         }
 
         /// <inheritdoc />
+        public virtual IEnumerable<IFtpCommandHandlerExtension> GetExtensions()
+        {
+            return Enumerable.Empty<IFtpCommandHandlerExtension>();
+        }
+
+        /// <inheritdoc />
         public abstract Task<FtpResponse> Process(FtpCommand command, CancellationToken cancellationToken);
     }
 }

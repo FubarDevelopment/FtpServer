@@ -7,7 +7,6 @@
 
 using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net.Sockets;
 using System.Threading;
@@ -149,6 +148,20 @@ namespace FubarDev.FtpServer
             }
 
             _stoppedSemaphore.Dispose();
+        }
+
+        /// <inheritdoc />
+        void IFtpServer.Start()
+        {
+            var host = _serviceProvider.GetRequiredService<IFtpServerHost>();
+            host.StartAsync(CancellationToken.None).ConfigureAwait(false).GetAwaiter().GetResult();
+        }
+
+        /// <inheritdoc />
+        void IFtpServer.Stop()
+        {
+            var host = _serviceProvider.GetRequiredService<IFtpServerHost>();
+            host.StopAsync(CancellationToken.None).ConfigureAwait(false).GetAwaiter().GetResult();
         }
 
         /// <inheritdoc />
