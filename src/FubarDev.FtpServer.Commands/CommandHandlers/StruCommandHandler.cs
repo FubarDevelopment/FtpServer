@@ -19,9 +19,9 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// <summary>
         /// Initializes a new instance of the <see cref="StruCommandHandler"/> class.
         /// </summary>
-        /// <param name="connection">The connection to create this command handler for.</param>
-        public StruCommandHandler(IFtpConnection connection)
-            : base(connection, "STRU")
+        /// <param name="connectionAccessor">The accessor to get the connection that is active during the <see cref="Process"/> method execution.</param>
+        public StruCommandHandler(IFtpConnectionAccessor connectionAccessor)
+            : base(connectionAccessor, "STRU")
         {
         }
 

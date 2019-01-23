@@ -28,10 +28,12 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// <summary>
         /// Initializes a new instance of the <see cref="StorCommandHandler"/> class.
         /// </summary>
-        /// <param name="connection">The connection this command handler is created for.</param>
+        /// <param name="connectionAccessor">The accessor to get the connection that is active during the <see cref="Process"/> method execution.</param>
         /// <param name="backgroundTransferWorker">The background transfer worker service.</param>
-        public StorCommandHandler([NotNull] IFtpConnection connection, [NotNull] IBackgroundTransferWorker backgroundTransferWorker)
-            : base(connection, "STOR")
+        public StorCommandHandler(
+            [NotNull] IFtpConnectionAccessor connectionAccessor,
+            [NotNull] IBackgroundTransferWorker backgroundTransferWorker)
+            : base(connectionAccessor, "STOR")
         {
             _backgroundTransferWorker = backgroundTransferWorker;
         }

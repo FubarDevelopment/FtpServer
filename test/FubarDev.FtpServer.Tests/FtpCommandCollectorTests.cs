@@ -201,9 +201,9 @@ namespace FubarDev.FtpServer.Tests
         private static IEnumerable<FtpCommand> Collect(FtpCommandCollector collector, string data)
         {
             var temp = collector.Encoding.GetBytes(data);
-            foreach (var escapedData in EscapeIAC(temp).Select(x => x.Span.ToArray()))
+            foreach (var escapedDataMemory in EscapeIAC(temp))
             {
-                var collected = collector.Collect(escapedData, 0, escapedData.Length);
+                var collected = collector.Collect(escapedDataMemory.Span);
                 foreach (var command in collected)
                 {
                     yield return command;

@@ -32,14 +32,14 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// <summary>
         /// Initializes a new instance of the <see cref="StatCommandHandler"/> class.
         /// </summary>
-        /// <param name="connection">The connection to create this command handler for.</param>
+        /// <param name="connectionAccessor">The accessor to get the connection that is active during the <see cref="Process"/> method execution.</param>
         /// <param name="server">The FTP server.</param>
         /// <param name="backgroundTransferWorker">The background transfer worker service.</param>
         public StatCommandHandler(
-            [NotNull] IFtpConnection connection,
+            [NotNull] IFtpConnectionAccessor connectionAccessor,
             [NotNull] IFtpServer server,
             [NotNull] IBackgroundTransferWorker backgroundTransferWorker)
-            : base(connection, "STAT")
+            : base(connectionAccessor, "STAT")
         {
             _server = server;
             _backgroundTransferWorker = backgroundTransferWorker;

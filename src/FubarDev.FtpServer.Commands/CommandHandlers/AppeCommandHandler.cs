@@ -28,12 +28,12 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// <summary>
         /// Initializes a new instance of the <see cref="AppeCommandHandler"/> class.
         /// </summary>
-        /// <param name="connection">The connection to create this command handler for.</param>
+        /// <param name="connectionAccessor">The accessor to get the connection that is active during the <see cref="Process"/> method execution.</param>
         /// <param name="backgroundTransferWorker">The background transfer worker service.</param>
         public AppeCommandHandler(
-            [NotNull] IFtpConnection connection,
+            [NotNull] IFtpConnectionAccessor connectionAccessor,
             [NotNull] IBackgroundTransferWorker backgroundTransferWorker)
-            : base(connection, "APPE")
+            : base(connectionAccessor, "APPE")
         {
             _backgroundTransferWorker = backgroundTransferWorker;
         }

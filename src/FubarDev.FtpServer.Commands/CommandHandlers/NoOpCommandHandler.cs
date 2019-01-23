@@ -18,9 +18,9 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// <summary>
         /// Initializes a new instance of the <see cref="NoOpCommandHandler"/> class.
         /// </summary>
-        /// <param name="connection">The connection to create this command handler for.</param>
-        public NoOpCommandHandler(IFtpConnection connection)
-            : base(connection, "NOOP")
+        /// <param name="connectionAccessor">The accessor to get the connection that is active during the <see cref="Process"/> method execution.</param>
+        public NoOpCommandHandler(IFtpConnectionAccessor connectionAccessor)
+            : base(connectionAccessor, "NOOP")
         {
         }
 

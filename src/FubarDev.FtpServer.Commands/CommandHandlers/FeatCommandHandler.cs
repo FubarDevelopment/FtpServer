@@ -19,9 +19,9 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// <summary>
         /// Initializes a new instance of the <see cref="FeatCommandHandler"/> class.
         /// </summary>
-        /// <param name="connection">The connection to create this command handler for.</param>
-        public FeatCommandHandler(IFtpConnection connection)
-            : base(connection, "FEAT")
+        /// <param name="connectionAccessor">The accessor to get the connection that is active during the <see cref="Process"/> method execution.</param>
+        public FeatCommandHandler(IFtpConnectionAccessor connectionAccessor)
+            : base(connectionAccessor, "FEAT")
         {
         }
 

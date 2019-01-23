@@ -20,9 +20,9 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// <summary>
         /// Initializes a new instance of the <see cref="UserCommandHandler"/> class.
         /// </summary>
-        /// <param name="connection">The connection to create this command handler for.</param>
-        public UserCommandHandler(IFtpConnection connection)
-            : base(connection, "USER")
+        /// <param name="connectionAccessor">The accessor to get the connection that is active during the <see cref="Process"/> method execution.</param>
+        public UserCommandHandler(IFtpConnectionAccessor connectionAccessor)
+            : base(connectionAccessor, "USER")
         {
         }
 

@@ -31,14 +31,14 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// <summary>
         /// Initializes a new instance of the <see cref="PassCommandHandler"/> class.
         /// </summary>
-        /// <param name="connection">The connection to create this command handler for.</param>
+        /// <param name="connectionAccessor">The accessor to get the connection that is active during the <see cref="Process"/> method execution.</param>
         /// <param name="membershipProviders">The membership providers.</param>
         /// <param name="fileSystemClassFactory">The file system access factory.</param>
         public PassCommandHandler(
-            [NotNull] IFtpConnection connection,
+            [NotNull] IFtpConnectionAccessor connectionAccessor,
             [NotNull] IEnumerable<IMembershipProvider> membershipProviders,
             [NotNull] IFileSystemClassFactory fileSystemClassFactory)
-            : base(connection, "PASS")
+            : base(connectionAccessor, "PASS")
         {
             _membershipProviders = membershipProviders;
             _fileSystemClassFactory = fileSystemClassFactory;

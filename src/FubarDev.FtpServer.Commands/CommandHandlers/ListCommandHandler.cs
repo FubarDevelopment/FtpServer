@@ -36,10 +36,10 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// <summary>
         /// Initializes a new instance of the <see cref="ListCommandHandler"/> class.
         /// </summary>
-        /// <param name="connection">The connection to create this command handler for.</param>
+        /// <param name="connectionAccessor">The accessor to get the connection that is active during the <see cref="Process"/> method execution.</param>
         /// <param name="logger">The logger.</param>
-        public ListCommandHandler([NotNull] IFtpConnection connection, [CanBeNull] ILogger<ListCommandHandler> logger = null)
-            : base(connection, "LIST", "NLST", "LS")
+        public ListCommandHandler([NotNull] IFtpConnectionAccessor connectionAccessor, [CanBeNull] ILogger<ListCommandHandler> logger = null)
+            : base(connectionAccessor, "LIST", "NLST", "LS")
         {
             _logger = logger;
         }

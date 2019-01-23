@@ -2,6 +2,7 @@
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 
@@ -10,7 +11,7 @@ namespace FubarDev.FtpServer
     /// <summary>
     /// Filters the TELNET commands usually sent before an ABOR command.
     /// </summary>
-    /// <typeparam name="T">The return type of a <see cref="Collect(byte[], int, int)"/> operation.</typeparam>
+    /// <typeparam name="T">The return type of a <see cref="Collect"/> operation.</typeparam>
     public abstract class TelnetInputParser<T>
     {
         private bool _interpretAsCommandReceived;
@@ -19,15 +20,13 @@ namespace FubarDev.FtpServer
         /// Collects data and handles the <code>Synch</code> and <code>Interrupt Process</code> TELNET commands.
         /// </summary>
         /// <param name="data">The data buffer.</param>
-        /// <param name="offset">The offset into the data buffer.</param>
-        /// <param name="length">The length of the data to read from the data buffer.</param>
         /// <returns>The list of items found inside the collected data.</returns>
-        public IReadOnlyList<T> Collect(byte[] data, int offset, int length)
+        public IReadOnlyList<T> Collect(ReadOnlySpan<byte> data)
         {
             var result = new List<T>();
-            var endOffset = offset + length;
-            var dataOffset = offset;
-            for (var index = offset; index != endOffset; ++index)
+
+            var dataOffset = 0;
+            for (var index = 0; index != data.Length; ++index)
             {
                 var v = data[index];
                 if (_interpretAsCommandReceived)
@@ -44,13 +43,14 @@ namespace FubarDev.FtpServer
                             break;
                         case 0xFF:
                             // Double-Escape
-                            result.AddRange(DataReceived(data, index, length: 1));
+                            result.AddRange(DataReceived(data.Slice(index, 1)));
                             break;
                         default:
                             Debug.WriteLine("TELNET: Unknown command received - skipping 0xFF");
                             dataOffset = index;
                             break;
                     }
+
                     _interpretAsCommandReceived = false;
                 }
                 else if (v == 0xFF)
@@ -58,21 +58,23 @@ namespace FubarDev.FtpServer
                     var dataLength = index - dataOffset;
                     if (dataLength != 0)
                     {
-                        result.AddRange(DataReceived(data, dataOffset, dataLength));
+                        result.AddRange(DataReceived(data.Slice(dataOffset, dataLength)));
                     }
 
                     _interpretAsCommandReceived = true;
                     dataOffset = index + 2;
                 }
             }
-            if (dataOffset < endOffset)
+
+            if (dataOffset < data.Length)
             {
-                var dataLength = endOffset - dataOffset;
+                var dataLength = data.Length - dataOffset;
                 if (dataLength != 0)
                 {
-                    result.AddRange(DataReceived(data, dataOffset, dataLength));
+                    result.AddRange(DataReceived(data.Slice(dataOffset, dataLength)));
                 }
             }
+
             return result;
         }
 
@@ -80,10 +82,8 @@ namespace FubarDev.FtpServer
         /// Collects all non-TELNET data.
         /// </summary>
         /// <param name="data">The data buffer.</param>
-        /// <param name="offset">The offset into the data buffer.</param>
-        /// <param name="length">The length of the data to be collected.</param>
         /// <returns>The collected items.</returns>
-        protected abstract IEnumerable<T> DataReceived(byte[] data, int offset, int length);
+        protected abstract IEnumerable<T> DataReceived(ReadOnlySpan<byte> data);
 
         /// <summary>
         /// Handles the <code>Synch</code> command.

@@ -2,11 +2,12 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>netstandard1.3;netstandard2.0;net461</TargetFrameworks>
-    <Description>File system for the portable FTP server</Description>
+    <Description>TCP-based FTP server implementation</Description>
     <PackageTags>portable;FTP;server</PackageTags>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Scrutor" Version="2.0.0" />
+    <PackageReference Include="System.Memory" Version="4.5.0" />
   </ItemGroup>
   <ItemGroup Condition=" '$(TargetFramework)' != 'netstandard1.3' ">
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="2.0.0" />
