@@ -56,7 +56,7 @@ namespace FubarDev.FtpServer.FileSystem.InMemory
         public DateTimeOffset? CreatedTime { get; private set; }
 
         /// <inheritdoc />
-        public long NumberOfLinks { get; } = 0;
+        public long NumberOfLinks { get; } = 1;
 
         /// <inheritdoc />
         public IUnixFileSystem FileSystem { get; }
