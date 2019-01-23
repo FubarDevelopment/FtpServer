@@ -1,4 +1,4 @@
-// <copyright file="FtpServerBuilderExtensions.cs" company="Fubar Development Junker">
+// <copyright file="GoogleDriveFtpServerBuilderExtensions.cs" company="Fubar Development Junker">
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
@@ -19,7 +19,7 @@ namespace FubarDev.FtpServer
     /// <summary>
     /// Extension methods for <see cref="IFtpServerBuilder"/>.
     /// </summary>
-    public static class FtpServerBuilderExtensions
+    public static class GoogleDriveFtpServerBuilderExtensions
     {
         /// <summary>
         /// Uses Google Drive as file system.

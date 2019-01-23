@@ -19,6 +19,10 @@ namespace FubarDev.FtpServer
     {
         private readonly IReadOnlyCollection<IFtpService> _ftpServices;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FtpServerHost"/> class.
+        /// </summary>
+        /// <param name="ftpServices">The FTP services to start and stop.</param>
         public FtpServerHost(IEnumerable<IFtpService> ftpServices)
         {
             _ftpServices = ftpServices.ToList();

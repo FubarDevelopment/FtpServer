@@ -25,7 +25,10 @@ namespace FubarDev.FtpServer.CommandHandlers
     /// </summary>
     public class MlstCommandHandler : FtpCommandHandler
     {
-        public static readonly ISet<string> KnownFacts = new HashSet<string> { "type", "size", "perm", "modify", "create" };
+        /// <summary>
+        /// The set of well-known facts.
+        /// </summary>
+        internal static readonly ISet<string> KnownFacts = new HashSet<string> { "type", "size", "perm", "modify", "create" };
 
         [CanBeNull]
         private readonly ILogger<MlstCommandHandler> _logger;

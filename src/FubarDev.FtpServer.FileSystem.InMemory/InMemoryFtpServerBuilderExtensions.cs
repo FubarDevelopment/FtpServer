@@ -1,4 +1,4 @@
-// <copyright file="FtpServerBuilderExtensions.cs" company="Fubar Development Junker">
+// <copyright file="InMemoryFtpServerBuilderExtensions.cs" company="Fubar Development Junker">
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
@@ -13,7 +13,7 @@ namespace FubarDev.FtpServer
     /// <summary>
     /// Extension methods for <see cref="IFtpServerBuilder"/>.
     /// </summary>
-    public static class FtpServerBuilderExtensions
+    public static class InMemoryFtpServerBuilderExtensions
     {
         /// <summary>
         /// Uses the in-memory file system API.

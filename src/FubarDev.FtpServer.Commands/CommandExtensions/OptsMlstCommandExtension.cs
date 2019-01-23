@@ -12,6 +12,9 @@ using JetBrains.Annotations;
 
 namespace FubarDev.FtpServer.CommandExtensions
 {
+    /// <summary>
+    /// <c>MLST</c> extension for the <c>OPTS</c> command.
+    /// </summary>
     public class OptsMlstCommandExtension : FtpCommandHandlerExtension
     {
         /// <summary>

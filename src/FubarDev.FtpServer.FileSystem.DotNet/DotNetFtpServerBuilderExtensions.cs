@@ -1,4 +1,4 @@
-// <copyright file="FtpServerBuilderExtensions.cs" company="Fubar Development Junker">
+// <copyright file="DotNetFtpServerBuilderExtensions.cs" company="Fubar Development Junker">
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
@@ -13,7 +13,7 @@ namespace FubarDev.FtpServer
     /// <summary>
     /// Extension methods for <see cref="IFtpServerBuilder"/>.
     /// </summary>
-    public static class FtpServerBuilderExtensions
+    public static class DotNetFtpServerBuilderExtensions
     {
         /// <summary>
         /// Uses the .NET file system API.

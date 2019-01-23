@@ -25,6 +25,10 @@ namespace FubarDev.FtpServer.FileSystem.InMemory
 
         private readonly Dictionary<string, InMemoryFileSystem> _authUserFileSystems;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="InMemoryFileSystemProvider"/> class.
+        /// </summary>
+        /// <param name="options">The provider options.</param>
         public InMemoryFileSystemProvider(IOptions<InMemoryFileSystemOptions> options)
         {
             _options = options.Value;
