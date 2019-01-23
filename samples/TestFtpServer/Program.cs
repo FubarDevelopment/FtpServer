@@ -3,6 +3,7 @@
 // </copyright>
 
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Security;
@@ -89,7 +90,7 @@ namespace TestFtpServer
                     {
                         "usage: ftpserver filesystem [ROOT-DIRECTORY]",
                     },
-                    Run = a => RunWithFileSystem(a.ToArray(), options),
+                    Run = a => RunWithFileSystemAsync(a.ToArray(), options).Wait(),
                 },
                 new Command("in-memory", "Use the in-memory file system access")
                 {
@@ -98,7 +99,7 @@ namespace TestFtpServer
                         "usage: ftpserver in-memory [OPTIONS]",
                         { "keep-anonymous", "Keep anonymous in-memory file sysytems", v => options.KeepAnonymousInMemoryFileSystem = v != null }
                     },
-                    Run = a => RunWithInMemoryFileSystem(options),
+                    Run = a => RunWithInMemoryFileSystemAsync(options).Wait(),
                 },
                 new CommandSet("google-drive")
                 {
@@ -109,7 +110,7 @@ namespace TestFtpServer
                             "usage: ftpserver google-drive user <CLIENT-SECRETS-FILE> <USERNAME>",
                             { "r|refresh", "Refresh the access token", v => options.RefreshToken = v != null },
                         },
-                        Run = a => RunWithGoogleDriveUser(a.ToArray(), options).Wait(),
+                        Run = a => RunWithGoogleDriveUserAsync(a.ToArray(), options).Wait(),
                     },
                     new Command("service", "Use a users Google Drive with a service account")
                     {
@@ -117,7 +118,7 @@ namespace TestFtpServer
                         {
                             "usage: ftpserver google-drive service <SERVICE-CREDENTIAL-FILE>",
                         },
-                        Run = a => RunWithGoogleDriveService(a.ToArray(), options),
+                        Run = a => RunWithGoogleDriveServiceAsync(a.ToArray(), options).Wait(),
                     },
                 },
             };
@@ -125,16 +126,16 @@ namespace TestFtpServer
             return optionSet.Run(args);
         }
 
-        private static void RunWithInMemoryFileSystem(TestFtpServerOptions options)
+        private static Task RunWithInMemoryFileSystemAsync(TestFtpServerOptions options)
         {
             options.Validate();
             var services = CreateServices(options)
                 .Configure<InMemoryFileSystemOptions>(opt => opt.KeepAnonymousFileSystem = options.KeepAnonymousInMemoryFileSystem)
                 .AddFtpServer(sb => Configure(sb, options).UseInMemoryFileSystem());
-            Run(services, options);
+            return RunAsync(services, options);
         }
 
-        private static void RunWithFileSystem(string[] args, TestFtpServerOptions options)
+        private static Task RunWithFileSystemAsync(string[] args, TestFtpServerOptions options)
         {
             options.Validate();
             var rootDir =
@@ -142,10 +143,10 @@ namespace TestFtpServer
             var services = CreateServices(options)
                 .Configure<DotNetFileSystemOptions>(opt => opt.RootPath = rootDir)
                 .AddFtpServer(sb => Configure(sb, options).UseDotNetFileSystem());
-            Run(services, options);
+            return RunAsync(services, options);
         }
 
-        private static async Task RunWithGoogleDriveUser(string[] args, TestFtpServerOptions options)
+        private static async Task RunWithGoogleDriveUserAsync(string[] args, TestFtpServerOptions options)
         {
             options.Validate();
             if (args.Length != 2)
@@ -173,10 +174,10 @@ namespace TestFtpServer
 
             var services = CreateServices(options)
                 .AddFtpServer(sb => Configure(sb, options).UseGoogleDrive(credential));
-            Run(services, options);
+            await RunAsync(services, options).ConfigureAwait(false);
         }
 
-        private static void RunWithGoogleDriveService(string[] args, TestFtpServerOptions options)
+        private static Task RunWithGoogleDriveServiceAsync(string[] args, TestFtpServerOptions options)
         {
             options.Validate();
             if (args.Length != 1)
@@ -191,10 +192,10 @@ namespace TestFtpServer
 
             var services = CreateServices(options)
                 .AddFtpServer(sb => Configure(sb, options).UseGoogleDrive(credential));
-            Run(services, options);
+            return RunAsync(services, options);
         }
 
-        private static void Run(IServiceCollection services, TestFtpServerOptions options)
+        private static async Task RunAsync(IServiceCollection services, TestFtpServerOptions options)
         {
             using (var serviceProvider = services.BuildServiceProvider())
             {
@@ -219,12 +220,20 @@ namespace TestFtpServer
                 try
                 {
                     // Start the FTP server
-                    ftpServer.Start();
+                    var ftpServices = serviceProvider.GetRequiredService<IEnumerable<IFtpService>>().ToList();
+                    foreach (var ftpService in ftpServices)
+                    {
+                        await ftpService.StartAsync(CancellationToken.None).ConfigureAwait(false);
+                    }
+
                     Console.WriteLine("Press ENTER/RETURN to close the test application.");
                     Console.ReadLine();
 
                     // Stop the FTP server
-                    ftpServer.Stop();
+                    foreach (var ftpService in ftpServices)
+                    {
+                        await ftpService.StopAsync(CancellationToken.None).ConfigureAwait(false);
+                    }
                 }
                 catch (Exception ex)
                 {

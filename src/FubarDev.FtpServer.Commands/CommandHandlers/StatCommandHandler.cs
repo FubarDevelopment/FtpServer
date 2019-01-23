@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 
 using DotNet.Globbing;
 
+using FubarDev.FtpServer.BackgroundTransfer;
 using FubarDev.FtpServer.ListFormatters;
 
 using JetBrains.Annotations;
@@ -25,15 +26,23 @@ namespace FubarDev.FtpServer.CommandHandlers
         [NotNull]
         private readonly IFtpServer _server;
 
+        [NotNull]
+        private readonly IBackgroundTransferWorker _backgroundTransferWorker;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="StatCommandHandler"/> class.
         /// </summary>
         /// <param name="connection">The connection to create this command handler for.</param>
         /// <param name="server">The FTP server.</param>
-        public StatCommandHandler([NotNull] IFtpConnection connection, [NotNull] IFtpServer server)
+        /// <param name="backgroundTransferWorker">The background transfer worker service.</param>
+        public StatCommandHandler(
+            [NotNull] IFtpConnection connection,
+            [NotNull] IFtpServer server,
+            [NotNull] IBackgroundTransferWorker backgroundTransferWorker)
             : base(connection, "STAT")
         {
             _server = server;
+            _backgroundTransferWorker = backgroundTransferWorker;
         }
 
         /// <inheritdoc/>
@@ -41,7 +50,7 @@ namespace FubarDev.FtpServer.CommandHandlers
         {
             if (string.IsNullOrEmpty(command.Argument))
             {
-                var taskStates = _server.GetBackgroundTaskStates();
+                var taskStates = _backgroundTransferWorker.GetStates();
                 var statusMessage = new StringBuilder();
                 statusMessage.AppendFormat("Server functional, {0} open connections", _server.Statistics.ActiveConnections);
                 if (taskStates.Count != 0)

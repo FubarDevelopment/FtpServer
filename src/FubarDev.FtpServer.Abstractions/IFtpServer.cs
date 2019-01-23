@@ -11,7 +11,7 @@ namespace FubarDev.FtpServer
     /// <summary>
     /// The interface that must be implemented by the FTP server
     /// </summary>
-    public interface IFtpServer : IBackgroundTransferHost
+    public interface IFtpServer
     {
         /// <summary>
         /// This event is raised when the connection is ready to be configured.
@@ -39,18 +39,5 @@ namespace FubarDev.FtpServer
         /// </summary>
         [NotNull]
         IFtpServerStatistics Statistics { get; }
-
-        /// <summary>
-        /// Starts the FTP server in the background.
-        /// </summary>
-        void Start();
-
-        /// <summary>
-        /// Stops the FTP server.
-        /// </summary>
-        /// <remarks>
-        /// The FTP server cannot be started again after it was stopped.
-        /// </remarks>
-        void Stop();
     }
 }

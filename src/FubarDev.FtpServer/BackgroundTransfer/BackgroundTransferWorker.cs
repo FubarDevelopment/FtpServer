@@ -17,14 +17,19 @@ using Microsoft.Extensions.Logging;
 
 namespace FubarDev.FtpServer.BackgroundTransfer
 {
-    internal class BackgroundTransferWorker : IDisposable
+    internal class BackgroundTransferWorker : IBackgroundTransferWorker, IFtpService, IDisposable
     {
         private readonly ManualResetEvent _event = new ManualResetEvent(false);
 
         [CanBeNull]
         private readonly ILogger _log;
 
-        private CancellationTokenSource _cancellationTokenSource;
+        private readonly CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
+
+        /// <summary>
+        /// Semaphore that gets released when the queue stopped.
+        /// </summary>
+        private readonly SemaphoreSlim _stoppedSemaphore = new SemaphoreSlim(0, 1);
 
         private bool _disposedValue;
 
@@ -34,28 +39,29 @@ namespace FubarDev.FtpServer.BackgroundTransfer
             Queue = new BackgroundTransferQueue(_event);
         }
 
-        public BackgroundTransferQueue Queue { get; }
+        private BackgroundTransferQueue Queue { get; }
 
-        public bool HasData { get; private set; }
+        private BackgroundTransferEntry CurrentEntry { get; set; }
 
-        internal BackgroundTransferEntry CurrentEntry { get; private set; }
-
-        public Task Start(CancellationTokenSource cts)
+        public Task StartAsync(CancellationToken cancellationToken)
         {
-            if (_cancellationTokenSource != null)
-            {
-                throw new InvalidOperationException("Background transfer worker already started");
-            }
-
-            _cancellationTokenSource = cts;
-            return Task.Run(() => ProcessQueue(cts.Token), cts.Token);
+            _log?.LogTrace("Background transfer worker starting");
+            Task.Run(() => ProcessQueue(_cancellationTokenSource.Token), _cancellationTokenSource.Token);
+            return Task.CompletedTask;
         }
 
-        public void Enqueue(BackgroundTransferEntry entry)
+        public Task StopAsync(CancellationToken cancellationToken)
+        {
+            _cancellationTokenSource.Cancel(true);
+            _log?.LogTrace("Background transfer worker stopping");
+            return _stoppedSemaphore.WaitAsync(cancellationToken);
+        }
+
+        public void Enqueue(IBackgroundTransfer backgroundTransfer)
         {
             lock (Queue)
             {
-                Queue.Enqueue(entry);
+                Queue.Enqueue(new BackgroundTransferEntry(backgroundTransfer));
             }
         }
 
@@ -117,7 +123,7 @@ namespace FubarDev.FtpServer.BackgroundTransfer
                 _event,
             };
 
-            _log?.LogDebug("Starting background transfer worker.");
+            _log?.LogDebug("Background transfer worker started.");
             try
             {
                 while (!cancellationToken.IsCancellationRequested)
@@ -128,19 +134,20 @@ namespace FubarDev.FtpServer.BackgroundTransfer
                         break;
                     }
 
-                    HasData = true;
-
-                    try
+                    BackgroundTransferEntry backgroundTransferEntry;
+                    while ((backgroundTransferEntry = GetNextEntry()) != null)
                     {
-                        BackgroundTransferEntry backgroundTransferEntry;
-                        while ((backgroundTransferEntry = GetNextEntry()) != null)
+                        using (_log?.BeginScope(
+                            new Dictionary<string, object>
+                            {
+                                ["TransferId"] = backgroundTransferEntry.BackgroundTransfer.TransferId,
+                            }))
                         {
-                            var log = backgroundTransferEntry.Log;
                             var backgroundTransfer = backgroundTransferEntry.BackgroundTransfer;
                             try
                             {
                                 var bt = backgroundTransfer;
-                                log?.LogInformation("Starting background transfer {0}", bt.TransferId);
+                                _log?.LogInformation("Starting background transfer {0}", bt.TransferId);
                                 backgroundTransferEntry.Status = BackgroundTransferStatus.Transferring;
 
                                 // ReSharper disable once AccessToModifiedClosure
@@ -151,14 +158,17 @@ namespace FubarDev.FtpServer.BackgroundTransfer
                                         t =>
                                         {
                                             // Nothing to do
-                                            log?.LogWarning("Background transfer {0} cancelled", bt.TransferId);
+                                            _log?.LogWarning("Background transfer {0} cancelled", bt.TransferId);
                                         },
                                         TaskContinuationOptions.OnlyOnCanceled);
                                 var faultedTask = task
                                     .ContinueWith(
                                         t =>
                                         {
-                                            log?.LogError(t.Exception, "Background transfer {0} faulted", bt.TransferId);
+                                            _log?.LogError(
+                                                t.Exception,
+                                                "Background transfer {0} faulted",
+                                                bt.TransferId);
                                         },
                                         TaskContinuationOptions.OnlyOnFaulted);
                                 var completedTask = task
@@ -166,7 +176,7 @@ namespace FubarDev.FtpServer.BackgroundTransfer
                                         t =>
                                         {
                                             // Nothing to do
-                                            log?.LogInformation("Completed background transfer {0}", bt.TransferId);
+                                            _log?.LogInformation("Completed background transfer {0}", bt.TransferId);
                                         },
                                         TaskContinuationOptions.NotOnCanceled);
 
@@ -174,37 +184,39 @@ namespace FubarDev.FtpServer.BackgroundTransfer
                                 {
                                     Task.WaitAll(cancelledTask, faultedTask, completedTask);
                                 }
-                                catch (AggregateException ex) when (ex.InnerExceptions.All(x => x is TaskCanceledException))
+                                catch (AggregateException ex) when (ex.InnerExceptions.All(
+                                    x => x is TaskCanceledException))
                                 {
                                     // Ignore AggregateException when it only contains TaskCancelledException
                                 }
 
-                                log?.LogTrace("Background transfer {0} finished", bt.TransferId);
+                                _log?.LogTrace("Background transfer {0} finished", bt.TransferId);
                             }
                             catch (Exception ex)
                             {
-                                log?.LogError(ex, "Error during execution of background transfer {0}", backgroundTransfer.TransferId);
+                                _log?.LogError(
+                                    ex,
+                                    "Error during execution of background transfer {0}",
+                                    backgroundTransfer.TransferId);
                             }
                             finally
                             {
                                 backgroundTransfer.Dispose();
                             }
-
-                            backgroundTransferEntry.Status = BackgroundTransferStatus.Finished;
-                            CurrentEntry = null;
                         }
-                    }
-                    finally
-                    {
-                        HasData = false;
+
+                        backgroundTransferEntry.Status = BackgroundTransferStatus.Finished;
+                        CurrentEntry = null;
                     }
                 }
+
                 _log?.LogInformation("Cancellation requested - stopping background transfer worker.");
             }
             finally
             {
                 _log?.LogDebug("Background transfer worker stopped.");
                 Queue.Dispose();
+                _stoppedSemaphore.Release();
             }
         }
 

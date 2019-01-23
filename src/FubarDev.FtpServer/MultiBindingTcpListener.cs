@@ -10,6 +10,10 @@ using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
 
+using JetBrains.Annotations;
+
+using Microsoft.Extensions.Logging;
+
 namespace FubarDev.FtpServer
 {
     /// <summary>
@@ -19,6 +23,8 @@ namespace FubarDev.FtpServer
     {
         private readonly string _address;
         private readonly int _port;
+        [CanBeNull]
+        private readonly ILogger _logger;
         private readonly IList<TcpListener> _listeners = new List<TcpListener>();
         private readonly IList<Task<TcpClient>> _acceptors = new List<Task<TcpClient>>();
 
@@ -27,7 +33,8 @@ namespace FubarDev.FtpServer
         /// </summary>
         /// <param name="address">The address/host name to bind to.</param>
         /// <param name="port">The listener port.</param>
-        public MultiBindingTcpListener(string address, int port)
+        /// <param name="logger">The logger.</param>
+        public MultiBindingTcpListener(string address, int port, [CanBeNull] ILogger logger)
         {
             if (port < 1 || port > 65535)
             {
@@ -36,6 +43,7 @@ namespace FubarDev.FtpServer
 
             _address = address;
             _port = port;
+            _logger = logger;
         }
 
         /// <summary>
@@ -49,6 +57,8 @@ namespace FubarDev.FtpServer
         /// <returns>the task.</returns>
         public async Task StartAsync()
         {
+            _logger?.LogDebug("Server configured for listening on {address}:{port}", _address, _port);
+
             List<IPAddress> addresses;
             if (string.IsNullOrEmpty(_address) || _address == IPAddress.Any.ToString())
             {
@@ -151,6 +161,8 @@ namespace FubarDev.FtpServer
                 {
                     selectedPort = ((IPEndPoint)listener.LocalEndpoint).Port;
                 }
+
+                _logger?.LogInformation("Started listening on {address}:{port}", address, selectedPort);
 
                 _listeners.Add(listener);
             }

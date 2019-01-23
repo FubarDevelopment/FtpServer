@@ -40,6 +40,11 @@ namespace Microsoft.Extensions.DependencyInjection
 
             services.AddScoped<IFtpConnection, FtpConnection>();
 
+            services.AddSingleton<IBackgroundTransferWorker, BackgroundTransferWorker>();
+
+            services.AddSingleton(sp => (IFtpService)sp.GetRequiredService<IFtpServer>());
+            services.AddSingleton(sp => (IFtpService)sp.GetRequiredService<IBackgroundTransferWorker>());
+
             services.Scan(
                 sel => sel.FromAssemblyOf<PassCommandHandler>()
                     .AddClasses(filter => filter.AssignableTo<IFtpCommandHandler>()).As<IFtpCommandHandler>().WithScopedLifetime()

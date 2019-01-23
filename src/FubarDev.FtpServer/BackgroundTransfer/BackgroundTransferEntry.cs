@@ -1,4 +1,4 @@
-﻿//-----------------------------------------------------------------------
+//-----------------------------------------------------------------------
 // <copyright file="BackgroundTransferEntry.cs" company="Fubar Development Junker">
 //     Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
@@ -7,8 +7,6 @@
 
 using JetBrains.Annotations;
 
-using Microsoft.Extensions.Logging;
-
 namespace FubarDev.FtpServer.BackgroundTransfer
 {
     internal class BackgroundTransferEntry
@@ -16,18 +14,14 @@ namespace FubarDev.FtpServer.BackgroundTransfer
         private readonly object _sync = new object();
         private long? _transferred;
 
-        public BackgroundTransferEntry([NotNull] IBackgroundTransfer backgroundTransfer, [CanBeNull] ILogger log)
+        public BackgroundTransferEntry([NotNull] IBackgroundTransfer backgroundTransfer)
         {
             BackgroundTransfer = backgroundTransfer;
-            Log = log;
             Status = BackgroundTransferStatus.Enqueued;
         }
 
         [NotNull]
         public IBackgroundTransfer BackgroundTransfer { get; }
-
-        [CanBeNull]
-        public ILogger Log { get; }
 
         public BackgroundTransferStatus Status { get; set; }
 
