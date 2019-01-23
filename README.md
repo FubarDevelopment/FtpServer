@@ -13,7 +13,7 @@ The library is released under the [![MIT license](https://img.shields.io/github/
 
 ## Compilation
 
-* Visual Studio 2017 / C# 7.2
+* Visual Studio 2017 / C# 7.3
 
 ## Using
 
@@ -28,6 +28,7 @@ The library is released under the [![MIT license](https://img.shields.io/github/
 | `FD.FS.Abstractions`: Basic types				| [![FubarDev.FtpServer.Abstractions](https://img.shields.io/nuget/vpre/FubarDev.FtpServer.Abstractions.svg)](https://www.nuget.org/packages/FubarDev.FtpServer.Abstractions) |
 | `FD.FS.FileSystem.DotNet`: `System.IO`-based file system	| [![FubarDev.FtpServer.FileSystem.DotNet](https://img.shields.io/nuget/vpre/FubarDev.FtpServer.FileSystem.DotNet.svg)](https://www.nuget.org/packages/FubarDev.FtpServer.FileSystem.DotNet) |
 | `FD.FS.FileSystem.GoogleDrive`: Google Drive as file system	| [![FubarDev.FtpServer.FileSystem.GoogleDrive](https://img.shields.io/nuget/vpre/FubarDev.FtpServer.FileSystem.GoogleDrive.svg)](https://www.nuget.org/packages/FubarDev.FtpServer.FileSystem.GoogleDrive) |
+| `FD.FS.FileSystem.InMemory`: In-memory file system	| [![FubarDev.FtpServer.FileSystem.InMemory](https://img.shields.io/nuget/vpre/FubarDev.FtpServer.FileSystem.InMemory.svg)](https://www.nuget.org/packages/FubarDev.FtpServer.FileSystem.InMemory) |
 
 # Example FTP server
 

@@ -45,16 +45,16 @@ namespace QuickStart
                 NLog.LogManager.LoadConfiguration("nlog.config");
 
                 // Initialize the FTP server
-                var ftpServer = serviceProvider.GetRequiredService<IFtpServer>();
+                var ftpServerHost = serviceProvider.GetRequiredService<IFtpServerHost>();
 
                 // Start the FTP server
-                ftpServer.Start();
+                ftpServerHost.StartAsync().Wait();
 
                 Console.WriteLine("Press ENTER/RETURN to close the test application.");
                 Console.ReadLine();
 
                 // Stop the FTP server
-                ftpServer.Stop();
+                ftpServerHost.StopAsync().Wait();
             }
         }
     }

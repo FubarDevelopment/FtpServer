@@ -24,3 +24,7 @@
     href: xref:custom-file-system
   - name: Custom Authentication
     href: xref:custom-authentication
+- name: Guides
+  items:
+  - name: Upgrade to 3.0
+    href: xref:upgrade-to-3.0
