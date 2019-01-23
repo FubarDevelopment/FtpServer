@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Interface IFileSystemClassFactory
    | FTP Server documentation ">
-    <meta name="generator" content="docfx 2.36.1.0">
+    <meta name="generator" content="docfx 2.40.7.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -96,19 +96,19 @@
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FileSystem_IFileSystemClassFactory_Create_System_String_System_Boolean_.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FileSystem.IFileSystemClassFactory.Create(System.String%2CSystem.Boolean)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FileSystem_IFileSystemClassFactory_Create_FubarDev_FtpServer_IAccountInformation_.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FileSystem.IFileSystemClassFactory.Create(FubarDev.FtpServer.IAccountInformation)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/2.0.0/src/FubarDev.FtpServer.Abstractions/FileSystem/IFileSystemClassFactory.cs/#L26">View Source</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/blob/master/src/FubarDev.FtpServer.Abstractions/FileSystem/IFileSystemClassFactory.cs/#L29">View Source</a>
   </span>
   <a id="FubarDev_FtpServer_FileSystem_IFileSystemClassFactory_Create_" data-uid="FubarDev.FtpServer.FileSystem.IFileSystemClassFactory.Create*"></a>
-  <h4 id="FubarDev_FtpServer_FileSystem_IFileSystemClassFactory_Create_System_String_System_Boolean_" data-uid="FubarDev.FtpServer.FileSystem.IFileSystemClassFactory.Create(System.String,System.Boolean)">Create(String, Boolean)</h4>
-  <div class="markdown level1 summary"><p>Creates a <a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixFileSystem.html">IUnixFileSystem</a> implementation for a given <code data-dev-comment-type="paramref" class="paramref">userId</code>.</p>
+  <h4 id="FubarDev_FtpServer_FileSystem_IFileSystemClassFactory_Create_FubarDev_FtpServer_IAccountInformation_" data-uid="FubarDev.FtpServer.FileSystem.IFileSystemClassFactory.Create(FubarDev.FtpServer.IAccountInformation)">Create(IAccountInformation)</h4>
+  <div class="markdown level1 summary"><p>Creates a <a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixFileSystem.html">IUnixFileSystem</a> implementation for a given <code data-dev-comment-type="paramref" class="paramref">accountInformation</code>.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">Task&lt;IUnixFileSystem&gt; Create(string userId, bool isAnonymous)</code></pre>
+    <pre><code class="lang-csharp hljs">Task&lt;IUnixFileSystem&gt; Create([NotNull] IAccountInformation accountInformation)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -121,15 +121,9 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
-        <td><span class="parametername">userId</span></td>
-        <td><p>The user ID to create the <a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixFileSystem.html">IUnixFileSystem</a> for.</p>
-</td>
-      </tr>
-      <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
-        <td><span class="parametername">isAnonymous</span></td>
-        <td><p>Specify whether we have an anonymous login.</p>
+        <td><a class="xref" href="FubarDev.FtpServer.IAccountInformation.html">IAccountInformation</a></td>
+        <td><span class="parametername">accountInformation</span></td>
+        <td><p>The FTP account to create the <a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixFileSystem.html">IUnixFileSystem</a> for.</p>
 </td>
       </tr>
     </tbody>
@@ -144,14 +138,14 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">Task</span>&lt;<a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixFileSystem.html">IUnixFileSystem</a>&gt;</td>
-        <td><p>The new <a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixFileSystem.html">IUnixFileSystem</a> for the <code data-dev-comment-type="paramref" class="paramref">userId</code>.</p>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixFileSystem.html">IUnixFileSystem</a>&gt;</td>
+        <td><p>The new <a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixFileSystem.html">IUnixFileSystem</a> for the <code data-dev-comment-type="paramref" class="paramref">accountInformation</code>.</p>
 </td>
       </tr>
     </tbody>
   </table>
-  <h5 id="FubarDev_FtpServer_FileSystem_IFileSystemClassFactory_Create_System_String_System_Boolean__remarks">Remarks</h5>
-  <div class="markdown level1 remarks"><p>When the login is anonymous, the <code data-dev-comment-type="paramref" class="paramref">userId</code> is the given password.</p>
+  <h5 id="FubarDev_FtpServer_FileSystem_IFileSystemClassFactory_Create_FubarDev_FtpServer_IAccountInformation__remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>When the login is anonymous, the <a class="xref" href="FubarDev.FtpServer.IAccountInformation.html#FubarDev_FtpServer_IAccountInformation_User">User</a> must be of type <a class="xref" href="FubarDev.FtpServer.AccountManagement.IAnonymousFtpUser.html">IAnonymousFtpUser</a>.</p>
 </div>
 </article>
           </div>
@@ -164,7 +158,7 @@
                     <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FileSystem_IFileSystemClassFactory.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FileSystem.IFileSystemClassFactory%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/2.0.0/src/FubarDev.FtpServer.Abstractions/FileSystem/IFileSystemClassFactory.cs/#L15" class="contribution-link">View Source</a>
+                    <a href="https://github.com/FubarDevelopment/FtpServer/blob/master/src/FubarDev.FtpServer.Abstractions/FileSystem/IFileSystemClassFactory.cs/#L19" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

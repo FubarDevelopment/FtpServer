@@ -1,0 +1,207 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Upgrade from 2.x to 3.0 | FTP Server documentation </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Upgrade from 2.x to 3.0 | FTP Server documentation ">
+    <meta name="generator" content="docfx 2.40.7.0">
+    
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    <meta property="docfx:rel" content="../">
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div class="container body-content">
+        
+        <div id="search-results">
+          <div class="search-list"></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination"></ul>
+        </div>
+      </div>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="upgrade-to-3.0">
+
+
+<ul>
+<li><a href="#overview">Overview</a>
+<ul>
+<li><a href="#file-system-changes">File system changes</a></li>
+<li><a href="#membership-provider-changes">Membership provider changes</a></li>
+<li><a href="#ftp-command-extensions-changes">FTP command extensions changes</a></li>
+<li><a href="#connection-data-changes">Connection data changes</a></li>
+<li><a href="#ftp-command-collection-changes">FTP command collection changes</a></li>
+</ul>
+</li>
+<li><a href="#changelog">Changelog</a>
+<ul>
+<li><a href="#whats-new">What's new?</a></li>
+<li><a href="#whats-changed">What's changed?</a></li>
+<li><a href="#whats-fixed">What's fixed?</a></li>
+</ul>
+</li>
+<li><a href="#a-look-into-the-future">A look into the future</a></li>
+</ul>
+<h1 id="overview">Overview</h1>
+<p>After the upgrade 3.0, you'll see that the <code>IFtpServer.Start</code> and <code>IFtpServer.Stop</code> functions are
+deprecated. Please query the <a class="xref" href="../api/FubarDev.FtpServer.IFtpServerHost.html"><code>IFtpServerHost</code></a> instead and
+use the <a class="xref" href="../api/FubarDev.FtpServer.IFtpServerHost.html#FubarDev_FtpServer_IFtpServerHost_StartAsync_System_Threading_CancellationToken_"><code>StartAsync</code></a>
+and <a class="xref" href="../api/FubarDev.FtpServer.IFtpServerHost.html#FubarDev_FtpServer_IFtpServerHost_StopAsync_System_Threading_CancellationToken_"><code>StopAsync</code></a> functions instead.</p>
+<p>You will notice breaking changes in the following areas:</p>
+<ul>
+<li>File system</li>
+<li>Membership provider</li>
+<li>FTP command extensions</li>
+<li>Connection data</li>
+<li>FTP command collection</li>
+</ul>
+<h2 id="file-system-changes">File system changes</h2>
+<p>The only change for file systems is that
+<a class="xref" href="../api/FubarDev.FtpServer.FileSystem.IFileSystemClassFactory.html#FubarDev_FtpServer_FileSystem_IFileSystemClassFactory_Create_FubarDev_FtpServer_IAccountInformation_"><code>IFileSystemClassFactory.Create</code></a>
+now requires an <a class="xref" href="../api/FubarDev.FtpServer.IAccountInformation.html"><code>IAccountInformation</code></a> parameter. This parameter provides more
+information in case a file system implementation needs it.</p>
+<h2 id="membership-provider-changes">Membership provider changes</h2>
+<p>The membership provider is now asynchronous which means that the <code>ValidateUser</code> function was
+renamed to <a class="xref" href="../api/FubarDev.FtpServer.AccountManagement.IMembershipProvider.html#FubarDev_FtpServer_AccountManagement_IMembershipProvider_ValidateUserAsync_System_String_System_String_"><code>ValidateUserAsync</code></a>.
+Everything else is the same.</p>
+<h2 id="ftp-command-extensions-changes">FTP command extensions changes</h2>
+<p>The command extensions cannot be returned by <code>IFtpCommandHandler.GetExtensions()</code> anymore. The extensions were moved to
+their own file and the default extensions are automatically registered as service.</p>
+<h2 id="connection-data-changes">Connection data changes</h2>
+<p>The connection datas <code>IsAnonymous</code> property is obsolete. An anonymous user is now detected by testing if
+the <a class="xref" href="../api/FubarDev.FtpServer.FtpConnectionData.html#FubarDev_FtpServer_FtpConnectionData_User"><code>FtpConnectionData.User</code></a>
+implements <a class="xref" href="../api/FubarDev.FtpServer.AccountManagement.IAnonymousFtpUser.html"><code>IAnonymousFtpUser</code></a>.</p>
+<h2 id="ftp-command-collection-changes">FTP command collection changes</h2>
+<p>We're now using <code>ReadOnlySpan</code> for both <a class="xref" href="../api/FubarDev.FtpServer.TelnetInputParser-1.html"><code>TelnetInputParser</code></a>
+and <a class="xref" href="../api/FubarDev.FtpServer.FtpCommandCollector.html"><code>FtpCommandCollector</code></a>.</p>
+<h1 id="changelog">Changelog</h1>
+<h2 id="whats-new">What's new?</h2>
+<ul>
+<li>In-memory file system</li>
+<li>Passive data connection port range (contribution from 40three GmbH)</li>
+<li>New <a class="xref" href="../api/FubarDev.FtpServer.IFtpServerHost.html"><code>IFtpServerHost</code></a> interface</li>
+<li>New <a class="xref" href="../api/FubarDev.FtpServer.IFtpService.html"><code>IFtpService</code></a> interface which allows easy integration into ASP.NET Core</li>
+<li>New <a class="xref" href="../api/FubarDev.FtpServer.IAccountInformation.html"><code>IAccountInformation</code></a> interface</li>
+<li>New <a class="xref" href="../api/FubarDev.FtpServer.AccountManagement.IAnonymousFtpUser.html"><code>IAnonymousFtpUser</code></a> interface</li>
+</ul>
+<h2 id="whats-changed">What's changed?</h2>
+<ul>
+<li>Google drive upload without background uploader</li>
+<li>BREAKING: The FTP commands are now registered as singletons to improve performance</li>
+<li>BREAKING: Usage of <code>ReadOnlySpan</code> in the FTP command collector</li>
+<li>BREAKING: <a class="xref" href="../api/FubarDev.FtpServer.FileSystem.IFileSystemClassFactory.html#FubarDev_FtpServer_FileSystem_IFileSystemClassFactory_Create_FubarDev_FtpServer_IAccountInformation_"><code>IFileSystemClassFactory.Create</code></a>
+takes an <a class="xref" href="../api/FubarDev.FtpServer.IAccountInformation.html"><code>IAccountInformation</code></a></li>
+<li>BREAKING: The <a class="xref" href="../api/FubarDev.FtpServer.AccountManagement.IMembershipProvider.html"><code>IMembershipProvider</code></a> is now asynchronous</li>
+<li>BREAKING: <code>FtpConnectionData.IsAnonymous</code> is obsolete, the anonymous user is now of type <a class="xref" href="../api/FubarDev.FtpServer.AccountManagement.IAnonymousFtpUser.html"><code>IAnonymousFtpUser</code></a></li>
+<li>The <code>IFtpCommandHandler.GetExtensions()</code> is now deprecated as all extensions that were previously returned here have
+their own implementation now</li>
+</ul>
+<h2 id="whats-fixed">What's fixed?</h2>
+<ul>
+<li>AUTH TLS fails gracefully when no SSL certificate is configured</li>
+<li><code>SITE BLST</code> works again</li>
+</ul>
+<h1 id="a-look-into-the-future">A look into the future</h1>
+<p>The 4.x version will drop support for .NET Standard 1.3 and - eventually - .NET 4.6.1 as
+the FTP Server will be reimplemented as <code>ConnectionHandler</code> which will result into the following
+improvements:</p>
+<ul>
+<li>Easy hosting in an ASP.NET Core application</li>
+<li>Usage of pipelines when possible (<code>AUTH TLS</code> might cause problems)</li>
+<li>Using the ASP.NET Core connection state management</li>
+</ul>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/FubarDevelopment/FtpServer/blob/master/docfx_project/articles/upgrade-3.0.md/#L1" class="contribution-link">Improve this Doc</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            <table border='0'><tr><td><span>Copyright © 2018 Fubar Development Junker<br>Generated by <strong>DocFX</strong></span></td><td><a rel='license' href='http://creativecommons.org/licenses/by-sa/4.0/'><img alt='Creative Commons License' style='border-width:0' src='https://i.creativecommons.org/l/by-sa/4.0/88x31.png'></a><br><span xmlns:dct='http://purl.org/dc/terms/' property='dct:title'>FluentMigrator Documentation</span> by <a xmlns:cc='http://creativecommons.org/ns#' href='https://fluentmigrator.github.io' property='cc:attributionName' rel='cc:attributionURL'>FluentMigrator Project</a> is licensed under a <a rel='license' href='http://creativecommons.org/licenses/by-sa/4.0/'>Creative Commons Attribution-ShareAlike 4.0 International License</a>.</td></tr></table>
+            
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>

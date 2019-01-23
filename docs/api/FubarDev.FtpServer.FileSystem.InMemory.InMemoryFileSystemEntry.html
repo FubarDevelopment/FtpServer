@@ -1,0 +1,667 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Class InMemoryFileSystemEntry
+   | FTP Server documentation </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Class InMemoryFileSystemEntry
+   | FTP Server documentation ">
+    <meta name="generator" content="docfx 2.40.7.0">
+    
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    <meta property="docfx:rel" content="../">
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div class="container body-content">
+        
+        <div id="search-results">
+          <div class="search-list"></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination"></ul>
+        </div>
+      </div>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="FubarDev.FtpServer.FileSystem.InMemory.InMemoryFileSystemEntry">
+  
+  
+  <h1 id="FubarDev_FtpServer_FileSystem_InMemory_InMemoryFileSystemEntry" data-uid="FubarDev.FtpServer.FileSystem.InMemory.InMemoryFileSystemEntry" class="text-break">Class InMemoryFileSystemEntry
+  </h1>
+  <div class="markdown level0 summary"><p>The base class for all in-memory file system entries.</p>
+</div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="inheritance">
+    <h5>Inheritance</h5>
+    <div class="level0"><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object">Object</a></div>
+    <div class="level1"><span class="xref">InMemoryFileSystemEntry</span></div>
+      <div class="level2"><a class="xref" href="FubarDev.FtpServer.FileSystem.InMemory.InMemoryDirectoryEntry.html">InMemoryDirectoryEntry</a></div>
+      <div class="level2"><a class="xref" href="FubarDev.FtpServer.FileSystem.InMemory.InMemoryFileEntry.html">InMemoryFileEntry</a></div>
+  </div>
+  <div classs="implements">
+    <h5>Implements</h5>
+    <div><a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixFileSystemEntry.html">IUnixFileSystemEntry</a></div>
+    <div><a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixOwner.html">IUnixOwner</a></div>
+  </div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.equals#System_Object_Equals_System_Object_">Object.Equals(Object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.equals#System_Object_Equals_System_Object_System_Object_">Object.Equals(Object, Object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.gethashcode#System_Object_GetHashCode">Object.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.gettype#System_Object_GetType">Object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.memberwiseclone#System_Object_MemberwiseClone">Object.MemberwiseClone()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.referenceequals#System_Object_ReferenceEquals_System_Object_System_Object_">Object.ReferenceEquals(Object, Object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.tostring#System_Object_ToString">Object.ToString()</a>
+    </div>
+  </div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="FubarDev.FtpServer.FileSystem.InMemory.html">FubarDev.FtpServer.FileSystem.InMemory</a></h6>
+  <h6><strong>Assembly</strong>: FubarDev.FtpServer.FileSystem.InMemory.dll</h6>
+  <h5 id="FubarDev_FtpServer_FileSystem_InMemory_InMemoryFileSystemEntry_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public abstract class InMemoryFileSystemEntry : IUnixFileSystemEntry, IUnixOwner</code></pre>
+  </div>
+  <h3 id="constructors">Constructors
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FileSystem_InMemory_InMemoryFileSystemEntry__ctor_FubarDev_FtpServer_FileSystem_IUnixFileSystem_FubarDev_FtpServer_FileSystem_InMemory_InMemoryDirectoryEntry_System_String_FubarDev_FtpServer_FileSystem_IUnixPermissions_.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FileSystem.InMemory.InMemoryFileSystemEntry.%23ctor(FubarDev.FtpServer.FileSystem.IUnixFileSystem%2CFubarDev.FtpServer.FileSystem.InMemory.InMemoryDirectoryEntry%2CSystem.String%2CFubarDev.FtpServer.FileSystem.IUnixPermissions)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/FubarDevelopment/FtpServer/blob/master/src/FubarDev.FtpServer.FileSystem.InMemory/InMemoryFileSystemEntry.cs/#L25">View Source</a>
+  </span>
+  <a id="FubarDev_FtpServer_FileSystem_InMemory_InMemoryFileSystemEntry__ctor_" data-uid="FubarDev.FtpServer.FileSystem.InMemory.InMemoryFileSystemEntry.#ctor*"></a>
+  <h4 id="FubarDev_FtpServer_FileSystem_InMemory_InMemoryFileSystemEntry__ctor_FubarDev_FtpServer_FileSystem_IUnixFileSystem_FubarDev_FtpServer_FileSystem_InMemory_InMemoryDirectoryEntry_System_String_FubarDev_FtpServer_FileSystem_IUnixPermissions_" data-uid="FubarDev.FtpServer.FileSystem.InMemory.InMemoryFileSystemEntry.#ctor(FubarDev.FtpServer.FileSystem.IUnixFileSystem,FubarDev.FtpServer.FileSystem.InMemory.InMemoryDirectoryEntry,System.String,FubarDev.FtpServer.FileSystem.IUnixPermissions)">InMemoryFileSystemEntry(IUnixFileSystem, InMemoryDirectoryEntry, String, IUnixPermissions)</h4>
+  <div class="markdown level1 summary"><p>Initializes a new instance of the <a class="xref" href="FubarDev.FtpServer.FileSystem.InMemory.InMemoryFileSystemEntry.html">InMemoryFileSystemEntry</a> class.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected InMemoryFileSystemEntry(IUnixFileSystem fileSystem, InMemoryDirectoryEntry parent, string name, IUnixPermissions permissions)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixFileSystem.html">IUnixFileSystem</a></td>
+        <td><span class="parametername">fileSystem</span></td>
+        <td><p>The file system this entry belongs to.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="FubarDev.FtpServer.FileSystem.InMemory.InMemoryDirectoryEntry.html">InMemoryDirectoryEntry</a></td>
+        <td><span class="parametername">parent</span></td>
+        <td><p>The parent entry.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><span class="parametername">name</span></td>
+        <td><p>The name of this entry.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixPermissions.html">IUnixPermissions</a></td>
+        <td><span class="parametername">permissions</span></td>
+        <td><p>The permissions of this entry.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="properties">Properties
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FileSystem_InMemory_InMemoryFileSystemEntry_CreatedTime.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FileSystem.InMemory.InMemoryFileSystemEntry.CreatedTime%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/FubarDevelopment/FtpServer/blob/master/src/FubarDev.FtpServer.FileSystem.InMemory/InMemoryFileSystemEntry.cs/#L56">View Source</a>
+  </span>
+  <a id="FubarDev_FtpServer_FileSystem_InMemory_InMemoryFileSystemEntry_CreatedTime_" data-uid="FubarDev.FtpServer.FileSystem.InMemory.InMemoryFileSystemEntry.CreatedTime*"></a>
+  <h4 id="FubarDev_FtpServer_FileSystem_InMemory_InMemoryFileSystemEntry_CreatedTime" data-uid="FubarDev.FtpServer.FileSystem.InMemory.InMemoryFileSystemEntry.CreatedTime">CreatedTime</h4>
+  <div class="markdown level1 summary"><p>Gets the time of creation.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public DateTimeOffset? CreatedTime { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.nullable-1">Nullable</a>&lt;<a class="xref" href="https://docs.microsoft.com/dotnet/api/system.datetimeoffset">DateTimeOffset</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FileSystem_InMemory_InMemoryFileSystemEntry_FileSystem.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FileSystem.InMemory.InMemoryFileSystemEntry.FileSystem%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/FubarDevelopment/FtpServer/blob/master/src/FubarDev.FtpServer.FileSystem.InMemory/InMemoryFileSystemEntry.cs/#L62">View Source</a>
+  </span>
+  <a id="FubarDev_FtpServer_FileSystem_InMemory_InMemoryFileSystemEntry_FileSystem_" data-uid="FubarDev.FtpServer.FileSystem.InMemory.InMemoryFileSystemEntry.FileSystem*"></a>
+  <h4 id="FubarDev_FtpServer_FileSystem_InMemory_InMemoryFileSystemEntry_FileSystem" data-uid="FubarDev.FtpServer.FileSystem.InMemory.InMemoryFileSystemEntry.FileSystem">FileSystem</h4>
+  <div class="markdown level1 summary"><p>Gets the file system this entry belongs to.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public IUnixFileSystem FileSystem { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixFileSystem.html">IUnixFileSystem</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FileSystem_InMemory_InMemoryFileSystemEntry_Group.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FileSystem.InMemory.InMemoryFileSystemEntry.Group%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/FubarDevelopment/FtpServer/blob/master/src/FubarDev.FtpServer.FileSystem.InMemory/InMemoryFileSystemEntry.cs/#L47">View Source</a>
+  </span>
+  <a id="FubarDev_FtpServer_FileSystem_InMemory_InMemoryFileSystemEntry_Group_" data-uid="FubarDev.FtpServer.FileSystem.InMemory.InMemoryFileSystemEntry.Group*"></a>
+  <h4 id="FubarDev_FtpServer_FileSystem_InMemory_InMemoryFileSystemEntry_Group" data-uid="FubarDev.FtpServer.FileSystem.InMemory.InMemoryFileSystemEntry.Group">Group</h4>
+  <div class="markdown level1 summary"><p>Gets the group.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string Group { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FileSystem_InMemory_InMemoryFileSystemEntry_LastWriteTime.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FileSystem.InMemory.InMemoryFileSystemEntry.LastWriteTime%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/FubarDevelopment/FtpServer/blob/master/src/FubarDev.FtpServer.FileSystem.InMemory/InMemoryFileSystemEntry.cs/#L53">View Source</a>
+  </span>
+  <a id="FubarDev_FtpServer_FileSystem_InMemory_InMemoryFileSystemEntry_LastWriteTime_" data-uid="FubarDev.FtpServer.FileSystem.InMemory.InMemoryFileSystemEntry.LastWriteTime*"></a>
+  <h4 id="FubarDev_FtpServer_FileSystem_InMemory_InMemoryFileSystemEntry_LastWriteTime" data-uid="FubarDev.FtpServer.FileSystem.InMemory.InMemoryFileSystemEntry.LastWriteTime">LastWriteTime</h4>
+  <div class="markdown level1 summary"><p>Gets the last write time.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public DateTimeOffset? LastWriteTime { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.nullable-1">Nullable</a>&lt;<a class="xref" href="https://docs.microsoft.com/dotnet/api/system.datetimeoffset">DateTimeOffset</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FileSystem_InMemory_InMemoryFileSystemEntry_Name.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FileSystem.InMemory.InMemoryFileSystemEntry.Name%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/FubarDevelopment/FtpServer/blob/master/src/FubarDev.FtpServer.FileSystem.InMemory/InMemoryFileSystemEntry.cs/#L41">View Source</a>
+  </span>
+  <a id="FubarDev_FtpServer_FileSystem_InMemory_InMemoryFileSystemEntry_Name_" data-uid="FubarDev.FtpServer.FileSystem.InMemory.InMemoryFileSystemEntry.Name*"></a>
+  <h4 id="FubarDev_FtpServer_FileSystem_InMemory_InMemoryFileSystemEntry_Name" data-uid="FubarDev.FtpServer.FileSystem.InMemory.InMemoryFileSystemEntry.Name">Name</h4>
+  <div class="markdown level1 summary"><p>Gets the name of the file system entry.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string Name { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FileSystem_InMemory_InMemoryFileSystemEntry_NumberOfLinks.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FileSystem.InMemory.InMemoryFileSystemEntry.NumberOfLinks%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/FubarDevelopment/FtpServer/blob/master/src/FubarDev.FtpServer.FileSystem.InMemory/InMemoryFileSystemEntry.cs/#L59">View Source</a>
+  </span>
+  <a id="FubarDev_FtpServer_FileSystem_InMemory_InMemoryFileSystemEntry_NumberOfLinks_" data-uid="FubarDev.FtpServer.FileSystem.InMemory.InMemoryFileSystemEntry.NumberOfLinks*"></a>
+  <h4 id="FubarDev_FtpServer_FileSystem_InMemory_InMemoryFileSystemEntry_NumberOfLinks" data-uid="FubarDev.FtpServer.FileSystem.InMemory.InMemoryFileSystemEntry.NumberOfLinks">NumberOfLinks</h4>
+  <div class="markdown level1 summary"><p>Gets the number of links.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public long NumberOfLinks { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.int64">Int64</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FileSystem_InMemory_InMemoryFileSystemEntry_Owner.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FileSystem.InMemory.InMemoryFileSystemEntry.Owner%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/FubarDevelopment/FtpServer/blob/master/src/FubarDev.FtpServer.FileSystem.InMemory/InMemoryFileSystemEntry.cs/#L44">View Source</a>
+  </span>
+  <a id="FubarDev_FtpServer_FileSystem_InMemory_InMemoryFileSystemEntry_Owner_" data-uid="FubarDev.FtpServer.FileSystem.InMemory.InMemoryFileSystemEntry.Owner*"></a>
+  <h4 id="FubarDev_FtpServer_FileSystem_InMemory_InMemoryFileSystemEntry_Owner" data-uid="FubarDev.FtpServer.FileSystem.InMemory.InMemoryFileSystemEntry.Owner">Owner</h4>
+  <div class="markdown level1 summary"><p>Gets the owner.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string Owner { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FileSystem_InMemory_InMemoryFileSystemEntry_Parent.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FileSystem.InMemory.InMemoryFileSystemEntry.Parent%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/FubarDevelopment/FtpServer/blob/master/src/FubarDev.FtpServer.FileSystem.InMemory/InMemoryFileSystemEntry.cs/#L67">View Source</a>
+  </span>
+  <a id="FubarDev_FtpServer_FileSystem_InMemory_InMemoryFileSystemEntry_Parent_" data-uid="FubarDev.FtpServer.FileSystem.InMemory.InMemoryFileSystemEntry.Parent*"></a>
+  <h4 id="FubarDev_FtpServer_FileSystem_InMemory_InMemoryFileSystemEntry_Parent" data-uid="FubarDev.FtpServer.FileSystem.InMemory.InMemoryFileSystemEntry.Parent">Parent</h4>
+  <div class="markdown level1 summary"><p>Gets or sets the parent entry.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[CanBeNull]
+public InMemoryDirectoryEntry Parent { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="FubarDev.FtpServer.FileSystem.InMemory.InMemoryDirectoryEntry.html">InMemoryDirectoryEntry</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FileSystem_InMemory_InMemoryFileSystemEntry_Permissions.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FileSystem.InMemory.InMemoryFileSystemEntry.Permissions%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/FubarDevelopment/FtpServer/blob/master/src/FubarDev.FtpServer.FileSystem.InMemory/InMemoryFileSystemEntry.cs/#L50">View Source</a>
+  </span>
+  <a id="FubarDev_FtpServer_FileSystem_InMemory_InMemoryFileSystemEntry_Permissions_" data-uid="FubarDev.FtpServer.FileSystem.InMemory.InMemoryFileSystemEntry.Permissions*"></a>
+  <h4 id="FubarDev_FtpServer_FileSystem_InMemory_InMemoryFileSystemEntry_Permissions" data-uid="FubarDev.FtpServer.FileSystem.InMemory.InMemoryFileSystemEntry.Permissions">Permissions</h4>
+  <div class="markdown level1 summary"><p>Gets the file entry permissions.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public IUnixPermissions Permissions { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixPermissions.html">IUnixPermissions</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="methods">Methods
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FileSystem_InMemory_InMemoryFileSystemEntry_SetCreateTime_System_DateTimeOffset_.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FileSystem.InMemory.InMemoryFileSystemEntry.SetCreateTime(System.DateTimeOffset)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/FubarDevelopment/FtpServer/blob/master/src/FubarDev.FtpServer.FileSystem.InMemory/InMemoryFileSystemEntry.cs/#L97">View Source</a>
+  </span>
+  <a id="FubarDev_FtpServer_FileSystem_InMemory_InMemoryFileSystemEntry_SetCreateTime_" data-uid="FubarDev.FtpServer.FileSystem.InMemory.InMemoryFileSystemEntry.SetCreateTime*"></a>
+  <h4 id="FubarDev_FtpServer_FileSystem_InMemory_InMemoryFileSystemEntry_SetCreateTime_System_DateTimeOffset_" data-uid="FubarDev.FtpServer.FileSystem.InMemory.InMemoryFileSystemEntry.SetCreateTime(System.DateTimeOffset)">SetCreateTime(DateTimeOffset)</h4>
+  <div class="markdown level1 summary"><p>Sets the creation time.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public InMemoryFileSystemEntry SetCreateTime(DateTimeOffset timestamp)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.datetimeoffset">DateTimeOffset</a></td>
+        <td><span class="parametername">timestamp</span></td>
+        <td><p>The new value of the creation time.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="FubarDev.FtpServer.FileSystem.InMemory.InMemoryFileSystemEntry.html">InMemoryFileSystemEntry</a></td>
+        <td><p>The changed file system entry.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FileSystem_InMemory_InMemoryFileSystemEntry_SetLastWriteTime_System_DateTimeOffset_.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FileSystem.InMemory.InMemoryFileSystemEntry.SetLastWriteTime(System.DateTimeOffset)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/FubarDevelopment/FtpServer/blob/master/src/FubarDev.FtpServer.FileSystem.InMemory/InMemoryFileSystemEntry.cs/#L86">View Source</a>
+  </span>
+  <a id="FubarDev_FtpServer_FileSystem_InMemory_InMemoryFileSystemEntry_SetLastWriteTime_" data-uid="FubarDev.FtpServer.FileSystem.InMemory.InMemoryFileSystemEntry.SetLastWriteTime*"></a>
+  <h4 id="FubarDev_FtpServer_FileSystem_InMemory_InMemoryFileSystemEntry_SetLastWriteTime_System_DateTimeOffset_" data-uid="FubarDev.FtpServer.FileSystem.InMemory.InMemoryFileSystemEntry.SetLastWriteTime(System.DateTimeOffset)">SetLastWriteTime(DateTimeOffset)</h4>
+  <div class="markdown level1 summary"><p>Sets the last write time.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public InMemoryFileSystemEntry SetLastWriteTime(DateTimeOffset timestamp)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.datetimeoffset">DateTimeOffset</a></td>
+        <td><span class="parametername">timestamp</span></td>
+        <td><p>The new value of the last write time.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="FubarDev.FtpServer.FileSystem.InMemory.InMemoryFileSystemEntry.html">InMemoryFileSystemEntry</a></td>
+        <td><p>The changed file system entry.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FileSystem_InMemory_InMemoryFileSystemEntry_WithOwner_FubarDev_FtpServer_AccountManagement_IFtpUser_.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FileSystem.InMemory.InMemoryFileSystemEntry.WithOwner(FubarDev.FtpServer.AccountManagement.IFtpUser)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/FubarDevelopment/FtpServer/blob/master/src/FubarDev.FtpServer.FileSystem.InMemory/InMemoryFileSystemEntry.cs/#L75">View Source</a>
+  </span>
+  <a id="FubarDev_FtpServer_FileSystem_InMemory_InMemoryFileSystemEntry_WithOwner_" data-uid="FubarDev.FtpServer.FileSystem.InMemory.InMemoryFileSystemEntry.WithOwner*"></a>
+  <h4 id="FubarDev_FtpServer_FileSystem_InMemory_InMemoryFileSystemEntry_WithOwner_FubarDev_FtpServer_AccountManagement_IFtpUser_" data-uid="FubarDev.FtpServer.FileSystem.InMemory.InMemoryFileSystemEntry.WithOwner(FubarDev.FtpServer.AccountManagement.IFtpUser)">WithOwner(IFtpUser)</h4>
+  <div class="markdown level1 summary"><p>Configure directory entry as owned by given <code data-dev-comment-type="paramref" class="paramref">user</code>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public InMemoryFileSystemEntry WithOwner(IFtpUser user)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="FubarDev.FtpServer.AccountManagement.IFtpUser.html">IFtpUser</a></td>
+        <td><span class="parametername">user</span></td>
+        <td><p>The user that becomes the new owner of this directory entry.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="FubarDev.FtpServer.FileSystem.InMemory.InMemoryFileSystemEntry.html">InMemoryFileSystemEntry</a></td>
+        <td><p>The changed file system entry.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="implements">Implements</h3>
+  <div>
+      <a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixFileSystemEntry.html">IUnixFileSystemEntry</a>
+  </div>
+  <div>
+      <a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixOwner.html">IUnixOwner</a>
+  </div>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FileSystem_InMemory_InMemoryFileSystemEntry.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FileSystem.InMemory.InMemoryFileSystemEntry%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                  </li>
+                  <li>
+                    <a href="https://github.com/FubarDevelopment/FtpServer/blob/master/src/FubarDev.FtpServer.FileSystem.InMemory/InMemoryFileSystemEntry.cs/#L16" class="contribution-link">View Source</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            <table border='0'><tr><td><span>Copyright © 2018 Fubar Development Junker<br>Generated by <strong>DocFX</strong></span></td><td><a rel='license' href='http://creativecommons.org/licenses/by-sa/4.0/'><img alt='Creative Commons License' style='border-width:0' src='https://i.creativecommons.org/l/by-sa/4.0/88x31.png'></a><br><span xmlns:dct='http://purl.org/dc/terms/' property='dct:title'>FluentMigrator Documentation</span> by <a xmlns:cc='http://creativecommons.org/ns#' href='https://fluentmigrator.github.io' property='cc:attributionName' rel='cc:attributionURL'>FluentMigrator Project</a> is licensed under a <a rel='license' href='http://creativecommons.org/licenses/by-sa/4.0/'>Creative Commons Attribution-ShareAlike 4.0 International License</a>.</td></tr></table>
+            
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>

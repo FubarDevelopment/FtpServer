@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Interface IBackgroundCommandHandler
    | FTP Server documentation ">
-    <meta name="generator" content="docfx 2.36.1.0">
+    <meta name="generator" content="docfx 2.40.7.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -93,7 +93,7 @@
     <pre><code class="lang-csharp hljs">public interface IBackgroundCommandHandler</code></pre>
   </div>
   <h5 id="FubarDev_FtpServer_IBackgroundCommandHandler_remarks"><strong>Remarks</strong></h5>
-  <div class="markdown level0 remarks"><p>This allows the implementation of the <pre><code>ABOR</code></pre> command.</p>
+  <div class="markdown level0 remarks"><p>This allows the implementation of the <code>ABOR</code> command.</p>
 </div>
   <h3 id="methods">Methods
   </h3>
@@ -102,7 +102,7 @@
     <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_IBackgroundCommandHandler_Cancel.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.IBackgroundCommandHandler.Cancel%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/2.0.0/src/FubarDev.FtpServer.Abstractions/IBackgroundCommandHandler.cs/#L32">View Source</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/blob/master/src/FubarDev.FtpServer.Abstractions/IBackgroundCommandHandler.cs/#L32">View Source</a>
   </span>
   <a id="FubarDev_FtpServer_IBackgroundCommandHandler_Cancel_" data-uid="FubarDev.FtpServer.IBackgroundCommandHandler.Cancel*"></a>
   <h4 id="FubarDev_FtpServer_IBackgroundCommandHandler_Cancel" data-uid="FubarDev.FtpServer.IBackgroundCommandHandler.Cancel">Cancel()</h4>
@@ -134,7 +134,7 @@
     <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_IBackgroundCommandHandler_Execute_FubarDev_FtpServer_IFtpCommandBase_FubarDev_FtpServer_FtpCommand_.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.IBackgroundCommandHandler.Execute(FubarDev.FtpServer.IFtpCommandBase%2CFubarDev.FtpServer.FtpCommand)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/2.0.0/src/FubarDev.FtpServer.Abstractions/IBackgroundCommandHandler.cs/#L25">View Source</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/blob/master/src/FubarDev.FtpServer.Abstractions/IBackgroundCommandHandler.cs/#L25">View Source</a>
   </span>
   <a id="FubarDev_FtpServer_IBackgroundCommandHandler_Execute_" data-uid="FubarDev.FtpServer.IBackgroundCommandHandler.Execute*"></a>
   <h4 id="FubarDev_FtpServer_IBackgroundCommandHandler_Execute_FubarDev_FtpServer_IFtpCommandBase_FubarDev_FtpServer_FtpCommand_" data-uid="FubarDev.FtpServer.IBackgroundCommandHandler.Execute(FubarDev.FtpServer.IFtpCommandBase,FubarDev.FtpServer.FtpCommand)">Execute(IFtpCommandBase, FtpCommand)</h4>
@@ -143,7 +143,8 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">Task&lt;FtpResponse&gt; Execute(IFtpCommandBase handler, FtpCommand command)</code></pre>
+    <pre><code class="lang-csharp hljs">[CanBeNull]
+Task&lt;FtpResponse&gt; Execute([NotNull] IFtpCommandBase handler, [NotNull] FtpCommand command)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -179,7 +180,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">Task</span>&lt;<a class="xref" href="FubarDev.FtpServer.FtpResponse.html">FtpResponse</a>&gt;</td>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a class="xref" href="FubarDev.FtpServer.FtpResponse.html">FtpResponse</a>&gt;</td>
         <td><pre><code>null</code></pre> when the command could not be processed.
 </td>
       </tr>
@@ -196,7 +197,7 @@
                     <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_IBackgroundCommandHandler.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.IBackgroundCommandHandler%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/2.0.0/src/FubarDev.FtpServer.Abstractions/IBackgroundCommandHandler.cs/#L17" class="contribution-link">View Source</a>
+                    <a href="https://github.com/FubarDevelopment/FtpServer/blob/master/src/FubarDev.FtpServer.Abstractions/IBackgroundCommandHandler.cs/#L17" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

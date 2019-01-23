@@ -8,7 +8,7 @@
     <title>FTP Server Configuration | FTP Server documentation </title>
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="FTP Server Configuration | FTP Server documentation ">
-    <meta name="generator" content="docfx 2.36.1.0">
+    <meta name="generator" content="docfx 2.40.7.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -82,12 +82,12 @@
 <p>The configuration is split into several parts:</p>
 <ul>
 <li>Services</li>
-<li><a href="FubarDev.FtpServer.IFtpServerBuilder">IFtpServerBuilder</a> is the FTP Server configuration builder</li>
+<li><a class="xref" href="../api/FubarDev.FtpServer.IFtpServerBuilder.html">IFtpServerBuilder</a> is the FTP Server configuration builder</li>
 <li><a class="xref" href="../api/FubarDev.FtpServer.FtpServerOptions.html">FtpServerOptions</a> for the FTP server transport configuration</li>
 <li><a class="xref" href="../api/FubarDev.FtpServer.FtpConnectionOptions.html">FtpConnectionOptions</a> to configure the default control connection text encoding</li>
 <li><a class="xref" href="../api/FubarDev.FtpServer.AuthTlsOptions.html">AuthTlsOptions</a> for the FTPS configuration</li>
 <li><a class="xref" href="../api/FubarDev.FtpServer.FileSystem.DotNet.DotNetFileSystemOptions.html">DotNetFileSystemOptions</a> to configure the file system access</li>
-<li><a href="FubarDev.FtpServer.SystCommandOptions">SystCommandOptions</a> to specify the behavior of the SYST command</li>
+<li><a class="xref" href="../api/FubarDev.FtpServer.SystCommandOptions.html">SystCommandOptions</a> to specify the behavior of the SYST command</li>
 </ul>
 <h1 id="services">Services</h1>
 <p>You use a <code>ServiceCollection</code> and add your services to, e.g.:</p>
@@ -97,7 +97,7 @@
         .UseDotNetFileSystem());
 </code></pre>
 <p>This is also the absolute minimum configuration for the FTP server.</p>
-<h1 id="iftpserverbuilder"><a href="FubarDev.FtpServer.IFtpServerBuilder">IFtpServerBuilder</a></h1>
+<h1 id="iftpserverbuilder"><a class="xref" href="../api/FubarDev.FtpServer.IFtpServerBuilder.html">IFtpServerBuilder</a></h1>
 <p>This is the place where other services are configured that will be used by the FTP server. This are the options currently available:</p>
 <ul>
 <li><code>builder.EnableAnonymousAuthentication()</code>: Enables anonymous authentication</li>
@@ -118,7 +118,7 @@
 <li>Usage of the user ID as subdirectory</li>
 <li>Is deletion of non-empty directories allowed?</li>
 </ul>
-<h1 id="systcommandoptions"><a href="FubarDev.FtpServer.SystCommandOptions">SystCommandOptions</a></h1>
+<h1 id="systcommandoptions"><a class="xref" href="../api/FubarDev.FtpServer.SystCommandOptions.html">SystCommandOptions</a></h1>
 <p>Here you can specify the operating system to be returned by the SYST command.</p>
 </article>
           </div>

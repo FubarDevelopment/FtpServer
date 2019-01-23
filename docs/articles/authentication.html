@@ -8,7 +8,7 @@
     <title>Authentication | FTP Server documentation </title>
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Authentication | FTP Server documentation ">
-    <meta name="generator" content="docfx 2.36.1.0">
+    <meta name="generator" content="docfx 2.40.7.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -81,19 +81,19 @@
 
 <p>The FTP server only supports anonymous authentication, because .NET Standard doesn't provide a cross-platform way to authenticate a user against the operating system.</p>
 <h1 id="how-it-works">How it works</h1>
-<p>The FTP server queries all services implementing the <a href="FubarDev.FtpServer.AccountManagement.IMembershipProvider"><code>IMembershipProvider</code></a> interface and tries to authenticate the given login/password against all registered providers. The first provider that was able to authenticate the user is stored in the FTP connection data.</p>
+<p>The FTP server queries all services implementing the <a class="xref" href="../api/FubarDev.FtpServer.AccountManagement.IMembershipProvider.html"><code>IMembershipProvider</code></a> interface and tries to authenticate the given login/password against all registered providers. The first provider that was able to authenticate the user is stored in the FTP connection data.</p>
 <div class="WARNING">
 <h5>Warning</h5>
 <p>The order of the registration of the membership providers is important.</p>
 </div>
 <h1 id="anonymous-authentication">Anonymous authentication</h1>
-<p>The anonymous authentiation is implemented by the <a href="FubarDev.FtpServer.AccountManagement.AnonymousMembershipProvider"><code>AnonymousMembershipProvider</code></a> class and can be configured by adding a service for an <a href="FubarDev.FtpServer.AccountManagement.Anonymous.IAnonymousPasswordValidator"><code>IAnonymousPasswordValidator</code></a>.</p>
+<p>The anonymous authentiation is implemented by the <a class="xref" href="../api/FubarDev.FtpServer.AccountManagement.AnonymousMembershipProvider.html"><code>AnonymousMembershipProvider</code></a> class and can be configured by adding a service for an <a class="xref" href="../api/FubarDev.FtpServer.AccountManagement.Anonymous.IAnonymousPasswordValidator.html"><code>IAnonymousPasswordValidator</code></a>.</p>
 <h2 id="default-anonymous-password-validators">Default anonymous password validators</h2>
 <ul>
-<li><code>NoValidation</code>: Take the password without validation</li>
-<li><code>NoTopLevelDomainValidation</code>: The E-Mail-Address doesn't need to have a TLD</li>
-<li><code>SimpleMailAddressValidation</code>: Simple E-Mail validation</li>
-<li><code>BlockAnonymousValidation</code>: Block anonymous logins</li>
+<li><a class="xref" href="../api/FubarDev.FtpServer.AccountManagement.Anonymous.NoValidation.html">NoValidation</a>: Take the password without validation</li>
+<li><a class="xref" href="../api/FubarDev.FtpServer.AccountManagement.Anonymous.NoTopLevelDomainValidation.html">NoTopLevelDomainValidation</a>: The E-Mail-Address doesn't need to have a TLD</li>
+<li><a class="xref" href="../api/FubarDev.FtpServer.AccountManagement.Anonymous.SimpleMailAddressValidation.html">SimpleMailAddressValidation</a>: Simple E-Mail validation</li>
+<li><a class="xref" href="../api/FubarDev.FtpServer.AccountManagement.Anonymous.BlockAnonymousValidation.html">BlockAnonymousValidation</a>: Block anonymous logins</li>
 </ul>
 <p>The <code>SimpleMailAddressValidation</code> is the default password validator.</p>
 </article>

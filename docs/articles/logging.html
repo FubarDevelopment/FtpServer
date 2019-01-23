@@ -8,7 +8,7 @@
     <title>FTP Server logging | FTP Server documentation </title>
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="FTP Server logging | FTP Server documentation ">
-    <meta name="generator" content="docfx 2.36.1.0">
+    <meta name="generator" content="docfx 2.40.7.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -82,7 +82,7 @@
 <p>The FTP server utilizes <a href="https://docs.microsoft.com/aspnet/core/fundamentals/logging"><code>Microsoft.Extensions.Logging</code></a> which provides an interface to many logging frameworks (e.g. <a href="https://github.com/NLog/NLog/wiki">NLog</a>).</p>
 <h1 id="example-using-serilog">Example: Using SeriLog</h1>
 <h2 id="adding-serilog-to-the-project">Adding SeriLog to the project</h2>
-<p>Go to the quickstart project created during the <a href="xref:quickstart.md">Quickstart</a> tutorial and add the following NuGet packages:</p>
+<p>Go to the quickstart project created during the <a class="xref" href="quickstart.html">Quickstart</a> tutorial and add the following NuGet packages:</p>
 <pre><code class="lang-bash"># Serilog.Extensions.Logging
 dotnet add package Serilog.Extensions.Logging
 # Serilog.Sinks.Console
@@ -137,16 +137,16 @@ namespace QuickStart
             using (var serviceProvider = services.BuildServiceProvider())
             {
                 // Initialize the FTP server
-                var ftpServer = serviceProvider.GetRequiredService&lt;IFtpServer&gt;();
+                var ftpServerHost = serviceProvider.GetRequiredService&lt;IFtpServerHost&gt;();
 
                 // Start the FTP server
-                ftpServer.Start();
+                ftpServerHost.StartAsync().Wait();
 
                 Console.WriteLine(&quot;Press ENTER/RETURN to close the test application.&quot;);
                 Console.ReadLine();
 
                 // Stop the FTP server
-                ftpServer.Stop();
+                ftpServerHost.StopAsync().Wait();
             }
         }
     }
@@ -155,7 +155,7 @@ namespace QuickStart
 <p>Now you can see all the log messages from the FTP server.</p>
 <h1 id="example-using-nlog">Example: Using NLog</h1>
 <h2 id="adding-nlog-to-the-project">Adding NLog to the project</h2>
-<p>Go to the quickstart project created during the <a href="xref:quickstart.md">Quickstart</a> tutorial and add the following NuGet package:</p>
+<p>Go to the quickstart project created during the <a class="xref" href="quickstart.html">Quickstart</a> tutorial and add the following NuGet package:</p>
 <pre><code class="lang-bash"># Add NLog
 dotnet add package NLog.Extensions.Logging
 </code></pre>
@@ -253,16 +253,16 @@ namespace QuickStart
                 NLog.LogManager.LoadConfiguration(&quot;nlog.config&quot;);
 
                 // Initialize the FTP server
-                var ftpServer = serviceProvider.GetRequiredService&lt;IFtpServer&gt;();
+                var ftpServerHost = serviceProvider.GetRequiredService&lt;IFtpServerHost&gt;();
 
                 // Start the FTP server
-                ftpServer.Start();
+                ftpServerHost.StartAsync().Wait();
 
                 Console.WriteLine(&quot;Press ENTER/RETURN to close the test application.&quot;);
                 Console.ReadLine();
 
                 // Stop the FTP server
-                ftpServer.Stop();
+                ftpServerHost.StopAsync().Wait();
             }
         }
     }

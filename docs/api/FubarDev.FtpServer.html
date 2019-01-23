@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Namespace FubarDev.FtpServer
    | FTP Server documentation ">
-    <meta name="generator" content="docfx 2.36.1.0">
+    <meta name="generator" content="docfx 2.40.7.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -99,11 +99,14 @@
       <h4><a class="xref" href="FubarDev.FtpServer.ConnectionExtensions.html">ConnectionExtensions</a></h4>
       <section><p>Extension methods for <a class="xref" href="FubarDev.FtpServer.IFtpConnection.html">IFtpConnection</a>.</p>
 </section>
+      <h4><a class="xref" href="FubarDev.FtpServer.DotNetFtpServerBuilderExtensions.html">DotNetFtpServerBuilderExtensions</a></h4>
+      <section><p>Extension methods for <a class="xref" href="FubarDev.FtpServer.IFtpServerBuilder.html">IFtpServerBuilder</a>.</p>
+</section>
       <h4><a class="xref" href="FubarDev.FtpServer.FtpCommand.html">FtpCommand</a></h4>
       <section><p>FTP command with argument.</p>
 </section>
       <h4><a class="xref" href="FubarDev.FtpServer.FtpCommandCollector.html">FtpCommandCollector</a></h4>
-      <section><p>Collects FTP commands using the current <see cref="!:System.Text.Encoding"></see>.</p>
+      <section><p>Collects FTP commands using the current <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.text.encoding">Encoding</a>.</p>
 </section>
       <h4><a class="xref" href="FubarDev.FtpServer.FtpConnection.html">FtpConnection</a></h4>
       <section><p>This class represents a FTP connection.</p>
@@ -126,6 +129,9 @@
       <h4><a class="xref" href="FubarDev.FtpServer.FtpServerBuilderExtensions.html">FtpServerBuilderExtensions</a></h4>
       <section><p>Extension methods for <a class="xref" href="FubarDev.FtpServer.IFtpServerBuilder.html">IFtpServerBuilder</a>.</p>
 </section>
+      <h4><a class="xref" href="FubarDev.FtpServer.FtpServerHost.html">FtpServerHost</a></h4>
+      <section><p>Simple <a class="xref" href="FubarDev.FtpServer.IFtpServerHost.html">IFtpServerHost</a> implementation.</p>
+</section>
       <h4><a class="xref" href="FubarDev.FtpServer.FtpServerOptions.html">FtpServerOptions</a></h4>
       <section><p>The FTP server options.</p>
 </section>
@@ -138,8 +144,20 @@
       <h4><a class="xref" href="FubarDev.FtpServer.GenericFeatureInfo.html">GenericFeatureInfo</a></h4>
       <section><p>Generic feature information.</p>
 </section>
+      <h4><a class="xref" href="FubarDev.FtpServer.GoogleDriveFtpServerBuilderExtensions.html">GoogleDriveFtpServerBuilderExtensions</a></h4>
+      <section><p>Extension methods for <a class="xref" href="FubarDev.FtpServer.IFtpServerBuilder.html">IFtpServerBuilder</a>.</p>
+</section>
+      <h4><a class="xref" href="FubarDev.FtpServer.InMemoryFtpServerBuilderExtensions.html">InMemoryFtpServerBuilderExtensions</a></h4>
+      <section><p>Extension methods for <a class="xref" href="FubarDev.FtpServer.IFtpServerBuilder.html">IFtpServerBuilder</a>.</p>
+</section>
       <h4><a class="xref" href="FubarDev.FtpServer.MultiBindingTcpListener.html">MultiBindingTcpListener</a></h4>
       <section><p>Allows binding to a host name, which in turn may resolve to multiple IP addresses.</p>
+</section>
+      <h4><a class="xref" href="FubarDev.FtpServer.PasvListener.html">PasvListener</a></h4>
+      <section><p>The default implementation of the <a class="xref" href="FubarDev.FtpServer.IPasvListener.html">IPasvListener</a> interface.</p>
+</section>
+      <h4><a class="xref" href="FubarDev.FtpServer.PasvListenerFactory.html">PasvListenerFactory</a></h4>
+      <section><p>Creates TcpListeners for use with PASV commands.</p>
 </section>
       <h4><a class="xref" href="FubarDev.FtpServer.PermissionsExtensions.html">PermissionsExtensions</a></h4>
       <section><p>Extension methods for <a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixPermissions.html">IUnixPermissions</a>.</p>
@@ -148,18 +166,18 @@
       <section><p>Options for the SYST command.</p>
 </section>
       <h4><a class="xref" href="FubarDev.FtpServer.TcpSocketClientAccessor.html">TcpSocketClientAccessor</a></h4>
-      <section><p>Accessor to set/get the current <see cref="!:TcpClient"></see>.</p>
+      <section><p>Accessor to set/get the current <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.net.sockets.tcpclient">TcpClient</a>.</p>
 </section>
       <h4><a class="xref" href="FubarDev.FtpServer.TelnetInputParser-1.html">TelnetInputParser&lt;T&gt;</a></h4>
       <section><p>Filters the TELNET commands usually sent before an ABOR command.</p>
 </section>
     <h3 id="interfaces">Interfaces
   </h3>
+      <h4><a class="xref" href="FubarDev.FtpServer.IAccountInformation.html">IAccountInformation</a></h4>
+      <section><p>Information about the account associated to a connection.</p>
+</section>
       <h4><a class="xref" href="FubarDev.FtpServer.IBackgroundCommandHandler.html">IBackgroundCommandHandler</a></h4>
       <section><p>Interface for asynchronous processing of an FTP command.</p>
-</section>
-      <h4><a class="xref" href="FubarDev.FtpServer.IBackgroundTransferHost.html">IBackgroundTransferHost</a></h4>
-      <section><p>Interface to be implemented by a host for background transfers</p>
 </section>
       <h4><a class="xref" href="FubarDev.FtpServer.IFeatureInfo.html">IFeatureInfo</a></h4>
       <section><p>Defines a feature and its handler.</p>
@@ -177,19 +195,31 @@
       <section><p>The interface for an FTP connection.</p>
 </section>
       <h4><a class="xref" href="FubarDev.FtpServer.IFtpConnectionAccessor.html">IFtpConnectionAccessor</a></h4>
-      <section><p>Accessor to get/set the current (scoped) FTP connection</p>
+      <section><p>Accessor to get/set the current (scoped) FTP connection.</p>
 </section>
       <h4><a class="xref" href="FubarDev.FtpServer.IFtpServer.html">IFtpServer</a></h4>
-      <section><p>The interface that must be implemented by the FTP server</p>
+      <section><p>The interface that must be implemented by the FTP server.</p>
 </section>
       <h4><a class="xref" href="FubarDev.FtpServer.IFtpServerBuilder.html">IFtpServerBuilder</a></h4>
       <section><p>Base interface for <a class="xref" href="FubarDev.FtpServer.html">FubarDev.FtpServer</a> configuration.</p>
 </section>
+      <h4><a class="xref" href="FubarDev.FtpServer.IFtpServerHost.html">IFtpServerHost</a></h4>
+      <section><p>Interface for a simple FTP server host.</p>
+</section>
       <h4><a class="xref" href="FubarDev.FtpServer.IFtpServerStatistics.html">IFtpServerStatistics</a></h4>
       <section><p>Statistics about the FTP server.</p>
 </section>
+      <h4><a class="xref" href="FubarDev.FtpServer.IFtpService.html">IFtpService</a></h4>
+      <section><p>Defines methods for services required to run the FTP server.</p>
+</section>
       <h4><a class="xref" href="FubarDev.FtpServer.IListFormatter.html">IListFormatter</a></h4>
-      <section><p>Interface that provides the text to output for the <pre><code>LIST</code></pre> and <pre><code>NLST</code></pre> commands.</p>
+      <section><p>Interface that provides the text to output for the <code>LIST</code> and <code>NLST</code> commands.</p>
+</section>
+      <h4><a class="xref" href="FubarDev.FtpServer.IPasvListener.html">IPasvListener</a></h4>
+      <section><p>Wraps a TCPListener so we can easily use it in our commands that require a passive data connection.</p>
+</section>
+      <h4><a class="xref" href="FubarDev.FtpServer.IPasvListenerFactory.html">IPasvListenerFactory</a></h4>
+      <section><p>Creates correctly configured <a class="xref" href="FubarDev.FtpServer.IPasvListener.html">IPasvListener</a>.</p>
 </section>
     <h3 id="enums">Enums
   </h3>
@@ -203,9 +233,6 @@
   </h3>
       <h4><a class="xref" href="FubarDev.FtpServer.CreateEncryptedStreamDelegate.html">CreateEncryptedStreamDelegate</a></h4>
       <section><p>A delegate that's used to create an encrypted stream (<a class="xref" href="FubarDev.FtpServer.FtpConnectionData.html#FubarDev_FtpServer_FtpConnectionData_CreateEncryptedStream">CreateEncryptedStream</a>).</p>
-</section>
-      <h4><a class="xref" href="FubarDev.FtpServer.FeatureHandlerDelgate.html">FeatureHandlerDelgate</a></h4>
-      <section><p>The delegate to handle feature options.</p>
 </section>
       <h4><a class="xref" href="FubarDev.FtpServer.FtpCommandHandlerProcessDelegate.html">FtpCommandHandlerProcessDelegate</a></h4>
       <section><p>Processes the command.</p>

@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Class GenericUnixPermissions
    | FTP Server documentation ">
-    <meta name="generator" content="docfx 2.36.1.0">
+    <meta name="generator" content="docfx 2.40.7.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -88,18 +88,42 @@
   <div class="markdown level0 conceptual"></div>
   <div class="inheritance">
     <h5>Inheritance</h5>
-    <div class="level0"><span class="xref">System.Object</span></div>
+    <div class="level0"><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object">Object</a></div>
     <div class="level1"><span class="xref">GenericUnixPermissions</span></div>
   </div>
   <div classs="implements">
     <h5>Implements</h5>
     <div><a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixPermissions.html">IUnixPermissions</a></div>
   </div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.equals#System_Object_Equals_System_Object_">Object.Equals(Object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.equals#System_Object_Equals_System_Object_System_Object_">Object.Equals(Object, Object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.gethashcode#System_Object_GetHashCode">Object.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.gettype#System_Object_GetType">Object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.memberwiseclone#System_Object_MemberwiseClone">Object.MemberwiseClone()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.referenceequals#System_Object_ReferenceEquals_System_Object_System_Object_">Object.ReferenceEquals(Object, Object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.tostring#System_Object_ToString">Object.ToString()</a>
+    </div>
+  </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="FubarDev.FtpServer.FileSystem.Generic.html">FubarDev.FtpServer.FileSystem.Generic</a></h6>
   <h6><strong>Assembly</strong>: FubarDev.FtpServer.Abstractions.dll</h6>
   <h5 id="FubarDev_FtpServer_FileSystem_Generic_GenericUnixPermissions_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class GenericUnixPermissions : object, IUnixPermissions</code></pre>
+    <pre><code class="lang-csharp hljs">public class GenericUnixPermissions : IUnixPermissions</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
@@ -108,7 +132,7 @@
     <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FileSystem_Generic_GenericUnixPermissions__ctor_FubarDev_FtpServer_FileSystem_IAccessMode_FubarDev_FtpServer_FileSystem_IAccessMode_FubarDev_FtpServer_FileSystem_IAccessMode_.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FileSystem.Generic.GenericUnixPermissions.%23ctor(FubarDev.FtpServer.FileSystem.IAccessMode%2CFubarDev.FtpServer.FileSystem.IAccessMode%2CFubarDev.FtpServer.FileSystem.IAccessMode)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/2.0.0/src/FubarDev.FtpServer.Abstractions/FileSystem/Generic/GenericUnixPermissions.cs/#L23">View Source</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/blob/master/src/FubarDev.FtpServer.Abstractions/FileSystem/Generic/GenericUnixPermissions.cs/#L23">View Source</a>
   </span>
   <a id="FubarDev_FtpServer_FileSystem_Generic_GenericUnixPermissions__ctor_" data-uid="FubarDev.FtpServer.FileSystem.Generic.GenericUnixPermissions.#ctor*"></a>
   <h4 id="FubarDev_FtpServer_FileSystem_Generic_GenericUnixPermissions__ctor_FubarDev_FtpServer_FileSystem_IAccessMode_FubarDev_FtpServer_FileSystem_IAccessMode_FubarDev_FtpServer_FileSystem_IAccessMode_" data-uid="FubarDev.FtpServer.FileSystem.Generic.GenericUnixPermissions.#ctor(FubarDev.FtpServer.FileSystem.IAccessMode,FubarDev.FtpServer.FileSystem.IAccessMode,FubarDev.FtpServer.FileSystem.IAccessMode)">GenericUnixPermissions(IAccessMode, IAccessMode, IAccessMode)</h4>
@@ -117,7 +141,7 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public GenericUnixPermissions(IAccessMode user, IAccessMode group, IAccessMode owner)</code></pre>
+    <pre><code class="lang-csharp hljs">public GenericUnixPermissions([NotNull] IAccessMode user, [NotNull] IAccessMode group, [NotNull] IAccessMode other)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -143,8 +167,8 @@
       </tr>
       <tr>
         <td><a class="xref" href="FubarDev.FtpServer.FileSystem.IAccessMode.html">IAccessMode</a></td>
-        <td><span class="parametername">owner</span></td>
-        <td><p>The owner permissions.</p>
+        <td><span class="parametername">other</span></td>
+        <td><p>The other permissions.</p>
 </td>
       </tr>
     </tbody>
@@ -156,11 +180,12 @@
     <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FileSystem_Generic_GenericUnixPermissions_Group.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FileSystem.Generic.GenericUnixPermissions.Group%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/2.0.0/src/FubarDev.FtpServer.Abstractions/FileSystem/Generic/GenericUnixPermissions.cs/#L34">View Source</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/blob/master/src/FubarDev.FtpServer.Abstractions/FileSystem/Generic/GenericUnixPermissions.cs/#L34">View Source</a>
   </span>
   <a id="FubarDev_FtpServer_FileSystem_Generic_GenericUnixPermissions_Group_" data-uid="FubarDev.FtpServer.FileSystem.Generic.GenericUnixPermissions.Group*"></a>
   <h4 id="FubarDev_FtpServer_FileSystem_Generic_GenericUnixPermissions_Group" data-uid="FubarDev.FtpServer.FileSystem.Generic.GenericUnixPermissions.Group">Group</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Gets the group permissions.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -186,11 +211,12 @@
     <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FileSystem_Generic_GenericUnixPermissions_Other.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FileSystem.Generic.GenericUnixPermissions.Other%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/2.0.0/src/FubarDev.FtpServer.Abstractions/FileSystem/Generic/GenericUnixPermissions.cs/#L37">View Source</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/blob/master/src/FubarDev.FtpServer.Abstractions/FileSystem/Generic/GenericUnixPermissions.cs/#L37">View Source</a>
   </span>
   <a id="FubarDev_FtpServer_FileSystem_Generic_GenericUnixPermissions_Other_" data-uid="FubarDev.FtpServer.FileSystem.Generic.GenericUnixPermissions.Other*"></a>
   <h4 id="FubarDev_FtpServer_FileSystem_Generic_GenericUnixPermissions_Other" data-uid="FubarDev.FtpServer.FileSystem.Generic.GenericUnixPermissions.Other">Other</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Gets the other permissions.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -216,11 +242,12 @@
     <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FileSystem_Generic_GenericUnixPermissions_User.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FileSystem.Generic.GenericUnixPermissions.User%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/2.0.0/src/FubarDev.FtpServer.Abstractions/FileSystem/Generic/GenericUnixPermissions.cs/#L31">View Source</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/blob/master/src/FubarDev.FtpServer.Abstractions/FileSystem/Generic/GenericUnixPermissions.cs/#L31">View Source</a>
   </span>
   <a id="FubarDev_FtpServer_FileSystem_Generic_GenericUnixPermissions_User_" data-uid="FubarDev.FtpServer.FileSystem.Generic.GenericUnixPermissions.User*"></a>
   <h4 id="FubarDev_FtpServer_FileSystem_Generic_GenericUnixPermissions_User" data-uid="FubarDev.FtpServer.FileSystem.Generic.GenericUnixPermissions.User">User</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Gets the user permissions.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -245,6 +272,10 @@
   <div>
       <a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixPermissions.html">IUnixPermissions</a>
   </div>
+  <h3 id="extensionmethods">Extension Methods</h3>
+  <div>
+      <a class="xref" href="FubarDev.FtpServer.PermissionsExtensions.html#FubarDev_FtpServer_PermissionsExtensions_GetAccessModeFor_FubarDev_FtpServer_FileSystem_IUnixPermissions_FubarDev_FtpServer_FileSystem_IUnixOwner_FubarDev_FtpServer_AccountManagement_IFtpUser_">PermissionsExtensions.GetAccessModeFor(IUnixPermissions, IUnixOwner, IFtpUser)</a>
+  </div>
 </article>
           </div>
           
@@ -256,7 +287,7 @@
                     <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FileSystem_Generic_GenericUnixPermissions.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FileSystem.Generic.GenericUnixPermissions%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/2.0.0/src/FubarDev.FtpServer.Abstractions/FileSystem/Generic/GenericUnixPermissions.cs/#L15" class="contribution-link">View Source</a>
+                    <a href="https://github.com/FubarDevelopment/FtpServer/blob/master/src/FubarDev.FtpServer.Abstractions/FileSystem/Generic/GenericUnixPermissions.cs/#L15" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

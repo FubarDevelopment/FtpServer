@@ -8,7 +8,7 @@
     <title>FTP Server | FTP Server documentation </title>
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="FTP Server | FTP Server documentation ">
-    <meta name="generator" content="docfx 2.36.1.0">
+    <meta name="generator" content="docfx 2.40.7.0">
     
     <link rel="shortcut icon" href="favicon.ico">
     <link rel="stylesheet" href="styles/docfx.vendor.css">
@@ -103,16 +103,16 @@ services.Configure&lt;FtpServerOptions&gt;(opt =&gt; opt.ServerAddress = &quot;1
 using (var serviceProvider = services.BuildServiceProvider())
 {
     // Initialize the FTP server
-    var ftpServer = serviceProvider.GetRequiredService&lt;IFtpServer&gt;();
+    var ftpServerHost = serviceProvider.GetRequiredService&lt;IFtpServerHost&gt;();
 
     // Start the FTP server
-    ftpServer.Start();
+    ftpServerHost.StartAsync().Wait();
 
     Console.WriteLine(&quot;Press ENTER/RETURN to close the test application.&quot;);
     Console.ReadLine();
 
     // Stop the FTP server
-    ftpServer.Stop();
+    ftpServerHost.StopAsync().Wait();
 }
 </code></pre><h2 id="further-information">Further Information</h2>
 <p>You find more information on the <a href="articles/intro.html">articles overview</a>.</p>

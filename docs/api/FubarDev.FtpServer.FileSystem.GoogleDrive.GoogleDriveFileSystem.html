@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Class GoogleDriveFileSystem
    | FTP Server documentation ">
-    <meta name="generator" content="docfx 2.36.1.0">
+    <meta name="generator" content="docfx 2.40.7.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -88,37 +88,61 @@
   <div class="markdown level0 conceptual"></div>
   <div class="inheritance">
     <h5>Inheritance</h5>
-    <div class="level0"><span class="xref">System.Object</span></div>
+    <div class="level0"><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object">Object</a></div>
     <div class="level1"><span class="xref">GoogleDriveFileSystem</span></div>
   </div>
   <div classs="implements">
     <h5>Implements</h5>
     <div><a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixFileSystem.html">IUnixFileSystem</a></div>
-    <div><span class="xref">IDisposable</span></div>
+    <div><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.idisposable">IDisposable</a></div>
+  </div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.equals#System_Object_Equals_System_Object_">Object.Equals(Object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.equals#System_Object_Equals_System_Object_System_Object_">Object.Equals(Object, Object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.gethashcode#System_Object_GetHashCode">Object.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.gettype#System_Object_GetType">Object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.memberwiseclone#System_Object_MemberwiseClone">Object.MemberwiseClone()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.referenceequals#System_Object_ReferenceEquals_System_Object_System_Object_">Object.ReferenceEquals(Object, Object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.tostring#System_Object_ToString">Object.ToString()</a>
+    </div>
   </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="FubarDev.FtpServer.FileSystem.GoogleDrive.html">FubarDev.FtpServer.FileSystem.GoogleDrive</a></h6>
   <h6><strong>Assembly</strong>: FubarDev.FtpServer.FileSystem.GoogleDrive.dll</h6>
   <h5 id="FubarDev_FtpServer_FileSystem_GoogleDrive_GoogleDriveFileSystem_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public sealed class GoogleDriveFileSystem : object, IUnixFileSystem, IDisposable</code></pre>
+    <pre><code class="lang-csharp hljs">public sealed class GoogleDriveFileSystem : IGoogleDriveFileSystem, IUnixFileSystem, IDisposable</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FileSystem_GoogleDrive_GoogleDriveFileSystem__ctor_DriveService_Google_Apis_Drive_v3_Data_File_FubarDev_FtpServer_BackgroundTransfer_ITemporaryDataFactory_.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FileSystem.GoogleDrive.GoogleDriveFileSystem.%23ctor(DriveService%2CGoogle.Apis.Drive.v3.Data.File%2CFubarDev.FtpServer.BackgroundTransfer.ITemporaryDataFactory)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FileSystem_GoogleDrive_GoogleDriveFileSystem__ctor_Google_Apis_Drive_v3_DriveService_Google_Apis_Drive_v3_Data_File_FubarDev_FtpServer_BackgroundTransfer_ITemporaryDataFactory_System_Boolean_.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FileSystem.GoogleDrive.GoogleDriveFileSystem.%23ctor(Google.Apis.Drive.v3.DriveService%2CGoogle.Apis.Drive.v3.Data.File%2CFubarDev.FtpServer.BackgroundTransfer.ITemporaryDataFactory%2CSystem.Boolean)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/2.0.0/src/FubarDev.FtpServer.FileSystem.GoogleDrive/GoogleDriveFileSystem.cs/#L44">View Source</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/blob/master/src/FubarDev.FtpServer.FileSystem.GoogleDrive/GoogleDriveFileSystem.cs/#L48">View Source</a>
   </span>
   <a id="FubarDev_FtpServer_FileSystem_GoogleDrive_GoogleDriveFileSystem__ctor_" data-uid="FubarDev.FtpServer.FileSystem.GoogleDrive.GoogleDriveFileSystem.#ctor*"></a>
-  <h4 id="FubarDev_FtpServer_FileSystem_GoogleDrive_GoogleDriveFileSystem__ctor_DriveService_Google_Apis_Drive_v3_Data_File_FubarDev_FtpServer_BackgroundTransfer_ITemporaryDataFactory_" data-uid="FubarDev.FtpServer.FileSystem.GoogleDrive.GoogleDriveFileSystem.#ctor(DriveService,Google.Apis.Drive.v3.Data.File,FubarDev.FtpServer.BackgroundTransfer.ITemporaryDataFactory)">GoogleDriveFileSystem(DriveService, Google.Apis.Drive.v3.Data.File, ITemporaryDataFactory)</h4>
+  <h4 id="FubarDev_FtpServer_FileSystem_GoogleDrive_GoogleDriveFileSystem__ctor_Google_Apis_Drive_v3_DriveService_Google_Apis_Drive_v3_Data_File_FubarDev_FtpServer_BackgroundTransfer_ITemporaryDataFactory_System_Boolean_" data-uid="FubarDev.FtpServer.FileSystem.GoogleDrive.GoogleDriveFileSystem.#ctor(Google.Apis.Drive.v3.DriveService,Google.Apis.Drive.v3.Data.File,FubarDev.FtpServer.BackgroundTransfer.ITemporaryDataFactory,System.Boolean)">GoogleDriveFileSystem(DriveService, File, ITemporaryDataFactory, Boolean)</h4>
   <div class="markdown level1 summary"><p>Initializes a new instance of the <a class="xref" href="FubarDev.FtpServer.FileSystem.GoogleDrive.GoogleDriveFileSystem.html">GoogleDriveFileSystem</a> class.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public GoogleDriveFileSystem(DriveService service, Google.Apis.Drive.v3.Data.File rootFolderInfo, ITemporaryDataFactory temporaryDataFactory)</code></pre>
+    <pre><code class="lang-csharp hljs">public GoogleDriveFileSystem([NotNull] DriveService service, [NotNull] File rootFolderInfo, [NotNull] ITemporaryDataFactory temporaryDataFactory, bool useBackgroundUpload)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -131,21 +155,27 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">DriveService</span></td>
+        <td><span class="xref">Google.Apis.Drive.v3.DriveService</span></td>
         <td><span class="parametername">service</span></td>
-        <td><p>The <see cref="!:DriveService"></see> instance to use to access the Google Drive.</p>
+        <td><p>The <span class="xref">Google.Apis.Drive.v3.DriveService</span> instance to use to access the Google Drive.</p>
 </td>
       </tr>
       <tr>
         <td><span class="xref">Google.Apis.Drive.v3.Data.File</span></td>
         <td><span class="parametername">rootFolderInfo</span></td>
-        <td><p>The <see cref="!:Google.Apis.Drive.v3.Data.File"></see> to use as root folder.</p>
+        <td><p>The <span class="xref">Google.Apis.Drive.v3.Data.File</span> to use as root folder.</p>
 </td>
       </tr>
       <tr>
         <td><a class="xref" href="FubarDev.FtpServer.BackgroundTransfer.ITemporaryDataFactory.html">ITemporaryDataFactory</a></td>
         <td><span class="parametername">temporaryDataFactory</span></td>
         <td><p>The factory to create temporary data objects.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.boolean">Boolean</a></td>
+        <td><span class="parametername">useBackgroundUpload</span></td>
+        <td><p>Use the Google Drive uploader instead of the background uploader.</p>
 </td>
       </tr>
     </tbody>
@@ -157,11 +187,12 @@
     <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FileSystem_GoogleDrive_GoogleDriveFileSystem_FileSystemEntryComparer.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FileSystem.GoogleDrive.GoogleDriveFileSystem.FileSystemEntryComparer%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/2.0.0/src/FubarDev.FtpServer.FileSystem.GoogleDrive/GoogleDriveFileSystem.cs/#L64">View Source</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/blob/master/src/FubarDev.FtpServer.FileSystem.GoogleDrive/GoogleDriveFileSystem.cs/#L67">View Source</a>
   </span>
   <a id="FubarDev_FtpServer_FileSystem_GoogleDrive_GoogleDriveFileSystem_FileSystemEntryComparer_" data-uid="FubarDev.FtpServer.FileSystem.GoogleDrive.GoogleDriveFileSystem.FileSystemEntryComparer*"></a>
   <h4 id="FubarDev_FtpServer_FileSystem_GoogleDrive_GoogleDriveFileSystem_FileSystemEntryComparer" data-uid="FubarDev.FtpServer.FileSystem.GoogleDrive.GoogleDriveFileSystem.FileSystemEntryComparer">FileSystemEntryComparer</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Gets a string comparer for file system entry names.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -177,21 +208,25 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">StringComparer</span></td>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.stringcomparer">StringComparer</a></td>
         <td></td>
       </tr>
     </tbody>
   </table>
+  <h5 id="FubarDev_FtpServer_FileSystem_GoogleDrive_GoogleDriveFileSystem_FileSystemEntryComparer_remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>Required to support case insensitive file systems.</p>
+</div>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
     <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FileSystem_GoogleDrive_GoogleDriveFileSystem_Root.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FileSystem.GoogleDrive.GoogleDriveFileSystem.Root%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/2.0.0/src/FubarDev.FtpServer.FileSystem.GoogleDrive/GoogleDriveFileSystem.cs/#L67">View Source</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/blob/master/src/FubarDev.FtpServer.FileSystem.GoogleDrive/GoogleDriveFileSystem.cs/#L70">View Source</a>
   </span>
   <a id="FubarDev_FtpServer_FileSystem_GoogleDrive_GoogleDriveFileSystem_Root_" data-uid="FubarDev.FtpServer.FileSystem.GoogleDrive.GoogleDriveFileSystem.Root*"></a>
   <h4 id="FubarDev_FtpServer_FileSystem_GoogleDrive_GoogleDriveFileSystem_Root" data-uid="FubarDev.FtpServer.FileSystem.GoogleDrive.GoogleDriveFileSystem.Root">Root</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Gets the root directory entry.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -217,12 +252,11 @@
     <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FileSystem_GoogleDrive_GoogleDriveFileSystem_Service.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FileSystem.GoogleDrive.GoogleDriveFileSystem.Service%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/2.0.0/src/FubarDev.FtpServer.FileSystem.GoogleDrive/GoogleDriveFileSystem.cs/#L57">View Source</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/blob/master/src/FubarDev.FtpServer.FileSystem.GoogleDrive/GoogleDriveFileSystem.cs/#L61">View Source</a>
   </span>
   <a id="FubarDev_FtpServer_FileSystem_GoogleDrive_GoogleDriveFileSystem_Service_" data-uid="FubarDev.FtpServer.FileSystem.GoogleDrive.GoogleDriveFileSystem.Service*"></a>
   <h4 id="FubarDev_FtpServer_FileSystem_GoogleDrive_GoogleDriveFileSystem_Service" data-uid="FubarDev.FtpServer.FileSystem.GoogleDrive.GoogleDriveFileSystem.Service">Service</h4>
-  <div class="markdown level1 summary"><p>Gets the <see cref="!:DriveService"></see> instance to use to access the Google Drive.</p>
-</div>
+  <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -238,7 +272,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">DriveService</span></td>
+        <td><span class="xref">Google.Apis.Drive.v3.DriveService</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -248,11 +282,12 @@
     <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FileSystem_GoogleDrive_GoogleDriveFileSystem_SupportsAppend.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FileSystem.GoogleDrive.GoogleDriveFileSystem.SupportsAppend%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/2.0.0/src/FubarDev.FtpServer.FileSystem.GoogleDrive/GoogleDriveFileSystem.cs/#L70">View Source</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/blob/master/src/FubarDev.FtpServer.FileSystem.GoogleDrive/GoogleDriveFileSystem.cs/#L73">View Source</a>
   </span>
   <a id="FubarDev_FtpServer_FileSystem_GoogleDrive_GoogleDriveFileSystem_SupportsAppend_" data-uid="FubarDev.FtpServer.FileSystem.GoogleDrive.GoogleDriveFileSystem.SupportsAppend*"></a>
   <h4 id="FubarDev_FtpServer_FileSystem_GoogleDrive_GoogleDriveFileSystem_SupportsAppend" data-uid="FubarDev.FtpServer.FileSystem.GoogleDrive.GoogleDriveFileSystem.SupportsAppend">SupportsAppend</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Gets a value indicating whether this file system supports appending to a file.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -278,11 +313,12 @@
     <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FileSystem_GoogleDrive_GoogleDriveFileSystem_SupportsNonEmptyDirectoryDelete.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FileSystem.GoogleDrive.GoogleDriveFileSystem.SupportsNonEmptyDirectoryDelete%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/2.0.0/src/FubarDev.FtpServer.FileSystem.GoogleDrive/GoogleDriveFileSystem.cs/#L61">View Source</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/blob/master/src/FubarDev.FtpServer.FileSystem.GoogleDrive/GoogleDriveFileSystem.cs/#L64">View Source</a>
   </span>
   <a id="FubarDev_FtpServer_FileSystem_GoogleDrive_GoogleDriveFileSystem_SupportsNonEmptyDirectoryDelete_" data-uid="FubarDev.FtpServer.FileSystem.GoogleDrive.GoogleDriveFileSystem.SupportsNonEmptyDirectoryDelete*"></a>
   <h4 id="FubarDev_FtpServer_FileSystem_GoogleDrive_GoogleDriveFileSystem_SupportsNonEmptyDirectoryDelete" data-uid="FubarDev.FtpServer.FileSystem.GoogleDrive.GoogleDriveFileSystem.SupportsNonEmptyDirectoryDelete">SupportsNonEmptyDirectoryDelete</h4>
-  <div class="markdown level1 summary"></div>
+  <div class="markdown level1 summary"><p>Gets a value indicating whether this file system supports deletion of non-empty directories.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -307,14 +343,15 @@
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FileSystem_GoogleDrive_GoogleDriveFileSystem_AppendAsync_FubarDev_FtpServer_FileSystem_IUnixFileEntry_System_Nullable_System_Int64__Stream_CancellationToken_.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FileSystem.GoogleDrive.GoogleDriveFileSystem.AppendAsync(FubarDev.FtpServer.FileSystem.IUnixFileEntry%2CSystem.Nullable%7BSystem.Int64%7D%2CStream%2CCancellationToken)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FileSystem_GoogleDrive_GoogleDriveFileSystem_AppendAsync_FubarDev_FtpServer_FileSystem_IUnixFileEntry_System_Nullable_System_Int64__System_IO_Stream_System_Threading_CancellationToken_.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FileSystem.GoogleDrive.GoogleDriveFileSystem.AppendAsync(FubarDev.FtpServer.FileSystem.IUnixFileEntry%2CSystem.Nullable%7BSystem.Int64%7D%2CSystem.IO.Stream%2CSystem.Threading.CancellationToken)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/2.0.0/src/FubarDev.FtpServer.FileSystem.GoogleDrive/GoogleDriveFileSystem.cs/#L222">View Source</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/blob/master/src/FubarDev.FtpServer.FileSystem.GoogleDrive/GoogleDriveFileSystem.cs/#L225">View Source</a>
   </span>
   <a id="FubarDev_FtpServer_FileSystem_GoogleDrive_GoogleDriveFileSystem_AppendAsync_" data-uid="FubarDev.FtpServer.FileSystem.GoogleDrive.GoogleDriveFileSystem.AppendAsync*"></a>
-  <h4 id="FubarDev_FtpServer_FileSystem_GoogleDrive_GoogleDriveFileSystem_AppendAsync_FubarDev_FtpServer_FileSystem_IUnixFileEntry_System_Nullable_System_Int64__Stream_CancellationToken_" data-uid="FubarDev.FtpServer.FileSystem.GoogleDrive.GoogleDriveFileSystem.AppendAsync(FubarDev.FtpServer.FileSystem.IUnixFileEntry,System.Nullable{System.Int64},Stream,CancellationToken)">AppendAsync(IUnixFileEntry, Nullable&lt;Int64&gt;, Stream, CancellationToken)</h4>
-  <div class="markdown level1 summary"></div>
+  <h4 id="FubarDev_FtpServer_FileSystem_GoogleDrive_GoogleDriveFileSystem_AppendAsync_FubarDev_FtpServer_FileSystem_IUnixFileEntry_System_Nullable_System_Int64__System_IO_Stream_System_Threading_CancellationToken_" data-uid="FubarDev.FtpServer.FileSystem.GoogleDrive.GoogleDriveFileSystem.AppendAsync(FubarDev.FtpServer.FileSystem.IUnixFileEntry,System.Nullable{System.Int64},System.IO.Stream,System.Threading.CancellationToken)">AppendAsync(IUnixFileEntry, Nullable&lt;Int64&gt;, Stream, CancellationToken)</h4>
+  <div class="markdown level1 summary"><p>Appends data to a file.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -333,22 +370,26 @@
       <tr>
         <td><a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixFileEntry.html">IUnixFileEntry</a></td>
         <td><span class="parametername">fileEntry</span></td>
-        <td></td>
+        <td><p>The <a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixFileEntry.html">IUnixFileEntry</a> to append data to.</p>
+</td>
       </tr>
       <tr>
         <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.nullable-1">Nullable</a>&lt;<a class="xref" href="https://docs.microsoft.com/dotnet/api/system.int64">Int64</a>&gt;</td>
         <td><span class="parametername">startPosition</span></td>
-        <td></td>
+        <td><p>The start position - when it is null, the data is appended.</p>
+</td>
       </tr>
       <tr>
-        <td><span class="xref">Stream</span></td>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.io.stream">Stream</a></td>
         <td><span class="parametername">data</span></td>
-        <td></td>
+        <td><p>The data stream to read from.</p>
+</td>
       </tr>
       <tr>
-        <td><span class="xref">CancellationToken</span></td>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.threading.cancellationtoken">CancellationToken</a></td>
         <td><span class="parametername">cancellationToken</span></td>
-        <td></td>
+        <td><p>The cancellation token.</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -362,21 +403,23 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">Task</span>&lt;<a class="xref" href="FubarDev.FtpServer.BackgroundTransfer.IBackgroundTransfer.html">IBackgroundTransfer</a>&gt;</td>
-        <td></td>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a class="xref" href="FubarDev.FtpServer.BackgroundTransfer.IBackgroundTransfer.html">IBackgroundTransfer</a>&gt;</td>
+        <td><p>an optional <a class="xref" href="FubarDev.FtpServer.BackgroundTransfer.IBackgroundTransfer.html">IBackgroundTransfer</a> when the transfer needs to happen in the background.</p>
+</td>
       </tr>
     </tbody>
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FileSystem_GoogleDrive_GoogleDriveFileSystem_CreateAsync_FubarDev_FtpServer_FileSystem_IUnixDirectoryEntry_System_String_Stream_CancellationToken_.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FileSystem.GoogleDrive.GoogleDriveFileSystem.CreateAsync(FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry%2CSystem.String%2CStream%2CCancellationToken)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FileSystem_GoogleDrive_GoogleDriveFileSystem_CreateAsync_FubarDev_FtpServer_FileSystem_IUnixDirectoryEntry_System_String_System_IO_Stream_System_Threading_CancellationToken_.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FileSystem.GoogleDrive.GoogleDriveFileSystem.CreateAsync(FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry%2CSystem.String%2CSystem.IO.Stream%2CSystem.Threading.CancellationToken)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/2.0.0/src/FubarDev.FtpServer.FileSystem.GoogleDrive/GoogleDriveFileSystem.cs/#L232">View Source</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/blob/master/src/FubarDev.FtpServer.FileSystem.GoogleDrive/GoogleDriveFileSystem.cs/#L235">View Source</a>
   </span>
   <a id="FubarDev_FtpServer_FileSystem_GoogleDrive_GoogleDriveFileSystem_CreateAsync_" data-uid="FubarDev.FtpServer.FileSystem.GoogleDrive.GoogleDriveFileSystem.CreateAsync*"></a>
-  <h4 id="FubarDev_FtpServer_FileSystem_GoogleDrive_GoogleDriveFileSystem_CreateAsync_FubarDev_FtpServer_FileSystem_IUnixDirectoryEntry_System_String_Stream_CancellationToken_" data-uid="FubarDev.FtpServer.FileSystem.GoogleDrive.GoogleDriveFileSystem.CreateAsync(FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry,System.String,Stream,CancellationToken)">CreateAsync(IUnixDirectoryEntry, String, Stream, CancellationToken)</h4>
-  <div class="markdown level1 summary"></div>
+  <h4 id="FubarDev_FtpServer_FileSystem_GoogleDrive_GoogleDriveFileSystem_CreateAsync_FubarDev_FtpServer_FileSystem_IUnixDirectoryEntry_System_String_System_IO_Stream_System_Threading_CancellationToken_" data-uid="FubarDev.FtpServer.FileSystem.GoogleDrive.GoogleDriveFileSystem.CreateAsync(FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry,System.String,System.IO.Stream,System.Threading.CancellationToken)">CreateAsync(IUnixDirectoryEntry, String, Stream, CancellationToken)</h4>
+  <div class="markdown level1 summary"><p>Creates a file with the given <code data-dev-comment-type="paramref" class="paramref">fileName</code> and <code data-dev-comment-type="paramref" class="paramref">data</code>.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -395,22 +438,26 @@
       <tr>
         <td><a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry.html">IUnixDirectoryEntry</a></td>
         <td><span class="parametername">targetDirectory</span></td>
-        <td></td>
+        <td><p>The directory to create the file in.</p>
+</td>
       </tr>
       <tr>
         <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
         <td><span class="parametername">fileName</span></td>
-        <td></td>
+        <td><p>The name of the new file.</p>
+</td>
       </tr>
       <tr>
-        <td><span class="xref">Stream</span></td>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.io.stream">Stream</a></td>
         <td><span class="parametername">data</span></td>
-        <td></td>
+        <td><p>The <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.io.stream">Stream</a> used to read the data for the new file.</p>
+</td>
       </tr>
       <tr>
-        <td><span class="xref">CancellationToken</span></td>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.threading.cancellationtoken">CancellationToken</a></td>
         <td><span class="parametername">cancellationToken</span></td>
-        <td></td>
+        <td><p>The cancellation token.</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -424,21 +471,23 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">Task</span>&lt;<a class="xref" href="FubarDev.FtpServer.BackgroundTransfer.IBackgroundTransfer.html">IBackgroundTransfer</a>&gt;</td>
-        <td></td>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a class="xref" href="FubarDev.FtpServer.BackgroundTransfer.IBackgroundTransfer.html">IBackgroundTransfer</a>&gt;</td>
+        <td><p>an optional <a class="xref" href="FubarDev.FtpServer.BackgroundTransfer.IBackgroundTransfer.html">IBackgroundTransfer</a> when the transfer needs to happen in the background.</p>
+</td>
       </tr>
     </tbody>
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FileSystem_GoogleDrive_GoogleDriveFileSystem_CreateDirectoryAsync_FubarDev_FtpServer_FileSystem_IUnixDirectoryEntry_System_String_CancellationToken_.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FileSystem.GoogleDrive.GoogleDriveFileSystem.CreateDirectoryAsync(FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry%2CSystem.String%2CCancellationToken)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FileSystem_GoogleDrive_GoogleDriveFileSystem_CreateDirectoryAsync_FubarDev_FtpServer_FileSystem_IUnixDirectoryEntry_System_String_System_Threading_CancellationToken_.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FileSystem.GoogleDrive.GoogleDriveFileSystem.CreateDirectoryAsync(FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry%2CSystem.String%2CSystem.Threading.CancellationToken)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/2.0.0/src/FubarDev.FtpServer.FileSystem.GoogleDrive/GoogleDriveFileSystem.cs/#L154">View Source</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/blob/master/src/FubarDev.FtpServer.FileSystem.GoogleDrive/GoogleDriveFileSystem.cs/#L157">View Source</a>
   </span>
   <a id="FubarDev_FtpServer_FileSystem_GoogleDrive_GoogleDriveFileSystem_CreateDirectoryAsync_" data-uid="FubarDev.FtpServer.FileSystem.GoogleDrive.GoogleDriveFileSystem.CreateDirectoryAsync*"></a>
-  <h4 id="FubarDev_FtpServer_FileSystem_GoogleDrive_GoogleDriveFileSystem_CreateDirectoryAsync_FubarDev_FtpServer_FileSystem_IUnixDirectoryEntry_System_String_CancellationToken_" data-uid="FubarDev.FtpServer.FileSystem.GoogleDrive.GoogleDriveFileSystem.CreateDirectoryAsync(FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry,System.String,CancellationToken)">CreateDirectoryAsync(IUnixDirectoryEntry, String, CancellationToken)</h4>
-  <div class="markdown level1 summary"></div>
+  <h4 id="FubarDev_FtpServer_FileSystem_GoogleDrive_GoogleDriveFileSystem_CreateDirectoryAsync_FubarDev_FtpServer_FileSystem_IUnixDirectoryEntry_System_String_System_Threading_CancellationToken_" data-uid="FubarDev.FtpServer.FileSystem.GoogleDrive.GoogleDriveFileSystem.CreateDirectoryAsync(FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry,System.String,System.Threading.CancellationToken)">CreateDirectoryAsync(IUnixDirectoryEntry, String, CancellationToken)</h4>
+  <div class="markdown level1 summary"><p>Creates a sub directory with the name <code data-dev-comment-type="paramref" class="paramref">directoryName</code> in <code data-dev-comment-type="paramref" class="paramref">targetDirectory</code>.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -457,17 +506,20 @@
       <tr>
         <td><a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry.html">IUnixDirectoryEntry</a></td>
         <td><span class="parametername">targetDirectory</span></td>
-        <td></td>
+        <td><p>The directory to create the sub directory in.</p>
+</td>
       </tr>
       <tr>
         <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
         <td><span class="parametername">directoryName</span></td>
-        <td></td>
+        <td><p>The name of the new sub directory.</p>
+</td>
       </tr>
       <tr>
-        <td><span class="xref">CancellationToken</span></td>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.threading.cancellationtoken">CancellationToken</a></td>
         <td><span class="parametername">cancellationToken</span></td>
-        <td></td>
+        <td><p>The cancellation token.</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -481,8 +533,9 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">Task</span>&lt;<a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry.html">IUnixDirectoryEntry</a>&gt;</td>
-        <td></td>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry.html">IUnixDirectoryEntry</a>&gt;</td>
+        <td><p>The new <a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry.html">IUnixDirectoryEntry</a>.</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -491,7 +544,7 @@
     <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FileSystem_GoogleDrive_GoogleDriveFileSystem_Dispose.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FileSystem.GoogleDrive.GoogleDriveFileSystem.Dispose%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/2.0.0/src/FubarDev.FtpServer.FileSystem.GoogleDrive/GoogleDriveFileSystem.cs/#L331">View Source</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/blob/master/src/FubarDev.FtpServer.FileSystem.GoogleDrive/GoogleDriveFileSystem.cs/#L359">View Source</a>
   </span>
   <a id="FubarDev_FtpServer_FileSystem_GoogleDrive_GoogleDriveFileSystem_Dispose_" data-uid="FubarDev.FtpServer.FileSystem.GoogleDrive.GoogleDriveFileSystem.Dispose*"></a>
   <h4 id="FubarDev_FtpServer_FileSystem_GoogleDrive_GoogleDriveFileSystem_Dispose" data-uid="FubarDev.FtpServer.FileSystem.GoogleDrive.GoogleDriveFileSystem.Dispose">Dispose()</h4>
@@ -503,14 +556,15 @@
   </div>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FileSystem_GoogleDrive_GoogleDriveFileSystem_GetEntriesAsync_FubarDev_FtpServer_FileSystem_IUnixDirectoryEntry_CancellationToken_.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FileSystem.GoogleDrive.GoogleDriveFileSystem.GetEntriesAsync(FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry%2CCancellationToken)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FileSystem_GoogleDrive_GoogleDriveFileSystem_GetEntriesAsync_FubarDev_FtpServer_FileSystem_IUnixDirectoryEntry_System_Threading_CancellationToken_.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FileSystem.GoogleDrive.GoogleDriveFileSystem.GetEntriesAsync(FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry%2CSystem.Threading.CancellationToken)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/2.0.0/src/FubarDev.FtpServer.FileSystem.GoogleDrive/GoogleDriveFileSystem.cs/#L73">View Source</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/blob/master/src/FubarDev.FtpServer.FileSystem.GoogleDrive/GoogleDriveFileSystem.cs/#L76">View Source</a>
   </span>
   <a id="FubarDev_FtpServer_FileSystem_GoogleDrive_GoogleDriveFileSystem_GetEntriesAsync_" data-uid="FubarDev.FtpServer.FileSystem.GoogleDrive.GoogleDriveFileSystem.GetEntriesAsync*"></a>
-  <h4 id="FubarDev_FtpServer_FileSystem_GoogleDrive_GoogleDriveFileSystem_GetEntriesAsync_FubarDev_FtpServer_FileSystem_IUnixDirectoryEntry_CancellationToken_" data-uid="FubarDev.FtpServer.FileSystem.GoogleDrive.GoogleDriveFileSystem.GetEntriesAsync(FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry,CancellationToken)">GetEntriesAsync(IUnixDirectoryEntry, CancellationToken)</h4>
-  <div class="markdown level1 summary"></div>
+  <h4 id="FubarDev_FtpServer_FileSystem_GoogleDrive_GoogleDriveFileSystem_GetEntriesAsync_FubarDev_FtpServer_FileSystem_IUnixDirectoryEntry_System_Threading_CancellationToken_" data-uid="FubarDev.FtpServer.FileSystem.GoogleDrive.GoogleDriveFileSystem.GetEntriesAsync(FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry,System.Threading.CancellationToken)">GetEntriesAsync(IUnixDirectoryEntry, CancellationToken)</h4>
+  <div class="markdown level1 summary"><p>Gets a list of <a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixFileSystemEntry.html">IUnixFileSystemEntry</a> objects for a given <code data-dev-comment-type="paramref" class="paramref">directoryEntry</code>.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -529,12 +583,14 @@
       <tr>
         <td><a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry.html">IUnixDirectoryEntry</a></td>
         <td><span class="parametername">directoryEntry</span></td>
-        <td></td>
+        <td><p>The <a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry.html">IUnixDirectoryEntry</a> to get the file system entries for.</p>
+</td>
       </tr>
       <tr>
-        <td><span class="xref">CancellationToken</span></td>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.threading.cancellationtoken">CancellationToken</a></td>
         <td><span class="parametername">cancellationToken</span></td>
-        <td></td>
+        <td><p>The cancellation token.</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -548,21 +604,23 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">Task</span>&lt;<span class="xref">IReadOnlyList</span>&lt;<a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixFileSystemEntry.html">IUnixFileSystemEntry</a>&gt;&gt;</td>
-        <td></td>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.generic.ireadonlylist-1">IReadOnlyList</a>&lt;<a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixFileSystemEntry.html">IUnixFileSystemEntry</a>&gt;&gt;</td>
+        <td><p>The list of <a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixFileSystemEntry.html">IUnixFileSystemEntry</a> objects for a given <code data-dev-comment-type="paramref" class="paramref">directoryEntry</code>.</p>
+</td>
       </tr>
     </tbody>
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FileSystem_GoogleDrive_GoogleDriveFileSystem_GetEntryByNameAsync_FubarDev_FtpServer_FileSystem_IUnixDirectoryEntry_System_String_CancellationToken_.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FileSystem.GoogleDrive.GoogleDriveFileSystem.GetEntryByNameAsync(FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry%2CSystem.String%2CCancellationToken)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FileSystem_GoogleDrive_GoogleDriveFileSystem_GetEntryByNameAsync_FubarDev_FtpServer_FileSystem_IUnixDirectoryEntry_System_String_System_Threading_CancellationToken_.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FileSystem.GoogleDrive.GoogleDriveFileSystem.GetEntryByNameAsync(FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry%2CSystem.String%2CSystem.Threading.CancellationToken)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/2.0.0/src/FubarDev.FtpServer.FileSystem.GoogleDrive/GoogleDriveFileSystem.cs/#L86">View Source</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/blob/master/src/FubarDev.FtpServer.FileSystem.GoogleDrive/GoogleDriveFileSystem.cs/#L89">View Source</a>
   </span>
   <a id="FubarDev_FtpServer_FileSystem_GoogleDrive_GoogleDriveFileSystem_GetEntryByNameAsync_" data-uid="FubarDev.FtpServer.FileSystem.GoogleDrive.GoogleDriveFileSystem.GetEntryByNameAsync*"></a>
-  <h4 id="FubarDev_FtpServer_FileSystem_GoogleDrive_GoogleDriveFileSystem_GetEntryByNameAsync_FubarDev_FtpServer_FileSystem_IUnixDirectoryEntry_System_String_CancellationToken_" data-uid="FubarDev.FtpServer.FileSystem.GoogleDrive.GoogleDriveFileSystem.GetEntryByNameAsync(FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry,System.String,CancellationToken)">GetEntryByNameAsync(IUnixDirectoryEntry, String, CancellationToken)</h4>
-  <div class="markdown level1 summary"></div>
+  <h4 id="FubarDev_FtpServer_FileSystem_GoogleDrive_GoogleDriveFileSystem_GetEntryByNameAsync_FubarDev_FtpServer_FileSystem_IUnixDirectoryEntry_System_String_System_Threading_CancellationToken_" data-uid="FubarDev.FtpServer.FileSystem.GoogleDrive.GoogleDriveFileSystem.GetEntryByNameAsync(FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry,System.String,System.Threading.CancellationToken)">GetEntryByNameAsync(IUnixDirectoryEntry, String, CancellationToken)</h4>
+  <div class="markdown level1 summary"><p>Gets a file system entry by name.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -581,17 +639,20 @@
       <tr>
         <td><a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry.html">IUnixDirectoryEntry</a></td>
         <td><span class="parametername">directoryEntry</span></td>
-        <td></td>
+        <td><p>The <a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry.html">IUnixDirectoryEntry</a> to get the file system entry for.</p>
+</td>
       </tr>
       <tr>
         <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
         <td><span class="parametername">name</span></td>
-        <td></td>
+        <td><p>The name of the file system entry to search.</p>
+</td>
       </tr>
       <tr>
-        <td><span class="xref">CancellationToken</span></td>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.threading.cancellationtoken">CancellationToken</a></td>
         <td><span class="parametername">cancellationToken</span></td>
-        <td></td>
+        <td><p>The cancellation token.</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -605,21 +666,23 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">Task</span>&lt;<a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixFileSystemEntry.html">IUnixFileSystemEntry</a>&gt;</td>
-        <td></td>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixFileSystemEntry.html">IUnixFileSystemEntry</a>&gt;</td>
+        <td><p>Returns the found <a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixFileSystemEntry.html">IUnixFileSystemEntry</a>.</p>
+</td>
       </tr>
     </tbody>
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FileSystem_GoogleDrive_GoogleDriveFileSystem_MoveAsync_FubarDev_FtpServer_FileSystem_IUnixDirectoryEntry_FubarDev_FtpServer_FileSystem_IUnixFileSystemEntry_FubarDev_FtpServer_FileSystem_IUnixDirectoryEntry_System_String_CancellationToken_.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FileSystem.GoogleDrive.GoogleDriveFileSystem.MoveAsync(FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry%2CFubarDev.FtpServer.FileSystem.IUnixFileSystemEntry%2CFubarDev.FtpServer.FileSystem.IUnixDirectoryEntry%2CSystem.String%2CCancellationToken)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FileSystem_GoogleDrive_GoogleDriveFileSystem_MoveAsync_FubarDev_FtpServer_FileSystem_IUnixDirectoryEntry_FubarDev_FtpServer_FileSystem_IUnixFileSystemEntry_FubarDev_FtpServer_FileSystem_IUnixDirectoryEntry_System_String_System_Threading_CancellationToken_.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FileSystem.GoogleDrive.GoogleDriveFileSystem.MoveAsync(FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry%2CFubarDev.FtpServer.FileSystem.IUnixFileSystemEntry%2CFubarDev.FtpServer.FileSystem.IUnixDirectoryEntry%2CSystem.String%2CSystem.Threading.CancellationToken)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/2.0.0/src/FubarDev.FtpServer.FileSystem.GoogleDrive/GoogleDriveFileSystem.cs/#L100">View Source</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/blob/master/src/FubarDev.FtpServer.FileSystem.GoogleDrive/GoogleDriveFileSystem.cs/#L103">View Source</a>
   </span>
   <a id="FubarDev_FtpServer_FileSystem_GoogleDrive_GoogleDriveFileSystem_MoveAsync_" data-uid="FubarDev.FtpServer.FileSystem.GoogleDrive.GoogleDriveFileSystem.MoveAsync*"></a>
-  <h4 id="FubarDev_FtpServer_FileSystem_GoogleDrive_GoogleDriveFileSystem_MoveAsync_FubarDev_FtpServer_FileSystem_IUnixDirectoryEntry_FubarDev_FtpServer_FileSystem_IUnixFileSystemEntry_FubarDev_FtpServer_FileSystem_IUnixDirectoryEntry_System_String_CancellationToken_" data-uid="FubarDev.FtpServer.FileSystem.GoogleDrive.GoogleDriveFileSystem.MoveAsync(FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry,FubarDev.FtpServer.FileSystem.IUnixFileSystemEntry,FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry,System.String,CancellationToken)">MoveAsync(IUnixDirectoryEntry, IUnixFileSystemEntry, IUnixDirectoryEntry, String, CancellationToken)</h4>
-  <div class="markdown level1 summary"></div>
+  <h4 id="FubarDev_FtpServer_FileSystem_GoogleDrive_GoogleDriveFileSystem_MoveAsync_FubarDev_FtpServer_FileSystem_IUnixDirectoryEntry_FubarDev_FtpServer_FileSystem_IUnixFileSystemEntry_FubarDev_FtpServer_FileSystem_IUnixDirectoryEntry_System_String_System_Threading_CancellationToken_" data-uid="FubarDev.FtpServer.FileSystem.GoogleDrive.GoogleDriveFileSystem.MoveAsync(FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry,FubarDev.FtpServer.FileSystem.IUnixFileSystemEntry,FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry,System.String,System.Threading.CancellationToken)">MoveAsync(IUnixDirectoryEntry, IUnixFileSystemEntry, IUnixDirectoryEntry, String, CancellationToken)</h4>
+  <div class="markdown level1 summary"><p>Moves a file system entry from <code data-dev-comment-type="paramref" class="paramref">parent</code> to <code data-dev-comment-type="paramref" class="paramref">target</code>.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -638,27 +701,32 @@
       <tr>
         <td><a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry.html">IUnixDirectoryEntry</a></td>
         <td><span class="parametername">parent</span></td>
-        <td></td>
+        <td><p>The <a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry.html">IUnixDirectoryEntry</a> of <code data-dev-comment-type="paramref" class="paramref">source</code>.</p>
+</td>
       </tr>
       <tr>
         <td><a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixFileSystemEntry.html">IUnixFileSystemEntry</a></td>
         <td><span class="parametername">source</span></td>
-        <td></td>
+        <td><p>The <a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixFileSystemEntry.html">IUnixFileSystemEntry</a> to move.</p>
+</td>
       </tr>
       <tr>
         <td><a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry.html">IUnixDirectoryEntry</a></td>
         <td><span class="parametername">target</span></td>
-        <td></td>
+        <td><p>The destination <a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry.html">IUnixDirectoryEntry</a> where <code data-dev-comment-type="paramref" class="paramref">source</code> gets moved to.</p>
+</td>
       </tr>
       <tr>
         <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
         <td><span class="parametername">fileName</span></td>
-        <td></td>
+        <td><p>The new name of <code data-dev-comment-type="paramref" class="paramref">source</code>.</p>
+</td>
       </tr>
       <tr>
-        <td><span class="xref">CancellationToken</span></td>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.threading.cancellationtoken">CancellationToken</a></td>
         <td><span class="parametername">cancellationToken</span></td>
-        <td></td>
+        <td><p>The cancellation token.</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -672,21 +740,23 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">Task</span>&lt;<a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixFileSystemEntry.html">IUnixFileSystemEntry</a>&gt;</td>
-        <td></td>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixFileSystemEntry.html">IUnixFileSystemEntry</a>&gt;</td>
+        <td><p>Returns the new <a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixFileSystemEntry.html">IUnixFileSystemEntry</a>.</p>
+</td>
       </tr>
     </tbody>
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FileSystem_GoogleDrive_GoogleDriveFileSystem_OpenReadAsync_FubarDev_FtpServer_FileSystem_IUnixFileEntry_System_Int64_CancellationToken_.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FileSystem.GoogleDrive.GoogleDriveFileSystem.OpenReadAsync(FubarDev.FtpServer.FileSystem.IUnixFileEntry%2CSystem.Int64%2CCancellationToken)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FileSystem_GoogleDrive_GoogleDriveFileSystem_OpenReadAsync_FubarDev_FtpServer_FileSystem_IUnixFileEntry_System_Int64_System_Threading_CancellationToken_.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FileSystem.GoogleDrive.GoogleDriveFileSystem.OpenReadAsync(FubarDev.FtpServer.FileSystem.IUnixFileEntry%2CSystem.Int64%2CSystem.Threading.CancellationToken)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/2.0.0/src/FubarDev.FtpServer.FileSystem.GoogleDrive/GoogleDriveFileSystem.cs/#L180">View Source</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/blob/master/src/FubarDev.FtpServer.FileSystem.GoogleDrive/GoogleDriveFileSystem.cs/#L183">View Source</a>
   </span>
   <a id="FubarDev_FtpServer_FileSystem_GoogleDrive_GoogleDriveFileSystem_OpenReadAsync_" data-uid="FubarDev.FtpServer.FileSystem.GoogleDrive.GoogleDriveFileSystem.OpenReadAsync*"></a>
-  <h4 id="FubarDev_FtpServer_FileSystem_GoogleDrive_GoogleDriveFileSystem_OpenReadAsync_FubarDev_FtpServer_FileSystem_IUnixFileEntry_System_Int64_CancellationToken_" data-uid="FubarDev.FtpServer.FileSystem.GoogleDrive.GoogleDriveFileSystem.OpenReadAsync(FubarDev.FtpServer.FileSystem.IUnixFileEntry,System.Int64,CancellationToken)">OpenReadAsync(IUnixFileEntry, Int64, CancellationToken)</h4>
-  <div class="markdown level1 summary"></div>
+  <h4 id="FubarDev_FtpServer_FileSystem_GoogleDrive_GoogleDriveFileSystem_OpenReadAsync_FubarDev_FtpServer_FileSystem_IUnixFileEntry_System_Int64_System_Threading_CancellationToken_" data-uid="FubarDev.FtpServer.FileSystem.GoogleDrive.GoogleDriveFileSystem.OpenReadAsync(FubarDev.FtpServer.FileSystem.IUnixFileEntry,System.Int64,System.Threading.CancellationToken)">OpenReadAsync(IUnixFileEntry, Int64, CancellationToken)</h4>
+  <div class="markdown level1 summary"><p>Opens a file for reading.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -705,17 +775,20 @@
       <tr>
         <td><a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixFileEntry.html">IUnixFileEntry</a></td>
         <td><span class="parametername">fileEntry</span></td>
-        <td></td>
+        <td><p>The <a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixFileEntry.html">IUnixFileEntry</a> to read from.</p>
+</td>
       </tr>
       <tr>
         <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.int64">Int64</a></td>
         <td><span class="parametername">startPosition</span></td>
-        <td></td>
+        <td><p>The start position to read from.</p>
+</td>
       </tr>
       <tr>
-        <td><span class="xref">CancellationToken</span></td>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.threading.cancellationtoken">CancellationToken</a></td>
         <td><span class="parametername">cancellationToken</span></td>
-        <td></td>
+        <td><p>The cancellation token.</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -729,21 +802,23 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">Task</span>&lt;<span class="xref">Stream</span>&gt;</td>
-        <td></td>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a class="xref" href="https://docs.microsoft.com/dotnet/api/system.io.stream">Stream</a>&gt;</td>
+        <td><p>The <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.io.stream">Stream</a> to be used for reading.</p>
+</td>
       </tr>
     </tbody>
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FileSystem_GoogleDrive_GoogleDriveFileSystem_ReplaceAsync_FubarDev_FtpServer_FileSystem_IUnixFileEntry_Stream_CancellationToken_.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FileSystem.GoogleDrive.GoogleDriveFileSystem.ReplaceAsync(FubarDev.FtpServer.FileSystem.IUnixFileEntry%2CStream%2CCancellationToken)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FileSystem_GoogleDrive_GoogleDriveFileSystem_ReplaceAsync_FubarDev_FtpServer_FileSystem_IUnixFileEntry_System_IO_Stream_System_Threading_CancellationToken_.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FileSystem.GoogleDrive.GoogleDriveFileSystem.ReplaceAsync(FubarDev.FtpServer.FileSystem.IUnixFileEntry%2CSystem.IO.Stream%2CSystem.Threading.CancellationToken)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/2.0.0/src/FubarDev.FtpServer.FileSystem.GoogleDrive/GoogleDriveFileSystem.cs/#L271">View Source</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/blob/master/src/FubarDev.FtpServer.FileSystem.GoogleDrive/GoogleDriveFileSystem.cs/#L286">View Source</a>
   </span>
   <a id="FubarDev_FtpServer_FileSystem_GoogleDrive_GoogleDriveFileSystem_ReplaceAsync_" data-uid="FubarDev.FtpServer.FileSystem.GoogleDrive.GoogleDriveFileSystem.ReplaceAsync*"></a>
-  <h4 id="FubarDev_FtpServer_FileSystem_GoogleDrive_GoogleDriveFileSystem_ReplaceAsync_FubarDev_FtpServer_FileSystem_IUnixFileEntry_Stream_CancellationToken_" data-uid="FubarDev.FtpServer.FileSystem.GoogleDrive.GoogleDriveFileSystem.ReplaceAsync(FubarDev.FtpServer.FileSystem.IUnixFileEntry,Stream,CancellationToken)">ReplaceAsync(IUnixFileEntry, Stream, CancellationToken)</h4>
-  <div class="markdown level1 summary"></div>
+  <h4 id="FubarDev_FtpServer_FileSystem_GoogleDrive_GoogleDriveFileSystem_ReplaceAsync_FubarDev_FtpServer_FileSystem_IUnixFileEntry_System_IO_Stream_System_Threading_CancellationToken_" data-uid="FubarDev.FtpServer.FileSystem.GoogleDrive.GoogleDriveFileSystem.ReplaceAsync(FubarDev.FtpServer.FileSystem.IUnixFileEntry,System.IO.Stream,System.Threading.CancellationToken)">ReplaceAsync(IUnixFileEntry, Stream, CancellationToken)</h4>
+  <div class="markdown level1 summary"><p>Replaces the contents of a file.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -762,17 +837,20 @@
       <tr>
         <td><a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixFileEntry.html">IUnixFileEntry</a></td>
         <td><span class="parametername">fileEntry</span></td>
-        <td></td>
+        <td><p>The <a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixFileEntry.html">IUnixFileEntry</a> to replace the data for.</p>
+</td>
       </tr>
       <tr>
-        <td><span class="xref">Stream</span></td>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.io.stream">Stream</a></td>
         <td><span class="parametername">data</span></td>
-        <td></td>
+        <td><p>The data to be written to the given <code data-dev-comment-type="paramref" class="paramref">fileEntry</code>.</p>
+</td>
       </tr>
       <tr>
-        <td><span class="xref">CancellationToken</span></td>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.threading.cancellationtoken">CancellationToken</a></td>
         <td><span class="parametername">cancellationToken</span></td>
-        <td></td>
+        <td><p>The cancellation token.</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -786,21 +864,23 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">Task</span>&lt;<a class="xref" href="FubarDev.FtpServer.BackgroundTransfer.IBackgroundTransfer.html">IBackgroundTransfer</a>&gt;</td>
-        <td></td>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a class="xref" href="FubarDev.FtpServer.BackgroundTransfer.IBackgroundTransfer.html">IBackgroundTransfer</a>&gt;</td>
+        <td><p>an optional <a class="xref" href="FubarDev.FtpServer.BackgroundTransfer.IBackgroundTransfer.html">IBackgroundTransfer</a> when the transfer needs to happen in the background.</p>
+</td>
       </tr>
     </tbody>
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FileSystem_GoogleDrive_GoogleDriveFileSystem_SetMacTimeAsync_FubarDev_FtpServer_FileSystem_IUnixFileSystemEntry_System_Nullable_DateTimeOffset__System_Nullable_DateTimeOffset__System_Nullable_DateTimeOffset__CancellationToken_.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FileSystem.GoogleDrive.GoogleDriveFileSystem.SetMacTimeAsync(FubarDev.FtpServer.FileSystem.IUnixFileSystemEntry%2CSystem.Nullable%7BDateTimeOffset%7D%2CSystem.Nullable%7BDateTimeOffset%7D%2CSystem.Nullable%7BDateTimeOffset%7D%2CCancellationToken)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FileSystem_GoogleDrive_GoogleDriveFileSystem_SetMacTimeAsync_FubarDev_FtpServer_FileSystem_IUnixFileSystemEntry_System_Nullable_System_DateTimeOffset__System_Nullable_System_DateTimeOffset__System_Nullable_System_DateTimeOffset__System_Threading_CancellationToken_.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FileSystem.GoogleDrive.GoogleDriveFileSystem.SetMacTimeAsync(FubarDev.FtpServer.FileSystem.IUnixFileSystemEntry%2CSystem.Nullable%7BSystem.DateTimeOffset%7D%2CSystem.Nullable%7BSystem.DateTimeOffset%7D%2CSystem.Nullable%7BSystem.DateTimeOffset%7D%2CSystem.Threading.CancellationToken)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/2.0.0/src/FubarDev.FtpServer.FileSystem.GoogleDrive/GoogleDriveFileSystem.cs/#L294">View Source</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/blob/master/src/FubarDev.FtpServer.FileSystem.GoogleDrive/GoogleDriveFileSystem.cs/#L322">View Source</a>
   </span>
   <a id="FubarDev_FtpServer_FileSystem_GoogleDrive_GoogleDriveFileSystem_SetMacTimeAsync_" data-uid="FubarDev.FtpServer.FileSystem.GoogleDrive.GoogleDriveFileSystem.SetMacTimeAsync*"></a>
-  <h4 id="FubarDev_FtpServer_FileSystem_GoogleDrive_GoogleDriveFileSystem_SetMacTimeAsync_FubarDev_FtpServer_FileSystem_IUnixFileSystemEntry_System_Nullable_DateTimeOffset__System_Nullable_DateTimeOffset__System_Nullable_DateTimeOffset__CancellationToken_" data-uid="FubarDev.FtpServer.FileSystem.GoogleDrive.GoogleDriveFileSystem.SetMacTimeAsync(FubarDev.FtpServer.FileSystem.IUnixFileSystemEntry,System.Nullable{DateTimeOffset},System.Nullable{DateTimeOffset},System.Nullable{DateTimeOffset},CancellationToken)">SetMacTimeAsync(IUnixFileSystemEntry, Nullable&lt;DateTimeOffset&gt;, Nullable&lt;DateTimeOffset&gt;, Nullable&lt;DateTimeOffset&gt;, CancellationToken)</h4>
-  <div class="markdown level1 summary"></div>
+  <h4 id="FubarDev_FtpServer_FileSystem_GoogleDrive_GoogleDriveFileSystem_SetMacTimeAsync_FubarDev_FtpServer_FileSystem_IUnixFileSystemEntry_System_Nullable_System_DateTimeOffset__System_Nullable_System_DateTimeOffset__System_Nullable_System_DateTimeOffset__System_Threading_CancellationToken_" data-uid="FubarDev.FtpServer.FileSystem.GoogleDrive.GoogleDriveFileSystem.SetMacTimeAsync(FubarDev.FtpServer.FileSystem.IUnixFileSystemEntry,System.Nullable{System.DateTimeOffset},System.Nullable{System.DateTimeOffset},System.Nullable{System.DateTimeOffset},System.Threading.CancellationToken)">SetMacTimeAsync(IUnixFileSystemEntry, Nullable&lt;DateTimeOffset&gt;, Nullable&lt;DateTimeOffset&gt;, Nullable&lt;DateTimeOffset&gt;, CancellationToken)</h4>
+  <div class="markdown level1 summary"><p>Sets the modify/access/create timestamp of a file system item.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -819,27 +899,32 @@
       <tr>
         <td><a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixFileSystemEntry.html">IUnixFileSystemEntry</a></td>
         <td><span class="parametername">entry</span></td>
-        <td></td>
+        <td><p>The <a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixFileSystemEntry.html">IUnixFileSystemEntry</a> to change the timestamp for.</p>
+</td>
       </tr>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.nullable-1">Nullable</a>&lt;<span class="xref">DateTimeOffset</span>&gt;</td>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.nullable-1">Nullable</a>&lt;<a class="xref" href="https://docs.microsoft.com/dotnet/api/system.datetimeoffset">DateTimeOffset</a>&gt;</td>
         <td><span class="parametername">modify</span></td>
-        <td></td>
+        <td><p>The modification timestamp.</p>
+</td>
       </tr>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.nullable-1">Nullable</a>&lt;<span class="xref">DateTimeOffset</span>&gt;</td>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.nullable-1">Nullable</a>&lt;<a class="xref" href="https://docs.microsoft.com/dotnet/api/system.datetimeoffset">DateTimeOffset</a>&gt;</td>
         <td><span class="parametername">access</span></td>
-        <td></td>
+        <td><p>The access timestamp.</p>
+</td>
       </tr>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.nullable-1">Nullable</a>&lt;<span class="xref">DateTimeOffset</span>&gt;</td>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.nullable-1">Nullable</a>&lt;<a class="xref" href="https://docs.microsoft.com/dotnet/api/system.datetimeoffset">DateTimeOffset</a>&gt;</td>
         <td><span class="parametername">create</span></td>
-        <td></td>
+        <td><p>The creation timestamp.</p>
+</td>
       </tr>
       <tr>
-        <td><span class="xref">CancellationToken</span></td>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.threading.cancellationtoken">CancellationToken</a></td>
         <td><span class="parametername">cancellationToken</span></td>
-        <td></td>
+        <td><p>The cancellation token.</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -853,21 +938,23 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">Task</span>&lt;<a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixFileSystemEntry.html">IUnixFileSystemEntry</a>&gt;</td>
-        <td></td>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixFileSystemEntry.html">IUnixFileSystemEntry</a>&gt;</td>
+        <td><p>The modified <a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixFileSystemEntry.html">IUnixFileSystemEntry</a>.</p>
+</td>
       </tr>
     </tbody>
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FileSystem_GoogleDrive_GoogleDriveFileSystem_UnlinkAsync_FubarDev_FtpServer_FileSystem_IUnixFileSystemEntry_CancellationToken_.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FileSystem.GoogleDrive.GoogleDriveFileSystem.UnlinkAsync(FubarDev.FtpServer.FileSystem.IUnixFileSystemEntry%2CCancellationToken)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FileSystem_GoogleDrive_GoogleDriveFileSystem_UnlinkAsync_FubarDev_FtpServer_FileSystem_IUnixFileSystemEntry_System_Threading_CancellationToken_.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FileSystem.GoogleDrive.GoogleDriveFileSystem.UnlinkAsync(FubarDev.FtpServer.FileSystem.IUnixFileSystemEntry%2CSystem.Threading.CancellationToken)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/2.0.0/src/FubarDev.FtpServer.FileSystem.GoogleDrive/GoogleDriveFileSystem.cs/#L135">View Source</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/blob/master/src/FubarDev.FtpServer.FileSystem.GoogleDrive/GoogleDriveFileSystem.cs/#L138">View Source</a>
   </span>
   <a id="FubarDev_FtpServer_FileSystem_GoogleDrive_GoogleDriveFileSystem_UnlinkAsync_" data-uid="FubarDev.FtpServer.FileSystem.GoogleDrive.GoogleDriveFileSystem.UnlinkAsync*"></a>
-  <h4 id="FubarDev_FtpServer_FileSystem_GoogleDrive_GoogleDriveFileSystem_UnlinkAsync_FubarDev_FtpServer_FileSystem_IUnixFileSystemEntry_CancellationToken_" data-uid="FubarDev.FtpServer.FileSystem.GoogleDrive.GoogleDriveFileSystem.UnlinkAsync(FubarDev.FtpServer.FileSystem.IUnixFileSystemEntry,CancellationToken)">UnlinkAsync(IUnixFileSystemEntry, CancellationToken)</h4>
-  <div class="markdown level1 summary"></div>
+  <h4 id="FubarDev_FtpServer_FileSystem_GoogleDrive_GoogleDriveFileSystem_UnlinkAsync_FubarDev_FtpServer_FileSystem_IUnixFileSystemEntry_System_Threading_CancellationToken_" data-uid="FubarDev.FtpServer.FileSystem.GoogleDrive.GoogleDriveFileSystem.UnlinkAsync(FubarDev.FtpServer.FileSystem.IUnixFileSystemEntry,System.Threading.CancellationToken)">UnlinkAsync(IUnixFileSystemEntry, CancellationToken)</h4>
+  <div class="markdown level1 summary"><p>Deletes a <a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixFileSystemEntry.html">IUnixFileSystemEntry</a>.</p>
+</div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -886,12 +973,14 @@
       <tr>
         <td><a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixFileSystemEntry.html">IUnixFileSystemEntry</a></td>
         <td><span class="parametername">entry</span></td>
-        <td></td>
+        <td><p>The <a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixFileSystemEntry.html">IUnixFileSystemEntry</a> to delete.</p>
+</td>
       </tr>
       <tr>
-        <td><span class="xref">CancellationToken</span></td>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.threading.cancellationtoken">CancellationToken</a></td>
         <td><span class="parametername">cancellationToken</span></td>
-        <td></td>
+        <td><p>The cancellation token.</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -905,17 +994,21 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">Task</span></td>
-        <td></td>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.threading.tasks.task">Task</a></td>
+        <td><p>The task where the underlying action is performed on.</p>
+</td>
       </tr>
     </tbody>
   </table>
+  <h5 id="FubarDev_FtpServer_FileSystem_GoogleDrive_GoogleDriveFileSystem_UnlinkAsync_FubarDev_FtpServer_FileSystem_IUnixFileSystemEntry_System_Threading_CancellationToken__remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>An implementation might decide to move the <code data-dev-comment-type="paramref" class="paramref">entry</code> into the trash instead of deleting it.</p>
+</div>
   <h3 id="implements">Implements</h3>
   <div>
       <a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixFileSystem.html">IUnixFileSystem</a>
   </div>
   <div>
-      <span class="xref">IDisposable</span>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.idisposable">System.IDisposable</a>
   </div>
 </article>
           </div>
@@ -928,7 +1021,7 @@
                     <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FileSystem_GoogleDrive_GoogleDriveFileSystem.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FileSystem.GoogleDrive.GoogleDriveFileSystem%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/2.0.0/src/FubarDev.FtpServer.FileSystem.GoogleDrive/GoogleDriveFileSystem.cs/#L27" class="contribution-link">View Source</a>
+                    <a href="https://github.com/FubarDevelopment/FtpServer/blob/master/src/FubarDev.FtpServer.FileSystem.GoogleDrive/GoogleDriveFileSystem.cs/#L28" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

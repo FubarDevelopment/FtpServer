@@ -8,7 +8,7 @@
     <title>Your first FTP server | FTP Server documentation </title>
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Your first FTP server | FTP Server documentation ">
-    <meta name="generator" content="docfx 2.36.1.0">
+    <meta name="generator" content="docfx 2.40.7.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -85,13 +85,13 @@ dotnet new console
 </code></pre>
 <h1 id="adding-the-nuget-packages">Adding the NuGet packages</h1>
 <pre><code class="lang-bash"># For dependency injection support (required)
-dotnet add package Microsoft.Extensions.DependencyInjection -v 2.1.0
+dotnet add package Microsoft.Extensions.DependencyInjection
 
 # For the main FTP server
-dotnet add package FubarDev.FtpServer -v 2.0.0-beta.36
+dotnet add package FubarDev.FtpServer
 
 # For the System.IO-based file system access
-dotnet add package FubarDev.FtpServer.FileSystem.DotNet -v 2.0.0-beta.36
+dotnet add package FubarDev.FtpServer.FileSystem.DotNet
 </code></pre>
 <h1 id="using-the-ftp-server">Using the FTP server</h1>
 <p>Change your <code>Program.cs</code> to the following code:</p>
@@ -130,16 +130,16 @@ namespace QuickStart
             using (var serviceProvider = services.BuildServiceProvider())
             {
                 // Initialize the FTP server
-                var ftpServer = serviceProvider.GetRequiredService&lt;IFtpServer&gt;();
+                var ftpServerHost = serviceProvider.GetRequiredService&lt;IFtpServerHost&gt;();
 
                 // Start the FTP server
-                ftpServer.Start();
+                ftpServerHost.StartAsync().Wait();
 
                 Console.WriteLine(&quot;Press ENTER/RETURN to close the test application.&quot;);
                 Console.ReadLine();
 
                 // Stop the FTP server
-                ftpServer.Stop();
+                ftpServerHost.StopAsync().Wait();
             }
         }
     }

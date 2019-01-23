@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Interface IFtpCommandHandlerExtension
    | FTP Server documentation ">
-    <meta name="generator" content="docfx 2.36.1.0">
+    <meta name="generator" content="docfx 2.40.7.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -92,7 +92,7 @@
       <a class="xref" href="FubarDev.FtpServer.IFtpCommandBase.html#FubarDev_FtpServer_IFtpCommandBase_Names">IFtpCommandBase.Names</a>
     </div>
     <div>
-      <a class="xref" href="FubarDev.FtpServer.IFtpCommandBase.html#FubarDev_FtpServer_IFtpCommandBase_Process_FubarDev_FtpServer_FtpCommand_CancellationToken_">IFtpCommandBase.Process(FtpCommand, CancellationToken)</a>
+      <a class="xref" href="FubarDev.FtpServer.IFtpCommandBase.html#FubarDev_FtpServer_IFtpCommandBase_Process_FubarDev_FtpServer_FtpCommand_System_Threading_CancellationToken_">IFtpCommandBase.Process(FtpCommand, CancellationToken)</a>
     </div>
   </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="FubarDev.FtpServer.html">FubarDev.FtpServer</a></h6>
@@ -108,7 +108,7 @@
     <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_IFtpCommandHandlerExtension_ExtensionFor.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.IFtpCommandHandlerExtension.ExtensionFor%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/2.0.0/src/FubarDev.FtpServer.Abstractions/IFtpCommandHandlerExtension.cs/#L22">View Source</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/blob/master/src/FubarDev.FtpServer.Abstractions/IFtpCommandHandlerExtension.cs/#L22">View Source</a>
   </span>
   <a id="FubarDev_FtpServer_IFtpCommandHandlerExtension_ExtensionFor_" data-uid="FubarDev.FtpServer.IFtpCommandHandlerExtension.ExtensionFor*"></a>
   <h4 id="FubarDev_FtpServer_IFtpCommandHandlerExtension_ExtensionFor" data-uid="FubarDev.FtpServer.IFtpCommandHandlerExtension.ExtensionFor">ExtensionFor</h4>
@@ -117,7 +117,8 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">string ExtensionFor { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">[NotNull]
+string ExtensionFor { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -139,7 +140,7 @@
     <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_IFtpCommandHandlerExtension_IsLoginRequired.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.IFtpCommandHandlerExtension.IsLoginRequired%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/2.0.0/src/FubarDev.FtpServer.Abstractions/IFtpCommandHandlerExtension.cs/#L17">View Source</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/blob/master/src/FubarDev.FtpServer.Abstractions/IFtpCommandHandlerExtension.cs/#L17">View Source</a>
   </span>
   <a id="FubarDev_FtpServer_IFtpCommandHandlerExtension_IsLoginRequired_" data-uid="FubarDev.FtpServer.IFtpCommandHandlerExtension.IsLoginRequired*"></a>
   <h4 id="FubarDev_FtpServer_IFtpCommandHandlerExtension_IsLoginRequired" data-uid="FubarDev.FtpServer.IFtpCommandHandlerExtension.IsLoginRequired">IsLoginRequired</h4>
@@ -165,6 +166,24 @@
       </tr>
     </tbody>
   </table>
+  <h3 id="methods">Methods
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_IFtpCommandHandlerExtension_InitializeConnectionData.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.IFtpCommandHandlerExtension.InitializeConnectionData%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/FubarDevelopment/FtpServer/blob/master/src/FubarDev.FtpServer.Abstractions/IFtpCommandHandlerExtension.cs/#L28">View Source</a>
+  </span>
+  <a id="FubarDev_FtpServer_IFtpCommandHandlerExtension_InitializeConnectionData_" data-uid="FubarDev.FtpServer.IFtpCommandHandlerExtension.InitializeConnectionData*"></a>
+  <h4 id="FubarDev_FtpServer_IFtpCommandHandlerExtension_InitializeConnectionData" data-uid="FubarDev.FtpServer.IFtpCommandHandlerExtension.InitializeConnectionData">InitializeConnectionData()</h4>
+  <div class="markdown level1 summary"><p>Called to initialize the connection data.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">void InitializeConnectionData()</code></pre>
+  </div>
 </article>
           </div>
           
@@ -176,7 +195,7 @@
                     <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_IFtpCommandHandlerExtension.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.IFtpCommandHandlerExtension%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/2.0.0/src/FubarDev.FtpServer.Abstractions/IFtpCommandHandlerExtension.cs/#L12" class="contribution-link">View Source</a>
+                    <a href="https://github.com/FubarDevelopment/FtpServer/blob/master/src/FubarDev.FtpServer.Abstractions/IFtpCommandHandlerExtension.cs/#L12" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>
