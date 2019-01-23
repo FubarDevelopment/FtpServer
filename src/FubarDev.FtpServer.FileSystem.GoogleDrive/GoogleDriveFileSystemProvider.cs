@@ -37,8 +37,9 @@ namespace FubarDev.FtpServer.FileSystem.GoogleDrive
         }
 
         /// <inheritdoc />
-        public async Task<IUnixFileSystem> Create(IFtpUser user)
+        public async Task<IUnixFileSystem> Create(IAccountInformation accountInformation)
         {
+            var user = accountInformation.User;
             var (userId, isAnonymous) = user is IAnonymousFtpUser anonymousFtpUser
                 ? (userId: anonymousFtpUser.Email, isAnonymous: true)
                 : (userId: user.Name, isAnonymous: false);

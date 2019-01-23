@@ -5,6 +5,7 @@
 // <author>Mark Junker</author>
 //-----------------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -61,11 +62,15 @@ namespace FubarDev.FtpServer.CommandHandlers
                     .ConfigureAwait(false);
                 if (validationResult.IsSuccess)
                 {
+                    var accountInformation = new DefaultAccountInformation(
+                        validationResult.User ?? throw new InvalidOperationException("The user property must be set if validation succeeded."),
+                        membershipProvider);
+
                     Connection.Data.User = validationResult.User;
                     Connection.Data.IsLoggedIn = true;
                     Connection.Data.AuthenticatedBy = membershipProvider;
                     Connection.Data.FileSystem = await _fileSystemClassFactory
-                        .Create(validationResult.User)
+                        .Create(accountInformation)
                         .ConfigureAwait(false);
                     Connection.Data.Path = new Stack<IUnixDirectoryEntry>();
                     return new FtpResponse(230, "Password ok, FTP server ready");
@@ -73,6 +78,21 @@ namespace FubarDev.FtpServer.CommandHandlers
             }
 
             return new FtpResponse(530, "Username or password incorrect");
+        }
+
+        private class DefaultAccountInformation : IAccountInformation
+        {
+            public DefaultAccountInformation(IFtpUser user, IMembershipProvider authenticatedBy)
+            {
+                User = user;
+                AuthenticatedBy = authenticatedBy;
+            }
+
+            /// <inheritdoc />
+            public IFtpUser User { get; }
+
+            /// <inheritdoc />
+            public IMembershipProvider AuthenticatedBy { get; }
         }
     }
 }

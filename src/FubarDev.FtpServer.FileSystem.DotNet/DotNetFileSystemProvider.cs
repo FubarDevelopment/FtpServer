@@ -43,12 +43,12 @@ namespace FubarDev.FtpServer.FileSystem.DotNet
         }
 
         /// <inheritdoc/>
-        public Task<IUnixFileSystem> Create(IFtpUser user)
+        public Task<IUnixFileSystem> Create(IAccountInformation accountInformation)
         {
             var path = _rootPath;
             if (_useUserIdAsSubFolder)
             {
-                path = Path.Combine(path, user.Name);
+                path = Path.Combine(path, accountInformation.User.Name);
             }
 
             return Task.FromResult<IUnixFileSystem>(new DotNetFileSystem(path, _allowNonEmptyDirectoryDelete, _streamBufferSize));

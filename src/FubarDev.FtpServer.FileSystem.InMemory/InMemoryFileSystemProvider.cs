@@ -33,9 +33,10 @@ namespace FubarDev.FtpServer.FileSystem.InMemory
         }
 
         /// <inheritdoc />
-        public Task<IUnixFileSystem> Create(IFtpUser user)
+        public Task<IUnixFileSystem> Create(IAccountInformation accountInformation)
         {
             var fsComparer = _options.FileSystemComparer;
+            var user = accountInformation.User;
             InMemoryFileSystem fileSystem;
             string userId;
 

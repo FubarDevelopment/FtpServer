@@ -9,6 +9,8 @@ using System.Threading.Tasks;
 
 using FubarDev.FtpServer.AccountManagement;
 
+using JetBrains.Annotations;
+
 namespace FubarDev.FtpServer.FileSystem
 {
     /// <summary>
@@ -17,13 +19,13 @@ namespace FubarDev.FtpServer.FileSystem
     public interface IFileSystemClassFactory
     {
         /// <summary>
-        /// Creates a <see cref="IUnixFileSystem"/> implementation for a given <paramref name="user"/>.
+        /// Creates a <see cref="IUnixFileSystem"/> implementation for a given <paramref name="accountInformation"/>.
         /// </summary>
-        /// <param name="user">The FTP user to create the <see cref="IUnixFileSystem"/> for.</param>
-        /// <returns>The new <see cref="IUnixFileSystem"/> for the <paramref name="user"/>.</returns>
+        /// <param name="accountInformation">The FTP account to create the <see cref="IUnixFileSystem"/> for.</param>
+        /// <returns>The new <see cref="IUnixFileSystem"/> for the <paramref name="accountInformation"/>.</returns>
         /// <remarks>
-        /// When the login is anonymous, the <paramref name="user"/> must be of type <see cref="IAnonymousFtpUser"/>.
+        /// When the login is anonymous, the <see cref="IAccountInformation.User"/> must be of type <see cref="IAnonymousFtpUser"/>.
         /// </remarks>
-        Task<IUnixFileSystem> Create(IFtpUser user);
+        Task<IUnixFileSystem> Create([NotNull] IAccountInformation accountInformation);
     }
 }
