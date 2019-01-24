@@ -39,7 +39,7 @@ namespace FubarDev.FtpServer.CommandHandlers
                 // CDUP
                 if (Data.CurrentDirectory.IsRoot)
                 {
-                    return new FtpResponse(550, "Not a valid directory.");
+                    return new FtpResponse(550, T("Not a valid directory."));
                 }
 
                 Data.Path.Pop();
@@ -50,12 +50,12 @@ namespace FubarDev.FtpServer.CommandHandlers
                 var newTargetDir = await Data.FileSystem.GetDirectoryAsync(tempPath, path, cancellationToken).ConfigureAwait(false);
                 if (newTargetDir == null)
                 {
-                    return new FtpResponse(550, "Not a valid directory.");
+                    return new FtpResponse(550, T("Not a valid directory."));
                 }
 
                 Data.Path = tempPath;
             }
-            return new FtpResponse(250, $"Successful ({Data.Path.GetFullPath()})");
+            return new FtpResponse(250, T("Successful ({0})", Data.Path.GetFullPath()));
         }
     }
 }

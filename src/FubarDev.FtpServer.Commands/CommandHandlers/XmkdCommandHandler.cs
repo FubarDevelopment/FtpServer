@@ -35,29 +35,30 @@ namespace FubarDev.FtpServer.CommandHandlers
             var dirInfo = await Data.FileSystem.SearchDirectoryAsync(currentPath, directoryName, cancellationToken).ConfigureAwait(false);
             if (dirInfo == null)
             {
-                return new FtpResponse(550, "Not a valid directory.");
+                return new FtpResponse(550, T("Not a valid directory."));
             }
 
             if (dirInfo.FileName == null)
             {
-                return new FtpResponse(550, "ROOT folder not allowed.");
+                return new FtpResponse(550, T("ROOT folder not allowed."));
             }
 
             if (dirInfo.Entry != null)
             {
-                await Connection.WriteAsync($"521-\"{currentPath.GetFullPath(dirInfo.FileName)}\" directory already exists", cancellationToken).ConfigureAwait(false);
-                return new FtpResponse(521, "Taking no action.");
+                var message = T("\"{0}\" directory already exists", currentPath.GetFullPath(dirInfo.FileName));
+                await Connection.WriteAsync($"521-{message}", cancellationToken).ConfigureAwait(false);
+                return new FtpResponse(521, T("Taking no action."));
             }
 
             try
             {
                 var targetDirectory = currentPath.Count == 0 ? Data.FileSystem.Root : currentPath.Peek();
                 var newDirectory = await Data.FileSystem.CreateDirectoryAsync(targetDirectory, dirInfo.FileName, cancellationToken).ConfigureAwait(false);
-                return new FtpResponse(257, $"\"{currentPath.GetFullPath(newDirectory.Name)}\" created.");
+                return new FtpResponse(257, T("\"{0}\" created.", currentPath.GetFullPath(newDirectory.Name)));
             }
             catch (IOException)
             {
-                return new FtpResponse(550, "Bad pathname syntax.");
+                return new FtpResponse(550, T("Bad pathname syntax."));
             }
         }
     }

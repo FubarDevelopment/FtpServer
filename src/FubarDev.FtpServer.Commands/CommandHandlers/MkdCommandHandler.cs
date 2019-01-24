@@ -35,17 +35,17 @@ namespace FubarDev.FtpServer.CommandHandlers
             var dirInfo = await Data.FileSystem.SearchDirectoryAsync(currentPath, directoryName, cancellationToken).ConfigureAwait(false);
             if (dirInfo == null)
             {
-                return new FtpResponse(550, "Not a valid directory.");
+                return new FtpResponse(550, T("Not a valid directory."));
             }
 
             if (dirInfo.Entry != null)
             {
-                return new FtpResponse(550, "Directory already exists.");
+                return new FtpResponse(550, T("Directory already exists."));
             }
 
             if (dirInfo.FileName == null)
             {
-                return new FtpResponse(550, "File name not allowed.");
+                return new FtpResponse(550, T("File name not allowed."));
             }
 
             try
@@ -56,7 +56,7 @@ namespace FubarDev.FtpServer.CommandHandlers
             }
             catch (IOException)
             {
-                return new FtpResponse(550, "Bad pathname syntax.");
+                return new FtpResponse(550, T("Bad pathname syntax."));
             }
         }
     }

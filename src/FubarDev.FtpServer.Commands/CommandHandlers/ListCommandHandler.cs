@@ -47,14 +47,14 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// <inheritdoc/>
         public override async Task<FtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
         {
-            await Connection.WriteAsync(new FtpResponse(150, "Opening data connection."), cancellationToken).ConfigureAwait(false);
+            await Connection.WriteAsync(new FtpResponse(150, T("Opening data connection.")), cancellationToken).ConfigureAwait(false);
 
             return await Connection.SendResponseAsync(
                     client => ExecuteSend(client, command, cancellationToken),
                     ex =>
                     {
                         _logger?.LogError(ex, ex.Message);
-                        return new FtpResponse(425, "Can't open data connection.");
+                        return new FtpResponse(425, T("Can't open data connection."));
                     })
                 .ConfigureAwait(false);
         }
@@ -101,7 +101,7 @@ namespace FubarDev.FtpServer.CommandHandlers
                     var foundEntry = await Data.FileSystem.SearchEntryAsync(path, searchPath, cancellationToken).ConfigureAwait(false);
                     if (foundEntry?.Directory == null)
                     {
-                        return new FtpResponse(550, "File system entry not found.");
+                        return new FtpResponse(550, T("File system entry not found."));
                     }
 
                     if (!(foundEntry.Entry is IUnixDirectoryEntry dirEntry))
@@ -189,7 +189,7 @@ namespace FubarDev.FtpServer.CommandHandlers
             }
 
             // Use 250 when the connection stays open.
-            return new FtpResponse(250, "Closing data connection.");
+            return new FtpResponse(250, T("Closing data connection."));
         }
 
         /// <summary>

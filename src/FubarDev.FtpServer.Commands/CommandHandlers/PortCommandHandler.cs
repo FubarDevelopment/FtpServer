@@ -45,19 +45,19 @@ namespace FubarDev.FtpServer.CommandHandlers
                 var address = Address.Parse(command.Argument);
                 if (address == null)
                 {
-                    return Task.FromResult(new FtpResponse(501, "Syntax error in parameters or arguments."));
+                    return Task.FromResult(new FtpResponse(501, T("Syntax error in parameters or arguments.")));
                 }
 
                 Data.PortAddress = address;
             }
             catch (NotSupportedException ex)
             {
-                return Task.FromResult(new FtpResponse(522, $"Extended port failure - {ex.Message}."));
+                return Task.FromResult(new FtpResponse(522, T("Extended port failure - {0}.", ex.Message)));
             }
 
             Data.TransferTypeCommandUsed = command.Name;
 
-            return Task.FromResult(new FtpResponse(200, "Command okay."));
+            return Task.FromResult(new FtpResponse(200, T("Command okay.")));
         }
     }
 }

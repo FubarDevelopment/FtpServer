@@ -27,7 +27,7 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// <inheritdoc/>
         public override Task<FtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
         {
-            return Task.FromResult(new FtpResponse(200, "NOOP command successful."));
+            return Task.FromResult(new FtpResponse(200, T("NOOP command successful.")));
         }
     }
 }

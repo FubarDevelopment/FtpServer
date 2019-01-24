@@ -66,7 +66,7 @@ namespace FubarDev.FtpServer.CommandHandlers
             var parts = command.Argument.Split(new[] { ' ' }, 2);
             if (parts.Length != 2)
             {
-                return new FtpResponse(551, "Facts or file name missing.");
+                return new FtpResponse(551, T("Facts or file name missing."));
             }
 
             var factInfos = new Dictionary<string, string>();
@@ -75,7 +75,7 @@ namespace FubarDev.FtpServer.CommandHandlers
                 var keyValue = factEntry.Split(new[] { '=' }, 2);
                 if (keyValue.Length != 2)
                 {
-                    return new FtpResponse(551, $"Invalid format for fact {factEntry}.");
+                    return new FtpResponse(551, T("Invalid format for fact {0}.", factEntry));
                 }
 
                 factInfos.Add(keyValue[0], keyValue[1]);
@@ -86,7 +86,7 @@ namespace FubarDev.FtpServer.CommandHandlers
             var fileInfo = await Data.FileSystem.SearchFileAsync(currentPath, path, cancellationToken).ConfigureAwait(false);
             if (fileInfo?.Entry == null)
             {
-                return new FtpResponse(550, "File not found.");
+                return new FtpResponse(550, T("File not found."));
             }
 
             var facts = new List<IFact>();
@@ -94,7 +94,7 @@ namespace FubarDev.FtpServer.CommandHandlers
             {
                 if (!_knownFacts.TryGetValue(factInfo.Key, out var createFact))
                 {
-                    return new FtpResponse(551, $"Unsupported fact {factInfo.Key}.");
+                    return new FtpResponse(551, T("Unsupported fact {0}.", factInfo.Key));
                 }
 
                 var fact = createFact(factInfo.Value);
@@ -113,7 +113,7 @@ namespace FubarDev.FtpServer.CommandHandlers
                         creationTime = ((CreateFact)fact).Timestamp;
                         break;
                     default:
-                        return new FtpResponse(551, $"Unsupported fact {fact.Name}.");
+                        return new FtpResponse(551, T("Unsupported fact {0}.", fact.Name));
                 }
             }
 

@@ -55,22 +55,22 @@ namespace FubarDev.FtpServer.CommandHandlers
             var fileName = command.Argument;
             if (string.IsNullOrEmpty(fileName))
             {
-                return new FtpResponse(501, "No file name specified");
+                return new FtpResponse(501, T("No file name specified"));
             }
 
             var currentPath = Data.Path.Clone();
             var fileInfo = await Data.FileSystem.SearchFileAsync(currentPath, fileName, cancellationToken).ConfigureAwait(false);
             if (fileInfo == null)
             {
-                return new FtpResponse(550, "Not a valid directory.");
+                return new FtpResponse(550, T("Not a valid directory."));
             }
 
             if (fileInfo.FileName == null)
             {
-                return new FtpResponse(553, "File name not allowed.");
+                return new FtpResponse(553, T("File name not allowed."));
             }
 
-            await Connection.WriteAsync(new FtpResponse(150, "Opening connection for data transfer."), cancellationToken).ConfigureAwait(false);
+            await Connection.WriteAsync(new FtpResponse(150, T("Opening connection for data transfer.")), cancellationToken).ConfigureAwait(false);
 
             return await Connection
                 .SendResponseAsync(client => ExecuteSend(client, fileInfo, restartPosition, cancellationToken))
@@ -120,7 +120,7 @@ namespace FubarDev.FtpServer.CommandHandlers
                 }
             }
 
-            return new FtpResponse(226, "Uploaded file successfully.");
+            return new FtpResponse(226, T("Uploaded file successfully."));
         }
     }
 }

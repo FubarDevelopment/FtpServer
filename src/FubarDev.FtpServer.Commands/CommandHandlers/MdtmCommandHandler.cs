@@ -45,12 +45,12 @@ namespace FubarDev.FtpServer.CommandHandlers
                 var parts = path.Split(new[] { ' ' }, 2);
                 if (parts.Length != 2)
                 {
-                    return new FtpResponse(550, "File not found.");
+                    return new FtpResponse(550, T("File not found."));
                 }
 
                 if (!parts[0].TryParseTimestamp("UTC", out var modificationTime))
                 {
-                    return new FtpResponse(550, "File not found.");
+                    return new FtpResponse(550, T("File not found."));
                 }
 
                 path = parts[1];
@@ -58,7 +58,7 @@ namespace FubarDev.FtpServer.CommandHandlers
                 fileInfo = await Data.FileSystem.SearchFileAsync(currentPath, path, cancellationToken).ConfigureAwait(false);
                 if (fileInfo?.Entry == null)
                 {
-                    return new FtpResponse(550, "File not found.");
+                    return new FtpResponse(550, T("File not found."));
                 }
 
                 foundEntry = await Data.FileSystem.SetMacTimeAsync(fileInfo.Entry, modificationTime, null, null, cancellationToken).ConfigureAwait(false);

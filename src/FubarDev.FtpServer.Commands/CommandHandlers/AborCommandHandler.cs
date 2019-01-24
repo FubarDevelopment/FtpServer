@@ -29,10 +29,10 @@ namespace FubarDev.FtpServer.CommandHandlers
         {
             if (Data.BackgroundCommandHandler.Cancel())
             {
-                return Task.FromResult(new FtpResponse(226, "File transfer aborting."));
+                return Task.FromResult(new FtpResponse(226, T("File transfer aborting.")));
             }
 
-            return Task.FromResult(new FtpResponse(226, "Cannot abort - no active transfer."));
+            return Task.FromResult(new FtpResponse(226, T("Cannot abort - no active transfer.")));
         }
     }
 }

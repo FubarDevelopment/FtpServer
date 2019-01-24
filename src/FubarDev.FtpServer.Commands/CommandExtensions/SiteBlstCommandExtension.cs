@@ -65,7 +65,7 @@ namespace FubarDev.FtpServer.CommandExtensions
                 case "direct":
                     return await SendBlstDirectly(cancellationToken).ConfigureAwait(false);
                 default:
-                    return new FtpResponse(501, $"Mode {mode} not supported.");
+                    return new FtpResponse(501, T("Mode {0} not supported.", mode));
             }
         }
 
@@ -74,10 +74,10 @@ namespace FubarDev.FtpServer.CommandExtensions
             var taskStates = _backgroundTransferWorker.GetStates();
             if (taskStates.Count == 0)
             {
-                return new FtpResponse(211, "No background tasks");
+                return new FtpResponse(211, T("No background tasks"));
             }
 
-            await Connection.WriteAsync("211-Active background tasks:", cancellationToken).ConfigureAwait(false);
+            await Connection.WriteAsync(T("211-Active background tasks:"), cancellationToken).ConfigureAwait(false);
             foreach (var line in GetLines(taskStates))
             {
                 await Connection.WriteAsync($" {line}", cancellationToken).ConfigureAwait(false);
@@ -88,14 +88,14 @@ namespace FubarDev.FtpServer.CommandExtensions
 
         private async Task<FtpResponse> SendBlstWithDataConnection(CancellationToken cancellationToken)
         {
-            await Connection.WriteAsync(new FtpResponse(150, "Opening data connection."), cancellationToken).ConfigureAwait(false);
+            await Connection.WriteAsync(new FtpResponse(150, T("Opening data connection.")), cancellationToken).ConfigureAwait(false);
 
             return await Connection.SendResponseAsync(
                 ExecuteSend,
                 ex =>
                 {
                     _logger?.LogError(ex, ex.Message);
-                    return new FtpResponse(425, "Can't open data connection.");
+                    return new FtpResponse(425, T("Can't open data connection."));
                 }).ConfigureAwait(false);
         }
 

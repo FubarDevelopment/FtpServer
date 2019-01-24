@@ -74,5 +74,27 @@ namespace FubarDev.FtpServer.CommandHandlers
 
         /// <inheritdoc />
         public abstract Task<FtpResponse> Process(FtpCommand command, CancellationToken cancellationToken);
+
+        /// <summary>
+        /// Translates a message using the current catalog of the active connection.
+        /// </summary>
+        /// <param name="message">The message to translate.</param>
+        /// <returns>The translated message.</returns>
+        protected string T(string message)
+        {
+            return Connection.Data.Catalog.GetString(message);
+        }
+
+        /// <summary>
+        /// Translates a message using the current catalog of the active connection.
+        /// </summary>
+        /// <param name="message">The message to translate.</param>
+        /// <param name="args">The format arguments.</param>
+        /// <returns>The translated message.</returns>
+        [StringFormatMethod("message")]
+        protected string T(string message, params object[] args)
+        {
+            return Connection.Data.Catalog.GetString(message, args);
+        }
     }
 }

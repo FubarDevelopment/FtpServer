@@ -47,16 +47,16 @@ namespace FubarDev.FtpServer.CommandHandlers
         {
             if (string.IsNullOrEmpty(command.Argument))
             {
-                return Task.FromResult(new FtpResponse(501, "Protection buffer size not specified."));
+                return Task.FromResult(new FtpResponse(501, T("Protection buffer size not specified.")));
             }
 
             var bufferSize = Convert.ToInt32(command.Argument, 10);
             if (bufferSize != 0)
             {
-                return Task.FromResult(new FtpResponse(501, "A protection buffer size other than 0 is not supported."));
+                return Task.FromResult(new FtpResponse(501, T("A protection buffer size other than 0 is not supported.")));
             }
 
-            return Task.FromResult(new FtpResponse(200, $"Protection buffer size set to {bufferSize}."));
+            return Task.FromResult(new FtpResponse(200, T("Protection buffer size set to {0}.", bufferSize)));
         }
     }
 }

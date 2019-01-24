@@ -32,15 +32,15 @@ namespace FubarDev.FtpServer.CommandHandlers
             FtpResponse response;
             if (transferMode.FileType == FtpFileType.Ascii)
             {
-                response = new FtpResponse(200, "ASCII transfer mode active.");
+                response = new FtpResponse(200, T("ASCII transfer mode active."));
             }
             else if (transferMode.IsBinary)
             {
-                response = new FtpResponse(200, "Binary transfer mode active.");
+                response = new FtpResponse(200, T("Binary transfer mode active."));
             }
             else
             {
-                response = new FtpResponse(504, $"Mode {command.Argument} not supported.");
+                response = new FtpResponse(504, T("Mode {0} not supported.", command.Argument));
             }
 
             if (response.Code == 200)

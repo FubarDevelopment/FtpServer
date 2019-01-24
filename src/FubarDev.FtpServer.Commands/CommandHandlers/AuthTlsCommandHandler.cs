@@ -58,7 +58,7 @@ namespace FubarDev.FtpServer.CommandHandlers
 
             if (_serverCertificate == null)
             {
-                return Task.FromResult(new FtpResponse(502, "TLS not configured"));
+                return Task.FromResult(new FtpResponse(502, T("TLS not configured")));
             }
 
             switch (arg.ToUpperInvariant())
@@ -66,13 +66,13 @@ namespace FubarDev.FtpServer.CommandHandlers
                 case "TLS":
                     return ElevateToTls(cancellationToken);
                 default:
-                    return Task.FromResult(new FtpResponse(504, $"Authentication mode {arg} not supported."));
+                    return Task.FromResult(new FtpResponse(504, T("Authentication mode {0} not supported.", arg)));
             }
         }
 
         private async Task<FtpResponse> ElevateToTls(CancellationToken cancellationToken)
         {
-            await Connection.WriteAsync(new FtpResponse(234, "Enabling TLS Connection"), cancellationToken).ConfigureAwait(false);
+            await Connection.WriteAsync(new FtpResponse(234, T("Enabling TLS Connection")), cancellationToken).ConfigureAwait(false);
             await Connection.SocketStream.FlushAsync(cancellationToken).ConfigureAwait(false);
 
             try
@@ -85,7 +85,7 @@ namespace FubarDev.FtpServer.CommandHandlers
             catch (Exception ex)
             {
                 Connection.Log?.LogWarning(ex, "SSL stream authentication failed: {0}", ex.Message);
-                return new FtpResponse(421, "TLS authentication failed");
+                return new FtpResponse(421, T("TLS authentication failed"));
             }
         }
     }

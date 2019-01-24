@@ -36,16 +36,18 @@ namespace FubarDev.FtpServer.CommandExtensions
             {
                 case "ON":
                     Connection.Encoding = Encoding.UTF8;
-                    return Task.FromResult(new FtpResponse(200, "Command okay."));
+                    break;
                 case "":
                     Connection.Data.NlstEncoding = null;
-                    return Task.FromResult(new FtpResponse(200, "Command okay."));
+                    break;
                 case "NLST":
                     Connection.Data.NlstEncoding = Encoding.UTF8;
-                    return Task.FromResult(new FtpResponse(200, "Command okay."));
+                    break;
                 default:
-                    return Task.FromResult(new FtpResponse(501, "Syntax error in parameters or arguments."));
+                    return Task.FromResult(new FtpResponse(501, T("Syntax error in parameters or arguments.")));
             }
+
+            return Task.FromResult(new FtpResponse(200, T("Command okay.")));
         }
     }
 }

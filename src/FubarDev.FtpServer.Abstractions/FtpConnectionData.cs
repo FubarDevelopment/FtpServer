@@ -8,14 +8,18 @@
 using System;
 using System.Collections.Generic;
 using System.Dynamic;
+using System.Globalization;
 using System.Net.Sockets;
 using System.Text;
 
 using FubarDev.FtpServer.AccountManagement;
 using FubarDev.FtpServer.FileSystem;
 using FubarDev.FtpServer.ListFormatters.Facts;
+using FubarDev.FtpServer.Localization;
 
 using JetBrains.Annotations;
+
+using NGettext;
 
 namespace FubarDev.FtpServer
 {
@@ -28,13 +32,18 @@ namespace FubarDev.FtpServer
         /// Initializes a new instance of the <see cref="FtpConnectionData"/> class.
         /// </summary>
         /// <param name="backgroundCommandHandler">Utility module that allows background execution of an FTP command.</param>
-        public FtpConnectionData([NotNull] IBackgroundCommandHandler backgroundCommandHandler)
+        /// <param name="catalogLoader">The catalog loader for the FTP server.</param>
+        public FtpConnectionData(
+            [NotNull] IBackgroundCommandHandler backgroundCommandHandler,
+            [NotNull] IFtpCatalogLoader catalogLoader)
         {
             UserData = new ExpandoObject();
             TransferMode = new FtpTransferMode(FtpFileType.Ascii);
             BackgroundCommandHandler = backgroundCommandHandler;
             Path = new Stack<IUnixDirectoryEntry>();
             FileSystem = new EmptyUnixFileSystem();
+            Language = catalogLoader.DefaultLanguage;
+            Catalog = catalogLoader.DefaultCatalog;
         }
 
         /// <summary>
@@ -79,6 +88,18 @@ namespace FubarDev.FtpServer
         [NotNull]
         [ItemNotNull]
         public Stack<IUnixDirectoryEntry> Path { get; set; }
+
+        /// <summary>
+        /// Gets or sets the selected language.
+        /// </summary>
+        [NotNull]
+        public CultureInfo Language { get; set; }
+
+        /// <summary>
+        /// Gets or sets the catalog to be used by the default FTP server implementation.
+        /// </summary>
+        [NotNull]
+        public ICatalog Catalog { get; set; }
 
         /// <summary>
         /// Gets the current <see cref="IUnixDirectoryEntry"/> of the current <see cref="Path"/>.

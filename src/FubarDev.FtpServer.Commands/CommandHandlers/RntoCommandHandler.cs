@@ -34,12 +34,12 @@ namespace FubarDev.FtpServer.CommandHandlers
         {
             if (Data.RenameFrom == null)
             {
-                return new FtpResponse(503, "RNTO must be preceded by a RNFR.");
+                return new FtpResponse(503, T("RNTO must be preceded by a RNFR."));
             }
 
             if (Data.RenameFrom.Entry == null)
             {
-                return new FtpResponse(550, "Item specified for RNFR doesn't exist.");
+                return new FtpResponse(550, T("Item specified for RNFR doesn't exist."));
             }
 
             var fileName = command.Argument;
@@ -47,12 +47,12 @@ namespace FubarDev.FtpServer.CommandHandlers
             var fileInfo = await Data.FileSystem.SearchEntryAsync(tempPath, fileName, cancellationToken).ConfigureAwait(false);
             if (fileInfo == null)
             {
-                return new FtpResponse(550, "Directory doesn't exist.");
+                return new FtpResponse(550, T("Directory doesn't exist."));
             }
 
             if (fileInfo.FileName == null)
             {
-                return new FtpResponse(550, "ROOT folder not allowed.");
+                return new FtpResponse(550, T("ROOT folder not allowed."));
             }
 
             if (fileInfo.Entry != null)
@@ -66,7 +66,7 @@ namespace FubarDev.FtpServer.CommandHandlers
 
             Data.RenameFrom = null;
 
-            return new FtpResponse(250, "Renamed file successfully.");
+            return new FtpResponse(250, T("Renamed file successfully."));
         }
     }
 }

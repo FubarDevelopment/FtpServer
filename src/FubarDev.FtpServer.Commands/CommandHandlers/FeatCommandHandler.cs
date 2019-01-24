@@ -48,7 +48,7 @@ namespace FubarDev.FtpServer.CommandHandlers
 
             if (features.Count == 0)
             {
-                return new FtpResponse(211, "No extensions supported");
+                return new FtpResponse(211, T("No extensions supported"));
             }
 
             await Connection.WriteAsync("211-Extensions supported:", cancellationToken).ConfigureAwait(false);

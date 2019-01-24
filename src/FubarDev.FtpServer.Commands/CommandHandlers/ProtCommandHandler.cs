@@ -48,7 +48,7 @@ namespace FubarDev.FtpServer.CommandHandlers
         {
             if (string.IsNullOrEmpty(command.Argument))
             {
-                return Task.FromResult(new FtpResponse(501, "Data channel protection level not specified."));
+                return Task.FromResult(new FtpResponse(501, T("Data channel protection level not specified.")));
             }
 
             switch (command.Argument.ToUpperInvariant())
@@ -60,9 +60,9 @@ namespace FubarDev.FtpServer.CommandHandlers
                     Data.CreateEncryptedStream = CreateSslStream;
                     break;
                 default:
-                    return Task.FromResult(new FtpResponse(501, "A data channel protection level other than C, or P is not supported."));
+                    return Task.FromResult(new FtpResponse(501, T("A data channel protection level other than C, or P is not supported.")));
             }
-            return Task.FromResult(new FtpResponse(200, $"Data channel protection level set to {command.Argument}."));
+            return Task.FromResult(new FtpResponse(200, T("Data channel protection level set to {0}.", command.Argument)));
         }
 
         private async Task<Stream> CreateSslStream(Stream unencryptedStream)

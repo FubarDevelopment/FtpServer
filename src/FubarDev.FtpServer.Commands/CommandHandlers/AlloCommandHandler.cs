@@ -30,7 +30,7 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// <inheritdoc/>
         public override Task<FtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
         {
-            return Task.FromResult(new FtpResponse(202, "Allo processed successfully (deprecated)."));
+            return Task.FromResult(new FtpResponse(202, T("Allo processed successfully (deprecated).")));
         }
     }
 }

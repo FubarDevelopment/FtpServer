@@ -34,11 +34,11 @@ namespace FubarDev.FtpServer.CommandHandlers
             var subDir = await Data.FileSystem.GetDirectoryAsync(currentPath, path, cancellationToken).ConfigureAwait(false);
             if (subDir == null)
             {
-                return new FtpResponse(550, "Not a valid directory.");
+                return new FtpResponse(550, T("Not a valid directory."));
             }
 
             Data.Path = currentPath;
-            return new FtpResponse(200, $"Directory changed to {currentPath.GetFullPath()}");
+            return new FtpResponse(200, T("Directory changed to {0}", currentPath.GetFullPath()));
         }
     }
 }

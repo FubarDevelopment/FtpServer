@@ -38,7 +38,7 @@ namespace FubarDev.FtpServer.CommandHandlers
                 case "SITE":
                     return ShowHelpSite(cancellationToken);
                 default:
-                    return Task.FromResult(new FtpResponse(501, "Syntax error in parameters or arguments."));
+                    return Task.FromResult(new FtpResponse(501, T("Syntax error in parameters or arguments.")));
             }
         }
 

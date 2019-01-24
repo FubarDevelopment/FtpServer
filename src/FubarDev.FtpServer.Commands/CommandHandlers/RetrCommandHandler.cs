@@ -50,12 +50,12 @@ namespace FubarDev.FtpServer.CommandHandlers
             var fileInfo = await Data.FileSystem.SearchFileAsync(currentPath, fileName, cancellationToken).ConfigureAwait(false);
             if (fileInfo?.Entry == null)
             {
-                return new FtpResponse(550, "File doesn't exist.");
+                return new FtpResponse(550, T("File doesn't exist."));
             }
 
             using (var input = await Data.FileSystem.OpenReadAsync(fileInfo.Entry, restartPosition ?? 0, cancellationToken).ConfigureAwait(false))
             {
-                await Connection.WriteAsync(new FtpResponse(150, "Opening connection for data transfer."), cancellationToken).ConfigureAwait(false);
+                await Connection.WriteAsync(new FtpResponse(150, T("Opening connection for data transfer.")), cancellationToken).ConfigureAwait(false);
 
                 // ReSharper disable once AccessToDisposedClosure
                 return await Connection.SendResponseAsync(
@@ -83,7 +83,7 @@ namespace FubarDev.FtpServer.CommandHandlers
                 }
             }
 
-            return new FtpResponse(226, "File download succeeded.");
+            return new FtpResponse(226, T("File download succeeded."));
         }
     }
 }

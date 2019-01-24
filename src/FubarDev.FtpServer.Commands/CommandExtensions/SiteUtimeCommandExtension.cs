@@ -36,7 +36,7 @@ namespace FubarDev.FtpServer.CommandExtensions
         {
             if (string.IsNullOrEmpty(command.Argument))
             {
-                return new FtpResponse(501, "No file name.");
+                return new FtpResponse(501, T("No file name."));
             }
 
             var parts = new List<string>();
@@ -74,17 +74,17 @@ namespace FubarDev.FtpServer.CommandExtensions
         {
             if (!parts[1].TryParseTimestamp(parts[4], out var accessTime))
             {
-                return new FtpResponse(501, "Syntax error in parameters or arguments.");
+                return new FtpResponse(501, T("Syntax error in parameters or arguments."));
             }
 
             if (!parts[2].TryParseTimestamp(parts[4], out var modificationTime))
             {
-                return new FtpResponse(501, "Syntax error in parameters or arguments.");
+                return new FtpResponse(501, T("Syntax error in parameters or arguments."));
             }
 
             if (!parts[3].TryParseTimestamp(parts[4], out var creationTime))
             {
-                return new FtpResponse(501, "Syntax error in parameters or arguments.");
+                return new FtpResponse(501, T("Syntax error in parameters or arguments."));
             }
 
             var path = parts[0];

@@ -29,11 +29,11 @@ namespace FubarDev.FtpServer.CommandHandlers
         {
             if (Data.CurrentDirectory.IsRoot)
             {
-                return Task.FromResult(new FtpResponse(550, "Not a valid directory."));
+                return Task.FromResult(new FtpResponse(550, T("Not a valid directory.")));
             }
 
             Data.Path.Pop();
-            return Task.FromResult(new FtpResponse(200, "Command okay."));
+            return Task.FromResult(new FtpResponse(200, T("Command okay.")));
         }
     }
 }

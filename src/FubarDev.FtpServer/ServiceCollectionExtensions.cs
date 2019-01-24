@@ -7,6 +7,7 @@ using System;
 using FubarDev.FtpServer;
 using FubarDev.FtpServer.BackgroundTransfer;
 using FubarDev.FtpServer.CommandHandlers;
+using FubarDev.FtpServer.Localization;
 
 using JetBrains.Annotations;
 
@@ -39,6 +40,8 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddScoped(sp => sp.GetRequiredService<TcpSocketClientAccessor>().TcpSocketClient);
 
             services.AddScoped<IFtpConnection, FtpConnection>();
+
+            services.AddSingleton<IFtpCatalogLoader, DefaultFtpCatalogLoader>();
 
             services.AddSingleton<IBackgroundTransferWorker, BackgroundTransferWorker>();
 

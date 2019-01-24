@@ -35,22 +35,22 @@ namespace FubarDev.FtpServer.CommandHandlers
             var subDir = await Data.FileSystem.GetDirectoryAsync(currentPath, path, cancellationToken).ConfigureAwait(false);
             if (subDir == null)
             {
-                return new FtpResponse(550, "Not a valid directory.");
+                return new FtpResponse(550, T("Not a valid directory."));
             }
 
             try
             {
                 if (Data.Path.IsChildOfOrSameAs(currentPath, Data.FileSystem))
                 {
-                    return new FtpResponse(550, "Not a valid directory (is same or parent of current directory).");
+                    return new FtpResponse(550, T("Not a valid directory (is same or parent of current directory)."));
                 }
 
                 await Data.FileSystem.UnlinkAsync(subDir, cancellationToken).ConfigureAwait(false);
-                return new FtpResponse(250, "Directory removed.");
+                return new FtpResponse(250, T("Directory removed."));
             }
             catch (Exception)
             {
-                return new FtpResponse(550, "Couldn't remove directory (locked?).");
+                return new FtpResponse(550, T("Couldn't remove directory (locked?)."));
             }
         }
     }

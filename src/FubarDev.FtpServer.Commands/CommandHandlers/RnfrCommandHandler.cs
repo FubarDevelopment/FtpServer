@@ -37,18 +37,18 @@ namespace FubarDev.FtpServer.CommandHandlers
             var fileInfo = await Data.FileSystem.SearchEntryAsync(tempPath, fileName, cancellationToken).ConfigureAwait(false);
             if (fileInfo == null)
             {
-                return new FtpResponse(550, "Directory doesn't exist.");
+                return new FtpResponse(550, T("Directory doesn't exist."));
             }
 
             if (fileInfo.Entry == null)
             {
-                return new FtpResponse(550, "Source entry doesn't exist.");
+                return new FtpResponse(550, T("Source entry doesn't exist."));
             }
 
             Data.RenameFrom = fileInfo;
 
             var fullName = tempPath.GetFullPath(fileInfo.FileName);
-            return new FtpResponse(350, $"Rename started ({fullName}).");
+            return new FtpResponse(350, T("Rename started ({0}).", fullName));
         }
     }
 }

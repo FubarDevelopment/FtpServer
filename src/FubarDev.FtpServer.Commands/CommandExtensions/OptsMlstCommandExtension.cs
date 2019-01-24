@@ -45,12 +45,12 @@ namespace FubarDev.FtpServer.CommandExtensions
             {
                 if (!MlstCommandHandler.KnownFacts.Contains(fact))
                 {
-                    return Task.FromResult(new FtpResponse(501, "Syntax error in parameters or arguments."));
+                    return Task.FromResult(new FtpResponse(501, T("Syntax error in parameters or arguments.")));
                 }
 
                 Connection.Data.ActiveMlstFacts.Add(fact);
             }
-            return Task.FromResult(new FtpResponse(200, "Command okay."));
+            return Task.FromResult(new FtpResponse(200, T("Command okay.")));
         }
     }
 }

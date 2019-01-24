@@ -44,18 +44,18 @@ namespace FubarDev.FtpServer.CommandHandlers
             var fileInfo = await Data.FileSystem.SearchFileAsync(currentPath, path, cancellationToken).ConfigureAwait(false);
             if (fileInfo?.Entry == null)
             {
-                return new FtpResponse(550, "File does not exist.");
+                return new FtpResponse(550, T("File does not exist."));
             }
 
             try
             {
                 await Data.FileSystem.UnlinkAsync(fileInfo.Entry, cancellationToken).ConfigureAwait(false);
-                return new FtpResponse(250, "File deleted successfully.");
+                return new FtpResponse(250, T("File deleted successfully."));
             }
             catch (Exception ex)
             {
                 _logger?.LogError(ex, ex.Message);
-                return new FtpResponse(550, "Couldn't delete file.");
+                return new FtpResponse(550, T("Couldn't delete file."));
             }
         }
     }

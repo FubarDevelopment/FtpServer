@@ -40,12 +40,12 @@ namespace FubarDev.FtpServer.CommandHandlers
             var parts = command.Argument.Split(new[] { ' ' }, 2);
             if (parts.Length != 2)
             {
-                return new FtpResponse(551, "Timestamp or file name missing.");
+                return new FtpResponse(551, T("Timestamp or file name missing."));
             }
 
             if (!parts[0].TryParseTimestamp("UTC", out var createTime))
             {
-                return new FtpResponse(551, "Invalid timestamp.");
+                return new FtpResponse(551, T("Invalid timestamp."));
             }
 
             var path = parts[1];
@@ -53,7 +53,7 @@ namespace FubarDev.FtpServer.CommandHandlers
             var fileInfo = await Data.FileSystem.SearchFileAsync(currentPath, path, cancellationToken).ConfigureAwait(false);
             if (fileInfo?.Entry == null)
             {
-                return new FtpResponse(550, "File not found.");
+                return new FtpResponse(550, T("File not found."));
             }
 
             await Data.FileSystem.SetMacTimeAsync(fileInfo.Entry, null, null, createTime, cancellationToken).ConfigureAwait(false);

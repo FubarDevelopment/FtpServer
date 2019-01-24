@@ -128,7 +128,7 @@ namespace FubarDev.FtpServer.CommandHandlers
             catch (Exception ex)
             {
                 Connection.Log?.LogError(ex, ex.Message);
-                return new FtpResponse(425, "Could not open data connection");
+                return new FtpResponse(425, T("Could not open data connection"));
             }
 
             return null;

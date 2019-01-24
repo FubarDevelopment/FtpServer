@@ -27,7 +27,7 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// <inheritdoc/>
         public override Task<FtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
         {
-            return Task.FromResult(new FtpResponse(221, "Service closing control connection.")
+            return Task.FromResult(new FtpResponse(221, T("Service closing control connection."))
             {
                 AfterWriteAction = () =>
                 {

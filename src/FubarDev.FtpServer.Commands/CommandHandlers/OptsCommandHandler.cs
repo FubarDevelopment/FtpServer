@@ -52,7 +52,7 @@ namespace FubarDev.FtpServer.CommandHandlers
             var argument = FtpCommand.Parse(command.Argument);
             if (!Extensions.TryGetValue(argument.Name, out var extension))
             {
-                return new FtpResponse(500, "Syntax error, command unrecognized.");
+                return new FtpResponse(500, T("Syntax error, command unrecognized."));
             }
 
             return await extension.Process(argument, cancellationToken).ConfigureAwait(false);

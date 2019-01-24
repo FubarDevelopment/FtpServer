@@ -30,10 +30,10 @@ namespace FubarDev.FtpServer.CommandHandlers
         {
             if (string.Equals(command.Argument, "F", StringComparison.OrdinalIgnoreCase))
             {
-                return Task.FromResult(new FtpResponse(200, "Structure set to File."));
+                return Task.FromResult(new FtpResponse(200, T("Structure set to File.")));
             }
 
-            return Task.FromResult(new FtpResponse(504, $"File structure {command.Argument} not supported."));
+            return Task.FromResult(new FtpResponse(504, T("File structure {0} not supported.", command.Argument)));
         }
     }
 }

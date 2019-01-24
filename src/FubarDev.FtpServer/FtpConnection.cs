@@ -19,6 +19,7 @@ using System.Threading.Tasks;
 using FubarDev.FtpServer.BackgroundTransfer;
 using FubarDev.FtpServer.CommandHandlers;
 using FubarDev.FtpServer.FileSystem.Error;
+using FubarDev.FtpServer.Localization;
 
 using JetBrains.Annotations;
 
@@ -58,12 +59,14 @@ namespace FubarDev.FtpServer
         /// <param name="logger">The logger for the FTP connection.</param>
         /// <param name="options">The options for the FTP connection.</param>
         /// <param name="commandHandlers">The registered command handlers.</param>
+        /// <param name="catalogLoader">The catalog loader for the FTP server.</param>
         public FtpConnection(
             [NotNull] TcpClient socket,
             [NotNull] IOptions<FtpConnectionOptions> options,
             [NotNull] IFtpConnectionAccessor connectionAccessor,
             [NotNull, ItemNotNull] IEnumerable<IFtpCommandHandler> commandHandlers,
             [NotNull, ItemNotNull] IEnumerable<IFtpCommandHandlerExtension> commandHandlerExtensions,
+            [NotNull] IFtpCatalogLoader catalogLoader,
             [CanBeNull] ILogger<IFtpConnection> logger = null)
         {
             var endpoint = (IPEndPoint)socket.Client.RemoteEndPoint;
@@ -88,7 +91,7 @@ namespace FubarDev.FtpServer
             Log = logger;
             Encoding = options.Value.DefaultEncoding ?? Encoding.ASCII;
             PromiscuousPasv = options.Value.PromiscuousPasv;
-            Data = new FtpConnectionData(new BackgroundCommandHandler(this));
+            Data = new FtpConnectionData(new BackgroundCommandHandler(this), catalogLoader);
 
             var commandHandlersList = commandHandlers.ToList();
             var dict = commandHandlersList
@@ -249,6 +252,28 @@ namespace FubarDev.FtpServer
         }
 
         /// <summary>
+        /// Translates a message using the current catalog of the active connection.
+        /// </summary>
+        /// <param name="message">The message to translate.</param>
+        /// <returns>The translated message.</returns>
+        private string T(string message)
+        {
+            return Data.Catalog.GetString(message);
+        }
+
+        /// <summary>
+        /// Translates a message using the current catalog of the active connection.
+        /// </summary>
+        /// <param name="message">The message to translate.</param>
+        /// <param name="args">The format arguments.</param>
+        /// <returns>The translated message.</returns>
+        [StringFormatMethod("message")]
+        private string T(string message, params object[] args)
+        {
+            return Data.Catalog.GetString(message, args);
+        }
+
+        /// <summary>
         /// Writes a FTP response to a client.
         /// </summary>
         /// <param name="response">The response to write to the client.</param>
@@ -276,7 +301,7 @@ namespace FubarDev.FtpServer
 
             Log?.LogInformation($"Connected from {RemoteAddress.ToString(true)}");
             var collector = new FtpCommandCollector(() => Encoding);
-            await WriteAsync(new FtpResponse(220, "FTP Server Ready"), _cancellationTokenSource.Token).ConfigureAwait(false);
+            await WriteAsync(new FtpResponse(220, T("FTP Server Ready")), _cancellationTokenSource.Token).ConfigureAwait(false);
 
             var buffer = new byte[1024];
             try
@@ -361,7 +386,7 @@ namespace FubarDev.FtpServer
                 var isLoginRequired = result.Item3;
                 if (isLoginRequired && !Data.IsLoggedIn)
                 {
-                    response = new FtpResponse(530, "Not logged in.");
+                    response = new FtpResponse(530, T("Not logged in."));
                 }
                 else
                 {
@@ -379,7 +404,7 @@ namespace FubarDev.FtpServer
                             }
                             else
                             {
-                                response = new FtpResponse(503, "Parallel commands aren't allowed.");
+                                response = new FtpResponse(503, T("Parallel commands aren't allowed."));
                             }
                         }
                         else
@@ -396,20 +421,20 @@ namespace FubarDev.FtpServer
                     }
                     catch (NotSupportedException nse)
                     {
-                        var message = nse.Message ?? $"Command {command} not supported";
+                        var message = nse.Message ?? T("Command {0} not supported", command);
                         Log?.LogInformation(message);
                         response = new FtpResponse(502, message);
                     }
                     catch (Exception ex)
                     {
                         Log?.LogError(ex, "Failed to process message ({0})", command);
-                        response = new FtpResponse(501, "Syntax error in parameters or arguments.");
+                        response = new FtpResponse(501, T("Syntax error in parameters or arguments."));
                     }
                 }
             }
             else
             {
-                response = new FtpResponse(500, "Syntax error, command unrecognized.");
+                response = new FtpResponse(500, T("Syntax error, command unrecognized."));
             }
             if (response != null)
             {

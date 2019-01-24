@@ -15,5 +15,8 @@
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="1.0.0" />
     <PackageReference Include="System.Dynamic.Runtime" Version="4.0.11" />
   </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="NGettext" Version="0.6.3" />
+  </ItemGroup>
   <Import Project="../../PackageLibrary.props" />
 </Project>

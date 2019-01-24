@@ -30,10 +30,10 @@ namespace FubarDev.FtpServer.CommandHandlers
         {
             if (string.Equals(command.Argument, "S", StringComparison.OrdinalIgnoreCase))
             {
-                return Task.FromResult(new FtpResponse(200, "Mode set to Stream."));
+                return Task.FromResult(new FtpResponse(200, T("Mode set to Stream.")));
             }
 
-            return Task.FromResult(new FtpResponse(504, $"Transfer mode {command.Argument} not supported."));
+            return Task.FromResult(new FtpResponse(504, T("Transfer mode {0} not supported.", command.Argument)));
         }
     }
 }
