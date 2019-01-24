@@ -436,9 +436,15 @@ namespace FubarDev.FtpServer
             {
                 response = new FtpResponse(500, T("Syntax error, command unrecognized."));
             }
+
             if (response != null)
             {
                 await WriteAsync(response, _cancellationTokenSource.Token).ConfigureAwait(false);
+                if (response.Code == 421)
+                {
+                    SocketStream.Flush();
+                    Close();
+                }
             }
         }
 
