@@ -31,12 +31,15 @@ namespace FubarDev.FtpServer
         /// <summary>
         /// Initializes a new instance of the <see cref="FtpConnectionData"/> class.
         /// </summary>
+        /// <param name="loginStateMachine">The state machine to handle FTP logins.</param>
         /// <param name="backgroundCommandHandler">Utility module that allows background execution of an FTP command.</param>
         /// <param name="catalogLoader">The catalog loader for the FTP server.</param>
         public FtpConnectionData(
+            [NotNull] IFtpLoginStateMachine loginStateMachine,
             [NotNull] IBackgroundCommandHandler backgroundCommandHandler,
             [NotNull] IFtpCatalogLoader catalogLoader)
         {
+            LoginStateMachine = loginStateMachine;
             UserData = new ExpandoObject();
             TransferMode = new FtpTransferMode(FtpFileType.Ascii);
             BackgroundCommandHandler = backgroundCommandHandler;
@@ -69,6 +72,11 @@ namespace FubarDev.FtpServer
         /// </summary>
         [Obsolete("An anonymous user object now implements IAnonymousFtpUser.")]
         public bool IsAnonymous { get; set; }
+
+        /// <summary>
+        /// Gets the state machine to handle FTP logins.
+        /// </summary>
+        public IFtpLoginStateMachine LoginStateMachine { get; }
 
         /// <summary>
         /// Gets or sets the <see cref="Encoding"/> for the <c>NLST</c> command.

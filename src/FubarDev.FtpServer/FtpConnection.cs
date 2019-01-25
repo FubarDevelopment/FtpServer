@@ -16,6 +16,8 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
+using FubarDev.FtpServer.Authentication;
+using FubarDev.FtpServer.Authorization;
 using FubarDev.FtpServer.BackgroundTransfer;
 using FubarDev.FtpServer.CommandHandlers;
 using FubarDev.FtpServer.FileSystem.Error;
@@ -60,6 +62,8 @@ namespace FubarDev.FtpServer
         /// <param name="options">The options for the FTP connection.</param>
         /// <param name="commandHandlers">The registered command handlers.</param>
         /// <param name="catalogLoader">The catalog loader for the FTP server.</param>
+        /// <param name="authenticationMechanisms">The supported authentication mechanisms.</param>
+        /// <param name="authorizationMechanisms">The supported authorization mechanisms.</param>
         public FtpConnection(
             [NotNull] TcpClient socket,
             [NotNull] IOptions<FtpConnectionOptions> options,
@@ -67,6 +71,8 @@ namespace FubarDev.FtpServer
             [NotNull, ItemNotNull] IEnumerable<IFtpCommandHandler> commandHandlers,
             [NotNull, ItemNotNull] IEnumerable<IFtpCommandHandlerExtension> commandHandlerExtensions,
             [NotNull] IFtpCatalogLoader catalogLoader,
+            [NotNull][ItemNotNull] IEnumerable<IAuthenticationMechanism> authenticationMechanisms,
+            [NotNull][ItemNotNull] IEnumerable<IAuthorizationMechanism> authorizationMechanisms,
             [CanBeNull] ILogger<IFtpConnection> logger = null)
         {
             var endpoint = (IPEndPoint)socket.Client.RemoteEndPoint;
@@ -84,6 +90,8 @@ namespace FubarDev.FtpServer
             _socket = socket;
             _connectionAccessor = connectionAccessor;
 
+            var stateMachine = new FtpLoginStateMachine(this, authenticationMechanisms, authorizationMechanisms);
+
             var socketStream = socket.GetStream();
 
             SocketStream = socketStream;
@@ -91,7 +99,7 @@ namespace FubarDev.FtpServer
             Log = logger;
             Encoding = options.Value.DefaultEncoding ?? Encoding.ASCII;
             PromiscuousPasv = options.Value.PromiscuousPasv;
-            Data = new FtpConnectionData(new BackgroundCommandHandler(this), catalogLoader);
+            Data = new FtpConnectionData(stateMachine, new BackgroundCommandHandler(this), catalogLoader);
 
             var commandHandlersList = commandHandlers.ToList();
             var dict = commandHandlersList

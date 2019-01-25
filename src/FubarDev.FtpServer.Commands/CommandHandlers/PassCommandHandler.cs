@@ -52,7 +52,7 @@ namespace FubarDev.FtpServer.CommandHandlers
         {
             if (Connection.Data.User == null)
             {
-                return new FtpResponse(530, "No user name given");
+                return new FtpResponse(530, T("No user name given"));
             }
 
             var password = command.Argument;
@@ -73,15 +73,15 @@ namespace FubarDev.FtpServer.CommandHandlers
                     Connection.Data.FileSystem = await _fileSystemClassFactory
                         .Create(
                             new DefaultAccountInformation(
-                                validationResult.User ?? throw new InvalidOperationException("The user property must be set if validation succeeded."),
+                                validationResult.User ?? throw new InvalidOperationException(T("The user property must be set if validation succeeded.")),
                                 membershipProvider))
                         .ConfigureAwait(false);
                     Connection.Data.Path = new Stack<IUnixDirectoryEntry>();
-                    return new FtpResponse(230, "Password ok, FTP server ready");
+                    return new FtpResponse(230, T("Password ok, FTP server ready"));
                 }
             }
 
-            return new FtpResponse(530, "Username or password incorrect");
+            return new FtpResponse(530, T("Username or password incorrect"));
         }
 
         private class DefaultAccountInformation : IAccountInformation

@@ -34,7 +34,7 @@ namespace FubarDev.FtpServer.CommandHandlers
         {
             var userName = command.Argument;
             Connection.Data.User = new UnauthenticatedUser(userName);
-            return Task.FromResult(new FtpResponse(331, $"User {userName} logged in, needs password"));
+            return Task.FromResult(new FtpResponse(331, T("User {0} logged in, needs password", userName)));
         }
 
         private class UnauthenticatedUser : IFtpUser

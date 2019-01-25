@@ -12,6 +12,10 @@ using JetBrains.Annotations;
 
 namespace FubarDev.FtpServer
 {
+    /// <summary>
+    /// A base class for a state machine that's triggered by FTP commands.
+    /// </summary>
+    /// <typeparam name="TStatus">The status type.</typeparam>
     public abstract class FtpStateMachine<TStatus> : IFtpStateMachine<TStatus>
             where TStatus : Enum
     {
@@ -19,24 +23,55 @@ namespace FubarDev.FtpServer
 
         private readonly TStatus _initialStatus;
 
+        [NotNull]
+        [ItemNotNull]
         private IReadOnlyCollection<Transition> _possibleTransitions;
 
-        protected FtpStateMachine(IEnumerable<Transition> transitions, TStatus initialStatus)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FtpStateMachine{TStatus}"/> class.
+        /// </summary>
+        /// <param name="connection">The FTP connection.</param>
+        /// <param name="transitions">The supported transitions.</param>
+        /// <param name="initialStatus">The initial status.</param>
+        protected FtpStateMachine(
+            [NotNull] IFtpConnection connection,
+            [NotNull, ItemNotNull] IEnumerable<Transition> transitions,
+            TStatus initialStatus)
         {
+            Connection = connection;
             _initialStatus = initialStatus;
             _transitions = transitions
                 .ToLookup(x => x.Source)
                 .ToDictionary(x => x.Key, x => (IReadOnlyCollection<Transition>)x.ToList());
+            Status = initialStatus;
             SetStatus(initialStatus);
         }
 
+        /// <summary>
+        /// Gets the current status.
+        /// </summary>
         public TStatus Status { get; private set; }
 
+        /// <summary>
+        /// Gets the connection this state machine belongs to.
+        /// </summary>
+        [NotNull]
+        public IFtpConnection Connection { get; }
+
+        /// <summary>
+        /// Resets the state machine to the initial status.
+        /// </summary>
         public void Reset()
         {
             SetStatus(_initialStatus);
         }
 
+        /// <summary>
+        /// Executes the given FTP command.
+        /// </summary>
+        /// <param name="ftpCommand">The FTP command to execute.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <returns>The task returning the response.</returns>
         public async Task<FtpResponse> ExecuteAsync([NotNull] FtpCommand ftpCommand, CancellationToken cancellationToken = default)
         {
             var commandTransitions = _possibleTransitions
@@ -45,7 +80,7 @@ namespace FubarDev.FtpServer
 
             if (commandTransitions.Count == 0)
             {
-                return new FtpResponse(503, "Bad sequence of commands");
+                return new FtpResponse(503, T("Bad sequence of commands"));
             }
 
             var response = await ExecuteCommandAsync(ftpCommand, cancellationToken)
@@ -54,15 +89,35 @@ namespace FubarDev.FtpServer
             var foundStatus = commandTransitions.SingleOrDefault(x => x.IsMatch(ftpCommand.Name, response.Code));
             if (foundStatus == null)
             {
-                return new FtpResponse(421, "Service not available");
+                return new FtpResponse(421, T("Service not available"));
             }
 
-            Status = foundStatus.Target;
+            SetStatus(foundStatus.Target);
+
             return response;
         }
 
+        /// <summary>
+        /// Execute the command. All status checks are already done.
+        /// </summary>
+        /// <param name="ftpCommand">The FTP command to execute.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <returns>The task returning the response.</returns>
         protected abstract Task<FtpResponse> ExecuteCommandAsync([NotNull] FtpCommand ftpCommand, CancellationToken cancellationToken = default);
 
+        /// <summary>
+        /// Called when the status was updated.
+        /// </summary>
+        /// <param name="from">The previous status.</param>
+        /// <param name="to">The new status.</param>
+        protected virtual void OnStatusChanged(TStatus from, TStatus to)
+        {
+        }
+
+        /// <summary>
+        /// Sets the status to a new value.
+        /// </summary>
+        /// <param name="status">The new status value.</param>
         protected void SetStatus(TStatus status)
         {
             if (_transitions.TryGetValue(status, out var statusTransitions))
@@ -74,21 +129,65 @@ namespace FubarDev.FtpServer
                 _possibleTransitions = Array.Empty<Transition>();
             }
 
+            var oldStatus = Status;
             Status = status;
+
+            OnStatusChanged(oldStatus, status);
         }
 
+        /// <summary>
+        /// Translates a message using the current catalog of the active connection.
+        /// </summary>
+        /// <param name="message">The message to translate.</param>
+        /// <returns>The translated message.</returns>
+        protected string T(string message)
+        {
+            return Connection.Data.Catalog.GetString(message);
+        }
+
+        /// <summary>
+        /// Translates a message using the current catalog of the active connection.
+        /// </summary>
+        /// <param name="message">The message to translate.</param>
+        /// <param name="args">The format arguments.</param>
+        /// <returns>The translated message.</returns>
+        [StringFormatMethod("message")]
+        protected string T(string message, params object[] args)
+        {
+            return Connection.Data.Catalog.GetString(message, args);
+        }
+
+        /// <summary>
+        /// A class representing a transition.
+        /// </summary>
         protected class Transition
         {
             private readonly Func<int, bool> _isCodeMatchFunc;
-
             private readonly Func<string, bool> _isCommandMatchFunc;
 
-            public Transition(TStatus source, TStatus target, string command, SecurityActionResult resultCode)
+            /// <summary>
+            /// Initializes a new instance of the <see cref="Transition"/> class.
+            /// </summary>
+            /// <param name="source">The source status.</param>
+            /// <param name="target">The target status.</param>
+            /// <param name="command">The trigger command.</param>
+            /// <param name="resultCode">The expected FTP code.</param>
+            public Transition(TStatus source, TStatus target, [NotNull] string command, SecurityActionResult resultCode)
                 : this(source, target, command, code => code == (int)resultCode)
             {
             }
 
-            public Transition(TStatus source, TStatus target, string command, int hundredsRange)
+            /// <summary>
+            /// Initializes a new instance of the <see cref="Transition"/> class.
+            /// </summary>
+            /// <remarks>
+            /// The <paramref name="hundredsRange"/> is multiplied by 100 to get the FTP code range.
+            /// </remarks>
+            /// <param name="source">The source status.</param>
+            /// <param name="target">The target status.</param>
+            /// <param name="command">The trigger command.</param>
+            /// <param name="hundredsRange">The hundreds range.</param>
+            public Transition(TStatus source, TStatus target, [NotNull] string command, int hundredsRange)
                 : this(source, target, command, code => code >= (hundredsRange * 100) && code < (hundredsRange + 1) * 100)
             {
                 if (hundredsRange > 9)
@@ -97,7 +196,14 @@ namespace FubarDev.FtpServer
                 }
             }
 
-            public Transition(TStatus source, TStatus target, string command, Func<int, bool> isCodeMatch)
+            /// <summary>
+            /// Initializes a new instance of the <see cref="Transition"/> class.
+            /// </summary>
+            /// <param name="source">The source status.</param>
+            /// <param name="target">The target status.</param>
+            /// <param name="command">The trigger command.</param>
+            /// <param name="isCodeMatch">A function to test if the code triggers this transition.</param>
+            public Transition(TStatus source, TStatus target, [NotNull] string command, Func<int, bool> isCodeMatch)
             {
                 Source = source;
                 Target = target;
@@ -105,12 +211,30 @@ namespace FubarDev.FtpServer
                 _isCodeMatchFunc = isCodeMatch;
             }
 
+            /// <summary>
+            /// Gets the source status.
+            /// </summary>
             public TStatus Source { get; }
+
+            /// <summary>
+            /// Gets the target status.
+            /// </summary>
             public TStatus Target { get; }
 
+            /// <summary>
+            /// Returns <see langword="true"/> when this transition might be triggered by the given <paramref name="command"/>.
+            /// </summary>
+            /// <param name="command">The command to test for.</param>
+            /// <returns><see langword="true"/> when this transition might be triggered by the given <paramref name="command"/>.</returns>
             public bool IsMatch([NotNull] string command)
                 => _isCommandMatchFunc(command);
 
+            /// <summary>
+            /// Returns <see langword="true"/> when this transition will be triggered by the given <paramref name="command"/> and <paramref name="code"/>.
+            /// </summary>
+            /// <param name="command">The command to test for.</param>
+            /// <param name="code">The code to test for.</param>
+            /// <returns><see langword="true"/> when this transition will be triggered by the given <paramref name="command"/> and <paramref name="code"/>.</returns>
             public bool IsMatch([NotNull] string command, int code)
                 => _isCommandMatchFunc(command) && _isCodeMatchFunc(code);
         }
