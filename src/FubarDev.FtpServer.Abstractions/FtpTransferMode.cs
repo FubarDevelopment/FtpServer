@@ -131,6 +131,7 @@ namespace FubarDev.FtpServer
                 case 'L':
                     return FtpFileType.Local;
             }
+
             throw new NotSupportedException($"Unknown file type \"{fileType}\"");
         }
 
