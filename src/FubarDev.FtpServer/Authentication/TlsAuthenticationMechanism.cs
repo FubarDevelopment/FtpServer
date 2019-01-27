@@ -32,7 +32,7 @@ namespace FubarDev.FtpServer.Authentication
         /// <param name="options">Options for the AUTH TLS command.</param>
         public TlsAuthenticationMechanism(
             [NotNull] IFtpConnection connection,
-            [NotNull] IOptions<TlsAuthenticationOptions> options)
+            [NotNull] IOptions<AuthTlsOptions> options)
             : base(connection)
         {
             _serverCertificate = options.Value.ServerCertificate;

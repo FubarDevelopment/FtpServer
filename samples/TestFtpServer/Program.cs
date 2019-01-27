@@ -229,7 +229,7 @@ namespace TestFtpServer
             var services = new ServiceCollection()
                 .AddLogging(cfg => cfg.SetMinimumLevel(LogLevel.Trace))
                 .AddOptions()
-                .Configure<TlsAuthenticationOptions>(
+                .Configure<AuthTlsOptions>(
                     opt =>
                     {
                         if (options.ServerCertificateFile != null)
@@ -259,7 +259,7 @@ namespace TestFtpServer
                 services.Decorate<IFtpServer>(
                     (ftpServer, serviceProvider) =>
                     {
-                        var authTlsOptions = serviceProvider.GetRequiredService<IOptions<TlsAuthenticationOptions>>();
+                        var authTlsOptions = serviceProvider.GetRequiredService<IOptions<AuthTlsOptions>>();
 
                         // Use an implicit SSL connection (without the AUTHTLS command)
                         ftpServer.ConfigureConnection += (s, e) =>
