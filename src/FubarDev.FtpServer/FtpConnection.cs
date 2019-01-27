@@ -103,7 +103,7 @@ namespace FubarDev.FtpServer
             var dict = commandHandlersList
                 .SelectMany(x => x.Names, (item, name) => new { Name = name, Item = item })
                 .ToLookup(x => x.Name, x => x.Item, StringComparer.OrdinalIgnoreCase)
-                .ToDictionary(x => x.Key, x => x.Last());
+                .ToDictionary(x => x.Key, x => x.Last(), StringComparer.OrdinalIgnoreCase);
 
 #pragma warning disable 618
             _extensions = commandHandlerExtensions.Concat(commandHandlersList.SelectMany(x => x.GetExtensions())).ToList();
