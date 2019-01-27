@@ -8,7 +8,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 
-using FubarDev.FtpServer.AccountManagement;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace FubarDev.FtpServer.CommandHandlers
 {
@@ -32,21 +32,8 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// <inheritdoc/>
         public override Task<FtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
         {
-            var userName = command.Argument;
-            Connection.Data.User = new UnauthenticatedUser(userName);
-            return Task.FromResult(new FtpResponse(331, T("User {0} logged in, needs password", userName)));
-        }
-
-        private class UnauthenticatedUser : IFtpUser
-        {
-            public UnauthenticatedUser(string name)
-            {
-                Name = name;
-            }
-
-            public string Name { get; }
-
-            public bool IsInGroup(string groupName) => false;
+            var loginStateMachine = Connection.ConnectionServices.GetRequiredService<IFtpLoginStateMachine>();
+            return loginStateMachine.ExecuteAsync(command, cancellationToken);
         }
     }
 }

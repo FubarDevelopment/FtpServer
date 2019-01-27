@@ -5,6 +5,8 @@
 using System;
 
 using FubarDev.FtpServer;
+using FubarDev.FtpServer.Authentication;
+using FubarDev.FtpServer.Authorization;
 using FubarDev.FtpServer.BackgroundTransfer;
 using FubarDev.FtpServer.CommandHandlers;
 using FubarDev.FtpServer.Localization;
@@ -40,6 +42,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddScoped(sp => sp.GetRequiredService<TcpSocketClientAccessor>().TcpSocketClient);
 
             services.AddScoped<IFtpConnection, FtpConnection>();
+            services.AddScoped<IFtpLoginStateMachine, FtpLoginStateMachine>();
 
             services.AddSingleton<IFtpCatalogLoader, DefaultFtpCatalogLoader>();
 
@@ -57,6 +60,14 @@ namespace Microsoft.Extensions.DependencyInjection
             services.Scan(
                 sel => sel.FromAssemblyOf<PassCommandHandler>()
                     .AddClasses(filter => filter.AssignableTo<IFtpCommandHandler>()).As<IFtpCommandHandler>().WithSingletonLifetime());
+
+            services.Scan(
+                sel => sel.FromAssemblyOf<PasswordAuthorization>()
+                   .AddClasses(filter => filter.AssignableTo<IAuthorizationMechanism>()).As<IAuthorizationMechanism>().WithScopedLifetime());
+
+            services.Scan(
+                sel => sel.FromAssemblyOf<TlsAuthenticationMechanism>()
+                   .AddClasses(filter => filter.AssignableTo<IAuthenticationMechanism>()).As<IAuthenticationMechanism>().WithScopedLifetime());
 
             configure(new FtpServerBuilder(services));
 

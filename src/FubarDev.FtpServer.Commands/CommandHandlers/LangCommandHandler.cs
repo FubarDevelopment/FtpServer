@@ -40,6 +40,7 @@ namespace FubarDev.FtpServer.CommandHandlers
             _catalogLoader = catalogLoader;
         }
 
+        /// <inheritdoc />
         public override IEnumerable<IFeatureInfo> GetSupportedFeatures()
         {
             yield return new GenericFeatureInfo(

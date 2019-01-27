@@ -32,6 +32,11 @@ namespace FubarDev.FtpServer
         event EventHandler Closed;
 
         /// <summary>
+        /// Gets the connection services.
+        /// </summary>
+        IServiceProvider ConnectionServices { get; }
+
+        /// <summary>
         /// Gets the dictionary of all known command handlers.
         /// </summary>
         [NotNull]

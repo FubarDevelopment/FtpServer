@@ -5,6 +5,7 @@
 // <author>Mark Junker</author>
 //-----------------------------------------------------------------------
 
+using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -52,7 +53,7 @@ namespace FubarDev.FtpServer.CommandHandlers
             }
 
             await Connection.WriteAsync("211-Extensions supported:", cancellationToken).ConfigureAwait(false);
-            foreach (var supportedFeature in features)
+            foreach (var supportedFeature in features.Distinct(StringComparer.OrdinalIgnoreCase))
             {
                 await Connection.WriteAsync($" {supportedFeature}", cancellationToken).ConfigureAwait(false);
             }

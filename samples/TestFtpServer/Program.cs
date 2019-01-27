@@ -14,6 +14,7 @@ using System.Xml;
 
 using FubarDev.FtpServer;
 using FubarDev.FtpServer.AccountManagement;
+using FubarDev.FtpServer.Authentication;
 using FubarDev.FtpServer.FileSystem.DotNet;
 using FubarDev.FtpServer.FileSystem.GoogleDrive;
 using FubarDev.FtpServer.FileSystem.InMemory;
@@ -228,7 +229,7 @@ namespace TestFtpServer
             var services = new ServiceCollection()
                 .AddLogging(cfg => cfg.SetMinimumLevel(LogLevel.Trace))
                 .AddOptions()
-                .Configure<AuthTlsOptions>(
+                .Configure<TlsAuthenticationOptions>(
                     opt =>
                     {
                         if (options.ServerCertificateFile != null)
@@ -258,7 +259,7 @@ namespace TestFtpServer
                 services.Decorate<IFtpServer>(
                     (ftpServer, serviceProvider) =>
                     {
-                        var authTlsOptions = serviceProvider.GetRequiredService<IOptions<AuthTlsOptions>>();
+                        var authTlsOptions = serviceProvider.GetRequiredService<IOptions<TlsAuthenticationOptions>>();
 
                         // Use an implicit SSL connection (without the AUTHTLS command)
                         ftpServer.ConfigureConnection += (s, e) =>

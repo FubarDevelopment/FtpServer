@@ -58,12 +58,11 @@ namespace FubarDev.FtpServer
         /// <param name="socket">The socket to use to communicate with the client.</param>
         /// <param name="connectionAccessor">The accessor to get the connection that is active during the <see cref="FtpCommandHandler.Process"/> method execution.</param>
         /// <param name="commandHandlerExtensions">The registered command handler extensions.</param>
+        /// <param name="serviceProvider">The service provider for the connection.</param>
         /// <param name="logger">The logger for the FTP connection.</param>
         /// <param name="options">The options for the FTP connection.</param>
         /// <param name="commandHandlers">The registered command handlers.</param>
         /// <param name="catalogLoader">The catalog loader for the FTP server.</param>
-        /// <param name="authenticationMechanisms">The supported authentication mechanisms.</param>
-        /// <param name="authorizationMechanisms">The supported authorization mechanisms.</param>
         public FtpConnection(
             [NotNull] TcpClient socket,
             [NotNull] IOptions<FtpConnectionOptions> options,
@@ -71,12 +70,13 @@ namespace FubarDev.FtpServer
             [NotNull, ItemNotNull] IEnumerable<IFtpCommandHandler> commandHandlers,
             [NotNull, ItemNotNull] IEnumerable<IFtpCommandHandlerExtension> commandHandlerExtensions,
             [NotNull] IFtpCatalogLoader catalogLoader,
-            [NotNull][ItemNotNull] IEnumerable<IAuthenticationMechanism> authenticationMechanisms,
-            [NotNull][ItemNotNull] IEnumerable<IAuthorizationMechanism> authorizationMechanisms,
+            [NotNull] IServiceProvider serviceProvider,
             [CanBeNull] ILogger<IFtpConnection> logger = null)
         {
             var endpoint = (IPEndPoint)socket.Client.RemoteEndPoint;
             RemoteAddress = new Address(endpoint.Address.ToString(), endpoint.Port);
+
+            ConnectionServices = serviceProvider;
 
             var properties = new Dictionary<string, object>
             {
@@ -90,8 +90,6 @@ namespace FubarDev.FtpServer
             _socket = socket;
             _connectionAccessor = connectionAccessor;
 
-            var stateMachine = new FtpLoginStateMachine(this, authenticationMechanisms, authorizationMechanisms);
-
             var socketStream = socket.GetStream();
 
             SocketStream = socketStream;
@@ -99,7 +97,7 @@ namespace FubarDev.FtpServer
             Log = logger;
             Encoding = options.Value.DefaultEncoding ?? Encoding.ASCII;
             PromiscuousPasv = options.Value.PromiscuousPasv;
-            Data = new FtpConnectionData(stateMachine, new BackgroundCommandHandler(this), catalogLoader);
+            Data = new FtpConnectionData(new BackgroundCommandHandler(this), catalogLoader);
 
             var commandHandlersList = commandHandlers.ToList();
             var dict = commandHandlersList
@@ -107,13 +105,18 @@ namespace FubarDev.FtpServer
                 .ToLookup(x => x.Name, x => x.Item, StringComparer.OrdinalIgnoreCase)
                 .ToDictionary(x => x.Key, x => x.Last());
 
-            _extensions = commandHandlerExtensions.ToList();
+#pragma warning disable 618
+            _extensions = commandHandlerExtensions.Concat(commandHandlersList.SelectMany(x => x.GetExtensions())).ToList();
+#pragma warning restore 618
 
             CommandHandlers = dict;
         }
 
         /// <inheritdoc />
         public event EventHandler Closed;
+
+        /// <inheritdoc />
+        public IServiceProvider ConnectionServices { get; }
 
         /// <inheritdoc />
         public IReadOnlyDictionary<string, IFtpCommandHandler> CommandHandlers { get; }
@@ -180,7 +183,10 @@ namespace FubarDev.FtpServer
                 Log?.Log(response);
                 var data = Encoding.GetBytes($"{response}\r\n");
                 await SocketStream.WriteAsync(data, 0, data.Length, cancellationToken).ConfigureAwait(false);
-                response.AfterWriteAction?.Invoke();
+                if (response.AfterWriteAction != null)
+                {
+                    await response.AfterWriteAction(this, cancellationToken).ConfigureAwait(false);
+                }
             }
         }
 
@@ -281,21 +287,6 @@ namespace FubarDev.FtpServer
             return Data.Catalog.GetString(message, args);
         }
 
-        /// <summary>
-        /// Writes a FTP response to a client.
-        /// </summary>
-        /// <param name="response">The response to write to the client.</param>
-        private void Write([NotNull] FtpResponse response)
-        {
-            if (!_closed)
-            {
-                Log?.Log(response);
-                var data = Encoding.GetBytes($"{response}\r\n");
-                SocketStream.Write(data, 0, data.Length);
-                response.AfterWriteAction?.Invoke();
-            }
-        }
-
         private async Task ProcessMessages()
         {
             // Initialize the FTP connection accessor
@@ -336,7 +327,8 @@ namespace FubarDev.FtpServer
                         var response = _activeBackgroundTask?.Result;
                         if (response != null)
                         {
-                            Write(response);
+                            await WriteAsync(response, _cancellationTokenSource.Token)
+                               .ConfigureAwait(false);
                         }
 
                         _activeBackgroundTask = null;

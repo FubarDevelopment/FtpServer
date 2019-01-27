@@ -50,5 +50,25 @@ namespace FubarDev.FtpServer.Authentication
         [NotNull]
         [ItemNotNull]
         Task<FtpResponse> HandleAdatAsync([NotNull] byte[] data, CancellationToken cancellationToken);
+
+        /// <summary>
+        /// Processes the <c>PBSZ</c> command.
+        /// </summary>
+        /// <param name="size">The protected buffer size passed to the PBSZ command.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <returns>The response to return.</returns>
+        [NotNull]
+        [ItemNotNull]
+        Task<FtpResponse> HandlePbszAsync(long size, CancellationToken cancellationToken);
+
+        /// <summary>
+        /// Processes the <c>PROT</c> command.
+        /// </summary>
+        /// <param name="protCode">The code passed to the PROT command.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <returns>The response to return.</returns>
+        [NotNull]
+        [ItemNotNull]
+        Task<FtpResponse> HandleProtAsync([NotNull] string protCode, CancellationToken cancellationToken);
     }
 }

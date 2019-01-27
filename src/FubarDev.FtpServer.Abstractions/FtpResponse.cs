@@ -6,6 +6,8 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Threading;
+using System.Threading.Tasks;
 
 using JetBrains.Annotations;
 
@@ -28,6 +30,16 @@ namespace FubarDev.FtpServer
         }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="FtpResponse"/> class.
+        /// </summary>
+        /// <param name="code">The response code.</param>
+        /// <param name="message">The response message.</param>
+        public FtpResponse(SecurityActionResult code, [CanBeNull] string message)
+            : this((int)code, message)
+        {
+        }
+
+        /// <summary>
         /// Gets the response code.
         /// </summary>
         public int Code { get; }
@@ -39,9 +51,9 @@ namespace FubarDev.FtpServer
         public string Message { get; }
 
         /// <summary>
-        /// Gets or sets the <see cref="Action"/> to execute after sending the response to the client.
+        /// Gets or sets the async action to execute after sending the response to the client.
         /// </summary>
-        public Action AfterWriteAction { get; set; }
+        public Func<IFtpConnection, CancellationToken, Task> AfterWriteAction { get; set; }
 
         /// <inheritdoc/>
         public override string ToString()

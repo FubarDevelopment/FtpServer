@@ -1,11 +1,7 @@
-//-----------------------------------------------------------------------
-// <copyright file="PassCommandHandler.cs" company="Fubar Development Junker">
-//     Copyright (c) Fubar Development Junker. All rights reserved.
+// <copyright file="AcctCommandHandler.cs" company="Fubar Development Junker">
+// Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
-// <author>Mark Junker</author>
-//-----------------------------------------------------------------------
 
-using System;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -16,15 +12,15 @@ using Microsoft.Extensions.DependencyInjection;
 namespace FubarDev.FtpServer.CommandHandlers
 {
     /// <summary>
-    /// Implements the <c>PASS</c> command.
+    /// Implements the <c>ACCT</c> command.
     /// </summary>
-    public class PassCommandHandler : FtpCommandHandler
+    public class AcctCommandHandler : FtpCommandHandler
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="PassCommandHandler"/> class.
+        /// Initializes a new instance of the <see cref="AcctCommandHandler"/> class.
         /// </summary>
         /// <param name="connectionAccessor">The accessor to get the connection that is active during the <see cref="Process"/> method execution.</param>
-        public PassCommandHandler(
+        public AcctCommandHandler(
             [NotNull] IFtpConnectionAccessor connectionAccessor)
             : base(connectionAccessor, "PASS")
         {

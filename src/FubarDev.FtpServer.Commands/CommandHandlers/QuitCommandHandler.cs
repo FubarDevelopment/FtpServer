@@ -24,15 +24,19 @@ namespace FubarDev.FtpServer.CommandHandlers
         {
         }
 
+        /// <inheritdoc />
+        public override bool IsLoginRequired { get; } = false;
+
         /// <inheritdoc/>
         public override Task<FtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
         {
             return Task.FromResult(new FtpResponse(221, T("Service closing control connection."))
             {
-                AfterWriteAction = () =>
+                AfterWriteAction = async (conn, ct) =>
                 {
-                    Connection.SocketStream.Flush();
-                    Connection.Close();
+                    await conn.SocketStream.FlushAsync(ct)
+                       .ConfigureAwait(false);
+                    conn.Close();
                 },
             });
         }

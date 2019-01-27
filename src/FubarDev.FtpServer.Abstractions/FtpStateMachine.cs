@@ -85,6 +85,10 @@ namespace FubarDev.FtpServer
 
             var response = await ExecuteCommandAsync(ftpCommand, cancellationToken)
                 .ConfigureAwait(false);
+            if (response == null)
+            {
+                return new FtpResponse(421, T("Service not available"));
+            }
 
             var foundStatus = commandTransitions.SingleOrDefault(x => x.IsMatch(ftpCommand.Name, response.Code));
             if (foundStatus == null)
@@ -132,7 +136,10 @@ namespace FubarDev.FtpServer
             var oldStatus = Status;
             Status = status;
 
-            OnStatusChanged(oldStatus, status);
+            if (!oldStatus.Equals(status))
+            {
+                OnStatusChanged(oldStatus, status);
+            }
         }
 
         /// <summary>

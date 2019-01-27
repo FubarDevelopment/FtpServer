@@ -242,9 +242,9 @@ namespace FubarDev.FtpServer
 
         private void AddClient(TcpClient client)
         {
+            var scope = _serviceProvider.CreateScope();
             try
             {
-                var scope = _serviceProvider.CreateScope();
                 var socketAccessor = scope.ServiceProvider.GetRequiredService<TcpSocketClientAccessor>();
                 socketAccessor.TcpSocketClient = client;
 
@@ -266,6 +266,7 @@ namespace FubarDev.FtpServer
             }
             catch (Exception ex)
             {
+                scope.Dispose();
                 _log?.LogError(ex, ex.Message);
             }
         }

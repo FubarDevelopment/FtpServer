@@ -11,6 +11,9 @@ using JetBrains.Annotations;
 
 namespace FubarDev.FtpServer.FileSystem.DotNet
 {
+    /// <summary>
+    /// Base class for System.IO based file system entries.
+    /// </summary>
     public abstract class DotNetFileSystemEntry : IUnixFileSystemEntry
     {
         /// <summary>

@@ -1,15 +1,15 @@
-// <copyright file="AuthTlsOptions.cs" company="Fubar Development Junker">
+// <copyright file="TlsAuthenticationOptions.cs" company="Fubar Development Junker">
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
 using System.Security.Cryptography.X509Certificates;
 
-namespace FubarDev.FtpServer
+namespace FubarDev.FtpServer.Authentication
 {
     /// <summary>
     /// Options for SSL/TLS connections.
     /// </summary>
-    public class AuthTlsOptions
+    public class TlsAuthenticationOptions
     {
         /// <summary>
         /// Gets or sets the server certificate.

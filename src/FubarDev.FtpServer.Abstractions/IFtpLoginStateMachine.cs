@@ -9,6 +9,9 @@ using JetBrains.Annotations;
 
 namespace FubarDev.FtpServer
 {
+    /// <summary>
+    /// Interface for a FTP login state machine.
+    /// </summary>
     public interface IFtpLoginStateMachine : IFtpStateMachine<SecurityStatus>
     {
         /// <summary>
