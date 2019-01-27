@@ -95,26 +95,26 @@ namespace FubarDev.FtpServer.CommandExtensions
 
             if (string.IsNullOrEmpty(path))
             {
-                return new FtpResponse(501, "No file name.");
+                return new FtpResponse(501, T("No file name."));
             }
 
             var currentPath = Data.Path.Clone();
             var foundEntry = await Data.FileSystem.SearchEntryAsync(currentPath, path, cancellationToken).ConfigureAwait(false);
             if (foundEntry?.Entry == null)
             {
-                return new FtpResponse(550, "File system entry not found.");
+                return new FtpResponse(550, T("File system entry not found."));
             }
 
             await Data.FileSystem.SetMacTimeAsync(foundEntry.Entry, modificationTime, accessTime, creationTime, cancellationToken).ConfigureAwait(false);
 
-            return new FtpResponse(220, "Timestamps set.");
+            return new FtpResponse(220, T("Timestamps set."));
         }
 
         private async Task<FtpResponse> SetTimestamp2(IReadOnlyList<string> parts, CancellationToken cancellationToken)
         {
             if (!parts[0].TryParseTimestamp("UTC", out var modificationTime))
             {
-                return new FtpResponse(501, "Syntax error in parameters or arguments.");
+                return new FtpResponse(501, T("Syntax error in parameters or arguments."));
             }
 
             var path = parts[1];
@@ -125,19 +125,19 @@ namespace FubarDev.FtpServer.CommandExtensions
 
             if (string.IsNullOrEmpty(path))
             {
-                return new FtpResponse(501, "No file name.");
+                return new FtpResponse(501, T("No file name."));
             }
 
             var currentPath = Data.Path.Clone();
             var foundEntry = await Data.FileSystem.SearchEntryAsync(currentPath, path, cancellationToken).ConfigureAwait(false);
             if (foundEntry?.Entry == null)
             {
-                return new FtpResponse(550, "File system entry not found.");
+                return new FtpResponse(550, T("File system entry not found."));
             }
 
             await Data.FileSystem.SetMacTimeAsync(foundEntry.Entry, modificationTime, null, null, cancellationToken).ConfigureAwait(false);
 
-            return new FtpResponse(220, "Modification time set.");
+            return new FtpResponse(220, T("Modification time set."));
         }
     }
 }

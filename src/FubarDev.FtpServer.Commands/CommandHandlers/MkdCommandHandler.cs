@@ -52,7 +52,7 @@ namespace FubarDev.FtpServer.CommandHandlers
             {
                 var targetDirectory = currentPath.Count == 0 ? Data.FileSystem.Root : currentPath.Peek();
                 var newDirectory = await Data.FileSystem.CreateDirectoryAsync(targetDirectory, dirInfo.FileName, cancellationToken).ConfigureAwait(false);
-                return new FtpResponse(257, $"\"{currentPath.GetFullPath(newDirectory.Name)}\" created.");
+                return new FtpResponse(257, T("\"{0}\" created.", currentPath.GetFullPath(newDirectory.Name)));
             }
             catch (IOException)
             {

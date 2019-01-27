@@ -35,7 +35,7 @@ namespace FubarDev.FtpServer.CommandHandlers
                 path = path.Substring(0, path.Length - 1);
             }
 
-            return Task.FromResult(new FtpResponse(257, $"\"{path}\""));
+            return Task.FromResult(new FtpResponse(257, T("\"{0}\"", path)));
         }
     }
 }

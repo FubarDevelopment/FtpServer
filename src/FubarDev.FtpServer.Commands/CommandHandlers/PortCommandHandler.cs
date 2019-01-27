@@ -37,7 +37,7 @@ namespace FubarDev.FtpServer.CommandHandlers
         {
             if (Data.TransferTypeCommandUsed != null && !string.Equals(command.Name, Data.TransferTypeCommandUsed, StringComparison.OrdinalIgnoreCase))
             {
-                return Task.FromResult(new FtpResponse(500, $"Cannot use {command.Name} when {Data.TransferTypeCommandUsed} was used before."));
+                return Task.FromResult(new FtpResponse(500, T("Cannot use {0} when {1} was used before.", command.Name, Data.TransferTypeCommandUsed)));
             }
 
             try

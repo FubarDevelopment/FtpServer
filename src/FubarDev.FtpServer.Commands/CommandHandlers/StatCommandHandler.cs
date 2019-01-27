@@ -84,7 +84,7 @@ namespace FubarDev.FtpServer.CommandHandlers
                 await Connection.WriteAsync($" {line}", cancellationToken).ConfigureAwait(false);
             }
 
-            return new FtpResponse(211, "STAT");
+            return new FtpResponse(211, T("STAT"));
         }
     }
 }

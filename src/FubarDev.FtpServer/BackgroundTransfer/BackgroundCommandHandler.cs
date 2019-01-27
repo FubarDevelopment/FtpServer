@@ -60,7 +60,7 @@ namespace FubarDev.FtpServer.BackgroundTransfer
                 .ContinueWith(
                     t =>
                     {
-                        var response = new FtpResponse(426, "Connection closed; transfer aborted.");
+                        var response = new FtpResponse(426, _connection.Data.Catalog.GetString("Connection closed; transfer aborted."));
                         Debug.WriteLine($"Background task cancelled with response {response}");
                         return response;
                     },
@@ -82,7 +82,7 @@ namespace FubarDev.FtpServer.BackgroundTransfer
                     {
                         var ex = t.Exception;
                         _connection.Log?.LogError(ex, "Error while processing background command {0}", command);
-                        var response = new FtpResponse(501, "Syntax error in parameters or arguments.");
+                        var response = new FtpResponse(501, _connection.Data.Catalog.GetString("Syntax error in parameters or arguments."));
                         Debug.WriteLine($"Background task failed with response {response}");
                         return response;
                     },

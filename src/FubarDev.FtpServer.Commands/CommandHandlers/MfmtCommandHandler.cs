@@ -61,7 +61,7 @@ namespace FubarDev.FtpServer.CommandHandlers
             var fact = new ModifyFact(modificationTime);
             var fullName = currentPath.GetFullPath() + fileInfo.FileName;
 
-            return new FtpResponse(213, $"{fact.Name}={fact.Value}; {fullName}");
+            return new FtpResponse(213, T("{0}={1}; {2}", fact.Name, fact.Value, fullName));
         }
     }
 }

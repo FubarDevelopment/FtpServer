@@ -88,7 +88,7 @@ namespace FubarDev.FtpServer.CommandHandlers
                 var foundEntry = await Data.FileSystem.SearchEntryAsync(path, argument, cancellationToken).ConfigureAwait(false);
                 if (foundEntry?.Entry == null)
                 {
-                    return new FtpResponse(550, "File system entry not found.");
+                    return new FtpResponse(550, T("File system entry not found."));
                 }
 
                 targetEntry = foundEntry.Entry;
@@ -109,7 +109,7 @@ namespace FubarDev.FtpServer.CommandHandlers
                 await Connection.WriteAsync($" {line}", cancellationToken).ConfigureAwait(false);
             }
 
-            return new FtpResponse(250, "End");
+            return new FtpResponse(250, T("End"));
         }
 
         private async Task<FtpResponse> ProcessMlsdAsync(FtpCommand command, CancellationToken cancellationToken)
@@ -127,13 +127,13 @@ namespace FubarDev.FtpServer.CommandHandlers
                 var foundEntry = await Data.FileSystem.SearchEntryAsync(path, argument, cancellationToken).ConfigureAwait(false);
                 if (foundEntry?.Entry == null)
                 {
-                    return new FtpResponse(550, "File system entry not found.");
+                    return new FtpResponse(550, T("File system entry not found."));
                 }
 
                 dirEntry = foundEntry.Entry as IUnixDirectoryEntry;
                 if (dirEntry == null)
                 {
-                    return new FtpResponse(501, "Not a directory.");
+                    return new FtpResponse(501, T("Not a directory."));
                 }
 
                 if (!dirEntry.IsRoot)
@@ -142,14 +142,14 @@ namespace FubarDev.FtpServer.CommandHandlers
                 }
             }
 
-            await Connection.WriteAsync(new FtpResponse(150, "Opening data connection."), cancellationToken).ConfigureAwait(false);
+            await Connection.WriteAsync(new FtpResponse(150, T("Opening data connection.")), cancellationToken).ConfigureAwait(false);
 
             return await Connection.SendResponseAsync(
                     client => ExecuteSendAsync(client, path, dirEntry, cancellationToken),
                     ex =>
                     {
                         _logger?.LogError(ex, ex.Message);
-                        return new FtpResponse(425, "Can't open data connection.");
+                        return new FtpResponse(425, T("Can't open data connection."));
                     })
                 .ConfigureAwait(false);
         }
@@ -185,7 +185,7 @@ namespace FubarDev.FtpServer.CommandHandlers
             }
 
             // Use 250 when the connection stays open.
-            return new FtpResponse(226, "Closing data connection.");
+            return new FtpResponse(226, T("Closing data connection."));
         }
     }
 }

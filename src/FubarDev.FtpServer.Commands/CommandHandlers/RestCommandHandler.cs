@@ -36,7 +36,7 @@ namespace FubarDev.FtpServer.CommandHandlers
         public override Task<FtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
         {
             Data.RestartPosition = Convert.ToInt64(command.Argument, 10);
-            return Task.FromResult(new FtpResponse(350, $"Restarting next transfer from position {Data.RestartPosition}"));
+            return Task.FromResult(new FtpResponse(350, T("Restarting next transfer from position {0}", Data.RestartPosition)));
         }
     }
 }

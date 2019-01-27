@@ -92,14 +92,14 @@ namespace FubarDev.FtpServer.CommandHandlers
                     {
                         var listenerAddress = new Address(localPort);
                         await Connection.WriteAsync(
-                            new FtpResponse(229, $"Entering Extended Passive Mode ({listenerAddress})."),
+                            new FtpResponse(229, T("Entering Extended Passive Mode ({0}).", listenerAddress)),
                             cancellationToken).ConfigureAwait(false);
                     }
                     else
                     {
                         var listenerAddress = new Address(address.ToString(), localPort);
                         await Connection.WriteAsync(
-                            new FtpResponse(227, $"Entering Passive Mode ({listenerAddress})."),
+                            new FtpResponse(227, T("Entering Passive Mode ({0}).", listenerAddress)),
                             cancellationToken).ConfigureAwait(false);
                     }
 
@@ -112,7 +112,7 @@ namespace FubarDev.FtpServer.CommandHandlers
                         {
                             return new FtpResponse(
                                 425,
-                                "Data connection must be opened from same IP address as control connection");
+                                T("Data connection must be opened from same IP address as control connection"));
                         }
 
                         if (Connection.Log?.IsEnabled(LogLevel.Debug) ?? false)

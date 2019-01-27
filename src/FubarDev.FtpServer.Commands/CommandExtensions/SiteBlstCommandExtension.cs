@@ -83,7 +83,7 @@ namespace FubarDev.FtpServer.CommandExtensions
                 await Connection.WriteAsync($" {line}", cancellationToken).ConfigureAwait(false);
             }
 
-            return new FtpResponse(211, "END");
+            return new FtpResponse(211, T("END"));
         }
 
         private async Task<FtpResponse> SendBlstWithDataConnection(CancellationToken cancellationToken)
@@ -118,7 +118,7 @@ namespace FubarDev.FtpServer.CommandExtensions
                 }
             }
 
-            return new FtpResponse(250, "Closing data connection.");
+            return new FtpResponse(250, T("Closing data connection."));
         }
 
         private IEnumerable<string> GetLines(IEnumerable<BackgroundTransferInfo> entries)

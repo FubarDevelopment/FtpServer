@@ -48,7 +48,7 @@ namespace FubarDev.FtpServer.CommandHandlers
 
             await Connection.WriteAsync(" SITE BLST [DIRECT]", cancellationToken).ConfigureAwait(false);
 
-            return new FtpResponse(211, "HELP");
+            return new FtpResponse(211, T("HELP"));
         }
     }
 }

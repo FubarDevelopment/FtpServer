@@ -58,7 +58,7 @@ namespace FubarDev.FtpServer.CommandHandlers
             if (fileInfo.Entry != null)
             {
                 var fullName = tempPath.GetFullPath(fileInfo.FileName);
-                return new FtpResponse(553, $"Target name already exists ({fullName}).");
+                return new FtpResponse(553, T("Target name already exists ({0}).", fullName));
             }
 
             var targetDir = fileInfo.Directory;

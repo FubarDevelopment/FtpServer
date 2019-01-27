@@ -41,10 +41,10 @@ namespace FubarDev.FtpServer.CommandHandlers
             var fileInfo = await Data.FileSystem.SearchFileAsync(tempPath, fileName, cancellationToken).ConfigureAwait(false);
             if (fileInfo?.Entry == null)
             {
-                return new FtpResponse(550, $"File not found ({fileName}).");
+                return new FtpResponse(550, T("File not found ({0}).", fileName));
             }
 
-            return new FtpResponse(213, $"{fileInfo.Entry.Size}");
+            return new FtpResponse(213, T("{0}", fileInfo.Entry.Size));
         }
     }
 }
