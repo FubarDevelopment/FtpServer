@@ -33,7 +33,7 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// <inheritdoc/>
         public override Task<FtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
         {
-            return Task.FromResult(new FtpResponse(200, T("{0} Type: {1}", _operatingSystem, Connection.Data.TransferMode)));
+            return Task.FromResult(new FtpResponse(215, T("{0} Type: {1}", _operatingSystem, Connection.Data.TransferMode)));
         }
     }
 }
