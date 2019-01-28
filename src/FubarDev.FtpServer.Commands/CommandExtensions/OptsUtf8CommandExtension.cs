@@ -25,6 +25,9 @@ namespace FubarDev.FtpServer.CommandExtensions
         }
 
         /// <inheritdoc />
+        public override bool? IsLoginRequired { get; set; } = false;
+
+        /// <inheritdoc />
         public override void InitializeConnectionData()
         {
         }
