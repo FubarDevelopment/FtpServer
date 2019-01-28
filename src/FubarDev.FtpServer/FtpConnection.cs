@@ -25,6 +25,7 @@ using FubarDev.FtpServer.Localization;
 
 using JetBrains.Annotations;
 
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
@@ -300,7 +301,10 @@ namespace FubarDev.FtpServer
 
             Log?.LogInformation($"Connected from {RemoteAddress.ToString(true)}");
             var collector = new FtpCommandCollector(() => Encoding);
-            await WriteAsync(new FtpResponse(220, T("FTP Server Ready")), _cancellationTokenSource.Token).ConfigureAwait(false);
+            await WriteAsync(new FtpResponse(220, T("FTP Server Ready")), _cancellationTokenSource.Token)
+               .ConfigureAwait(false);
+
+            var loginStateMachine = ConnectionServices.GetRequiredService<IFtpLoginStateMachine>();
 
             var buffer = new byte[1024];
             try
@@ -345,7 +349,8 @@ namespace FubarDev.FtpServer
                         var commands = collector.Collect(buffer.AsSpan(0, bytesRead));
                         foreach (var command in commands)
                         {
-                            await ProcessMessage(command).ConfigureAwait(false);
+                            await ProcessMessage(loginStateMachine, command)
+                               .ConfigureAwait(false);
                         }
                     }
                 }
@@ -374,7 +379,7 @@ namespace FubarDev.FtpServer
             }
         }
 
-        private async Task ProcessMessage(FtpCommand command)
+        private async Task ProcessMessage(IFtpLoginStateMachine loginStateMachine, FtpCommand command)
         {
             FtpResponse response;
             Log?.Trace(command);
@@ -384,7 +389,7 @@ namespace FubarDev.FtpServer
                 var handler = result.Item2;
                 var handlerCommand = result.Item1;
                 var isLoginRequired = result.Item3;
-                if (isLoginRequired && !Data.IsLoggedIn)
+                if (isLoginRequired && loginStateMachine.Status != SecurityStatus.Authorized)
                 {
                     response = new FtpResponse(530, T("Not logged in."));
                 }

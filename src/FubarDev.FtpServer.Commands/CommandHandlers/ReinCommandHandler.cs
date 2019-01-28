@@ -29,10 +29,20 @@ namespace FubarDev.FtpServer.CommandHandlers
         public override bool IsLoginRequired => false;
 
         /// <inheritdoc />
-        public override Task<FtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
+        public override async Task<FtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
         {
-            var connectionStateMachine = Connection.ConnectionServices.GetRequiredService<IFtpConnectionStateMachine>();
-            return connectionStateMachine.ExecuteAsync(command, cancellationToken);
+            var loginStateMachine = Connection.ConnectionServices.GetRequiredService<IFtpLoginStateMachine>();
+            loginStateMachine.Reset();
+
+            if (Connection.SocketStream != Connection.OriginalStream)
+            {
+                await Connection.SocketStream.FlushAsync(cancellationToken)
+                   .ConfigureAwait(false);
+                Connection.SocketStream.Dispose();
+                Connection.SocketStream = Connection.OriginalStream;
+            }
+
+            return new FtpResponse(220, T("FTP Server Ready"));
         }
     }
 }

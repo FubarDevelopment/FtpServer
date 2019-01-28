@@ -3,6 +3,7 @@
 // </copyright>
 
 using System.Collections.Generic;
+using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -38,8 +39,45 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// <inheritdoc />
         public override Task<FtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
         {
-            var connectionStateMachine = Connection.ConnectionServices.GetRequiredService<IFtpConnectionStateMachine>();
-            return connectionStateMachine.ExecuteAsync(command, cancellationToken);
+            if (string.IsNullOrWhiteSpace(command.Argument))
+            {
+                return Task.FromResult(new FtpResponse(501, T("Syntax error in parameters or arguments.")));
+            }
+
+            var loginStateMachine = Connection.ConnectionServices.GetRequiredService<IFtpLoginStateMachine>();
+
+            if (loginStateMachine.Status != SecurityStatus.Unauthenticated &&
+                loginStateMachine.Status != SecurityStatus.Authenticated)
+            {
+                return Task.FromResult(new FtpResponse(503, T("Bad sequence of commands")));
+            }
+
+            var hostInfo = ParseHost(command.Argument);
+            var hostSelector = Connection.ConnectionServices.GetRequiredService<IFtpHostSelector>();
+            return hostSelector.SelectHostAsync(hostInfo, cancellationToken);
+        }
+
+        private static HostInfo ParseHost([NotNull] string host)
+        {
+            if (host.StartsWith("[") && host.EndsWith("]"))
+            {
+                // IPv6
+                var address = host.Substring(1, host.Length - 2);
+                if (address.StartsWith("::"))
+                {
+                    // IPv4
+                    return new HostInfo(IPAddress.Parse(address.Substring(2)));
+                }
+
+                return new HostInfo(IPAddress.Parse(address));
+            }
+
+            if (IPAddress.TryParse(host, out var ipAddress))
+            {
+                return new HostInfo(ipAddress);
+            }
+
+            return new HostInfo(host);
         }
     }
 }

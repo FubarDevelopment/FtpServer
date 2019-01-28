@@ -10,6 +10,8 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
+using Microsoft.Extensions.DependencyInjection;
+
 namespace FubarDev.FtpServer.CommandHandlers
 {
     /// <summary>
@@ -36,7 +38,8 @@ namespace FubarDev.FtpServer.CommandHandlers
                 .CommandHandlers.Values
                 .SelectMany(x => x.GetSupportedFeatures());
 
-            if (!Data.IsLoggedIn)
+            var loginStateMachine = Connection.ConnectionServices.GetRequiredService<IFtpLoginStateMachine>();
+            if (loginStateMachine.Status != SecurityStatus.Authorized)
             {
                 supportedFeatures = supportedFeatures
                     .Where(f => !f.RequiresAuthentication);

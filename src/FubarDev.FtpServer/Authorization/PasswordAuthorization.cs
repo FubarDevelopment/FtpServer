@@ -72,9 +72,9 @@ namespace FubarDev.FtpServer.Authorization
 
 #pragma warning disable 618
                     Connection.Data.IsAnonymous = validationResult.User is IAnonymousFtpUser;
+                    Connection.Data.IsLoggedIn = true;
 #pragma warning restore 618
 
-                    Connection.Data.IsLoggedIn = true;
                     Connection.Data.AuthenticatedBy = membershipProvider;
                     Connection.Data.FileSystem = await _fileSystemFactory
                        .Create(
