@@ -22,6 +22,9 @@ namespace FubarDev.FtpServer.Authentication
     /// </summary>
     public class TlsAuthenticationMechanism : AuthenticationMechanism, IFeatureHost
     {
+        [NotNull]
+        private readonly ISslStreamWrapperFactory _sslStreamWrapperFactory;
+
         [CanBeNull]
         private readonly X509Certificate2 _serverCertificate;
 
@@ -29,12 +32,15 @@ namespace FubarDev.FtpServer.Authentication
         /// Initializes a new instance of the <see cref="TlsAuthenticationMechanism"/> class.
         /// </summary>
         /// <param name="connection">The required FTP connection.</param>
+        /// <param name="sslStreamWrapperFactory">The SslStream wrapper factory.</param>
         /// <param name="options">Options for the AUTH TLS command.</param>
         public TlsAuthenticationMechanism(
             [NotNull] IFtpConnection connection,
+            [NotNull] ISslStreamWrapperFactory sslStreamWrapperFactory,
             [NotNull] IOptions<AuthTlsOptions> options)
             : base(connection)
         {
+            _sslStreamWrapperFactory = sslStreamWrapperFactory;
             _serverCertificate = options.Value.ServerCertificate;
         }
 
@@ -65,15 +71,20 @@ namespace FubarDev.FtpServer.Authentication
 
                     try
                     {
-                        var sslStream = new SslStream(conn.OriginalStream, true);
-                        await sslStream.AuthenticateAsServerAsync(_serverCertificate).ConfigureAwait(false);
-                        var oldSocketStream = conn.SocketStream;
-                        conn.SocketStream = sslStream;
-                        if (oldSocketStream != conn.OriginalStream)
+                        var sslStream = await _sslStreamWrapperFactory.WrapStreamAsync(
+                                conn.OriginalStream,
+                                true,
+                                _serverCertificate,
+                                cancellationToken)
+                           .ConfigureAwait(false);
+                        if (conn.SocketStream != conn.OriginalStream)
                         {
                             // Close old SSL connection.
-                            oldSocketStream.Dispose();
+                            await _sslStreamWrapperFactory.CloseStreamAsync(conn.SocketStream, cancellationToken)
+                               .ConfigureAwait(false);
                         }
+
+                        conn.SocketStream = sslStream;
                     }
                     catch (Exception ex)
                     {
@@ -136,8 +147,12 @@ namespace FubarDev.FtpServer.Authentication
 
         private async Task<Stream> CreateSslStream(Stream unencryptedStream)
         {
-            var sslStream = new SslStream(unencryptedStream, false);
-            await sslStream.AuthenticateAsServerAsync(_serverCertificate).ConfigureAwait(false);
+            var sslStream = await _sslStreamWrapperFactory.WrapStreamAsync(
+                    unencryptedStream,
+                    false,
+                    _serverCertificate,
+                    CancellationToken.None)
+               .ConfigureAwait(false);
             return sslStream;
         }
     }

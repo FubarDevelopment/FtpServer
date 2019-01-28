@@ -260,12 +260,17 @@ namespace TestFtpServer
                     (ftpServer, serviceProvider) =>
                     {
                         var authTlsOptions = serviceProvider.GetRequiredService<IOptions<AuthTlsOptions>>();
+                        var sslStreamWrapperFactory = serviceProvider.GetRequiredService<ISslStreamWrapperFactory>();
 
                         // Use an implicit SSL connection (without the AUTHTLS command)
                         ftpServer.ConfigureConnection += (s, e) =>
                         {
-                            var sslStream = new SslStream(e.Connection.OriginalStream);
-                            sslStream.AuthenticateAsServer(authTlsOptions.Value.ServerCertificate);
+                            var sslStream = sslStreamWrapperFactory.WrapStreamAsync(
+                                    e.Connection.OriginalStream,
+                                    false,
+                                    authTlsOptions.Value.ServerCertificate,
+                                    CancellationToken.None)
+                               .Result;
                             e.Connection.SocketStream = sslStream;
                         };
 

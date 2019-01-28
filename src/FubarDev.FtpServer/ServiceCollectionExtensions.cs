@@ -56,6 +56,8 @@ namespace Microsoft.Extensions.DependencyInjection
 
             services.AddSingleton<IFtpServerHost, FtpServerHost>();
 
+            services.AddSingleton<ISslStreamWrapperFactory, DefaultSslStreamWrapperFactory>();
+
             services.Scan(
                 sel => sel.FromAssemblyOf<PassCommandHandler>()
                     .AddClasses(filter => filter.AssignableTo<IFtpCommandHandlerExtension>()).As<IFtpCommandHandlerExtension>().WithSingletonLifetime());
