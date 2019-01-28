@@ -36,7 +36,7 @@ namespace FubarDev.FtpServer
         /// <param name="logger">The logger.</param>
         public MultiBindingTcpListener(string address, int port, [CanBeNull] ILogger logger)
         {
-            if (port < 1 || port > 65535)
+            if (port < 0 || port > 65535)
             {
                 throw new ArgumentOutOfRangeException(nameof(port), "The port argument is out of range");
             }
