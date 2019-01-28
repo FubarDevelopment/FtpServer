@@ -227,9 +227,9 @@ namespace TestFtpServer
         private static IServiceCollection CreateServices(TestFtpServerOptions options)
         {
             var services = new ServiceCollection()
-                .AddLogging(cfg => cfg.SetMinimumLevel(LogLevel.Trace))
-                .AddOptions()
-                .Configure<AuthTlsOptions>(
+               .AddLogging(cfg => cfg.SetMinimumLevel(LogLevel.Trace))
+               .AddOptions()
+               .Configure<AuthTlsOptions>(
                     opt =>
                     {
                         if (options.ServerCertificateFile != null)
@@ -239,20 +239,23 @@ namespace TestFtpServer
                                 options.ServerCertificatePassword);
                         }
                     })
-                .Configure<FtpConnectionOptions>(opt => opt.DefaultEncoding = Encoding.ASCII)
-                .Configure<FtpServerOptions>(
+               .Configure<FtpConnectionOptions>(opt => opt.DefaultEncoding = Encoding.ASCII)
+               .Configure<FtpServerOptions>(
                     opt =>
                     {
                         opt.ServerAddress = options.ServerAddress;
                         opt.Port = options.GetPort();
-
+                    })
+               .Configure<SimplePasvOptions>(
+                    opt =>
+                    {
                         if (options.PassivePortRange != null)
                         {
                             opt.PasvMinPort = options.PassivePortRange.Value.Item1;
                             opt.PasvMaxPort = options.PassivePortRange.Value.Item2;
                         }
                     })
-                .Configure<GoogleDriveOptions>(opt => opt.UseBackgroundUpload = options.UseBackgroundUpload);
+               .Configure<GoogleDriveOptions>(opt => opt.UseBackgroundUpload = options.UseBackgroundUpload);
 
             if (options.ImplicitFtps)
             {

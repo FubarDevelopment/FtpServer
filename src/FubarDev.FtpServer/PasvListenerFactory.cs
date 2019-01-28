@@ -4,13 +4,12 @@
 // </copyright>
 
 using System;
-using System.Linq;
-using System.Net;
+using System.Collections.Generic;
 using System.Net.Sockets;
+using System.Threading;
 using System.Threading.Tasks;
 
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 
 namespace FubarDev.FtpServer
 {
@@ -19,45 +18,27 @@ namespace FubarDev.FtpServer
     /// </summary>
     public class PasvListenerFactory : IPasvListenerFactory
     {
+        private readonly IPasvAddressResolver _addressResolver;
         private readonly ILogger<PasvListenerFactory> _log;
-
-        private readonly int _pasvMinPort;
-        private readonly int _pasvMaxPort;
-
-        private readonly int[] _pasvPorts;
-
         private readonly Random _prng = new Random();
+        private readonly object _listenerLock = new object();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PasvListenerFactory"/> class.
         /// </summary>
-        /// <param name="serverOptions">FTPServer options.</param>
+        /// <param name="addressResolver">The address resolver for <c>PASV</c>/<c>EPSV</c>.</param>
         /// <param name="logger">Logger instance.</param>
-        public PasvListenerFactory(IOptions<FtpServerOptions> serverOptions, ILogger<PasvListenerFactory> logger)
+        public PasvListenerFactory(IPasvAddressResolver addressResolver, ILogger<PasvListenerFactory> logger)
         {
+            _addressResolver = addressResolver;
             _log = logger;
-            if (serverOptions.Value.PasvMinPort > 1023 &&
-                serverOptions.Value.PasvMaxPort >= serverOptions.Value.PasvMinPort)
-            {
-                _pasvMinPort = serverOptions.Value.PasvMinPort;
-                _pasvMaxPort = serverOptions.Value.PasvMaxPort;
-                _log.LogInformation($"PASV port range set to {_pasvMinPort}:{_pasvMaxPort}");
-                _pasvPorts = Enumerable.Range(_pasvMinPort, _pasvMaxPort - _pasvMinPort + 1).ToArray();
-            }
-
-            PasvExternalAddress = !string.IsNullOrWhiteSpace(serverOptions.Value.PasvAddress)
-                ? IPAddress.Parse(serverOptions.Value.PasvAddress)
-                : null;
         }
 
-        /// <summary>
-        /// Gets the IP address where clients should direct PASV connection attempts. If null, the control connection
-        /// interface's IP is used.
-        /// </summary>
-        protected IPAddress PasvExternalAddress { get; }
-
         /// <inheritdoc />
-        public Task<IPasvListener> CreateTcpListener(IFtpConnection connection, int port)
+        public async Task<IPasvListener> CreateTcpListenerAsync(
+            IFtpConnection connection,
+            int port,
+            CancellationToken cancellationToken)
         {
             IPasvListener listener;
 
@@ -66,40 +47,45 @@ namespace FubarDev.FtpServer
                 throw new ArgumentOutOfRangeException(nameof(port), "may not be less than 0");
             }
 
-            if (port > 0 && _pasvMinPort > 0 && (port > _pasvMaxPort || port < _pasvMinPort))
+            var pasvOptions = await _addressResolver.GetOptionsAsync(connection, cancellationToken)
+               .ConfigureAwait(false);
+
+            if (port > 0 && pasvOptions.HasPortRange && (port > pasvOptions.PasvMaxPort || port < pasvOptions.PasvMinPort))
             {
-                throw new ArgumentOutOfRangeException(nameof(port), $"must be in {_pasvMinPort}:{_pasvMaxPort}");
+                throw new ArgumentOutOfRangeException(
+                    nameof(port),
+                    $"must be in {pasvOptions.PasvMinPort}:{pasvOptions.PasvMaxPort}");
             }
 
-            if (port == 0 && _pasvPorts != null)
+            if (port == 0 && pasvOptions.HasPortRange)
             {
-                listener = CreateListenerInRange(connection);
+                listener = CreateListenerInRange(connection, pasvOptions);
             }
             else
             {
-                listener = new PasvListener(connection.LocalEndPoint.Address, port, PasvExternalAddress);
+                listener = new PasvListener(connection.LocalEndPoint.Address, port, pasvOptions.PublicAddress);
             }
 
-            return Task.FromResult(listener);
+            return listener;
         }
 
         /// <summary>
         /// Gets a listener on a port within the assigned port range.
         /// </summary>
         /// <param name="connection">Connection for which to create the listener.</param>
+        /// <param name="pasvOptions">The options for the <see cref="IPasvListener"/>.</param>
         /// <returns>Configured PasvListener.</returns>
         /// <exception cref="SocketException">When no free port could be found, or other bad things happen. See <see cref="SocketError"/>.</exception>
-        private IPasvListener CreateListenerInRange(IFtpConnection connection)
+        private IPasvListener CreateListenerInRange(IFtpConnection connection, PasvListenerOptions pasvOptions)
         {
-            lock (_pasvPorts)
+            lock (_listenerLock)
             {
                 // randomize ports so we don't always get the ports in the same order
-                var randomizedPorts = _pasvPorts.OrderBy(_ => _prng.Next());
-                foreach (var port in randomizedPorts)
+                foreach (var port in GetPorts(pasvOptions))
                 {
                     try
                     {
-                        return new PasvListener(connection.LocalEndPoint.Address, port, PasvExternalAddress);
+                        return new PasvListener(connection.LocalEndPoint.Address, port, pasvOptions.PublicAddress);
                     }
                     catch (SocketException se)
                     {
@@ -115,6 +101,15 @@ namespace FubarDev.FtpServer
                 // if we reach this point, we have not been able to create a listener within range
                 _log.LogWarning("No free ports available for data connection");
                 throw new SocketException((int)SocketError.AddressAlreadyInUse);
+            }
+        }
+
+        private IEnumerable<int> GetPorts(PasvListenerOptions options)
+        {
+            var portRangeCount = (options.PasvMaxPort - options.PasvMinPort + 1) * 2;
+            while (portRangeCount-- != 0)
+            {
+                yield return _prng.Next(options.PasvMinPort, options.PasvMaxPort + 1);
             }
         }
     }
