@@ -34,8 +34,8 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// <inheritdoc/>
         public override IEnumerable<IFeatureInfo> GetSupportedFeatures()
         {
-            var mechanisms = Connection.ConnectionServices.GetRequiredService<IEnumerable<IAuthenticationMechanism>>();
-            return mechanisms.OfType<IFeatureHost>().SelectMany(x => x.GetSupportedFeatures());
+            var host = Connection.ConnectionServices.GetRequiredService<IFtpHost>();
+            return host.AuthenticationMechanisms.OfType<IFeatureHost>().SelectMany(x => x.GetSupportedFeatures());
         }
 
         /// <inheritdoc/>

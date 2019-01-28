@@ -47,12 +47,7 @@ namespace FubarDev.FtpServer
         };
 
         [NotNull]
-        [ItemNotNull]
-        private readonly IReadOnlyCollection<IAuthenticationMechanism> _allAuthenticationMechanisms;
-
-        [NotNull]
-        [ItemNotNull]
-        private readonly IReadOnlyCollection<IAuthorizationMechanism> _allAuthorizationMechanisms;
+        private readonly IFtpHostSelector _hostSelector;
 
         [CanBeNull]
         private IAuthenticationMechanism _filteredAuthenticationMechanism;
@@ -70,16 +65,13 @@ namespace FubarDev.FtpServer
         /// Initializes a new instance of the <see cref="FtpLoginStateMachine"/> class.
         /// </summary>
         /// <param name="connection">The FTP connection.</param>
-        /// <param name="authenticationMechanisms">The supported authentication mechanisms.</param>
-        /// <param name="authorizationMechanisms">The supported authorization mechanisms.</param>
+        /// <param name="hostSelector">The FTP host selector.</param>
         public FtpLoginStateMachine(
             [NotNull] IFtpConnection connection,
-            [NotNull][ItemNotNull] IEnumerable<IAuthenticationMechanism> authenticationMechanisms,
-            [NotNull][ItemNotNull] IEnumerable<IAuthorizationMechanism> authorizationMechanisms)
+            [NotNull] IFtpHostSelector hostSelector)
             : base(connection, _transitions, SecurityStatus.Unauthenticated)
         {
-            _allAuthenticationMechanisms = authenticationMechanisms.ToList();
-            _allAuthorizationMechanisms = authorizationMechanisms.ToList();
+            _hostSelector = hostSelector;
         }
 
         /// <inheritdoc />
@@ -117,7 +109,7 @@ namespace FubarDev.FtpServer
             {
                 _filteredAuthenticationMechanism = null;
                 _selectedAuthenticationMechanism = null;
-                foreach (var authenticationMechanism in _allAuthenticationMechanisms)
+                foreach (var authenticationMechanism in _hostSelector.SelectedHost.AuthenticationMechanisms)
                 {
                     authenticationMechanism.Reset();
                 }
@@ -127,7 +119,7 @@ namespace FubarDev.FtpServer
                 _selectedAuthorizationMechanism = null;
                 _filteredAuthorizationMechanism = null;
 
-                foreach (var authorizationMechanism in _allAuthorizationMechanisms)
+                foreach (var authorizationMechanism in _hostSelector.SelectedHost.AuthorizationMechanisms)
                 {
                     authorizationMechanism.Reset(SelectedAuthenticationMechanism);
                 }
@@ -157,7 +149,8 @@ namespace FubarDev.FtpServer
 
         private async Task<FtpResponse> HandleAuthAsync(string argument, CancellationToken cancellationToken)
         {
-            var authenticationMechanism = _allAuthenticationMechanisms.SingleOrDefault(x => x.CanHandle(argument));
+            var authenticationMechanism = _hostSelector.SelectedHost.AuthenticationMechanisms
+               .SingleOrDefault(x => x.CanHandle(argument));
             if (authenticationMechanism == null)
             {
                 return new FtpResponse(504, T("Unsupported security mechanism"));
@@ -197,7 +190,7 @@ namespace FubarDev.FtpServer
         private async Task<FtpResponse> HandleUserAsync(string argument, CancellationToken cancellationToken)
         {
             var results = new List<Tuple<FtpResponse, IAuthorizationMechanism>>();
-            foreach (var authorizationMechanism in _allAuthorizationMechanisms)
+            foreach (var authorizationMechanism in _hostSelector.SelectedHost.AuthorizationMechanisms)
             {
                 var response = await authorizationMechanism.HandleUserAsync(argument, cancellationToken)
                     .ConfigureAwait(false);

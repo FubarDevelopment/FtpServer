@@ -67,7 +67,13 @@ namespace FubarDev.FtpServer.Authentication
                     {
                         var sslStream = new SslStream(conn.OriginalStream, true);
                         await sslStream.AuthenticateAsServerAsync(_serverCertificate).ConfigureAwait(false);
+                        var oldSocketStream = conn.SocketStream;
                         conn.SocketStream = sslStream;
+                        if (oldSocketStream != conn.OriginalStream)
+                        {
+                            // Close old SSL connection.
+                            oldSocketStream.Dispose();
+                        }
                     }
                     catch (Exception ex)
                     {
