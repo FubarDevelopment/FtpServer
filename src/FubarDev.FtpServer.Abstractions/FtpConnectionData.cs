@@ -56,6 +56,7 @@ namespace FubarDev.FtpServer
         /// Gets or sets a value indicating whether the user with the <see cref="User"/>.
         /// is logged in.
         /// </summary>
+        [Obsolete("User the IFtpLoginStateMachine services to get the current status.")]
         public bool IsLoggedIn { get; set; }
 
         /// <summary>
