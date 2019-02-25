@@ -38,5 +38,12 @@ namespace FubarDev.FtpServer
         /// This may be necessary if you are behind a forwarding firewall, for example.
         /// </summary>
         public string PasvAddress { get; set; }
+
+        /// <summary>
+        /// Gets or sets the max allows active connections.
+        /// This will cause connections to be refused if count is exceeded.
+        /// 0 (default) means no control over connection count.
+        /// </summary>
+        public int MaxActiveConnections { get; set; } = 0;
     }
 }
