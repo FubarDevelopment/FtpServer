@@ -44,6 +44,6 @@ namespace FubarDev.FtpServer
         /// This will cause connections to be refused if count is exceeded.
         /// 0 (default) means no control over connection count.
         /// </summary>
-        public int MaxActiveConnections { get; set; } = 0;
+        public int MaxActiveConnections { get; set; }
     }
 }
