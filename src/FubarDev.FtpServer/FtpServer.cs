@@ -90,6 +90,7 @@ namespace FubarDev.FtpServer
         /// <inheritdoc />
         public int Port { get; }
 
+        /// <inheritdoc />
         public int MaxActiveConnections { get; }
 
         /// <inheritdoc />
