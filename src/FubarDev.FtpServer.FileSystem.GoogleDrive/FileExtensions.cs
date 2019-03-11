@@ -10,7 +10,7 @@ namespace FubarDev.FtpServer.FileSystem.GoogleDrive
     {
         public static readonly string DirectoryMimeType = "application/vnd.google-apps.folder";
 
-        public static readonly string DefaultListFields = "kind,files(kind,id,name,originalFilename,fullFileExtension,fileExtension,mimeType,modifiedTime,modifiedByMeTime,viewedByMeTime,createdTime,parents,trashed,size)";
+        public static readonly string DefaultListFields = "nextPageToken,kind,files(kind,id,name,originalFilename,fullFileExtension,fileExtension,mimeType,modifiedTime,modifiedByMeTime,viewedByMeTime,createdTime,parents,trashed,size)";
         public static readonly string DefaultFileFields = "kind,id,name,originalFilename,fullFileExtension,fileExtension,mimeType,modifiedTime,modifiedByMeTime,viewedByMeTime,createdTime,parents,trashed,size";
 
         public static File AsDirectory(this File file)
