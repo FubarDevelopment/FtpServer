@@ -441,7 +441,8 @@ namespace FubarDev.FtpServer.FileSystem.GoogleDrive
             try
             {
                 var baseDir = dirEntry.FullName;
-                foreach (var child in (await getEntriesFunc()).Where(x => !x.Trashed.GetValueOrDefault()))
+                var children = await getEntriesFunc().ConfigureAwait(false);
+                foreach (var child in children.Where(x => !x.Trashed.GetValueOrDefault()))
                 {
                     var fullName = FileSystemExtensions.CombinePath(baseDir, child.Name);
                     if (child.IsDirectory())
