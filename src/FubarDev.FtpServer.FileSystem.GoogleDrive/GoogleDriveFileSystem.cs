@@ -384,6 +384,36 @@ namespace FubarDev.FtpServer.FileSystem.GoogleDrive
             }
         }
 
+        private async Task<IReadOnlyCollection<File>> ListFilesAsync(
+            string query,
+            CancellationToken cancellationToken)
+        {
+            var request = Service.Files.List();
+            request.Q = query;
+            request.PageSize = 1000;
+            request.Fields = FileExtensions.DefaultListFields;
+            var response = await request.ExecuteAsync(cancellationToken)
+               .ConfigureAwait(false);
+
+            if (string.IsNullOrEmpty(response.NextPageToken))
+            {
+                return response.Files as IReadOnlyList<File> ?? response.Files.ToList();
+            }
+
+            var fileList = new List<File>(response.Files);
+
+            do
+            {
+                request.PageToken = response.NextPageToken;
+                response = await request.ExecuteAsync(cancellationToken)
+                   .ConfigureAwait(false);
+                fileList.AddRange(response.Files);
+            }
+            while (!string.IsNullOrEmpty(response.NextPageToken));
+
+            return fileList;
+        }
+
         /// <summary>
         /// Dispose the object.
         /// </summary>
@@ -442,49 +472,19 @@ namespace FubarDev.FtpServer.FileSystem.GoogleDrive
             return result;
         }
 
-        private async Task<IReadOnlyCollection<File>> GetChildrenAsync(File parent, CancellationToken cancellationToken)
+        private Task<IReadOnlyCollection<File>> GetChildrenAsync(File parent, CancellationToken cancellationToken)
         {
-            var fileList = new List<File>();
-            var request = Service.Files.List();
-            request.Q = $"{parent.Id.ToJsonString()} in parents";
-            request.PageSize = 1000;
-            request.Fields = FileExtensions.DefaultListFields;
-            var response = await request.ExecuteAsync(cancellationToken);
-
-            fileList.AddRange(response.Files ?? response.Files.ToList());
-
-            if (!string.IsNullOrWhiteSpace(response.NextPageToken))
-            {
-                request.PageToken = response.NextPageToken;
-                response = await request.ExecuteAsync(cancellationToken);
-                fileList.AddRange(response.Files ?? response.Files.ToList());
-            }
-
-            return fileList as IReadOnlyList<File>;
+            return ListFilesAsync($"{parent.Id.ToJsonString()} in parents", cancellationToken);
         }
 
-        private async Task<IReadOnlyCollection<File>> FindChildByNameAsync(
+        private Task<IReadOnlyCollection<File>> FindChildByNameAsync(
             File parent,
             string name,
             CancellationToken cancellationToken)
         {
-            var fileList = new List<File>();
-            var request = Service.Files.List();
-            request.Q = $"{parent.Id.ToJsonString()} in parents and name={name.ToJsonString()}";
-            request.PageSize = 1000;
-            request.Fields = FileExtensions.DefaultListFields;
-            var response = await request.ExecuteAsync(cancellationToken);
-
-            fileList.AddRange(response.Files ?? response.Files.ToList());
-
-            if (!string.IsNullOrWhiteSpace(response.NextPageToken))
-            {
-                request.PageToken = response.NextPageToken;
-                response = await request.ExecuteAsync(cancellationToken);
-                fileList.AddRange(response.Files ?? response.Files.ToList());
-            }
-
-            return fileList as IReadOnlyList<File>;
+            return ListFilesAsync(
+                $"{parent.Id.ToJsonString()} in parents and name={name.ToJsonString()}",
+                cancellationToken);
         }
 
         private Task<File> MoveItem(
