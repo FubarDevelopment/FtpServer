@@ -75,6 +75,7 @@ namespace FubarDev.FtpServer
             _log = logger;
             ServerAddress = serverOptions.Value.ServerAddress;
             Port = serverOptions.Value.Port;
+            MaxActiveConnections = serverOptions.Value.MaxActiveConnections;
         }
 
         /// <inheritdoc />
@@ -88,6 +89,9 @@ namespace FubarDev.FtpServer
 
         /// <inheritdoc />
         public int Port { get; }
+
+        /// <inheritdoc />
+        public int MaxActiveConnections { get; }
 
         /// <inheritdoc />
         public bool Ready
@@ -251,6 +255,15 @@ namespace FubarDev.FtpServer
                 var connection = scope.ServiceProvider.GetRequiredService<IFtpConnection>();
                 var connectionAccessor = scope.ServiceProvider.GetRequiredService<IFtpConnectionAccessor>();
                 connectionAccessor.FtpConnection = connection;
+
+                if (MaxActiveConnections != 0 && _statistics.ActiveConnections >= MaxActiveConnections)
+                {
+                    var response = new FtpResponse(10068, "Too many users, server is full.");
+                    connection.WriteAsync(response, CancellationToken.None).Wait();
+                    client.Dispose();
+                    scope.Dispose();
+                    return;
+                }
 
                 if (!_connections.TryAdd(connection, new FtpConnectionInfo(scope)))
                 {

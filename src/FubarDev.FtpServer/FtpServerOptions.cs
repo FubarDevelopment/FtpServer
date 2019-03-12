@@ -19,5 +19,14 @@ namespace FubarDev.FtpServer
         /// Gets or sets the server port.
         /// </summary>
         public int Port { get; set; } = 21;
+
+        /// <summary>
+        /// Gets or sets the max allows active connections.
+        /// </summary>
+        /// <remarks>
+        /// This will cause connections to be refused if count is exceeded.
+        /// 0 (default) means no control over connection count.
+        /// </remarks>
+        public int MaxActiveConnections { get; set; }
     }
 }

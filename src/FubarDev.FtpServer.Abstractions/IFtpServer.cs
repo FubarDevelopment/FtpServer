@@ -30,7 +30,16 @@ namespace FubarDev.FtpServer
         int Port { get; }
 
         /// <summary>
-        /// Gets a value indicating whether server ready to receive incoming connectoions.
+        /// Gets the max allows active connections.
+        /// </summary>
+        /// <remarks>
+        /// This will cause connections to be refused if count is exceeded.
+        /// 0 (default) means no control over connection count.
+        /// </remarks>
+        int MaxActiveConnections { get; }
+
+        /// <summary>
+        /// Gets a value indicating whether server ready to receive incoming connections.
         /// </summary>
         bool Ready { get; }
 
