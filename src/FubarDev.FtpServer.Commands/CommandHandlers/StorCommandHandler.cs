@@ -10,6 +10,7 @@ using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
 
+using FubarDev.FtpServer.Authentication;
 using FubarDev.FtpServer.BackgroundTransfer;
 using FubarDev.FtpServer.FileSystem;
 
@@ -25,17 +26,23 @@ namespace FubarDev.FtpServer.CommandHandlers
         [NotNull]
         private readonly IBackgroundTransferWorker _backgroundTransferWorker;
 
+        [NotNull]
+        private readonly ISslStreamWrapperFactory _sslStreamWrapperFactory;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="StorCommandHandler"/> class.
         /// </summary>
         /// <param name="connectionAccessor">The accessor to get the connection that is active during the <see cref="Process"/> method execution.</param>
         /// <param name="backgroundTransferWorker">The background transfer worker service.</param>
+        /// <param name="sslStreamWrapperFactory">An object to handle SSL streams.</param>
         public StorCommandHandler(
             [NotNull] IFtpConnectionAccessor connectionAccessor,
-            [NotNull] IBackgroundTransferWorker backgroundTransferWorker)
+            [NotNull] IBackgroundTransferWorker backgroundTransferWorker,
+            [NotNull] ISslStreamWrapperFactory sslStreamWrapperFactory)
             : base(connectionAccessor, "STOR")
         {
             _backgroundTransferWorker = backgroundTransferWorker;
+            _sslStreamWrapperFactory = sslStreamWrapperFactory;
         }
 
         /// <inheritdoc/>
@@ -119,6 +126,9 @@ namespace FubarDev.FtpServer.CommandHandlers
                 {
                     _backgroundTransferWorker.Enqueue(backgroundTransfer);
                 }
+
+                await _sslStreamWrapperFactory.CloseStreamAsync(stream, cancellationToken)
+                   .ConfigureAwait(false);
             }
 
             return new FtpResponse(226, T("Uploaded file successfully."));

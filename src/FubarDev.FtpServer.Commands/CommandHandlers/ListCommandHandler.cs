@@ -15,6 +15,7 @@ using System.Threading.Tasks;
 
 using DotNet.Globbing;
 
+using FubarDev.FtpServer.Authentication;
 using FubarDev.FtpServer.FileSystem;
 using FubarDev.FtpServer.ListFormatters;
 using FubarDev.FtpServer.Utilities;
@@ -30,6 +31,9 @@ namespace FubarDev.FtpServer.CommandHandlers
     /// </summary>
     public class ListCommandHandler : FtpCommandHandler
     {
+        [NotNull]
+        private readonly ISslStreamWrapperFactory _sslStreamWrapperFactory;
+
         [CanBeNull]
         private readonly ILogger<ListCommandHandler> _logger;
 
@@ -37,10 +41,15 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// Initializes a new instance of the <see cref="ListCommandHandler"/> class.
         /// </summary>
         /// <param name="connectionAccessor">The accessor to get the connection that is active during the <see cref="Process"/> method execution.</param>
+        /// <param name="sslStreamWrapperFactory">An object to handle SSL streams.</param>
         /// <param name="logger">The logger.</param>
-        public ListCommandHandler([NotNull] IFtpConnectionAccessor connectionAccessor, [CanBeNull] ILogger<ListCommandHandler> logger = null)
+        public ListCommandHandler(
+            [NotNull] IFtpConnectionAccessor connectionAccessor,
+            [NotNull] ISslStreamWrapperFactory sslStreamWrapperFactory,
+            [CanBeNull] ILogger<ListCommandHandler> logger = null)
             : base(connectionAccessor, "LIST", "NLST", "LS")
         {
+            _sslStreamWrapperFactory = sslStreamWrapperFactory;
             _logger = logger;
         }
 
@@ -186,6 +195,9 @@ namespace FubarDev.FtpServer.CommandHandlers
                         }
                     }
                 }
+
+                await _sslStreamWrapperFactory.CloseStreamAsync(stream, cancellationToken)
+                   .ConfigureAwait(false);
             }
 
             // Use 250 when the connection stays open.

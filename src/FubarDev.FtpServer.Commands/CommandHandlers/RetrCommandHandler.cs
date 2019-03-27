@@ -11,7 +11,10 @@ using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
 
+using FubarDev.FtpServer.Authentication;
 using FubarDev.FtpServer.FileSystem;
+
+using JetBrains.Annotations;
 
 namespace FubarDev.FtpServer.CommandHandlers
 {
@@ -20,15 +23,21 @@ namespace FubarDev.FtpServer.CommandHandlers
     /// </summary>
     public class RetrCommandHandler : FtpCommandHandler
     {
+        [NotNull]
+        private readonly ISslStreamWrapperFactory _sslStreamWrapperFactory;
         private const int BufferSize = 4096;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RetrCommandHandler"/> class.
         /// </summary>
         /// <param name="connectionAccessor">The accessor to get the connection that is active during the <see cref="Process"/> method execution.</param>
-        public RetrCommandHandler(IFtpConnectionAccessor connectionAccessor)
+        /// <param name="sslStreamWrapperFactory">An object to handle SSL streams.</param>
+        public RetrCommandHandler(
+            [NotNull] IFtpConnectionAccessor connectionAccessor,
+            [NotNull] ISslStreamWrapperFactory sslStreamWrapperFactory)
             : base(connectionAccessor, "RETR")
         {
+            _sslStreamWrapperFactory = sslStreamWrapperFactory;
         }
 
         /// <inheritdoc/>
@@ -81,6 +90,9 @@ namespace FubarDev.FtpServer.CommandHandlers
                     await stream.WriteAsync(buffer, 0, receivedBytes, cancellationToken)
                         .ConfigureAwait(false);
                 }
+
+                await _sslStreamWrapperFactory.CloseStreamAsync(stream, cancellationToken)
+                   .ConfigureAwait(false);
             }
 
             return new FtpResponse(226, T("File download succeeded."));

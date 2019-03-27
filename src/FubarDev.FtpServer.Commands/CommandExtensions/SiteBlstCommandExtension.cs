@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
+using FubarDev.FtpServer.Authentication;
 using FubarDev.FtpServer.BackgroundTransfer;
 
 using JetBrains.Annotations;
@@ -25,6 +26,9 @@ namespace FubarDev.FtpServer.CommandExtensions
         [NotNull]
         private readonly IBackgroundTransferWorker _backgroundTransferWorker;
 
+        [NotNull]
+        private readonly ISslStreamWrapperFactory _sslStreamWrapperFactory;
+
         [CanBeNull]
         private readonly ILogger<SiteBlstCommandExtension> _logger;
 
@@ -33,14 +37,17 @@ namespace FubarDev.FtpServer.CommandExtensions
         /// </summary>
         /// <param name="connectionAccessor">The accessor to get the connection that is active during the <see cref="Process"/> method execution.</param>
         /// <param name="backgroundTransferWorker">The background transfer worker service.</param>
+        /// <param name="sslStreamWrapperFactory">An object to handle SSL streams.</param>
         /// <param name="logger">The logger.</param>
         public SiteBlstCommandExtension(
             [NotNull] IFtpConnectionAccessor connectionAccessor,
             [NotNull] IBackgroundTransferWorker backgroundTransferWorker,
+            [NotNull] ISslStreamWrapperFactory sslStreamWrapperFactory,
             [CanBeNull] ILogger<SiteBlstCommandExtension> logger = null)
             : base(connectionAccessor, "SITE", "BLST")
         {
             _backgroundTransferWorker = backgroundTransferWorker;
+            _sslStreamWrapperFactory = sslStreamWrapperFactory;
             _logger = logger;
         }
 
@@ -115,6 +122,9 @@ namespace FubarDev.FtpServer.CommandExtensions
                         await writer.WriteLineAsync(line).ConfigureAwait(false);
                     }
                 }
+
+                await _sslStreamWrapperFactory.CloseStreamAsync(stream, CancellationToken.None)
+                   .ConfigureAwait(false);
             }
 
             return new FtpResponse(250, T("Closing data connection."));

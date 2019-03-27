@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
+using FubarDev.FtpServer.Authentication;
 using FubarDev.FtpServer.FileSystem;
 using FubarDev.FtpServer.ListFormatters;
 using FubarDev.FtpServer.Utilities;
@@ -30,6 +31,9 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// </summary>
         internal static readonly ISet<string> KnownFacts = new HashSet<string> { "type", "size", "perm", "modify", "create" };
 
+        [NotNull]
+        private readonly ISslStreamWrapperFactory _sslStreamWrapperFactory;
+
         [CanBeNull]
         private readonly ILogger<MlstCommandHandler> _logger;
 
@@ -37,10 +41,15 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// Initializes a new instance of the <see cref="MlstCommandHandler"/> class.
         /// </summary>
         /// <param name="connectionAccessor">The accessor to get the connection that is active during the <see cref="Process"/> method execution.</param>
+        /// <param name="sslStreamWrapperFactory">An object to handle SSL streams.</param>
         /// <param name="logger">The logger.</param>
-        public MlstCommandHandler([NotNull] IFtpConnectionAccessor connectionAccessor, [CanBeNull] ILogger<MlstCommandHandler> logger = null)
+        public MlstCommandHandler(
+            [NotNull] IFtpConnectionAccessor connectionAccessor,
+            [NotNull] ISslStreamWrapperFactory sslStreamWrapperFactory,
+            [CanBeNull] ILogger<MlstCommandHandler> logger = null)
             : base(connectionAccessor, "MLST", "MLSD")
         {
+            _sslStreamWrapperFactory = sslStreamWrapperFactory;
             _logger = logger;
         }
 
@@ -164,9 +173,14 @@ namespace FubarDev.FtpServer.CommandHandlers
                         Connection.Log?.LogDebug(line);
                         await writer.WriteLineAsync(line).ConfigureAwait(false);
                     }
+
                     await writer.FlushAsync().ConfigureAwait(false);
                 }
+
                 await stream.FlushAsync(cancellationToken).ConfigureAwait(false);
+
+                await _sslStreamWrapperFactory.CloseStreamAsync(stream, cancellationToken)
+                   .ConfigureAwait(false);
             }
 
             // Use 250 when the connection stays open.
