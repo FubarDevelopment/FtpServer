@@ -5,7 +5,6 @@
 using System;
 using System.IO;
 using System.Linq;
-using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading;
@@ -132,8 +131,10 @@ namespace TestFtpServer
         {
             options.Validate();
             var services = CreateServices(options)
-                .Configure<InMemoryFileSystemOptions>(opt => opt.KeepAnonymousFileSystem = options.KeepAnonymousInMemoryFileSystem)
-                .AddFtpServer(sb => Configure(sb, options).UseInMemoryFileSystem());
+               .Configure<InMemoryFileSystemOptions>(
+                    opt => opt.KeepAnonymousFileSystem = options.KeepAnonymousInMemoryFileSystem)
+               .AddFtpServer(sb => Configure(sb, options).UseInMemoryFileSystem())
+               .AddSingleton<ISslStreamWrapperFactory, CustomSslStreamWrapperFactory>();
             return RunAsync(services);
         }
 
@@ -143,8 +144,9 @@ namespace TestFtpServer
             var rootDir =
                 args.Length != 0 ? args[0] : Path.Combine(Path.GetTempPath(), "TestFtpServer");
             var services = CreateServices(options)
-                .Configure<DotNetFileSystemOptions>(opt => opt.RootPath = rootDir)
-                .AddFtpServer(sb => Configure(sb, options).UseDotNetFileSystem());
+               .Configure<DotNetFileSystemOptions>(opt => opt.RootPath = rootDir)
+               .AddFtpServer(sb => Configure(sb, options).UseDotNetFileSystem())
+               .AddSingleton<ISslStreamWrapperFactory, CustomSslStreamWrapperFactory>();
             return RunAsync(services);
         }
 
@@ -175,7 +177,8 @@ namespace TestFtpServer
             }
 
             var services = CreateServices(options)
-                .AddFtpServer(sb => Configure(sb, options).UseGoogleDrive(credential));
+               .AddFtpServer(sb => Configure(sb, options).UseGoogleDrive(credential))
+               .AddSingleton<ISslStreamWrapperFactory, CustomSslStreamWrapperFactory>();
             await RunAsync(services).ConfigureAwait(false);
         }
 
@@ -193,7 +196,8 @@ namespace TestFtpServer
                 .CreateScoped(DriveService.Scope.Drive, DriveService.Scope.DriveFile);
 
             var services = CreateServices(options)
-                .AddFtpServer(sb => Configure(sb, options).UseGoogleDrive(credential));
+               .AddFtpServer(sb => Configure(sb, options).UseGoogleDrive(credential))
+               .AddSingleton<ISslStreamWrapperFactory, CustomSslStreamWrapperFactory>();
             return RunAsync(services);
         }
 
