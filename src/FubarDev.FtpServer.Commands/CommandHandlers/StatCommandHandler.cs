@@ -52,7 +52,9 @@ namespace FubarDev.FtpServer.CommandHandlers
             {
                 var taskStates = _backgroundTransferWorker.GetStates();
                 var statusMessage = new StringBuilder();
-                statusMessage.AppendFormat("Server functional, {0} open connections", _server.Statistics.ActiveConnections);
+                statusMessage.AppendFormat(
+                    "Server functional, {0} open connections",
+                    _server.Statistics.ActiveConnections);
                 if (taskStates.Count != 0)
                 {
                     statusMessage.AppendFormat(", {0} active background transfers", taskStates.Count);
@@ -73,18 +75,17 @@ namespace FubarDev.FtpServer.CommandHandlers
             var glob = Glob.Parse(mask, globOptions);
 
             var formatter = new LongListFormatter();
-            await Connection.WriteAsync($"211-STAT {command.Argument}", cancellationToken).ConfigureAwait(false);
 
             var entries = await Data.FileSystem.GetEntriesAsync(Data.CurrentDirectory, cancellationToken)
-                .ConfigureAwait(false);
-            foreach (var entry in entries.Where(x => glob.IsMatch(x.Name)))
-            {
-                var line = formatter.Format(entry, entry.Name);
-                Connection.Log?.LogDebug(line);
-                await Connection.WriteAsync($" {line}", cancellationToken).ConfigureAwait(false);
-            }
-
-            return new FtpResponse(211, T("STAT"));
+               .ConfigureAwait(false);
+            var lines = entries.Where(x => glob.IsMatch(x.Name))
+               .Select(x => formatter.Format(x, x.Name))
+               .ToList();
+            return new FtpResponseList(
+                211,
+                $"STAT {command.Argument}",
+                "STAT",
+                lines);
         }
     }
 }

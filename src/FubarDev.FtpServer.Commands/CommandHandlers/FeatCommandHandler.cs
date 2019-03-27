@@ -32,7 +32,7 @@ namespace FubarDev.FtpServer.CommandHandlers
         public override bool IsLoginRequired => false;
 
         /// <inheritdoc/>
-        public override async Task<IFtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
+        public override Task<IFtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
         {
             var supportedFeatures = Connection
                 .CommandHandlers.Values
@@ -52,15 +52,15 @@ namespace FubarDev.FtpServer.CommandHandlers
 
             if (features.Count == 0)
             {
-                return new FtpResponse(211, T("No extensions supported"));
+                return Task.FromResult<IFtpResponse>(new FtpResponse(211, T("No extensions supported")));
             }
 
-            await Connection.WriteAsync("211-Extensions supported:", cancellationToken).ConfigureAwait(false);
-            foreach (var supportedFeature in features.Distinct(StringComparer.OrdinalIgnoreCase))
-            {
-                await Connection.WriteAsync($" {supportedFeature}", cancellationToken).ConfigureAwait(false);
-            }
-            return new FtpResponse(211, T("END"));
+            return Task.FromResult<IFtpResponse>(
+                new FtpResponseList(
+                    211,
+                    T("Extensions supported:"),
+                    T("END"),
+                    features.Distinct(StringComparer.OrdinalIgnoreCase)));
         }
     }
 }

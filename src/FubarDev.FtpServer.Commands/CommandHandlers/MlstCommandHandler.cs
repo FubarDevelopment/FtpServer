@@ -94,22 +94,7 @@ namespace FubarDev.FtpServer.CommandHandlers
                 targetEntry = foundEntry.Entry;
             }
 
-            await Connection.WriteAsync($"250- {targetEntry.Name}", cancellationToken).ConfigureAwait(false);
-            var entries = new List<IUnixFileSystemEntry>()
-            {
-                targetEntry,
-            };
-            var enumerator = new DirectoryListingEnumerator(entries, Data.FileSystem, path, false);
-            var formatter = new FactsListFormatter(Data.User, enumerator, Data.ActiveMlstFacts, true);
-            while (enumerator.MoveNext())
-            {
-                var name = enumerator.Name;
-                var entry = enumerator.Entry;
-                var line = formatter.Format(entry, name);
-                await Connection.WriteAsync($" {line}", cancellationToken).ConfigureAwait(false);
-            }
-
-            return new FtpResponse(250, T("End"));
+            return new MlstFtpResponse(Data, targetEntry, path);
         }
 
         private async Task<IFtpResponse> ProcessMlsdAsync(FtpCommand command, CancellationToken cancellationToken)
@@ -186,6 +171,54 @@ namespace FubarDev.FtpServer.CommandHandlers
 
             // Use 250 when the connection stays open.
             return new FtpResponse(226, T("Closing data connection."));
+        }
+
+        private class MlstFtpResponse : FtpResponseList<Tuple<DirectoryListingEnumerator, FactsListFormatter>>
+        {
+            private readonly FtpConnectionData _data;
+            private readonly IUnixFileSystemEntry _targetEntry;
+            private readonly Stack<IUnixDirectoryEntry> _path;
+
+            public MlstFtpResponse(
+                FtpConnectionData data,
+                IUnixFileSystemEntry targetEntry,
+                Stack<IUnixDirectoryEntry> path)
+                : base(250, $" {targetEntry.Name}", "End")
+            {
+                _data = data;
+                _targetEntry = targetEntry;
+                _path = path;
+            }
+
+            /// <inheritdoc />
+            protected override Task<Tuple<DirectoryListingEnumerator, FactsListFormatter>> CreateInitialStatusAsync(CancellationToken cancellationToken)
+            {
+                var entries = new List<IUnixFileSystemEntry>()
+                {
+                    _targetEntry,
+                };
+
+                var enumerator = new DirectoryListingEnumerator(entries, _data.FileSystem, _path, false);
+                var formatter = new FactsListFormatter(_data.User, enumerator, _data.ActiveMlstFacts, true);
+
+                return Task.FromResult(Tuple.Create(enumerator, formatter));
+            }
+
+            /// <inheritdoc />
+            protected override Task<string> GetNextLineAsync(Tuple<DirectoryListingEnumerator, FactsListFormatter> status, CancellationToken cancellationToken)
+            {
+                var enumerator = status.Item1;
+                var formatter = status.Item2;
+
+                if (enumerator.MoveNext())
+                {
+                    var name = enumerator.Name;
+                    var entry = enumerator.Entry;
+                    return Task.FromResult(formatter.Format(entry, name));
+                }
+
+                return Task.FromResult<string>(null);
+            }
         }
     }
 }

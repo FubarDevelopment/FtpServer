@@ -69,21 +69,20 @@ namespace FubarDev.FtpServer.CommandExtensions
             }
         }
 
-        private async Task<IFtpResponse> SendBlstDirectly(CancellationToken cancellationToken)
+        private Task<IFtpResponse> SendBlstDirectly(CancellationToken cancellationToken)
         {
             var taskStates = _backgroundTransferWorker.GetStates();
             if (taskStates.Count == 0)
             {
-                return new FtpResponse(211, T("No background tasks"));
+                return Task.FromResult<IFtpResponse>(new FtpResponse(211, T("No background tasks")));
             }
 
-            await Connection.WriteAsync(T("211-Active background tasks:"), cancellationToken).ConfigureAwait(false);
-            foreach (var line in GetLines(taskStates))
-            {
-                await Connection.WriteAsync($" {line}", cancellationToken).ConfigureAwait(false);
-            }
-
-            return new FtpResponse(211, T("END"));
+            return Task.FromResult<IFtpResponse>(
+                new FtpResponseList(
+                    211,
+                    T("Active background tasks:"),
+                    T("END"),
+                    GetLines(taskStates)));
         }
 
         private async Task<IFtpResponse> SendBlstWithDataConnection(CancellationToken cancellationToken)

@@ -6,6 +6,7 @@
 //-----------------------------------------------------------------------
 
 using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -46,8 +47,11 @@ namespace FubarDev.FtpServer.CommandHandlers
             if (dirInfo.Entry != null)
             {
                 var message = T("\"{0}\" directory already exists", currentPath.GetFullPath(dirInfo.FileName));
-                await Connection.WriteAsync($"521-{message}", cancellationToken).ConfigureAwait(false);
-                return new FtpResponse(521, T("Taking no action."));
+                return new FtpResponseList(
+                    521,
+                    message,
+                    T("Taking no action."),
+                    Enumerable.Empty<string>());
             }
 
             try

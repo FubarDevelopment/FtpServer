@@ -36,19 +36,25 @@ namespace FubarDev.FtpServer.CommandHandlers
             switch (helpArg)
             {
                 case "SITE":
-                    return ShowHelpSite(cancellationToken);
+                    return ShowHelpSiteAsync();
                 default:
                     return Task.FromResult<IFtpResponse>(new FtpResponse(501, T("Syntax error in parameters or arguments.")));
             }
         }
 
-        private async Task<IFtpResponse> ShowHelpSite(CancellationToken cancellationToken)
+        private Task<IFtpResponse> ShowHelpSiteAsync()
         {
-            await Connection.WriteAsync("211-HELP", cancellationToken).ConfigureAwait(false);
+            var helpText = new[]
+            {
+                "SITE BLST [DIRECT]",
+            };
 
-            await Connection.WriteAsync(" SITE BLST [DIRECT]", cancellationToken).ConfigureAwait(false);
-
-            return new FtpResponse(211, T("HELP"));
+            return Task.FromResult<IFtpResponse>(
+                new FtpResponseList(
+                    211,
+                    "HELP",
+                    "HELP",
+                    helpText));
         }
     }
 }
