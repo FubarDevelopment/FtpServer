@@ -28,18 +28,18 @@ namespace FubarDev.FtpServer.CommandHandlers
         public override bool IsLoginRequired => false;
 
         /// <inheritdoc/>
-        public override Task<FtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
+        public override Task<IFtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
         {
             if (string.IsNullOrWhiteSpace(command.Argument))
             {
-                return Task.FromResult(new FtpResponse(501, T("Data channel protection level not specified.")));
+                return Task.FromResult<IFtpResponse>(new FtpResponse(501, T("Data channel protection level not specified.")));
             }
 
             var loginStateMachine = Connection.ConnectionServices.GetRequiredService<IFtpLoginStateMachine>();
             var authMechanism = loginStateMachine.SelectedAuthenticationMechanism;
             if (authMechanism == null)
             {
-                return Task.FromResult(new FtpResponse(503, T("No authentication mechanism selected.")));
+                return Task.FromResult<IFtpResponse>(new FtpResponse(503, T("No authentication mechanism selected.")));
             }
 
             return authMechanism.HandleProtAsync(command.Argument.Trim(), cancellationToken);

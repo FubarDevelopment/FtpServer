@@ -28,9 +28,9 @@ namespace FubarDev.FtpServer.CommandHandlers
         public override bool IsLoginRequired { get; } = false;
 
         /// <inheritdoc/>
-        public override Task<FtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
+        public override Task<IFtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
         {
-            return Task.FromResult(new FtpResponse(221, T("Service closing control connection."))
+            return Task.FromResult<IFtpResponse>(new FtpResponse(221, T("Service closing control connection."))
             {
                 AfterWriteAction = async (conn, ct) =>
                 {

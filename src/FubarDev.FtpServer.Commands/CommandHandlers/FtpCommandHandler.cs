@@ -73,7 +73,7 @@ namespace FubarDev.FtpServer.CommandHandlers
         }
 
         /// <inheritdoc />
-        public abstract Task<FtpResponse> Process(FtpCommand command, CancellationToken cancellationToken);
+        public abstract Task<IFtpResponse> Process(FtpCommand command, CancellationToken cancellationToken);
 
         /// <summary>
         /// Translates a message using the current catalog of the active connection.

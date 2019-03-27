@@ -37,7 +37,7 @@ namespace FubarDev.FtpServer.CommandExtensions
         }
 
         /// <inheritdoc />
-        public override Task<FtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
+        public override Task<IFtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
         {
             var facts = command.Argument.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
             Connection.Data.ActiveMlstFacts.Clear();
@@ -45,12 +45,12 @@ namespace FubarDev.FtpServer.CommandExtensions
             {
                 if (!MlstCommandHandler.KnownFacts.Contains(fact))
                 {
-                    return Task.FromResult(new FtpResponse(501, T("Syntax error in parameters or arguments.")));
+                    return Task.FromResult<IFtpResponse>(new FtpResponse(501, T("Syntax error in parameters or arguments.")));
                 }
 
                 Connection.Data.ActiveMlstFacts.Add(fact);
             }
-            return Task.FromResult(new FtpResponse(200, T("Command okay.")));
+            return Task.FromResult<IFtpResponse>(new FtpResponse(200, T("Command okay.")));
         }
     }
 }

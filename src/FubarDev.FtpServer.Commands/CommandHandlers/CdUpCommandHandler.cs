@@ -25,15 +25,15 @@ namespace FubarDev.FtpServer.CommandHandlers
         }
 
         /// <inheritdoc/>
-        public override Task<FtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
+        public override Task<IFtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
         {
             if (Data.CurrentDirectory.IsRoot)
             {
-                return Task.FromResult(new FtpResponse(550, T("Not a valid directory.")));
+                return Task.FromResult<IFtpResponse>(new FtpResponse(550, T("Not a valid directory.")));
             }
 
             Data.Path.Pop();
-            return Task.FromResult(new FtpResponse(200, T("Command okay.")));
+            return Task.FromResult<IFtpResponse>(new FtpResponse(200, T("Command okay.")));
         }
     }
 }

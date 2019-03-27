@@ -3,13 +3,10 @@
 // </copyright>
 
 using System;
-using System.Collections.Generic;
-using System.Security.Cryptography.X509Certificates;
 using System.Threading;
 using System.Threading.Tasks;
 
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
 
 namespace FubarDev.FtpServer.CommandHandlers
 {
@@ -31,18 +28,18 @@ namespace FubarDev.FtpServer.CommandHandlers
         public override bool IsLoginRequired => false;
 
         /// <inheritdoc/>
-        public override Task<FtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
+        public override Task<IFtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
         {
             if (string.IsNullOrEmpty(command.Argument))
             {
-                return Task.FromResult(new FtpResponse(501, T("Protection buffer size not specified.")));
+                return Task.FromResult<IFtpResponse>(new FtpResponse(501, T("Protection buffer size not specified.")));
             }
 
             var loginStateMachine = Connection.ConnectionServices.GetRequiredService<IFtpLoginStateMachine>();
             var authMechanism = loginStateMachine.SelectedAuthenticationMechanism;
             if (authMechanism == null)
             {
-                return Task.FromResult(new FtpResponse(503, T("No authentication mechanism selected.")));
+                return Task.FromResult<IFtpResponse>(new FtpResponse(503, T("No authentication mechanism selected.")));
             }
 
             var size = Convert.ToInt32(command.Argument, 10);

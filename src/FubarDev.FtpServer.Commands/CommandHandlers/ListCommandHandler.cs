@@ -45,7 +45,7 @@ namespace FubarDev.FtpServer.CommandHandlers
         }
 
         /// <inheritdoc/>
-        public override async Task<FtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
+        public override async Task<IFtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
         {
             await Connection.WriteAsync(new FtpResponse(150, T("Opening data connection.")), cancellationToken).ConfigureAwait(false);
 
@@ -59,7 +59,7 @@ namespace FubarDev.FtpServer.CommandHandlers
                 .ConfigureAwait(false);
         }
 
-        private async Task<FtpResponse> ExecuteSend(TcpClient responseSocket, FtpCommand command, CancellationToken cancellationToken)
+        private async Task<IFtpResponse> ExecuteSend(TcpClient responseSocket, FtpCommand command, CancellationToken cancellationToken)
         {
             // Parse arguments in a way that's compatible with broken FTP clients
             var argument = new ListArguments(command.Argument);

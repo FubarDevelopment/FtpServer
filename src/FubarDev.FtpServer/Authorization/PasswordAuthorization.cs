@@ -48,13 +48,13 @@ namespace FubarDev.FtpServer.Authorization
         }
 
         /// <inheritdoc />
-        public override Task<FtpResponse> HandleAcctAsync(string account, CancellationToken cancellationToken)
+        public override Task<IFtpResponse> HandleAcctAsync(string account, CancellationToken cancellationToken)
         {
-            return Task.FromResult(new FtpResponse(421, T("Service not available")));
+            return Task.FromResult<IFtpResponse>(new FtpResponse(421, T("Service not available")));
         }
 
         /// <inheritdoc />
-        public override async Task<FtpResponse> HandlePassAsync(string password, CancellationToken cancellationToken)
+        public override async Task<IFtpResponse> HandlePassAsync(string password, CancellationToken cancellationToken)
         {
             if (!_needsPassword)
             {
@@ -91,14 +91,14 @@ namespace FubarDev.FtpServer.Authorization
         }
 
         /// <inheritdoc />
-        public override Task<FtpResponse> HandleUserAsync(string userIdentifier, CancellationToken cancellationToken)
+        public override Task<IFtpResponse> HandleUserAsync(string userIdentifier, CancellationToken cancellationToken)
         {
             _userName = userIdentifier;
             _needsPassword = true;
 
             Connection.Data.User = new UnauthenticatedUser(userIdentifier);
 
-            return Task.FromResult(new FtpResponse(331, T("User {0} logged in, needs password", userIdentifier)));
+            return Task.FromResult<IFtpResponse>(new FtpResponse(331, T("User {0} logged in, needs password", userIdentifier)));
         }
 
         /// <inheritdoc />

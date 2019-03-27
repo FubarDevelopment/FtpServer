@@ -72,7 +72,7 @@ namespace FubarDev.FtpServer
         /// <param name="ftpCommand">The FTP command to execute.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>The task returning the response.</returns>
-        public async Task<FtpResponse> ExecuteAsync([NotNull] FtpCommand ftpCommand, CancellationToken cancellationToken = default)
+        public async Task<IFtpResponse> ExecuteAsync([NotNull] FtpCommand ftpCommand, CancellationToken cancellationToken = default)
         {
             var commandTransitions = _possibleTransitions
                 .Where(x => x.IsMatch(ftpCommand.Name))
@@ -107,7 +107,7 @@ namespace FubarDev.FtpServer
         /// <param name="ftpCommand">The FTP command to execute.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>The task returning the response.</returns>
-        protected abstract Task<FtpResponse> ExecuteCommandAsync([NotNull] FtpCommand ftpCommand, CancellationToken cancellationToken = default);
+        protected abstract Task<IFtpResponse> ExecuteCommandAsync([NotNull] FtpCommand ftpCommand, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Called when the status was updated.

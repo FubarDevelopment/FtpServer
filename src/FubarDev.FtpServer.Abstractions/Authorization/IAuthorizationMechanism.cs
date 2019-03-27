@@ -31,7 +31,7 @@ namespace FubarDev.FtpServer.Authorization
         /// <returns>The task returning the FTP response.</returns>
         [NotNull]
         [ItemNotNull]
-        Task<FtpResponse> HandleUserAsync([NotNull] string userIdentifier, CancellationToken cancellationToken);
+        Task<IFtpResponse> HandleUserAsync([NotNull] string userIdentifier, CancellationToken cancellationToken);
 
         /// <summary>
         /// Handles the <c>PASS</c> command.
@@ -41,7 +41,7 @@ namespace FubarDev.FtpServer.Authorization
         /// <returns>The task returning the FTP response.</returns>
         [NotNull]
         [ItemNotNull]
-        Task<FtpResponse> HandlePassAsync([NotNull] string password, CancellationToken cancellationToken);
+        Task<IFtpResponse> HandlePassAsync([NotNull] string password, CancellationToken cancellationToken);
 
         /// <summary>
         /// Handles the <c>ACCT</c> command.
@@ -51,6 +51,6 @@ namespace FubarDev.FtpServer.Authorization
         /// <returns>The task returning the FTP response.</returns>
         [NotNull]
         [ItemNotNull]
-        Task<FtpResponse> HandleAcctAsync([NotNull] string account, CancellationToken cancellationToken);
+        Task<IFtpResponse> HandleAcctAsync([NotNull] string account, CancellationToken cancellationToken);
     }
 }

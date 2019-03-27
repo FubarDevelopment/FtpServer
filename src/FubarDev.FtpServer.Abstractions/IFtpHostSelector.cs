@@ -23,6 +23,6 @@ namespace FubarDev.FtpServer
         /// <param name="hostInfo">The host to select.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>The FTP response for the <c>HOST</c> command.</returns>
-        Task<FtpResponse> SelectHostAsync(HostInfo hostInfo, CancellationToken cancellationToken);
+        Task<IFtpResponse> SelectHostAsync(HostInfo hostInfo, CancellationToken cancellationToken);
     }
 }

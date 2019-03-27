@@ -47,7 +47,7 @@ namespace FubarDev.FtpServer.CommandHandlers
         }
 
         /// <inheritdoc/>
-        public override async Task<FtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
+        public override async Task<IFtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
         {
             var argument = FtpCommand.Parse(command.Argument);
             if (!Extensions.TryGetValue(argument.Name, out var extension))

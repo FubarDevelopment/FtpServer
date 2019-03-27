@@ -25,7 +25,7 @@ namespace FubarDev.FtpServer.CommandHandlers
         public override bool IsLoginRequired => false;
 
         /// <inheritdoc/>
-        public override Task<FtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
+        public override Task<IFtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
         {
             var helpArg = command.Argument;
             if (string.IsNullOrEmpty(helpArg))
@@ -38,11 +38,11 @@ namespace FubarDev.FtpServer.CommandHandlers
                 case "SITE":
                     return ShowHelpSite(cancellationToken);
                 default:
-                    return Task.FromResult(new FtpResponse(501, T("Syntax error in parameters or arguments.")));
+                    return Task.FromResult<IFtpResponse>(new FtpResponse(501, T("Syntax error in parameters or arguments.")));
             }
         }
 
-        private async Task<FtpResponse> ShowHelpSite(CancellationToken cancellationToken)
+        private async Task<IFtpResponse> ShowHelpSite(CancellationToken cancellationToken)
         {
             await Connection.WriteAsync("211-HELP", cancellationToken).ConfigureAwait(false);
 

@@ -51,7 +51,7 @@ namespace FubarDev.FtpServer.CommandHandlers
         }
 
         /// <inheritdoc/>
-        public override Task<FtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
+        public override Task<IFtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
         {
             var listDir = string.Equals(command.Name, "MLSD", StringComparison.OrdinalIgnoreCase);
             if (listDir)
@@ -73,7 +73,7 @@ namespace FubarDev.FtpServer.CommandHandlers
             return result.ToString();
         }
 
-        private async Task<FtpResponse> ProcessMlstAsync(FtpCommand command, CancellationToken cancellationToken)
+        private async Task<IFtpResponse> ProcessMlstAsync(FtpCommand command, CancellationToken cancellationToken)
         {
             var argument = command.Argument;
             var path = Data.Path.Clone();
@@ -112,7 +112,7 @@ namespace FubarDev.FtpServer.CommandHandlers
             return new FtpResponse(250, T("End"));
         }
 
-        private async Task<FtpResponse> ProcessMlsdAsync(FtpCommand command, CancellationToken cancellationToken)
+        private async Task<IFtpResponse> ProcessMlsdAsync(FtpCommand command, CancellationToken cancellationToken)
         {
             var argument = command.Argument;
             var path = Data.Path.Clone();
@@ -154,7 +154,7 @@ namespace FubarDev.FtpServer.CommandHandlers
                 .ConfigureAwait(false);
         }
 
-        private async Task<FtpResponse> ExecuteSendAsync(
+        private async Task<IFtpResponse> ExecuteSendAsync(
             TcpClient responseSocket,
             Stack<IUnixDirectoryEntry> path,
             IUnixDirectoryEntry dirEntry,

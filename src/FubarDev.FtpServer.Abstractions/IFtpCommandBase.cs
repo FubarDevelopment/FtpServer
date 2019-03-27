@@ -30,6 +30,6 @@ namespace FubarDev.FtpServer
         /// <returns>The FTP response.</returns>
         [NotNull]
         [ItemCanBeNull]
-        Task<FtpResponse> Process([NotNull] FtpCommand command, CancellationToken cancellationToken);
+        Task<IFtpResponse> Process([NotNull] FtpCommand command, CancellationToken cancellationToken);
     }
 }

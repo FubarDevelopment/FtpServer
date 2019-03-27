@@ -24,10 +24,10 @@ namespace FubarDev.FtpServer
         /// <returns>The task with the FTP response.</returns>
         [NotNull]
         [ItemNotNull]
-        public static async Task<FtpResponse> SendResponseAsync(
+        public static async Task<IFtpResponse> SendResponseAsync(
             [NotNull] this IFtpConnection connection,
-            [NotNull] Func<TcpClient, Task<FtpResponse>> asyncSendAction,
-            [CanBeNull] Func<Exception, FtpResponse> createConnectionErrorFunc = null)
+            [NotNull] Func<TcpClient, Task<IFtpResponse>> asyncSendAction,
+            [CanBeNull] Func<Exception, IFtpResponse> createConnectionErrorFunc = null)
         {
             TcpClient responseSocket;
             try

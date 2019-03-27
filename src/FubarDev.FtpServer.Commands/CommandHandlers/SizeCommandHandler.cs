@@ -34,7 +34,7 @@ namespace FubarDev.FtpServer.CommandHandlers
         }
 
         /// <inheritdoc/>
-        public override async Task<FtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
+        public override async Task<IFtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
         {
             var fileName = command.Argument;
             var tempPath = Data.Path.Clone();

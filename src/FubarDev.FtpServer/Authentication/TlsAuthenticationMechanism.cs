@@ -56,11 +56,11 @@ namespace FubarDev.FtpServer.Authentication
         }
 
         /// <inheritdoc />
-        public override Task<FtpResponse> HandleAuthAsync(string methodIdentifier, CancellationToken cancellationToken)
+        public override Task<IFtpResponse> HandleAuthAsync(string methodIdentifier, CancellationToken cancellationToken)
         {
             if (_serverCertificate == null)
             {
-                return Task.FromResult(new FtpResponse(502, T("TLS not configured")));
+                return Task.FromResult<IFtpResponse>(new FtpResponse(502, T("TLS not configured")));
             }
 
             var response = new FtpResponse(234, T("Enabling TLS Connection"))
@@ -96,28 +96,28 @@ namespace FubarDev.FtpServer.Authentication
                 },
             };
 
-            return Task.FromResult(response);
+            return Task.FromResult<IFtpResponse>(response);
         }
 
         /// <inheritdoc />
-        public override Task<FtpResponse> HandleAdatAsync(byte[] data, CancellationToken cancellationToken)
+        public override Task<IFtpResponse> HandleAdatAsync(byte[] data, CancellationToken cancellationToken)
         {
-            return Task.FromResult(new FtpResponse(421, T("Service not available")));
+            return Task.FromResult<IFtpResponse>(new FtpResponse(421, T("Service not available")));
         }
 
         /// <inheritdoc />
-        public override Task<FtpResponse> HandlePbszAsync(long size, CancellationToken cancellationToken)
+        public override Task<IFtpResponse> HandlePbszAsync(long size, CancellationToken cancellationToken)
         {
             if (size != 0)
             {
-                return Task.FromResult(new FtpResponse(501, T("A protection buffer size other than 0 is not supported. Use PBSZ=0 instead.")));
+                return Task.FromResult<IFtpResponse>(new FtpResponse(501, T("A protection buffer size other than 0 is not supported. Use PBSZ=0 instead.")));
             }
 
-            return Task.FromResult(new FtpResponse(200, T("Protection buffer size set to {0}.", size)));
+            return Task.FromResult<IFtpResponse>(new FtpResponse(200, T("Protection buffer size set to {0}.", size)));
         }
 
         /// <inheritdoc />
-        public override Task<FtpResponse> HandleProtAsync(string protCode, CancellationToken cancellationToken)
+        public override Task<IFtpResponse> HandleProtAsync(string protCode, CancellationToken cancellationToken)
         {
             switch (protCode.ToUpperInvariant())
             {
@@ -128,10 +128,10 @@ namespace FubarDev.FtpServer.Authentication
                     Connection.Data.CreateEncryptedStream = CreateSslStream;
                     break;
                 default:
-                    return Task.FromResult(new FtpResponse(SecurityActionResult.RequestedProtLevelNotSupported, T("A data channel protection level other than C, or P is not supported.")));
+                    return Task.FromResult<IFtpResponse>(new FtpResponse(SecurityActionResult.RequestedProtLevelNotSupported, T("A data channel protection level other than C, or P is not supported.")));
             }
 
-            return Task.FromResult(new FtpResponse(200, T("Data channel protection level set to {0}.", protCode)));
+            return Task.FromResult<IFtpResponse>(new FtpResponse(200, T("Data channel protection level set to {0}.", protCode)));
         }
 
         /// <inheritdoc />

@@ -51,7 +51,7 @@ namespace FubarDev.FtpServer
 
         private bool _closed;
 
-        private Task<FtpResponse> _activeBackgroundTask;
+        private Task<IFtpResponse> _activeBackgroundTask;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FtpConnection"/> class.
@@ -177,7 +177,7 @@ namespace FubarDev.FtpServer
         /// <param name="response">The response to write to the client.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>The task.</returns>
-        public async Task WriteAsync(FtpResponse response, CancellationToken cancellationToken)
+        public async Task WriteAsync(IFtpResponse response, CancellationToken cancellationToken)
         {
             if (!_closed)
             {
@@ -381,7 +381,7 @@ namespace FubarDev.FtpServer
 
         private async Task ProcessMessage(IFtpLoginStateMachine loginStateMachine, FtpCommand command)
         {
-            FtpResponse response;
+            IFtpResponse response;
             Log?.Trace(command);
             var result = FindCommandHandler(command);
             if (result != null)

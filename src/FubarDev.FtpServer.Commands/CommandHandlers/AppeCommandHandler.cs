@@ -42,7 +42,7 @@ namespace FubarDev.FtpServer.CommandHandlers
         public override bool IsAbortable => true;
 
         /// <inheritdoc/>
-        public override async Task<FtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
+        public override async Task<IFtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
         {
             var restartPosition = Data.RestartPosition;
             Data.RestartPosition = null;
@@ -77,7 +77,7 @@ namespace FubarDev.FtpServer.CommandHandlers
                 .ConfigureAwait(false);
         }
 
-        private async Task<FtpResponse> ExecuteSend(
+        private async Task<IFtpResponse> ExecuteSend(
             TcpClient responseSocket,
             [NotNull] SearchResult<IUnixFileEntry> fileInfo,
             long? restartPosition,

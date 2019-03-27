@@ -34,7 +34,7 @@ namespace FubarDev.FtpServer.BackgroundTransfer
 
         private CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
 
-        private Task<FtpResponse> _handlerTask;
+        private Task<IFtpResponse> _handlerTask;
 
         internal BackgroundCommandHandler(IFtpConnection connection)
         {
@@ -43,7 +43,7 @@ namespace FubarDev.FtpServer.BackgroundTransfer
         }
 
         /// <inheritdoc />
-        public Task<FtpResponse> Execute(IFtpCommandBase handler, FtpCommand command)
+        public Task<IFtpResponse> Execute(IFtpCommandBase handler, FtpCommand command)
         {
             lock (_syncRoot)
             {
@@ -57,7 +57,7 @@ namespace FubarDev.FtpServer.BackgroundTransfer
             }
 
             var taskCanceled = _handlerTask
-                .ContinueWith(
+                .ContinueWith<IFtpResponse>(
                     t =>
                     {
                         var response = new FtpResponse(426, _connection.Data.Catalog.GetString("Connection closed; transfer aborted."));
@@ -77,7 +77,7 @@ namespace FubarDev.FtpServer.BackgroundTransfer
                     TaskContinuationOptions.OnlyOnRanToCompletion);
 
             var taskFaulted = _handlerTask
-                .ContinueWith(
+                .ContinueWith<IFtpResponse>(
                     t =>
                     {
                         var ex = t.Exception;
@@ -92,10 +92,10 @@ namespace FubarDev.FtpServer.BackgroundTransfer
             taskCompleted.ContinueWith(t => { }, TaskContinuationOptions.OnlyOnCanceled);
             taskCanceled.ContinueWith(t => { }, TaskContinuationOptions.OnlyOnCanceled);
 
-            return Task.Run(
+            return Task.Run<IFtpResponse>(
                 () =>
                 {
-                    var tasks = new List<Task<FtpResponse>> { taskCompleted, taskCanceled, taskFaulted };
+                    var tasks = new List<Task<IFtpResponse>> { taskCompleted, taskCanceled, taskFaulted };
 
                     do
                     {

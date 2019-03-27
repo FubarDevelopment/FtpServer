@@ -36,16 +36,16 @@ namespace FubarDev.FtpServer.Authentication
         public abstract bool CanHandle(string methodIdentifier);
 
         /// <inheritdoc />
-        public abstract Task<FtpResponse> HandleAuthAsync(string methodIdentifier, CancellationToken cancellationToken);
+        public abstract Task<IFtpResponse> HandleAuthAsync(string methodIdentifier, CancellationToken cancellationToken);
 
         /// <inheritdoc />
-        public abstract Task<FtpResponse> HandleAdatAsync(byte[] data, CancellationToken cancellationToken);
+        public abstract Task<IFtpResponse> HandleAdatAsync(byte[] data, CancellationToken cancellationToken);
 
         /// <inheritdoc />
-        public abstract Task<FtpResponse> HandlePbszAsync(long size, CancellationToken cancellationToken);
+        public abstract Task<IFtpResponse> HandlePbszAsync(long size, CancellationToken cancellationToken);
 
         /// <inheritdoc />
-        public abstract Task<FtpResponse> HandleProtAsync(string protCode, CancellationToken cancellationToken);
+        public abstract Task<IFtpResponse> HandleProtAsync(string protCode, CancellationToken cancellationToken);
 
         /// <summary>
         /// Translates a message using the current catalog of the active connection.

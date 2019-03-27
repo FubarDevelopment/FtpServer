@@ -39,7 +39,7 @@ namespace FubarDev.FtpServer.Authentication
         /// <returns>The response to return.</returns>
         [NotNull]
         [ItemNotNull]
-        Task<FtpResponse> HandleAuthAsync([NotNull] string methodIdentifier, CancellationToken cancellationToken);
+        Task<IFtpResponse> HandleAuthAsync([NotNull] string methodIdentifier, CancellationToken cancellationToken);
 
         /// <summary>
         /// Processes the <c>ADAT</c> command.
@@ -49,7 +49,7 @@ namespace FubarDev.FtpServer.Authentication
         /// <returns>The response to return.</returns>
         [NotNull]
         [ItemNotNull]
-        Task<FtpResponse> HandleAdatAsync([NotNull] byte[] data, CancellationToken cancellationToken);
+        Task<IFtpResponse> HandleAdatAsync([NotNull] byte[] data, CancellationToken cancellationToken);
 
         /// <summary>
         /// Processes the <c>PBSZ</c> command.
@@ -59,7 +59,7 @@ namespace FubarDev.FtpServer.Authentication
         /// <returns>The response to return.</returns>
         [NotNull]
         [ItemNotNull]
-        Task<FtpResponse> HandlePbszAsync(long size, CancellationToken cancellationToken);
+        Task<IFtpResponse> HandlePbszAsync(long size, CancellationToken cancellationToken);
 
         /// <summary>
         /// Processes the <c>PROT</c> command.
@@ -69,6 +69,6 @@ namespace FubarDev.FtpServer.Authentication
         /// <returns>The response to return.</returns>
         [NotNull]
         [ItemNotNull]
-        Task<FtpResponse> HandleProtAsync([NotNull] string protCode, CancellationToken cancellationToken);
+        Task<IFtpResponse> HandleProtAsync([NotNull] string protCode, CancellationToken cancellationToken);
     }
 }

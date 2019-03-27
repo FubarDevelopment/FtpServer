@@ -16,7 +16,7 @@ namespace FubarDev.FtpServer
     /// <summary>
     /// FTP response.
     /// </summary>
-    public class FtpResponse
+    public class FtpResponse : IFtpResponse
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="FtpResponse"/> class.
@@ -39,9 +39,7 @@ namespace FubarDev.FtpServer
         {
         }
 
-        /// <summary>
-        /// Gets the response code.
-        /// </summary>
+        /// <inheritdoc />
         public int Code { get; }
 
         /// <summary>
@@ -59,6 +57,17 @@ namespace FubarDev.FtpServer
         public override string ToString()
         {
             return $"{Code:D3} {Message}".TrimEnd();
+        }
+
+        /// <inheritdoc />
+        public Task<FtpResponseLine> GetNextLineAsync(object token, CancellationToken cancellationToken)
+        {
+            if (token is null)
+            {
+                return Task.FromResult(new FtpResponseLine(ToString(), new object()));
+            }
+
+            return Task.FromResult(new FtpResponseLine(null, null));
         }
     }
 }

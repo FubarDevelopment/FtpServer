@@ -27,7 +27,7 @@ namespace FubarDev.FtpServer.CommandHandlers
         }
 
         /// <inheritdoc/>
-        public override Task<FtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
+        public override Task<IFtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
         {
             var path = Connection.Data.Path.GetFullPath();
             if (path.EndsWith("/") && path.Length > 1)
@@ -35,7 +35,7 @@ namespace FubarDev.FtpServer.CommandHandlers
                 path = path.Substring(0, path.Length - 1);
             }
 
-            return Task.FromResult(new FtpResponse(257, T("\"{0}\"", path)));
+            return Task.FromResult<IFtpResponse>(new FtpResponse(257, T("\"{0}\"", path)));
         }
     }
 }

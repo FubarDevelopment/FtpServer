@@ -30,13 +30,13 @@ namespace FubarDev.FtpServer.CommandHandlers
         public override bool IsLoginRequired => false;
 
         /// <inheritdoc />
-        public override Task<FtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
+        public override Task<IFtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
         {
             var loginStateMachine = Connection.ConnectionServices.GetRequiredService<IFtpLoginStateMachine>();
             var authenticationMechanism = loginStateMachine.SelectedAuthenticationMechanism;
             if (authenticationMechanism == null)
             {
-                return Task.FromResult(new FtpResponse(503, T("Bad sequence of commands")));
+                return Task.FromResult<IFtpResponse>(new FtpResponse(503, T("Bad sequence of commands")));
             }
 
             byte[] data;
@@ -46,7 +46,7 @@ namespace FubarDev.FtpServer.CommandHandlers
             }
             catch (FormatException)
             {
-                return Task.FromResult(new FtpResponse(501, T("Syntax error in parameters or arguments.")));
+                return Task.FromResult<IFtpResponse>(new FtpResponse(501, T("Syntax error in parameters or arguments.")));
             }
 
             return authenticationMechanism.HandleAdatAsync(data, cancellationToken);

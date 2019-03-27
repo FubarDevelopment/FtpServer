@@ -118,7 +118,7 @@ namespace FubarDev.FtpServer
         /// <param name="response">The response to write to the client.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>The task.</returns>
-        Task WriteAsync([NotNull] FtpResponse response, CancellationToken cancellationToken);
+        Task WriteAsync([NotNull] IFtpResponse response, CancellationToken cancellationToken);
 
         /// <summary>
         /// Writes response to a client.

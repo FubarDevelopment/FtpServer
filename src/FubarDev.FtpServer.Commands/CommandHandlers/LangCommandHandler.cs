@@ -60,7 +60,7 @@ namespace FubarDev.FtpServer.CommandHandlers
         }
 
         /// <inheritdoc />
-        public override async Task<FtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
+        public override async Task<IFtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
         {
             if (string.IsNullOrWhiteSpace(command.Argument))
             {

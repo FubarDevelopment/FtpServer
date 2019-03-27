@@ -53,7 +53,7 @@ namespace FubarDev.FtpServer.CommandExtensions
         }
 
         /// <inheritdoc/>
-        public override async Task<FtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
+        public override async Task<IFtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
         {
             var mode = (string.IsNullOrEmpty(command.Argument) ? "data" : command.Argument).ToLowerInvariant();
 
@@ -69,7 +69,7 @@ namespace FubarDev.FtpServer.CommandExtensions
             }
         }
 
-        private async Task<FtpResponse> SendBlstDirectly(CancellationToken cancellationToken)
+        private async Task<IFtpResponse> SendBlstDirectly(CancellationToken cancellationToken)
         {
             var taskStates = _backgroundTransferWorker.GetStates();
             if (taskStates.Count == 0)
@@ -86,7 +86,7 @@ namespace FubarDev.FtpServer.CommandExtensions
             return new FtpResponse(211, T("END"));
         }
 
-        private async Task<FtpResponse> SendBlstWithDataConnection(CancellationToken cancellationToken)
+        private async Task<IFtpResponse> SendBlstWithDataConnection(CancellationToken cancellationToken)
         {
             await Connection.WriteAsync(new FtpResponse(150, T("Opening data connection.")), cancellationToken).ConfigureAwait(false);
 
@@ -99,7 +99,7 @@ namespace FubarDev.FtpServer.CommandExtensions
                 }).ConfigureAwait(false);
         }
 
-        private async Task<FtpResponse> ExecuteSend(TcpClient responseSocket)
+        private async Task<IFtpResponse> ExecuteSend(TcpClient responseSocket)
         {
             var encoding = Data.NlstEncoding ?? Connection.Encoding;
             var responseStream = responseSocket.GetStream();

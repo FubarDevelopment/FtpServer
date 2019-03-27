@@ -35,6 +35,6 @@ namespace FubarDev.FtpServer
         /// <returns>The task returning the response.</returns>
         [NotNull]
         [ItemNotNull]
-        Task<FtpResponse> ExecuteAsync([NotNull] FtpCommand ftpCommand, CancellationToken cancellationToken = default);
+        Task<IFtpResponse> ExecuteAsync([NotNull] FtpCommand ftpCommand, CancellationToken cancellationToken = default);
     }
 }

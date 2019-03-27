@@ -17,5 +17,5 @@ namespace FubarDev.FtpServer
     /// <returns>The FTP response.</returns>
     [NotNull]
     [ItemCanBeNull]
-    public delegate Task<FtpResponse> FtpCommandHandlerProcessDelegate([NotNull] FtpCommand command, CancellationToken cancellationToken);
+    public delegate Task<IFtpResponse> FtpCommandHandlerProcessDelegate([NotNull] FtpCommand command, CancellationToken cancellationToken);
 }

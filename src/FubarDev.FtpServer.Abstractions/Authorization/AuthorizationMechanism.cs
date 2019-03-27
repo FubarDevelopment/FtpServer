@@ -35,13 +35,13 @@ namespace FubarDev.FtpServer.Authorization
         public abstract void Reset(IAuthenticationMechanism authenticationMechanism);
 
         /// <inheritdoc />
-        public abstract Task<FtpResponse> HandleUserAsync(string userIdentifier, CancellationToken cancellationToken);
+        public abstract Task<IFtpResponse> HandleUserAsync(string userIdentifier, CancellationToken cancellationToken);
 
         /// <inheritdoc />
-        public abstract Task<FtpResponse> HandlePassAsync(string password, CancellationToken cancellationToken);
+        public abstract Task<IFtpResponse> HandlePassAsync(string password, CancellationToken cancellationToken);
 
         /// <inheritdoc />
-        public abstract Task<FtpResponse> HandleAcctAsync(string account, CancellationToken cancellationToken);
+        public abstract Task<IFtpResponse> HandleAcctAsync(string account, CancellationToken cancellationToken);
 
         /// <summary>
         /// Translates a message using the current catalog of the active connection.

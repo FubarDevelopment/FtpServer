@@ -37,11 +37,11 @@ namespace FubarDev.FtpServer.CommandHandlers
         }
 
         /// <inheritdoc />
-        public override Task<FtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
+        public override Task<IFtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
         {
             if (string.IsNullOrWhiteSpace(command.Argument))
             {
-                return Task.FromResult(new FtpResponse(501, T("Syntax error in parameters or arguments.")));
+                return Task.FromResult<IFtpResponse>(new FtpResponse(501, T("Syntax error in parameters or arguments.")));
             }
 
             var loginStateMachine = Connection.ConnectionServices.GetRequiredService<IFtpLoginStateMachine>();
@@ -49,7 +49,7 @@ namespace FubarDev.FtpServer.CommandHandlers
             if (loginStateMachine.Status != SecurityStatus.Unauthenticated &&
                 loginStateMachine.Status != SecurityStatus.Authenticated)
             {
-                return Task.FromResult(new FtpResponse(503, T("Bad sequence of commands")));
+                return Task.FromResult<IFtpResponse>(new FtpResponse(503, T("Bad sequence of commands")));
             }
 
             var hostInfo = ParseHost(command.Argument);

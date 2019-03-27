@@ -38,9 +38,9 @@ namespace FubarDev.FtpServer
         public IFtpHost SelectedHost { get; }
 
         /// <inheritdoc />
-        public Task<FtpResponse> SelectHostAsync(HostInfo hostInfo, CancellationToken cancellationToken)
+        public Task<IFtpResponse> SelectHostAsync(HostInfo hostInfo, CancellationToken cancellationToken)
         {
-            return Task.FromResult(new FtpResponse(504, _connection.Data.Catalog.GetString("Unknown host \"{0}\"", hostInfo)));
+            return Task.FromResult<IFtpResponse>(new FtpResponse(504, _connection.Data.Catalog.GetString("Unknown host \"{0}\"", hostInfo)));
         }
 
         private class DefaultFtpHost : IFtpHost

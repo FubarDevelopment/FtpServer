@@ -33,11 +33,11 @@ namespace FubarDev.FtpServer.CommandHandlers
         }
 
         /// <inheritdoc/>
-        public override Task<FtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
+        public override Task<IFtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
         {
             if (Data.TransferTypeCommandUsed != null && !string.Equals(command.Name, Data.TransferTypeCommandUsed, StringComparison.OrdinalIgnoreCase))
             {
-                return Task.FromResult(new FtpResponse(500, T("Cannot use {0} when {1} was used before.", command.Name, Data.TransferTypeCommandUsed)));
+                return Task.FromResult<IFtpResponse>(new FtpResponse(500, T("Cannot use {0} when {1} was used before.", command.Name, Data.TransferTypeCommandUsed)));
             }
 
             try
@@ -45,19 +45,19 @@ namespace FubarDev.FtpServer.CommandHandlers
                 var address = Address.Parse(command.Argument);
                 if (address == null)
                 {
-                    return Task.FromResult(new FtpResponse(501, T("Syntax error in parameters or arguments.")));
+                    return Task.FromResult<IFtpResponse>(new FtpResponse(501, T("Syntax error in parameters or arguments.")));
                 }
 
                 Data.PortAddress = address;
             }
             catch (NotSupportedException ex)
             {
-                return Task.FromResult(new FtpResponse(522, T("Extended port failure - {0}.", ex.Message)));
+                return Task.FromResult<IFtpResponse>(new FtpResponse(522, T("Extended port failure - {0}.", ex.Message)));
             }
 
             Data.TransferTypeCommandUsed = command.Name;
 
-            return Task.FromResult(new FtpResponse(200, T("Command okay.")));
+            return Task.FromResult<IFtpResponse>(new FtpResponse(200, T("Command okay.")));
         }
     }
 }

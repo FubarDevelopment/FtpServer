@@ -23,7 +23,7 @@ namespace FubarDev.FtpServer
         /// <param name="command">The command to process by the <paramref name="handler"/>.</param>
         /// <returns><code>null</code> when the command could not be processed.</returns>
         [CanBeNull]
-        Task<FtpResponse> Execute([NotNull] IFtpCommandBase handler, [NotNull] FtpCommand command);
+        Task<IFtpResponse> Execute([NotNull] IFtpCommandBase handler, [NotNull] FtpCommand command);
 
         /// <summary>
         /// Cancels the processing of the current command.

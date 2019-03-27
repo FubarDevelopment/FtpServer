@@ -29,7 +29,7 @@ namespace FubarDev.FtpServer.CommandHandlers
         public override bool IsLoginRequired => false;
 
         /// <inheritdoc />
-        public override async Task<FtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
+        public override async Task<IFtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
         {
             var loginStateMachine = Connection.ConnectionServices.GetRequiredService<IFtpLoginStateMachine>();
             loginStateMachine.Reset();

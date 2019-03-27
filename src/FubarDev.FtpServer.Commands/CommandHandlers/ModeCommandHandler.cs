@@ -26,14 +26,14 @@ namespace FubarDev.FtpServer.CommandHandlers
         }
 
         /// <inheritdoc/>
-        public override Task<FtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
+        public override Task<IFtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
         {
             if (string.Equals(command.Argument, "S", StringComparison.OrdinalIgnoreCase))
             {
-                return Task.FromResult(new FtpResponse(200, T("Mode set to Stream.")));
+                return Task.FromResult<IFtpResponse>(new FtpResponse(200, T("Mode set to Stream.")));
             }
 
-            return Task.FromResult(new FtpResponse(504, T("Transfer mode {0} not supported.", command.Argument)));
+            return Task.FromResult<IFtpResponse>(new FtpResponse(504, T("Transfer mode {0} not supported.", command.Argument)));
         }
     }
 }

@@ -83,7 +83,7 @@ namespace FubarDev.FtpServer
         public IAuthorizationMechanism SelectedAuthorizationMechanism => _selectedAuthorizationMechanism;
 
         /// <inheritdoc />
-        protected override Task<FtpResponse> ExecuteCommandAsync([NotNull] FtpCommand ftpCommand, CancellationToken cancellationToken = default)
+        protected override Task<IFtpResponse> ExecuteCommandAsync([NotNull] FtpCommand ftpCommand, CancellationToken cancellationToken = default)
         {
             switch (ftpCommand.Name.Trim().ToUpperInvariant())
             {
@@ -142,12 +142,12 @@ namespace FubarDev.FtpServer
         /// <param name="ftpCommand">The FTP command causing the problem.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>The FTP response to be returned.</returns>
-        protected virtual Task<FtpResponse> UnhandledCommandAsync(FtpCommand ftpCommand, CancellationToken cancellationToken)
+        protected virtual Task<IFtpResponse> UnhandledCommandAsync(FtpCommand ftpCommand, CancellationToken cancellationToken)
         {
-            return Task.FromResult(new FtpResponse(421, T("Service not available")));
+            return Task.FromResult<IFtpResponse>(new FtpResponse(421, T("Service not available")));
         }
 
-        private async Task<FtpResponse> HandleAuthAsync(string argument, CancellationToken cancellationToken)
+        private async Task<IFtpResponse> HandleAuthAsync(string argument, CancellationToken cancellationToken)
         {
             var authenticationMechanism = _hostSelector.SelectedHost.AuthenticationMechanisms
                .SingleOrDefault(x => x.CanHandle(argument));
@@ -160,11 +160,11 @@ namespace FubarDev.FtpServer
             return await authenticationMechanism.HandleAuthAsync(argument, cancellationToken).ConfigureAwait(false);
         }
 
-        private Task<FtpResponse> HandleAdatAsync(string argument, CancellationToken cancellationToken)
+        private Task<IFtpResponse> HandleAdatAsync(string argument, CancellationToken cancellationToken)
         {
             if (_filteredAuthenticationMechanism is null)
             {
-                return Task.FromResult(new FtpResponse(503, T("Bad sequence of commands")));
+                return Task.FromResult<IFtpResponse>(new FtpResponse(503, T("Bad sequence of commands")));
             }
 
             byte[] data;
@@ -180,16 +180,16 @@ namespace FubarDev.FtpServer
                 }
                 catch (FormatException)
                 {
-                    return Task.FromResult(new FtpResponse(501, T("Syntax error in parameters or arguments.")));
+                    return Task.FromResult<IFtpResponse>(new FtpResponse(501, T("Syntax error in parameters or arguments.")));
                 }
             }
 
             return _filteredAuthenticationMechanism.HandleAdatAsync(data, cancellationToken);
         }
 
-        private async Task<FtpResponse> HandleUserAsync(string argument, CancellationToken cancellationToken)
+        private async Task<IFtpResponse> HandleUserAsync(string argument, CancellationToken cancellationToken)
         {
-            var results = new List<Tuple<FtpResponse, IAuthorizationMechanism>>();
+            var results = new List<Tuple<IFtpResponse, IAuthorizationMechanism>>();
             foreach (var authorizationMechanism in _hostSelector.SelectedHost.AuthorizationMechanisms)
             {
                 var response = await authorizationMechanism.HandleUserAsync(argument, cancellationToken)
@@ -213,21 +213,21 @@ namespace FubarDev.FtpServer
             return results.First().Item1;
         }
 
-        private Task<FtpResponse> HandlePassAsync(string argument, CancellationToken cancellationToken)
+        private Task<IFtpResponse> HandlePassAsync(string argument, CancellationToken cancellationToken)
         {
             if (_filteredAuthorizationMechanism is null)
             {
-                return Task.FromResult(new FtpResponse(503, T("Bad sequence of commands")));
+                return Task.FromResult<IFtpResponse>(new FtpResponse(503, T("Bad sequence of commands")));
             }
 
             return _filteredAuthorizationMechanism.HandlePassAsync(argument, cancellationToken);
         }
 
-        private Task<FtpResponse> HandleAcctAsync(string argument, CancellationToken cancellationToken)
+        private Task<IFtpResponse> HandleAcctAsync(string argument, CancellationToken cancellationToken)
         {
             if (_filteredAuthorizationMechanism is null)
             {
-                return Task.FromResult(new FtpResponse(503, T("Bad sequence of commands")));
+                return Task.FromResult<IFtpResponse>(new FtpResponse(503, T("Bad sequence of commands")));
             }
 
             return _filteredAuthorizationMechanism.HandleAcctAsync(argument, cancellationToken);

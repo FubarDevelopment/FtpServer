@@ -25,14 +25,14 @@ namespace FubarDev.FtpServer.CommandHandlers
         }
 
         /// <inheritdoc/>
-        public override Task<FtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
+        public override Task<IFtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
         {
             if (Data.BackgroundCommandHandler.Cancel())
             {
-                return Task.FromResult(new FtpResponse(226, T("File transfer aborting.")));
+                return Task.FromResult<IFtpResponse>(new FtpResponse(226, T("File transfer aborting.")));
             }
 
-            return Task.FromResult(new FtpResponse(226, T("Cannot abort - no active transfer.")));
+            return Task.FromResult<IFtpResponse>(new FtpResponse(226, T("Cannot abort - no active transfer.")));
         }
     }
 }
