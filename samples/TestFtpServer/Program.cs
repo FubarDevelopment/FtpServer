@@ -133,8 +133,7 @@ namespace TestFtpServer
             var services = CreateServices(options)
                .Configure<InMemoryFileSystemOptions>(
                     opt => opt.KeepAnonymousFileSystem = options.KeepAnonymousInMemoryFileSystem)
-               .AddFtpServer(sb => Configure(sb, options).UseInMemoryFileSystem())
-               .AddSingleton<ISslStreamWrapperFactory, CustomSslStreamWrapperFactory>();
+               .AddFtpServer(sb => Configure(sb, options).UseInMemoryFileSystem());
             return RunAsync(services);
         }
 
@@ -145,8 +144,7 @@ namespace TestFtpServer
                 args.Length != 0 ? args[0] : Path.Combine(Path.GetTempPath(), "TestFtpServer");
             var services = CreateServices(options)
                .Configure<DotNetFileSystemOptions>(opt => opt.RootPath = rootDir)
-               .AddFtpServer(sb => Configure(sb, options).UseDotNetFileSystem())
-               .AddSingleton<ISslStreamWrapperFactory, CustomSslStreamWrapperFactory>();
+               .AddFtpServer(sb => Configure(sb, options).UseDotNetFileSystem());
             return RunAsync(services);
         }
 
@@ -177,8 +175,7 @@ namespace TestFtpServer
             }
 
             var services = CreateServices(options)
-               .AddFtpServer(sb => Configure(sb, options).UseGoogleDrive(credential))
-               .AddSingleton<ISslStreamWrapperFactory, CustomSslStreamWrapperFactory>();
+               .AddFtpServer(sb => Configure(sb, options).UseGoogleDrive(credential));
             await RunAsync(services).ConfigureAwait(false);
         }
 
@@ -196,8 +193,7 @@ namespace TestFtpServer
                 .CreateScoped(DriveService.Scope.Drive, DriveService.Scope.DriveFile);
 
             var services = CreateServices(options)
-               .AddFtpServer(sb => Configure(sb, options).UseGoogleDrive(credential))
-               .AddSingleton<ISslStreamWrapperFactory, CustomSslStreamWrapperFactory>();
+               .AddFtpServer(sb => Configure(sb, options).UseGoogleDrive(credential));
             return RunAsync(services);
         }
 

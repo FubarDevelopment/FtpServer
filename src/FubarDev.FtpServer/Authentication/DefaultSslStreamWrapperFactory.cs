@@ -75,7 +75,11 @@ namespace FubarDev.FtpServer.Authentication
             Stream unencryptedStream,
             bool keepOpen)
         {
+#if USE_GNU_SSL_STREAM
+            return new GnuSslStream(unencryptedStream, keepOpen);
+#else
             return new SslStream(unencryptedStream, keepOpen);
+#endif
         }
     }
 }
