@@ -62,7 +62,7 @@ namespace TestFtpServer
                 { "p|port=", "Sets the listen port", v => options.Port = Convert.ToInt32(v) },
                 { "s|pasv=", "Sets the range for PASV ports, specify as FIRST:LAST", v =>
                     {
-                        var sPorts = v.Split(":", StringSplitOptions.RemoveEmptyEntries);
+                        var sPorts = v.Split(new[] { ':' }, StringSplitOptions.RemoveEmptyEntries);
 
                         if (sPorts.Length != 2)
                         {
