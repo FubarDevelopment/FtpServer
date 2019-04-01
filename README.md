@@ -9,6 +9,10 @@ abstract file system which allows e.g. Google Drive as backend.
 
 The library is released under the [![MIT license](https://img.shields.io/github/license/mashape/apistatus.svg)](http://opensource.org/licenses/MIT).
 
+# Support the development
+
+[![Patreon](https://img.shields.io/endpoint.svg?url=https:%2F%2Fshieldsio-patreon.herokuapp.com%2FFubarDevelopment&style=for-the-badge)](https://www.patreon.com/FubarDevelopment)
+
 # Prerequisites
 
 ## Compilation
