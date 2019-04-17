@@ -92,7 +92,7 @@ namespace FubarDev.FtpServer.BackgroundTransfer
             taskCompleted.ContinueWith(t => { }, TaskContinuationOptions.OnlyOnCanceled);
             taskCanceled.ContinueWith(t => { }, TaskContinuationOptions.OnlyOnCanceled);
 
-            return Task.Run<IFtpResponse>(
+            return Task.Run(
                 () =>
                 {
                     var tasks = new List<Task<IFtpResponse>> { taskCompleted, taskCanceled, taskFaulted };

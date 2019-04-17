@@ -5,7 +5,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading;
 using System.Threading.Tasks;
@@ -147,6 +146,11 @@ namespace FubarDev.FtpServer.Authentication
 
         private async Task<Stream> CreateSslStream(Stream unencryptedStream)
         {
+            if (_serverCertificate == null)
+            {
+                throw new InvalidOperationException(T("No server certificate configured."));
+            }
+
             var sslStream = await _sslStreamWrapperFactory.WrapStreamAsync(
                     unencryptedStream,
                     false,

@@ -20,7 +20,6 @@ namespace FubarDev.FtpServer.Authorization
         /// Resets the authorization mechanism.
         /// </summary>
         /// <param name="authenticationMechanism">The previously selected authentication mechanism.</param>
-        [NotNull]
         void Reset([CanBeNull] IAuthenticationMechanism authenticationMechanism);
 
         /// <summary>

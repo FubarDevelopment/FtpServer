@@ -75,15 +75,13 @@ namespace FubarDev.FtpServer
         }
 
         /// <inheritdoc />
-        [CanBeNull]
         public IAuthenticationMechanism SelectedAuthenticationMechanism => _selectedAuthenticationMechanism;
 
         /// <inheritdoc />
-        [CanBeNull]
         public IAuthorizationMechanism SelectedAuthorizationMechanism => _selectedAuthorizationMechanism;
 
         /// <inheritdoc />
-        protected override Task<IFtpResponse> ExecuteCommandAsync([NotNull] FtpCommand ftpCommand, CancellationToken cancellationToken = default)
+        protected override Task<IFtpResponse> ExecuteCommandAsync(FtpCommand ftpCommand, CancellationToken cancellationToken = default)
         {
             switch (ftpCommand.Name.Trim().ToUpperInvariant())
             {

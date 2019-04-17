@@ -44,7 +44,7 @@ namespace FubarDev.FtpServer
                 .ToLookup(x => x.Source)
                 .ToDictionary(x => x.Key, x => (IReadOnlyCollection<Transition>)x.ToList());
             Status = initialStatus;
-            SetStatus(initialStatus);
+            _possibleTransitions = GetPossibleTransitions(initialStatus);
         }
 
         /// <summary>
@@ -72,7 +72,7 @@ namespace FubarDev.FtpServer
         /// <param name="ftpCommand">The FTP command to execute.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>The task returning the response.</returns>
-        public async Task<IFtpResponse> ExecuteAsync([NotNull] FtpCommand ftpCommand, CancellationToken cancellationToken = default)
+        public async Task<IFtpResponse> ExecuteAsync(FtpCommand ftpCommand, CancellationToken cancellationToken = default)
         {
             var commandTransitions = _possibleTransitions
                 .Where(x => x.IsMatch(ftpCommand.Name))
@@ -124,14 +124,7 @@ namespace FubarDev.FtpServer
         /// <param name="status">The new status value.</param>
         protected void SetStatus(TStatus status)
         {
-            if (_transitions.TryGetValue(status, out var statusTransitions))
-            {
-                _possibleTransitions = statusTransitions;
-            }
-            else
-            {
-                _possibleTransitions = Array.Empty<Transition>();
-            }
+            _possibleTransitions = GetPossibleTransitions(status);
 
             var oldStatus = Status;
             Status = status;
@@ -140,6 +133,22 @@ namespace FubarDev.FtpServer
             {
                 OnStatusChanged(oldStatus, status);
             }
+        }
+
+        /// <summary>
+        /// Get all possible transitions for a given status.
+        /// </summary>
+        /// <param name="status">The status value to get the transitions for.</param>
+        /// <returns>The possible transitions for the given status.</returns>
+        [NotNull, ItemNotNull]
+        protected IReadOnlyCollection<Transition> GetPossibleTransitions(TStatus status)
+        {
+            if (_transitions.TryGetValue(status, out var statusTransitions))
+            {
+                return statusTransitions;
+            }
+
+            return Array.Empty<Transition>();
         }
 
         /// <summary>

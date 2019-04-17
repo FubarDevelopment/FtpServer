@@ -70,13 +70,13 @@ namespace FubarDev.FtpServer.CommandExtensions
                     return await SendBlstWithDataConnection(cancellationToken).ConfigureAwait(false);
                 case "control":
                 case "direct":
-                    return await SendBlstDirectly(cancellationToken).ConfigureAwait(false);
+                    return await SendBlstDirectly().ConfigureAwait(false);
                 default:
                     return new FtpResponse(501, T("Mode {0} not supported.", mode));
             }
         }
 
-        private Task<IFtpResponse> SendBlstDirectly(CancellationToken cancellationToken)
+        private Task<IFtpResponse> SendBlstDirectly()
         {
             var taskStates = _backgroundTransferWorker.GetStates();
             if (taskStates.Count == 0)

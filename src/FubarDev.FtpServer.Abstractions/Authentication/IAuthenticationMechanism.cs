@@ -17,7 +17,6 @@ namespace FubarDev.FtpServer.Authentication
         /// <summary>
         /// Resets the authentication mechanism.
         /// </summary>
-        [NotNull]
         void Reset();
 
         /// <summary>

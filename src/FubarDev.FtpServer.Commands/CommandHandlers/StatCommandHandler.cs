@@ -14,8 +14,6 @@ using FubarDev.FtpServer.ListFormatters;
 
 using JetBrains.Annotations;
 
-using Microsoft.Extensions.Logging;
-
 namespace FubarDev.FtpServer.CommandHandlers
 {
     /// <summary>

@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -177,13 +178,14 @@ namespace FubarDev.FtpServer
         [ItemCanBeNull]
         protected abstract Task<string> GetNextLineAsync(TStatus status, CancellationToken cancellationToken);
 
+        [DebuggerDisplay("Status store: Status = {Status}, IsFinished = {IsFinished}")]
         private class StatusStore
         {
             public TStatus Status { get; set; }
 
             public IEnumerator<string> Enumerator { get; set; }
 
-            public bool IsFinished { get; set; }
+            public bool IsFinished { private get; set; }
         }
     }
 }
