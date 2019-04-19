@@ -9,6 +9,8 @@ using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
 
+using JetBrains.Annotations;
+
 using Microsoft.Extensions.Logging;
 
 namespace FubarDev.FtpServer
@@ -19,6 +21,7 @@ namespace FubarDev.FtpServer
     public class PasvListenerFactory : IPasvListenerFactory
     {
         private readonly IPasvAddressResolver _addressResolver;
+        [CanBeNull]
         private readonly ILogger<PasvListenerFactory> _log;
         private readonly Random _prng = new Random();
         private readonly object _listenerLock = new object();
@@ -28,7 +31,7 @@ namespace FubarDev.FtpServer
         /// </summary>
         /// <param name="addressResolver">The address resolver for <c>PASV</c>/<c>EPSV</c>.</param>
         /// <param name="logger">Logger instance.</param>
-        public PasvListenerFactory(IPasvAddressResolver addressResolver, ILogger<PasvListenerFactory> logger)
+        public PasvListenerFactory(IPasvAddressResolver addressResolver, ILogger<PasvListenerFactory> logger = null)
         {
             _addressResolver = addressResolver;
             _log = logger;
@@ -92,14 +95,14 @@ namespace FubarDev.FtpServer
                         // retry if the socket is already in use, else throw the underlying exception
                         if (se.SocketErrorCode != SocketError.AddressAlreadyInUse)
                         {
-                            _log.LogError(se, "Could not create listener");
+                            _log?.LogError(se, "Could not create listener");
                             throw;
                         }
                     }
                 }
 
                 // if we reach this point, we have not been able to create a listener within range
-                _log.LogWarning("No free ports available for data connection");
+                _log?.LogWarning("No free ports available for data connection");
                 throw new SocketException((int)SocketError.AddressAlreadyInUse);
             }
         }
