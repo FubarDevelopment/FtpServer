@@ -23,9 +23,10 @@ namespace FubarDev.FtpServer.CommandHandlers
     /// </summary>
     public class RetrCommandHandler : FtpCommandHandler
     {
+        private const int BufferSize = 4096;
+
         [NotNull]
         private readonly ISslStreamWrapperFactory _sslStreamWrapperFactory;
-        private const int BufferSize = 4096;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RetrCommandHandler"/> class.
