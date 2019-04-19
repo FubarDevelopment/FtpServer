@@ -9,6 +9,8 @@ using System.Net;
 using System.Net.Sockets;
 using System.Threading.Tasks;
 
+using JetBrains.Annotations;
+
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
@@ -19,6 +21,7 @@ namespace FubarDev.FtpServer
     /// </summary>
     public class PasvListenerFactory : IPasvListenerFactory
     {
+        [CanBeNull]
         private readonly ILogger<PasvListenerFactory> _log;
 
         private readonly int _pasvMinPort;
@@ -33,7 +36,7 @@ namespace FubarDev.FtpServer
         /// </summary>
         /// <param name="serverOptions">FTPServer options.</param>
         /// <param name="logger">Logger instance.</param>
-        public PasvListenerFactory(IOptions<FtpServerOptions> serverOptions, ILogger<PasvListenerFactory> logger)
+        public PasvListenerFactory(IOptions<FtpServerOptions> serverOptions, ILogger<PasvListenerFactory> logger = null)
         {
             _log = logger;
             if (serverOptions.Value.PasvMinPort > 1023 &&
@@ -41,7 +44,7 @@ namespace FubarDev.FtpServer
             {
                 _pasvMinPort = serverOptions.Value.PasvMinPort;
                 _pasvMaxPort = serverOptions.Value.PasvMaxPort;
-                _log.LogInformation($"PASV port range set to {_pasvMinPort}:{_pasvMaxPort}");
+                _log?.LogInformation($"PASV port range set to {_pasvMinPort}:{_pasvMaxPort}");
                 _pasvPorts = Enumerable.Range(_pasvMinPort, _pasvMaxPort - _pasvMinPort + 1).ToArray();
             }
 
@@ -106,14 +109,14 @@ namespace FubarDev.FtpServer
                         // retry if the socket is already in use, else throw the underlying exception
                         if (se.SocketErrorCode != SocketError.AddressAlreadyInUse)
                         {
-                            _log.LogError(se, "Could not create listener");
+                            _log?.LogError(se, "Could not create listener");
                             throw;
                         }
                     }
                 }
 
                 // if we reach this point, we have not been able to create a listener within range
-                _log.LogWarning("No free ports available for data connection");
+                _log?.LogWarning("No free ports available for data connection");
                 throw new SocketException((int)SocketError.AddressAlreadyInUse);
             }
         }
