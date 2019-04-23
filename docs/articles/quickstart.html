@@ -8,7 +8,7 @@
     <title>Your first FTP server | FTP Server documentation </title>
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Your first FTP server | FTP Server documentation ">
-    <meta name="generator" content="docfx 2.40.7.0">
+    <meta name="generator" content="docfx 2.42.0.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -95,6 +95,16 @@ dotnet add package FubarDev.FtpServer.FileSystem.DotNet
 </code></pre>
 <h1 id="using-the-ftp-server">Using the FTP server</h1>
 <p>Change your <code>Program.cs</code> to the following code:</p>
+<div class="tabGroup" id="tabgroup_CeZOj-G++Q">
+<ul role="tablist">
+<li role="presentation">
+<a href="#tabpanel_CeZOj-G++Q_tabid-30" role="tab" aria-controls="tabpanel_CeZOj-G++Q_tabid-30" data-tab="tabid-30" tabindex="0" aria-selected="true">3.0</a>
+</li>
+<li role="presentation">
+<a href="#tabpanel_CeZOj-G++Q_tabid-2x" role="tab" aria-controls="tabpanel_CeZOj-G++Q_tabid-2x" data-tab="tabid-2x" tabindex="-1">2.x</a>
+</li>
+</ul>
+<section id="tabpanel_CeZOj-G++Q_tabid-30" role="tabpanel" data-tab="tabid-30">
 <pre><code class="lang-cs" name="Program.cs" title="The FTP server">using System;
 using System.IO;
 
@@ -144,7 +154,60 @@ namespace QuickStart
         }
     }
 }
-</code></pre><h1 id="starting-the-ftp-server">Starting the FTP server</h1>
+</code></pre></section>
+<section id="tabpanel_CeZOj-G++Q_tabid-2x" role="tabpanel" data-tab="tabid-2x" aria-hidden="true" hidden="hidden">
+<pre><code class="lang-cs" name="Program.cs" title="The FTP server">using System;
+using System.IO;
+
+using FubarDev.FtpServer;
+using FubarDev.FtpServer.FileSystem.DotNet;
+
+using Microsoft.Extensions.DependencyInjection;
+
+namespace QuickStart
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            // Setup dependency injection
+            var services = new ServiceCollection();
+
+            // use %TEMP%/TestFtpServer as root folder
+            services.Configure&lt;DotNetFileSystemOptions&gt;(opt =&gt; opt
+                .RootPath = Path.Combine(Path.GetTempPath(), &quot;TestFtpServer&quot;));
+
+            // Add FTP server services
+            // DotNetFileSystemProvider = Use the .NET file system functionality
+            // AnonymousMembershipProvider = allow only anonymous logins
+            services.AddFtpServer(builder =&gt; builder
+                .UseDotNetFileSystem() // Use the .NET file system functionality
+                .EnableAnonymousAuthentication()); // allow anonymous logins
+
+            // Configure the FTP server
+            services.Configure&lt;FtpServerOptions&gt;(opt =&gt; opt.ServerAddress = &quot;127.0.0.1&quot;);
+
+            // Build the service provider
+            using (var serviceProvider = services.BuildServiceProvider())
+            {
+                // Initialize the FTP server
+                var ftpServerHost = serviceProvider.GetRequiredService&lt;IFtpServer&gt;();
+
+                // Start the FTP server
+                ftpServerHost.Start();
+
+                Console.WriteLine(&quot;Press ENTER/RETURN to close the test application.&quot;);
+                Console.ReadLine();
+
+                // Stop the FTP server
+                ftpServerHost.Stop();
+            }
+        }
+    }
+}
+</code></pre></section>
+</div>
+<h1 id="starting-the-ftp-server">Starting the FTP server</h1>
 <pre><code class="lang-bash">dotnet run
 </code></pre>
 <p>Now your FTP server should be accessible at <code>127.0.0.1:21</code>.</p>

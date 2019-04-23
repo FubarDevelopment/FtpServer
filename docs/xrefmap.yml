@@ -7162,6 +7162,19 @@ references:
   fullName: FubarDev.FtpServer.FtpServer.FubarDev.FtpServer.IFtpService.StopAsync
   nameWithType: FtpServer.IFtpService.StopAsync
   nameWithType.vb: FtpServer.FubarDev.FtpServer.IFtpService.StopAsync
+- uid: FubarDev.FtpServer.FtpServer.MaxActiveConnections
+  name: MaxActiveConnections
+  href: api/FubarDev.FtpServer.FtpServer.html#FubarDev_FtpServer_FtpServer_MaxActiveConnections
+  commentId: P:FubarDev.FtpServer.FtpServer.MaxActiveConnections
+  fullName: FubarDev.FtpServer.FtpServer.MaxActiveConnections
+  nameWithType: FtpServer.MaxActiveConnections
+- uid: FubarDev.FtpServer.FtpServer.MaxActiveConnections*
+  name: MaxActiveConnections
+  href: api/FubarDev.FtpServer.FtpServer.html#FubarDev_FtpServer_FtpServer_MaxActiveConnections_
+  commentId: Overload:FubarDev.FtpServer.FtpServer.MaxActiveConnections
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.FtpServer.MaxActiveConnections
+  nameWithType: FtpServer.MaxActiveConnections
 - uid: FubarDev.FtpServer.FtpServer.Port
   name: Port
   href: api/FubarDev.FtpServer.FtpServer.html#FubarDev_FtpServer_FtpServer_Port
@@ -7287,6 +7300,19 @@ references:
   commentId: T:FubarDev.FtpServer.FtpServerOptions
   fullName: FubarDev.FtpServer.FtpServerOptions
   nameWithType: FtpServerOptions
+- uid: FubarDev.FtpServer.FtpServerOptions.MaxActiveConnections
+  name: MaxActiveConnections
+  href: api/FubarDev.FtpServer.FtpServerOptions.html#FubarDev_FtpServer_FtpServerOptions_MaxActiveConnections
+  commentId: P:FubarDev.FtpServer.FtpServerOptions.MaxActiveConnections
+  fullName: FubarDev.FtpServer.FtpServerOptions.MaxActiveConnections
+  nameWithType: FtpServerOptions.MaxActiveConnections
+- uid: FubarDev.FtpServer.FtpServerOptions.MaxActiveConnections*
+  name: MaxActiveConnections
+  href: api/FubarDev.FtpServer.FtpServerOptions.html#FubarDev_FtpServer_FtpServerOptions_MaxActiveConnections_
+  commentId: Overload:FubarDev.FtpServer.FtpServerOptions.MaxActiveConnections
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.FtpServerOptions.MaxActiveConnections
+  nameWithType: FtpServerOptions.MaxActiveConnections
 - uid: FubarDev.FtpServer.FtpServerOptions.PasvAddress
   name: PasvAddress
   href: api/FubarDev.FtpServer.FtpServerOptions.html#FubarDev_FtpServer_FtpServerOptions_PasvAddress
@@ -8067,6 +8093,19 @@ references:
   commentId: E:FubarDev.FtpServer.IFtpServer.ConfigureConnection
   fullName: FubarDev.FtpServer.IFtpServer.ConfigureConnection
   nameWithType: IFtpServer.ConfigureConnection
+- uid: FubarDev.FtpServer.IFtpServer.MaxActiveConnections
+  name: MaxActiveConnections
+  href: api/FubarDev.FtpServer.IFtpServer.html#FubarDev_FtpServer_IFtpServer_MaxActiveConnections
+  commentId: P:FubarDev.FtpServer.IFtpServer.MaxActiveConnections
+  fullName: FubarDev.FtpServer.IFtpServer.MaxActiveConnections
+  nameWithType: IFtpServer.MaxActiveConnections
+- uid: FubarDev.FtpServer.IFtpServer.MaxActiveConnections*
+  name: MaxActiveConnections
+  href: api/FubarDev.FtpServer.IFtpServer.html#FubarDev_FtpServer_IFtpServer_MaxActiveConnections_
+  commentId: Overload:FubarDev.FtpServer.IFtpServer.MaxActiveConnections
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.IFtpServer.MaxActiveConnections
+  nameWithType: IFtpServer.MaxActiveConnections
 - uid: FubarDev.FtpServer.IFtpServer.Port
   name: Port
   href: api/FubarDev.FtpServer.IFtpServer.html#FubarDev_FtpServer_IFtpServer_Port

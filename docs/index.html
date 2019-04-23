@@ -8,7 +8,7 @@
     <title>FTP Server | FTP Server documentation </title>
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="FTP Server | FTP Server documentation ">
-    <meta name="generator" content="docfx 2.40.7.0">
+    <meta name="generator" content="docfx 2.42.0.0">
     
     <link rel="shortcut icon" href="favicon.ico">
     <link rel="stylesheet" href="styles/docfx.vendor.css">
@@ -81,7 +81,8 @@
 </ul>
 <h2 id="getting-started">Getting started</h2>
 <p>There is a <a class="xref" href="articles/quickstart.html">quickstart tutorial</a> available.</p>
-<h2 id="what-does-it-look-like">What does it look like?</h2>
+<h2 id="what-does-it-look-like-2x">What does it look like? (2.x)</h2>
+<p>Head over to the <a class="xref" href="articles/quickstart.html">quickstart tutorial</a> to see an example for the FTP server v3.0 (unreleased).</p>
 <pre><code class="lang-cs" name="Program.cs" title="Main program code">// Setup dependency injection
 var services = new ServiceCollection();
 
@@ -103,16 +104,16 @@ services.Configure&lt;FtpServerOptions&gt;(opt =&gt; opt.ServerAddress = &quot;1
 using (var serviceProvider = services.BuildServiceProvider())
 {
     // Initialize the FTP server
-    var ftpServerHost = serviceProvider.GetRequiredService&lt;IFtpServerHost&gt;();
+    var ftpServerHost = serviceProvider.GetRequiredService&lt;IFtpServer&gt;();
 
     // Start the FTP server
-    ftpServerHost.StartAsync().Wait();
+    ftpServerHost.Start();
 
     Console.WriteLine(&quot;Press ENTER/RETURN to close the test application.&quot;);
     Console.ReadLine();
 
     // Stop the FTP server
-    ftpServerHost.StopAsync().Wait();
+    ftpServerHost.Stop();
 }
 </code></pre><h2 id="further-information">Further Information</h2>
 <p>You find more information on the <a href="articles/intro.html">articles overview</a>.</p>
