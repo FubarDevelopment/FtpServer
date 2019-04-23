@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Namespace FubarDev.FtpServer
    | FTP Server documentation ">
-    <meta name="generator" content="docfx 2.40.7.0">
+    <meta name="generator" content="docfx 2.42.0.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -120,8 +120,20 @@
       <h4><a class="xref" href="FubarDev.FtpServer.FtpConnectionOptions.html">FtpConnectionOptions</a></h4>
       <section><p>Options for the FTP connection.</p>
 </section>
+      <h4><a class="xref" href="FubarDev.FtpServer.FtpLoginStateMachine.html">FtpLoginStateMachine</a></h4>
+      <section><p>A state machine for FTP logins.</p>
+</section>
       <h4><a class="xref" href="FubarDev.FtpServer.FtpResponse.html">FtpResponse</a></h4>
       <section><p>FTP response.</p>
+</section>
+      <h4><a class="xref" href="FubarDev.FtpServer.FtpResponseLine.html">FtpResponseLine</a></h4>
+      <section><p>Information about a line to be sent to the client.</p>
+</section>
+      <h4><a class="xref" href="FubarDev.FtpServer.FtpResponseList.html">FtpResponseList</a></h4>
+      <section><p>An FTP response for lists.</p>
+</section>
+      <h4><a class="xref" href="FubarDev.FtpServer.FtpResponseList-1.html">FtpResponseList&lt;TStatus&gt;</a></h4>
+      <section><p>Base class for FTP response lists.</p>
 </section>
       <h4><a class="xref" href="FubarDev.FtpServer.FtpServer.html">FtpServer</a></h4>
       <section><p>The portable FTP server.</p>
@@ -138,6 +150,12 @@
       <h4><a class="xref" href="FubarDev.FtpServer.FtpServerStatistics.html">FtpServerStatistics</a></h4>
       <section><p>Statistics about the FTP server.</p>
 </section>
+      <h4><a class="xref" href="FubarDev.FtpServer.FtpStateMachine-1.html">FtpStateMachine&lt;TStatus&gt;</a></h4>
+      <section><p>A base class for a state machine that's triggered by FTP commands.</p>
+</section>
+      <h4><a class="xref" href="FubarDev.FtpServer.FtpStateMachine-1.Transition.html">FtpStateMachine&lt;TStatus&gt;.Transition</a></h4>
+      <section><p>A class representing a transition.</p>
+</section>
       <h4><a class="xref" href="FubarDev.FtpServer.FtpTransferMode.html">FtpTransferMode</a></h4>
       <section><p>FTP transfer mode (RFC 959, 3.4.).</p>
 </section>
@@ -146,6 +164,9 @@
 </section>
       <h4><a class="xref" href="FubarDev.FtpServer.GoogleDriveFtpServerBuilderExtensions.html">GoogleDriveFtpServerBuilderExtensions</a></h4>
       <section><p>Extension methods for <a class="xref" href="FubarDev.FtpServer.IFtpServerBuilder.html">IFtpServerBuilder</a>.</p>
+</section>
+      <h4><a class="xref" href="FubarDev.FtpServer.HostInfo.html">HostInfo</a></h4>
+      <section><p>Record for a host name/address.</p>
 </section>
       <h4><a class="xref" href="FubarDev.FtpServer.InMemoryFtpServerBuilderExtensions.html">InMemoryFtpServerBuilderExtensions</a></h4>
       <section><p>Extension methods for <a class="xref" href="FubarDev.FtpServer.IFtpServerBuilder.html">IFtpServerBuilder</a>.</p>
@@ -159,8 +180,20 @@
       <h4><a class="xref" href="FubarDev.FtpServer.PasvListenerFactory.html">PasvListenerFactory</a></h4>
       <section><p>Creates TcpListeners for use with PASV commands.</p>
 </section>
+      <h4><a class="xref" href="FubarDev.FtpServer.PasvListenerOptions.html">PasvListenerOptions</a></h4>
+      <section><p>IP address and port range to be used by the <code>PASV</code>/<code>EPSV</code> commands.</p>
+</section>
       <h4><a class="xref" href="FubarDev.FtpServer.PermissionsExtensions.html">PermissionsExtensions</a></h4>
       <section><p>Extension methods for <a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixPermissions.html">IUnixPermissions</a>.</p>
+</section>
+      <h4><a class="xref" href="FubarDev.FtpServer.SimplePasvAddressResolver.html">SimplePasvAddressResolver</a></h4>
+      <section><p>The default implementation of the <a class="xref" href="FubarDev.FtpServer.SimplePasvAddressResolver.html">SimplePasvAddressResolver</a>.</p>
+</section>
+      <h4><a class="xref" href="FubarDev.FtpServer.SimplePasvOptions.html">SimplePasvOptions</a></h4>
+      <section><p>Options for the <a class="xref" href="FubarDev.FtpServer.SimplePasvAddressResolver.html">SimplePasvAddressResolver</a>.</p>
+</section>
+      <h4><a class="xref" href="FubarDev.FtpServer.SingleFtpHostSelector.html">SingleFtpHostSelector</a></h4>
+      <section><p>A simple implementation of the <a class="xref" href="FubarDev.FtpServer.IFtpHostSelector.html">IFtpHostSelector</a> interface.</p>
 </section>
       <h4><a class="xref" href="FubarDev.FtpServer.SystCommandOptions.html">SystCommandOptions</a></h4>
       <section><p>Options for the SYST command.</p>
@@ -178,6 +211,9 @@
 </section>
       <h4><a class="xref" href="FubarDev.FtpServer.IBackgroundCommandHandler.html">IBackgroundCommandHandler</a></h4>
       <section><p>Interface for asynchronous processing of an FTP command.</p>
+</section>
+      <h4><a class="xref" href="FubarDev.FtpServer.IFeatureHost.html">IFeatureHost</a></h4>
+      <section><p>Interface for something that may host FTP features.</p>
 </section>
       <h4><a class="xref" href="FubarDev.FtpServer.IFeatureInfo.html">IFeatureInfo</a></h4>
       <section><p>Defines a feature and its handler.</p>
@@ -197,6 +233,18 @@
       <h4><a class="xref" href="FubarDev.FtpServer.IFtpConnectionAccessor.html">IFtpConnectionAccessor</a></h4>
       <section><p>Accessor to get/set the current (scoped) FTP connection.</p>
 </section>
+      <h4><a class="xref" href="FubarDev.FtpServer.IFtpHost.html">IFtpHost</a></h4>
+      <section><p>Information about an FTP host.</p>
+</section>
+      <h4><a class="xref" href="FubarDev.FtpServer.IFtpHostSelector.html">IFtpHostSelector</a></h4>
+      <section><p>Interface to select an FTP host or get the selected FTP host.</p>
+</section>
+      <h4><a class="xref" href="FubarDev.FtpServer.IFtpLoginStateMachine.html">IFtpLoginStateMachine</a></h4>
+      <section><p>Interface for a FTP login state machine.</p>
+</section>
+      <h4><a class="xref" href="FubarDev.FtpServer.IFtpResponse.html">IFtpResponse</a></h4>
+      <section><p>Base interface to get the response for an FTP command.</p>
+</section>
       <h4><a class="xref" href="FubarDev.FtpServer.IFtpServer.html">IFtpServer</a></h4>
       <section><p>The interface that must be implemented by the FTP server.</p>
 </section>
@@ -212,8 +260,14 @@
       <h4><a class="xref" href="FubarDev.FtpServer.IFtpService.html">IFtpService</a></h4>
       <section><p>Defines methods for services required to run the FTP server.</p>
 </section>
+      <h4><a class="xref" href="FubarDev.FtpServer.IFtpStateMachine-1.html">IFtpStateMachine&lt;TStatus&gt;</a></h4>
+      <section><p>Interface for a state machine for the FTP server.</p>
+</section>
       <h4><a class="xref" href="FubarDev.FtpServer.IListFormatter.html">IListFormatter</a></h4>
       <section><p>Interface that provides the text to output for the <code>LIST</code> and <code>NLST</code> commands.</p>
+</section>
+      <h4><a class="xref" href="FubarDev.FtpServer.IPasvAddressResolver.html">IPasvAddressResolver</a></h4>
+      <section><p>Interface to get the options for the <code>PASV</code>/<code>EPSV</code> commands.</p>
 </section>
       <h4><a class="xref" href="FubarDev.FtpServer.IPasvListener.html">IPasvListener</a></h4>
       <section><p>Wraps a TCPListener so we can easily use it in our commands that require a passive data connection.</p>
@@ -223,11 +277,20 @@
 </section>
     <h3 id="enums">Enums
   </h3>
+      <h4><a class="xref" href="FubarDev.FtpServer.ConnectionStatus.html">ConnectionStatus</a></h4>
+      <section><p>The status of the current connection.</p>
+</section>
       <h4><a class="xref" href="FubarDev.FtpServer.FtpFileType.html">FtpFileType</a></h4>
       <section><p>FTP data type (3.1.1).</p>
 </section>
       <h4><a class="xref" href="FubarDev.FtpServer.FtpFileTypeInterpreterMode.html">FtpFileTypeInterpreterMode</a></h4>
       <section><p>Format control (RFC 959 chapter 3.1.1.5).</p>
+</section>
+      <h4><a class="xref" href="FubarDev.FtpServer.SecurityActionResult.html">SecurityActionResult</a></h4>
+      <section><p>Default status codes for the FTP security extensions according to RFC 2228.</p>
+</section>
+      <h4><a class="xref" href="FubarDev.FtpServer.SecurityStatus.html">SecurityStatus</a></h4>
+      <section><p>The states of the FTP login state machine.</p>
 </section>
     <h3 id="delegates">Delegates
   </h3>

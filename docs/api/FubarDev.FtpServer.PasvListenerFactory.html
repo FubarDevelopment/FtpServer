@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Class PasvListenerFactory
    | FTP Server documentation ">
-    <meta name="generator" content="docfx 2.40.7.0">
+    <meta name="generator" content="docfx 2.42.0.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -129,19 +129,19 @@
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_PasvListenerFactory__ctor_Microsoft_Extensions_Options_IOptions_FubarDev_FtpServer_FtpServerOptions__Microsoft_Extensions_Logging_ILogger_FubarDev_FtpServer_PasvListenerFactory__.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.PasvListenerFactory.%23ctor(Microsoft.Extensions.Options.IOptions%7BFubarDev.FtpServer.FtpServerOptions%7D%2CMicrosoft.Extensions.Logging.ILogger%7BFubarDev.FtpServer.PasvListenerFactory%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_PasvListenerFactory__ctor_FubarDev_FtpServer_IPasvAddressResolver_Microsoft_Extensions_Logging_ILogger_FubarDev_FtpServer_PasvListenerFactory__.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.PasvListenerFactory.%23ctor(FubarDev.FtpServer.IPasvAddressResolver%2CMicrosoft.Extensions.Logging.ILogger%7BFubarDev.FtpServer.PasvListenerFactory%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/FubarDevelopment/FtpServer/blob/master/src/FubarDev.FtpServer/PasvListenerFactory.cs/#L36">View Source</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer/PasvListenerFactory.cs/#L34">View Source</a>
   </span>
   <a id="FubarDev_FtpServer_PasvListenerFactory__ctor_" data-uid="FubarDev.FtpServer.PasvListenerFactory.#ctor*"></a>
-  <h4 id="FubarDev_FtpServer_PasvListenerFactory__ctor_Microsoft_Extensions_Options_IOptions_FubarDev_FtpServer_FtpServerOptions__Microsoft_Extensions_Logging_ILogger_FubarDev_FtpServer_PasvListenerFactory__" data-uid="FubarDev.FtpServer.PasvListenerFactory.#ctor(Microsoft.Extensions.Options.IOptions{FubarDev.FtpServer.FtpServerOptions},Microsoft.Extensions.Logging.ILogger{FubarDev.FtpServer.PasvListenerFactory})">PasvListenerFactory(IOptions&lt;FtpServerOptions&gt;, ILogger&lt;PasvListenerFactory&gt;)</h4>
+  <h4 id="FubarDev_FtpServer_PasvListenerFactory__ctor_FubarDev_FtpServer_IPasvAddressResolver_Microsoft_Extensions_Logging_ILogger_FubarDev_FtpServer_PasvListenerFactory__" data-uid="FubarDev.FtpServer.PasvListenerFactory.#ctor(FubarDev.FtpServer.IPasvAddressResolver,Microsoft.Extensions.Logging.ILogger{FubarDev.FtpServer.PasvListenerFactory})">PasvListenerFactory(IPasvAddressResolver, ILogger&lt;PasvListenerFactory&gt;)</h4>
   <div class="markdown level1 summary"><p>Initializes a new instance of the <a class="xref" href="FubarDev.FtpServer.PasvListenerFactory.html">PasvListenerFactory</a> class.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public PasvListenerFactory(IOptions&lt;FtpServerOptions&gt; serverOptions, ILogger&lt;PasvListenerFactory&gt; logger)</code></pre>
+    <pre><code class="lang-csharp hljs">public PasvListenerFactory(IPasvAddressResolver addressResolver, ILogger&lt;PasvListenerFactory&gt; logger = null)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -154,9 +154,9 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/microsoft.extensions.options.ioptions-1">IOptions</a>&lt;<a class="xref" href="FubarDev.FtpServer.FtpServerOptions.html">FtpServerOptions</a>&gt;</td>
-        <td><span class="parametername">serverOptions</span></td>
-        <td><p>FTPServer options.</p>
+        <td><a class="xref" href="FubarDev.FtpServer.IPasvAddressResolver.html">IPasvAddressResolver</a></td>
+        <td><span class="parametername">addressResolver</span></td>
+        <td><p>The address resolver for <code>PASV</code>/<code>EPSV</code>.</p>
 </td>
       </tr>
       <tr>
@@ -167,57 +167,23 @@
       </tr>
     </tbody>
   </table>
-  <h3 id="properties">Properties
-  </h3>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_PasvListenerFactory_PasvExternalAddress.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.PasvListenerFactory.PasvExternalAddress%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/FubarDevelopment/FtpServer/blob/master/src/FubarDev.FtpServer/PasvListenerFactory.cs/#L57">View Source</a>
-  </span>
-  <a id="FubarDev_FtpServer_PasvListenerFactory_PasvExternalAddress_" data-uid="FubarDev.FtpServer.PasvListenerFactory.PasvExternalAddress*"></a>
-  <h4 id="FubarDev_FtpServer_PasvListenerFactory_PasvExternalAddress" data-uid="FubarDev.FtpServer.PasvListenerFactory.PasvExternalAddress">PasvExternalAddress</h4>
-  <div class="markdown level1 summary"><p>Gets the IP address where clients should direct PASV connection attempts. If null, the control connection
-interface's IP is used.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">protected IPAddress PasvExternalAddress { get; }</code></pre>
-  </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.net.ipaddress">IPAddress</a></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
   <h3 id="methods">Methods
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_PasvListenerFactory_CreateTcpListener_FubarDev_FtpServer_IFtpConnection_System_Int32_.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.PasvListenerFactory.CreateTcpListener(FubarDev.FtpServer.IFtpConnection%2CSystem.Int32)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_PasvListenerFactory_CreateTcpListenerAsync_FubarDev_FtpServer_IFtpConnection_System_Int32_System_Threading_CancellationToken_.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.PasvListenerFactory.CreateTcpListenerAsync(FubarDev.FtpServer.IFtpConnection%2CSystem.Int32%2CSystem.Threading.CancellationToken)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/FubarDevelopment/FtpServer/blob/master/src/FubarDev.FtpServer/PasvListenerFactory.cs/#L60">View Source</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer/PasvListenerFactory.cs/#L41">View Source</a>
   </span>
-  <a id="FubarDev_FtpServer_PasvListenerFactory_CreateTcpListener_" data-uid="FubarDev.FtpServer.PasvListenerFactory.CreateTcpListener*"></a>
-  <h4 id="FubarDev_FtpServer_PasvListenerFactory_CreateTcpListener_FubarDev_FtpServer_IFtpConnection_System_Int32_" data-uid="FubarDev.FtpServer.PasvListenerFactory.CreateTcpListener(FubarDev.FtpServer.IFtpConnection,System.Int32)">CreateTcpListener(IFtpConnection, Int32)</h4>
+  <a id="FubarDev_FtpServer_PasvListenerFactory_CreateTcpListenerAsync_" data-uid="FubarDev.FtpServer.PasvListenerFactory.CreateTcpListenerAsync*"></a>
+  <h4 id="FubarDev_FtpServer_PasvListenerFactory_CreateTcpListenerAsync_FubarDev_FtpServer_IFtpConnection_System_Int32_System_Threading_CancellationToken_" data-uid="FubarDev.FtpServer.PasvListenerFactory.CreateTcpListenerAsync(FubarDev.FtpServer.IFtpConnection,System.Int32,System.Threading.CancellationToken)">CreateTcpListenerAsync(IFtpConnection, Int32, CancellationToken)</h4>
   <div class="markdown level1 summary"><p>Create a new TcpListener for the given connection.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Task&lt;IPasvListener&gt; CreateTcpListener(IFtpConnection connection, int port)</code></pre>
+    <pre><code class="lang-csharp hljs">public Task&lt;IPasvListener&gt; CreateTcpListenerAsync(IFtpConnection connection, int port, CancellationToken cancellationToken)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -239,6 +205,12 @@ interface's IP is used.</p>
         <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.int32">Int32</a></td>
         <td><span class="parametername">port</span></td>
         <td><p>listen on the given port, or 0 for any port.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.threading.cancellationtoken">CancellationToken</a></td>
+        <td><span class="parametername">cancellationToken</span></td>
+        <td><p>The cancellation token.</p>
 </td>
       </tr>
     </tbody>
@@ -295,7 +267,7 @@ interface's IP is used.</p>
                     <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_PasvListenerFactory.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.PasvListenerFactory%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/FubarDevelopment/FtpServer/blob/master/src/FubarDev.FtpServer/PasvListenerFactory.cs/#L20" class="contribution-link">View Source</a>
+                    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer/PasvListenerFactory.cs/#L21" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>
