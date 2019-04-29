@@ -140,7 +140,8 @@ namespace FubarDev.FtpServer
         /// </summary>
         /// <param name="status">The status value to get the transitions for.</param>
         /// <returns>The possible transitions for the given status.</returns>
-        [NotNull, ItemNotNull]
+        [NotNull]
+        [ItemNotNull]
         protected IReadOnlyCollection<Transition> GetPossibleTransitions(TStatus status)
         {
             if (_transitions.TryGetValue(status, out var statusTransitions))

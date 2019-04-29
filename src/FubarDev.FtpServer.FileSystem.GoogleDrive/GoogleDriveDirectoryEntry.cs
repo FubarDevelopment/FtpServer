@@ -13,7 +13,7 @@ using JetBrains.Annotations;
 namespace FubarDev.FtpServer.FileSystem.GoogleDrive
 {
    /// <summary>
-    /// Implementatio of <see cref="IUnixDirectoryEntry"/> for Google Drive.
+    /// Implementation of <see cref="IUnixDirectoryEntry"/> for Google Drive.
     /// </summary>
     internal class GoogleDriveDirectoryEntry : IUnixDirectoryEntry
     {
