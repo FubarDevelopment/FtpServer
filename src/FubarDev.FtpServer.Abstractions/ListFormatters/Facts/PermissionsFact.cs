@@ -20,9 +20,10 @@ namespace FubarDev.FtpServer.ListFormatters.Facts
         /// Initializes a new instance of the <see cref="PermissionsFact"/> class.
         /// </summary>
         /// <param name="user">The current user.</param>
+        /// <param name="fileSystem">The current file system of the given <see cref="entry"/>.</param>
         /// <param name="dir">The current directory.</param>
         /// <param name="entry">The file to create the permissions for.</param>
-        public PermissionsFact([NotNull] IFtpUser user, [NotNull] IUnixDirectoryEntry dir, [NotNull] IUnixFileEntry entry)
+        public PermissionsFact([NotNull] IFtpUser user, [NotNull] IUnixFileSystem fileSystem, [NotNull] IUnixDirectoryEntry dir, [NotNull] IUnixFileEntry entry)
         {
             var values = new StringBuilder();
             var entryPerm = entry.Permissions.GetAccessModeFor(entry, user);
@@ -32,7 +33,7 @@ namespace FubarDev.FtpServer.ListFormatters.Facts
                 values.Append('c');
                 if (entryPerm.Write)
                 {
-                    if (entry.FileSystem.SupportsAppend)
+                    if (fileSystem.SupportsAppend)
                     {
                         values.Append('a');
                     }

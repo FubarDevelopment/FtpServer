@@ -18,17 +18,14 @@ namespace FubarDev.FtpServer.FileSystem.InMemory
         /// <summary>
         /// Initializes a new instance of the <see cref="InMemoryFileSystemEntry"/> class.
         /// </summary>
-        /// <param name="fileSystem">The file system this entry belongs to.</param>
         /// <param name="parent">The parent entry.</param>
         /// <param name="name">The name of this entry.</param>
         /// <param name="permissions">The permissions of this entry.</param>
         protected InMemoryFileSystemEntry(
-            IUnixFileSystem fileSystem,
             InMemoryDirectoryEntry parent,
             string name,
             IUnixPermissions permissions)
         {
-            FileSystem = fileSystem;
             Name = name;
             Permissions = permissions;
             Parent = parent;
@@ -57,9 +54,6 @@ namespace FubarDev.FtpServer.FileSystem.InMemory
 
         /// <inheritdoc />
         public long NumberOfLinks { get; } = 1;
-
-        /// <inheritdoc />
-        public IUnixFileSystem FileSystem { get; }
 
         /// <summary>
         /// Gets or sets the parent entry.

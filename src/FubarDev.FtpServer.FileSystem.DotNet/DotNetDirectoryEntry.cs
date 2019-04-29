@@ -18,15 +18,18 @@ namespace FubarDev.FtpServer.FileSystem.DotNet
     /// </summary>
     public class DotNetDirectoryEntry : DotNetFileSystemEntry, IUnixDirectoryEntry
     {
+        private readonly bool _allowDeleteIfNotEmpty;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="DotNetDirectoryEntry"/> class.
         /// </summary>
-        /// <param name="fileSystem">The file system this entry belongs to.</param>
         /// <param name="dirInfo">The <see cref="DirectoryInfo"/> to extract the information from.</param>
         /// <param name="isRoot">Defines whether this the root directory.</param>
-        public DotNetDirectoryEntry([NotNull] DotNetFileSystem fileSystem, [NotNull] DirectoryInfo dirInfo, bool isRoot)
-            : base(fileSystem, dirInfo)
+        /// <param name="allowDeleteIfNotEmpty">Is deletion of this directory allowed if it's not empty.</param>
+        public DotNetDirectoryEntry([NotNull] DirectoryInfo dirInfo, bool isRoot, bool allowDeleteIfNotEmpty)
+            : base(dirInfo)
         {
+            _allowDeleteIfNotEmpty = allowDeleteIfNotEmpty;
             IsRoot = isRoot;
             DirectoryInfo = dirInfo;
         }
@@ -40,6 +43,6 @@ namespace FubarDev.FtpServer.FileSystem.DotNet
         public bool IsRoot { get; }
 
         /// <inheritdoc/>
-        public bool IsDeletable => !IsRoot && (FileSystem.SupportsNonEmptyDirectoryDelete || !DirectoryInfo.EnumerateFileSystemInfos().Any());
+        public bool IsDeletable => !IsRoot && (_allowDeleteIfNotEmpty || !DirectoryInfo.EnumerateFileSystemInfos().Any());
     }
 }

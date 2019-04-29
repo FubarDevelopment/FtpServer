@@ -20,17 +20,14 @@ namespace FubarDev.FtpServer.FileSystem.GoogleDrive
         /// <summary>
         /// Initializes a new instance of the <see cref="GoogleDriveFileEntry"/> class.
         /// </summary>
-        /// <param name="fileSystem">The file system this entry belongs to.</param>
         /// <param name="file">The underlying model.</param>
         /// <param name="fullName">The full path and file name of this entry.</param>
         /// <param name="fileSize">The file size (if it differs from the one in the model).</param>
         public GoogleDriveFileEntry(
-            [NotNull] IUnixFileSystem fileSystem,
             [NotNull] File file,
             [NotNull] string fullName,
             long? fileSize = null)
         {
-            FileSystem = fileSystem;
             File = file;
             Permissions = new GenericUnixPermissions(
                 new GenericAccessMode(true, true, false),
@@ -65,9 +62,6 @@ namespace FubarDev.FtpServer.FileSystem.GoogleDrive
 
         /// <inheritdoc/>
         public long NumberOfLinks { get; }
-
-        /// <inheritdoc/>
-        public IUnixFileSystem FileSystem { get; }
 
         /// <inheritdoc/>
         public string Owner => "owner";

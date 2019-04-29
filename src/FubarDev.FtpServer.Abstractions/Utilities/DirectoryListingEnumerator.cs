@@ -35,6 +35,7 @@ namespace FubarDev.FtpServer.Utilities
         /// <param name="returnDotEntries"><code>true</code> when this enumerator should return the dot entries.</param>
         public DirectoryListingEnumerator(IEnumerable<IUnixFileSystemEntry> entries, IUnixFileSystem fileSystem, Stack<IUnixDirectoryEntry> pathEntries, bool returnDotEntries)
         {
+            FileSystem = fileSystem;
             _pathEntries = pathEntries;
 
             var topPathEntries = pathEntries.Take(3).ToList();
@@ -76,6 +77,12 @@ namespace FubarDev.FtpServer.Utilities
             _dotEntriesEnumerator = dotEntries.GetEnumerator();
             _entriesEnumerator = entries.GetEnumerator();
         }
+
+        /// <summary>
+        /// Gets the file system of the entries to be enumerated.
+        /// </summary>
+        [NotNull]
+        public IUnixFileSystem FileSystem { get; }
 
         /// <summary>
         /// Gets the current directory.

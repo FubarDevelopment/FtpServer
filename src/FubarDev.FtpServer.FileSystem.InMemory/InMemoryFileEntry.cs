@@ -19,16 +19,14 @@ namespace FubarDev.FtpServer.FileSystem.InMemory
         /// <summary>
         /// Initializes a new instance of the <see cref="InMemoryFileEntry"/> class.
         /// </summary>
-        /// <param name="fileSystem">The file system this entry belongs to.</param>
         /// <param name="parent">The parent entry.</param>
         /// <param name="name">The name of this entry.</param>
         /// <param name="data">The file data.</param>
         public InMemoryFileEntry(
-            IUnixFileSystem fileSystem,
             InMemoryDirectoryEntry parent,
             string name,
             byte[] data)
-            : base(fileSystem, parent, name, _defaultPermissions)
+            : base(parent, name, _defaultPermissions)
         {
             Data = data;
         }

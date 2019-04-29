@@ -47,7 +47,7 @@ namespace FubarDev.FtpServer.FileSystem.DotNet
         public DotNetFileSystem(string rootPath, bool allowNonEmptyDirectoryDelete, int streamBufferSize)
         {
             FileSystemEntryComparer = StringComparer.OrdinalIgnoreCase;
-            Root = new DotNetDirectoryEntry(this, Directory.CreateDirectory(rootPath), true);
+            Root = new DotNetDirectoryEntry(Directory.CreateDirectory(rootPath), true, allowNonEmptyDirectoryDelete);
             SupportsNonEmptyDirectoryDelete = allowNonEmptyDirectoryDelete;
             _streamBufferSize = streamBufferSize;
         }
@@ -73,13 +73,13 @@ namespace FubarDev.FtpServer.FileSystem.DotNet
             {
                 if (info is DirectoryInfo dirInfo)
                 {
-                    result.Add(new DotNetDirectoryEntry(this, dirInfo, false));
+                    result.Add(new DotNetDirectoryEntry(dirInfo, false, SupportsNonEmptyDirectoryDelete));
                 }
                 else
                 {
                     if (info is FileInfo fileInfo)
                     {
-                        result.Add(new DotNetFileEntry(this, fileInfo));
+                        result.Add(new DotNetFileEntry(fileInfo));
                     }
                 }
             }
@@ -94,11 +94,11 @@ namespace FubarDev.FtpServer.FileSystem.DotNet
             IUnixFileSystemEntry result;
             if (File.Exists(fullPath))
             {
-                result = new DotNetFileEntry(this, new FileInfo(fullPath));
+                result = new DotNetFileEntry(new FileInfo(fullPath));
             }
             else if (Directory.Exists(fullPath))
             {
-                result = new DotNetDirectoryEntry(this, new DirectoryInfo(fullPath), false);
+                result = new DotNetDirectoryEntry(new DirectoryInfo(fullPath), false, SupportsNonEmptyDirectoryDelete);
             }
             else
             {
@@ -117,12 +117,12 @@ namespace FubarDev.FtpServer.FileSystem.DotNet
             if (source is DotNetFileEntry sourceFileEntry)
             {
                 sourceFileEntry.FileInfo.MoveTo(targetName);
-                return Task.FromResult<IUnixFileSystemEntry>(new DotNetFileEntry(this, new FileInfo(targetName)));
+                return Task.FromResult<IUnixFileSystemEntry>(new DotNetFileEntry(new FileInfo(targetName)));
             }
 
             var sourceDirEntry = (DotNetDirectoryEntry)source;
             sourceDirEntry.DirectoryInfo.MoveTo(targetName);
-            return Task.FromResult<IUnixFileSystemEntry>(new DotNetDirectoryEntry(this, new DirectoryInfo(targetName), false));
+            return Task.FromResult<IUnixFileSystemEntry>(new DotNetDirectoryEntry(new DirectoryInfo(targetName), false, SupportsNonEmptyDirectoryDelete));
         }
 
         /// <inheritdoc/>
@@ -146,7 +146,7 @@ namespace FubarDev.FtpServer.FileSystem.DotNet
         {
             var targetEntry = (DotNetDirectoryEntry)targetDirectory;
             var newDirInfo = targetEntry.DirectoryInfo.CreateSubdirectory(directoryName);
-            return Task.FromResult<IUnixDirectoryEntry>(new DotNetDirectoryEntry(this, newDirInfo, false));
+            return Task.FromResult<IUnixDirectoryEntry>(new DotNetDirectoryEntry(newDirInfo, false, SupportsNonEmptyDirectoryDelete));
         }
 
         /// <inheritdoc/>
@@ -236,10 +236,10 @@ namespace FubarDev.FtpServer.FileSystem.DotNet
 
             if (entry is DotNetDirectoryEntry dirEntry)
             {
-                return Task.FromResult<IUnixFileSystemEntry>(new DotNetDirectoryEntry(this, (DirectoryInfo)item, dirEntry.IsRoot));
+                return Task.FromResult<IUnixFileSystemEntry>(new DotNetDirectoryEntry((DirectoryInfo)item, dirEntry.IsRoot, SupportsNonEmptyDirectoryDelete));
             }
 
-            return Task.FromResult<IUnixFileSystemEntry>(new DotNetFileEntry(this, (FileInfo)item));
+            return Task.FromResult<IUnixFileSystemEntry>(new DotNetFileEntry((FileInfo)item));
         }
     }
 }

@@ -61,7 +61,7 @@ namespace FubarDev.FtpServer.ListFormatters
                         return BuildLine(BuildFacts(currentDirEntry, dirEntry, new TypeFact(dirEntry)), dirEntry.IsRoot ? string.Empty : name ?? entry.Name);
                     }
 
-                    return BuildLine(BuildFacts(currentDirEntry, (IUnixFileEntry)entry), name ?? entry.Name);
+                    return BuildLine(BuildFacts(_enumerator.FileSystem, currentDirEntry, (IUnixFileEntry)entry), name ?? entry.Name);
                 }
             }
         }
@@ -115,11 +115,11 @@ namespace FubarDev.FtpServer.ListFormatters
         }
 
         [NotNull]
-        private IReadOnlyList<IFact> BuildFacts([NotNull] IUnixDirectoryEntry directoryEntry, [NotNull] IUnixFileEntry entry)
+        private IReadOnlyList<IFact> BuildFacts([NotNull] IUnixFileSystem fileSystem, [NotNull] IUnixDirectoryEntry directoryEntry, [NotNull] IUnixFileEntry entry)
         {
             var result = new List<IFact>()
             {
-                new PermissionsFact(_user, directoryEntry, entry),
+                new PermissionsFact(_user, fileSystem, directoryEntry, entry),
                 new SizeFact(entry.Size),
                 new TypeFact(entry),
             };

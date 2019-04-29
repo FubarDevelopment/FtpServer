@@ -25,7 +25,6 @@ namespace FubarDev.FtpServer.FileSystem.InMemory
         public InMemoryFileSystem(StringComparer fileSystemEntryComparer)
         {
             Root = new InMemoryDirectoryEntry(
-                this,
                 null,
                 string.Empty,
                 new Dictionary<string, IUnixFileSystemEntry>(fileSystemEntryComparer));
@@ -116,7 +115,6 @@ namespace FubarDev.FtpServer.FileSystem.InMemory
         {
             var dirEntry = (InMemoryDirectoryEntry)targetDirectory;
             var childEntry = new InMemoryDirectoryEntry(
-                this,
                 dirEntry,
                 directoryName,
                 new Dictionary<string, IUnixFileSystemEntry>(FileSystemEntryComparer));
@@ -177,7 +175,7 @@ namespace FubarDev.FtpServer.FileSystem.InMemory
                 .ConfigureAwait(false);
 
             var targetEntry = (InMemoryDirectoryEntry)targetDirectory;
-            var entry = new InMemoryFileEntry(this, targetEntry, fileName, temp.ToArray());
+            var entry = new InMemoryFileEntry(targetEntry, fileName, temp.ToArray());
             targetEntry.Children.Add(fileName, entry);
 
             var now = DateTimeOffset.Now;

@@ -19,11 +19,9 @@ namespace FubarDev.FtpServer.FileSystem.DotNet
         /// <summary>
         /// Initializes a new instance of the <see cref="DotNetFileSystemEntry"/> class.
         /// </summary>
-        /// <param name="fileSystem">The file system this entry belongs to.</param>
         /// <param name="fsInfo">The <see cref="FileSystemInfo"/> to extract the information from.</param>
-        protected DotNetFileSystemEntry([NotNull] DotNetFileSystem fileSystem, [NotNull] FileSystemInfo fsInfo)
+        protected DotNetFileSystemEntry([NotNull] FileSystemInfo fsInfo)
         {
-            FileSystem = fileSystem;
             Info = fsInfo;
             LastWriteTime = new DateTimeOffset(Info.LastWriteTime);
             CreatedTime = new DateTimeOffset(Info.CreationTimeUtc);
@@ -50,9 +48,6 @@ namespace FubarDev.FtpServer.FileSystem.DotNet
 
         /// <inheritdoc/>
         public long NumberOfLinks => 1;
-
-        /// <inheritdoc/>
-        public IUnixFileSystem FileSystem { get; }
 
         /// <inheritdoc/>
         public string Owner => "owner";

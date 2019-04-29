@@ -20,10 +20,9 @@ namespace FubarDev.FtpServer.FileSystem.DotNet
         /// <summary>
         /// Initializes a new instance of the <see cref="DotNetFileEntry"/> class.
         /// </summary>
-        /// <param name="fileSystem">The file system this entry belongs to.</param>
         /// <param name="info">The <see cref="FileInfo"/> to extract the information from.</param>
-        public DotNetFileEntry([NotNull] DotNetFileSystem fileSystem, [NotNull] FileInfo info)
-            : base(fileSystem, info)
+        public DotNetFileEntry([NotNull] FileInfo info)
+            : base(info)
         {
             FileInfo = info;
         }
