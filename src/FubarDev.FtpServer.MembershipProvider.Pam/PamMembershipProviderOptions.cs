@@ -1,6 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
+// <copyright file="PamMembershipProviderOptions.cs" company="Fubar Development Junker">
+// Copyright (c) Fubar Development Junker. All rights reserved.
+// </copyright>
 
 namespace FubarDev.FtpServer.MembershipProvider.Pam
 {
