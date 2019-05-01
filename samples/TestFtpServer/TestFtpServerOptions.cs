@@ -14,7 +14,7 @@ namespace TestFtpServer
         /// <summary>
         /// Gets or sets a value indicating whether the help message should be shown.
         /// </summary>
-        public bool ShowHelp { get;set; }
+        public bool ShowHelp { get; set; }
 
         /// <summary>
         /// Gets or sets the requested server address.
@@ -59,12 +59,17 @@ namespace TestFtpServer
         /// <summary>
         /// Gets or sets the membership provider to be used.
         /// </summary>
-        public MembershipProviderType MembershipProviderType { get; set; } = MembershipProviderType.Anonymous;
+        public MembershipProviderType MembershipProviderType { get; set; } = MembershipProviderType.Default;
 
         /// <summary>
         /// Gets or sets the passive port range.
         /// </summary>
         public (int, int)? PassivePortRange { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether PAM account management is disabled.
+        /// </summary>
+        public bool NoPamAccountManagement { get; set; }
 
         /// <summary>
         /// Gets the requested or the default port.
@@ -90,16 +95,27 @@ namespace TestFtpServer
     /// <summary>
     /// The selected membership provider.
     /// </summary>
+    [Flags]
     public enum MembershipProviderType
     {
         /// <summary>
+        /// Use the default membership provider (<see cref="Anonymous"/>).
+        /// </summary>
+        Default = 0,
+
+        /// <summary>
         /// Use the custom (example) membership provider.
         /// </summary>
-        Custom,
+        Custom = 1,
 
         /// <summary>
         /// Use the membership provider for anonymous users.
         /// </summary>
-        Anonymous,
+        Anonymous = 2,
+
+        /// <summary>
+        /// Use the PAM membership provider.
+        /// </summary>
+        PAM = 4,
     }
 }

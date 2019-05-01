@@ -3,15 +3,15 @@
 // </copyright>
 
 using System;
-using System.Diagnostics;
 using System.Threading.Tasks;
-
-using JetBrains.Annotations;
 
 using Mono.Unix;
 
 namespace FubarDev.FtpServer.FileSystem.Unix
 {
+    /// <summary>
+    /// A file system provider that uses the Posix API.
+    /// </summary>
     public class UnixFileSystemProvider : IFileSystemClassFactory
     {
         /// <inheritdoc />
@@ -25,7 +25,7 @@ namespace FubarDev.FtpServer.FileSystem.Unix
 
             var root = new UnixDirectoryInfo(userInfo.HomeDirectory);
             var rootEntry = new UnixDirectoryEntry(root, accountInformation.User, userInfo);
-            return Task.FromResult<IUnixFileSystem>(new UnixFileSystem(rootEntry, accountInformation.User));
+            return Task.FromResult<IUnixFileSystem>(new UnixFileSystem(rootEntry, accountInformation.User, userInfo));
         }
     }
 }

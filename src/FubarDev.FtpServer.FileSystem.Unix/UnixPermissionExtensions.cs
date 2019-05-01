@@ -16,9 +16,10 @@ namespace FubarDev.FtpServer.FileSystem.Unix
         public static IAccessMode GetEffectivePermissions(
             this IUnixDirectoryEntry entry,
             IFtpUser ftpUser,
-            UnixUserInfo userInfo)
+            long userId,
+            long groupId)
         {
-            if (userInfo.UserId == 0 || userInfo.GroupId == 0)
+            if (userId == 0 || groupId == 0)
             {
                 return new GenericAccessMode(true, true, true);
             }

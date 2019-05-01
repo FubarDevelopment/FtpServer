@@ -17,8 +17,14 @@ namespace FubarDev.FtpServer.FileSystem.Unix
         public UnixFileEntry([NotNull] UnixFileInfo info)
             : base(info)
         {
+            Info = info;
             Size = info.Length;
         }
+
+        /// <summary>
+        /// Gets the unix file info.
+        /// </summary>
+        public UnixFileInfo Info { get; }
 
         /// <inheritdoc />
         public long Size { get; }

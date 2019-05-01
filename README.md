@@ -17,12 +17,13 @@ The library is released under the [![MIT license](https://img.shields.io/github/
 
 ## Compilation
 
-* Visual Studio 2017 / C# 7.3
+* Visual Studio 2019 / C# 8.0
 
 ## Using
 
-* Visual Studio 2017
-* .NET Standard 2.0
+* Visual Studio 2019
+* .NET Standard 2.0 (everything **except** sample application, PAM authentication)
+* .NET Core 3.0 (sample application, PAM authentication)
 
 ## NuGet packages
 

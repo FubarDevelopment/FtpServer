@@ -4,8 +4,6 @@
 
 using System;
 
-using FubarDev.FtpServer.AccountManagement;
-
 using JetBrains.Annotations;
 
 using Mono.Unix;
@@ -19,9 +17,14 @@ namespace FubarDev.FtpServer.FileSystem.Unix
         protected UnixFileSystemEntry(
             [NotNull] UnixFileSystemInfo info)
         {
-            _info = info;
+            GenericInfo = _info = info;
             Permissions = new UnixPermissions(info);
         }
+
+        /// <summary>
+        /// Gets generic unix file system entry information.
+        /// </summary>
+        public UnixFileSystemInfo GenericInfo { get; }
 
         /// <inheritdoc />
         public string Owner => _info.OwnerUser.UserName;
@@ -36,7 +39,7 @@ namespace FubarDev.FtpServer.FileSystem.Unix
         public IUnixPermissions Permissions { get; }
 
         /// <inheritdoc />
-        public DateTimeOffset? LastWriteTime => _info.LastAccessTimeUtc;
+        public DateTimeOffset? LastWriteTime => _info.LastWriteTimeUtc;
 
         /// <inheritdoc />
         public DateTimeOffset? CreatedTime => _info.LastStatusChangeTimeUtc;

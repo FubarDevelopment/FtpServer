@@ -22,6 +22,7 @@ namespace FubarDev.FtpServer.FileSystem.Unix
             : base(info)
         {
             IsRoot = parent == null;
+            Info = info;
 
             if (parent == null)
             {
@@ -35,9 +36,14 @@ namespace FubarDev.FtpServer.FileSystem.Unix
             }
             else
             {
-                IsDeletable = parent.GetEffectivePermissions(user, userInfo).Write;
+                IsDeletable = parent.GetEffectivePermissions(user, userInfo.UserId, userInfo.GroupId).Write;
             }
         }
+
+        /// <summary>
+        /// Gets the unix directory info.
+        /// </summary>
+        public UnixDirectoryInfo Info { get; }
 
         /// <inheritdoc />
         public bool IsRoot { get; }

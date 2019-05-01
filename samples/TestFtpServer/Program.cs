@@ -17,6 +17,7 @@ using FubarDev.FtpServer.Authentication;
 using FubarDev.FtpServer.FileSystem.DotNet;
 using FubarDev.FtpServer.FileSystem.GoogleDrive;
 using FubarDev.FtpServer.FileSystem.InMemory;
+using FubarDev.FtpServer.MembershipProvider.Pam;
 
 using Google.Apis.Auth.OAuth2;
 using Google.Apis.Drive.v3;
@@ -47,16 +48,21 @@ namespace TestFtpServer
                         switch (v)
                         {
                             case "custom":
-                                options.MembershipProviderType = MembershipProviderType.Custom;
+                                options.MembershipProviderType |= MembershipProviderType.Custom;
                                 break;
                             case "anonymous":
-                                options.MembershipProviderType = MembershipProviderType.Anonymous;
+                                options.MembershipProviderType |= MembershipProviderType.Anonymous;
+                                break;
+                            case "pam":
+                                options.MembershipProviderType |= MembershipProviderType.PAM;
                                 break;
                             default:
                                 throw new ApplicationException("Invalid authentication module");
                         }
                     }
                 },
+                "Workarounds",
+                { "no-pam-account-management", "Disable the PAM account management", v => options.NoPamAccountManagement = v != null },
                 "Server",
                 { "a|address=", "Sets the IP address or host name", v => options.ServerAddress = v },
                 { "p|port=", "Sets the listen port", v => options.Port = Convert.ToInt32(v) },
@@ -91,6 +97,14 @@ namespace TestFtpServer
                         "usage: ftpserver filesystem [ROOT-DIRECTORY]",
                     },
                     Run = a => RunWithFileSystemAsync(a.ToArray(), options).Wait(),
+                },
+                new Command("unix", "Use the Unix file system access")
+                {
+                    Options = new OptionSet()
+                    {
+                        "usage: ftpserver unix",
+                    },
+                    Run = a => RunWithUnixFileSystemAsync(options).Wait(),
                 },
                 new Command("in-memory", "Use the in-memory file system access")
                 {
@@ -145,6 +159,14 @@ namespace TestFtpServer
             var services = CreateServices(options)
                .Configure<DotNetFileSystemOptions>(opt => opt.RootPath = rootDir)
                .AddFtpServer(sb => Configure(sb, options).UseDotNetFileSystem());
+            return RunAsync(services);
+        }
+
+        private static Task RunWithUnixFileSystemAsync(TestFtpServerOptions options)
+        {
+            options.Validate();
+            var services = CreateServices(options)
+               .AddFtpServer(sb => Configure(sb, options).UseUnixFileSystem());
             return RunAsync(services);
         }
 
@@ -255,7 +277,8 @@ namespace TestFtpServer
                             opt.PasvMaxPort = options.PassivePortRange.Value.Item2;
                         }
                     })
-               .Configure<GoogleDriveOptions>(opt => opt.UseBackgroundUpload = options.UseBackgroundUpload);
+               .Configure<GoogleDriveOptions>(opt => opt.UseBackgroundUpload = options.UseBackgroundUpload)
+               .Configure<PamMembershipProviderOptions>(opt => opt.IgnoreAccountManagement = options.NoPamAccountManagement);
 
             if (options.ImplicitFtps)
             {
@@ -286,15 +309,24 @@ namespace TestFtpServer
 
         private static IFtpServerBuilder Configure(IFtpServerBuilder builder, TestFtpServerOptions options)
         {
-            switch (options.MembershipProviderType)
+            if (options.MembershipProviderType == MembershipProviderType.Default)
             {
-                case MembershipProviderType.Anonymous:
-                    return builder.EnableAnonymousAuthentication();
-                case MembershipProviderType.Custom:
-                    builder.Services.AddSingleton<IMembershipProvider, CustomMembershipProvider>();
-                    break;
-                default:
-                    throw new InvalidOperationException($"Unknown membership provider {options.MembershipProviderType}");
+                return builder.EnableAnonymousAuthentication();
+            }
+
+            if ((options.MembershipProviderType & MembershipProviderType.Anonymous) != 0)
+            {
+                builder = builder.EnableAnonymousAuthentication();
+            }
+
+            if ((options.MembershipProviderType & MembershipProviderType.Custom) != 0)
+            {
+                builder.Services.AddSingleton<IMembershipProvider, CustomMembershipProvider>();
+            }
+
+            if ((options.MembershipProviderType & MembershipProviderType.PAM) != 0)
+            {
+                builder = builder.EnablePamAuthentication();
             }
 
             return builder;
