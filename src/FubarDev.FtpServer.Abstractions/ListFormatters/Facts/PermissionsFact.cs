@@ -20,7 +20,7 @@ namespace FubarDev.FtpServer.ListFormatters.Facts
         /// Initializes a new instance of the <see cref="PermissionsFact"/> class.
         /// </summary>
         /// <param name="user">The current user.</param>
-        /// <param name="fileSystem">The current file system of the given <see cref="entry"/>.</param>
+        /// <param name="fileSystem">The current file system of the given <paramref name="entry"/>.</param>
         /// <param name="dir">The current directory.</param>
         /// <param name="entry">The file to create the permissions for.</param>
         public PermissionsFact([NotNull] IFtpUser user, [NotNull] IUnixFileSystem fileSystem, [NotNull] IUnixDirectoryEntry dir, [NotNull] IUnixFileEntry entry)
