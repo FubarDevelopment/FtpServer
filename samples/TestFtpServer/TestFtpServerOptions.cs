@@ -72,6 +72,11 @@ namespace TestFtpServer
         public bool NoPamAccountManagement { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether the user ID should be changed during file system operations.
+        /// </summary>
+        public bool DisableUserIdSwitch { get; set; }
+
+        /// <summary>
         /// Gets the requested or the default port.
         /// </summary>
         /// <returns></returns>

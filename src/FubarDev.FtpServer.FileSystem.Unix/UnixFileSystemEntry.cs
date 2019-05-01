@@ -12,6 +12,7 @@ namespace FubarDev.FtpServer.FileSystem.Unix
 {
     internal abstract class UnixFileSystemEntry : IUnixFileSystemEntry
     {
+        [NotNull]
         private readonly UnixFileSystemInfo _info;
 
         protected UnixFileSystemEntry(
@@ -24,6 +25,7 @@ namespace FubarDev.FtpServer.FileSystem.Unix
         /// <summary>
         /// Gets generic unix file system entry information.
         /// </summary>
+        [NotNull]
         public UnixFileSystemInfo GenericInfo { get; }
 
         /// <inheritdoc />

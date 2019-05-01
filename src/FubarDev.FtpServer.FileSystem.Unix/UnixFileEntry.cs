@@ -24,6 +24,7 @@ namespace FubarDev.FtpServer.FileSystem.Unix
         /// <summary>
         /// Gets the unix file info.
         /// </summary>
+        [NotNull]
         public UnixFileInfo Info { get; }
 
         /// <inheritdoc />

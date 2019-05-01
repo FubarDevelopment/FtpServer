@@ -17,6 +17,7 @@ using FubarDev.FtpServer.Authentication;
 using FubarDev.FtpServer.FileSystem.DotNet;
 using FubarDev.FtpServer.FileSystem.GoogleDrive;
 using FubarDev.FtpServer.FileSystem.InMemory;
+using FubarDev.FtpServer.FileSystem.Unix;
 using FubarDev.FtpServer.MembershipProvider.Pam;
 
 using Google.Apis.Auth.OAuth2;
@@ -103,6 +104,7 @@ namespace TestFtpServer
                     Options = new OptionSet()
                     {
                         "usage: ftpserver unix",
+                        { "no-id-change", "Don't change the effective user id for file operations", v => options.DisableUserIdSwitch = v != null }
                     },
                     Run = a => RunWithUnixFileSystemAsync(options).Wait(),
                 },
@@ -111,7 +113,7 @@ namespace TestFtpServer
                     Options = new OptionSet()
                     {
                         "usage: ftpserver in-memory [OPTIONS]",
-                        { "keep-anonymous", "Keep anonymous in-memory file sysytems", v => options.KeepAnonymousInMemoryFileSystem = v != null }
+                        { "keep-anonymous", "Keep anonymous in-memory file systems", v => options.KeepAnonymousInMemoryFileSystem = v != null }
                     },
                     Run = a => RunWithInMemoryFileSystemAsync(options).Wait(),
                 },
@@ -166,6 +168,7 @@ namespace TestFtpServer
         {
             options.Validate();
             var services = CreateServices(options)
+               .Configure<UnixFileSystemOptions>(opt => opt.DisableUserIdSwitch = options.DisableUserIdSwitch)
                .AddFtpServer(sb => Configure(sb, options).UseUnixFileSystem());
             return RunAsync(services);
         }

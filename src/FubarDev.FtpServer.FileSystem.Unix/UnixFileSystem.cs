@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 using FubarDev.FtpServer.AccountManagement;
 using FubarDev.FtpServer.BackgroundTransfer;
-
+using JetBrains.Annotations;
 using Mono.Unix;
 using Mono.Unix.Native;
 
@@ -20,17 +20,24 @@ namespace FubarDev.FtpServer.FileSystem.Unix
 {
     internal class UnixFileSystem : IUnixFileSystem
     {
+        [NotNull]
         private readonly IFtpUser _user;
 
+        [CanBeNull]
         private readonly UnixUserInfo _userInfo;
 
+        [NotNull]
+        private readonly UnixFileSystemOptions _options;
+
         public UnixFileSystem(
-            IUnixDirectoryEntry root,
-            IFtpUser user,
-            UnixUserInfo userInfo)
+            [NotNull] IUnixDirectoryEntry root,
+            [NotNull] IFtpUser user,
+            [CanBeNull] UnixUserInfo userInfo,
+            [NotNull] UnixFileSystemOptions options)
         {
             _user = user;
             _userInfo = userInfo;
+            _options = options;
             Root = root;
         }
 
@@ -49,21 +56,27 @@ namespace FubarDev.FtpServer.FileSystem.Unix
         /// <inheritdoc />
         public Task<IReadOnlyList<IUnixFileSystemEntry>> GetEntriesAsync(IUnixDirectoryEntry directoryEntry, CancellationToken cancellationToken)
         {
-            var dirEntry = (UnixDirectoryEntry)directoryEntry;
-            var dirInfo = dirEntry.Info;
-            var entries = dirInfo.GetFileSystemEntries().Select(x => CreateEntry(dirEntry, x)).ToList();
-            return Task.FromResult<IReadOnlyList<IUnixFileSystemEntry>>(entries);
+            using (ChangeIds())
+            {
+                var dirEntry = (UnixDirectoryEntry)directoryEntry;
+                var dirInfo = dirEntry.Info;
+                var entries = dirInfo.GetFileSystemEntries().Select(x => CreateEntry(dirEntry, x)).ToList();
+                return Task.FromResult<IReadOnlyList<IUnixFileSystemEntry>>(entries);
+            }
         }
 
         /// <inheritdoc />
         public Task<IUnixFileSystemEntry> GetEntryByNameAsync(IUnixDirectoryEntry directoryEntry, string name, CancellationToken cancellationToken)
         {
-            var dirEntry = (UnixDirectoryEntry)directoryEntry;
-            var dirInfo = dirEntry.Info;
-            var entry = dirInfo.GetFileSystemEntries($"^{Regex.Escape(name)}$")
-               .Select(x => CreateEntry(dirEntry, x))
-               .SingleOrDefault();
-            return Task.FromResult(entry);
+            using (ChangeIds())
+            {
+                var dirEntry = (UnixDirectoryEntry)directoryEntry;
+                var dirInfo = dirEntry.Info;
+                var entry = dirInfo.GetFileSystemEntries($"^{Regex.Escape(name)}$")
+                   .Select(x => CreateEntry(dirEntry, x))
+                   .SingleOrDefault();
+                return Task.FromResult(entry);
+            }
         }
 
         /// <inheritdoc />
@@ -74,26 +87,32 @@ namespace FubarDev.FtpServer.FileSystem.Unix
             string fileName,
             CancellationToken cancellationToken)
         {
-            var sourceInfo = ((UnixFileSystemEntry)source).GenericInfo;
-            var targetEntry = (UnixDirectoryEntry)target;
-            var targetInfo = targetEntry.Info;
-            var sourceEntryName = sourceInfo.FullName;
-            var targetEntryName = UnixPath.Combine(targetInfo.FullName, fileName);
-            if (Stdlib.rename(sourceEntryName, targetEntryName) == -1)
+            using (ChangeIds())
             {
-                throw new InvalidOperationException("The entry couldn't be moved.");
-            }
+                var sourceInfo = ((UnixFileSystemEntry)source).GenericInfo;
+                var targetEntry = (UnixDirectoryEntry)target;
+                var targetInfo = targetEntry.Info;
+                var sourceEntryName = sourceInfo.FullName;
+                var targetEntryName = UnixPath.Combine(targetInfo.FullName, fileName);
+                if (Stdlib.rename(sourceEntryName, targetEntryName) == -1)
+                {
+                    throw new InvalidOperationException("The entry couldn't be moved.");
+                }
 
-            var targetEntryInfo = UnixFileSystemInfo.GetFileSystemEntry(targetEntryName);
-            return Task.FromResult(CreateEntry(targetEntry, targetEntryInfo));
+                var targetEntryInfo = UnixFileSystemInfo.GetFileSystemEntry(targetEntryName);
+                return Task.FromResult(CreateEntry(targetEntry, targetEntryInfo));
+            }
         }
 
         /// <inheritdoc />
         public Task UnlinkAsync(IUnixFileSystemEntry entry, CancellationToken cancellationToken)
         {
-            var entryInfo = ((UnixFileSystemEntry)entry).GenericInfo;
-            entryInfo.Delete();
-            return Task.CompletedTask;
+            using (ChangeIds())
+            {
+                var entryInfo = ((UnixFileSystemEntry)entry).GenericInfo;
+                entryInfo.Delete();
+                return Task.CompletedTask;
+            }
         }
 
         /// <inheritdoc />
@@ -102,39 +121,49 @@ namespace FubarDev.FtpServer.FileSystem.Unix
             string directoryName,
             CancellationToken cancellationToken)
         {
-            var targetEntry = (UnixDirectoryEntry)targetDirectory;
-            var newDirectoryName = UnixPath.Combine(targetEntry.Info.FullName, directoryName);
-            var newDirectoryInfo = new UnixDirectoryInfo(newDirectoryName);
-            newDirectoryInfo.Create();
-            return Task.FromResult((IUnixDirectoryEntry)CreateEntry(targetEntry, newDirectoryInfo));
+            using (ChangeIds())
+            {
+                var targetEntry = (UnixDirectoryEntry)targetDirectory;
+                var newDirectoryName = UnixPath.Combine(targetEntry.Info.FullName, directoryName);
+                var newDirectoryInfo = new UnixDirectoryInfo(newDirectoryName);
+                newDirectoryInfo.Create();
+                return Task.FromResult((IUnixDirectoryEntry)CreateEntry(targetEntry, newDirectoryInfo));
+            }
         }
 
         /// <inheritdoc />
         public Task<Stream> OpenReadAsync(IUnixFileEntry fileEntry, long startPosition, CancellationToken cancellationToken)
         {
-            var fileInfo = ((UnixFileEntry)fileEntry).Info;
-            var stream = fileInfo.OpenRead();
-            if (startPosition != 0)
+            using (ChangeIds())
             {
-                stream.Seek(startPosition, SeekOrigin.Begin);
-            }
+                var fileInfo = ((UnixFileEntry)fileEntry).Info;
+                var stream = fileInfo.OpenRead();
+                if (startPosition != 0)
+                {
+                    stream.Seek(startPosition, SeekOrigin.Begin);
+                }
 
-            return Task.FromResult<Stream>(stream);
+                return Task.FromResult<Stream>(stream);
+            }
         }
 
         /// <inheritdoc />
         public async Task<IBackgroundTransfer> AppendAsync(IUnixFileEntry fileEntry, long? startPosition, Stream data, CancellationToken cancellationToken)
         {
-            var fileInfo = ((UnixFileEntry)fileEntry).Info;
-            var stream = fileInfo.Open(FileMode.Append);
-            if (startPosition != null)
+            using (ChangeIds())
             {
-                stream.Seek(startPosition.Value, SeekOrigin.Begin);
+                var fileInfo = ((UnixFileEntry)fileEntry).Info;
+                var stream = fileInfo.Open(FileMode.Append);
+                if (startPosition != null)
+                {
+                    stream.Seek(startPosition.Value, SeekOrigin.Begin);
+                }
+
+                await data.CopyToAsync(stream, 81920, cancellationToken)
+                   .ConfigureAwait(false);
+
+                return null;
             }
-
-            await data.CopyToAsync(stream, 81920, cancellationToken);
-
-            return null;
         }
 
         /// <inheritdoc />
@@ -144,24 +173,32 @@ namespace FubarDev.FtpServer.FileSystem.Unix
             Stream data,
             CancellationToken cancellationToken)
         {
-            var targetInfo = ((UnixDirectoryEntry)targetDirectory).Info;
-            var fileInfo = new UnixFileInfo(UnixPath.Combine(targetInfo.FullName, fileName));
-            var stream = fileInfo.Open(FileMode.CreateNew, FileAccess.Write, FilePermissions.DEFFILEMODE);
+            using (ChangeIds())
+            {
+                var targetInfo = ((UnixDirectoryEntry)targetDirectory).Info;
+                var fileInfo = new UnixFileInfo(UnixPath.Combine(targetInfo.FullName, fileName));
+                var stream = fileInfo.Open(FileMode.CreateNew, FileAccess.Write, FilePermissions.DEFFILEMODE);
 
-            await data.CopyToAsync(stream, 81920, cancellationToken);
+                await data.CopyToAsync(stream, 81920, cancellationToken)
+                   .ConfigureAwait(false);
 
-            return null;
+                return null;
+            }
         }
 
         /// <inheritdoc />
         public async Task<IBackgroundTransfer> ReplaceAsync(IUnixFileEntry fileEntry, Stream data, CancellationToken cancellationToken)
         {
-            var fileInfo = ((UnixFileEntry)fileEntry).Info;
-            var stream = fileInfo.Open(FileMode.Create, FileAccess.Write, FilePermissions.DEFFILEMODE);
+            using (ChangeIds())
+            {
+                var fileInfo = ((UnixFileEntry)fileEntry).Info;
+                var stream = fileInfo.Open(FileMode.Create, FileAccess.Write, FilePermissions.DEFFILEMODE);
 
-            await data.CopyToAsync(stream, 81920, cancellationToken);
+                await data.CopyToAsync(stream, 81920, cancellationToken)
+                   .ConfigureAwait(false);
 
-            return null;
+                return null;
+            }
         }
 
         /// <inheritdoc />
@@ -199,10 +236,13 @@ namespace FubarDev.FtpServer.FileSystem.Unix
                 times[1] = ToTimeval(entryInfo.LastWriteTimeUtc);
             }
 
-            Syscall.utimes(entryInfo.FullName, times);
+            using (ChangeIds())
+            {
+                Syscall.utimes(entryInfo.FullName, times);
 
-            entryInfo.Refresh();
-            return Task.FromResult(entry);
+                entryInfo.Refresh();
+                return Task.FromResult(entry);
+            }
         }
 
         private static Timeval ToTimeval(DateTime timestamp)
@@ -217,7 +257,8 @@ namespace FubarDev.FtpServer.FileSystem.Unix
             };
         }
 
-        private IUnixFileSystemEntry CreateEntry(UnixDirectoryEntry parent, UnixFileSystemInfo info)
+        [NotNull]
+        private IUnixFileSystemEntry CreateEntry([NotNull] IUnixDirectoryEntry parent, [NotNull] UnixFileSystemInfo info)
         {
             switch (info)
             {
@@ -227,6 +268,26 @@ namespace FubarDev.FtpServer.FileSystem.Unix
                     return new UnixDirectoryEntry(dirInfo, _user, _userInfo, parent);
                 default:
                     throw new NotSupportedException($"Unsupported file system info type {info}");
+            }
+        }
+
+        private IDisposable ChangeIds()
+        {
+            if (_options.DisableUserIdSwitch)
+            {
+                return EmptyDisposable.Empty;
+            }
+
+            return new UnixFileSystemIdChanger(_userInfo);
+        }
+
+        private class EmptyDisposable : IDisposable
+        {
+            public static IDisposable Empty { get; } = new EmptyDisposable();
+
+            /// <inheritdoc />
+            public void Dispose()
+            {
             }
         }
     }

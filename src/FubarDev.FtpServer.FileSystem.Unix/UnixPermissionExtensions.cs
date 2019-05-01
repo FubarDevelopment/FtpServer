@@ -6,7 +6,7 @@ using System;
 
 using FubarDev.FtpServer.AccountManagement;
 using FubarDev.FtpServer.FileSystem.Generic;
-
+using JetBrains.Annotations;
 using Mono.Unix;
 
 namespace FubarDev.FtpServer.FileSystem.Unix
@@ -14,16 +14,9 @@ namespace FubarDev.FtpServer.FileSystem.Unix
     internal static class UnixPermissionExtensions
     {
         public static IAccessMode GetEffectivePermissions(
-            this IUnixDirectoryEntry entry,
-            IFtpUser ftpUser,
-            long userId,
-            long groupId)
+            [NotNull] this IUnixDirectoryEntry entry,
+            [NotNull] IFtpUser ftpUser)
         {
-            if (userId == 0 || groupId == 0)
-            {
-                return new GenericAccessMode(true, true, true);
-            }
-
             bool canRead = false;
             bool canWrite = false;
             bool canExecute = false;

@@ -46,7 +46,7 @@ namespace FubarDev.FtpServer.FileSystem.Unix
             private readonly FileAccessPermissions _executeMask;
 
             public UnixAccessInfo(
-                UnixFileSystemInfo info,
+                [NotNull] UnixFileSystemInfo info,
                 FileAccessPermissions readMask,
                 FileAccessPermissions writeMask,
                 FileAccessPermissions executeMask)

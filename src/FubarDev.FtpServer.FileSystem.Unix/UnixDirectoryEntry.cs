@@ -16,8 +16,8 @@ namespace FubarDev.FtpServer.FileSystem.Unix
     {
         public UnixDirectoryEntry(
             [NotNull] UnixDirectoryInfo info,
-            IFtpUser user,
-            UnixUserInfo userInfo,
+            [NotNull] IFtpUser user,
+            [CanBeNull] UnixUserInfo userInfo,
             IUnixDirectoryEntry parent = null)
             : base(info)
         {
@@ -34,15 +34,20 @@ namespace FubarDev.FtpServer.FileSystem.Unix
                 // File system root
                 IsDeletable = false;
             }
+            else if (userInfo != null && (userInfo.UserId == 0 || userInfo.GroupId == 0))
+            {
+                IsDeletable = true;
+            }
             else
             {
-                IsDeletable = parent.GetEffectivePermissions(user, userInfo.UserId, userInfo.GroupId).Write;
+                IsDeletable = parent.GetEffectivePermissions(user).Write;
             }
         }
 
         /// <summary>
         /// Gets the unix directory info.
         /// </summary>
+        [NotNull]
         public UnixDirectoryInfo Info { get; }
 
         /// <inheritdoc />
