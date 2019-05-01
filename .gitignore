@@ -215,3 +215,5 @@ ModelManifest.xml
 .idea/
 
 \.vscode/
+
+samples/TestFtpServer/Properties/PublishProfiles/FolderProfile\.pubxml
