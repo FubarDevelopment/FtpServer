@@ -1,4 +1,4 @@
-// <copyright file="FtpResponseList`1.cs" company="Fubar Development Junker">
+// <copyright file="FtpResponseList{TStatus}.cs" company="Fubar Development Junker">
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 

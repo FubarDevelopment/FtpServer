@@ -4,6 +4,8 @@
 
 using System;
 
+using FubarDev.FtpServer.AccountManagement;
+
 using JetBrains.Annotations;
 
 using Mono.Unix;

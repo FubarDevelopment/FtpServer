@@ -19,7 +19,7 @@ namespace TestFtpServer
         /// <summary>
         /// Gets or sets the requested server address.
         /// </summary>
-        public string ServerAddress { get; set; }
+        public string? ServerAddress { get; set; }
 
         /// <summary>
         /// Gets or sets the requested FTP server port.
@@ -34,12 +34,12 @@ namespace TestFtpServer
         /// <summary>
         /// Gets or sets the path to the server certificate file.
         /// </summary>
-        public string ServerCertificateFile { get; set; }
+        public string? ServerCertificateFile { get; set; }
 
         /// <summary>
         /// Gets or sets the password of the server certificate file.
         /// </summary>
-        public string ServerCertificatePassword { get; set; }
+        public string? ServerCertificatePassword { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether the in-memory file system should be kept between two connects.

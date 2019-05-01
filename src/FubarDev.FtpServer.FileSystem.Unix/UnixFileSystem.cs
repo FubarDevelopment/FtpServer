@@ -8,22 +8,28 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 
+using FubarDev.FtpServer.AccountManagement;
 using FubarDev.FtpServer.BackgroundTransfer;
 
 namespace FubarDev.FtpServer.FileSystem.Unix
 {
     internal class UnixFileSystem : IUnixFileSystem
     {
-        public UnixFileSystem()
-        {
+        private readonly IFtpUser _user;
 
+        public UnixFileSystem(
+            IUnixDirectoryEntry root,
+            IFtpUser user)
+        {
+            _user = user;
+            Root = root;
         }
 
         /// <inheritdoc />
         public bool SupportsAppend { get; } = true;
 
         /// <inheritdoc />
-        public bool SupportsNonEmptyDirectoryDelete { get; }
+        public bool SupportsNonEmptyDirectoryDelete { get; } = false;
 
         /// <inheritdoc />
         public StringComparer FileSystemEntryComparer { get; } = StringComparer.Ordinal;

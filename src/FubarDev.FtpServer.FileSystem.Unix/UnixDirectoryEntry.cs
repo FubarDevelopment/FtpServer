@@ -2,6 +2,10 @@
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
+using System;
+
+using FubarDev.FtpServer.AccountManagement;
+
 using JetBrains.Annotations;
 
 using Mono.Unix;
@@ -10,36 +14,35 @@ namespace FubarDev.FtpServer.FileSystem.Unix
 {
     internal class UnixDirectoryEntry : UnixFileSystemEntry, IUnixDirectoryEntry
     {
-        [NotNull]
-        private readonly UnixDirectoryInfo _info;
-
-        private readonly UnixUserInfo _userInfo;
-
-        /// <inheritdoc />
         public UnixDirectoryEntry(
             [NotNull] UnixDirectoryInfo info,
-            bool isRoot,
-            UnixUserInfo userInfo)
+            IFtpUser user,
+            UnixUserInfo userInfo,
+            IUnixDirectoryEntry parent = null)
             : base(info)
         {
-            _info = info;
-            _userInfo = userInfo;
-            IsRoot = isRoot;
+            IsRoot = parent == null;
+
+            if (parent == null)
+            {
+                // Root user
+                IsDeletable = false;
+            }
+            else if (info.Parent == info)
+            {
+                // File system root
+                IsDeletable = false;
+            }
+            else
+            {
+                IsDeletable = parent.GetEffectivePermissions(user, userInfo).Write;
+            }
         }
 
         /// <inheritdoc />
         public bool IsRoot { get; }
 
         /// <inheritdoc />
-        public bool IsDeletable
-        {
-            get
-            {
-                if (IsRoot)
-                {
-                    return false;
-                }
-            }
-        }
+        public bool IsDeletable { get; }
     }
 }

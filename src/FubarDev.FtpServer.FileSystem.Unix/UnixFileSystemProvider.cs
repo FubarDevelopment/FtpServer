@@ -1,4 +1,4 @@
-﻿// <copyright file="UnixFileSystemProvider.cs" company="Fubar Development Junker">
+// <copyright file="UnixFileSystemProvider.cs" company="Fubar Development Junker">
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
@@ -24,7 +24,8 @@ namespace FubarDev.FtpServer.FileSystem.Unix
             }
 
             var root = new UnixDirectoryInfo(userInfo.HomeDirectory);
-            return Task.FromResult<IUnixFileSystem>(new UnixFileSystem());
+            var rootEntry = new UnixDirectoryEntry(root, accountInformation.User, userInfo);
+            return Task.FromResult<IUnixFileSystem>(new UnixFileSystem(rootEntry, accountInformation.User));
         }
     }
 }
