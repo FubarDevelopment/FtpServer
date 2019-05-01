@@ -20,7 +20,7 @@ namespace FubarDev.FtpServer
     {
         private readonly List<string> _result = new List<string>();
 
-        private BuildStatus _buildStatus = BuildStatus.StartLine;
+        private FtpResponseListStatus _buildStatus = FtpResponseListStatus.StartLine;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FtpResponseList{TStatus}"/> class.
@@ -36,13 +36,6 @@ namespace FubarDev.FtpServer
             StartMessage = startMessage;
             EndMessage = endMessage;
             Code = code;
-        }
-
-        private enum BuildStatus
-        {
-            StartLine,
-            Between,
-            Finished,
         }
 
         /// <inheritdoc />
@@ -83,7 +76,7 @@ namespace FubarDev.FtpServer
 
             if (token is null)
             {
-                if (_buildStatus == BuildStatus.Finished)
+                if (_buildStatus == FtpResponseListStatus.Finished)
                 {
                     statusStore = new StatusStore
                     {
@@ -98,7 +91,7 @@ namespace FubarDev.FtpServer
                     };
 
                     _result.Clear();
-                    _buildStatus = BuildStatus.StartLine;
+                    _buildStatus = FtpResponseListStatus.StartLine;
                 }
             }
             else
@@ -111,23 +104,23 @@ namespace FubarDev.FtpServer
             {
                 switch (_buildStatus)
                 {
-                    case BuildStatus.StartLine:
+                    case FtpResponseListStatus.StartLine:
                         resultLine = $"{Code}-{StartMessage}".TrimEnd();
-                        _buildStatus = BuildStatus.Between;
+                        _buildStatus = FtpResponseListStatus.Between;
                         break;
 
-                    case BuildStatus.Between:
+                    case FtpResponseListStatus.Between:
                         resultLine = await GetNextLineAsync(statusStore.Status, cancellationToken)
                            .ConfigureAwait(false);
                         if (resultLine is null)
                         {
                             resultLine = $"{Code} {EndMessage}".TrimEnd();
-                            _buildStatus = BuildStatus.Finished;
+                            _buildStatus = FtpResponseListStatus.Finished;
                         }
 
                         break;
 
-                    case BuildStatus.Finished:
+                    case FtpResponseListStatus.Finished:
                         resultLine = null;
                         break;
 
