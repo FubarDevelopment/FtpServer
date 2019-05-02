@@ -24,6 +24,9 @@ namespace FubarDev.FtpServer.CommandExtensions
         public OptsMlstCommandExtension([NotNull] IFtpConnectionAccessor connectionAccessor)
             : base(connectionAccessor, "OPTS", "MLST")
         {
+            // Don't announce this extension, because it gets already announced
+            // by the MLST command itself.
+            AnnouncementMode = ExtensionAnnouncementMode.Hidden;
         }
 
         /// <inheritdoc />

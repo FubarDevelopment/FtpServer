@@ -10,6 +10,8 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
+using JetBrains.Annotations;
+
 using Microsoft.Extensions.DependencyInjection;
 
 namespace FubarDev.FtpServer.CommandHandlers
@@ -23,7 +25,8 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// Initializes a new instance of the <see cref="FeatCommandHandler"/> class.
         /// </summary>
         /// <param name="connectionAccessor">The accessor to get the connection that is active during the <see cref="Process"/> method execution.</param>
-        public FeatCommandHandler(IFtpConnectionAccessor connectionAccessor)
+        public FeatCommandHandler(
+            [NotNull] IFtpConnectionAccessor connectionAccessor)
             : base(connectionAccessor, "FEAT")
         {
         }
@@ -46,9 +49,9 @@ namespace FubarDev.FtpServer.CommandHandlers
             }
 
             var features = supportedFeatures
-                .Select(x => x.BuildInfo(Connection))
-                .Distinct()
-                .ToList();
+               .Select(x => x.BuildInfo(Connection))
+               .Distinct()
+               .ToList();
 
             if (features.Count == 0)
             {

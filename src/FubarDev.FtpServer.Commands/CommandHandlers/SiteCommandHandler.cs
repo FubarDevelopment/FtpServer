@@ -17,6 +17,9 @@ namespace FubarDev.FtpServer.CommandHandlers
     /// </summary>
     public class SiteCommandHandler : FtpCommandHandler, IFtpCommandHandlerExtensionHost
     {
+        [NotNull]
+        private readonly IReadOnlyCollection<IFtpCommandHandlerExtension> _extensions;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="SiteCommandHandler"/> class.
         /// </summary>
@@ -27,14 +30,35 @@ namespace FubarDev.FtpServer.CommandHandlers
             [NotNull, ItemNotNull] IEnumerable<IFtpCommandHandlerExtension> extensions)
             : base(connectionAccessor, "SITE")
         {
-            Extensions = extensions
-                .Where(x => Names.Any(name => string.Equals(name, x.ExtensionFor, StringComparison.OrdinalIgnoreCase)))
-                .SelectMany(x => x.Names.Select(n => new { Name = n, Extension = x }))
-                .ToDictionary(x => x.Name, x => x.Extension, StringComparer.OrdinalIgnoreCase);
+            _extensions = extensions
+               .Where(x => Names.Any(name => string.Equals(name, x.ExtensionFor, StringComparison.OrdinalIgnoreCase)))
+               .ToList();
+            Extensions = _extensions
+               .SelectMany(x => x.Names.Select(n => new { Name = n, Extension = x }))
+               .ToDictionary(x => x.Name, x => x.Extension, StringComparer.OrdinalIgnoreCase);
         }
 
         /// <inheritdoc/>
         public IDictionary<string, IFtpCommandHandlerExtension> Extensions { get; }
+
+        /// <inheritdoc/>
+        public override IEnumerable<IFeatureInfo> GetSupportedFeatures()
+        {
+            foreach (var extension in _extensions)
+            {
+                var featureString = extension.ToFeatureString();
+                if (string.IsNullOrEmpty(featureString))
+                {
+                    continue;
+                }
+
+                yield return new GenericFeatureInfo(
+                    extension.Names.First(),
+                    conn => featureString,
+                    extension.IsLoginRequired ?? IsLoginRequired,
+                    extension.Names.Skip(1).ToArray());
+            }
+        }
 
         /// <inheritdoc/>
         public override Task<IFtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)

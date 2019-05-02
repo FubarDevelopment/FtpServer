@@ -5,13 +5,17 @@
 using System;
 
 using FubarDev.FtpServer;
+using FubarDev.FtpServer.AccountManagement.Directories.SingleRootWithoutHome;
 using FubarDev.FtpServer.Authentication;
 using FubarDev.FtpServer.Authorization;
 using FubarDev.FtpServer.BackgroundTransfer;
 using FubarDev.FtpServer.CommandHandlers;
+using FubarDev.FtpServer.FileSystem;
 using FubarDev.FtpServer.Localization;
 
 using JetBrains.Annotations;
+
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 // ReSharper disable once CheckNamespace
 namespace Microsoft.Extensions.DependencyInjection
@@ -58,6 +62,12 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddSingleton<IFtpServerHost, FtpServerHost>();
 
             services.AddSingleton<ISslStreamWrapperFactory, DefaultSslStreamWrapperFactory>();
+
+            services.TryAddSingleton<IAccountDirectoryQuery, SingleRootWithoutHomeAccountDirectoryQuery>();
+
+            services.Scan(
+                sel => sel.FromAssemblyOf<IAuthorizationAction>()
+                   .AddClasses(filter => filter.AssignableTo<IAuthorizationAction>()).As<IAuthorizationAction>().WithSingletonLifetime());
 
             services.Scan(
                 sel => sel.FromAssemblyOf<PassCommandHandler>()

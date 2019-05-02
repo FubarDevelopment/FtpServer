@@ -20,6 +20,8 @@ namespace FubarDev.FtpServer.CommandHandlers
     /// </summary>
     public class OptsCommandHandler : FtpCommandHandler, IFtpCommandHandlerExtensionHost
     {
+        private readonly IReadOnlyCollection<IFtpCommandHandlerExtension> _extensions;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="OptsCommandHandler"/> class.
         /// </summary>
@@ -30,8 +32,10 @@ namespace FubarDev.FtpServer.CommandHandlers
             [NotNull, ItemNotNull] IEnumerable<IFtpCommandHandlerExtension> extensions)
             : base(connectionAccessor, "OPTS")
         {
-            Extensions = extensions
-                .Where(x => Names.Any(name => string.Equals(name, x.ExtensionFor, StringComparison.OrdinalIgnoreCase)))
+            _extensions = extensions
+               .Where(x => Names.Any(name => string.Equals(name, x.ExtensionFor, StringComparison.OrdinalIgnoreCase)))
+               .ToList();
+            Extensions = _extensions
                 .SelectMany(x => x.Names.Select(n => new { Name = n, Extension = x }))
                 .ToDictionary(x => x.Name, x => x.Extension, StringComparer.OrdinalIgnoreCase);
         }
@@ -42,7 +46,20 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// <inheritdoc/>
         public override IEnumerable<IFeatureInfo> GetSupportedFeatures()
         {
-            yield return new GenericFeatureInfo("UTF8", false, "UTF-8");
+            foreach (var extension in _extensions)
+            {
+                var featureString = extension.ToFeatureString();
+                if (string.IsNullOrEmpty(featureString))
+                {
+                    continue;
+                }
+
+                yield return new GenericFeatureInfo(
+                    extension.Names.First(),
+                    conn => featureString,
+                    extension.IsLoginRequired ?? IsLoginRequired,
+                    extension.Names.Skip(1).ToArray());
+            }
         }
 
         /// <inheritdoc/>

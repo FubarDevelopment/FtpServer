@@ -17,6 +17,8 @@ namespace FubarDev.FtpServer.FileSystem.InMemory
     /// </summary>
     public class InMemoryFileSystemProvider : IFileSystemClassFactory
     {
+        private readonly IAccountDirectoryQuery _accountDirectoryQuery;
+
         private readonly bool _keepAnonymousFileSystem;
 
         private readonly bool _keepAuthenticatedUserFileSystem;
@@ -35,8 +37,12 @@ namespace FubarDev.FtpServer.FileSystem.InMemory
         /// Initializes a new instance of the <see cref="InMemoryFileSystemProvider"/> class.
         /// </summary>
         /// <param name="options">The provider options.</param>
-        public InMemoryFileSystemProvider(IOptions<InMemoryFileSystemOptions> options)
+        /// <param name="accountDirectoryQuery">Interface to query account directories.</param>
+        public InMemoryFileSystemProvider(
+            IOptions<InMemoryFileSystemOptions> options,
+            IAccountDirectoryQuery accountDirectoryQuery)
         {
+            _accountDirectoryQuery = accountDirectoryQuery;
             _fileSystemComparer = options.Value.FileSystemComparer;
             _keepAnonymousFileSystem = options.Value.KeepAnonymousFileSystem;
             _keepAuthenticatedUserFileSystem = options.Value.KeepAuthenticatedUserFileSystem;
@@ -49,22 +55,19 @@ namespace FubarDev.FtpServer.FileSystem.InMemory
         {
             var user = accountInformation.User;
             InMemoryFileSystem fileSystem;
-            string userId;
 
-            if (user is IAnonymousFtpUser anonymousFtpUser)
+            var directories = _accountDirectoryQuery.GetDirectories(accountInformation);
+            var fileSystemId = directories.RootPath ?? string.Empty;
+            if (user is IAnonymousFtpUser)
             {
-                userId = string.IsNullOrEmpty(anonymousFtpUser.Email)
-                    ? anonymousFtpUser.Name
-                    : anonymousFtpUser.Email;
-
                 if (_keepAnonymousFileSystem)
                 {
                     lock (_anonymousFileSystemLock)
                     {
-                        if (!_anonymousFileSystems.TryGetValue(userId, out fileSystem))
+                        if (!_anonymousFileSystems.TryGetValue(fileSystemId, out fileSystem))
                         {
                             fileSystem = new InMemoryFileSystem(_fileSystemComparer);
-                            _anonymousFileSystems.Add(userId, fileSystem);
+                            _anonymousFileSystems.Add(fileSystemId, fileSystem);
                         }
                     }
                 }
@@ -75,16 +78,14 @@ namespace FubarDev.FtpServer.FileSystem.InMemory
             }
             else
             {
-                userId = user.Name;
-
                 if (_keepAuthenticatedUserFileSystem)
                 {
                     lock (_authUserFileSystemLock)
                     {
-                        if (!_authUserFileSystems.TryGetValue(userId, out fileSystem))
+                        if (!_authUserFileSystems.TryGetValue(fileSystemId, out fileSystem))
                         {
                             fileSystem = new InMemoryFileSystem(_fileSystemComparer);
-                            _authUserFileSystems.Add(userId, fileSystem);
+                            _authUserFileSystems.Add(fileSystemId, fileSystem);
                         }
                     }
                 }

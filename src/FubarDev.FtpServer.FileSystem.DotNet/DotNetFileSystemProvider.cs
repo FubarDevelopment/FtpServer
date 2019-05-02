@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 
 using JetBrains.Annotations;
 
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
 namespace FubarDev.FtpServer.FileSystem.DotNet
@@ -20,9 +21,14 @@ namespace FubarDev.FtpServer.FileSystem.DotNet
     /// </summary>
     public class DotNetFileSystemProvider : IFileSystemClassFactory
     {
-        private readonly string _rootPath;
+        [NotNull]
+        private readonly IAccountDirectoryQuery _accountDirectoryQuery;
 
-        private readonly bool _useUserIdAsSubFolder;
+        [CanBeNull]
+        private readonly ILogger<DotNetFileSystemProvider> _logger;
+
+        [NotNull]
+        private readonly string _rootPath;
 
         private readonly int _streamBufferSize;
 
@@ -32,10 +38,16 @@ namespace FubarDev.FtpServer.FileSystem.DotNet
         /// Initializes a new instance of the <see cref="DotNetFileSystemProvider"/> class.
         /// </summary>
         /// <param name="options">The file system options.</param>
-        public DotNetFileSystemProvider([NotNull] IOptions<DotNetFileSystemOptions> options)
+        /// <param name="accountDirectoryQuery">Interface to query account directories.</param>
+        /// <param name="logger">The logger.</param>
+        public DotNetFileSystemProvider(
+            [NotNull] IOptions<DotNetFileSystemOptions> options,
+            [NotNull] IAccountDirectoryQuery accountDirectoryQuery,
+            [CanBeNull] ILogger<DotNetFileSystemProvider> logger = null)
         {
+            _accountDirectoryQuery = accountDirectoryQuery;
+            _logger = logger;
             _rootPath = options.Value.RootPath ?? Path.GetTempPath();
-            _useUserIdAsSubFolder = options.Value.UseUserIdAsSubFolder;
             _streamBufferSize = options.Value.StreamBufferSize ?? DotNetFileSystem.DefaultStreamBufferSize;
             _allowNonEmptyDirectoryDelete = options.Value.AllowNonEmptyDirectoryDelete;
         }
@@ -44,10 +56,13 @@ namespace FubarDev.FtpServer.FileSystem.DotNet
         public Task<IUnixFileSystem> Create(IAccountInformation accountInformation)
         {
             var path = _rootPath;
-            if (_useUserIdAsSubFolder)
+            var directories = _accountDirectoryQuery.GetDirectories(accountInformation);
+            if (!string.IsNullOrEmpty(directories.RootPath))
             {
-                path = Path.Combine(path, accountInformation.User.Name);
+                path = Path.Combine(path, directories.RootPath);
             }
+
+            _logger?.LogDebug("The root directory for {userName} is {rootPath}", accountInformation.User.Name, path);
 
             return Task.FromResult<IUnixFileSystem>(new DotNetFileSystem(path, _allowNonEmptyDirectoryDelete, _streamBufferSize));
         }

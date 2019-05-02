@@ -33,10 +33,16 @@ namespace FubarDev.FtpServer.MembershipProvider.Pam
                 userGroups.Select(x => x.GroupName),
                 StringComparer.Ordinal);
             Name = userInfo.UserName;
+            HomeDirectory = userInfo.HomeDirectory;
         }
 
         /// <inheritdoc />
         public string Name { get; }
+
+        /// <summary>
+        /// Gets the users home directory.
+        /// </summary>
+        public string HomeDirectory { get; }
 
         /// <inheritdoc />
         public bool IsInGroup(string groupName)

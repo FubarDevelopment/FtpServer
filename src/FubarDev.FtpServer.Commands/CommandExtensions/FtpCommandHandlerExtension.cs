@@ -48,6 +48,11 @@ namespace FubarDev.FtpServer.CommandExtensions
         public string ExtensionFor { get; }
 
         /// <summary>
+        /// Gets or sets the extension announcement mode.
+        /// </summary>
+        public ExtensionAnnouncementMode AnnouncementMode { get; set; } = ExtensionAnnouncementMode.Hidden;
+
+        /// <summary>
         /// Gets the connection this command was created for.
         /// </summary>
         [NotNull]

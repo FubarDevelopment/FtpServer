@@ -77,6 +77,11 @@ namespace TestFtpServer
         public bool DisableUserIdSwitch { get; set; }
 
         /// <summary>
+        /// Gets or sets the directory layout.
+        /// </summary>
+        public DirectoryLayout DirectoryLayout { get; set; }
+
+        /// <summary>
         /// Gets the requested or the default port.
         /// </summary>
         /// <returns></returns>
@@ -95,6 +100,32 @@ namespace TestFtpServer
                 throw new Exception("Implicit FTPS requires a server certificate.");
             }
         }
+    }
+
+    /// <summary>
+    /// The requested directory layout.
+    /// </summary>
+    public enum DirectoryLayout
+    {
+        /// <summary>
+        /// A single root directory for all users.
+        /// </summary>
+        SingleRoot,
+
+        /// <summary>
+        /// A per-user root directory.
+        /// </summary>
+        RootPerUser,
+
+        /// <summary>
+        /// A single root, but with the users home directory as default directory.
+        /// </summary>
+        PamHomeDirectory,
+
+        /// <summary>
+        /// Users home directories are root.
+        /// </summary>
+        PamHomeDirectoryAsRoot,
     }
 
     /// <summary>

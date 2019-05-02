@@ -49,6 +49,7 @@ namespace FubarDev.FtpServer.CommandExtensions
             _backgroundTransferWorker = backgroundTransferWorker;
             _sslStreamWrapperFactory = sslStreamWrapperFactory;
             _logger = logger;
+            AnnouncementMode = ExtensionAnnouncementMode.CommandAndExtensionName;
         }
 
         /// <inheritdoc/>

@@ -15,6 +15,10 @@ namespace FubarDev.FtpServer.CommandExtensions
     /// <summary>
     /// The implementation of the <c>SITE UTIME</c> command.
     /// </summary>
+    /// <remarks>
+    /// This doesn't exist as RFC. Instead, it's only documented
+    /// on the <a href="http://www.proftpd.org/docs/contrib/mod_site_misc.html">ProFTPd site</a>.
+    /// </remarks>
     public class SiteUtimeCommandExtension : FtpCommandHandlerExtension
     {
         /// <summary>
@@ -24,6 +28,9 @@ namespace FubarDev.FtpServer.CommandExtensions
         public SiteUtimeCommandExtension([NotNull] IFtpConnectionAccessor connectionAccessor)
             : base(connectionAccessor, "SITE", "UTIME")
         {
+            // This extension is hidden, accoding to
+            // https://ghisler.ch/board/viewtopic.php?t=24952
+            AnnouncementMode = ExtensionAnnouncementMode.Hidden;
         }
 
         /// <inheritdoc />

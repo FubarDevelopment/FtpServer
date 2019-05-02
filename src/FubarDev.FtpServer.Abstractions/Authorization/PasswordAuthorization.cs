@@ -10,7 +10,6 @@ using System.Threading.Tasks;
 
 using FubarDev.FtpServer.AccountManagement;
 using FubarDev.FtpServer.Authentication;
-using FubarDev.FtpServer.FileSystem;
 
 using JetBrains.Annotations;
 
@@ -22,7 +21,8 @@ namespace FubarDev.FtpServer.Authorization
     public class PasswordAuthorization : AuthorizationMechanism
     {
         [NotNull]
-        private readonly IFileSystemClassFactory _fileSystemFactory;
+        [ItemNotNull]
+        private readonly IReadOnlyCollection<IAuthorizationAction> _authorizationActions;
 
         [NotNull]
         [ItemNotNull]
@@ -35,15 +35,15 @@ namespace FubarDev.FtpServer.Authorization
         /// Initializes a new instance of the <see cref="PasswordAuthorization"/> class.
         /// </summary>
         /// <param name="connection">The required FTP connection.</param>
-        /// <param name="fileSystemFactory">The file system factory.</param>
         /// <param name="membershipProviders">The membership providers for password authorization.</param>
+        /// <param name="authorizationActions">Actions to be executed upon authorization.</param>
         public PasswordAuthorization(
             [NotNull] IFtpConnection connection,
-            [NotNull] IFileSystemClassFactory fileSystemFactory,
-            [NotNull, ItemNotNull] IEnumerable<IMembershipProvider> membershipProviders)
+            [NotNull, ItemNotNull] IEnumerable<IMembershipProvider> membershipProviders,
+            [NotNull, ItemNotNull] IEnumerable<IAuthorizationAction> authorizationActions)
             : base(connection)
         {
-            _fileSystemFactory = fileSystemFactory;
+            _authorizationActions = authorizationActions.OrderByDescending(x => x.Level).ToList();
             _membershipProviders = membershipProviders.ToList();
         }
 
@@ -68,21 +68,16 @@ namespace FubarDev.FtpServer.Authorization
                    .ConfigureAwait(false);
                 if (validationResult.IsSuccess)
                 {
-                    Connection.Data.User = validationResult.User;
+                    var accountInformation = new DefaultAccountInformation(
+                        validationResult.User ?? throw new InvalidOperationException(
+                            T("The user property must be set if validation succeeded.")));
 
-#pragma warning disable 618
-                    Connection.Data.IsAnonymous = validationResult.User is IAnonymousFtpUser;
-                    Connection.Data.IsLoggedIn = true;
-#pragma warning restore 618
+                    foreach (var authorizationAction in _authorizationActions)
+                    {
+                        await authorizationAction.AuthorizedAsync(accountInformation, cancellationToken)
+                           .ConfigureAwait(false);
+                    }
 
-                    Connection.Data.AuthenticatedBy = membershipProvider;
-                    Connection.Data.FileSystem = await _fileSystemFactory
-                       .Create(
-                            new DefaultAccountInformation(
-                                validationResult.User ?? throw new InvalidOperationException(T("The user property must be set if validation succeeded.")),
-                                membershipProvider))
-                       .ConfigureAwait(false);
-                    Connection.Data.Path = new Stack<IUnixDirectoryEntry>();
                     return new FtpResponse(230, T("Password ok, FTP server ready"));
                 }
             }
@@ -110,17 +105,13 @@ namespace FubarDev.FtpServer.Authorization
 
         private class DefaultAccountInformation : IAccountInformation
         {
-            public DefaultAccountInformation(IFtpUser user, IMembershipProvider authenticatedBy)
+            public DefaultAccountInformation(IFtpUser user)
             {
                 User = user;
-                AuthenticatedBy = authenticatedBy;
             }
 
             /// <inheritdoc />
             public IFtpUser User { get; }
-
-            /// <inheritdoc />
-            public IMembershipProvider AuthenticatedBy { get; }
         }
 
         private class UnauthenticatedUser : IFtpUser

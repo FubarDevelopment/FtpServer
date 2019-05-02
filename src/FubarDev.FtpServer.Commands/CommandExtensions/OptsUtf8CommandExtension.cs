@@ -22,6 +22,8 @@ namespace FubarDev.FtpServer.CommandExtensions
         public OptsUtf8CommandExtension([NotNull] IFtpConnectionAccessor connectionAccessor)
             : base(connectionAccessor, "OPTS", "UTF8", "UTF-8")
         {
+            // Announce it as UTF8 only.
+            AnnouncementMode = ExtensionAnnouncementMode.ExtensionName;
         }
 
         /// <inheritdoc />

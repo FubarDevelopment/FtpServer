@@ -13,12 +13,16 @@ using System.Xml;
 
 using FubarDev.FtpServer;
 using FubarDev.FtpServer.AccountManagement;
+using FubarDev.FtpServer.AccountManagement.Directories.RootPerUser;
+using FubarDev.FtpServer.AccountManagement.Directories.SingleRootWithoutHome;
 using FubarDev.FtpServer.Authentication;
+using FubarDev.FtpServer.FileSystem;
 using FubarDev.FtpServer.FileSystem.DotNet;
 using FubarDev.FtpServer.FileSystem.GoogleDrive;
 using FubarDev.FtpServer.FileSystem.InMemory;
 using FubarDev.FtpServer.FileSystem.Unix;
 using FubarDev.FtpServer.MembershipProvider.Pam;
+using FubarDev.FtpServer.MembershipProvider.Pam.Directories;
 
 using Google.Apis.Auth.OAuth2;
 using Google.Apis.Drive.v3;
@@ -62,8 +66,38 @@ namespace TestFtpServer
                         }
                     }
                 },
-                "Workarounds",
+                "PAM authentication workarounds",
                 { "no-pam-account-management", "Disable the PAM account management", v => options.NoPamAccountManagement = v != null },
+                "Directory layout (filesystem, unix))",
+                { "l|layout=", "Directory layout", v =>                     {
+                        switch (v)
+                        {
+                            case "default":
+                            case "root":
+                            case "single":
+                            case "single-root":
+                                options.DirectoryLayout = DirectoryLayout.SingleRoot;
+                                break;
+                            case "root-per-user":
+                            case "per-user-root":
+                            case "per-user":
+                                options.DirectoryLayout = DirectoryLayout.RootPerUser;
+                                break;
+                            case "pam":
+                            case "passwd":
+                            case "pam-home":
+                            case "passwd-home":
+                                options.DirectoryLayout = DirectoryLayout.PamHomeDirectory;
+                                break;
+                            case "pam-root":
+                            case "passwd-root":
+                                options.DirectoryLayout = DirectoryLayout.PamHomeDirectoryAsRoot;
+                                break;
+                            default:
+                                throw new ApplicationException("Invalid authentication module");
+                        }
+                    }
+                },
                 "Server",
                 { "a|address=", "Sets the IP address or host name", v => options.ServerAddress = v },
                 { "p|port=", "Sets the listen port", v => options.Port = Convert.ToInt32(v) },
@@ -282,6 +316,32 @@ namespace TestFtpServer
                     })
                .Configure<GoogleDriveOptions>(opt => opt.UseBackgroundUpload = options.UseBackgroundUpload)
                .Configure<PamMembershipProviderOptions>(opt => opt.IgnoreAccountManagement = options.NoPamAccountManagement);
+
+            switch (options.DirectoryLayout)
+            {
+                case DirectoryLayout.SingleRoot:
+                    services.AddSingleton<IAccountDirectoryQuery, SingleRootWithoutHomeAccountDirectoryQuery>();
+                    break;
+                case DirectoryLayout.RootPerUser:
+                    services
+                       .AddSingleton<IAccountDirectoryQuery, RootPerUserAccountDirectoryQuery>()
+                       .Configure<RootPerUserAccountDirectoryQueryOptions>(opt => opt.AnonymousRootPerEmail = true);
+                    break;
+                case DirectoryLayout.PamHomeDirectory:
+                    services
+                       .AddSingleton<IAccountDirectoryQuery, PamAccountDirectoryQuery>()
+                       .Configure<PamAccountDirectoryQueryOptions>(opt => opt.AnonymousRootDirectory = "/tmp");
+                    break;
+                case DirectoryLayout.PamHomeDirectoryAsRoot:
+                    services
+                       .AddSingleton<IAccountDirectoryQuery, PamAccountDirectoryQuery>()
+                       .Configure<PamAccountDirectoryQueryOptions>(opt =>
+                        {
+                            opt.AnonymousRootDirectory = "/tmp";
+                            opt.UserHomeIsRoot = true;
+                        });
+                    break;
+            }
 
             if (options.ImplicitFtps)
             {

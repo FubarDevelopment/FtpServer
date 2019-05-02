@@ -15,11 +15,6 @@ namespace FubarDev.FtpServer.FileSystem.DotNet
         public string RootPath { get; set; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether the user ID should be used as sub directory.
-        /// </summary>
-        public bool UseUserIdAsSubFolder { get; set; }
-
-        /// <summary>
         /// Gets or sets the buffer size to be used in async IO methods.
         /// </summary>
         public int? StreamBufferSize { get; set; }
