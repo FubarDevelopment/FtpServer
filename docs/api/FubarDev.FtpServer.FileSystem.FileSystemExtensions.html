@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Class FileSystemExtensions
    | FTP Server documentation ">
-    <meta name="generator" content="docfx 2.42.0.0">
+    <meta name="generator" content="docfx 2.42.1.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -180,7 +180,7 @@ public static Stack&lt;IUnixDirectoryEntry&gt; Clone([NotNull, ItemNotNull] this
     <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FileSystem_FileSystemExtensions_CombinePath_System_String_System_Collections_Generic_IEnumerable_System_String__.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FileSystem.FileSystemExtensions.CombinePath(System.String%2CSystem.Collections.Generic.IEnumerable%7BSystem.String%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.Abstractions/FileSystem/FileSystemExtensions.cs/#L371">View Source</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.Abstractions/FileSystem/FileSystemExtensions.cs/#L382">View Source</a>
   </span>
   <a id="FubarDev_FtpServer_FileSystem_FileSystemExtensions_CombinePath_" data-uid="FubarDev.FtpServer.FileSystem.FileSystemExtensions.CombinePath*"></a>
   <h4 id="FubarDev_FtpServer_FileSystem_FileSystemExtensions_CombinePath_System_String_System_Collections_Generic_IEnumerable_System_String__" data-uid="FubarDev.FtpServer.FileSystem.FileSystemExtensions.CombinePath(System.String,System.Collections.Generic.IEnumerable{System.String})">CombinePath(String, IEnumerable&lt;String&gt;)</h4>
@@ -237,7 +237,7 @@ public static string CombinePath([CanBeNull] string path, [NotNull, ItemNotNull]
     <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FileSystem_FileSystemExtensions_CombinePath_System_String_System_String___.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FileSystem.FileSystemExtensions.CombinePath(System.String%2CSystem.String%5B%5D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.Abstractions/FileSystem/FileSystemExtensions.cs/#L359">View Source</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.Abstractions/FileSystem/FileSystemExtensions.cs/#L370">View Source</a>
   </span>
   <a id="FubarDev_FtpServer_FileSystem_FileSystemExtensions_CombinePath_" data-uid="FubarDev.FtpServer.FileSystem.FileSystemExtensions.CombinePath*"></a>
   <h4 id="FubarDev_FtpServer_FileSystem_FileSystemExtensions_CombinePath_System_String_System_String___" data-uid="FubarDev.FtpServer.FileSystem.FileSystemExtensions.CombinePath(System.String,System.String[])">CombinePath(String, String[])</h4>
@@ -431,6 +431,57 @@ public static Task&lt;IUnixDirectoryEntry&gt; GetDirectoryAsync([NotNull] this I
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
+    <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FileSystem_FileSystemExtensions_GetFullPath_System_Collections_Generic_IEnumerable_FubarDev_FtpServer_FileSystem_IUnixDirectoryEntry__.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FileSystem.FileSystemExtensions.GetFullPath(System.Collections.Generic.IEnumerable%7BFubarDev.FtpServer.FileSystem.IUnixDirectoryEntry%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.Abstractions/FileSystem/FileSystemExtensions.cs/#L317">View Source</a>
+  </span>
+  <a id="FubarDev_FtpServer_FileSystem_FileSystemExtensions_GetFullPath_" data-uid="FubarDev.FtpServer.FileSystem.FileSystemExtensions.GetFullPath*"></a>
+  <h4 id="FubarDev_FtpServer_FileSystem_FileSystemExtensions_GetFullPath_System_Collections_Generic_IEnumerable_FubarDev_FtpServer_FileSystem_IUnixDirectoryEntry__" data-uid="FubarDev.FtpServer.FileSystem.FileSystemExtensions.GetFullPath(System.Collections.Generic.IEnumerable{FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry})">GetFullPath(IEnumerable&lt;IUnixDirectoryEntry&gt;)</h4>
+  <div class="markdown level1 summary"><p>Returns the <code data-dev-comment-type="paramref" class="paramref">path</code> as string.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[NotNull]
+public static string GetFullPath([NotNull, ItemNotNull] this IEnumerable&lt;IUnixDirectoryEntry&gt; path)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable</a>&lt;<a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry.html">IUnixDirectoryEntry</a>&gt;</td>
+        <td><span class="parametername">path</span></td>
+        <td><p>The path to convert to string.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><p>The <code data-dev-comment-type="paramref" class="paramref">path</code> as string.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
     <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FileSystem_FileSystemExtensions_GetFullPath_System_Collections_Generic_Stack_FubarDev_FtpServer_FileSystem_IUnixDirectoryEntry__.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FileSystem.FileSystemExtensions.GetFullPath(System.Collections.Generic.Stack%7BFubarDev.FtpServer.FileSystem.IUnixDirectoryEntry%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
@@ -485,7 +536,7 @@ public static string GetFullPath([NotNull, ItemNotNull] this Stack&lt;IUnixDirec
     <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FileSystem_FileSystemExtensions_GetFullPath_System_Collections_Generic_Stack_FubarDev_FtpServer_FileSystem_IUnixDirectoryEntry__System_String_.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FileSystem.FileSystemExtensions.GetFullPath(System.Collections.Generic.Stack%7BFubarDev.FtpServer.FileSystem.IUnixDirectoryEntry%7D%2CSystem.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.Abstractions/FileSystem/FileSystemExtensions.cs/#L346">View Source</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.Abstractions/FileSystem/FileSystemExtensions.cs/#L357">View Source</a>
   </span>
   <a id="FubarDev_FtpServer_FileSystem_FileSystemExtensions_GetFullPath_" data-uid="FubarDev.FtpServer.FileSystem.FileSystemExtensions.GetFullPath*"></a>
   <h4 id="FubarDev_FtpServer_FileSystem_FileSystemExtensions_GetFullPath_System_Collections_Generic_Stack_FubarDev_FtpServer_FileSystem_IUnixDirectoryEntry__System_String_" data-uid="FubarDev.FtpServer.FileSystem.FileSystemExtensions.GetFullPath(System.Collections.Generic.Stack{FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry},System.String)">GetFullPath(Stack&lt;IUnixDirectoryEntry&gt;, String)</h4>
@@ -542,7 +593,7 @@ public static string GetFullPath([NotNull, ItemNotNull] this Stack&lt;IUnixDirec
     <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FileSystem_FileSystemExtensions_GetParentPath_System_String_.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FileSystem.FileSystemExtensions.GetParentPath(System.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.Abstractions/FileSystem/FileSystemExtensions.cs/#L323">View Source</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.Abstractions/FileSystem/FileSystemExtensions.cs/#L334">View Source</a>
   </span>
   <a id="FubarDev_FtpServer_FileSystem_FileSystemExtensions_GetParentPath_" data-uid="FubarDev.FtpServer.FileSystem.FileSystemExtensions.GetParentPath*"></a>
   <h4 id="FubarDev_FtpServer_FileSystem_FileSystemExtensions_GetParentPath_System_String_" data-uid="FubarDev.FtpServer.FileSystem.FileSystemExtensions.GetParentPath(System.String)">GetParentPath(String)</h4>
@@ -1075,7 +1126,7 @@ public static Task&lt;SearchResult&lt;IUnixFileEntry&gt;&gt; SearchFileAsync([No
     <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FileSystem_FileSystemExtensions_SplitPath_System_String_.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FileSystem.FileSystemExtensions.SplitPath(System.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.Abstractions/FileSystem/FileSystemExtensions.cs/#L408">View Source</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.Abstractions/FileSystem/FileSystemExtensions.cs/#L419">View Source</a>
   </span>
   <a id="FubarDev_FtpServer_FileSystem_FileSystemExtensions_SplitPath_" data-uid="FubarDev.FtpServer.FileSystem.FileSystemExtensions.SplitPath*"></a>
   <h4 id="FubarDev_FtpServer_FileSystem_FileSystemExtensions_SplitPath_System_String_" data-uid="FubarDev.FtpServer.FileSystem.FileSystemExtensions.SplitPath(System.String)">SplitPath(String)</h4>

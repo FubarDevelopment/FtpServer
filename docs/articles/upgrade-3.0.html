@@ -8,7 +8,7 @@
     <title>Upgrade from 2.x to 3.0 | FTP Server documentation </title>
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Upgrade from 2.x to 3.0 | FTP Server documentation ">
-    <meta name="generator" content="docfx 2.42.0.0">
+    <meta name="generator" content="docfx 2.42.1.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -83,10 +83,16 @@
 <li><a href="#overview">Overview</a>
 <ul>
 <li><a href="#file-system-changes">File system changes</a></li>
+<li><a href="#account-management-changes">Account management changes</a>
+<ul>
+<li><a href="#account-directories-queryable">Account directories queryable</a></li>
 <li><a href="#membership-provider-changes">Membership provider changes</a></li>
+</ul>
+</li>
 <li><a href="#ftp-command-extensions-changes">FTP command extensions changes</a></li>
 <li><a href="#connection-data-changes">Connection data changes</a></li>
 <li><a href="#ftp-command-collection-changes">FTP command collection changes</a></li>
+<li><a href="#authorizationauthentication-as-per-rfc-2228">Authorization/authentication as per RFC 2228</a></li>
 </ul>
 </li>
 <li><a href="#changelog">Changelog</a>
@@ -112,11 +118,39 @@ and <a class="xref" href="../api/FubarDev.FtpServer.IFtpServerHost.html#FubarDev
 <li>FTP command collection</li>
 </ul>
 <h2 id="file-system-changes">File system changes</h2>
-<p>The only change for file systems is that
-<a class="xref" href="../api/FubarDev.FtpServer.FileSystem.IFileSystemClassFactory.html#FubarDev_FtpServer_FileSystem_IFileSystemClassFactory_Create_FubarDev_FtpServer_IAccountInformation_"><code>IFileSystemClassFactory.Create</code></a>
-now requires an <a class="xref" href="../api/FubarDev.FtpServer.IAccountInformation.html"><code>IAccountInformation</code></a> parameter. This parameter provides more
-information in case a file system implementation needs it.</p>
-<h2 id="membership-provider-changes">Membership provider changes</h2>
+<p>There are two important changes:</p>
+<ul>
+<li><a class="xref" href="../api/FubarDev.FtpServer.FileSystem.IFileSystemClassFactory.html#FubarDev_FtpServer_FileSystem_IFileSystemClassFactory_Create_FubarDev_FtpServer_IAccountInformation_"><code>IFileSystemClassFactory.Create</code></a>
+now requires an <a class="xref" href="../api/FubarDev.FtpServer.IAccountInformation.html"><code>IAccountInformation</code></a> parameter</li>
+<li>The <a class="xref" href="../api/FubarDev.FtpServer.FileSystem.IUnixFileSystemEntry.html"><code>IUnixFileSystemEntry</code></a> doesn't contain the <code>FileSystem</code> property anymore.</li>
+</ul>
+<h2 id="account-management-changes">Account management changes</h2>
+<h3 id="account-directories-queryable">Account directories queryable</h3>
+<p>A new interface has been introduced to get the root and home directories for
+a given user.</p>
+<table>
+<thead>
+<tr>
+<th>Type name</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a class="xref" href="../api/FubarDev.FtpServer.AccountManagement.Directories.SingleRootWithoutHome.SingleRootWithoutHomeAccountDirectoryQuery.html"><code>SingleRootWithoutHomeAccountDirectoryQuery</code></a></td>
+<td>Provides a single root for all users.</td>
+</tr>
+<tr>
+<td><a class="xref" href="../api/FubarDev.FtpServer.AccountManagement.Directories.RootPerUser.RootPerUserAccountDirectoryQuery.html"><code>RootPerUserAccountDirectoryQuery</code></a></td>
+<td>Gives every user its own root directory. Useful, when - for example - the file system root was set to <code>/home</code>.</td>
+</tr>
+<tr>
+<td><a class="xref" href="../api/FubarDev.FtpServer.MembershipProvider.Pam.Directories.PamAccountDirectoryQuery.html"><code>PamAccountDirectoryQuery</code></a></td>
+<td>Uses home directory information from PAM. The home directory can be configured to be the root instead.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="membership-provider-changes">Membership provider changes</h3>
 <p>The membership provider is now asynchronous which means that the <code>ValidateUser</code> function was
 renamed to <a class="xref" href="../api/FubarDev.FtpServer.AccountManagement.IMembershipProvider.html#FubarDev_FtpServer_AccountManagement_IMembershipProvider_ValidateUserAsync_System_String_System_String_"><code>ValidateUserAsync</code></a>.
 Everything else is the same.</p>
@@ -130,15 +164,31 @@ implements <a class="xref" href="../api/FubarDev.FtpServer.AccountManagement.IAn
 <h2 id="ftp-command-collection-changes">FTP command collection changes</h2>
 <p>We're now using <code>ReadOnlySpan</code> for both <a class="xref" href="../api/FubarDev.FtpServer.TelnetInputParser-1.html"><code>TelnetInputParser</code></a>
 and <a class="xref" href="../api/FubarDev.FtpServer.FtpCommandCollector.html"><code>FtpCommandCollector</code></a>.</p>
+<h2 id="authorizationauthentication-as-per-rfc-2228">Authorization/authentication as per RFC 2228</h2>
+<p>The authorization/authentication stack is new and implemented as
+specified in the <a href="https://tools.ietf.org/rfc/rfc2228.txt">RFC 2228</a>.</p>
+<p>This results in additional interfaces/extension points, like</p>
+<ul>
+<li><code>IAuthorizationMechanism</code></li>
+<li><code>IAuthenticationMechanism</code></li>
+</ul>
+<p>There is also a new extension point for actions to be called when
+the user is fully authorized: <code>IAuthorizationAction</code>. You can develop
+your own action, but you should only use an <a class="xref" href="../api/FubarDev.FtpServer.Authorization.IAuthorizationAction.html#FubarDev_FtpServer_Authorization_IAuthorizationAction_Level"><code>IAuthorizationAction.Level</code></a>
+below 1000. The values from 1000 (incl.) to 2000 (incl.) are reserved by
+the FTP server and are used to initialize the FTP connection data.</p>
 <h1 id="changelog">Changelog</h1>
 <h2 id="whats-new">What's new?</h2>
 <ul>
 <li>In-memory file system</li>
+<li>Unix file system</li>
 <li>Passive data connection port range (contribution from 40three GmbH)</li>
 <li>New <a class="xref" href="../api/FubarDev.FtpServer.IFtpServerHost.html"><code>IFtpServerHost</code></a> interface</li>
 <li>New <a class="xref" href="../api/FubarDev.FtpServer.IFtpService.html"><code>IFtpService</code></a> interface which allows easy integration into ASP.NET Core</li>
 <li>New <a class="xref" href="../api/FubarDev.FtpServer.IAccountInformation.html"><code>IAccountInformation</code></a> interface</li>
 <li>New <a class="xref" href="../api/FubarDev.FtpServer.AccountManagement.IAnonymousFtpUser.html"><code>IAnonymousFtpUser</code></a> interface</li>
+<li>New RFC 2228 compliant authentication/authorization</li>
+<li>Root and home directories for an account can be queried</li>
 </ul>
 <h2 id="whats-changed">What's changed?</h2>
 <ul>
@@ -158,7 +208,7 @@ their own implementation now</li>
 <li><code>SITE BLST</code> works again</li>
 </ul>
 <h1 id="a-look-into-the-future">A look into the future</h1>
-<p>The 4.x version will drop support for .NET Standard 1.3 and - eventually - .NET 4.6.1 as
+<p>The 4.x version will drop support for .NET Standard 1.3 and - most likely - .NET 4.6.1 as
 the FTP Server will be reimplemented as <code>ConnectionHandler</code> which will result into the following
 improvements:</p>
 <ul>

@@ -8,7 +8,7 @@
     <title>Authentication | FTP Server documentation </title>
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Authentication | FTP Server documentation ">
-    <meta name="generator" content="docfx 2.42.0.0">
+    <meta name="generator" content="docfx 2.42.1.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -79,7 +79,11 @@
             <article class="content wrap" id="_content" data-uid="authentication">
 <h1 id="introduction">Introduction</h1>
 
-<p>The FTP server only supports anonymous authentication, because .NET Standard doesn't provide a cross-platform way to authenticate a user against the operating system.</p>
+<p>The FTP server currently supports the following membership providers:</p>
+<ul>
+<li><code>AnonymousMembershipProvider</code> is the only portable membership provider in the project</li>
+<li><code>PamMembershipProvider</code> requres .NET Core 3.0 and a system with an installed libpam.so.0</li>
+</ul>
 <h1 id="how-it-works">How it works</h1>
 <p>The FTP server queries all services implementing the <a class="xref" href="../api/FubarDev.FtpServer.AccountManagement.IMembershipProvider.html"><code>IMembershipProvider</code></a> interface and tries to authenticate the given login/password against all registered providers. The first provider that was able to authenticate the user is stored in the FTP connection data.</p>
 <div class="WARNING">

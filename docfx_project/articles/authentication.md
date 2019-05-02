@@ -5,7 +5,10 @@ title: Authentication
 
 # Introduction
 
-The FTP server only supports anonymous authentication, because .NET Standard doesn't provide a cross-platform way to authenticate a user against the operating system.
+The FTP server currently supports the following membership providers:
+
+- `AnonymousMembershipProvider` is the only portable membership provider in the project
+- `PamMembershipProvider` requres .NET Core 3.0 and a system with an installed libpam.so.0
 
 # How it works
 

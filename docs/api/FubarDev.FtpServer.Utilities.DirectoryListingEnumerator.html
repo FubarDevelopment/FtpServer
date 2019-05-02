@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Class DirectoryListingEnumerator
    | FTP Server documentation ">
-    <meta name="generator" content="docfx 2.42.0.0">
+    <meta name="generator" content="docfx 2.42.1.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -182,7 +182,7 @@
     <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_Utilities_DirectoryListingEnumerator_CurrentDirectory.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.Utilities.DirectoryListingEnumerator.CurrentDirectory%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.Abstractions/Utilities/DirectoryListingEnumerator.cs/#L83">View Source</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.Abstractions/Utilities/DirectoryListingEnumerator.cs/#L90">View Source</a>
   </span>
   <a id="FubarDev_FtpServer_Utilities_DirectoryListingEnumerator_CurrentDirectory_" data-uid="FubarDev.FtpServer.Utilities.DirectoryListingEnumerator.CurrentDirectory*"></a>
   <h4 id="FubarDev_FtpServer_Utilities_DirectoryListingEnumerator_CurrentDirectory" data-uid="FubarDev.FtpServer.Utilities.DirectoryListingEnumerator.CurrentDirectory">CurrentDirectory</h4>
@@ -214,7 +214,7 @@ public IUnixDirectoryEntry CurrentDirectory { get; }</code></pre>
     <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_Utilities_DirectoryListingEnumerator_Entry.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.Utilities.DirectoryListingEnumerator.Entry%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.Abstractions/Utilities/DirectoryListingEnumerator.cs/#L120">View Source</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.Abstractions/Utilities/DirectoryListingEnumerator.cs/#L127">View Source</a>
   </span>
   <a id="FubarDev_FtpServer_Utilities_DirectoryListingEnumerator_Entry_" data-uid="FubarDev.FtpServer.Utilities.DirectoryListingEnumerator.Entry*"></a>
   <h4 id="FubarDev_FtpServer_Utilities_DirectoryListingEnumerator_Entry" data-uid="FubarDev.FtpServer.Utilities.DirectoryListingEnumerator.Entry">Entry</h4>
@@ -243,10 +243,42 @@ public IUnixFileSystemEntry Entry { get; }</code></pre>
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
+    <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_Utilities_DirectoryListingEnumerator_FileSystem.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.Utilities.DirectoryListingEnumerator.FileSystem%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.Abstractions/Utilities/DirectoryListingEnumerator.cs/#L84">View Source</a>
+  </span>
+  <a id="FubarDev_FtpServer_Utilities_DirectoryListingEnumerator_FileSystem_" data-uid="FubarDev.FtpServer.Utilities.DirectoryListingEnumerator.FileSystem*"></a>
+  <h4 id="FubarDev_FtpServer_Utilities_DirectoryListingEnumerator_FileSystem" data-uid="FubarDev.FtpServer.Utilities.DirectoryListingEnumerator.FileSystem">FileSystem</h4>
+  <div class="markdown level1 summary"><p>Gets the file system of the entries to be enumerated.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">[NotNull]
+public IUnixFileSystem FileSystem { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixFileSystem.html">IUnixFileSystem</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
     <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_Utilities_DirectoryListingEnumerator_GrandParentDirectory.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.Utilities.DirectoryListingEnumerator.GrandParentDirectory%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.Abstractions/Utilities/DirectoryListingEnumerator.cs/#L95">View Source</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.Abstractions/Utilities/DirectoryListingEnumerator.cs/#L102">View Source</a>
   </span>
   <a id="FubarDev_FtpServer_Utilities_DirectoryListingEnumerator_GrandParentDirectory_" data-uid="FubarDev.FtpServer.Utilities.DirectoryListingEnumerator.GrandParentDirectory*"></a>
   <h4 id="FubarDev_FtpServer_Utilities_DirectoryListingEnumerator_GrandParentDirectory" data-uid="FubarDev.FtpServer.Utilities.DirectoryListingEnumerator.GrandParentDirectory">GrandParentDirectory</h4>
@@ -278,7 +310,7 @@ public IUnixDirectoryEntry GrandParentDirectory { get; }</code></pre>
     <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_Utilities_DirectoryListingEnumerator_IsDotEntry.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.Utilities.DirectoryListingEnumerator.IsDotEntry%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.Abstractions/Utilities/DirectoryListingEnumerator.cs/#L139">View Source</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.Abstractions/Utilities/DirectoryListingEnumerator.cs/#L146">View Source</a>
   </span>
   <a id="FubarDev_FtpServer_Utilities_DirectoryListingEnumerator_IsDotEntry_" data-uid="FubarDev.FtpServer.Utilities.DirectoryListingEnumerator.IsDotEntry*"></a>
   <h4 id="FubarDev_FtpServer_Utilities_DirectoryListingEnumerator_IsDotEntry" data-uid="FubarDev.FtpServer.Utilities.DirectoryListingEnumerator.IsDotEntry">IsDotEntry</h4>
@@ -309,7 +341,7 @@ public IUnixDirectoryEntry GrandParentDirectory { get; }</code></pre>
     <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_Utilities_DirectoryListingEnumerator_Name.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.Utilities.DirectoryListingEnumerator.Name%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.Abstractions/Utilities/DirectoryListingEnumerator.cs/#L101">View Source</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.Abstractions/Utilities/DirectoryListingEnumerator.cs/#L108">View Source</a>
   </span>
   <a id="FubarDev_FtpServer_Utilities_DirectoryListingEnumerator_Name_" data-uid="FubarDev.FtpServer.Utilities.DirectoryListingEnumerator.Name*"></a>
   <h4 id="FubarDev_FtpServer_Utilities_DirectoryListingEnumerator_Name" data-uid="FubarDev.FtpServer.Utilities.DirectoryListingEnumerator.Name">Name</h4>
@@ -341,7 +373,7 @@ public string Name { get; }</code></pre>
     <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_Utilities_DirectoryListingEnumerator_ParentDirectory.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.Utilities.DirectoryListingEnumerator.ParentDirectory%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.Abstractions/Utilities/DirectoryListingEnumerator.cs/#L89">View Source</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.Abstractions/Utilities/DirectoryListingEnumerator.cs/#L96">View Source</a>
   </span>
   <a id="FubarDev_FtpServer_Utilities_DirectoryListingEnumerator_ParentDirectory_" data-uid="FubarDev.FtpServer.Utilities.DirectoryListingEnumerator.ParentDirectory*"></a>
   <h4 id="FubarDev_FtpServer_Utilities_DirectoryListingEnumerator_ParentDirectory" data-uid="FubarDev.FtpServer.Utilities.DirectoryListingEnumerator.ParentDirectory">ParentDirectory</h4>
@@ -375,7 +407,7 @@ public IUnixDirectoryEntry ParentDirectory { get; }</code></pre>
     <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_Utilities_DirectoryListingEnumerator_GetFullPath_System_String_.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.Utilities.DirectoryListingEnumerator.GetFullPath(System.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.Abstractions/Utilities/DirectoryListingEnumerator.cs/#L164">View Source</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.Abstractions/Utilities/DirectoryListingEnumerator.cs/#L171">View Source</a>
   </span>
   <a id="FubarDev_FtpServer_Utilities_DirectoryListingEnumerator_GetFullPath_" data-uid="FubarDev.FtpServer.Utilities.DirectoryListingEnumerator.GetFullPath*"></a>
   <h4 id="FubarDev_FtpServer_Utilities_DirectoryListingEnumerator_GetFullPath_System_String_" data-uid="FubarDev.FtpServer.Utilities.DirectoryListingEnumerator.GetFullPath(System.String)">GetFullPath(String)</h4>
@@ -425,7 +457,7 @@ public IUnixDirectoryEntry ParentDirectory { get; }</code></pre>
     <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_Utilities_DirectoryListingEnumerator_MoveNext.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.Utilities.DirectoryListingEnumerator.MoveNext%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.Abstractions/Utilities/DirectoryListingEnumerator.cs/#L145">View Source</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.Abstractions/Utilities/DirectoryListingEnumerator.cs/#L152">View Source</a>
   </span>
   <a id="FubarDev_FtpServer_Utilities_DirectoryListingEnumerator_MoveNext_" data-uid="FubarDev.FtpServer.Utilities.DirectoryListingEnumerator.MoveNext*"></a>
   <h4 id="FubarDev_FtpServer_Utilities_DirectoryListingEnumerator_MoveNext" data-uid="FubarDev.FtpServer.Utilities.DirectoryListingEnumerator.MoveNext">MoveNext()</h4>

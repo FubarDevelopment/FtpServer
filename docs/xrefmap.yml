@@ -7,8 +7,8 @@ references:
 - uid: configuration
   name: FTP Server Configuration
   href: articles/configuration.html
-- uid: custom-authentication
-  name: Custom Authentication Development
+- uid: custom-account-management
+  name: Custom Account Management Development
   href: articles/custom-authentication.html
 - uid: custom-file-system
   name: Custom File System Development
@@ -228,6 +228,203 @@ references:
   isSpec: "True"
   fullName: FubarDev.FtpServer.AccountManagement.AnonymousMembershipProvider.ValidateUserAsync
   nameWithType: AnonymousMembershipProvider.ValidateUserAsync
+- uid: FubarDev.FtpServer.AccountManagement.Directories
+  name: FubarDev.FtpServer.AccountManagement.Directories
+  href: api/FubarDev.FtpServer.AccountManagement.Directories.html
+  commentId: N:FubarDev.FtpServer.AccountManagement.Directories
+  fullName: FubarDev.FtpServer.AccountManagement.Directories
+  nameWithType: FubarDev.FtpServer.AccountManagement.Directories
+- uid: FubarDev.FtpServer.AccountManagement.Directories.GenericAccountDirectories
+  name: GenericAccountDirectories
+  href: api/FubarDev.FtpServer.AccountManagement.Directories.GenericAccountDirectories.html
+  commentId: T:FubarDev.FtpServer.AccountManagement.Directories.GenericAccountDirectories
+  fullName: FubarDev.FtpServer.AccountManagement.Directories.GenericAccountDirectories
+  nameWithType: GenericAccountDirectories
+- uid: FubarDev.FtpServer.AccountManagement.Directories.GenericAccountDirectories.#ctor(System.String,System.String)
+  name: GenericAccountDirectories(String, String)
+  href: api/FubarDev.FtpServer.AccountManagement.Directories.GenericAccountDirectories.html#FubarDev_FtpServer_AccountManagement_Directories_GenericAccountDirectories__ctor_System_String_System_String_
+  commentId: M:FubarDev.FtpServer.AccountManagement.Directories.GenericAccountDirectories.#ctor(System.String,System.String)
+  fullName: FubarDev.FtpServer.AccountManagement.Directories.GenericAccountDirectories.GenericAccountDirectories(System.String, System.String)
+  nameWithType: GenericAccountDirectories.GenericAccountDirectories(String, String)
+- uid: FubarDev.FtpServer.AccountManagement.Directories.GenericAccountDirectories.#ctor*
+  name: GenericAccountDirectories
+  href: api/FubarDev.FtpServer.AccountManagement.Directories.GenericAccountDirectories.html#FubarDev_FtpServer_AccountManagement_Directories_GenericAccountDirectories__ctor_
+  commentId: Overload:FubarDev.FtpServer.AccountManagement.Directories.GenericAccountDirectories.#ctor
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.AccountManagement.Directories.GenericAccountDirectories.GenericAccountDirectories
+  nameWithType: GenericAccountDirectories.GenericAccountDirectories
+- uid: FubarDev.FtpServer.AccountManagement.Directories.GenericAccountDirectories.HomePath
+  name: HomePath
+  href: api/FubarDev.FtpServer.AccountManagement.Directories.GenericAccountDirectories.html#FubarDev_FtpServer_AccountManagement_Directories_GenericAccountDirectories_HomePath
+  commentId: P:FubarDev.FtpServer.AccountManagement.Directories.GenericAccountDirectories.HomePath
+  fullName: FubarDev.FtpServer.AccountManagement.Directories.GenericAccountDirectories.HomePath
+  nameWithType: GenericAccountDirectories.HomePath
+- uid: FubarDev.FtpServer.AccountManagement.Directories.GenericAccountDirectories.HomePath*
+  name: HomePath
+  href: api/FubarDev.FtpServer.AccountManagement.Directories.GenericAccountDirectories.html#FubarDev_FtpServer_AccountManagement_Directories_GenericAccountDirectories_HomePath_
+  commentId: Overload:FubarDev.FtpServer.AccountManagement.Directories.GenericAccountDirectories.HomePath
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.AccountManagement.Directories.GenericAccountDirectories.HomePath
+  nameWithType: GenericAccountDirectories.HomePath
+- uid: FubarDev.FtpServer.AccountManagement.Directories.GenericAccountDirectories.RootPath
+  name: RootPath
+  href: api/FubarDev.FtpServer.AccountManagement.Directories.GenericAccountDirectories.html#FubarDev_FtpServer_AccountManagement_Directories_GenericAccountDirectories_RootPath
+  commentId: P:FubarDev.FtpServer.AccountManagement.Directories.GenericAccountDirectories.RootPath
+  fullName: FubarDev.FtpServer.AccountManagement.Directories.GenericAccountDirectories.RootPath
+  nameWithType: GenericAccountDirectories.RootPath
+- uid: FubarDev.FtpServer.AccountManagement.Directories.GenericAccountDirectories.RootPath*
+  name: RootPath
+  href: api/FubarDev.FtpServer.AccountManagement.Directories.GenericAccountDirectories.html#FubarDev_FtpServer_AccountManagement_Directories_GenericAccountDirectories_RootPath_
+  commentId: Overload:FubarDev.FtpServer.AccountManagement.Directories.GenericAccountDirectories.RootPath
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.AccountManagement.Directories.GenericAccountDirectories.RootPath
+  nameWithType: GenericAccountDirectories.RootPath
+- uid: FubarDev.FtpServer.AccountManagement.Directories.RootPerUser
+  name: FubarDev.FtpServer.AccountManagement.Directories.RootPerUser
+  href: api/FubarDev.FtpServer.AccountManagement.Directories.RootPerUser.html
+  commentId: N:FubarDev.FtpServer.AccountManagement.Directories.RootPerUser
+  fullName: FubarDev.FtpServer.AccountManagement.Directories.RootPerUser
+  nameWithType: FubarDev.FtpServer.AccountManagement.Directories.RootPerUser
+- uid: FubarDev.FtpServer.AccountManagement.Directories.RootPerUser.RootPerUserAccountDirectoryQuery
+  name: RootPerUserAccountDirectoryQuery
+  href: api/FubarDev.FtpServer.AccountManagement.Directories.RootPerUser.RootPerUserAccountDirectoryQuery.html
+  commentId: T:FubarDev.FtpServer.AccountManagement.Directories.RootPerUser.RootPerUserAccountDirectoryQuery
+  fullName: FubarDev.FtpServer.AccountManagement.Directories.RootPerUser.RootPerUserAccountDirectoryQuery
+  nameWithType: RootPerUserAccountDirectoryQuery
+- uid: FubarDev.FtpServer.AccountManagement.Directories.RootPerUser.RootPerUserAccountDirectoryQuery.#ctor(Microsoft.Extensions.Options.IOptions{FubarDev.FtpServer.AccountManagement.Directories.RootPerUser.RootPerUserAccountDirectoryQueryOptions},Microsoft.Extensions.Logging.ILogger{FubarDev.FtpServer.AccountManagement.Directories.RootPerUser.RootPerUserAccountDirectoryQuery})
+  name: RootPerUserAccountDirectoryQuery(IOptions<RootPerUserAccountDirectoryQueryOptions>, ILogger<RootPerUserAccountDirectoryQuery>)
+  href: api/FubarDev.FtpServer.AccountManagement.Directories.RootPerUser.RootPerUserAccountDirectoryQuery.html#FubarDev_FtpServer_AccountManagement_Directories_RootPerUser_RootPerUserAccountDirectoryQuery__ctor_Microsoft_Extensions_Options_IOptions_FubarDev_FtpServer_AccountManagement_Directories_RootPerUser_RootPerUserAccountDirectoryQueryOptions__Microsoft_Extensions_Logging_ILogger_FubarDev_FtpServer_AccountManagement_Directories_RootPerUser_RootPerUserAccountDirectoryQuery__
+  commentId: M:FubarDev.FtpServer.AccountManagement.Directories.RootPerUser.RootPerUserAccountDirectoryQuery.#ctor(Microsoft.Extensions.Options.IOptions{FubarDev.FtpServer.AccountManagement.Directories.RootPerUser.RootPerUserAccountDirectoryQueryOptions},Microsoft.Extensions.Logging.ILogger{FubarDev.FtpServer.AccountManagement.Directories.RootPerUser.RootPerUserAccountDirectoryQuery})
+  name.vb: RootPerUserAccountDirectoryQuery(IOptions(Of RootPerUserAccountDirectoryQueryOptions), ILogger(Of RootPerUserAccountDirectoryQuery))
+  fullName: FubarDev.FtpServer.AccountManagement.Directories.RootPerUser.RootPerUserAccountDirectoryQuery.RootPerUserAccountDirectoryQuery(Microsoft.Extensions.Options.IOptions<FubarDev.FtpServer.AccountManagement.Directories.RootPerUser.RootPerUserAccountDirectoryQueryOptions>, Microsoft.Extensions.Logging.ILogger<FubarDev.FtpServer.AccountManagement.Directories.RootPerUser.RootPerUserAccountDirectoryQuery>)
+  fullName.vb: FubarDev.FtpServer.AccountManagement.Directories.RootPerUser.RootPerUserAccountDirectoryQuery.RootPerUserAccountDirectoryQuery(Microsoft.Extensions.Options.IOptions(Of FubarDev.FtpServer.AccountManagement.Directories.RootPerUser.RootPerUserAccountDirectoryQueryOptions), Microsoft.Extensions.Logging.ILogger(Of FubarDev.FtpServer.AccountManagement.Directories.RootPerUser.RootPerUserAccountDirectoryQuery))
+  nameWithType: RootPerUserAccountDirectoryQuery.RootPerUserAccountDirectoryQuery(IOptions<RootPerUserAccountDirectoryQueryOptions>, ILogger<RootPerUserAccountDirectoryQuery>)
+  nameWithType.vb: RootPerUserAccountDirectoryQuery.RootPerUserAccountDirectoryQuery(IOptions(Of RootPerUserAccountDirectoryQueryOptions), ILogger(Of RootPerUserAccountDirectoryQuery))
+- uid: FubarDev.FtpServer.AccountManagement.Directories.RootPerUser.RootPerUserAccountDirectoryQuery.#ctor*
+  name: RootPerUserAccountDirectoryQuery
+  href: api/FubarDev.FtpServer.AccountManagement.Directories.RootPerUser.RootPerUserAccountDirectoryQuery.html#FubarDev_FtpServer_AccountManagement_Directories_RootPerUser_RootPerUserAccountDirectoryQuery__ctor_
+  commentId: Overload:FubarDev.FtpServer.AccountManagement.Directories.RootPerUser.RootPerUserAccountDirectoryQuery.#ctor
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.AccountManagement.Directories.RootPerUser.RootPerUserAccountDirectoryQuery.RootPerUserAccountDirectoryQuery
+  nameWithType: RootPerUserAccountDirectoryQuery.RootPerUserAccountDirectoryQuery
+- uid: FubarDev.FtpServer.AccountManagement.Directories.RootPerUser.RootPerUserAccountDirectoryQuery.GetDirectories(FubarDev.FtpServer.IAccountInformation)
+  name: GetDirectories(IAccountInformation)
+  href: api/FubarDev.FtpServer.AccountManagement.Directories.RootPerUser.RootPerUserAccountDirectoryQuery.html#FubarDev_FtpServer_AccountManagement_Directories_RootPerUser_RootPerUserAccountDirectoryQuery_GetDirectories_FubarDev_FtpServer_IAccountInformation_
+  commentId: M:FubarDev.FtpServer.AccountManagement.Directories.RootPerUser.RootPerUserAccountDirectoryQuery.GetDirectories(FubarDev.FtpServer.IAccountInformation)
+  fullName: FubarDev.FtpServer.AccountManagement.Directories.RootPerUser.RootPerUserAccountDirectoryQuery.GetDirectories(FubarDev.FtpServer.IAccountInformation)
+  nameWithType: RootPerUserAccountDirectoryQuery.GetDirectories(IAccountInformation)
+- uid: FubarDev.FtpServer.AccountManagement.Directories.RootPerUser.RootPerUserAccountDirectoryQuery.GetDirectories*
+  name: GetDirectories
+  href: api/FubarDev.FtpServer.AccountManagement.Directories.RootPerUser.RootPerUserAccountDirectoryQuery.html#FubarDev_FtpServer_AccountManagement_Directories_RootPerUser_RootPerUserAccountDirectoryQuery_GetDirectories_
+  commentId: Overload:FubarDev.FtpServer.AccountManagement.Directories.RootPerUser.RootPerUserAccountDirectoryQuery.GetDirectories
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.AccountManagement.Directories.RootPerUser.RootPerUserAccountDirectoryQuery.GetDirectories
+  nameWithType: RootPerUserAccountDirectoryQuery.GetDirectories
+- uid: FubarDev.FtpServer.AccountManagement.Directories.RootPerUser.RootPerUserAccountDirectoryQueryOptions
+  name: RootPerUserAccountDirectoryQueryOptions
+  href: api/FubarDev.FtpServer.AccountManagement.Directories.RootPerUser.RootPerUserAccountDirectoryQueryOptions.html
+  commentId: T:FubarDev.FtpServer.AccountManagement.Directories.RootPerUser.RootPerUserAccountDirectoryQueryOptions
+  fullName: FubarDev.FtpServer.AccountManagement.Directories.RootPerUser.RootPerUserAccountDirectoryQueryOptions
+  nameWithType: RootPerUserAccountDirectoryQueryOptions
+- uid: FubarDev.FtpServer.AccountManagement.Directories.RootPerUser.RootPerUserAccountDirectoryQueryOptions.AnonymousRootDirectory
+  name: AnonymousRootDirectory
+  href: api/FubarDev.FtpServer.AccountManagement.Directories.RootPerUser.RootPerUserAccountDirectoryQueryOptions.html#FubarDev_FtpServer_AccountManagement_Directories_RootPerUser_RootPerUserAccountDirectoryQueryOptions_AnonymousRootDirectory
+  commentId: P:FubarDev.FtpServer.AccountManagement.Directories.RootPerUser.RootPerUserAccountDirectoryQueryOptions.AnonymousRootDirectory
+  fullName: FubarDev.FtpServer.AccountManagement.Directories.RootPerUser.RootPerUserAccountDirectoryQueryOptions.AnonymousRootDirectory
+  nameWithType: RootPerUserAccountDirectoryQueryOptions.AnonymousRootDirectory
+- uid: FubarDev.FtpServer.AccountManagement.Directories.RootPerUser.RootPerUserAccountDirectoryQueryOptions.AnonymousRootDirectory*
+  name: AnonymousRootDirectory
+  href: api/FubarDev.FtpServer.AccountManagement.Directories.RootPerUser.RootPerUserAccountDirectoryQueryOptions.html#FubarDev_FtpServer_AccountManagement_Directories_RootPerUser_RootPerUserAccountDirectoryQueryOptions_AnonymousRootDirectory_
+  commentId: Overload:FubarDev.FtpServer.AccountManagement.Directories.RootPerUser.RootPerUserAccountDirectoryQueryOptions.AnonymousRootDirectory
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.AccountManagement.Directories.RootPerUser.RootPerUserAccountDirectoryQueryOptions.AnonymousRootDirectory
+  nameWithType: RootPerUserAccountDirectoryQueryOptions.AnonymousRootDirectory
+- uid: FubarDev.FtpServer.AccountManagement.Directories.RootPerUser.RootPerUserAccountDirectoryQueryOptions.AnonymousRootPerEmail
+  name: AnonymousRootPerEmail
+  href: api/FubarDev.FtpServer.AccountManagement.Directories.RootPerUser.RootPerUserAccountDirectoryQueryOptions.html#FubarDev_FtpServer_AccountManagement_Directories_RootPerUser_RootPerUserAccountDirectoryQueryOptions_AnonymousRootPerEmail
+  commentId: P:FubarDev.FtpServer.AccountManagement.Directories.RootPerUser.RootPerUserAccountDirectoryQueryOptions.AnonymousRootPerEmail
+  fullName: FubarDev.FtpServer.AccountManagement.Directories.RootPerUser.RootPerUserAccountDirectoryQueryOptions.AnonymousRootPerEmail
+  nameWithType: RootPerUserAccountDirectoryQueryOptions.AnonymousRootPerEmail
+- uid: FubarDev.FtpServer.AccountManagement.Directories.RootPerUser.RootPerUserAccountDirectoryQueryOptions.AnonymousRootPerEmail*
+  name: AnonymousRootPerEmail
+  href: api/FubarDev.FtpServer.AccountManagement.Directories.RootPerUser.RootPerUserAccountDirectoryQueryOptions.html#FubarDev_FtpServer_AccountManagement_Directories_RootPerUser_RootPerUserAccountDirectoryQueryOptions_AnonymousRootPerEmail_
+  commentId: Overload:FubarDev.FtpServer.AccountManagement.Directories.RootPerUser.RootPerUserAccountDirectoryQueryOptions.AnonymousRootPerEmail
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.AccountManagement.Directories.RootPerUser.RootPerUserAccountDirectoryQueryOptions.AnonymousRootPerEmail
+  nameWithType: RootPerUserAccountDirectoryQueryOptions.AnonymousRootPerEmail
+- uid: FubarDev.FtpServer.AccountManagement.Directories.RootPerUser.RootPerUserAccountDirectoryQueryOptions.UserRootDirectory
+  name: UserRootDirectory
+  href: api/FubarDev.FtpServer.AccountManagement.Directories.RootPerUser.RootPerUserAccountDirectoryQueryOptions.html#FubarDev_FtpServer_AccountManagement_Directories_RootPerUser_RootPerUserAccountDirectoryQueryOptions_UserRootDirectory
+  commentId: P:FubarDev.FtpServer.AccountManagement.Directories.RootPerUser.RootPerUserAccountDirectoryQueryOptions.UserRootDirectory
+  fullName: FubarDev.FtpServer.AccountManagement.Directories.RootPerUser.RootPerUserAccountDirectoryQueryOptions.UserRootDirectory
+  nameWithType: RootPerUserAccountDirectoryQueryOptions.UserRootDirectory
+- uid: FubarDev.FtpServer.AccountManagement.Directories.RootPerUser.RootPerUserAccountDirectoryQueryOptions.UserRootDirectory*
+  name: UserRootDirectory
+  href: api/FubarDev.FtpServer.AccountManagement.Directories.RootPerUser.RootPerUserAccountDirectoryQueryOptions.html#FubarDev_FtpServer_AccountManagement_Directories_RootPerUser_RootPerUserAccountDirectoryQueryOptions_UserRootDirectory_
+  commentId: Overload:FubarDev.FtpServer.AccountManagement.Directories.RootPerUser.RootPerUserAccountDirectoryQueryOptions.UserRootDirectory
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.AccountManagement.Directories.RootPerUser.RootPerUserAccountDirectoryQueryOptions.UserRootDirectory
+  nameWithType: RootPerUserAccountDirectoryQueryOptions.UserRootDirectory
+- uid: FubarDev.FtpServer.AccountManagement.Directories.SingleRootWithoutHome
+  name: FubarDev.FtpServer.AccountManagement.Directories.SingleRootWithoutHome
+  href: api/FubarDev.FtpServer.AccountManagement.Directories.SingleRootWithoutHome.html
+  commentId: N:FubarDev.FtpServer.AccountManagement.Directories.SingleRootWithoutHome
+  fullName: FubarDev.FtpServer.AccountManagement.Directories.SingleRootWithoutHome
+  nameWithType: FubarDev.FtpServer.AccountManagement.Directories.SingleRootWithoutHome
+- uid: FubarDev.FtpServer.AccountManagement.Directories.SingleRootWithoutHome.SingleRootWithoutHomeAccountDirectoryQuery
+  name: SingleRootWithoutHomeAccountDirectoryQuery
+  href: api/FubarDev.FtpServer.AccountManagement.Directories.SingleRootWithoutHome.SingleRootWithoutHomeAccountDirectoryQuery.html
+  commentId: T:FubarDev.FtpServer.AccountManagement.Directories.SingleRootWithoutHome.SingleRootWithoutHomeAccountDirectoryQuery
+  fullName: FubarDev.FtpServer.AccountManagement.Directories.SingleRootWithoutHome.SingleRootWithoutHomeAccountDirectoryQuery
+  nameWithType: SingleRootWithoutHomeAccountDirectoryQuery
+- uid: FubarDev.FtpServer.AccountManagement.Directories.SingleRootWithoutHome.SingleRootWithoutHomeAccountDirectoryQuery.#ctor(Microsoft.Extensions.Options.IOptions{FubarDev.FtpServer.AccountManagement.Directories.SingleRootWithoutHome.SingleRootWithoutHomeAccountDirectoryQueryOptions})
+  name: SingleRootWithoutHomeAccountDirectoryQuery(IOptions<SingleRootWithoutHomeAccountDirectoryQueryOptions>)
+  href: api/FubarDev.FtpServer.AccountManagement.Directories.SingleRootWithoutHome.SingleRootWithoutHomeAccountDirectoryQuery.html#FubarDev_FtpServer_AccountManagement_Directories_SingleRootWithoutHome_SingleRootWithoutHomeAccountDirectoryQuery__ctor_Microsoft_Extensions_Options_IOptions_FubarDev_FtpServer_AccountManagement_Directories_SingleRootWithoutHome_SingleRootWithoutHomeAccountDirectoryQueryOptions__
+  commentId: M:FubarDev.FtpServer.AccountManagement.Directories.SingleRootWithoutHome.SingleRootWithoutHomeAccountDirectoryQuery.#ctor(Microsoft.Extensions.Options.IOptions{FubarDev.FtpServer.AccountManagement.Directories.SingleRootWithoutHome.SingleRootWithoutHomeAccountDirectoryQueryOptions})
+  name.vb: SingleRootWithoutHomeAccountDirectoryQuery(IOptions(Of SingleRootWithoutHomeAccountDirectoryQueryOptions))
+  fullName: FubarDev.FtpServer.AccountManagement.Directories.SingleRootWithoutHome.SingleRootWithoutHomeAccountDirectoryQuery.SingleRootWithoutHomeAccountDirectoryQuery(Microsoft.Extensions.Options.IOptions<FubarDev.FtpServer.AccountManagement.Directories.SingleRootWithoutHome.SingleRootWithoutHomeAccountDirectoryQueryOptions>)
+  fullName.vb: FubarDev.FtpServer.AccountManagement.Directories.SingleRootWithoutHome.SingleRootWithoutHomeAccountDirectoryQuery.SingleRootWithoutHomeAccountDirectoryQuery(Microsoft.Extensions.Options.IOptions(Of FubarDev.FtpServer.AccountManagement.Directories.SingleRootWithoutHome.SingleRootWithoutHomeAccountDirectoryQueryOptions))
+  nameWithType: SingleRootWithoutHomeAccountDirectoryQuery.SingleRootWithoutHomeAccountDirectoryQuery(IOptions<SingleRootWithoutHomeAccountDirectoryQueryOptions>)
+  nameWithType.vb: SingleRootWithoutHomeAccountDirectoryQuery.SingleRootWithoutHomeAccountDirectoryQuery(IOptions(Of SingleRootWithoutHomeAccountDirectoryQueryOptions))
+- uid: FubarDev.FtpServer.AccountManagement.Directories.SingleRootWithoutHome.SingleRootWithoutHomeAccountDirectoryQuery.#ctor*
+  name: SingleRootWithoutHomeAccountDirectoryQuery
+  href: api/FubarDev.FtpServer.AccountManagement.Directories.SingleRootWithoutHome.SingleRootWithoutHomeAccountDirectoryQuery.html#FubarDev_FtpServer_AccountManagement_Directories_SingleRootWithoutHome_SingleRootWithoutHomeAccountDirectoryQuery__ctor_
+  commentId: Overload:FubarDev.FtpServer.AccountManagement.Directories.SingleRootWithoutHome.SingleRootWithoutHomeAccountDirectoryQuery.#ctor
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.AccountManagement.Directories.SingleRootWithoutHome.SingleRootWithoutHomeAccountDirectoryQuery.SingleRootWithoutHomeAccountDirectoryQuery
+  nameWithType: SingleRootWithoutHomeAccountDirectoryQuery.SingleRootWithoutHomeAccountDirectoryQuery
+- uid: FubarDev.FtpServer.AccountManagement.Directories.SingleRootWithoutHome.SingleRootWithoutHomeAccountDirectoryQuery.GetDirectories(FubarDev.FtpServer.IAccountInformation)
+  name: GetDirectories(IAccountInformation)
+  href: api/FubarDev.FtpServer.AccountManagement.Directories.SingleRootWithoutHome.SingleRootWithoutHomeAccountDirectoryQuery.html#FubarDev_FtpServer_AccountManagement_Directories_SingleRootWithoutHome_SingleRootWithoutHomeAccountDirectoryQuery_GetDirectories_FubarDev_FtpServer_IAccountInformation_
+  commentId: M:FubarDev.FtpServer.AccountManagement.Directories.SingleRootWithoutHome.SingleRootWithoutHomeAccountDirectoryQuery.GetDirectories(FubarDev.FtpServer.IAccountInformation)
+  fullName: FubarDev.FtpServer.AccountManagement.Directories.SingleRootWithoutHome.SingleRootWithoutHomeAccountDirectoryQuery.GetDirectories(FubarDev.FtpServer.IAccountInformation)
+  nameWithType: SingleRootWithoutHomeAccountDirectoryQuery.GetDirectories(IAccountInformation)
+- uid: FubarDev.FtpServer.AccountManagement.Directories.SingleRootWithoutHome.SingleRootWithoutHomeAccountDirectoryQuery.GetDirectories*
+  name: GetDirectories
+  href: api/FubarDev.FtpServer.AccountManagement.Directories.SingleRootWithoutHome.SingleRootWithoutHomeAccountDirectoryQuery.html#FubarDev_FtpServer_AccountManagement_Directories_SingleRootWithoutHome_SingleRootWithoutHomeAccountDirectoryQuery_GetDirectories_
+  commentId: Overload:FubarDev.FtpServer.AccountManagement.Directories.SingleRootWithoutHome.SingleRootWithoutHomeAccountDirectoryQuery.GetDirectories
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.AccountManagement.Directories.SingleRootWithoutHome.SingleRootWithoutHomeAccountDirectoryQuery.GetDirectories
+  nameWithType: SingleRootWithoutHomeAccountDirectoryQuery.GetDirectories
+- uid: FubarDev.FtpServer.AccountManagement.Directories.SingleRootWithoutHome.SingleRootWithoutHomeAccountDirectoryQueryOptions
+  name: SingleRootWithoutHomeAccountDirectoryQueryOptions
+  href: api/FubarDev.FtpServer.AccountManagement.Directories.SingleRootWithoutHome.SingleRootWithoutHomeAccountDirectoryQueryOptions.html
+  commentId: T:FubarDev.FtpServer.AccountManagement.Directories.SingleRootWithoutHome.SingleRootWithoutHomeAccountDirectoryQueryOptions
+  fullName: FubarDev.FtpServer.AccountManagement.Directories.SingleRootWithoutHome.SingleRootWithoutHomeAccountDirectoryQueryOptions
+  nameWithType: SingleRootWithoutHomeAccountDirectoryQueryOptions
+- uid: FubarDev.FtpServer.AccountManagement.Directories.SingleRootWithoutHome.SingleRootWithoutHomeAccountDirectoryQueryOptions.RootPath
+  name: RootPath
+  href: api/FubarDev.FtpServer.AccountManagement.Directories.SingleRootWithoutHome.SingleRootWithoutHomeAccountDirectoryQueryOptions.html#FubarDev_FtpServer_AccountManagement_Directories_SingleRootWithoutHome_SingleRootWithoutHomeAccountDirectoryQueryOptions_RootPath
+  commentId: P:FubarDev.FtpServer.AccountManagement.Directories.SingleRootWithoutHome.SingleRootWithoutHomeAccountDirectoryQueryOptions.RootPath
+  fullName: FubarDev.FtpServer.AccountManagement.Directories.SingleRootWithoutHome.SingleRootWithoutHomeAccountDirectoryQueryOptions.RootPath
+  nameWithType: SingleRootWithoutHomeAccountDirectoryQueryOptions.RootPath
+- uid: FubarDev.FtpServer.AccountManagement.Directories.SingleRootWithoutHome.SingleRootWithoutHomeAccountDirectoryQueryOptions.RootPath*
+  name: RootPath
+  href: api/FubarDev.FtpServer.AccountManagement.Directories.SingleRootWithoutHome.SingleRootWithoutHomeAccountDirectoryQueryOptions.html#FubarDev_FtpServer_AccountManagement_Directories_SingleRootWithoutHome_SingleRootWithoutHomeAccountDirectoryQueryOptions_RootPath_
+  commentId: Overload:FubarDev.FtpServer.AccountManagement.Directories.SingleRootWithoutHome.SingleRootWithoutHomeAccountDirectoryQueryOptions.RootPath
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.AccountManagement.Directories.SingleRootWithoutHome.SingleRootWithoutHomeAccountDirectoryQueryOptions.RootPath
+  nameWithType: SingleRootWithoutHomeAccountDirectoryQueryOptions.RootPath
 - uid: FubarDev.FtpServer.AccountManagement.IAnonymousFtpUser
   name: IAnonymousFtpUser
   href: api/FubarDev.FtpServer.AccountManagement.IAnonymousFtpUser.html
@@ -928,6 +1125,169 @@ references:
   commentId: N:FubarDev.FtpServer.Authorization
   fullName: FubarDev.FtpServer.Authorization
   nameWithType: FubarDev.FtpServer.Authorization
+- uid: FubarDev.FtpServer.Authorization.Actions
+  name: FubarDev.FtpServer.Authorization.Actions
+  href: api/FubarDev.FtpServer.Authorization.Actions.html
+  commentId: N:FubarDev.FtpServer.Authorization.Actions
+  fullName: FubarDev.FtpServer.Authorization.Actions
+  nameWithType: FubarDev.FtpServer.Authorization.Actions
+- uid: FubarDev.FtpServer.Authorization.Actions.FillConnectionAccountDataAction
+  name: FillConnectionAccountDataAction
+  href: api/FubarDev.FtpServer.Authorization.Actions.FillConnectionAccountDataAction.html
+  commentId: T:FubarDev.FtpServer.Authorization.Actions.FillConnectionAccountDataAction
+  fullName: FubarDev.FtpServer.Authorization.Actions.FillConnectionAccountDataAction
+  nameWithType: FillConnectionAccountDataAction
+- uid: FubarDev.FtpServer.Authorization.Actions.FillConnectionAccountDataAction.#ctor(FubarDev.FtpServer.IFtpConnectionAccessor)
+  name: FillConnectionAccountDataAction(IFtpConnectionAccessor)
+  href: api/FubarDev.FtpServer.Authorization.Actions.FillConnectionAccountDataAction.html#FubarDev_FtpServer_Authorization_Actions_FillConnectionAccountDataAction__ctor_FubarDev_FtpServer_IFtpConnectionAccessor_
+  commentId: M:FubarDev.FtpServer.Authorization.Actions.FillConnectionAccountDataAction.#ctor(FubarDev.FtpServer.IFtpConnectionAccessor)
+  fullName: FubarDev.FtpServer.Authorization.Actions.FillConnectionAccountDataAction.FillConnectionAccountDataAction(FubarDev.FtpServer.IFtpConnectionAccessor)
+  nameWithType: FillConnectionAccountDataAction.FillConnectionAccountDataAction(IFtpConnectionAccessor)
+- uid: FubarDev.FtpServer.Authorization.Actions.FillConnectionAccountDataAction.#ctor*
+  name: FillConnectionAccountDataAction
+  href: api/FubarDev.FtpServer.Authorization.Actions.FillConnectionAccountDataAction.html#FubarDev_FtpServer_Authorization_Actions_FillConnectionAccountDataAction__ctor_
+  commentId: Overload:FubarDev.FtpServer.Authorization.Actions.FillConnectionAccountDataAction.#ctor
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.Authorization.Actions.FillConnectionAccountDataAction.FillConnectionAccountDataAction
+  nameWithType: FillConnectionAccountDataAction.FillConnectionAccountDataAction
+- uid: FubarDev.FtpServer.Authorization.Actions.FillConnectionAccountDataAction.AuthorizedAsync(FubarDev.FtpServer.IAccountInformation,System.Threading.CancellationToken)
+  name: AuthorizedAsync(IAccountInformation, CancellationToken)
+  href: api/FubarDev.FtpServer.Authorization.Actions.FillConnectionAccountDataAction.html#FubarDev_FtpServer_Authorization_Actions_FillConnectionAccountDataAction_AuthorizedAsync_FubarDev_FtpServer_IAccountInformation_System_Threading_CancellationToken_
+  commentId: M:FubarDev.FtpServer.Authorization.Actions.FillConnectionAccountDataAction.AuthorizedAsync(FubarDev.FtpServer.IAccountInformation,System.Threading.CancellationToken)
+  fullName: FubarDev.FtpServer.Authorization.Actions.FillConnectionAccountDataAction.AuthorizedAsync(FubarDev.FtpServer.IAccountInformation, System.Threading.CancellationToken)
+  nameWithType: FillConnectionAccountDataAction.AuthorizedAsync(IAccountInformation, CancellationToken)
+- uid: FubarDev.FtpServer.Authorization.Actions.FillConnectionAccountDataAction.AuthorizedAsync*
+  name: AuthorizedAsync
+  href: api/FubarDev.FtpServer.Authorization.Actions.FillConnectionAccountDataAction.html#FubarDev_FtpServer_Authorization_Actions_FillConnectionAccountDataAction_AuthorizedAsync_
+  commentId: Overload:FubarDev.FtpServer.Authorization.Actions.FillConnectionAccountDataAction.AuthorizedAsync
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.Authorization.Actions.FillConnectionAccountDataAction.AuthorizedAsync
+  nameWithType: FillConnectionAccountDataAction.AuthorizedAsync
+- uid: FubarDev.FtpServer.Authorization.Actions.FillConnectionAccountDataAction.Level
+  name: Level
+  href: api/FubarDev.FtpServer.Authorization.Actions.FillConnectionAccountDataAction.html#FubarDev_FtpServer_Authorization_Actions_FillConnectionAccountDataAction_Level
+  commentId: P:FubarDev.FtpServer.Authorization.Actions.FillConnectionAccountDataAction.Level
+  fullName: FubarDev.FtpServer.Authorization.Actions.FillConnectionAccountDataAction.Level
+  nameWithType: FillConnectionAccountDataAction.Level
+- uid: FubarDev.FtpServer.Authorization.Actions.FillConnectionAccountDataAction.Level*
+  name: Level
+  href: api/FubarDev.FtpServer.Authorization.Actions.FillConnectionAccountDataAction.html#FubarDev_FtpServer_Authorization_Actions_FillConnectionAccountDataAction_Level_
+  commentId: Overload:FubarDev.FtpServer.Authorization.Actions.FillConnectionAccountDataAction.Level
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.Authorization.Actions.FillConnectionAccountDataAction.Level
+  nameWithType: FillConnectionAccountDataAction.Level
+- uid: FubarDev.FtpServer.Authorization.Actions.FillConnectionFileSystemDataAction
+  name: FillConnectionFileSystemDataAction
+  href: api/FubarDev.FtpServer.Authorization.Actions.FillConnectionFileSystemDataAction.html
+  commentId: T:FubarDev.FtpServer.Authorization.Actions.FillConnectionFileSystemDataAction
+  fullName: FubarDev.FtpServer.Authorization.Actions.FillConnectionFileSystemDataAction
+  nameWithType: FillConnectionFileSystemDataAction
+- uid: FubarDev.FtpServer.Authorization.Actions.FillConnectionFileSystemDataAction.#ctor(FubarDev.FtpServer.IFtpConnectionAccessor,FubarDev.FtpServer.FileSystem.IFileSystemClassFactory)
+  name: FillConnectionFileSystemDataAction(IFtpConnectionAccessor, IFileSystemClassFactory)
+  href: api/FubarDev.FtpServer.Authorization.Actions.FillConnectionFileSystemDataAction.html#FubarDev_FtpServer_Authorization_Actions_FillConnectionFileSystemDataAction__ctor_FubarDev_FtpServer_IFtpConnectionAccessor_FubarDev_FtpServer_FileSystem_IFileSystemClassFactory_
+  commentId: M:FubarDev.FtpServer.Authorization.Actions.FillConnectionFileSystemDataAction.#ctor(FubarDev.FtpServer.IFtpConnectionAccessor,FubarDev.FtpServer.FileSystem.IFileSystemClassFactory)
+  fullName: FubarDev.FtpServer.Authorization.Actions.FillConnectionFileSystemDataAction.FillConnectionFileSystemDataAction(FubarDev.FtpServer.IFtpConnectionAccessor, FubarDev.FtpServer.FileSystem.IFileSystemClassFactory)
+  nameWithType: FillConnectionFileSystemDataAction.FillConnectionFileSystemDataAction(IFtpConnectionAccessor, IFileSystemClassFactory)
+- uid: FubarDev.FtpServer.Authorization.Actions.FillConnectionFileSystemDataAction.#ctor*
+  name: FillConnectionFileSystemDataAction
+  href: api/FubarDev.FtpServer.Authorization.Actions.FillConnectionFileSystemDataAction.html#FubarDev_FtpServer_Authorization_Actions_FillConnectionFileSystemDataAction__ctor_
+  commentId: Overload:FubarDev.FtpServer.Authorization.Actions.FillConnectionFileSystemDataAction.#ctor
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.Authorization.Actions.FillConnectionFileSystemDataAction.FillConnectionFileSystemDataAction
+  nameWithType: FillConnectionFileSystemDataAction.FillConnectionFileSystemDataAction
+- uid: FubarDev.FtpServer.Authorization.Actions.FillConnectionFileSystemDataAction.AuthorizedAsync(FubarDev.FtpServer.IAccountInformation,System.Threading.CancellationToken)
+  name: AuthorizedAsync(IAccountInformation, CancellationToken)
+  href: api/FubarDev.FtpServer.Authorization.Actions.FillConnectionFileSystemDataAction.html#FubarDev_FtpServer_Authorization_Actions_FillConnectionFileSystemDataAction_AuthorizedAsync_FubarDev_FtpServer_IAccountInformation_System_Threading_CancellationToken_
+  commentId: M:FubarDev.FtpServer.Authorization.Actions.FillConnectionFileSystemDataAction.AuthorizedAsync(FubarDev.FtpServer.IAccountInformation,System.Threading.CancellationToken)
+  fullName: FubarDev.FtpServer.Authorization.Actions.FillConnectionFileSystemDataAction.AuthorizedAsync(FubarDev.FtpServer.IAccountInformation, System.Threading.CancellationToken)
+  nameWithType: FillConnectionFileSystemDataAction.AuthorizedAsync(IAccountInformation, CancellationToken)
+- uid: FubarDev.FtpServer.Authorization.Actions.FillConnectionFileSystemDataAction.AuthorizedAsync*
+  name: AuthorizedAsync
+  href: api/FubarDev.FtpServer.Authorization.Actions.FillConnectionFileSystemDataAction.html#FubarDev_FtpServer_Authorization_Actions_FillConnectionFileSystemDataAction_AuthorizedAsync_
+  commentId: Overload:FubarDev.FtpServer.Authorization.Actions.FillConnectionFileSystemDataAction.AuthorizedAsync
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.Authorization.Actions.FillConnectionFileSystemDataAction.AuthorizedAsync
+  nameWithType: FillConnectionFileSystemDataAction.AuthorizedAsync
+- uid: FubarDev.FtpServer.Authorization.Actions.FillConnectionFileSystemDataAction.Level
+  name: Level
+  href: api/FubarDev.FtpServer.Authorization.Actions.FillConnectionFileSystemDataAction.html#FubarDev_FtpServer_Authorization_Actions_FillConnectionFileSystemDataAction_Level
+  commentId: P:FubarDev.FtpServer.Authorization.Actions.FillConnectionFileSystemDataAction.Level
+  fullName: FubarDev.FtpServer.Authorization.Actions.FillConnectionFileSystemDataAction.Level
+  nameWithType: FillConnectionFileSystemDataAction.Level
+- uid: FubarDev.FtpServer.Authorization.Actions.FillConnectionFileSystemDataAction.Level*
+  name: Level
+  href: api/FubarDev.FtpServer.Authorization.Actions.FillConnectionFileSystemDataAction.html#FubarDev_FtpServer_Authorization_Actions_FillConnectionFileSystemDataAction_Level_
+  commentId: Overload:FubarDev.FtpServer.Authorization.Actions.FillConnectionFileSystemDataAction.Level
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.Authorization.Actions.FillConnectionFileSystemDataAction.Level
+  nameWithType: FillConnectionFileSystemDataAction.Level
+- uid: FubarDev.FtpServer.Authorization.Actions.SetHomeDirectoryAction
+  name: SetHomeDirectoryAction
+  href: api/FubarDev.FtpServer.Authorization.Actions.SetHomeDirectoryAction.html
+  commentId: T:FubarDev.FtpServer.Authorization.Actions.SetHomeDirectoryAction
+  fullName: FubarDev.FtpServer.Authorization.Actions.SetHomeDirectoryAction
+  nameWithType: SetHomeDirectoryAction
+- uid: FubarDev.FtpServer.Authorization.Actions.SetHomeDirectoryAction.#ctor(Microsoft.Extensions.Options.IOptions{FubarDev.FtpServer.Authorization.Actions.SetHomeDirectoryActionOptions},FubarDev.FtpServer.IFtpConnectionAccessor,FubarDev.FtpServer.FileSystem.IAccountDirectoryQuery,Microsoft.Extensions.Logging.ILogger{FubarDev.FtpServer.Authorization.Actions.SetHomeDirectoryAction})
+  name: SetHomeDirectoryAction(IOptions<SetHomeDirectoryActionOptions>, IFtpConnectionAccessor, IAccountDirectoryQuery, ILogger<SetHomeDirectoryAction>)
+  href: api/FubarDev.FtpServer.Authorization.Actions.SetHomeDirectoryAction.html#FubarDev_FtpServer_Authorization_Actions_SetHomeDirectoryAction__ctor_Microsoft_Extensions_Options_IOptions_FubarDev_FtpServer_Authorization_Actions_SetHomeDirectoryActionOptions__FubarDev_FtpServer_IFtpConnectionAccessor_FubarDev_FtpServer_FileSystem_IAccountDirectoryQuery_Microsoft_Extensions_Logging_ILogger_FubarDev_FtpServer_Authorization_Actions_SetHomeDirectoryAction__
+  commentId: M:FubarDev.FtpServer.Authorization.Actions.SetHomeDirectoryAction.#ctor(Microsoft.Extensions.Options.IOptions{FubarDev.FtpServer.Authorization.Actions.SetHomeDirectoryActionOptions},FubarDev.FtpServer.IFtpConnectionAccessor,FubarDev.FtpServer.FileSystem.IAccountDirectoryQuery,Microsoft.Extensions.Logging.ILogger{FubarDev.FtpServer.Authorization.Actions.SetHomeDirectoryAction})
+  name.vb: SetHomeDirectoryAction(IOptions(Of SetHomeDirectoryActionOptions), IFtpConnectionAccessor, IAccountDirectoryQuery, ILogger(Of SetHomeDirectoryAction))
+  fullName: FubarDev.FtpServer.Authorization.Actions.SetHomeDirectoryAction.SetHomeDirectoryAction(Microsoft.Extensions.Options.IOptions<FubarDev.FtpServer.Authorization.Actions.SetHomeDirectoryActionOptions>, FubarDev.FtpServer.IFtpConnectionAccessor, FubarDev.FtpServer.FileSystem.IAccountDirectoryQuery, Microsoft.Extensions.Logging.ILogger<FubarDev.FtpServer.Authorization.Actions.SetHomeDirectoryAction>)
+  fullName.vb: FubarDev.FtpServer.Authorization.Actions.SetHomeDirectoryAction.SetHomeDirectoryAction(Microsoft.Extensions.Options.IOptions(Of FubarDev.FtpServer.Authorization.Actions.SetHomeDirectoryActionOptions), FubarDev.FtpServer.IFtpConnectionAccessor, FubarDev.FtpServer.FileSystem.IAccountDirectoryQuery, Microsoft.Extensions.Logging.ILogger(Of FubarDev.FtpServer.Authorization.Actions.SetHomeDirectoryAction))
+  nameWithType: SetHomeDirectoryAction.SetHomeDirectoryAction(IOptions<SetHomeDirectoryActionOptions>, IFtpConnectionAccessor, IAccountDirectoryQuery, ILogger<SetHomeDirectoryAction>)
+  nameWithType.vb: SetHomeDirectoryAction.SetHomeDirectoryAction(IOptions(Of SetHomeDirectoryActionOptions), IFtpConnectionAccessor, IAccountDirectoryQuery, ILogger(Of SetHomeDirectoryAction))
+- uid: FubarDev.FtpServer.Authorization.Actions.SetHomeDirectoryAction.#ctor*
+  name: SetHomeDirectoryAction
+  href: api/FubarDev.FtpServer.Authorization.Actions.SetHomeDirectoryAction.html#FubarDev_FtpServer_Authorization_Actions_SetHomeDirectoryAction__ctor_
+  commentId: Overload:FubarDev.FtpServer.Authorization.Actions.SetHomeDirectoryAction.#ctor
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.Authorization.Actions.SetHomeDirectoryAction.SetHomeDirectoryAction
+  nameWithType: SetHomeDirectoryAction.SetHomeDirectoryAction
+- uid: FubarDev.FtpServer.Authorization.Actions.SetHomeDirectoryAction.AuthorizedAsync(FubarDev.FtpServer.IAccountInformation,System.Threading.CancellationToken)
+  name: AuthorizedAsync(IAccountInformation, CancellationToken)
+  href: api/FubarDev.FtpServer.Authorization.Actions.SetHomeDirectoryAction.html#FubarDev_FtpServer_Authorization_Actions_SetHomeDirectoryAction_AuthorizedAsync_FubarDev_FtpServer_IAccountInformation_System_Threading_CancellationToken_
+  commentId: M:FubarDev.FtpServer.Authorization.Actions.SetHomeDirectoryAction.AuthorizedAsync(FubarDev.FtpServer.IAccountInformation,System.Threading.CancellationToken)
+  fullName: FubarDev.FtpServer.Authorization.Actions.SetHomeDirectoryAction.AuthorizedAsync(FubarDev.FtpServer.IAccountInformation, System.Threading.CancellationToken)
+  nameWithType: SetHomeDirectoryAction.AuthorizedAsync(IAccountInformation, CancellationToken)
+- uid: FubarDev.FtpServer.Authorization.Actions.SetHomeDirectoryAction.AuthorizedAsync*
+  name: AuthorizedAsync
+  href: api/FubarDev.FtpServer.Authorization.Actions.SetHomeDirectoryAction.html#FubarDev_FtpServer_Authorization_Actions_SetHomeDirectoryAction_AuthorizedAsync_
+  commentId: Overload:FubarDev.FtpServer.Authorization.Actions.SetHomeDirectoryAction.AuthorizedAsync
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.Authorization.Actions.SetHomeDirectoryAction.AuthorizedAsync
+  nameWithType: SetHomeDirectoryAction.AuthorizedAsync
+- uid: FubarDev.FtpServer.Authorization.Actions.SetHomeDirectoryAction.Level
+  name: Level
+  href: api/FubarDev.FtpServer.Authorization.Actions.SetHomeDirectoryAction.html#FubarDev_FtpServer_Authorization_Actions_SetHomeDirectoryAction_Level
+  commentId: P:FubarDev.FtpServer.Authorization.Actions.SetHomeDirectoryAction.Level
+  fullName: FubarDev.FtpServer.Authorization.Actions.SetHomeDirectoryAction.Level
+  nameWithType: SetHomeDirectoryAction.Level
+- uid: FubarDev.FtpServer.Authorization.Actions.SetHomeDirectoryAction.Level*
+  name: Level
+  href: api/FubarDev.FtpServer.Authorization.Actions.SetHomeDirectoryAction.html#FubarDev_FtpServer_Authorization_Actions_SetHomeDirectoryAction_Level_
+  commentId: Overload:FubarDev.FtpServer.Authorization.Actions.SetHomeDirectoryAction.Level
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.Authorization.Actions.SetHomeDirectoryAction.Level
+  nameWithType: SetHomeDirectoryAction.Level
+- uid: FubarDev.FtpServer.Authorization.Actions.SetHomeDirectoryActionOptions
+  name: SetHomeDirectoryActionOptions
+  href: api/FubarDev.FtpServer.Authorization.Actions.SetHomeDirectoryActionOptions.html
+  commentId: T:FubarDev.FtpServer.Authorization.Actions.SetHomeDirectoryActionOptions
+  fullName: FubarDev.FtpServer.Authorization.Actions.SetHomeDirectoryActionOptions
+  nameWithType: SetHomeDirectoryActionOptions
+- uid: FubarDev.FtpServer.Authorization.Actions.SetHomeDirectoryActionOptions.CreateMissingDirectories
+  name: CreateMissingDirectories
+  href: api/FubarDev.FtpServer.Authorization.Actions.SetHomeDirectoryActionOptions.html#FubarDev_FtpServer_Authorization_Actions_SetHomeDirectoryActionOptions_CreateMissingDirectories
+  commentId: P:FubarDev.FtpServer.Authorization.Actions.SetHomeDirectoryActionOptions.CreateMissingDirectories
+  fullName: FubarDev.FtpServer.Authorization.Actions.SetHomeDirectoryActionOptions.CreateMissingDirectories
+  nameWithType: SetHomeDirectoryActionOptions.CreateMissingDirectories
+- uid: FubarDev.FtpServer.Authorization.Actions.SetHomeDirectoryActionOptions.CreateMissingDirectories*
+  name: CreateMissingDirectories
+  href: api/FubarDev.FtpServer.Authorization.Actions.SetHomeDirectoryActionOptions.html#FubarDev_FtpServer_Authorization_Actions_SetHomeDirectoryActionOptions_CreateMissingDirectories_
+  commentId: Overload:FubarDev.FtpServer.Authorization.Actions.SetHomeDirectoryActionOptions.CreateMissingDirectories
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.Authorization.Actions.SetHomeDirectoryActionOptions.CreateMissingDirectories
+  nameWithType: SetHomeDirectoryActionOptions.CreateMissingDirectories
 - uid: FubarDev.FtpServer.Authorization.AuthorizationMechanism
   name: AuthorizationMechanism
   href: api/FubarDev.FtpServer.Authorization.AuthorizationMechanism.html
@@ -1034,6 +1394,38 @@ references:
   isSpec: "True"
   fullName: FubarDev.FtpServer.Authorization.AuthorizationMechanism.T
   nameWithType: AuthorizationMechanism.T
+- uid: FubarDev.FtpServer.Authorization.IAuthorizationAction
+  name: IAuthorizationAction
+  href: api/FubarDev.FtpServer.Authorization.IAuthorizationAction.html
+  commentId: T:FubarDev.FtpServer.Authorization.IAuthorizationAction
+  fullName: FubarDev.FtpServer.Authorization.IAuthorizationAction
+  nameWithType: IAuthorizationAction
+- uid: FubarDev.FtpServer.Authorization.IAuthorizationAction.AuthorizedAsync(FubarDev.FtpServer.IAccountInformation,System.Threading.CancellationToken)
+  name: AuthorizedAsync(IAccountInformation, CancellationToken)
+  href: api/FubarDev.FtpServer.Authorization.IAuthorizationAction.html#FubarDev_FtpServer_Authorization_IAuthorizationAction_AuthorizedAsync_FubarDev_FtpServer_IAccountInformation_System_Threading_CancellationToken_
+  commentId: M:FubarDev.FtpServer.Authorization.IAuthorizationAction.AuthorizedAsync(FubarDev.FtpServer.IAccountInformation,System.Threading.CancellationToken)
+  fullName: FubarDev.FtpServer.Authorization.IAuthorizationAction.AuthorizedAsync(FubarDev.FtpServer.IAccountInformation, System.Threading.CancellationToken)
+  nameWithType: IAuthorizationAction.AuthorizedAsync(IAccountInformation, CancellationToken)
+- uid: FubarDev.FtpServer.Authorization.IAuthorizationAction.AuthorizedAsync*
+  name: AuthorizedAsync
+  href: api/FubarDev.FtpServer.Authorization.IAuthorizationAction.html#FubarDev_FtpServer_Authorization_IAuthorizationAction_AuthorizedAsync_
+  commentId: Overload:FubarDev.FtpServer.Authorization.IAuthorizationAction.AuthorizedAsync
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.Authorization.IAuthorizationAction.AuthorizedAsync
+  nameWithType: IAuthorizationAction.AuthorizedAsync
+- uid: FubarDev.FtpServer.Authorization.IAuthorizationAction.Level
+  name: Level
+  href: api/FubarDev.FtpServer.Authorization.IAuthorizationAction.html#FubarDev_FtpServer_Authorization_IAuthorizationAction_Level
+  commentId: P:FubarDev.FtpServer.Authorization.IAuthorizationAction.Level
+  fullName: FubarDev.FtpServer.Authorization.IAuthorizationAction.Level
+  nameWithType: IAuthorizationAction.Level
+- uid: FubarDev.FtpServer.Authorization.IAuthorizationAction.Level*
+  name: Level
+  href: api/FubarDev.FtpServer.Authorization.IAuthorizationAction.html#FubarDev_FtpServer_Authorization_IAuthorizationAction_Level_
+  commentId: Overload:FubarDev.FtpServer.Authorization.IAuthorizationAction.Level
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.Authorization.IAuthorizationAction.Level
+  nameWithType: IAuthorizationAction.Level
 - uid: FubarDev.FtpServer.Authorization.IAuthorizationMechanism
   name: IAuthorizationMechanism
   href: api/FubarDev.FtpServer.Authorization.IAuthorizationMechanism.html
@@ -1098,15 +1490,15 @@ references:
   commentId: T:FubarDev.FtpServer.Authorization.PasswordAuthorization
   fullName: FubarDev.FtpServer.Authorization.PasswordAuthorization
   nameWithType: PasswordAuthorization
-- uid: FubarDev.FtpServer.Authorization.PasswordAuthorization.#ctor(FubarDev.FtpServer.IFtpConnection,FubarDev.FtpServer.FileSystem.IFileSystemClassFactory,System.Collections.Generic.IEnumerable{FubarDev.FtpServer.AccountManagement.IMembershipProvider})
-  name: PasswordAuthorization(IFtpConnection, IFileSystemClassFactory, IEnumerable<IMembershipProvider>)
-  href: api/FubarDev.FtpServer.Authorization.PasswordAuthorization.html#FubarDev_FtpServer_Authorization_PasswordAuthorization__ctor_FubarDev_FtpServer_IFtpConnection_FubarDev_FtpServer_FileSystem_IFileSystemClassFactory_System_Collections_Generic_IEnumerable_FubarDev_FtpServer_AccountManagement_IMembershipProvider__
-  commentId: M:FubarDev.FtpServer.Authorization.PasswordAuthorization.#ctor(FubarDev.FtpServer.IFtpConnection,FubarDev.FtpServer.FileSystem.IFileSystemClassFactory,System.Collections.Generic.IEnumerable{FubarDev.FtpServer.AccountManagement.IMembershipProvider})
-  name.vb: PasswordAuthorization(IFtpConnection, IFileSystemClassFactory, IEnumerable(Of IMembershipProvider))
-  fullName: FubarDev.FtpServer.Authorization.PasswordAuthorization.PasswordAuthorization(FubarDev.FtpServer.IFtpConnection, FubarDev.FtpServer.FileSystem.IFileSystemClassFactory, System.Collections.Generic.IEnumerable<FubarDev.FtpServer.AccountManagement.IMembershipProvider>)
-  fullName.vb: FubarDev.FtpServer.Authorization.PasswordAuthorization.PasswordAuthorization(FubarDev.FtpServer.IFtpConnection, FubarDev.FtpServer.FileSystem.IFileSystemClassFactory, System.Collections.Generic.IEnumerable(Of FubarDev.FtpServer.AccountManagement.IMembershipProvider))
-  nameWithType: PasswordAuthorization.PasswordAuthorization(IFtpConnection, IFileSystemClassFactory, IEnumerable<IMembershipProvider>)
-  nameWithType.vb: PasswordAuthorization.PasswordAuthorization(IFtpConnection, IFileSystemClassFactory, IEnumerable(Of IMembershipProvider))
+- uid: FubarDev.FtpServer.Authorization.PasswordAuthorization.#ctor(FubarDev.FtpServer.IFtpConnection,System.Collections.Generic.IEnumerable{FubarDev.FtpServer.AccountManagement.IMembershipProvider},System.Collections.Generic.IEnumerable{FubarDev.FtpServer.Authorization.IAuthorizationAction})
+  name: PasswordAuthorization(IFtpConnection, IEnumerable<IMembershipProvider>, IEnumerable<IAuthorizationAction>)
+  href: api/FubarDev.FtpServer.Authorization.PasswordAuthorization.html#FubarDev_FtpServer_Authorization_PasswordAuthorization__ctor_FubarDev_FtpServer_IFtpConnection_System_Collections_Generic_IEnumerable_FubarDev_FtpServer_AccountManagement_IMembershipProvider__System_Collections_Generic_IEnumerable_FubarDev_FtpServer_Authorization_IAuthorizationAction__
+  commentId: M:FubarDev.FtpServer.Authorization.PasswordAuthorization.#ctor(FubarDev.FtpServer.IFtpConnection,System.Collections.Generic.IEnumerable{FubarDev.FtpServer.AccountManagement.IMembershipProvider},System.Collections.Generic.IEnumerable{FubarDev.FtpServer.Authorization.IAuthorizationAction})
+  name.vb: PasswordAuthorization(IFtpConnection, IEnumerable(Of IMembershipProvider), IEnumerable(Of IAuthorizationAction))
+  fullName: FubarDev.FtpServer.Authorization.PasswordAuthorization.PasswordAuthorization(FubarDev.FtpServer.IFtpConnection, System.Collections.Generic.IEnumerable<FubarDev.FtpServer.AccountManagement.IMembershipProvider>, System.Collections.Generic.IEnumerable<FubarDev.FtpServer.Authorization.IAuthorizationAction>)
+  fullName.vb: FubarDev.FtpServer.Authorization.PasswordAuthorization.PasswordAuthorization(FubarDev.FtpServer.IFtpConnection, System.Collections.Generic.IEnumerable(Of FubarDev.FtpServer.AccountManagement.IMembershipProvider), System.Collections.Generic.IEnumerable(Of FubarDev.FtpServer.Authorization.IAuthorizationAction))
+  nameWithType: PasswordAuthorization.PasswordAuthorization(IFtpConnection, IEnumerable<IMembershipProvider>, IEnumerable<IAuthorizationAction>)
+  nameWithType.vb: PasswordAuthorization.PasswordAuthorization(IFtpConnection, IEnumerable(Of IMembershipProvider), IEnumerable(Of IAuthorizationAction))
 - uid: FubarDev.FtpServer.Authorization.PasswordAuthorization.#ctor*
   name: PasswordAuthorization
   href: api/FubarDev.FtpServer.Authorization.PasswordAuthorization.html#FubarDev_FtpServer_Authorization_PasswordAuthorization__ctor_
@@ -1595,6 +1987,19 @@ references:
   isSpec: "True"
   fullName: FubarDev.FtpServer.CommandExtensions.FtpCommandHandlerExtension.FtpCommandHandlerExtension
   nameWithType: FtpCommandHandlerExtension.FtpCommandHandlerExtension
+- uid: FubarDev.FtpServer.CommandExtensions.FtpCommandHandlerExtension.AnnouncementMode
+  name: AnnouncementMode
+  href: api/FubarDev.FtpServer.CommandExtensions.FtpCommandHandlerExtension.html#FubarDev_FtpServer_CommandExtensions_FtpCommandHandlerExtension_AnnouncementMode
+  commentId: P:FubarDev.FtpServer.CommandExtensions.FtpCommandHandlerExtension.AnnouncementMode
+  fullName: FubarDev.FtpServer.CommandExtensions.FtpCommandHandlerExtension.AnnouncementMode
+  nameWithType: FtpCommandHandlerExtension.AnnouncementMode
+- uid: FubarDev.FtpServer.CommandExtensions.FtpCommandHandlerExtension.AnnouncementMode*
+  name: AnnouncementMode
+  href: api/FubarDev.FtpServer.CommandExtensions.FtpCommandHandlerExtension.html#FubarDev_FtpServer_CommandExtensions_FtpCommandHandlerExtension_AnnouncementMode_
+  commentId: Overload:FubarDev.FtpServer.CommandExtensions.FtpCommandHandlerExtension.AnnouncementMode
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.CommandExtensions.FtpCommandHandlerExtension.AnnouncementMode
+  nameWithType: FtpCommandHandlerExtension.AnnouncementMode
 - uid: FubarDev.FtpServer.CommandExtensions.FtpCommandHandlerExtension.Connection
   name: Connection
   href: api/FubarDev.FtpServer.CommandExtensions.FtpCommandHandlerExtension.html#FubarDev_FtpServer_CommandExtensions_FtpCommandHandlerExtension_Connection
@@ -3666,6 +4071,19 @@ references:
   isSpec: "True"
   fullName: FubarDev.FtpServer.CommandHandlers.SiteCommandHandler.Extensions
   nameWithType: SiteCommandHandler.Extensions
+- uid: FubarDev.FtpServer.CommandHandlers.SiteCommandHandler.GetSupportedFeatures
+  name: GetSupportedFeatures()
+  href: api/FubarDev.FtpServer.CommandHandlers.SiteCommandHandler.html#FubarDev_FtpServer_CommandHandlers_SiteCommandHandler_GetSupportedFeatures
+  commentId: M:FubarDev.FtpServer.CommandHandlers.SiteCommandHandler.GetSupportedFeatures
+  fullName: FubarDev.FtpServer.CommandHandlers.SiteCommandHandler.GetSupportedFeatures()
+  nameWithType: SiteCommandHandler.GetSupportedFeatures()
+- uid: FubarDev.FtpServer.CommandHandlers.SiteCommandHandler.GetSupportedFeatures*
+  name: GetSupportedFeatures
+  href: api/FubarDev.FtpServer.CommandHandlers.SiteCommandHandler.html#FubarDev_FtpServer_CommandHandlers_SiteCommandHandler_GetSupportedFeatures_
+  commentId: Overload:FubarDev.FtpServer.CommandHandlers.SiteCommandHandler.GetSupportedFeatures
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.CommandHandlers.SiteCommandHandler.GetSupportedFeatures
+  nameWithType: SiteCommandHandler.GetSupportedFeatures
 - uid: FubarDev.FtpServer.CommandHandlers.SiteCommandHandler.Process(FubarDev.FtpServer.FtpCommand,System.Threading.CancellationToken)
   name: Process(FtpCommand, CancellationToken)
   href: api/FubarDev.FtpServer.CommandHandlers.SiteCommandHandler.html#FubarDev_FtpServer_CommandHandlers_SiteCommandHandler_Process_FubarDev_FtpServer_FtpCommand_System_Threading_CancellationToken_
@@ -4144,6 +4562,30 @@ references:
   isSpec: "True"
   fullName: FubarDev.FtpServer.DotNetFtpServerBuilderExtensions.UseDotNetFileSystem
   nameWithType: DotNetFtpServerBuilderExtensions.UseDotNetFileSystem
+- uid: FubarDev.FtpServer.ExtensionAnnouncementMode
+  name: ExtensionAnnouncementMode
+  href: api/FubarDev.FtpServer.ExtensionAnnouncementMode.html
+  commentId: T:FubarDev.FtpServer.ExtensionAnnouncementMode
+  fullName: FubarDev.FtpServer.ExtensionAnnouncementMode
+  nameWithType: ExtensionAnnouncementMode
+- uid: FubarDev.FtpServer.ExtensionAnnouncementMode.CommandAndExtensionName
+  name: CommandAndExtensionName
+  href: api/FubarDev.FtpServer.ExtensionAnnouncementMode.html#FubarDev_FtpServer_ExtensionAnnouncementMode_CommandAndExtensionName
+  commentId: F:FubarDev.FtpServer.ExtensionAnnouncementMode.CommandAndExtensionName
+  fullName: FubarDev.FtpServer.ExtensionAnnouncementMode.CommandAndExtensionName
+  nameWithType: ExtensionAnnouncementMode.CommandAndExtensionName
+- uid: FubarDev.FtpServer.ExtensionAnnouncementMode.ExtensionName
+  name: ExtensionName
+  href: api/FubarDev.FtpServer.ExtensionAnnouncementMode.html#FubarDev_FtpServer_ExtensionAnnouncementMode_ExtensionName
+  commentId: F:FubarDev.FtpServer.ExtensionAnnouncementMode.ExtensionName
+  fullName: FubarDev.FtpServer.ExtensionAnnouncementMode.ExtensionName
+  nameWithType: ExtensionAnnouncementMode.ExtensionName
+- uid: FubarDev.FtpServer.ExtensionAnnouncementMode.Hidden
+  name: Hidden
+  href: api/FubarDev.FtpServer.ExtensionAnnouncementMode.html#FubarDev_FtpServer_ExtensionAnnouncementMode_Hidden
+  commentId: F:FubarDev.FtpServer.ExtensionAnnouncementMode.Hidden
+  fullName: FubarDev.FtpServer.ExtensionAnnouncementMode.Hidden
+  nameWithType: ExtensionAnnouncementMode.Hidden
 - uid: FubarDev.FtpServer.FileSystem
   name: FubarDev.FtpServer.FileSystem
   href: api/FubarDev.FtpServer.FileSystem.html
@@ -4162,12 +4604,12 @@ references:
   commentId: T:FubarDev.FtpServer.FileSystem.DotNet.DotNetDirectoryEntry
   fullName: FubarDev.FtpServer.FileSystem.DotNet.DotNetDirectoryEntry
   nameWithType: DotNetDirectoryEntry
-- uid: FubarDev.FtpServer.FileSystem.DotNet.DotNetDirectoryEntry.#ctor(FubarDev.FtpServer.FileSystem.DotNet.DotNetFileSystem,System.IO.DirectoryInfo,System.Boolean)
-  name: DotNetDirectoryEntry(DotNetFileSystem, DirectoryInfo, Boolean)
-  href: api/FubarDev.FtpServer.FileSystem.DotNet.DotNetDirectoryEntry.html#FubarDev_FtpServer_FileSystem_DotNet_DotNetDirectoryEntry__ctor_FubarDev_FtpServer_FileSystem_DotNet_DotNetFileSystem_System_IO_DirectoryInfo_System_Boolean_
-  commentId: M:FubarDev.FtpServer.FileSystem.DotNet.DotNetDirectoryEntry.#ctor(FubarDev.FtpServer.FileSystem.DotNet.DotNetFileSystem,System.IO.DirectoryInfo,System.Boolean)
-  fullName: FubarDev.FtpServer.FileSystem.DotNet.DotNetDirectoryEntry.DotNetDirectoryEntry(FubarDev.FtpServer.FileSystem.DotNet.DotNetFileSystem, System.IO.DirectoryInfo, System.Boolean)
-  nameWithType: DotNetDirectoryEntry.DotNetDirectoryEntry(DotNetFileSystem, DirectoryInfo, Boolean)
+- uid: FubarDev.FtpServer.FileSystem.DotNet.DotNetDirectoryEntry.#ctor(System.IO.DirectoryInfo,System.Boolean,System.Boolean)
+  name: DotNetDirectoryEntry(DirectoryInfo, Boolean, Boolean)
+  href: api/FubarDev.FtpServer.FileSystem.DotNet.DotNetDirectoryEntry.html#FubarDev_FtpServer_FileSystem_DotNet_DotNetDirectoryEntry__ctor_System_IO_DirectoryInfo_System_Boolean_System_Boolean_
+  commentId: M:FubarDev.FtpServer.FileSystem.DotNet.DotNetDirectoryEntry.#ctor(System.IO.DirectoryInfo,System.Boolean,System.Boolean)
+  fullName: FubarDev.FtpServer.FileSystem.DotNet.DotNetDirectoryEntry.DotNetDirectoryEntry(System.IO.DirectoryInfo, System.Boolean, System.Boolean)
+  nameWithType: DotNetDirectoryEntry.DotNetDirectoryEntry(DirectoryInfo, Boolean, Boolean)
 - uid: FubarDev.FtpServer.FileSystem.DotNet.DotNetDirectoryEntry.#ctor*
   name: DotNetDirectoryEntry
   href: api/FubarDev.FtpServer.FileSystem.DotNet.DotNetDirectoryEntry.html#FubarDev_FtpServer_FileSystem_DotNet_DotNetDirectoryEntry__ctor_
@@ -4220,12 +4662,12 @@ references:
   commentId: T:FubarDev.FtpServer.FileSystem.DotNet.DotNetFileEntry
   fullName: FubarDev.FtpServer.FileSystem.DotNet.DotNetFileEntry
   nameWithType: DotNetFileEntry
-- uid: FubarDev.FtpServer.FileSystem.DotNet.DotNetFileEntry.#ctor(FubarDev.FtpServer.FileSystem.DotNet.DotNetFileSystem,System.IO.FileInfo)
-  name: DotNetFileEntry(DotNetFileSystem, FileInfo)
-  href: api/FubarDev.FtpServer.FileSystem.DotNet.DotNetFileEntry.html#FubarDev_FtpServer_FileSystem_DotNet_DotNetFileEntry__ctor_FubarDev_FtpServer_FileSystem_DotNet_DotNetFileSystem_System_IO_FileInfo_
-  commentId: M:FubarDev.FtpServer.FileSystem.DotNet.DotNetFileEntry.#ctor(FubarDev.FtpServer.FileSystem.DotNet.DotNetFileSystem,System.IO.FileInfo)
-  fullName: FubarDev.FtpServer.FileSystem.DotNet.DotNetFileEntry.DotNetFileEntry(FubarDev.FtpServer.FileSystem.DotNet.DotNetFileSystem, System.IO.FileInfo)
-  nameWithType: DotNetFileEntry.DotNetFileEntry(DotNetFileSystem, FileInfo)
+- uid: FubarDev.FtpServer.FileSystem.DotNet.DotNetFileEntry.#ctor(System.IO.FileInfo)
+  name: DotNetFileEntry(FileInfo)
+  href: api/FubarDev.FtpServer.FileSystem.DotNet.DotNetFileEntry.html#FubarDev_FtpServer_FileSystem_DotNet_DotNetFileEntry__ctor_System_IO_FileInfo_
+  commentId: M:FubarDev.FtpServer.FileSystem.DotNet.DotNetFileEntry.#ctor(System.IO.FileInfo)
+  fullName: FubarDev.FtpServer.FileSystem.DotNet.DotNetFileEntry.DotNetFileEntry(System.IO.FileInfo)
+  nameWithType: DotNetFileEntry.DotNetFileEntry(FileInfo)
 - uid: FubarDev.FtpServer.FileSystem.DotNet.DotNetFileEntry.#ctor*
   name: DotNetFileEntry
   href: api/FubarDev.FtpServer.FileSystem.DotNet.DotNetFileEntry.html#FubarDev_FtpServer_FileSystem_DotNet_DotNetFileEntry__ctor_
@@ -4484,12 +4926,12 @@ references:
   commentId: T:FubarDev.FtpServer.FileSystem.DotNet.DotNetFileSystemEntry
   fullName: FubarDev.FtpServer.FileSystem.DotNet.DotNetFileSystemEntry
   nameWithType: DotNetFileSystemEntry
-- uid: FubarDev.FtpServer.FileSystem.DotNet.DotNetFileSystemEntry.#ctor(FubarDev.FtpServer.FileSystem.DotNet.DotNetFileSystem,System.IO.FileSystemInfo)
-  name: DotNetFileSystemEntry(DotNetFileSystem, FileSystemInfo)
-  href: api/FubarDev.FtpServer.FileSystem.DotNet.DotNetFileSystemEntry.html#FubarDev_FtpServer_FileSystem_DotNet_DotNetFileSystemEntry__ctor_FubarDev_FtpServer_FileSystem_DotNet_DotNetFileSystem_System_IO_FileSystemInfo_
-  commentId: M:FubarDev.FtpServer.FileSystem.DotNet.DotNetFileSystemEntry.#ctor(FubarDev.FtpServer.FileSystem.DotNet.DotNetFileSystem,System.IO.FileSystemInfo)
-  fullName: FubarDev.FtpServer.FileSystem.DotNet.DotNetFileSystemEntry.DotNetFileSystemEntry(FubarDev.FtpServer.FileSystem.DotNet.DotNetFileSystem, System.IO.FileSystemInfo)
-  nameWithType: DotNetFileSystemEntry.DotNetFileSystemEntry(DotNetFileSystem, FileSystemInfo)
+- uid: FubarDev.FtpServer.FileSystem.DotNet.DotNetFileSystemEntry.#ctor(System.IO.FileSystemInfo)
+  name: DotNetFileSystemEntry(FileSystemInfo)
+  href: api/FubarDev.FtpServer.FileSystem.DotNet.DotNetFileSystemEntry.html#FubarDev_FtpServer_FileSystem_DotNet_DotNetFileSystemEntry__ctor_System_IO_FileSystemInfo_
+  commentId: M:FubarDev.FtpServer.FileSystem.DotNet.DotNetFileSystemEntry.#ctor(System.IO.FileSystemInfo)
+  fullName: FubarDev.FtpServer.FileSystem.DotNet.DotNetFileSystemEntry.DotNetFileSystemEntry(System.IO.FileSystemInfo)
+  nameWithType: DotNetFileSystemEntry.DotNetFileSystemEntry(FileSystemInfo)
 - uid: FubarDev.FtpServer.FileSystem.DotNet.DotNetFileSystemEntry.#ctor*
   name: DotNetFileSystemEntry
   href: api/FubarDev.FtpServer.FileSystem.DotNet.DotNetFileSystemEntry.html#FubarDev_FtpServer_FileSystem_DotNet_DotNetFileSystemEntry__ctor_
@@ -4510,19 +4952,6 @@ references:
   isSpec: "True"
   fullName: FubarDev.FtpServer.FileSystem.DotNet.DotNetFileSystemEntry.CreatedTime
   nameWithType: DotNetFileSystemEntry.CreatedTime
-- uid: FubarDev.FtpServer.FileSystem.DotNet.DotNetFileSystemEntry.FileSystem
-  name: FileSystem
-  href: api/FubarDev.FtpServer.FileSystem.DotNet.DotNetFileSystemEntry.html#FubarDev_FtpServer_FileSystem_DotNet_DotNetFileSystemEntry_FileSystem
-  commentId: P:FubarDev.FtpServer.FileSystem.DotNet.DotNetFileSystemEntry.FileSystem
-  fullName: FubarDev.FtpServer.FileSystem.DotNet.DotNetFileSystemEntry.FileSystem
-  nameWithType: DotNetFileSystemEntry.FileSystem
-- uid: FubarDev.FtpServer.FileSystem.DotNet.DotNetFileSystemEntry.FileSystem*
-  name: FileSystem
-  href: api/FubarDev.FtpServer.FileSystem.DotNet.DotNetFileSystemEntry.html#FubarDev_FtpServer_FileSystem_DotNet_DotNetFileSystemEntry_FileSystem_
-  commentId: Overload:FubarDev.FtpServer.FileSystem.DotNet.DotNetFileSystemEntry.FileSystem
-  isSpec: "True"
-  fullName: FubarDev.FtpServer.FileSystem.DotNet.DotNetFileSystemEntry.FileSystem
-  nameWithType: DotNetFileSystemEntry.FileSystem
 - uid: FubarDev.FtpServer.FileSystem.DotNet.DotNetFileSystemEntry.Group
   name: Group
   href: api/FubarDev.FtpServer.FileSystem.DotNet.DotNetFileSystemEntry.html#FubarDev_FtpServer_FileSystem_DotNet_DotNetFileSystemEntry_Group
@@ -4659,34 +5088,21 @@ references:
   isSpec: "True"
   fullName: FubarDev.FtpServer.FileSystem.DotNet.DotNetFileSystemOptions.StreamBufferSize
   nameWithType: DotNetFileSystemOptions.StreamBufferSize
-- uid: FubarDev.FtpServer.FileSystem.DotNet.DotNetFileSystemOptions.UseUserIdAsSubFolder
-  name: UseUserIdAsSubFolder
-  href: api/FubarDev.FtpServer.FileSystem.DotNet.DotNetFileSystemOptions.html#FubarDev_FtpServer_FileSystem_DotNet_DotNetFileSystemOptions_UseUserIdAsSubFolder
-  commentId: P:FubarDev.FtpServer.FileSystem.DotNet.DotNetFileSystemOptions.UseUserIdAsSubFolder
-  fullName: FubarDev.FtpServer.FileSystem.DotNet.DotNetFileSystemOptions.UseUserIdAsSubFolder
-  nameWithType: DotNetFileSystemOptions.UseUserIdAsSubFolder
-- uid: FubarDev.FtpServer.FileSystem.DotNet.DotNetFileSystemOptions.UseUserIdAsSubFolder*
-  name: UseUserIdAsSubFolder
-  href: api/FubarDev.FtpServer.FileSystem.DotNet.DotNetFileSystemOptions.html#FubarDev_FtpServer_FileSystem_DotNet_DotNetFileSystemOptions_UseUserIdAsSubFolder_
-  commentId: Overload:FubarDev.FtpServer.FileSystem.DotNet.DotNetFileSystemOptions.UseUserIdAsSubFolder
-  isSpec: "True"
-  fullName: FubarDev.FtpServer.FileSystem.DotNet.DotNetFileSystemOptions.UseUserIdAsSubFolder
-  nameWithType: DotNetFileSystemOptions.UseUserIdAsSubFolder
 - uid: FubarDev.FtpServer.FileSystem.DotNet.DotNetFileSystemProvider
   name: DotNetFileSystemProvider
   href: api/FubarDev.FtpServer.FileSystem.DotNet.DotNetFileSystemProvider.html
   commentId: T:FubarDev.FtpServer.FileSystem.DotNet.DotNetFileSystemProvider
   fullName: FubarDev.FtpServer.FileSystem.DotNet.DotNetFileSystemProvider
   nameWithType: DotNetFileSystemProvider
-- uid: FubarDev.FtpServer.FileSystem.DotNet.DotNetFileSystemProvider.#ctor(Microsoft.Extensions.Options.IOptions{FubarDev.FtpServer.FileSystem.DotNet.DotNetFileSystemOptions})
-  name: DotNetFileSystemProvider(IOptions<DotNetFileSystemOptions>)
-  href: api/FubarDev.FtpServer.FileSystem.DotNet.DotNetFileSystemProvider.html#FubarDev_FtpServer_FileSystem_DotNet_DotNetFileSystemProvider__ctor_Microsoft_Extensions_Options_IOptions_FubarDev_FtpServer_FileSystem_DotNet_DotNetFileSystemOptions__
-  commentId: M:FubarDev.FtpServer.FileSystem.DotNet.DotNetFileSystemProvider.#ctor(Microsoft.Extensions.Options.IOptions{FubarDev.FtpServer.FileSystem.DotNet.DotNetFileSystemOptions})
-  name.vb: DotNetFileSystemProvider(IOptions(Of DotNetFileSystemOptions))
-  fullName: FubarDev.FtpServer.FileSystem.DotNet.DotNetFileSystemProvider.DotNetFileSystemProvider(Microsoft.Extensions.Options.IOptions<FubarDev.FtpServer.FileSystem.DotNet.DotNetFileSystemOptions>)
-  fullName.vb: FubarDev.FtpServer.FileSystem.DotNet.DotNetFileSystemProvider.DotNetFileSystemProvider(Microsoft.Extensions.Options.IOptions(Of FubarDev.FtpServer.FileSystem.DotNet.DotNetFileSystemOptions))
-  nameWithType: DotNetFileSystemProvider.DotNetFileSystemProvider(IOptions<DotNetFileSystemOptions>)
-  nameWithType.vb: DotNetFileSystemProvider.DotNetFileSystemProvider(IOptions(Of DotNetFileSystemOptions))
+- uid: FubarDev.FtpServer.FileSystem.DotNet.DotNetFileSystemProvider.#ctor(Microsoft.Extensions.Options.IOptions{FubarDev.FtpServer.FileSystem.DotNet.DotNetFileSystemOptions},FubarDev.FtpServer.FileSystem.IAccountDirectoryQuery,Microsoft.Extensions.Logging.ILogger{FubarDev.FtpServer.FileSystem.DotNet.DotNetFileSystemProvider})
+  name: DotNetFileSystemProvider(IOptions<DotNetFileSystemOptions>, IAccountDirectoryQuery, ILogger<DotNetFileSystemProvider>)
+  href: api/FubarDev.FtpServer.FileSystem.DotNet.DotNetFileSystemProvider.html#FubarDev_FtpServer_FileSystem_DotNet_DotNetFileSystemProvider__ctor_Microsoft_Extensions_Options_IOptions_FubarDev_FtpServer_FileSystem_DotNet_DotNetFileSystemOptions__FubarDev_FtpServer_FileSystem_IAccountDirectoryQuery_Microsoft_Extensions_Logging_ILogger_FubarDev_FtpServer_FileSystem_DotNet_DotNetFileSystemProvider__
+  commentId: M:FubarDev.FtpServer.FileSystem.DotNet.DotNetFileSystemProvider.#ctor(Microsoft.Extensions.Options.IOptions{FubarDev.FtpServer.FileSystem.DotNet.DotNetFileSystemOptions},FubarDev.FtpServer.FileSystem.IAccountDirectoryQuery,Microsoft.Extensions.Logging.ILogger{FubarDev.FtpServer.FileSystem.DotNet.DotNetFileSystemProvider})
+  name.vb: DotNetFileSystemProvider(IOptions(Of DotNetFileSystemOptions), IAccountDirectoryQuery, ILogger(Of DotNetFileSystemProvider))
+  fullName: FubarDev.FtpServer.FileSystem.DotNet.DotNetFileSystemProvider.DotNetFileSystemProvider(Microsoft.Extensions.Options.IOptions<FubarDev.FtpServer.FileSystem.DotNet.DotNetFileSystemOptions>, FubarDev.FtpServer.FileSystem.IAccountDirectoryQuery, Microsoft.Extensions.Logging.ILogger<FubarDev.FtpServer.FileSystem.DotNet.DotNetFileSystemProvider>)
+  fullName.vb: FubarDev.FtpServer.FileSystem.DotNet.DotNetFileSystemProvider.DotNetFileSystemProvider(Microsoft.Extensions.Options.IOptions(Of FubarDev.FtpServer.FileSystem.DotNet.DotNetFileSystemOptions), FubarDev.FtpServer.FileSystem.IAccountDirectoryQuery, Microsoft.Extensions.Logging.ILogger(Of FubarDev.FtpServer.FileSystem.DotNet.DotNetFileSystemProvider))
+  nameWithType: DotNetFileSystemProvider.DotNetFileSystemProvider(IOptions<DotNetFileSystemOptions>, IAccountDirectoryQuery, ILogger<DotNetFileSystemProvider>)
+  nameWithType.vb: DotNetFileSystemProvider.DotNetFileSystemProvider(IOptions(Of DotNetFileSystemOptions), IAccountDirectoryQuery, ILogger(Of DotNetFileSystemProvider))
 - uid: FubarDev.FtpServer.FileSystem.DotNet.DotNetFileSystemProvider.#ctor*
   name: DotNetFileSystemProvider
   href: api/FubarDev.FtpServer.FileSystem.DotNet.DotNetFileSystemProvider.html#FubarDev_FtpServer_FileSystem_DotNet_DotNetFileSystemProvider__ctor_
@@ -5277,6 +5693,15 @@ references:
   isSpec: "True"
   fullName: FubarDev.FtpServer.FileSystem.FileSystemExtensions.GetDirectoryAsync
   nameWithType: FileSystemExtensions.GetDirectoryAsync
+- uid: FubarDev.FtpServer.FileSystem.FileSystemExtensions.GetFullPath(System.Collections.Generic.IEnumerable{FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry})
+  name: GetFullPath(IEnumerable<IUnixDirectoryEntry>)
+  href: api/FubarDev.FtpServer.FileSystem.FileSystemExtensions.html#FubarDev_FtpServer_FileSystem_FileSystemExtensions_GetFullPath_System_Collections_Generic_IEnumerable_FubarDev_FtpServer_FileSystem_IUnixDirectoryEntry__
+  commentId: M:FubarDev.FtpServer.FileSystem.FileSystemExtensions.GetFullPath(System.Collections.Generic.IEnumerable{FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry})
+  name.vb: GetFullPath(IEnumerable(Of IUnixDirectoryEntry))
+  fullName: FubarDev.FtpServer.FileSystem.FileSystemExtensions.GetFullPath(System.Collections.Generic.IEnumerable<FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry>)
+  fullName.vb: FubarDev.FtpServer.FileSystem.FileSystemExtensions.GetFullPath(System.Collections.Generic.IEnumerable(Of FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry))
+  nameWithType: FileSystemExtensions.GetFullPath(IEnumerable<IUnixDirectoryEntry>)
+  nameWithType.vb: FileSystemExtensions.GetFullPath(IEnumerable(Of IUnixDirectoryEntry))
 - uid: FubarDev.FtpServer.FileSystem.FileSystemExtensions.GetFullPath(System.Collections.Generic.Stack{FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry})
   name: GetFullPath(Stack<IUnixDirectoryEntry>)
   href: api/FubarDev.FtpServer.FileSystem.FileSystemExtensions.html#FubarDev_FtpServer_FileSystem_FileSystemExtensions_GetFullPath_System_Collections_Generic_Stack_FubarDev_FtpServer_FileSystem_IUnixDirectoryEntry__
@@ -5946,6 +6371,57 @@ references:
   isSpec: "True"
   fullName: FubarDev.FtpServer.FileSystem.IAccessMode.Write
   nameWithType: IAccessMode.Write
+- uid: FubarDev.FtpServer.FileSystem.IAccountDirectories
+  name: IAccountDirectories
+  href: api/FubarDev.FtpServer.FileSystem.IAccountDirectories.html
+  commentId: T:FubarDev.FtpServer.FileSystem.IAccountDirectories
+  fullName: FubarDev.FtpServer.FileSystem.IAccountDirectories
+  nameWithType: IAccountDirectories
+- uid: FubarDev.FtpServer.FileSystem.IAccountDirectories.HomePath
+  name: HomePath
+  href: api/FubarDev.FtpServer.FileSystem.IAccountDirectories.html#FubarDev_FtpServer_FileSystem_IAccountDirectories_HomePath
+  commentId: P:FubarDev.FtpServer.FileSystem.IAccountDirectories.HomePath
+  fullName: FubarDev.FtpServer.FileSystem.IAccountDirectories.HomePath
+  nameWithType: IAccountDirectories.HomePath
+- uid: FubarDev.FtpServer.FileSystem.IAccountDirectories.HomePath*
+  name: HomePath
+  href: api/FubarDev.FtpServer.FileSystem.IAccountDirectories.html#FubarDev_FtpServer_FileSystem_IAccountDirectories_HomePath_
+  commentId: Overload:FubarDev.FtpServer.FileSystem.IAccountDirectories.HomePath
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.FileSystem.IAccountDirectories.HomePath
+  nameWithType: IAccountDirectories.HomePath
+- uid: FubarDev.FtpServer.FileSystem.IAccountDirectories.RootPath
+  name: RootPath
+  href: api/FubarDev.FtpServer.FileSystem.IAccountDirectories.html#FubarDev_FtpServer_FileSystem_IAccountDirectories_RootPath
+  commentId: P:FubarDev.FtpServer.FileSystem.IAccountDirectories.RootPath
+  fullName: FubarDev.FtpServer.FileSystem.IAccountDirectories.RootPath
+  nameWithType: IAccountDirectories.RootPath
+- uid: FubarDev.FtpServer.FileSystem.IAccountDirectories.RootPath*
+  name: RootPath
+  href: api/FubarDev.FtpServer.FileSystem.IAccountDirectories.html#FubarDev_FtpServer_FileSystem_IAccountDirectories_RootPath_
+  commentId: Overload:FubarDev.FtpServer.FileSystem.IAccountDirectories.RootPath
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.FileSystem.IAccountDirectories.RootPath
+  nameWithType: IAccountDirectories.RootPath
+- uid: FubarDev.FtpServer.FileSystem.IAccountDirectoryQuery
+  name: IAccountDirectoryQuery
+  href: api/FubarDev.FtpServer.FileSystem.IAccountDirectoryQuery.html
+  commentId: T:FubarDev.FtpServer.FileSystem.IAccountDirectoryQuery
+  fullName: FubarDev.FtpServer.FileSystem.IAccountDirectoryQuery
+  nameWithType: IAccountDirectoryQuery
+- uid: FubarDev.FtpServer.FileSystem.IAccountDirectoryQuery.GetDirectories(FubarDev.FtpServer.IAccountInformation)
+  name: GetDirectories(IAccountInformation)
+  href: api/FubarDev.FtpServer.FileSystem.IAccountDirectoryQuery.html#FubarDev_FtpServer_FileSystem_IAccountDirectoryQuery_GetDirectories_FubarDev_FtpServer_IAccountInformation_
+  commentId: M:FubarDev.FtpServer.FileSystem.IAccountDirectoryQuery.GetDirectories(FubarDev.FtpServer.IAccountInformation)
+  fullName: FubarDev.FtpServer.FileSystem.IAccountDirectoryQuery.GetDirectories(FubarDev.FtpServer.IAccountInformation)
+  nameWithType: IAccountDirectoryQuery.GetDirectories(IAccountInformation)
+- uid: FubarDev.FtpServer.FileSystem.IAccountDirectoryQuery.GetDirectories*
+  name: GetDirectories
+  href: api/FubarDev.FtpServer.FileSystem.IAccountDirectoryQuery.html#FubarDev_FtpServer_FileSystem_IAccountDirectoryQuery_GetDirectories_
+  commentId: Overload:FubarDev.FtpServer.FileSystem.IAccountDirectoryQuery.GetDirectories
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.FileSystem.IAccountDirectoryQuery.GetDirectories
+  nameWithType: IAccountDirectoryQuery.GetDirectories
 - uid: FubarDev.FtpServer.FileSystem.IFileSystemClassFactory
   name: IFileSystemClassFactory
   href: api/FubarDev.FtpServer.FileSystem.IFileSystemClassFactory.html
@@ -5977,15 +6453,15 @@ references:
   commentId: T:FubarDev.FtpServer.FileSystem.InMemory.InMemoryDirectoryEntry
   fullName: FubarDev.FtpServer.FileSystem.InMemory.InMemoryDirectoryEntry
   nameWithType: InMemoryDirectoryEntry
-- uid: FubarDev.FtpServer.FileSystem.InMemory.InMemoryDirectoryEntry.#ctor(FubarDev.FtpServer.FileSystem.IUnixFileSystem,FubarDev.FtpServer.FileSystem.InMemory.InMemoryDirectoryEntry,System.String,System.Collections.Generic.IDictionary{System.String,FubarDev.FtpServer.FileSystem.IUnixFileSystemEntry})
-  name: InMemoryDirectoryEntry(IUnixFileSystem, InMemoryDirectoryEntry, String, IDictionary<String, IUnixFileSystemEntry>)
-  href: api/FubarDev.FtpServer.FileSystem.InMemory.InMemoryDirectoryEntry.html#FubarDev_FtpServer_FileSystem_InMemory_InMemoryDirectoryEntry__ctor_FubarDev_FtpServer_FileSystem_IUnixFileSystem_FubarDev_FtpServer_FileSystem_InMemory_InMemoryDirectoryEntry_System_String_System_Collections_Generic_IDictionary_System_String_FubarDev_FtpServer_FileSystem_IUnixFileSystemEntry__
-  commentId: M:FubarDev.FtpServer.FileSystem.InMemory.InMemoryDirectoryEntry.#ctor(FubarDev.FtpServer.FileSystem.IUnixFileSystem,FubarDev.FtpServer.FileSystem.InMemory.InMemoryDirectoryEntry,System.String,System.Collections.Generic.IDictionary{System.String,FubarDev.FtpServer.FileSystem.IUnixFileSystemEntry})
-  name.vb: InMemoryDirectoryEntry(IUnixFileSystem, InMemoryDirectoryEntry, String, IDictionary(Of String, IUnixFileSystemEntry))
-  fullName: FubarDev.FtpServer.FileSystem.InMemory.InMemoryDirectoryEntry.InMemoryDirectoryEntry(FubarDev.FtpServer.FileSystem.IUnixFileSystem, FubarDev.FtpServer.FileSystem.InMemory.InMemoryDirectoryEntry, System.String, System.Collections.Generic.IDictionary<System.String, FubarDev.FtpServer.FileSystem.IUnixFileSystemEntry>)
-  fullName.vb: FubarDev.FtpServer.FileSystem.InMemory.InMemoryDirectoryEntry.InMemoryDirectoryEntry(FubarDev.FtpServer.FileSystem.IUnixFileSystem, FubarDev.FtpServer.FileSystem.InMemory.InMemoryDirectoryEntry, System.String, System.Collections.Generic.IDictionary(Of System.String, FubarDev.FtpServer.FileSystem.IUnixFileSystemEntry))
-  nameWithType: InMemoryDirectoryEntry.InMemoryDirectoryEntry(IUnixFileSystem, InMemoryDirectoryEntry, String, IDictionary<String, IUnixFileSystemEntry>)
-  nameWithType.vb: InMemoryDirectoryEntry.InMemoryDirectoryEntry(IUnixFileSystem, InMemoryDirectoryEntry, String, IDictionary(Of String, IUnixFileSystemEntry))
+- uid: FubarDev.FtpServer.FileSystem.InMemory.InMemoryDirectoryEntry.#ctor(FubarDev.FtpServer.FileSystem.InMemory.InMemoryDirectoryEntry,System.String,System.Collections.Generic.IDictionary{System.String,FubarDev.FtpServer.FileSystem.IUnixFileSystemEntry})
+  name: InMemoryDirectoryEntry(InMemoryDirectoryEntry, String, IDictionary<String, IUnixFileSystemEntry>)
+  href: api/FubarDev.FtpServer.FileSystem.InMemory.InMemoryDirectoryEntry.html#FubarDev_FtpServer_FileSystem_InMemory_InMemoryDirectoryEntry__ctor_FubarDev_FtpServer_FileSystem_InMemory_InMemoryDirectoryEntry_System_String_System_Collections_Generic_IDictionary_System_String_FubarDev_FtpServer_FileSystem_IUnixFileSystemEntry__
+  commentId: M:FubarDev.FtpServer.FileSystem.InMemory.InMemoryDirectoryEntry.#ctor(FubarDev.FtpServer.FileSystem.InMemory.InMemoryDirectoryEntry,System.String,System.Collections.Generic.IDictionary{System.String,FubarDev.FtpServer.FileSystem.IUnixFileSystemEntry})
+  name.vb: InMemoryDirectoryEntry(InMemoryDirectoryEntry, String, IDictionary(Of String, IUnixFileSystemEntry))
+  fullName: FubarDev.FtpServer.FileSystem.InMemory.InMemoryDirectoryEntry.InMemoryDirectoryEntry(FubarDev.FtpServer.FileSystem.InMemory.InMemoryDirectoryEntry, System.String, System.Collections.Generic.IDictionary<System.String, FubarDev.FtpServer.FileSystem.IUnixFileSystemEntry>)
+  fullName.vb: FubarDev.FtpServer.FileSystem.InMemory.InMemoryDirectoryEntry.InMemoryDirectoryEntry(FubarDev.FtpServer.FileSystem.InMemory.InMemoryDirectoryEntry, System.String, System.Collections.Generic.IDictionary(Of System.String, FubarDev.FtpServer.FileSystem.IUnixFileSystemEntry))
+  nameWithType: InMemoryDirectoryEntry.InMemoryDirectoryEntry(InMemoryDirectoryEntry, String, IDictionary<String, IUnixFileSystemEntry>)
+  nameWithType.vb: InMemoryDirectoryEntry.InMemoryDirectoryEntry(InMemoryDirectoryEntry, String, IDictionary(Of String, IUnixFileSystemEntry))
 - uid: FubarDev.FtpServer.FileSystem.InMemory.InMemoryDirectoryEntry.#ctor*
   name: InMemoryDirectoryEntry
   href: api/FubarDev.FtpServer.FileSystem.InMemory.InMemoryDirectoryEntry.html#FubarDev_FtpServer_FileSystem_InMemory_InMemoryDirectoryEntry__ctor_
@@ -6038,15 +6514,15 @@ references:
   commentId: T:FubarDev.FtpServer.FileSystem.InMemory.InMemoryFileEntry
   fullName: FubarDev.FtpServer.FileSystem.InMemory.InMemoryFileEntry
   nameWithType: InMemoryFileEntry
-- uid: FubarDev.FtpServer.FileSystem.InMemory.InMemoryFileEntry.#ctor(FubarDev.FtpServer.FileSystem.IUnixFileSystem,FubarDev.FtpServer.FileSystem.InMemory.InMemoryDirectoryEntry,System.String,System.Byte[])
-  name: InMemoryFileEntry(IUnixFileSystem, InMemoryDirectoryEntry, String, Byte[])
-  href: api/FubarDev.FtpServer.FileSystem.InMemory.InMemoryFileEntry.html#FubarDev_FtpServer_FileSystem_InMemory_InMemoryFileEntry__ctor_FubarDev_FtpServer_FileSystem_IUnixFileSystem_FubarDev_FtpServer_FileSystem_InMemory_InMemoryDirectoryEntry_System_String_System_Byte___
-  commentId: M:FubarDev.FtpServer.FileSystem.InMemory.InMemoryFileEntry.#ctor(FubarDev.FtpServer.FileSystem.IUnixFileSystem,FubarDev.FtpServer.FileSystem.InMemory.InMemoryDirectoryEntry,System.String,System.Byte[])
-  name.vb: InMemoryFileEntry(IUnixFileSystem, InMemoryDirectoryEntry, String, Byte())
-  fullName: FubarDev.FtpServer.FileSystem.InMemory.InMemoryFileEntry.InMemoryFileEntry(FubarDev.FtpServer.FileSystem.IUnixFileSystem, FubarDev.FtpServer.FileSystem.InMemory.InMemoryDirectoryEntry, System.String, System.Byte[])
-  fullName.vb: FubarDev.FtpServer.FileSystem.InMemory.InMemoryFileEntry.InMemoryFileEntry(FubarDev.FtpServer.FileSystem.IUnixFileSystem, FubarDev.FtpServer.FileSystem.InMemory.InMemoryDirectoryEntry, System.String, System.Byte())
-  nameWithType: InMemoryFileEntry.InMemoryFileEntry(IUnixFileSystem, InMemoryDirectoryEntry, String, Byte[])
-  nameWithType.vb: InMemoryFileEntry.InMemoryFileEntry(IUnixFileSystem, InMemoryDirectoryEntry, String, Byte())
+- uid: FubarDev.FtpServer.FileSystem.InMemory.InMemoryFileEntry.#ctor(FubarDev.FtpServer.FileSystem.InMemory.InMemoryDirectoryEntry,System.String,System.Byte[])
+  name: InMemoryFileEntry(InMemoryDirectoryEntry, String, Byte[])
+  href: api/FubarDev.FtpServer.FileSystem.InMemory.InMemoryFileEntry.html#FubarDev_FtpServer_FileSystem_InMemory_InMemoryFileEntry__ctor_FubarDev_FtpServer_FileSystem_InMemory_InMemoryDirectoryEntry_System_String_System_Byte___
+  commentId: M:FubarDev.FtpServer.FileSystem.InMemory.InMemoryFileEntry.#ctor(FubarDev.FtpServer.FileSystem.InMemory.InMemoryDirectoryEntry,System.String,System.Byte[])
+  name.vb: InMemoryFileEntry(InMemoryDirectoryEntry, String, Byte())
+  fullName: FubarDev.FtpServer.FileSystem.InMemory.InMemoryFileEntry.InMemoryFileEntry(FubarDev.FtpServer.FileSystem.InMemory.InMemoryDirectoryEntry, System.String, System.Byte[])
+  fullName.vb: FubarDev.FtpServer.FileSystem.InMemory.InMemoryFileEntry.InMemoryFileEntry(FubarDev.FtpServer.FileSystem.InMemory.InMemoryDirectoryEntry, System.String, System.Byte())
+  nameWithType: InMemoryFileEntry.InMemoryFileEntry(InMemoryDirectoryEntry, String, Byte[])
+  nameWithType.vb: InMemoryFileEntry.InMemoryFileEntry(InMemoryDirectoryEntry, String, Byte())
 - uid: FubarDev.FtpServer.FileSystem.InMemory.InMemoryFileEntry.#ctor*
   name: InMemoryFileEntry
   href: api/FubarDev.FtpServer.FileSystem.InMemory.InMemoryFileEntry.html#FubarDev_FtpServer_FileSystem_InMemory_InMemoryFileEntry__ctor_
@@ -6293,12 +6769,12 @@ references:
   commentId: T:FubarDev.FtpServer.FileSystem.InMemory.InMemoryFileSystemEntry
   fullName: FubarDev.FtpServer.FileSystem.InMemory.InMemoryFileSystemEntry
   nameWithType: InMemoryFileSystemEntry
-- uid: FubarDev.FtpServer.FileSystem.InMemory.InMemoryFileSystemEntry.#ctor(FubarDev.FtpServer.FileSystem.IUnixFileSystem,FubarDev.FtpServer.FileSystem.InMemory.InMemoryDirectoryEntry,System.String,FubarDev.FtpServer.FileSystem.IUnixPermissions)
-  name: InMemoryFileSystemEntry(IUnixFileSystem, InMemoryDirectoryEntry, String, IUnixPermissions)
-  href: api/FubarDev.FtpServer.FileSystem.InMemory.InMemoryFileSystemEntry.html#FubarDev_FtpServer_FileSystem_InMemory_InMemoryFileSystemEntry__ctor_FubarDev_FtpServer_FileSystem_IUnixFileSystem_FubarDev_FtpServer_FileSystem_InMemory_InMemoryDirectoryEntry_System_String_FubarDev_FtpServer_FileSystem_IUnixPermissions_
-  commentId: M:FubarDev.FtpServer.FileSystem.InMemory.InMemoryFileSystemEntry.#ctor(FubarDev.FtpServer.FileSystem.IUnixFileSystem,FubarDev.FtpServer.FileSystem.InMemory.InMemoryDirectoryEntry,System.String,FubarDev.FtpServer.FileSystem.IUnixPermissions)
-  fullName: FubarDev.FtpServer.FileSystem.InMemory.InMemoryFileSystemEntry.InMemoryFileSystemEntry(FubarDev.FtpServer.FileSystem.IUnixFileSystem, FubarDev.FtpServer.FileSystem.InMemory.InMemoryDirectoryEntry, System.String, FubarDev.FtpServer.FileSystem.IUnixPermissions)
-  nameWithType: InMemoryFileSystemEntry.InMemoryFileSystemEntry(IUnixFileSystem, InMemoryDirectoryEntry, String, IUnixPermissions)
+- uid: FubarDev.FtpServer.FileSystem.InMemory.InMemoryFileSystemEntry.#ctor(FubarDev.FtpServer.FileSystem.InMemory.InMemoryDirectoryEntry,System.String,FubarDev.FtpServer.FileSystem.IUnixPermissions)
+  name: InMemoryFileSystemEntry(InMemoryDirectoryEntry, String, IUnixPermissions)
+  href: api/FubarDev.FtpServer.FileSystem.InMemory.InMemoryFileSystemEntry.html#FubarDev_FtpServer_FileSystem_InMemory_InMemoryFileSystemEntry__ctor_FubarDev_FtpServer_FileSystem_InMemory_InMemoryDirectoryEntry_System_String_FubarDev_FtpServer_FileSystem_IUnixPermissions_
+  commentId: M:FubarDev.FtpServer.FileSystem.InMemory.InMemoryFileSystemEntry.#ctor(FubarDev.FtpServer.FileSystem.InMemory.InMemoryDirectoryEntry,System.String,FubarDev.FtpServer.FileSystem.IUnixPermissions)
+  fullName: FubarDev.FtpServer.FileSystem.InMemory.InMemoryFileSystemEntry.InMemoryFileSystemEntry(FubarDev.FtpServer.FileSystem.InMemory.InMemoryDirectoryEntry, System.String, FubarDev.FtpServer.FileSystem.IUnixPermissions)
+  nameWithType: InMemoryFileSystemEntry.InMemoryFileSystemEntry(InMemoryDirectoryEntry, String, IUnixPermissions)
 - uid: FubarDev.FtpServer.FileSystem.InMemory.InMemoryFileSystemEntry.#ctor*
   name: InMemoryFileSystemEntry
   href: api/FubarDev.FtpServer.FileSystem.InMemory.InMemoryFileSystemEntry.html#FubarDev_FtpServer_FileSystem_InMemory_InMemoryFileSystemEntry__ctor_
@@ -6319,19 +6795,6 @@ references:
   isSpec: "True"
   fullName: FubarDev.FtpServer.FileSystem.InMemory.InMemoryFileSystemEntry.CreatedTime
   nameWithType: InMemoryFileSystemEntry.CreatedTime
-- uid: FubarDev.FtpServer.FileSystem.InMemory.InMemoryFileSystemEntry.FileSystem
-  name: FileSystem
-  href: api/FubarDev.FtpServer.FileSystem.InMemory.InMemoryFileSystemEntry.html#FubarDev_FtpServer_FileSystem_InMemory_InMemoryFileSystemEntry_FileSystem
-  commentId: P:FubarDev.FtpServer.FileSystem.InMemory.InMemoryFileSystemEntry.FileSystem
-  fullName: FubarDev.FtpServer.FileSystem.InMemory.InMemoryFileSystemEntry.FileSystem
-  nameWithType: InMemoryFileSystemEntry.FileSystem
-- uid: FubarDev.FtpServer.FileSystem.InMemory.InMemoryFileSystemEntry.FileSystem*
-  name: FileSystem
-  href: api/FubarDev.FtpServer.FileSystem.InMemory.InMemoryFileSystemEntry.html#FubarDev_FtpServer_FileSystem_InMemory_InMemoryFileSystemEntry_FileSystem_
-  commentId: Overload:FubarDev.FtpServer.FileSystem.InMemory.InMemoryFileSystemEntry.FileSystem
-  isSpec: "True"
-  fullName: FubarDev.FtpServer.FileSystem.InMemory.InMemoryFileSystemEntry.FileSystem
-  nameWithType: InMemoryFileSystemEntry.FileSystem
 - uid: FubarDev.FtpServer.FileSystem.InMemory.InMemoryFileSystemEntry.Group
   name: Group
   href: api/FubarDev.FtpServer.FileSystem.InMemory.InMemoryFileSystemEntry.html#FubarDev_FtpServer_FileSystem_InMemory_InMemoryFileSystemEntry_Group
@@ -6539,15 +7002,15 @@ references:
   commentId: T:FubarDev.FtpServer.FileSystem.InMemory.InMemoryFileSystemProvider
   fullName: FubarDev.FtpServer.FileSystem.InMemory.InMemoryFileSystemProvider
   nameWithType: InMemoryFileSystemProvider
-- uid: FubarDev.FtpServer.FileSystem.InMemory.InMemoryFileSystemProvider.#ctor(Microsoft.Extensions.Options.IOptions{FubarDev.FtpServer.FileSystem.InMemory.InMemoryFileSystemOptions})
-  name: InMemoryFileSystemProvider(IOptions<InMemoryFileSystemOptions>)
-  href: api/FubarDev.FtpServer.FileSystem.InMemory.InMemoryFileSystemProvider.html#FubarDev_FtpServer_FileSystem_InMemory_InMemoryFileSystemProvider__ctor_Microsoft_Extensions_Options_IOptions_FubarDev_FtpServer_FileSystem_InMemory_InMemoryFileSystemOptions__
-  commentId: M:FubarDev.FtpServer.FileSystem.InMemory.InMemoryFileSystemProvider.#ctor(Microsoft.Extensions.Options.IOptions{FubarDev.FtpServer.FileSystem.InMemory.InMemoryFileSystemOptions})
-  name.vb: InMemoryFileSystemProvider(IOptions(Of InMemoryFileSystemOptions))
-  fullName: FubarDev.FtpServer.FileSystem.InMemory.InMemoryFileSystemProvider.InMemoryFileSystemProvider(Microsoft.Extensions.Options.IOptions<FubarDev.FtpServer.FileSystem.InMemory.InMemoryFileSystemOptions>)
-  fullName.vb: FubarDev.FtpServer.FileSystem.InMemory.InMemoryFileSystemProvider.InMemoryFileSystemProvider(Microsoft.Extensions.Options.IOptions(Of FubarDev.FtpServer.FileSystem.InMemory.InMemoryFileSystemOptions))
-  nameWithType: InMemoryFileSystemProvider.InMemoryFileSystemProvider(IOptions<InMemoryFileSystemOptions>)
-  nameWithType.vb: InMemoryFileSystemProvider.InMemoryFileSystemProvider(IOptions(Of InMemoryFileSystemOptions))
+- uid: FubarDev.FtpServer.FileSystem.InMemory.InMemoryFileSystemProvider.#ctor(Microsoft.Extensions.Options.IOptions{FubarDev.FtpServer.FileSystem.InMemory.InMemoryFileSystemOptions},FubarDev.FtpServer.FileSystem.IAccountDirectoryQuery)
+  name: InMemoryFileSystemProvider(IOptions<InMemoryFileSystemOptions>, IAccountDirectoryQuery)
+  href: api/FubarDev.FtpServer.FileSystem.InMemory.InMemoryFileSystemProvider.html#FubarDev_FtpServer_FileSystem_InMemory_InMemoryFileSystemProvider__ctor_Microsoft_Extensions_Options_IOptions_FubarDev_FtpServer_FileSystem_InMemory_InMemoryFileSystemOptions__FubarDev_FtpServer_FileSystem_IAccountDirectoryQuery_
+  commentId: M:FubarDev.FtpServer.FileSystem.InMemory.InMemoryFileSystemProvider.#ctor(Microsoft.Extensions.Options.IOptions{FubarDev.FtpServer.FileSystem.InMemory.InMemoryFileSystemOptions},FubarDev.FtpServer.FileSystem.IAccountDirectoryQuery)
+  name.vb: InMemoryFileSystemProvider(IOptions(Of InMemoryFileSystemOptions), IAccountDirectoryQuery)
+  fullName: FubarDev.FtpServer.FileSystem.InMemory.InMemoryFileSystemProvider.InMemoryFileSystemProvider(Microsoft.Extensions.Options.IOptions<FubarDev.FtpServer.FileSystem.InMemory.InMemoryFileSystemOptions>, FubarDev.FtpServer.FileSystem.IAccountDirectoryQuery)
+  fullName.vb: FubarDev.FtpServer.FileSystem.InMemory.InMemoryFileSystemProvider.InMemoryFileSystemProvider(Microsoft.Extensions.Options.IOptions(Of FubarDev.FtpServer.FileSystem.InMemory.InMemoryFileSystemOptions), FubarDev.FtpServer.FileSystem.IAccountDirectoryQuery)
+  nameWithType: InMemoryFileSystemProvider.InMemoryFileSystemProvider(IOptions<InMemoryFileSystemOptions>, IAccountDirectoryQuery)
+  nameWithType.vb: InMemoryFileSystemProvider.InMemoryFileSystemProvider(IOptions(Of InMemoryFileSystemOptions), IAccountDirectoryQuery)
 - uid: FubarDev.FtpServer.FileSystem.InMemory.InMemoryFileSystemProvider.#ctor*
   name: InMemoryFileSystemProvider
   href: api/FubarDev.FtpServer.FileSystem.InMemory.InMemoryFileSystemProvider.html#FubarDev_FtpServer_FileSystem_InMemory_InMemoryFileSystemProvider__ctor_
@@ -6832,19 +7295,6 @@ references:
   isSpec: "True"
   fullName: FubarDev.FtpServer.FileSystem.IUnixFileSystemEntry.CreatedTime
   nameWithType: IUnixFileSystemEntry.CreatedTime
-- uid: FubarDev.FtpServer.FileSystem.IUnixFileSystemEntry.FileSystem
-  name: FileSystem
-  href: api/FubarDev.FtpServer.FileSystem.IUnixFileSystemEntry.html#FubarDev_FtpServer_FileSystem_IUnixFileSystemEntry_FileSystem
-  commentId: P:FubarDev.FtpServer.FileSystem.IUnixFileSystemEntry.FileSystem
-  fullName: FubarDev.FtpServer.FileSystem.IUnixFileSystemEntry.FileSystem
-  nameWithType: IUnixFileSystemEntry.FileSystem
-- uid: FubarDev.FtpServer.FileSystem.IUnixFileSystemEntry.FileSystem*
-  name: FileSystem
-  href: api/FubarDev.FtpServer.FileSystem.IUnixFileSystemEntry.html#FubarDev_FtpServer_FileSystem_IUnixFileSystemEntry_FileSystem_
-  commentId: Overload:FubarDev.FtpServer.FileSystem.IUnixFileSystemEntry.FileSystem
-  isSpec: "True"
-  fullName: FubarDev.FtpServer.FileSystem.IUnixFileSystemEntry.FileSystem
-  nameWithType: IUnixFileSystemEntry.FileSystem
 - uid: FubarDev.FtpServer.FileSystem.IUnixFileSystemEntry.LastWriteTime
   name: LastWriteTime
   href: api/FubarDev.FtpServer.FileSystem.IUnixFileSystemEntry.html#FubarDev_FtpServer_FileSystem_IUnixFileSystemEntry_LastWriteTime
@@ -7038,6 +7488,308 @@ references:
   isSpec: "True"
   fullName: FubarDev.FtpServer.FileSystem.MemoryTemporaryData.Size
   nameWithType: MemoryTemporaryData.Size
+- uid: FubarDev.FtpServer.FileSystem.PathEnumerator
+  name: PathEnumerator
+  href: api/FubarDev.FtpServer.FileSystem.PathEnumerator.html
+  commentId: T:FubarDev.FtpServer.FileSystem.PathEnumerator
+  fullName: FubarDev.FtpServer.FileSystem.PathEnumerator
+  nameWithType: PathEnumerator
+- uid: FubarDev.FtpServer.FileSystem.PathEnumerator.#ctor(System.String)
+  name: PathEnumerator(String)
+  href: api/FubarDev.FtpServer.FileSystem.PathEnumerator.html#FubarDev_FtpServer_FileSystem_PathEnumerator__ctor_System_String_
+  commentId: M:FubarDev.FtpServer.FileSystem.PathEnumerator.#ctor(System.String)
+  fullName: FubarDev.FtpServer.FileSystem.PathEnumerator.PathEnumerator(System.String)
+  nameWithType: PathEnumerator.PathEnumerator(String)
+- uid: FubarDev.FtpServer.FileSystem.PathEnumerator.#ctor*
+  name: PathEnumerator
+  href: api/FubarDev.FtpServer.FileSystem.PathEnumerator.html#FubarDev_FtpServer_FileSystem_PathEnumerator__ctor_
+  commentId: Overload:FubarDev.FtpServer.FileSystem.PathEnumerator.#ctor
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.FileSystem.PathEnumerator.PathEnumerator
+  nameWithType: PathEnumerator.PathEnumerator
+- uid: FubarDev.FtpServer.FileSystem.PathEnumerator.GetEnumerator
+  name: GetEnumerator()
+  href: api/FubarDev.FtpServer.FileSystem.PathEnumerator.html#FubarDev_FtpServer_FileSystem_PathEnumerator_GetEnumerator
+  commentId: M:FubarDev.FtpServer.FileSystem.PathEnumerator.GetEnumerator
+  fullName: FubarDev.FtpServer.FileSystem.PathEnumerator.GetEnumerator()
+  nameWithType: PathEnumerator.GetEnumerator()
+- uid: FubarDev.FtpServer.FileSystem.PathEnumerator.GetEnumerator*
+  name: GetEnumerator
+  href: api/FubarDev.FtpServer.FileSystem.PathEnumerator.html#FubarDev_FtpServer_FileSystem_PathEnumerator_GetEnumerator_
+  commentId: Overload:FubarDev.FtpServer.FileSystem.PathEnumerator.GetEnumerator
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.FileSystem.PathEnumerator.GetEnumerator
+  nameWithType: PathEnumerator.GetEnumerator
+- uid: FubarDev.FtpServer.FileSystem.PathEnumerator.System#Collections#IEnumerable#GetEnumerator
+  name: IEnumerable.GetEnumerator()
+  href: api/FubarDev.FtpServer.FileSystem.PathEnumerator.html#FubarDev_FtpServer_FileSystem_PathEnumerator_System_Collections_IEnumerable_GetEnumerator
+  commentId: M:FubarDev.FtpServer.FileSystem.PathEnumerator.System#Collections#IEnumerable#GetEnumerator
+  name.vb: System.Collections.IEnumerable.GetEnumerator()
+  fullName: FubarDev.FtpServer.FileSystem.PathEnumerator.System.Collections.IEnumerable.GetEnumerator()
+  nameWithType: PathEnumerator.IEnumerable.GetEnumerator()
+  nameWithType.vb: PathEnumerator.System.Collections.IEnumerable.GetEnumerator()
+- uid: FubarDev.FtpServer.FileSystem.PathEnumerator.System#Collections#IEnumerable#GetEnumerator*
+  name: IEnumerable.GetEnumerator
+  href: api/FubarDev.FtpServer.FileSystem.PathEnumerator.html#FubarDev_FtpServer_FileSystem_PathEnumerator_System_Collections_IEnumerable_GetEnumerator_
+  commentId: Overload:FubarDev.FtpServer.FileSystem.PathEnumerator.System#Collections#IEnumerable#GetEnumerator
+  isSpec: "True"
+  name.vb: System.Collections.IEnumerable.GetEnumerator
+  fullName: FubarDev.FtpServer.FileSystem.PathEnumerator.System.Collections.IEnumerable.GetEnumerator
+  nameWithType: PathEnumerator.IEnumerable.GetEnumerator
+  nameWithType.vb: PathEnumerator.System.Collections.IEnumerable.GetEnumerator
+- uid: FubarDev.FtpServer.FileSystem.PathNormalizer
+  name: PathNormalizer
+  href: api/FubarDev.FtpServer.FileSystem.PathNormalizer.html
+  commentId: T:FubarDev.FtpServer.FileSystem.PathNormalizer
+  fullName: FubarDev.FtpServer.FileSystem.PathNormalizer
+  nameWithType: PathNormalizer
+- uid: FubarDev.FtpServer.FileSystem.PathNormalizer.NormalizePath(System.Collections.Generic.IEnumerable{System.String},System.Collections.Generic.IEnumerable{System.String})
+  name: NormalizePath(IEnumerable<String>, IEnumerable<String>)
+  href: api/FubarDev.FtpServer.FileSystem.PathNormalizer.html#FubarDev_FtpServer_FileSystem_PathNormalizer_NormalizePath_System_Collections_Generic_IEnumerable_System_String__System_Collections_Generic_IEnumerable_System_String__
+  commentId: M:FubarDev.FtpServer.FileSystem.PathNormalizer.NormalizePath(System.Collections.Generic.IEnumerable{System.String},System.Collections.Generic.IEnumerable{System.String})
+  name.vb: NormalizePath(IEnumerable(Of String), IEnumerable(Of String))
+  fullName: FubarDev.FtpServer.FileSystem.PathNormalizer.NormalizePath(System.Collections.Generic.IEnumerable<System.String>, System.Collections.Generic.IEnumerable<System.String>)
+  fullName.vb: FubarDev.FtpServer.FileSystem.PathNormalizer.NormalizePath(System.Collections.Generic.IEnumerable(Of System.String), System.Collections.Generic.IEnumerable(Of System.String))
+  nameWithType: PathNormalizer.NormalizePath(IEnumerable<String>, IEnumerable<String>)
+  nameWithType.vb: PathNormalizer.NormalizePath(IEnumerable(Of String), IEnumerable(Of String))
+- uid: FubarDev.FtpServer.FileSystem.PathNormalizer.NormalizePath(System.String)
+  name: NormalizePath(String)
+  href: api/FubarDev.FtpServer.FileSystem.PathNormalizer.html#FubarDev_FtpServer_FileSystem_PathNormalizer_NormalizePath_System_String_
+  commentId: M:FubarDev.FtpServer.FileSystem.PathNormalizer.NormalizePath(System.String)
+  fullName: FubarDev.FtpServer.FileSystem.PathNormalizer.NormalizePath(System.String)
+  nameWithType: PathNormalizer.NormalizePath(String)
+- uid: FubarDev.FtpServer.FileSystem.PathNormalizer.NormalizePath*
+  name: NormalizePath
+  href: api/FubarDev.FtpServer.FileSystem.PathNormalizer.html#FubarDev_FtpServer_FileSystem_PathNormalizer_NormalizePath_
+  commentId: Overload:FubarDev.FtpServer.FileSystem.PathNormalizer.NormalizePath
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.FileSystem.PathNormalizer.NormalizePath
+  nameWithType: PathNormalizer.NormalizePath
+- uid: FubarDev.FtpServer.FileSystem.PathSelectionResult
+  name: PathSelectionResult
+  href: api/FubarDev.FtpServer.FileSystem.PathSelectionResult.html
+  commentId: T:FubarDev.FtpServer.FileSystem.PathSelectionResult
+  fullName: FubarDev.FtpServer.FileSystem.PathSelectionResult
+  nameWithType: PathSelectionResult
+- uid: FubarDev.FtpServer.FileSystem.PathSelectionResult.Create(System.Collections.Generic.Stack{FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry})
+  name: Create(Stack<IUnixDirectoryEntry>)
+  href: api/FubarDev.FtpServer.FileSystem.PathSelectionResult.html#FubarDev_FtpServer_FileSystem_PathSelectionResult_Create_System_Collections_Generic_Stack_FubarDev_FtpServer_FileSystem_IUnixDirectoryEntry__
+  commentId: M:FubarDev.FtpServer.FileSystem.PathSelectionResult.Create(System.Collections.Generic.Stack{FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry})
+  name.vb: Create(Stack(Of IUnixDirectoryEntry))
+  fullName: FubarDev.FtpServer.FileSystem.PathSelectionResult.Create(System.Collections.Generic.Stack<FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry>)
+  fullName.vb: FubarDev.FtpServer.FileSystem.PathSelectionResult.Create(System.Collections.Generic.Stack(Of FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry))
+  nameWithType: PathSelectionResult.Create(Stack<IUnixDirectoryEntry>)
+  nameWithType.vb: PathSelectionResult.Create(Stack(Of IUnixDirectoryEntry))
+- uid: FubarDev.FtpServer.FileSystem.PathSelectionResult.Create(System.Collections.Generic.Stack{FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry},FubarDev.FtpServer.FileSystem.IUnixFileEntry)
+  name: Create(Stack<IUnixDirectoryEntry>, IUnixFileEntry)
+  href: api/FubarDev.FtpServer.FileSystem.PathSelectionResult.html#FubarDev_FtpServer_FileSystem_PathSelectionResult_Create_System_Collections_Generic_Stack_FubarDev_FtpServer_FileSystem_IUnixDirectoryEntry__FubarDev_FtpServer_FileSystem_IUnixFileEntry_
+  commentId: M:FubarDev.FtpServer.FileSystem.PathSelectionResult.Create(System.Collections.Generic.Stack{FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry},FubarDev.FtpServer.FileSystem.IUnixFileEntry)
+  name.vb: Create(Stack(Of IUnixDirectoryEntry), IUnixFileEntry)
+  fullName: FubarDev.FtpServer.FileSystem.PathSelectionResult.Create(System.Collections.Generic.Stack<FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry>, FubarDev.FtpServer.FileSystem.IUnixFileEntry)
+  fullName.vb: FubarDev.FtpServer.FileSystem.PathSelectionResult.Create(System.Collections.Generic.Stack(Of FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry), FubarDev.FtpServer.FileSystem.IUnixFileEntry)
+  nameWithType: PathSelectionResult.Create(Stack<IUnixDirectoryEntry>, IUnixFileEntry)
+  nameWithType.vb: PathSelectionResult.Create(Stack(Of IUnixDirectoryEntry), IUnixFileEntry)
+- uid: FubarDev.FtpServer.FileSystem.PathSelectionResult.Create*
+  name: Create
+  href: api/FubarDev.FtpServer.FileSystem.PathSelectionResult.html#FubarDev_FtpServer_FileSystem_PathSelectionResult_Create_
+  commentId: Overload:FubarDev.FtpServer.FileSystem.PathSelectionResult.Create
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.FileSystem.PathSelectionResult.Create
+  nameWithType: PathSelectionResult.Create
+- uid: FubarDev.FtpServer.FileSystem.PathSelectionResult.CreateMissingDirectory(System.Collections.Generic.Stack{FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry},System.Collections.Generic.IReadOnlyCollection{System.String})
+  name: CreateMissingDirectory(Stack<IUnixDirectoryEntry>, IReadOnlyCollection<String>)
+  href: api/FubarDev.FtpServer.FileSystem.PathSelectionResult.html#FubarDev_FtpServer_FileSystem_PathSelectionResult_CreateMissingDirectory_System_Collections_Generic_Stack_FubarDev_FtpServer_FileSystem_IUnixDirectoryEntry__System_Collections_Generic_IReadOnlyCollection_System_String__
+  commentId: M:FubarDev.FtpServer.FileSystem.PathSelectionResult.CreateMissingDirectory(System.Collections.Generic.Stack{FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry},System.Collections.Generic.IReadOnlyCollection{System.String})
+  name.vb: CreateMissingDirectory(Stack(Of IUnixDirectoryEntry), IReadOnlyCollection(Of String))
+  fullName: FubarDev.FtpServer.FileSystem.PathSelectionResult.CreateMissingDirectory(System.Collections.Generic.Stack<FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry>, System.Collections.Generic.IReadOnlyCollection<System.String>)
+  fullName.vb: FubarDev.FtpServer.FileSystem.PathSelectionResult.CreateMissingDirectory(System.Collections.Generic.Stack(Of FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry), System.Collections.Generic.IReadOnlyCollection(Of System.String))
+  nameWithType: PathSelectionResult.CreateMissingDirectory(Stack<IUnixDirectoryEntry>, IReadOnlyCollection<String>)
+  nameWithType.vb: PathSelectionResult.CreateMissingDirectory(Stack(Of IUnixDirectoryEntry), IReadOnlyCollection(Of String))
+- uid: FubarDev.FtpServer.FileSystem.PathSelectionResult.CreateMissingDirectory*
+  name: CreateMissingDirectory
+  href: api/FubarDev.FtpServer.FileSystem.PathSelectionResult.html#FubarDev_FtpServer_FileSystem_PathSelectionResult_CreateMissingDirectory_
+  commentId: Overload:FubarDev.FtpServer.FileSystem.PathSelectionResult.CreateMissingDirectory
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.FileSystem.PathSelectionResult.CreateMissingDirectory
+  nameWithType: PathSelectionResult.CreateMissingDirectory
+- uid: FubarDev.FtpServer.FileSystem.PathSelectionResult.CreateMissingFileOrDirectory(System.Collections.Generic.Stack{FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry},System.Collections.Generic.IReadOnlyCollection{System.String})
+  name: CreateMissingFileOrDirectory(Stack<IUnixDirectoryEntry>, IReadOnlyCollection<String>)
+  href: api/FubarDev.FtpServer.FileSystem.PathSelectionResult.html#FubarDev_FtpServer_FileSystem_PathSelectionResult_CreateMissingFileOrDirectory_System_Collections_Generic_Stack_FubarDev_FtpServer_FileSystem_IUnixDirectoryEntry__System_Collections_Generic_IReadOnlyCollection_System_String__
+  commentId: M:FubarDev.FtpServer.FileSystem.PathSelectionResult.CreateMissingFileOrDirectory(System.Collections.Generic.Stack{FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry},System.Collections.Generic.IReadOnlyCollection{System.String})
+  name.vb: CreateMissingFileOrDirectory(Stack(Of IUnixDirectoryEntry), IReadOnlyCollection(Of String))
+  fullName: FubarDev.FtpServer.FileSystem.PathSelectionResult.CreateMissingFileOrDirectory(System.Collections.Generic.Stack<FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry>, System.Collections.Generic.IReadOnlyCollection<System.String>)
+  fullName.vb: FubarDev.FtpServer.FileSystem.PathSelectionResult.CreateMissingFileOrDirectory(System.Collections.Generic.Stack(Of FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry), System.Collections.Generic.IReadOnlyCollection(Of System.String))
+  nameWithType: PathSelectionResult.CreateMissingFileOrDirectory(Stack<IUnixDirectoryEntry>, IReadOnlyCollection<String>)
+  nameWithType.vb: PathSelectionResult.CreateMissingFileOrDirectory(Stack(Of IUnixDirectoryEntry), IReadOnlyCollection(Of String))
+- uid: FubarDev.FtpServer.FileSystem.PathSelectionResult.CreateMissingFileOrDirectory*
+  name: CreateMissingFileOrDirectory
+  href: api/FubarDev.FtpServer.FileSystem.PathSelectionResult.html#FubarDev_FtpServer_FileSystem_PathSelectionResult_CreateMissingFileOrDirectory_
+  commentId: Overload:FubarDev.FtpServer.FileSystem.PathSelectionResult.CreateMissingFileOrDirectory
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.FileSystem.PathSelectionResult.CreateMissingFileOrDirectory
+  nameWithType: PathSelectionResult.CreateMissingFileOrDirectory
+- uid: FubarDev.FtpServer.FileSystem.PathSelectionResult.Directory
+  name: Directory
+  href: api/FubarDev.FtpServer.FileSystem.PathSelectionResult.html#FubarDev_FtpServer_FileSystem_PathSelectionResult_Directory
+  commentId: P:FubarDev.FtpServer.FileSystem.PathSelectionResult.Directory
+  fullName: FubarDev.FtpServer.FileSystem.PathSelectionResult.Directory
+  nameWithType: PathSelectionResult.Directory
+- uid: FubarDev.FtpServer.FileSystem.PathSelectionResult.Directory*
+  name: Directory
+  href: api/FubarDev.FtpServer.FileSystem.PathSelectionResult.html#FubarDev_FtpServer_FileSystem_PathSelectionResult_Directory_
+  commentId: Overload:FubarDev.FtpServer.FileSystem.PathSelectionResult.Directory
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.FileSystem.PathSelectionResult.Directory
+  nameWithType: PathSelectionResult.Directory
+- uid: FubarDev.FtpServer.FileSystem.PathSelectionResult.File
+  name: File
+  href: api/FubarDev.FtpServer.FileSystem.PathSelectionResult.html#FubarDev_FtpServer_FileSystem_PathSelectionResult_File
+  commentId: P:FubarDev.FtpServer.FileSystem.PathSelectionResult.File
+  fullName: FubarDev.FtpServer.FileSystem.PathSelectionResult.File
+  nameWithType: PathSelectionResult.File
+- uid: FubarDev.FtpServer.FileSystem.PathSelectionResult.File*
+  name: File
+  href: api/FubarDev.FtpServer.FileSystem.PathSelectionResult.html#FubarDev_FtpServer_FileSystem_PathSelectionResult_File_
+  commentId: Overload:FubarDev.FtpServer.FileSystem.PathSelectionResult.File
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.FileSystem.PathSelectionResult.File
+  nameWithType: PathSelectionResult.File
+- uid: FubarDev.FtpServer.FileSystem.PathSelectionResult.FullPath
+  name: FullPath
+  href: api/FubarDev.FtpServer.FileSystem.PathSelectionResult.html#FubarDev_FtpServer_FileSystem_PathSelectionResult_FullPath
+  commentId: P:FubarDev.FtpServer.FileSystem.PathSelectionResult.FullPath
+  fullName: FubarDev.FtpServer.FileSystem.PathSelectionResult.FullPath
+  nameWithType: PathSelectionResult.FullPath
+- uid: FubarDev.FtpServer.FileSystem.PathSelectionResult.FullPath*
+  name: FullPath
+  href: api/FubarDev.FtpServer.FileSystem.PathSelectionResult.html#FubarDev_FtpServer_FileSystem_PathSelectionResult_FullPath_
+  commentId: Overload:FubarDev.FtpServer.FileSystem.PathSelectionResult.FullPath
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.FileSystem.PathSelectionResult.FullPath
+  nameWithType: PathSelectionResult.FullPath
+- uid: FubarDev.FtpServer.FileSystem.PathSelectionResult.GetPath
+  name: GetPath()
+  href: api/FubarDev.FtpServer.FileSystem.PathSelectionResult.html#FubarDev_FtpServer_FileSystem_PathSelectionResult_GetPath
+  commentId: M:FubarDev.FtpServer.FileSystem.PathSelectionResult.GetPath
+  fullName: FubarDev.FtpServer.FileSystem.PathSelectionResult.GetPath()
+  nameWithType: PathSelectionResult.GetPath()
+- uid: FubarDev.FtpServer.FileSystem.PathSelectionResult.GetPath*
+  name: GetPath
+  href: api/FubarDev.FtpServer.FileSystem.PathSelectionResult.html#FubarDev_FtpServer_FileSystem_PathSelectionResult_GetPath_
+  commentId: Overload:FubarDev.FtpServer.FileSystem.PathSelectionResult.GetPath
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.FileSystem.PathSelectionResult.GetPath
+  nameWithType: PathSelectionResult.GetPath
+- uid: FubarDev.FtpServer.FileSystem.PathSelectionResult.IsMissing
+  name: IsMissing
+  href: api/FubarDev.FtpServer.FileSystem.PathSelectionResult.html#FubarDev_FtpServer_FileSystem_PathSelectionResult_IsMissing
+  commentId: P:FubarDev.FtpServer.FileSystem.PathSelectionResult.IsMissing
+  fullName: FubarDev.FtpServer.FileSystem.PathSelectionResult.IsMissing
+  nameWithType: PathSelectionResult.IsMissing
+- uid: FubarDev.FtpServer.FileSystem.PathSelectionResult.IsMissing*
+  name: IsMissing
+  href: api/FubarDev.FtpServer.FileSystem.PathSelectionResult.html#FubarDev_FtpServer_FileSystem_PathSelectionResult_IsMissing_
+  commentId: Overload:FubarDev.FtpServer.FileSystem.PathSelectionResult.IsMissing
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.FileSystem.PathSelectionResult.IsMissing
+  nameWithType: PathSelectionResult.IsMissing
+- uid: FubarDev.FtpServer.FileSystem.PathSelectionResult.MissingNames
+  name: MissingNames
+  href: api/FubarDev.FtpServer.FileSystem.PathSelectionResult.html#FubarDev_FtpServer_FileSystem_PathSelectionResult_MissingNames
+  commentId: P:FubarDev.FtpServer.FileSystem.PathSelectionResult.MissingNames
+  fullName: FubarDev.FtpServer.FileSystem.PathSelectionResult.MissingNames
+  nameWithType: PathSelectionResult.MissingNames
+- uid: FubarDev.FtpServer.FileSystem.PathSelectionResult.MissingNames*
+  name: MissingNames
+  href: api/FubarDev.FtpServer.FileSystem.PathSelectionResult.html#FubarDev_FtpServer_FileSystem_PathSelectionResult_MissingNames_
+  commentId: Overload:FubarDev.FtpServer.FileSystem.PathSelectionResult.MissingNames
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.FileSystem.PathSelectionResult.MissingNames
+  nameWithType: PathSelectionResult.MissingNames
+- uid: FubarDev.FtpServer.FileSystem.PathSelectionResult.ResultType
+  name: ResultType
+  href: api/FubarDev.FtpServer.FileSystem.PathSelectionResult.html#FubarDev_FtpServer_FileSystem_PathSelectionResult_ResultType
+  commentId: P:FubarDev.FtpServer.FileSystem.PathSelectionResult.ResultType
+  fullName: FubarDev.FtpServer.FileSystem.PathSelectionResult.ResultType
+  nameWithType: PathSelectionResult.ResultType
+- uid: FubarDev.FtpServer.FileSystem.PathSelectionResult.ResultType*
+  name: ResultType
+  href: api/FubarDev.FtpServer.FileSystem.PathSelectionResult.html#FubarDev_FtpServer_FileSystem_PathSelectionResult_ResultType_
+  commentId: Overload:FubarDev.FtpServer.FileSystem.PathSelectionResult.ResultType
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.FileSystem.PathSelectionResult.ResultType
+  nameWithType: PathSelectionResult.ResultType
+- uid: FubarDev.FtpServer.FileSystem.PathSelectionResult.TargetEntry
+  name: TargetEntry
+  href: api/FubarDev.FtpServer.FileSystem.PathSelectionResult.html#FubarDev_FtpServer_FileSystem_PathSelectionResult_TargetEntry
+  commentId: P:FubarDev.FtpServer.FileSystem.PathSelectionResult.TargetEntry
+  fullName: FubarDev.FtpServer.FileSystem.PathSelectionResult.TargetEntry
+  nameWithType: PathSelectionResult.TargetEntry
+- uid: FubarDev.FtpServer.FileSystem.PathSelectionResult.TargetEntry*
+  name: TargetEntry
+  href: api/FubarDev.FtpServer.FileSystem.PathSelectionResult.html#FubarDev_FtpServer_FileSystem_PathSelectionResult_TargetEntry_
+  commentId: Overload:FubarDev.FtpServer.FileSystem.PathSelectionResult.TargetEntry
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.FileSystem.PathSelectionResult.TargetEntry
+  nameWithType: PathSelectionResult.TargetEntry
+- uid: FubarDev.FtpServer.FileSystem.PathSelectionResultType
+  name: PathSelectionResultType
+  href: api/FubarDev.FtpServer.FileSystem.PathSelectionResultType.html
+  commentId: T:FubarDev.FtpServer.FileSystem.PathSelectionResultType
+  fullName: FubarDev.FtpServer.FileSystem.PathSelectionResultType
+  nameWithType: PathSelectionResultType
+- uid: FubarDev.FtpServer.FileSystem.PathSelectionResultType.FoundDirectory
+  name: FoundDirectory
+  href: api/FubarDev.FtpServer.FileSystem.PathSelectionResultType.html#FubarDev_FtpServer_FileSystem_PathSelectionResultType_FoundDirectory
+  commentId: F:FubarDev.FtpServer.FileSystem.PathSelectionResultType.FoundDirectory
+  fullName: FubarDev.FtpServer.FileSystem.PathSelectionResultType.FoundDirectory
+  nameWithType: PathSelectionResultType.FoundDirectory
+- uid: FubarDev.FtpServer.FileSystem.PathSelectionResultType.FoundFile
+  name: FoundFile
+  href: api/FubarDev.FtpServer.FileSystem.PathSelectionResultType.html#FubarDev_FtpServer_FileSystem_PathSelectionResultType_FoundFile
+  commentId: F:FubarDev.FtpServer.FileSystem.PathSelectionResultType.FoundFile
+  fullName: FubarDev.FtpServer.FileSystem.PathSelectionResultType.FoundFile
+  nameWithType: PathSelectionResultType.FoundFile
+- uid: FubarDev.FtpServer.FileSystem.PathSelectionResultType.MissingDirectory
+  name: MissingDirectory
+  href: api/FubarDev.FtpServer.FileSystem.PathSelectionResultType.html#FubarDev_FtpServer_FileSystem_PathSelectionResultType_MissingDirectory
+  commentId: F:FubarDev.FtpServer.FileSystem.PathSelectionResultType.MissingDirectory
+  fullName: FubarDev.FtpServer.FileSystem.PathSelectionResultType.MissingDirectory
+  nameWithType: PathSelectionResultType.MissingDirectory
+- uid: FubarDev.FtpServer.FileSystem.PathSelectionResultType.MissingFileOrDirectory
+  name: MissingFileOrDirectory
+  href: api/FubarDev.FtpServer.FileSystem.PathSelectionResultType.html#FubarDev_FtpServer_FileSystem_PathSelectionResultType_MissingFileOrDirectory
+  commentId: F:FubarDev.FtpServer.FileSystem.PathSelectionResultType.MissingFileOrDirectory
+  fullName: FubarDev.FtpServer.FileSystem.PathSelectionResultType.MissingFileOrDirectory
+  nameWithType: PathSelectionResultType.MissingFileOrDirectory
+- uid: FubarDev.FtpServer.FileSystem.PathSelector
+  name: PathSelector
+  href: api/FubarDev.FtpServer.FileSystem.PathSelector.html
+  commentId: T:FubarDev.FtpServer.FileSystem.PathSelector
+  fullName: FubarDev.FtpServer.FileSystem.PathSelector
+  nameWithType: PathSelector
+- uid: FubarDev.FtpServer.FileSystem.PathSelector.SelectAsync(FubarDev.FtpServer.FileSystem.IUnixFileSystem,System.Collections.Generic.IEnumerable{FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry},System.String,System.Threading.CancellationToken)
+  name: SelectAsync(IUnixFileSystem, IEnumerable<IUnixDirectoryEntry>, String, CancellationToken)
+  href: api/FubarDev.FtpServer.FileSystem.PathSelector.html#FubarDev_FtpServer_FileSystem_PathSelector_SelectAsync_FubarDev_FtpServer_FileSystem_IUnixFileSystem_System_Collections_Generic_IEnumerable_FubarDev_FtpServer_FileSystem_IUnixDirectoryEntry__System_String_System_Threading_CancellationToken_
+  commentId: M:FubarDev.FtpServer.FileSystem.PathSelector.SelectAsync(FubarDev.FtpServer.FileSystem.IUnixFileSystem,System.Collections.Generic.IEnumerable{FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry},System.String,System.Threading.CancellationToken)
+  name.vb: SelectAsync(IUnixFileSystem, IEnumerable(Of IUnixDirectoryEntry), String, CancellationToken)
+  fullName: FubarDev.FtpServer.FileSystem.PathSelector.SelectAsync(FubarDev.FtpServer.FileSystem.IUnixFileSystem, System.Collections.Generic.IEnumerable<FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry>, System.String, System.Threading.CancellationToken)
+  fullName.vb: FubarDev.FtpServer.FileSystem.PathSelector.SelectAsync(FubarDev.FtpServer.FileSystem.IUnixFileSystem, System.Collections.Generic.IEnumerable(Of FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry), System.String, System.Threading.CancellationToken)
+  nameWithType: PathSelector.SelectAsync(IUnixFileSystem, IEnumerable<IUnixDirectoryEntry>, String, CancellationToken)
+  nameWithType.vb: PathSelector.SelectAsync(IUnixFileSystem, IEnumerable(Of IUnixDirectoryEntry), String, CancellationToken)
+- uid: FubarDev.FtpServer.FileSystem.PathSelector.SelectAsync(FubarDev.FtpServer.FileSystem.IUnixFileSystem,System.String,System.Threading.CancellationToken)
+  name: SelectAsync(IUnixFileSystem, String, CancellationToken)
+  href: api/FubarDev.FtpServer.FileSystem.PathSelector.html#FubarDev_FtpServer_FileSystem_PathSelector_SelectAsync_FubarDev_FtpServer_FileSystem_IUnixFileSystem_System_String_System_Threading_CancellationToken_
+  commentId: M:FubarDev.FtpServer.FileSystem.PathSelector.SelectAsync(FubarDev.FtpServer.FileSystem.IUnixFileSystem,System.String,System.Threading.CancellationToken)
+  fullName: FubarDev.FtpServer.FileSystem.PathSelector.SelectAsync(FubarDev.FtpServer.FileSystem.IUnixFileSystem, System.String, System.Threading.CancellationToken)
+  nameWithType: PathSelector.SelectAsync(IUnixFileSystem, String, CancellationToken)
+- uid: FubarDev.FtpServer.FileSystem.PathSelector.SelectAsync*
+  name: SelectAsync
+  href: api/FubarDev.FtpServer.FileSystem.PathSelector.html#FubarDev_FtpServer_FileSystem_PathSelector_SelectAsync_
+  commentId: Overload:FubarDev.FtpServer.FileSystem.PathSelector.SelectAsync
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.FileSystem.PathSelector.SelectAsync
+  nameWithType: PathSelector.SelectAsync
 - uid: FubarDev.FtpServer.FileSystem.SearchResult`1
   name: SearchResult<T>
   href: api/FubarDev.FtpServer.FileSystem.SearchResult-1.html
@@ -7115,6 +7867,98 @@ references:
   fullName.vb: FubarDev.FtpServer.FileSystem.SearchResult(Of T).FileName
   nameWithType: SearchResult<T>.FileName
   nameWithType.vb: SearchResult(Of T).FileName
+- uid: FubarDev.FtpServer.FileSystem.Unix
+  name: FubarDev.FtpServer.FileSystem.Unix
+  href: api/FubarDev.FtpServer.FileSystem.Unix.html
+  commentId: N:FubarDev.FtpServer.FileSystem.Unix
+  fullName: FubarDev.FtpServer.FileSystem.Unix
+  nameWithType: FubarDev.FtpServer.FileSystem.Unix
+- uid: FubarDev.FtpServer.FileSystem.Unix.UnixFileSystemIdChanger
+  name: UnixFileSystemIdChanger
+  href: api/FubarDev.FtpServer.FileSystem.Unix.UnixFileSystemIdChanger.html
+  commentId: T:FubarDev.FtpServer.FileSystem.Unix.UnixFileSystemIdChanger
+  fullName: FubarDev.FtpServer.FileSystem.Unix.UnixFileSystemIdChanger
+  nameWithType: UnixFileSystemIdChanger
+- uid: FubarDev.FtpServer.FileSystem.Unix.UnixFileSystemIdChanger.#ctor(Mono.Unix.UnixUserInfo)
+  name: UnixFileSystemIdChanger(UnixUserInfo)
+  href: api/FubarDev.FtpServer.FileSystem.Unix.UnixFileSystemIdChanger.html#FubarDev_FtpServer_FileSystem_Unix_UnixFileSystemIdChanger__ctor_Mono_Unix_UnixUserInfo_
+  commentId: M:FubarDev.FtpServer.FileSystem.Unix.UnixFileSystemIdChanger.#ctor(Mono.Unix.UnixUserInfo)
+  fullName: FubarDev.FtpServer.FileSystem.Unix.UnixFileSystemIdChanger.UnixFileSystemIdChanger(Mono.Unix.UnixUserInfo)
+  nameWithType: UnixFileSystemIdChanger.UnixFileSystemIdChanger(UnixUserInfo)
+- uid: FubarDev.FtpServer.FileSystem.Unix.UnixFileSystemIdChanger.#ctor*
+  name: UnixFileSystemIdChanger
+  href: api/FubarDev.FtpServer.FileSystem.Unix.UnixFileSystemIdChanger.html#FubarDev_FtpServer_FileSystem_Unix_UnixFileSystemIdChanger__ctor_
+  commentId: Overload:FubarDev.FtpServer.FileSystem.Unix.UnixFileSystemIdChanger.#ctor
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.FileSystem.Unix.UnixFileSystemIdChanger.UnixFileSystemIdChanger
+  nameWithType: UnixFileSystemIdChanger.UnixFileSystemIdChanger
+- uid: FubarDev.FtpServer.FileSystem.Unix.UnixFileSystemIdChanger.Dispose
+  name: Dispose()
+  href: api/FubarDev.FtpServer.FileSystem.Unix.UnixFileSystemIdChanger.html#FubarDev_FtpServer_FileSystem_Unix_UnixFileSystemIdChanger_Dispose
+  commentId: M:FubarDev.FtpServer.FileSystem.Unix.UnixFileSystemIdChanger.Dispose
+  fullName: FubarDev.FtpServer.FileSystem.Unix.UnixFileSystemIdChanger.Dispose()
+  nameWithType: UnixFileSystemIdChanger.Dispose()
+- uid: FubarDev.FtpServer.FileSystem.Unix.UnixFileSystemIdChanger.Dispose*
+  name: Dispose
+  href: api/FubarDev.FtpServer.FileSystem.Unix.UnixFileSystemIdChanger.html#FubarDev_FtpServer_FileSystem_Unix_UnixFileSystemIdChanger_Dispose_
+  commentId: Overload:FubarDev.FtpServer.FileSystem.Unix.UnixFileSystemIdChanger.Dispose
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.FileSystem.Unix.UnixFileSystemIdChanger.Dispose
+  nameWithType: UnixFileSystemIdChanger.Dispose
+- uid: FubarDev.FtpServer.FileSystem.Unix.UnixFileSystemOptions
+  name: UnixFileSystemOptions
+  href: api/FubarDev.FtpServer.FileSystem.Unix.UnixFileSystemOptions.html
+  commentId: T:FubarDev.FtpServer.FileSystem.Unix.UnixFileSystemOptions
+  fullName: FubarDev.FtpServer.FileSystem.Unix.UnixFileSystemOptions
+  nameWithType: UnixFileSystemOptions
+- uid: FubarDev.FtpServer.FileSystem.Unix.UnixFileSystemOptions.DisableUserIdSwitch
+  name: DisableUserIdSwitch
+  href: api/FubarDev.FtpServer.FileSystem.Unix.UnixFileSystemOptions.html#FubarDev_FtpServer_FileSystem_Unix_UnixFileSystemOptions_DisableUserIdSwitch
+  commentId: P:FubarDev.FtpServer.FileSystem.Unix.UnixFileSystemOptions.DisableUserIdSwitch
+  fullName: FubarDev.FtpServer.FileSystem.Unix.UnixFileSystemOptions.DisableUserIdSwitch
+  nameWithType: UnixFileSystemOptions.DisableUserIdSwitch
+- uid: FubarDev.FtpServer.FileSystem.Unix.UnixFileSystemOptions.DisableUserIdSwitch*
+  name: DisableUserIdSwitch
+  href: api/FubarDev.FtpServer.FileSystem.Unix.UnixFileSystemOptions.html#FubarDev_FtpServer_FileSystem_Unix_UnixFileSystemOptions_DisableUserIdSwitch_
+  commentId: Overload:FubarDev.FtpServer.FileSystem.Unix.UnixFileSystemOptions.DisableUserIdSwitch
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.FileSystem.Unix.UnixFileSystemOptions.DisableUserIdSwitch
+  nameWithType: UnixFileSystemOptions.DisableUserIdSwitch
+- uid: FubarDev.FtpServer.FileSystem.Unix.UnixFileSystemProvider
+  name: UnixFileSystemProvider
+  href: api/FubarDev.FtpServer.FileSystem.Unix.UnixFileSystemProvider.html
+  commentId: T:FubarDev.FtpServer.FileSystem.Unix.UnixFileSystemProvider
+  fullName: FubarDev.FtpServer.FileSystem.Unix.UnixFileSystemProvider
+  nameWithType: UnixFileSystemProvider
+- uid: FubarDev.FtpServer.FileSystem.Unix.UnixFileSystemProvider.#ctor(Microsoft.Extensions.Options.IOptions{FubarDev.FtpServer.FileSystem.Unix.UnixFileSystemOptions},FubarDev.FtpServer.FileSystem.IAccountDirectoryQuery)
+  name: UnixFileSystemProvider(IOptions<UnixFileSystemOptions>, IAccountDirectoryQuery)
+  href: api/FubarDev.FtpServer.FileSystem.Unix.UnixFileSystemProvider.html#FubarDev_FtpServer_FileSystem_Unix_UnixFileSystemProvider__ctor_Microsoft_Extensions_Options_IOptions_FubarDev_FtpServer_FileSystem_Unix_UnixFileSystemOptions__FubarDev_FtpServer_FileSystem_IAccountDirectoryQuery_
+  commentId: M:FubarDev.FtpServer.FileSystem.Unix.UnixFileSystemProvider.#ctor(Microsoft.Extensions.Options.IOptions{FubarDev.FtpServer.FileSystem.Unix.UnixFileSystemOptions},FubarDev.FtpServer.FileSystem.IAccountDirectoryQuery)
+  name.vb: UnixFileSystemProvider(IOptions(Of UnixFileSystemOptions), IAccountDirectoryQuery)
+  fullName: FubarDev.FtpServer.FileSystem.Unix.UnixFileSystemProvider.UnixFileSystemProvider(Microsoft.Extensions.Options.IOptions<FubarDev.FtpServer.FileSystem.Unix.UnixFileSystemOptions>, FubarDev.FtpServer.FileSystem.IAccountDirectoryQuery)
+  fullName.vb: FubarDev.FtpServer.FileSystem.Unix.UnixFileSystemProvider.UnixFileSystemProvider(Microsoft.Extensions.Options.IOptions(Of FubarDev.FtpServer.FileSystem.Unix.UnixFileSystemOptions), FubarDev.FtpServer.FileSystem.IAccountDirectoryQuery)
+  nameWithType: UnixFileSystemProvider.UnixFileSystemProvider(IOptions<UnixFileSystemOptions>, IAccountDirectoryQuery)
+  nameWithType.vb: UnixFileSystemProvider.UnixFileSystemProvider(IOptions(Of UnixFileSystemOptions), IAccountDirectoryQuery)
+- uid: FubarDev.FtpServer.FileSystem.Unix.UnixFileSystemProvider.#ctor*
+  name: UnixFileSystemProvider
+  href: api/FubarDev.FtpServer.FileSystem.Unix.UnixFileSystemProvider.html#FubarDev_FtpServer_FileSystem_Unix_UnixFileSystemProvider__ctor_
+  commentId: Overload:FubarDev.FtpServer.FileSystem.Unix.UnixFileSystemProvider.#ctor
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.FileSystem.Unix.UnixFileSystemProvider.UnixFileSystemProvider
+  nameWithType: UnixFileSystemProvider.UnixFileSystemProvider
+- uid: FubarDev.FtpServer.FileSystem.Unix.UnixFileSystemProvider.Create(FubarDev.FtpServer.IAccountInformation)
+  name: Create(IAccountInformation)
+  href: api/FubarDev.FtpServer.FileSystem.Unix.UnixFileSystemProvider.html#FubarDev_FtpServer_FileSystem_Unix_UnixFileSystemProvider_Create_FubarDev_FtpServer_IAccountInformation_
+  commentId: M:FubarDev.FtpServer.FileSystem.Unix.UnixFileSystemProvider.Create(FubarDev.FtpServer.IAccountInformation)
+  fullName: FubarDev.FtpServer.FileSystem.Unix.UnixFileSystemProvider.Create(FubarDev.FtpServer.IAccountInformation)
+  nameWithType: UnixFileSystemProvider.Create(IAccountInformation)
+- uid: FubarDev.FtpServer.FileSystem.Unix.UnixFileSystemProvider.Create*
+  name: Create
+  href: api/FubarDev.FtpServer.FileSystem.Unix.UnixFileSystemProvider.html#FubarDev_FtpServer_FileSystem_Unix_UnixFileSystemProvider_Create_
+  commentId: Overload:FubarDev.FtpServer.FileSystem.Unix.UnixFileSystemProvider.Create
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.FileSystem.Unix.UnixFileSystemProvider.Create
+  nameWithType: UnixFileSystemProvider.Create
 - uid: FubarDev.FtpServer.FtpCommand
   name: FtpCommand
   href: api/FubarDev.FtpServer.FtpCommand.html
@@ -7562,19 +8406,6 @@ references:
   isSpec: "True"
   fullName: FubarDev.FtpServer.FtpConnectionData.ActiveMlstFacts
   nameWithType: FtpConnectionData.ActiveMlstFacts
-- uid: FubarDev.FtpServer.FtpConnectionData.AuthenticatedBy
-  name: AuthenticatedBy
-  href: api/FubarDev.FtpServer.FtpConnectionData.html#FubarDev_FtpServer_FtpConnectionData_AuthenticatedBy
-  commentId: P:FubarDev.FtpServer.FtpConnectionData.AuthenticatedBy
-  fullName: FubarDev.FtpServer.FtpConnectionData.AuthenticatedBy
-  nameWithType: FtpConnectionData.AuthenticatedBy
-- uid: FubarDev.FtpServer.FtpConnectionData.AuthenticatedBy*
-  name: AuthenticatedBy
-  href: api/FubarDev.FtpServer.FtpConnectionData.html#FubarDev_FtpServer_FtpConnectionData_AuthenticatedBy_
-  commentId: Overload:FubarDev.FtpServer.FtpConnectionData.AuthenticatedBy
-  isSpec: "True"
-  fullName: FubarDev.FtpServer.FtpConnectionData.AuthenticatedBy
-  nameWithType: FtpConnectionData.AuthenticatedBy
 - uid: FubarDev.FtpServer.FtpConnectionData.BackgroundCommandHandler
   name: BackgroundCommandHandler
   href: api/FubarDev.FtpServer.FtpConnectionData.html#FubarDev_FtpServer_FtpConnectionData_BackgroundCommandHandler
@@ -8576,6 +9407,38 @@ references:
   isSpec: "True"
   fullName: FubarDev.FtpServer.FtpServerBuilderExtensions.EnableAnonymousAuthentication
   nameWithType: FtpServerBuilderExtensions.EnableAnonymousAuthentication
+- uid: FubarDev.FtpServer.FtpServerBuilderExtensions.UseRootPerUser(FubarDev.FtpServer.IFtpServerBuilder,System.Action{FubarDev.FtpServer.AccountManagement.Directories.RootPerUser.RootPerUserAccountDirectoryQueryOptions})
+  name: UseRootPerUser(IFtpServerBuilder, Action<RootPerUserAccountDirectoryQueryOptions>)
+  href: api/FubarDev.FtpServer.FtpServerBuilderExtensions.html#FubarDev_FtpServer_FtpServerBuilderExtensions_UseRootPerUser_FubarDev_FtpServer_IFtpServerBuilder_System_Action_FubarDev_FtpServer_AccountManagement_Directories_RootPerUser_RootPerUserAccountDirectoryQueryOptions__
+  commentId: M:FubarDev.FtpServer.FtpServerBuilderExtensions.UseRootPerUser(FubarDev.FtpServer.IFtpServerBuilder,System.Action{FubarDev.FtpServer.AccountManagement.Directories.RootPerUser.RootPerUserAccountDirectoryQueryOptions})
+  name.vb: UseRootPerUser(IFtpServerBuilder, Action(Of RootPerUserAccountDirectoryQueryOptions))
+  fullName: FubarDev.FtpServer.FtpServerBuilderExtensions.UseRootPerUser(FubarDev.FtpServer.IFtpServerBuilder, System.Action<FubarDev.FtpServer.AccountManagement.Directories.RootPerUser.RootPerUserAccountDirectoryQueryOptions>)
+  fullName.vb: FubarDev.FtpServer.FtpServerBuilderExtensions.UseRootPerUser(FubarDev.FtpServer.IFtpServerBuilder, System.Action(Of FubarDev.FtpServer.AccountManagement.Directories.RootPerUser.RootPerUserAccountDirectoryQueryOptions))
+  nameWithType: FtpServerBuilderExtensions.UseRootPerUser(IFtpServerBuilder, Action<RootPerUserAccountDirectoryQueryOptions>)
+  nameWithType.vb: FtpServerBuilderExtensions.UseRootPerUser(IFtpServerBuilder, Action(Of RootPerUserAccountDirectoryQueryOptions))
+- uid: FubarDev.FtpServer.FtpServerBuilderExtensions.UseRootPerUser*
+  name: UseRootPerUser
+  href: api/FubarDev.FtpServer.FtpServerBuilderExtensions.html#FubarDev_FtpServer_FtpServerBuilderExtensions_UseRootPerUser_
+  commentId: Overload:FubarDev.FtpServer.FtpServerBuilderExtensions.UseRootPerUser
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.FtpServerBuilderExtensions.UseRootPerUser
+  nameWithType: FtpServerBuilderExtensions.UseRootPerUser
+- uid: FubarDev.FtpServer.FtpServerBuilderExtensions.UseSingleRoot(FubarDev.FtpServer.IFtpServerBuilder,System.Action{FubarDev.FtpServer.AccountManagement.Directories.SingleRootWithoutHome.SingleRootWithoutHomeAccountDirectoryQueryOptions})
+  name: UseSingleRoot(IFtpServerBuilder, Action<SingleRootWithoutHomeAccountDirectoryQueryOptions>)
+  href: api/FubarDev.FtpServer.FtpServerBuilderExtensions.html#FubarDev_FtpServer_FtpServerBuilderExtensions_UseSingleRoot_FubarDev_FtpServer_IFtpServerBuilder_System_Action_FubarDev_FtpServer_AccountManagement_Directories_SingleRootWithoutHome_SingleRootWithoutHomeAccountDirectoryQueryOptions__
+  commentId: M:FubarDev.FtpServer.FtpServerBuilderExtensions.UseSingleRoot(FubarDev.FtpServer.IFtpServerBuilder,System.Action{FubarDev.FtpServer.AccountManagement.Directories.SingleRootWithoutHome.SingleRootWithoutHomeAccountDirectoryQueryOptions})
+  name.vb: UseSingleRoot(IFtpServerBuilder, Action(Of SingleRootWithoutHomeAccountDirectoryQueryOptions))
+  fullName: FubarDev.FtpServer.FtpServerBuilderExtensions.UseSingleRoot(FubarDev.FtpServer.IFtpServerBuilder, System.Action<FubarDev.FtpServer.AccountManagement.Directories.SingleRootWithoutHome.SingleRootWithoutHomeAccountDirectoryQueryOptions>)
+  fullName.vb: FubarDev.FtpServer.FtpServerBuilderExtensions.UseSingleRoot(FubarDev.FtpServer.IFtpServerBuilder, System.Action(Of FubarDev.FtpServer.AccountManagement.Directories.SingleRootWithoutHome.SingleRootWithoutHomeAccountDirectoryQueryOptions))
+  nameWithType: FtpServerBuilderExtensions.UseSingleRoot(IFtpServerBuilder, Action<SingleRootWithoutHomeAccountDirectoryQueryOptions>)
+  nameWithType.vb: FtpServerBuilderExtensions.UseSingleRoot(IFtpServerBuilder, Action(Of SingleRootWithoutHomeAccountDirectoryQueryOptions))
+- uid: FubarDev.FtpServer.FtpServerBuilderExtensions.UseSingleRoot*
+  name: UseSingleRoot
+  href: api/FubarDev.FtpServer.FtpServerBuilderExtensions.html#FubarDev_FtpServer_FtpServerBuilderExtensions_UseSingleRoot_
+  commentId: Overload:FubarDev.FtpServer.FtpServerBuilderExtensions.UseSingleRoot
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.FtpServerBuilderExtensions.UseSingleRoot
+  nameWithType: FtpServerBuilderExtensions.UseSingleRoot
 - uid: FubarDev.FtpServer.FtpServerHost
   name: FtpServerHost
   href: api/FubarDev.FtpServer.FtpServerHost.html
@@ -9289,19 +10152,6 @@ references:
   commentId: T:FubarDev.FtpServer.IAccountInformation
   fullName: FubarDev.FtpServer.IAccountInformation
   nameWithType: IAccountInformation
-- uid: FubarDev.FtpServer.IAccountInformation.AuthenticatedBy
-  name: AuthenticatedBy
-  href: api/FubarDev.FtpServer.IAccountInformation.html#FubarDev_FtpServer_IAccountInformation_AuthenticatedBy
-  commentId: P:FubarDev.FtpServer.IAccountInformation.AuthenticatedBy
-  fullName: FubarDev.FtpServer.IAccountInformation.AuthenticatedBy
-  nameWithType: IAccountInformation.AuthenticatedBy
-- uid: FubarDev.FtpServer.IAccountInformation.AuthenticatedBy*
-  name: AuthenticatedBy
-  href: api/FubarDev.FtpServer.IAccountInformation.html#FubarDev_FtpServer_IAccountInformation_AuthenticatedBy_
-  commentId: Overload:FubarDev.FtpServer.IAccountInformation.AuthenticatedBy
-  isSpec: "True"
-  fullName: FubarDev.FtpServer.IAccountInformation.AuthenticatedBy
-  nameWithType: IAccountInformation.AuthenticatedBy
 - uid: FubarDev.FtpServer.IAccountInformation.User
   name: User
   href: api/FubarDev.FtpServer.IAccountInformation.html#FubarDev_FtpServer_IAccountInformation_User
@@ -9494,6 +10344,19 @@ references:
   commentId: T:FubarDev.FtpServer.IFtpCommandHandlerExtension
   fullName: FubarDev.FtpServer.IFtpCommandHandlerExtension
   nameWithType: IFtpCommandHandlerExtension
+- uid: FubarDev.FtpServer.IFtpCommandHandlerExtension.AnnouncementMode
+  name: AnnouncementMode
+  href: api/FubarDev.FtpServer.IFtpCommandHandlerExtension.html#FubarDev_FtpServer_IFtpCommandHandlerExtension_AnnouncementMode
+  commentId: P:FubarDev.FtpServer.IFtpCommandHandlerExtension.AnnouncementMode
+  fullName: FubarDev.FtpServer.IFtpCommandHandlerExtension.AnnouncementMode
+  nameWithType: IFtpCommandHandlerExtension.AnnouncementMode
+- uid: FubarDev.FtpServer.IFtpCommandHandlerExtension.AnnouncementMode*
+  name: AnnouncementMode
+  href: api/FubarDev.FtpServer.IFtpCommandHandlerExtension.html#FubarDev_FtpServer_IFtpCommandHandlerExtension_AnnouncementMode_
+  commentId: Overload:FubarDev.FtpServer.IFtpCommandHandlerExtension.AnnouncementMode
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.IFtpCommandHandlerExtension.AnnouncementMode
+  nameWithType: IFtpCommandHandlerExtension.AnnouncementMode
 - uid: FubarDev.FtpServer.IFtpCommandHandlerExtension.ExtensionFor
   name: ExtensionFor
   href: api/FubarDev.FtpServer.IFtpCommandHandlerExtension.html#FubarDev_FtpServer_IFtpCommandHandlerExtension_ExtensionFor
@@ -10573,12 +11436,12 @@ references:
   commentId: M:FubarDev.FtpServer.ListFormatters.Facts.PermissionsFact.#ctor(FubarDev.FtpServer.AccountManagement.IFtpUser,FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry,FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry)
   fullName: FubarDev.FtpServer.ListFormatters.Facts.PermissionsFact.PermissionsFact(FubarDev.FtpServer.AccountManagement.IFtpUser, FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry, FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry)
   nameWithType: PermissionsFact.PermissionsFact(IFtpUser, IUnixDirectoryEntry, IUnixDirectoryEntry)
-- uid: FubarDev.FtpServer.ListFormatters.Facts.PermissionsFact.#ctor(FubarDev.FtpServer.AccountManagement.IFtpUser,FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry,FubarDev.FtpServer.FileSystem.IUnixFileEntry)
-  name: PermissionsFact(IFtpUser, IUnixDirectoryEntry, IUnixFileEntry)
-  href: api/FubarDev.FtpServer.ListFormatters.Facts.PermissionsFact.html#FubarDev_FtpServer_ListFormatters_Facts_PermissionsFact__ctor_FubarDev_FtpServer_AccountManagement_IFtpUser_FubarDev_FtpServer_FileSystem_IUnixDirectoryEntry_FubarDev_FtpServer_FileSystem_IUnixFileEntry_
-  commentId: M:FubarDev.FtpServer.ListFormatters.Facts.PermissionsFact.#ctor(FubarDev.FtpServer.AccountManagement.IFtpUser,FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry,FubarDev.FtpServer.FileSystem.IUnixFileEntry)
-  fullName: FubarDev.FtpServer.ListFormatters.Facts.PermissionsFact.PermissionsFact(FubarDev.FtpServer.AccountManagement.IFtpUser, FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry, FubarDev.FtpServer.FileSystem.IUnixFileEntry)
-  nameWithType: PermissionsFact.PermissionsFact(IFtpUser, IUnixDirectoryEntry, IUnixFileEntry)
+- uid: FubarDev.FtpServer.ListFormatters.Facts.PermissionsFact.#ctor(FubarDev.FtpServer.AccountManagement.IFtpUser,FubarDev.FtpServer.FileSystem.IUnixFileSystem,FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry,FubarDev.FtpServer.FileSystem.IUnixFileEntry)
+  name: PermissionsFact(IFtpUser, IUnixFileSystem, IUnixDirectoryEntry, IUnixFileEntry)
+  href: api/FubarDev.FtpServer.ListFormatters.Facts.PermissionsFact.html#FubarDev_FtpServer_ListFormatters_Facts_PermissionsFact__ctor_FubarDev_FtpServer_AccountManagement_IFtpUser_FubarDev_FtpServer_FileSystem_IUnixFileSystem_FubarDev_FtpServer_FileSystem_IUnixDirectoryEntry_FubarDev_FtpServer_FileSystem_IUnixFileEntry_
+  commentId: M:FubarDev.FtpServer.ListFormatters.Facts.PermissionsFact.#ctor(FubarDev.FtpServer.AccountManagement.IFtpUser,FubarDev.FtpServer.FileSystem.IUnixFileSystem,FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry,FubarDev.FtpServer.FileSystem.IUnixFileEntry)
+  fullName: FubarDev.FtpServer.ListFormatters.Facts.PermissionsFact.PermissionsFact(FubarDev.FtpServer.AccountManagement.IFtpUser, FubarDev.FtpServer.FileSystem.IUnixFileSystem, FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry, FubarDev.FtpServer.FileSystem.IUnixFileEntry)
+  nameWithType: PermissionsFact.PermissionsFact(IFtpUser, IUnixFileSystem, IUnixDirectoryEntry, IUnixFileEntry)
 - uid: FubarDev.FtpServer.ListFormatters.Facts.PermissionsFact.#ctor*
   name: PermissionsFact
   href: api/FubarDev.FtpServer.ListFormatters.Facts.PermissionsFact.html#FubarDev_FtpServer_ListFormatters_Facts_PermissionsFact__ctor_
@@ -10903,6 +11766,197 @@ references:
   isSpec: "True"
   fullName: FubarDev.FtpServer.Localization.IFtpCatalogLoader.LoadAsync
   nameWithType: IFtpCatalogLoader.LoadAsync
+- uid: FubarDev.FtpServer.MembershipProvider.Pam
+  name: FubarDev.FtpServer.MembershipProvider.Pam
+  href: api/FubarDev.FtpServer.MembershipProvider.Pam.html
+  commentId: N:FubarDev.FtpServer.MembershipProvider.Pam
+  fullName: FubarDev.FtpServer.MembershipProvider.Pam
+  nameWithType: FubarDev.FtpServer.MembershipProvider.Pam
+- uid: FubarDev.FtpServer.MembershipProvider.Pam.Directories
+  name: FubarDev.FtpServer.MembershipProvider.Pam.Directories
+  href: api/FubarDev.FtpServer.MembershipProvider.Pam.Directories.html
+  commentId: N:FubarDev.FtpServer.MembershipProvider.Pam.Directories
+  fullName: FubarDev.FtpServer.MembershipProvider.Pam.Directories
+  nameWithType: FubarDev.FtpServer.MembershipProvider.Pam.Directories
+- uid: FubarDev.FtpServer.MembershipProvider.Pam.Directories.PamAccountDirectoryQuery
+  name: PamAccountDirectoryQuery
+  href: api/FubarDev.FtpServer.MembershipProvider.Pam.Directories.PamAccountDirectoryQuery.html
+  commentId: T:FubarDev.FtpServer.MembershipProvider.Pam.Directories.PamAccountDirectoryQuery
+  fullName: FubarDev.FtpServer.MembershipProvider.Pam.Directories.PamAccountDirectoryQuery
+  nameWithType: PamAccountDirectoryQuery
+- uid: FubarDev.FtpServer.MembershipProvider.Pam.Directories.PamAccountDirectoryQuery.#ctor(IOptions{FubarDev.FtpServer.MembershipProvider.Pam.Directories.PamAccountDirectoryQueryOptions},System.Nullable{ILogger{FubarDev.FtpServer.MembershipProvider.Pam.Directories.PamAccountDirectoryQuery}})
+  name: PamAccountDirectoryQuery(IOptions<PamAccountDirectoryQueryOptions>, Nullable<ILogger<PamAccountDirectoryQuery>>)
+  href: api/FubarDev.FtpServer.MembershipProvider.Pam.Directories.PamAccountDirectoryQuery.html#FubarDev_FtpServer_MembershipProvider_Pam_Directories_PamAccountDirectoryQuery__ctor_IOptions_FubarDev_FtpServer_MembershipProvider_Pam_Directories_PamAccountDirectoryQueryOptions__System_Nullable_ILogger_FubarDev_FtpServer_MembershipProvider_Pam_Directories_PamAccountDirectoryQuery___
+  commentId: M:FubarDev.FtpServer.MembershipProvider.Pam.Directories.PamAccountDirectoryQuery.#ctor(IOptions{FubarDev.FtpServer.MembershipProvider.Pam.Directories.PamAccountDirectoryQueryOptions},System.Nullable{ILogger{FubarDev.FtpServer.MembershipProvider.Pam.Directories.PamAccountDirectoryQuery}})
+  name.vb: PamAccountDirectoryQuery(IOptions(Of PamAccountDirectoryQueryOptions), Nullable(Of ILogger(Of PamAccountDirectoryQuery)))
+  fullName: FubarDev.FtpServer.MembershipProvider.Pam.Directories.PamAccountDirectoryQuery.PamAccountDirectoryQuery(IOptions<FubarDev.FtpServer.MembershipProvider.Pam.Directories.PamAccountDirectoryQueryOptions>, System.Nullable<ILogger<FubarDev.FtpServer.MembershipProvider.Pam.Directories.PamAccountDirectoryQuery>>)
+  fullName.vb: FubarDev.FtpServer.MembershipProvider.Pam.Directories.PamAccountDirectoryQuery.PamAccountDirectoryQuery(IOptions(Of FubarDev.FtpServer.MembershipProvider.Pam.Directories.PamAccountDirectoryQueryOptions), System.Nullable(Of ILogger(Of FubarDev.FtpServer.MembershipProvider.Pam.Directories.PamAccountDirectoryQuery)))
+  nameWithType: PamAccountDirectoryQuery.PamAccountDirectoryQuery(IOptions<PamAccountDirectoryQueryOptions>, Nullable<ILogger<PamAccountDirectoryQuery>>)
+  nameWithType.vb: PamAccountDirectoryQuery.PamAccountDirectoryQuery(IOptions(Of PamAccountDirectoryQueryOptions), Nullable(Of ILogger(Of PamAccountDirectoryQuery)))
+- uid: FubarDev.FtpServer.MembershipProvider.Pam.Directories.PamAccountDirectoryQuery.#ctor*
+  name: PamAccountDirectoryQuery
+  href: api/FubarDev.FtpServer.MembershipProvider.Pam.Directories.PamAccountDirectoryQuery.html#FubarDev_FtpServer_MembershipProvider_Pam_Directories_PamAccountDirectoryQuery__ctor_
+  commentId: Overload:FubarDev.FtpServer.MembershipProvider.Pam.Directories.PamAccountDirectoryQuery.#ctor
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.MembershipProvider.Pam.Directories.PamAccountDirectoryQuery.PamAccountDirectoryQuery
+  nameWithType: PamAccountDirectoryQuery.PamAccountDirectoryQuery
+- uid: FubarDev.FtpServer.MembershipProvider.Pam.Directories.PamAccountDirectoryQuery.GetDirectories(FubarDev.FtpServer.IAccountInformation)
+  name: GetDirectories(IAccountInformation)
+  href: api/FubarDev.FtpServer.MembershipProvider.Pam.Directories.PamAccountDirectoryQuery.html#FubarDev_FtpServer_MembershipProvider_Pam_Directories_PamAccountDirectoryQuery_GetDirectories_FubarDev_FtpServer_IAccountInformation_
+  commentId: M:FubarDev.FtpServer.MembershipProvider.Pam.Directories.PamAccountDirectoryQuery.GetDirectories(FubarDev.FtpServer.IAccountInformation)
+  fullName: FubarDev.FtpServer.MembershipProvider.Pam.Directories.PamAccountDirectoryQuery.GetDirectories(FubarDev.FtpServer.IAccountInformation)
+  nameWithType: PamAccountDirectoryQuery.GetDirectories(IAccountInformation)
+- uid: FubarDev.FtpServer.MembershipProvider.Pam.Directories.PamAccountDirectoryQuery.GetDirectories*
+  name: GetDirectories
+  href: api/FubarDev.FtpServer.MembershipProvider.Pam.Directories.PamAccountDirectoryQuery.html#FubarDev_FtpServer_MembershipProvider_Pam_Directories_PamAccountDirectoryQuery_GetDirectories_
+  commentId: Overload:FubarDev.FtpServer.MembershipProvider.Pam.Directories.PamAccountDirectoryQuery.GetDirectories
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.MembershipProvider.Pam.Directories.PamAccountDirectoryQuery.GetDirectories
+  nameWithType: PamAccountDirectoryQuery.GetDirectories
+- uid: FubarDev.FtpServer.MembershipProvider.Pam.Directories.PamAccountDirectoryQueryOptions
+  name: PamAccountDirectoryQueryOptions
+  href: api/FubarDev.FtpServer.MembershipProvider.Pam.Directories.PamAccountDirectoryQueryOptions.html
+  commentId: T:FubarDev.FtpServer.MembershipProvider.Pam.Directories.PamAccountDirectoryQueryOptions
+  fullName: FubarDev.FtpServer.MembershipProvider.Pam.Directories.PamAccountDirectoryQueryOptions
+  nameWithType: PamAccountDirectoryQueryOptions
+- uid: FubarDev.FtpServer.MembershipProvider.Pam.Directories.PamAccountDirectoryQueryOptions.AnonymousRootDirectory
+  name: AnonymousRootDirectory
+  href: api/FubarDev.FtpServer.MembershipProvider.Pam.Directories.PamAccountDirectoryQueryOptions.html#FubarDev_FtpServer_MembershipProvider_Pam_Directories_PamAccountDirectoryQueryOptions_AnonymousRootDirectory
+  commentId: P:FubarDev.FtpServer.MembershipProvider.Pam.Directories.PamAccountDirectoryQueryOptions.AnonymousRootDirectory
+  fullName: FubarDev.FtpServer.MembershipProvider.Pam.Directories.PamAccountDirectoryQueryOptions.AnonymousRootDirectory
+  nameWithType: PamAccountDirectoryQueryOptions.AnonymousRootDirectory
+- uid: FubarDev.FtpServer.MembershipProvider.Pam.Directories.PamAccountDirectoryQueryOptions.AnonymousRootDirectory*
+  name: AnonymousRootDirectory
+  href: api/FubarDev.FtpServer.MembershipProvider.Pam.Directories.PamAccountDirectoryQueryOptions.html#FubarDev_FtpServer_MembershipProvider_Pam_Directories_PamAccountDirectoryQueryOptions_AnonymousRootDirectory_
+  commentId: Overload:FubarDev.FtpServer.MembershipProvider.Pam.Directories.PamAccountDirectoryQueryOptions.AnonymousRootDirectory
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.MembershipProvider.Pam.Directories.PamAccountDirectoryQueryOptions.AnonymousRootDirectory
+  nameWithType: PamAccountDirectoryQueryOptions.AnonymousRootDirectory
+- uid: FubarDev.FtpServer.MembershipProvider.Pam.Directories.PamAccountDirectoryQueryOptions.AnonymousRootPerEmail
+  name: AnonymousRootPerEmail
+  href: api/FubarDev.FtpServer.MembershipProvider.Pam.Directories.PamAccountDirectoryQueryOptions.html#FubarDev_FtpServer_MembershipProvider_Pam_Directories_PamAccountDirectoryQueryOptions_AnonymousRootPerEmail
+  commentId: P:FubarDev.FtpServer.MembershipProvider.Pam.Directories.PamAccountDirectoryQueryOptions.AnonymousRootPerEmail
+  fullName: FubarDev.FtpServer.MembershipProvider.Pam.Directories.PamAccountDirectoryQueryOptions.AnonymousRootPerEmail
+  nameWithType: PamAccountDirectoryQueryOptions.AnonymousRootPerEmail
+- uid: FubarDev.FtpServer.MembershipProvider.Pam.Directories.PamAccountDirectoryQueryOptions.AnonymousRootPerEmail*
+  name: AnonymousRootPerEmail
+  href: api/FubarDev.FtpServer.MembershipProvider.Pam.Directories.PamAccountDirectoryQueryOptions.html#FubarDev_FtpServer_MembershipProvider_Pam_Directories_PamAccountDirectoryQueryOptions_AnonymousRootPerEmail_
+  commentId: Overload:FubarDev.FtpServer.MembershipProvider.Pam.Directories.PamAccountDirectoryQueryOptions.AnonymousRootPerEmail
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.MembershipProvider.Pam.Directories.PamAccountDirectoryQueryOptions.AnonymousRootPerEmail
+  nameWithType: PamAccountDirectoryQueryOptions.AnonymousRootPerEmail
+- uid: FubarDev.FtpServer.MembershipProvider.Pam.Directories.PamAccountDirectoryQueryOptions.UserHomeIsRoot
+  name: UserHomeIsRoot
+  href: api/FubarDev.FtpServer.MembershipProvider.Pam.Directories.PamAccountDirectoryQueryOptions.html#FubarDev_FtpServer_MembershipProvider_Pam_Directories_PamAccountDirectoryQueryOptions_UserHomeIsRoot
+  commentId: P:FubarDev.FtpServer.MembershipProvider.Pam.Directories.PamAccountDirectoryQueryOptions.UserHomeIsRoot
+  fullName: FubarDev.FtpServer.MembershipProvider.Pam.Directories.PamAccountDirectoryQueryOptions.UserHomeIsRoot
+  nameWithType: PamAccountDirectoryQueryOptions.UserHomeIsRoot
+- uid: FubarDev.FtpServer.MembershipProvider.Pam.Directories.PamAccountDirectoryQueryOptions.UserHomeIsRoot*
+  name: UserHomeIsRoot
+  href: api/FubarDev.FtpServer.MembershipProvider.Pam.Directories.PamAccountDirectoryQueryOptions.html#FubarDev_FtpServer_MembershipProvider_Pam_Directories_PamAccountDirectoryQueryOptions_UserHomeIsRoot_
+  commentId: Overload:FubarDev.FtpServer.MembershipProvider.Pam.Directories.PamAccountDirectoryQueryOptions.UserHomeIsRoot
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.MembershipProvider.Pam.Directories.PamAccountDirectoryQueryOptions.UserHomeIsRoot
+  nameWithType: PamAccountDirectoryQueryOptions.UserHomeIsRoot
+- uid: FubarDev.FtpServer.MembershipProvider.Pam.PamFtpUser
+  name: PamFtpUser
+  href: api/FubarDev.FtpServer.MembershipProvider.Pam.PamFtpUser.html
+  commentId: T:FubarDev.FtpServer.MembershipProvider.Pam.PamFtpUser
+  fullName: FubarDev.FtpServer.MembershipProvider.Pam.PamFtpUser
+  nameWithType: PamFtpUser
+- uid: FubarDev.FtpServer.MembershipProvider.Pam.PamFtpUser.HomeDirectory
+  name: HomeDirectory
+  href: api/FubarDev.FtpServer.MembershipProvider.Pam.PamFtpUser.html#FubarDev_FtpServer_MembershipProvider_Pam_PamFtpUser_HomeDirectory
+  commentId: P:FubarDev.FtpServer.MembershipProvider.Pam.PamFtpUser.HomeDirectory
+  fullName: FubarDev.FtpServer.MembershipProvider.Pam.PamFtpUser.HomeDirectory
+  nameWithType: PamFtpUser.HomeDirectory
+- uid: FubarDev.FtpServer.MembershipProvider.Pam.PamFtpUser.HomeDirectory*
+  name: HomeDirectory
+  href: api/FubarDev.FtpServer.MembershipProvider.Pam.PamFtpUser.html#FubarDev_FtpServer_MembershipProvider_Pam_PamFtpUser_HomeDirectory_
+  commentId: Overload:FubarDev.FtpServer.MembershipProvider.Pam.PamFtpUser.HomeDirectory
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.MembershipProvider.Pam.PamFtpUser.HomeDirectory
+  nameWithType: PamFtpUser.HomeDirectory
+- uid: FubarDev.FtpServer.MembershipProvider.Pam.PamFtpUser.IsInGroup(System.String)
+  name: IsInGroup(String)
+  href: api/FubarDev.FtpServer.MembershipProvider.Pam.PamFtpUser.html#FubarDev_FtpServer_MembershipProvider_Pam_PamFtpUser_IsInGroup_System_String_
+  commentId: M:FubarDev.FtpServer.MembershipProvider.Pam.PamFtpUser.IsInGroup(System.String)
+  fullName: FubarDev.FtpServer.MembershipProvider.Pam.PamFtpUser.IsInGroup(System.String)
+  nameWithType: PamFtpUser.IsInGroup(String)
+- uid: FubarDev.FtpServer.MembershipProvider.Pam.PamFtpUser.IsInGroup*
+  name: IsInGroup
+  href: api/FubarDev.FtpServer.MembershipProvider.Pam.PamFtpUser.html#FubarDev_FtpServer_MembershipProvider_Pam_PamFtpUser_IsInGroup_
+  commentId: Overload:FubarDev.FtpServer.MembershipProvider.Pam.PamFtpUser.IsInGroup
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.MembershipProvider.Pam.PamFtpUser.IsInGroup
+  nameWithType: PamFtpUser.IsInGroup
+- uid: FubarDev.FtpServer.MembershipProvider.Pam.PamFtpUser.Name
+  name: Name
+  href: api/FubarDev.FtpServer.MembershipProvider.Pam.PamFtpUser.html#FubarDev_FtpServer_MembershipProvider_Pam_PamFtpUser_Name
+  commentId: P:FubarDev.FtpServer.MembershipProvider.Pam.PamFtpUser.Name
+  fullName: FubarDev.FtpServer.MembershipProvider.Pam.PamFtpUser.Name
+  nameWithType: PamFtpUser.Name
+- uid: FubarDev.FtpServer.MembershipProvider.Pam.PamFtpUser.Name*
+  name: Name
+  href: api/FubarDev.FtpServer.MembershipProvider.Pam.PamFtpUser.html#FubarDev_FtpServer_MembershipProvider_Pam_PamFtpUser_Name_
+  commentId: Overload:FubarDev.FtpServer.MembershipProvider.Pam.PamFtpUser.Name
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.MembershipProvider.Pam.PamFtpUser.Name
+  nameWithType: PamFtpUser.Name
+- uid: FubarDev.FtpServer.MembershipProvider.Pam.PamMembershipProvider
+  name: PamMembershipProvider
+  href: api/FubarDev.FtpServer.MembershipProvider.Pam.PamMembershipProvider.html
+  commentId: T:FubarDev.FtpServer.MembershipProvider.Pam.PamMembershipProvider
+  fullName: FubarDev.FtpServer.MembershipProvider.Pam.PamMembershipProvider
+  nameWithType: PamMembershipProvider
+- uid: FubarDev.FtpServer.MembershipProvider.Pam.PamMembershipProvider.#ctor(IPamService,IOptions{FubarDev.FtpServer.MembershipProvider.Pam.PamMembershipProviderOptions})
+  name: PamMembershipProvider(IPamService, IOptions<PamMembershipProviderOptions>)
+  href: api/FubarDev.FtpServer.MembershipProvider.Pam.PamMembershipProvider.html#FubarDev_FtpServer_MembershipProvider_Pam_PamMembershipProvider__ctor_IPamService_IOptions_FubarDev_FtpServer_MembershipProvider_Pam_PamMembershipProviderOptions__
+  commentId: M:FubarDev.FtpServer.MembershipProvider.Pam.PamMembershipProvider.#ctor(IPamService,IOptions{FubarDev.FtpServer.MembershipProvider.Pam.PamMembershipProviderOptions})
+  name.vb: PamMembershipProvider(IPamService, IOptions(Of PamMembershipProviderOptions))
+  fullName: FubarDev.FtpServer.MembershipProvider.Pam.PamMembershipProvider.PamMembershipProvider(IPamService, IOptions<FubarDev.FtpServer.MembershipProvider.Pam.PamMembershipProviderOptions>)
+  fullName.vb: FubarDev.FtpServer.MembershipProvider.Pam.PamMembershipProvider.PamMembershipProvider(IPamService, IOptions(Of FubarDev.FtpServer.MembershipProvider.Pam.PamMembershipProviderOptions))
+  nameWithType: PamMembershipProvider.PamMembershipProvider(IPamService, IOptions<PamMembershipProviderOptions>)
+  nameWithType.vb: PamMembershipProvider.PamMembershipProvider(IPamService, IOptions(Of PamMembershipProviderOptions))
+- uid: FubarDev.FtpServer.MembershipProvider.Pam.PamMembershipProvider.#ctor*
+  name: PamMembershipProvider
+  href: api/FubarDev.FtpServer.MembershipProvider.Pam.PamMembershipProvider.html#FubarDev_FtpServer_MembershipProvider_Pam_PamMembershipProvider__ctor_
+  commentId: Overload:FubarDev.FtpServer.MembershipProvider.Pam.PamMembershipProvider.#ctor
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.MembershipProvider.Pam.PamMembershipProvider.PamMembershipProvider
+  nameWithType: PamMembershipProvider.PamMembershipProvider
+- uid: FubarDev.FtpServer.MembershipProvider.Pam.PamMembershipProvider.ValidateUserAsync(System.String,System.String)
+  name: ValidateUserAsync(String, String)
+  href: api/FubarDev.FtpServer.MembershipProvider.Pam.PamMembershipProvider.html#FubarDev_FtpServer_MembershipProvider_Pam_PamMembershipProvider_ValidateUserAsync_System_String_System_String_
+  commentId: M:FubarDev.FtpServer.MembershipProvider.Pam.PamMembershipProvider.ValidateUserAsync(System.String,System.String)
+  fullName: FubarDev.FtpServer.MembershipProvider.Pam.PamMembershipProvider.ValidateUserAsync(System.String, System.String)
+  nameWithType: PamMembershipProvider.ValidateUserAsync(String, String)
+- uid: FubarDev.FtpServer.MembershipProvider.Pam.PamMembershipProvider.ValidateUserAsync*
+  name: ValidateUserAsync
+  href: api/FubarDev.FtpServer.MembershipProvider.Pam.PamMembershipProvider.html#FubarDev_FtpServer_MembershipProvider_Pam_PamMembershipProvider_ValidateUserAsync_
+  commentId: Overload:FubarDev.FtpServer.MembershipProvider.Pam.PamMembershipProvider.ValidateUserAsync
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.MembershipProvider.Pam.PamMembershipProvider.ValidateUserAsync
+  nameWithType: PamMembershipProvider.ValidateUserAsync
+- uid: FubarDev.FtpServer.MembershipProvider.Pam.PamMembershipProviderOptions
+  name: PamMembershipProviderOptions
+  href: api/FubarDev.FtpServer.MembershipProvider.Pam.PamMembershipProviderOptions.html
+  commentId: T:FubarDev.FtpServer.MembershipProvider.Pam.PamMembershipProviderOptions
+  fullName: FubarDev.FtpServer.MembershipProvider.Pam.PamMembershipProviderOptions
+  nameWithType: PamMembershipProviderOptions
+- uid: FubarDev.FtpServer.MembershipProvider.Pam.PamMembershipProviderOptions.IgnoreAccountManagement
+  name: IgnoreAccountManagement
+  href: api/FubarDev.FtpServer.MembershipProvider.Pam.PamMembershipProviderOptions.html#FubarDev_FtpServer_MembershipProvider_Pam_PamMembershipProviderOptions_IgnoreAccountManagement
+  commentId: P:FubarDev.FtpServer.MembershipProvider.Pam.PamMembershipProviderOptions.IgnoreAccountManagement
+  fullName: FubarDev.FtpServer.MembershipProvider.Pam.PamMembershipProviderOptions.IgnoreAccountManagement
+  nameWithType: PamMembershipProviderOptions.IgnoreAccountManagement
+- uid: FubarDev.FtpServer.MembershipProvider.Pam.PamMembershipProviderOptions.IgnoreAccountManagement*
+  name: IgnoreAccountManagement
+  href: api/FubarDev.FtpServer.MembershipProvider.Pam.PamMembershipProviderOptions.html#FubarDev_FtpServer_MembershipProvider_Pam_PamMembershipProviderOptions_IgnoreAccountManagement_
+  commentId: Overload:FubarDev.FtpServer.MembershipProvider.Pam.PamMembershipProviderOptions.IgnoreAccountManagement
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.MembershipProvider.Pam.PamMembershipProviderOptions.IgnoreAccountManagement
+  nameWithType: PamMembershipProviderOptions.IgnoreAccountManagement
 - uid: FubarDev.FtpServer.MultiBindingTcpListener
   name: MultiBindingTcpListener
   href: api/FubarDev.FtpServer.MultiBindingTcpListener.html
@@ -11003,6 +12057,41 @@ references:
   isSpec: "True"
   fullName: FubarDev.FtpServer.MultiBindingTcpListener.WaitAnyTcpClientAsync
   nameWithType: MultiBindingTcpListener.WaitAnyTcpClientAsync
+- uid: FubarDev.FtpServer.PamFtpServerBuilderExtensions
+  name: PamFtpServerBuilderExtensions
+  href: api/FubarDev.FtpServer.PamFtpServerBuilderExtensions.html
+  commentId: T:FubarDev.FtpServer.PamFtpServerBuilderExtensions
+  fullName: FubarDev.FtpServer.PamFtpServerBuilderExtensions
+  nameWithType: PamFtpServerBuilderExtensions
+- uid: FubarDev.FtpServer.PamFtpServerBuilderExtensions.EnablePamAuthentication(FubarDev.FtpServer.IFtpServerBuilder)
+  name: EnablePamAuthentication(IFtpServerBuilder)
+  href: api/FubarDev.FtpServer.PamFtpServerBuilderExtensions.html#FubarDev_FtpServer_PamFtpServerBuilderExtensions_EnablePamAuthentication_FubarDev_FtpServer_IFtpServerBuilder_
+  commentId: M:FubarDev.FtpServer.PamFtpServerBuilderExtensions.EnablePamAuthentication(FubarDev.FtpServer.IFtpServerBuilder)
+  fullName: FubarDev.FtpServer.PamFtpServerBuilderExtensions.EnablePamAuthentication(FubarDev.FtpServer.IFtpServerBuilder)
+  nameWithType: PamFtpServerBuilderExtensions.EnablePamAuthentication(IFtpServerBuilder)
+- uid: FubarDev.FtpServer.PamFtpServerBuilderExtensions.EnablePamAuthentication*
+  name: EnablePamAuthentication
+  href: api/FubarDev.FtpServer.PamFtpServerBuilderExtensions.html#FubarDev_FtpServer_PamFtpServerBuilderExtensions_EnablePamAuthentication_
+  commentId: Overload:FubarDev.FtpServer.PamFtpServerBuilderExtensions.EnablePamAuthentication
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.PamFtpServerBuilderExtensions.EnablePamAuthentication
+  nameWithType: PamFtpServerBuilderExtensions.EnablePamAuthentication
+- uid: FubarDev.FtpServer.PamFtpServerBuilderExtensions.UsePamUserHome(FubarDev.FtpServer.IFtpServerBuilder,System.Nullable{Action{FubarDev.FtpServer.MembershipProvider.Pam.Directories.PamAccountDirectoryQueryOptions}})
+  name: UsePamUserHome(IFtpServerBuilder, Nullable<Action<PamAccountDirectoryQueryOptions>>)
+  href: api/FubarDev.FtpServer.PamFtpServerBuilderExtensions.html#FubarDev_FtpServer_PamFtpServerBuilderExtensions_UsePamUserHome_FubarDev_FtpServer_IFtpServerBuilder_System_Nullable_Action_FubarDev_FtpServer_MembershipProvider_Pam_Directories_PamAccountDirectoryQueryOptions___
+  commentId: M:FubarDev.FtpServer.PamFtpServerBuilderExtensions.UsePamUserHome(FubarDev.FtpServer.IFtpServerBuilder,System.Nullable{Action{FubarDev.FtpServer.MembershipProvider.Pam.Directories.PamAccountDirectoryQueryOptions}})
+  name.vb: UsePamUserHome(IFtpServerBuilder, Nullable(Of Action(Of PamAccountDirectoryQueryOptions)))
+  fullName: FubarDev.FtpServer.PamFtpServerBuilderExtensions.UsePamUserHome(FubarDev.FtpServer.IFtpServerBuilder, System.Nullable<Action<FubarDev.FtpServer.MembershipProvider.Pam.Directories.PamAccountDirectoryQueryOptions>>)
+  fullName.vb: FubarDev.FtpServer.PamFtpServerBuilderExtensions.UsePamUserHome(FubarDev.FtpServer.IFtpServerBuilder, System.Nullable(Of Action(Of FubarDev.FtpServer.MembershipProvider.Pam.Directories.PamAccountDirectoryQueryOptions)))
+  nameWithType: PamFtpServerBuilderExtensions.UsePamUserHome(IFtpServerBuilder, Nullable<Action<PamAccountDirectoryQueryOptions>>)
+  nameWithType.vb: PamFtpServerBuilderExtensions.UsePamUserHome(IFtpServerBuilder, Nullable(Of Action(Of PamAccountDirectoryQueryOptions)))
+- uid: FubarDev.FtpServer.PamFtpServerBuilderExtensions.UsePamUserHome*
+  name: UsePamUserHome
+  href: api/FubarDev.FtpServer.PamFtpServerBuilderExtensions.html#FubarDev_FtpServer_PamFtpServerBuilderExtensions_UsePamUserHome_
+  commentId: Overload:FubarDev.FtpServer.PamFtpServerBuilderExtensions.UsePamUserHome
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.PamFtpServerBuilderExtensions.UsePamUserHome
+  nameWithType: PamFtpServerBuilderExtensions.UsePamUserHome
 - uid: FubarDev.FtpServer.PasvListener
   name: PasvListener
   href: api/FubarDev.FtpServer.PasvListener.html
@@ -11551,6 +12640,25 @@ references:
   fullName.vb: FubarDev.FtpServer.TelnetInputParser(Of T).Synch
   nameWithType: TelnetInputParser<T>.Synch
   nameWithType.vb: TelnetInputParser(Of T).Synch
+- uid: FubarDev.FtpServer.UnixFsFtpServerBuilderExtensions
+  name: UnixFsFtpServerBuilderExtensions
+  href: api/FubarDev.FtpServer.UnixFsFtpServerBuilderExtensions.html
+  commentId: T:FubarDev.FtpServer.UnixFsFtpServerBuilderExtensions
+  fullName: FubarDev.FtpServer.UnixFsFtpServerBuilderExtensions
+  nameWithType: UnixFsFtpServerBuilderExtensions
+- uid: FubarDev.FtpServer.UnixFsFtpServerBuilderExtensions.UseUnixFileSystem(FubarDev.FtpServer.IFtpServerBuilder)
+  name: UseUnixFileSystem(IFtpServerBuilder)
+  href: api/FubarDev.FtpServer.UnixFsFtpServerBuilderExtensions.html#FubarDev_FtpServer_UnixFsFtpServerBuilderExtensions_UseUnixFileSystem_FubarDev_FtpServer_IFtpServerBuilder_
+  commentId: M:FubarDev.FtpServer.UnixFsFtpServerBuilderExtensions.UseUnixFileSystem(FubarDev.FtpServer.IFtpServerBuilder)
+  fullName: FubarDev.FtpServer.UnixFsFtpServerBuilderExtensions.UseUnixFileSystem(FubarDev.FtpServer.IFtpServerBuilder)
+  nameWithType: UnixFsFtpServerBuilderExtensions.UseUnixFileSystem(IFtpServerBuilder)
+- uid: FubarDev.FtpServer.UnixFsFtpServerBuilderExtensions.UseUnixFileSystem*
+  name: UseUnixFileSystem
+  href: api/FubarDev.FtpServer.UnixFsFtpServerBuilderExtensions.html#FubarDev_FtpServer_UnixFsFtpServerBuilderExtensions_UseUnixFileSystem_
+  commentId: Overload:FubarDev.FtpServer.UnixFsFtpServerBuilderExtensions.UseUnixFileSystem
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.UnixFsFtpServerBuilderExtensions.UseUnixFileSystem
+  nameWithType: UnixFsFtpServerBuilderExtensions.UseUnixFileSystem
 - uid: FubarDev.FtpServer.Utilities
   name: FubarDev.FtpServer.Utilities
   href: api/FubarDev.FtpServer.Utilities.html
@@ -11605,6 +12713,19 @@ references:
   isSpec: "True"
   fullName: FubarDev.FtpServer.Utilities.DirectoryListingEnumerator.Entry
   nameWithType: DirectoryListingEnumerator.Entry
+- uid: FubarDev.FtpServer.Utilities.DirectoryListingEnumerator.FileSystem
+  name: FileSystem
+  href: api/FubarDev.FtpServer.Utilities.DirectoryListingEnumerator.html#FubarDev_FtpServer_Utilities_DirectoryListingEnumerator_FileSystem
+  commentId: P:FubarDev.FtpServer.Utilities.DirectoryListingEnumerator.FileSystem
+  fullName: FubarDev.FtpServer.Utilities.DirectoryListingEnumerator.FileSystem
+  nameWithType: DirectoryListingEnumerator.FileSystem
+- uid: FubarDev.FtpServer.Utilities.DirectoryListingEnumerator.FileSystem*
+  name: FileSystem
+  href: api/FubarDev.FtpServer.Utilities.DirectoryListingEnumerator.html#FubarDev_FtpServer_Utilities_DirectoryListingEnumerator_FileSystem_
+  commentId: Overload:FubarDev.FtpServer.Utilities.DirectoryListingEnumerator.FileSystem
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.Utilities.DirectoryListingEnumerator.FileSystem
+  nameWithType: DirectoryListingEnumerator.FileSystem
 - uid: FubarDev.FtpServer.Utilities.DirectoryListingEnumerator.GetFullPath(System.String)
   name: GetFullPath(String)
   href: api/FubarDev.FtpServer.Utilities.DirectoryListingEnumerator.html#FubarDev_FtpServer_Utilities_DirectoryListingEnumerator_GetFullPath_System_String_
@@ -11717,6 +12838,9 @@ references:
   isSpec: "True"
   fullName: Microsoft.Extensions.DependencyInjection.ServiceCollectionExtensions.AddFtpServer
   nameWithType: ServiceCollectionExtensions.AddFtpServer
+- uid: project-structure
+  name: FTP Server Project Structure
+  href: articles/project-structure.html
 - uid: quickstart
   name: Your first FTP server
   href: articles/quickstart.html

@@ -27,4 +27,4 @@ FubarDev.FtpServer.FileSystem.GoogleDrive | Google Drive as virtual file system
 * [FTPS](xref:ftps)
 * [Google Drive](xref:google-drive)
 * [Custom File System Development](xref:custom-file-system)
-* [Custom Authentication Development](xref:custom-authentication)
+* [Custom Account Management](xref:custom-account-management)
