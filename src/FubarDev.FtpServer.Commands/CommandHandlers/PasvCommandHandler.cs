@@ -17,6 +17,7 @@ using FubarDev.FtpServer.Features;
 using JetBrains.Annotations;
 
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace FubarDev.FtpServer.CommandHandlers
 {
@@ -25,17 +26,25 @@ namespace FubarDev.FtpServer.CommandHandlers
     /// </summary>
     public class PasvCommandHandler : FtpCommandHandler
     {
+        [NotNull]
         private readonly IPasvListenerFactory _pasvListenerFactory;
+
+        private readonly bool _promiscuousPasv;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PasvCommandHandler"/> class.
         /// </summary>
         /// <param name="connectionAccessor">The accessor to get the connection that is active during the <see cref="Process"/> method execution.</param>
         /// <param name="pasvListenerFactory">The provider for passive ports.</param>
-        public PasvCommandHandler([NotNull] IFtpConnectionAccessor connectionAccessor, IPasvListenerFactory pasvListenerFactory)
+        /// <param name="options">The options for the PASV/EPSV commands.</param>
+        public PasvCommandHandler(
+            [NotNull] IFtpConnectionAccessor connectionAccessor,
+            [NotNull] IPasvListenerFactory pasvListenerFactory,
+            [NotNull] IOptions<PasvCommandOptions> options)
             : base(connectionAccessor, "PASV", "EPSV")
         {
             _pasvListenerFactory = pasvListenerFactory;
+            _promiscuousPasv = options.Value.PromiscuousPasv;
         }
 
         /// <inheritdoc/>
@@ -148,7 +157,7 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// <returns><see langword="true"/> when the passive connection can be used.</returns>
         private bool IsConnectionAllowed(TcpClient client)
         {
-            if (Connection.PromiscuousPasv)
+            if (_promiscuousPasv)
             {
                 return true;
             }

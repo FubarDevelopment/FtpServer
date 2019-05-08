@@ -98,7 +98,6 @@ namespace FubarDev.FtpServer
             SocketStream = socketStream;
             OriginalStream = socketStream;
             Log = logger;
-            PromiscuousPasv = options.Value.PromiscuousPasv;
 
             Data = new FtpConnectionData(
                 options.Value.DefaultEncoding ?? Encoding.ASCII,
@@ -140,9 +139,6 @@ namespace FubarDev.FtpServer
             get => Features.Get<IEncodingFeature>().Encoding;
             set => Features.Get<IEncodingFeature>().Encoding = value;
         }
-
-        /// <inheritdoc />
-        public bool PromiscuousPasv { get; }
 
         /// <inheritdoc />
         public FtpConnectionData Data { get; }

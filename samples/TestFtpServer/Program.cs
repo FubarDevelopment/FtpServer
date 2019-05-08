@@ -120,6 +120,7 @@ namespace TestFtpServer
                         options.PassivePortRange = (iPorts[0], iPorts[1]) ;
                     }
                 },
+                { "promiscuous", "Allows promiscuous PASV", v => options.PromiscuousPasv = v != null },
                 "FTPS",
                 { "c|certificate=", "Set the SSL certificate", v => options.ServerCertificateFile = v },
                 { "P|password=", "Password for the SSL certificate", v => options.ServerCertificatePassword = v },
@@ -314,6 +315,7 @@ namespace TestFtpServer
                             opt.PasvMaxPort = options.PassivePortRange.Value.Item2;
                         }
                     })
+               .Configure<PasvCommandOptions>(opt => opt.PromiscuousPasv = options.PromiscuousPasv)
                .Configure<GoogleDriveOptions>(opt => opt.UseBackgroundUpload = options.UseBackgroundUpload)
                .Configure<PamMembershipProviderOptions>(opt => opt.IgnoreAccountManagement = options.NoPamAccountManagement);
 
