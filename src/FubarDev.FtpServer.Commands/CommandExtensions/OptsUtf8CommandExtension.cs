@@ -20,9 +20,8 @@ namespace FubarDev.FtpServer.CommandExtensions
         /// <summary>
         /// Initializes a new instance of the <see cref="OptsUtf8CommandExtension"/> class.
         /// </summary>
-        /// <param name="connectionAccessor">The accessor to get the connection that is active during the <see cref="Process"/> method execution.</param>
-        public OptsUtf8CommandExtension([NotNull] IFtpConnectionAccessor connectionAccessor)
-            : base(connectionAccessor, "OPTS", "UTF8", "UTF-8")
+        public OptsUtf8CommandExtension()
+            : base("OPTS", "UTF8", "UTF-8")
         {
             // Announce it as UTF8 only.
             AnnouncementMode = ExtensionAnnouncementMode.ExtensionName;

@@ -34,14 +34,12 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// <summary>
         /// Initializes a new instance of the <see cref="PasvCommandHandler"/> class.
         /// </summary>
-        /// <param name="connectionAccessor">The accessor to get the connection that is active during the <see cref="Process"/> method execution.</param>
         /// <param name="pasvListenerFactory">The provider for passive ports.</param>
         /// <param name="options">The options for the PASV/EPSV commands.</param>
         public PasvCommandHandler(
-            [NotNull] IFtpConnectionAccessor connectionAccessor,
             [NotNull] IPasvListenerFactory pasvListenerFactory,
             [NotNull] IOptions<PasvCommandOptions> options)
-            : base(connectionAccessor, "PASV", "EPSV")
+            : base("PASV", "EPSV")
         {
             _pasvListenerFactory = pasvListenerFactory;
             _promiscuousPasv = options.Value.PromiscuousPasv;

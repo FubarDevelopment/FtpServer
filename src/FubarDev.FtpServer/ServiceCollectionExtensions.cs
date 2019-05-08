@@ -49,9 +49,10 @@ namespace Microsoft.Extensions.DependencyInjection
 
             services.AddScoped<IFtpConnection, FtpConnection>();
             services.AddScoped<IFtpLoginStateMachine, FtpLoginStateMachine>();
+            services.AddScoped<IFtpCommandActivator, ServiceBasedFtpCommandActivator>();
 
             services.AddScoped<IFtpHostSelector, SingleFtpHostSelector>();
-            services.AddScoped(sp => sp.GetRequiredService<IFtpConnection>().Features.Get<ISelectedHostFeature>().SelectedHost);
+            services.AddScoped(sp => sp.GetRequiredService<IFtpHostSelector>().SelectedHost);
 
             services.AddSingleton<IFtpCatalogLoader, DefaultFtpCatalogLoader>();
 

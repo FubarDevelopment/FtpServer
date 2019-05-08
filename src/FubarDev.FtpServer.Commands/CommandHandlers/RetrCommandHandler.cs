@@ -32,12 +32,10 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// <summary>
         /// Initializes a new instance of the <see cref="RetrCommandHandler"/> class.
         /// </summary>
-        /// <param name="connectionAccessor">The accessor to get the connection that is active during the <see cref="Process"/> method execution.</param>
         /// <param name="sslStreamWrapperFactory">An object to handle SSL streams.</param>
         public RetrCommandHandler(
-            [NotNull] IFtpConnectionAccessor connectionAccessor,
             [NotNull] ISslStreamWrapperFactory sslStreamWrapperFactory)
-            : base(connectionAccessor, "RETR")
+            : base("RETR")
         {
             _sslStreamWrapperFactory = sslStreamWrapperFactory;
         }

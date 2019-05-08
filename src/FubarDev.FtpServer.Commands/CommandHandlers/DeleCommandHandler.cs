@@ -29,10 +29,9 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// <summary>
         /// Initializes a new instance of the <see cref="DeleCommandHandler"/> class.
         /// </summary>
-        /// <param name="connectionAccessor">The accessor to get the connection that is active during the <see cref="Process"/> method execution.</param>
         /// <param name="logger">The logger.</param>
-        public DeleCommandHandler([NotNull] IFtpConnectionAccessor connectionAccessor, [CanBeNull] ILogger<DeleCommandHandler> logger = null)
-            : base(connectionAccessor, "DELE")
+        public DeleCommandHandler([CanBeNull] ILogger<DeleCommandHandler> logger = null)
+            : base("DELE")
         {
             _logger = logger;
         }

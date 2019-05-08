@@ -31,14 +31,12 @@ namespace FubarDev.FtpServer
             IEnumerable<IAuthenticationMechanism> authenticationMechanisms,
             IEnumerable<IAuthorizationMechanism> authorizationMechanisms)
         {
-            var feature = new SelectedHostFeature(
-                new DefaultFtpHost(authenticationMechanisms.ToList(), authorizationMechanisms.ToList()));
-            connection.Features.Set<ISelectedHostFeature>(feature);
+            SelectedHost = new DefaultFtpHost(authenticationMechanisms.ToList(), authorizationMechanisms.ToList());
             _connection = connection;
         }
 
         /// <inheritdoc />
-        public IFtpHost SelectedHost => _connection.Features.Get<ISelectedHostFeature>().SelectedHost;
+        public IFtpHost SelectedHost { get; }
 
         /// <inheritdoc />
         public Task<IFtpResponse> SelectHostAsync(HostInfo hostInfo, CancellationToken cancellationToken)
@@ -65,17 +63,6 @@ namespace FubarDev.FtpServer
 
             /// <inheritdoc />
             public IEnumerable<IAuthorizationMechanism> AuthorizationMechanisms { get; }
-        }
-
-        private class SelectedHostFeature : ISelectedHostFeature
-        {
-            public SelectedHostFeature(IFtpHost host)
-            {
-                SelectedHost = host;
-            }
-
-            /// <inheritdoc />
-            public IFtpHost SelectedHost { get; set; }
         }
     }
 }

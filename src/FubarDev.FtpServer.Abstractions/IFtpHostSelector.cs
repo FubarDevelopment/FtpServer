@@ -16,7 +16,6 @@ namespace FubarDev.FtpServer
         /// <summary>
         /// Gets the selected FTP host.
         /// </summary>
-        [Obsolete("Query the information using the ISelectedHostFeature instead.")]
         IFtpHost SelectedHost { get; }
 
         /// <summary>

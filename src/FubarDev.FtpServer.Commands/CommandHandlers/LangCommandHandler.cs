@@ -31,12 +31,10 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// <summary>
         /// Initializes a new instance of the <see cref="LangCommandHandler"/> class.
         /// </summary>
-        /// <param name="connectionAccessor">The accessor to get the connection that is active during the <see cref="Process"/> method execution.</param>
         /// <param name="catalogLoader">The catalog loader for the FTP server.</param>
         public LangCommandHandler(
-            [NotNull] IFtpConnectionAccessor connectionAccessor,
             [NotNull] IFtpCatalogLoader catalogLoader)
-            : base(connectionAccessor, "LANG")
+            : base("LANG")
         {
             _catalogLoader = catalogLoader;
         }
@@ -49,9 +47,9 @@ namespace FubarDev.FtpServer.CommandHandlers
                 connection =>
                 {
 #if NETSTANDARD1_3
-                    var currentLanguage = Connection.Features.Get<ILocalizationFeature>().Language.Name;
+                    var currentLanguage = connection.Features.Get<ILocalizationFeature>().Language.Name;
 #else
-                    var currentLanguage = Connection.Features.Get<ILocalizationFeature>().Language.IetfLanguageTag;
+                    var currentLanguage = connection.Features.Get<ILocalizationFeature>().Language.IetfLanguageTag;
 #endif
                     var languages = _catalogLoader.GetSupportedLanguages()
                         .Select(x => x + (string.Equals(x, currentLanguage) ? "*" : string.Empty));

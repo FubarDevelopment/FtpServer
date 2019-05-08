@@ -18,9 +18,8 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// <summary>
         /// Initializes a new instance of the <see cref="AlloCommandHandler"/> class.
         /// </summary>
-        /// <param name="connectionAccessor">The accessor to get the connection that is active during the <see cref="Process"/> method execution.</param>
-        public AlloCommandHandler(IFtpConnectionAccessor connectionAccessor)
-            : base(connectionAccessor, "ALLO")
+        public AlloCommandHandler()
+            : base("ALLO")
         {
         }
 

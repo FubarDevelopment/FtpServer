@@ -23,9 +23,8 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// <summary>
         /// Initializes a new instance of the <see cref="XmkdCommandHandler"/> class.
         /// </summary>
-        /// <param name="connectionAccessor">The accessor to get the connection that is active during the <see cref="Process"/> method execution.</param>
-        public XmkdCommandHandler(IFtpConnectionAccessor connectionAccessor)
-            : base(connectionAccessor, "XMKD")
+        public XmkdCommandHandler()
+            : base("XMKD")
         {
         }
 

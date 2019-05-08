@@ -19,9 +19,8 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// <summary>
         /// Initializes a new instance of the <see cref="AuthCommandHandler"/> class.
         /// </summary>
-        /// <param name="connectionAccessor">The accessor to get the connection that is active during the <see cref="Process"/> method execution.</param>
-        public AuthCommandHandler(IFtpConnectionAccessor connectionAccessor)
-            : base(connectionAccessor, "AUTH")
+        public AuthCommandHandler()
+            : base("AUTH")
         {
         }
 
@@ -31,7 +30,7 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// <inheritdoc/>
         public override IEnumerable<IFeatureInfo> GetSupportedFeatures()
         {
-            var host = Connection.ConnectionServices.GetRequiredService<IFtpHost>();
+            var host = Connection.ConnectionServices.GetRequiredService<IFtpHostSelector>().SelectedHost;
             return host.AuthenticationMechanisms.OfType<IFeatureHost>().SelectMany(x => x.GetSupportedFeatures());
         }
 

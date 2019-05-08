@@ -6,7 +6,6 @@
 //-----------------------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Net;
@@ -43,12 +42,6 @@ namespace FubarDev.FtpServer
         /// </summary>
         [NotNull]
         IFeatureCollection Features { get; }
-
-        /// <summary>
-        /// Gets the dictionary of all known command handlers.
-        /// </summary>
-        [NotNull]
-        IReadOnlyDictionary<string, IFtpCommandHandler> CommandHandlers { get; }
 
         /// <summary>
         /// Gets or sets the encoding for the LIST/NLST commands.

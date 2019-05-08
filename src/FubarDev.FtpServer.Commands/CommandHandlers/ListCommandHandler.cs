@@ -42,14 +42,12 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// <summary>
         /// Initializes a new instance of the <see cref="ListCommandHandler"/> class.
         /// </summary>
-        /// <param name="connectionAccessor">The accessor to get the connection that is active during the <see cref="Process"/> method execution.</param>
         /// <param name="sslStreamWrapperFactory">An object to handle SSL streams.</param>
         /// <param name="logger">The logger.</param>
         public ListCommandHandler(
-            [NotNull] IFtpConnectionAccessor connectionAccessor,
             [NotNull] ISslStreamWrapperFactory sslStreamWrapperFactory,
             [CanBeNull] ILogger<ListCommandHandler> logger = null)
-            : base(connectionAccessor, "LIST", "NLST", "LS")
+            : base("LIST", "NLST", "LS")
         {
             _sslStreamWrapperFactory = sslStreamWrapperFactory;
             _logger = logger;

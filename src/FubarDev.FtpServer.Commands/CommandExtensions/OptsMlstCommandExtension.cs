@@ -22,9 +22,8 @@ namespace FubarDev.FtpServer.CommandExtensions
         /// <summary>
         /// Initializes a new instance of the <see cref="OptsMlstCommandExtension"/> class.
         /// </summary>
-        /// <param name="connectionAccessor">The accessor to get the connection that is active during the <see cref="Process"/> method execution.</param>
-        public OptsMlstCommandExtension([NotNull] IFtpConnectionAccessor connectionAccessor)
-            : base(connectionAccessor, "OPTS", "MLST")
+        public OptsMlstCommandExtension()
+            : base("OPTS", "MLST")
         {
             // Don't announce this extension, because it gets already announced
             // by the MLST command itself.

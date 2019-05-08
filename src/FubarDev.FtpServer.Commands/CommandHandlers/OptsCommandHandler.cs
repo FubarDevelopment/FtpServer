@@ -25,12 +25,10 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// <summary>
         /// Initializes a new instance of the <see cref="OptsCommandHandler"/> class.
         /// </summary>
-        /// <param name="connectionAccessor">The accessor to get the connection that is active during the <see cref="Process"/> method execution.</param>
         /// <param name="extensions">All registered extensions.</param>
         public OptsCommandHandler(
-            [NotNull] IFtpConnectionAccessor connectionAccessor,
             [NotNull, ItemNotNull] IEnumerable<IFtpCommandHandlerExtension> extensions)
-            : base(connectionAccessor, "OPTS")
+            : base("OPTS")
         {
             _extensions = extensions
                .Where(x => Names.Any(name => string.Equals(name, x.ExtensionFor, StringComparison.OrdinalIgnoreCase)))

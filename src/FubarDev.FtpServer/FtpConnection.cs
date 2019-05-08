@@ -43,11 +43,10 @@ namespace FubarDev.FtpServer
         [NotNull]
         private readonly IFtpConnectionAccessor _connectionAccessor;
 
-        private readonly IDisposable _loggerScope;
-
         [NotNull]
-        [ItemNotNull]
-        private readonly IReadOnlyCollection<IFtpCommandHandlerExtension> _extensions;
+        private readonly IFtpCommandActivator _commandActivator;
+
+        private readonly IDisposable _loggerScope;
 
         private bool _closed;
 
@@ -57,19 +56,17 @@ namespace FubarDev.FtpServer
         /// Initializes a new instance of the <see cref="FtpConnection"/> class.
         /// </summary>
         /// <param name="socket">The socket to use to communicate with the client.</param>
+        /// <param name="options">The options for the FTP connection.</param>
         /// <param name="connectionAccessor">The accessor to get the connection that is active during the <see cref="FtpCommandHandler.Process"/> method execution.</param>
-        /// <param name="commandHandlerExtensions">The registered command handler extensions.</param>
+        /// <param name="commandActivator">Activator for FTP commands.</param>
+        /// <param name="catalogLoader">The catalog loader for the FTP server.</param>
         /// <param name="serviceProvider">The service provider for the connection.</param>
         /// <param name="logger">The logger for the FTP connection.</param>
-        /// <param name="options">The options for the FTP connection.</param>
-        /// <param name="commandHandlers">The registered command handlers.</param>
-        /// <param name="catalogLoader">The catalog loader for the FTP server.</param>
         public FtpConnection(
             [NotNull] TcpClient socket,
             [NotNull] IOptions<FtpConnectionOptions> options,
             [NotNull] IFtpConnectionAccessor connectionAccessor,
-            [NotNull, ItemNotNull] IEnumerable<IFtpCommandHandler> commandHandlers,
-            [NotNull, ItemNotNull] IEnumerable<IFtpCommandHandlerExtension> commandHandlerExtensions,
+            [NotNull] IFtpCommandActivator commandActivator,
             [NotNull] IFtpCatalogLoader catalogLoader,
             [NotNull] IServiceProvider serviceProvider,
             [CanBeNull] ILogger<IFtpConnection> logger = null)
@@ -92,6 +89,7 @@ namespace FubarDev.FtpServer
 
             _socket = socket;
             _connectionAccessor = connectionAccessor;
+            _commandActivator = commandActivator;
 
             var socketStream = socket.GetStream();
 
@@ -105,18 +103,6 @@ namespace FubarDev.FtpServer
                 new BackgroundCommandHandler(this),
                 catalogLoader);
 
-            var commandHandlersList = commandHandlers.ToList();
-            var dict = commandHandlersList
-                .SelectMany(x => x.Names, (item, name) => new { Name = name, Item = item })
-                .ToLookup(x => x.Name, x => x.Item, StringComparer.OrdinalIgnoreCase)
-                .ToDictionary(x => x.Key, x => x.Last(), StringComparer.OrdinalIgnoreCase);
-
-#pragma warning disable 618
-            _extensions = commandHandlerExtensions.Concat(commandHandlersList.SelectMany(x => x.GetExtensions())).ToList();
-#pragma warning restore 618
-
-            CommandHandlers = dict;
-
             Features = features;
         }
 
@@ -128,9 +114,6 @@ namespace FubarDev.FtpServer
 
         /// <inheritdoc />
         public IFeatureCollection Features { get; }
-
-        /// <inheritdoc />
-        public IReadOnlyDictionary<string, IFtpCommandHandler> CommandHandlers { get; }
 
         /// <inheritdoc />
         [Obsolete("Query the information using the IEncodingFeature instead.")]
@@ -308,12 +291,6 @@ namespace FubarDev.FtpServer
             // Initialize the FTP connection accessor
             _connectionAccessor.FtpConnection = this;
 
-            // Initialize the connection data
-            foreach (var extension in _extensions)
-            {
-                extension.InitializeConnectionData();
-            }
-
             Log?.LogInformation($"Connected from {RemoteAddress.ToString(true)}");
             var collector = new FtpCommandCollector(() => Features.Get<IEncodingFeature>().Encoding);
             await WriteAsync(new FtpResponse(220, T("FTP Server Ready")), _cancellationTokenSource.Token)
@@ -398,12 +375,16 @@ namespace FubarDev.FtpServer
         {
             IFtpResponse response;
             Log?.Trace(command);
-            var result = FindCommandHandler(command);
+            var context = new FtpCommandContext(command)
+            {
+                Connection = this,
+            };
+            var result = _commandActivator.Create(context);
             if (result != null)
             {
-                var handler = result.Item2;
-                var handlerCommand = result.Item1;
-                var isLoginRequired = result.Item3;
+                var handler = result.Handler;
+                var handlerCommand = result.CommandContext.Command;
+                var isLoginRequired = result.IsLoginRequired;
                 if (isLoginRequired && loginStateMachine.Status != SecurityStatus.Authorized)
                 {
                     response = new FtpResponse(530, T("Not logged in."));
@@ -466,25 +447,6 @@ namespace FubarDev.FtpServer
                     Close();
                 }
             }
-        }
-
-        private Tuple<FtpCommand, IFtpCommandBase, bool> FindCommandHandler(FtpCommand command)
-        {
-            if (!CommandHandlers.TryGetValue(command.Name, out var handler))
-            {
-                return null;
-            }
-
-            if (!string.IsNullOrWhiteSpace(command.Argument) && handler is IFtpCommandHandlerExtensionHost extensionHost)
-            {
-                var extensionCommand = FtpCommand.Parse(command.Argument);
-                if (extensionHost.Extensions.TryGetValue(extensionCommand.Name, out var extension))
-                {
-                    return Tuple.Create(extensionCommand, (IFtpCommandBase)extension, extension.IsLoginRequired ?? handler.IsLoginRequired);
-                }
-            }
-
-            return Tuple.Create(command, (IFtpCommandBase)handler, handler.IsLoginRequired);
         }
 
         private void OnClosed()

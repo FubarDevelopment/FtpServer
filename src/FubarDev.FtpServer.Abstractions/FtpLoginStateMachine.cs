@@ -13,6 +13,8 @@ using FubarDev.FtpServer.Features;
 
 using JetBrains.Annotations;
 
+using Microsoft.Extensions.DependencyInjection;
+
 namespace FubarDev.FtpServer
 {
     /// <summary>
@@ -48,6 +50,9 @@ namespace FubarDev.FtpServer
             new Transition(SecurityStatus.NeedAccount, SecurityStatus.Authenticated, "ACCT", 5),
         };
 
+        [NotNull]
+        private readonly IFtpHostSelector _hostSelector;
+
         [CanBeNull]
         private IAuthenticationMechanism _filteredAuthenticationMechanism;
 
@@ -64,10 +69,13 @@ namespace FubarDev.FtpServer
         /// Initializes a new instance of the <see cref="FtpLoginStateMachine"/> class.
         /// </summary>
         /// <param name="connection">The FTP connection.</param>
+        /// <param name="hostSelector">The FTP host selector.</param>
         public FtpLoginStateMachine(
-            [NotNull] IFtpConnection connection)
+            [NotNull] IFtpConnection connection,
+            [NotNull] IFtpHostSelector hostSelector)
             : base(connection, _transitions, SecurityStatus.Unauthenticated)
         {
+            _hostSelector = hostSelector;
         }
 
         /// <inheritdoc />
@@ -79,7 +87,7 @@ namespace FubarDev.FtpServer
         /// <summary>
         /// Gets the selected host.
         /// </summary>
-        public IFtpHost SelectedHost => Connection.Features.Get<ISelectedHostFeature>().SelectedHost;
+        public IFtpHost SelectedHost => _hostSelector.SelectedHost;
 
         /// <inheritdoc />
         protected override Task<IFtpResponse> ExecuteCommandAsync(FtpCommand ftpCommand, CancellationToken cancellationToken = default)

@@ -6,6 +6,7 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -24,10 +25,8 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// <summary>
         /// Initializes a new instance of the <see cref="FeatCommandHandler"/> class.
         /// </summary>
-        /// <param name="connectionAccessor">The accessor to get the connection that is active during the <see cref="Process"/> method execution.</param>
-        public FeatCommandHandler(
-            [NotNull] IFtpConnectionAccessor connectionAccessor)
-            : base(connectionAccessor, "FEAT")
+        public FeatCommandHandler()
+            : base("FEAT")
         {
         }
 
@@ -37,9 +36,8 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// <inheritdoc/>
         public override Task<IFtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
         {
-            var supportedFeatures = Connection
-                .CommandHandlers.Values
-                .SelectMany(x => x.GetSupportedFeatures());
+            var handlers = Connection.ConnectionServices.GetRequiredService<IEnumerable<IFtpCommandHandler>>();
+            var supportedFeatures = handlers.SelectMany(x => x.GetSupportedFeatures());
 
             var loginStateMachine = Connection.ConnectionServices.GetRequiredService<IFtpLoginStateMachine>();
             if (loginStateMachine.Status != SecurityStatus.Authorized)

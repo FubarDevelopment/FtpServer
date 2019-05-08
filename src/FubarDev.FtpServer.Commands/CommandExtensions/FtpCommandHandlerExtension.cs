@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -18,19 +19,14 @@ namespace FubarDev.FtpServer.CommandExtensions
     /// </summary>
     public abstract class FtpCommandHandlerExtension : IFtpCommandHandlerExtension
     {
-        [NotNull]
-        private readonly IFtpConnectionAccessor _connectionAccessor;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="FtpCommandHandlerExtension"/> class.
         /// </summary>
-        /// <param name="connectionAccessor">The accessor to get the connection that is active during the <see cref="Process"/> method execution.</param>
         /// <param name="extensionFor">The name of the command this extension is for.</param>
         /// <param name="name">The command name.</param>
         /// <param name="alternativeNames">Alternative names.</param>
-        protected FtpCommandHandlerExtension([NotNull] IFtpConnectionAccessor connectionAccessor, [NotNull] string extensionFor, [NotNull] string name, [NotNull, ItemNotNull] params string[] alternativeNames)
+        protected FtpCommandHandlerExtension([NotNull] string extensionFor, [NotNull] string name, [NotNull, ItemNotNull] params string[] alternativeNames)
         {
-            _connectionAccessor = connectionAccessor;
             var names = new List<string>
             {
                 name,
@@ -55,10 +51,18 @@ namespace FubarDev.FtpServer.CommandExtensions
         public ExtensionAnnouncementMode AnnouncementMode { get; set; } = ExtensionAnnouncementMode.Hidden;
 
         /// <summary>
+        /// Gets or sets the FTP command context.
+        /// </summary>
+        [CanBeNull]
+        [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global", Justification = "Set using reflection.")]
+        [SuppressMessage("ReSharper", "MemberCanBePrivate.Global", Justification = "Required for setting through reflection.")]
+        public FtpCommandContext CommandContext { get; set; }
+
+        /// <summary>
         /// Gets the connection this command was created for.
         /// </summary>
         [NotNull]
-        protected IFtpConnection Connection => _connectionAccessor.FtpConnection ?? throw new InvalidOperationException("The connection information was used outside of an active connection.");
+        protected IFtpConnection Connection => CommandContext?.Connection ?? throw new InvalidOperationException("The connection information was used outside of an active connection.");
 
         /// <summary>
         /// Gets the connection data.
