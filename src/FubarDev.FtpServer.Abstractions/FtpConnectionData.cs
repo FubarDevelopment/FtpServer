@@ -195,7 +195,32 @@ namespace FubarDev.FtpServer
         /// Gets or sets the <see cref="IUnixFileEntry"/> to use for a <c>RNTO</c> operation.
         /// </summary>
         [CanBeNull]
-        public SearchResult<IUnixFileSystemEntry> RenameFrom { get; set; }
+        [Obsolete("Query the information using the IRenameCommandFeature instead.")]
+        public SearchResult<IUnixFileSystemEntry> RenameFrom
+        {
+            get => _featureCollection.Get<IRenameCommandFeature>()?.RenameFrom;
+            set
+            {
+                var feature = _featureCollection.Get<IRenameCommandFeature>();
+                if (value != null)
+                {
+                    if (feature == null)
+                    {
+                        feature = new RenameCommandFeature();
+                        _featureCollection.Set(feature);
+                    }
+
+                    feature.RenameFrom = value;
+                }
+                else
+                {
+                    if (feature != null)
+                    {
+                        _featureCollection.Set<IRenameCommandFeature>(null);
+                    }
+                }
+            }
+        }
 
         /// <inheritdoc />
         [Obsolete("Query the information using the IMlstFactsFeature instead.")]
@@ -228,6 +253,15 @@ namespace FubarDev.FtpServer
         {
             /// <inheritdoc />
             public long RestartPosition { get; set; }
+        }
+
+        /// <summary>
+        /// Container that implements <see cref="IRenameCommandFeature"/>.
+        /// </summary>
+        private class RenameCommandFeature : IRenameCommandFeature
+        {
+            /// <inheritdoc />
+            public SearchResult<IUnixFileSystemEntry> RenameFrom { get; set; }
         }
     }
 }
