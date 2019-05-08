@@ -2,10 +2,11 @@
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
-using JetBrains.Annotations;
-
 namespace FubarDev.FtpServer.MembershipProvider.Pam.Directories
 {
+    /// <summary>
+    /// Options for the PAM account directory query.
+    /// </summary>
     public class PamAccountDirectoryQueryOptions
     {
         /// <summary>

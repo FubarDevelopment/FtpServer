@@ -8,7 +8,7 @@ using System.Runtime.InteropServices;
 
 namespace System.Net.Security
 {
-    public unsafe static class SslDirectCall
+    internal unsafe static class SslDirectCall
     {
         public static void CloseNotify(SslStream sslStream)
         {
