@@ -223,6 +223,10 @@ namespace FubarDev.FtpServer
                     {
                         // Ignore - everything is fine
                     }
+                    catch (AggregateException ex) when (ex.InnerException is OperationCanceledException)
+                    {
+                        // Ignore - everything is fine
+                    }
                     finally
                     {
                         listener.Stop();
