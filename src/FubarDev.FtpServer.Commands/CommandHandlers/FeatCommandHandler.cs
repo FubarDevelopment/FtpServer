@@ -36,8 +36,15 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// <inheritdoc/>
         public override Task<IFtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
         {
+            /*
+            var activator = Connection.ConnectionServices.GetRequiredService<IFtpCommandActivator>();
+            var handlers = (from handler in Connection.ConnectionServices.GetRequiredService<IEnumerable<IFtpCommandHandler>>()
+                            let commandContext = new FtpCommandContext(new FtpCommand(handler.Names.First(), null)) { Connection = Connection }
+                            select activator.Create(commandContext)?.Handler)
+               .OfType<IFtpCommandHandler>();
+               */
             var handlers = Connection.ConnectionServices.GetRequiredService<IEnumerable<IFtpCommandHandler>>();
-            var supportedFeatures = handlers.SelectMany(x => x.GetSupportedFeatures());
+            var supportedFeatures = handlers.SelectMany(x => x.GetSupportedFeatures(Connection));
 
             var loginStateMachine = Connection.ConnectionServices.GetRequiredService<IFtpLoginStateMachine>();
             if (loginStateMachine.Status != SecurityStatus.Authorized)

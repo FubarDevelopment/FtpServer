@@ -54,7 +54,7 @@ namespace FubarDev.FtpServer.CommandHandlers
         }
 
         /// <inheritdoc/>
-        public override IEnumerable<IFeatureInfo> GetSupportedFeatures()
+        public override IEnumerable<IFeatureInfo> GetSupportedFeatures(IFtpConnection connection)
         {
             yield return new GenericFeatureInfo("MLST", FeatureStatus, IsLoginRequired);
         }

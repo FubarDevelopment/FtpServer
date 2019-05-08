@@ -40,22 +40,17 @@ namespace FubarDev.FtpServer.CommandHandlers
         }
 
         /// <inheritdoc />
-        public override IEnumerable<IFeatureInfo> GetSupportedFeatures()
+        public override IEnumerable<IFeatureInfo> GetSupportedFeatures(IFtpConnection connection)
         {
-            yield return new GenericFeatureInfo(
-                "FEAT",
-                connection =>
-                {
 #if NETSTANDARD1_3
-                    var currentLanguage = connection.Features.Get<ILocalizationFeature>().Language.Name;
+            var currentLanguage = connection.Features.Get<ILocalizationFeature>().Language.Name;
 #else
-                    var currentLanguage = connection.Features.Get<ILocalizationFeature>().Language.IetfLanguageTag;
+            var currentLanguage = connection.Features.Get<ILocalizationFeature>().Language.IetfLanguageTag;
 #endif
-                    var languages = _catalogLoader.GetSupportedLanguages()
-                        .Select(x => x + (string.Equals(x, currentLanguage) ? "*" : string.Empty));
-                    return "LANG " + string.Join(";", languages);
-                },
-                false);
+            var languages = _catalogLoader.GetSupportedLanguages()
+               .Select(x => x + (string.Equals(x, currentLanguage) ? "*" : string.Empty));
+            var feature = "LANG " + string.Join(";", languages);
+            yield return new GenericFeatureInfo(feature, false);
         }
 
         /// <inheritdoc />

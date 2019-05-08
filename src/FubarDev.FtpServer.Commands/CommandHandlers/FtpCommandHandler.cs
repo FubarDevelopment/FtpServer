@@ -68,7 +68,7 @@ namespace FubarDev.FtpServer.CommandHandlers
         protected FtpConnectionData Data => Connection.Data;
 
         /// <inheritdoc />
-        public virtual IEnumerable<IFeatureInfo> GetSupportedFeatures()
+        public virtual IEnumerable<IFeatureInfo> GetSupportedFeatures(IFtpConnection connection)
         {
             return Enumerable.Empty<IFeatureInfo>();
         }

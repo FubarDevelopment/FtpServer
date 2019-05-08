@@ -55,7 +55,7 @@ namespace FubarDev.FtpServer.CommandHandlers
         private delegate IFact CreateFactDelegate(string value);
 
         /// <inheritdoc/>
-        public override IEnumerable<IFeatureInfo> GetSupportedFeatures()
+        public override IEnumerable<IFeatureInfo> GetSupportedFeatures(IFtpConnection connection)
         {
             yield return new GenericFeatureInfo("MFF", FeatureStatus, IsLoginRequired);
         }

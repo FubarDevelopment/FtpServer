@@ -42,7 +42,7 @@ namespace FubarDev.FtpServer.CommandHandlers
         public IDictionary<string, IFtpCommandHandlerExtension> Extensions { get; }
 
         /// <inheritdoc/>
-        public override IEnumerable<IFeatureInfo> GetSupportedFeatures()
+        public override IEnumerable<IFeatureInfo> GetSupportedFeatures(IFtpConnection connection)
         {
             foreach (var extension in _extensions)
             {

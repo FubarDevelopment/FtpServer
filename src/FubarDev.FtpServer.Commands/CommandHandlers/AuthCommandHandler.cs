@@ -28,10 +28,10 @@ namespace FubarDev.FtpServer.CommandHandlers
         public override bool IsLoginRequired => false;
 
         /// <inheritdoc/>
-        public override IEnumerable<IFeatureInfo> GetSupportedFeatures()
+        public override IEnumerable<IFeatureInfo> GetSupportedFeatures(IFtpConnection connection)
         {
-            var host = Connection.ConnectionServices.GetRequiredService<IFtpHostSelector>().SelectedHost;
-            return host.AuthenticationMechanisms.OfType<IFeatureHost>().SelectMany(x => x.GetSupportedFeatures());
+            var host = connection.ConnectionServices.GetRequiredService<IFtpHostSelector>().SelectedHost;
+            return host.AuthenticationMechanisms.OfType<IFeatureHost>().SelectMany(x => x.GetSupportedFeatures(connection));
         }
 
         /// <inheritdoc/>

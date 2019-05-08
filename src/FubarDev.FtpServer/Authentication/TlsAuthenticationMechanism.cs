@@ -134,7 +134,7 @@ namespace FubarDev.FtpServer.Authentication
         }
 
         /// <inheritdoc />
-        public IEnumerable<IFeatureInfo> GetSupportedFeatures()
+        public IEnumerable<IFeatureInfo> GetSupportedFeatures(IFtpConnection connection)
         {
             if (_serverCertificate != null)
             {

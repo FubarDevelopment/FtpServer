@@ -16,9 +16,10 @@ namespace FubarDev.FtpServer
         /// <summary>
         /// Gets a collection of features supported by this command handler.
         /// </summary>
+        /// <param name="connection">The FTP connection.</param>
         /// <returns>A list of features supported by this command handler.</returns>
         [NotNull]
         [ItemNotNull]
-        IEnumerable<IFeatureInfo> GetSupportedFeatures();
+        IEnumerable<IFeatureInfo> GetSupportedFeatures([NotNull] IFtpConnection connection);
     }
 }
