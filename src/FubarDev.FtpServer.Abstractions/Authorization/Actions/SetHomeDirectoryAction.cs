@@ -15,6 +15,9 @@ using Microsoft.Extensions.Options;
 
 namespace FubarDev.FtpServer.Authorization.Actions
 {
+    /// <summary>
+    /// Sets the home directory for the connection.
+    /// </summary>
     public class SetHomeDirectoryAction : IAuthorizationAction
     {
         [NotNull]

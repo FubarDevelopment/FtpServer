@@ -8,7 +8,7 @@ using System.Runtime.InteropServices;
 namespace FubarDev.FtpServer.FileSystem.Unix
 {
     /// <summary>
-    /// Interop functions
+    /// Interop functions.
     /// </summary>
     internal static class UnixInterop
     {

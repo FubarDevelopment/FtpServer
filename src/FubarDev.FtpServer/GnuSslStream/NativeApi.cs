@@ -8,7 +8,7 @@ using System.Runtime.InteropServices;
 
 namespace System.Net.Security
 {
-    public unsafe static class NativeApi
+    internal unsafe static class NativeApi
     {
         internal enum BufferType
         {
