@@ -46,7 +46,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FubarDev.FtpServer.FileSyst
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "membership-providers", "membership-providers", "{AB0B8CA2-250E-4045-B94B-096F19B9C06E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FubarDev.FtpServer.MembershipProvider.Pam", "src\FubarDev.FtpServer.MembershipProvider.Pam\FubarDev.FtpServer.MembershipProvider.Pam.csproj", "{6346A449-A391-458A-B6A3-68F6893DD7DB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FubarDev.FtpServer.MembershipProvider.Pam", "src\FubarDev.FtpServer.MembershipProvider.Pam\FubarDev.FtpServer.MembershipProvider.Pam.csproj", "{6346A449-A391-458A-B6A3-68F6893DD7DB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QuickStart", "samples\QuickStart\QuickStart.csproj", "{60775D4D-A625-44FA-A9D2-D23FC29BB132}"
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
@@ -97,6 +99,10 @@ Global
 		{6346A449-A391-458A-B6A3-68F6893DD7DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6346A449-A391-458A-B6A3-68F6893DD7DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6346A449-A391-458A-B6A3-68F6893DD7DB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{60775D4D-A625-44FA-A9D2-D23FC29BB132}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{60775D4D-A625-44FA-A9D2-D23FC29BB132}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{60775D4D-A625-44FA-A9D2-D23FC29BB132}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{60775D4D-A625-44FA-A9D2-D23FC29BB132}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -115,6 +121,7 @@ Global
 		{E763936D-DD8D-4392-8075-CA26D7F2BA1E} = {A3AF1D22-494F-42F3-8DA5-CC2FD3391798}
 		{AB0B8CA2-250E-4045-B94B-096F19B9C06E} = {118460ED-4F14-4FF3-BFBF-11497DFB80B6}
 		{6346A449-A391-458A-B6A3-68F6893DD7DB} = {AB0B8CA2-250E-4045-B94B-096F19B9C06E}
+		{60775D4D-A625-44FA-A9D2-D23FC29BB132} = {7004709E-5C0D-4D3E-AF27-89968FA47C19}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {DAA7D00E-C61D-4640-A54E-D307E4682263}
