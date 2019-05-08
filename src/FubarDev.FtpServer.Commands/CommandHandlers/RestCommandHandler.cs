@@ -10,6 +10,8 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
+using FubarDev.FtpServer.Features;
+
 namespace FubarDev.FtpServer.CommandHandlers
 {
     /// <summary>
@@ -35,8 +37,20 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// <inheritdoc/>
         public override Task<IFtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
         {
-            Data.RestartPosition = Convert.ToInt64(command.Argument, 10);
-            return Task.FromResult<IFtpResponse>(new FtpResponse(350, T("Restarting next transfer from position {0}", Data.RestartPosition)));
+            var restartPosition = Convert.ToInt64(command.Argument, 10);
+            Connection.Features.Set<IRestCommandFeature>(new RestCommandFeature(restartPosition));
+            return Task.FromResult<IFtpResponse>(new FtpResponse(350, T("Restarting next transfer from position {0}", restartPosition)));
+        }
+
+        private class RestCommandFeature : IRestCommandFeature
+        {
+            public RestCommandFeature(long restartPosition)
+            {
+                RestartPosition = restartPosition;
+            }
+
+            /// <inheritdoc />
+            public long RestartPosition { get; set; }
         }
     }
 }

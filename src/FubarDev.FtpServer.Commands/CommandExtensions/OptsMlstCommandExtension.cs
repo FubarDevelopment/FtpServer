@@ -7,6 +7,8 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using FubarDev.FtpServer.CommandHandlers;
+using FubarDev.FtpServer.Features;
+using FubarDev.FtpServer.Features.Impl;
 
 using JetBrains.Annotations;
 
@@ -32,10 +34,11 @@ namespace FubarDev.FtpServer.CommandExtensions
         /// <inheritdoc />
         public override void InitializeConnectionData()
         {
-            Connection.Data.ActiveMlstFacts.Clear();
+            var factsFeature = new MlstFactsFeature();
+            Connection.Features.Set<IMlstFactsFeature>(factsFeature);
             foreach (var knownFact in MlstCommandHandler.KnownFacts)
             {
-                Connection.Data.ActiveMlstFacts.Add(knownFact);
+                factsFeature.ActiveMlstFacts.Add(knownFact);
             }
         }
 
@@ -43,7 +46,8 @@ namespace FubarDev.FtpServer.CommandExtensions
         public override Task<IFtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
         {
             var facts = command.Argument.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
-            Connection.Data.ActiveMlstFacts.Clear();
+            var factsFeature = Connection.Features.Get<IMlstFactsFeature>();
+            factsFeature.ActiveMlstFacts.Clear();
             foreach (var fact in facts)
             {
                 if (!MlstCommandHandler.KnownFacts.Contains(fact))
@@ -51,7 +55,7 @@ namespace FubarDev.FtpServer.CommandExtensions
                     return Task.FromResult<IFtpResponse>(new FtpResponse(501, T("Syntax error in parameters or arguments.")));
                 }
 
-                Connection.Data.ActiveMlstFacts.Add(fact);
+                factsFeature.ActiveMlstFacts.Add(fact);
             }
             return Task.FromResult<IFtpResponse>(new FtpResponse(200, T("Command okay.")));
         }

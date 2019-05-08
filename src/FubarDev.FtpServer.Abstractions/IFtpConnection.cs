@@ -17,6 +17,7 @@ using System.Threading.Tasks;
 
 using JetBrains.Annotations;
 
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.Extensions.Logging;
 
 namespace FubarDev.FtpServer
@@ -34,7 +35,14 @@ namespace FubarDev.FtpServer
         /// <summary>
         /// Gets the connection services.
         /// </summary>
+        [NotNull]
         IServiceProvider ConnectionServices { get; }
+
+        /// <summary>
+        /// Gets the feature collection.
+        /// </summary>
+        [NotNull]
+        IFeatureCollection Features { get; }
 
         /// <summary>
         /// Gets the dictionary of all known command handlers.
@@ -45,6 +53,7 @@ namespace FubarDev.FtpServer
         /// <summary>
         /// Gets or sets the encoding for the LIST/NLST commands.
         /// </summary>
+        [Obsolete("Query the information using the IEncodingFeature instead.")]
         [NotNull]
         Encoding Encoding { get; set; }
 

@@ -9,6 +9,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
+using FubarDev.FtpServer.Features;
 using FubarDev.FtpServer.Localization;
 
 using JetBrains.Annotations;
@@ -48,9 +49,9 @@ namespace FubarDev.FtpServer.CommandHandlers
                 connection =>
                 {
 #if NETSTANDARD1_3
-                    var currentLanguage = connection.Data.Language.Name;
+                    var currentLanguage = Connection.Features.Get<ILocalizationFeature>().Language.Name;
 #else
-                    var currentLanguage = connection.Data.Language.IetfLanguageTag;
+                    var currentLanguage = Connection.Features.Get<ILocalizationFeature>().Language.IetfLanguageTag;
 #endif
                     var languages = _catalogLoader.GetSupportedLanguages()
                         .Select(x => x + (string.Equals(x, currentLanguage) ? "*" : string.Empty));
@@ -62,10 +63,11 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// <inheritdoc />
         public override async Task<IFtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
         {
+            var localizationFeature = Connection.Features.Get<ILocalizationFeature>();
             if (string.IsNullOrWhiteSpace(command.Argument))
             {
-                Connection.Data.Language = _catalogLoader.DefaultLanguage;
-                Connection.Data.Catalog = _catalogLoader.DefaultCatalog;
+                localizationFeature.Language = _catalogLoader.DefaultLanguage;
+                localizationFeature.Catalog = _catalogLoader.DefaultCatalog;
             }
             else
             {
@@ -85,8 +87,8 @@ namespace FubarDev.FtpServer.CommandHandlers
                         return new FtpResponse(504, T("Unsupported parameter"));
                     }
 
-                    Connection.Data.Language = language;
-                    Connection.Data.Catalog = catalog;
+                    localizationFeature.Language = language;
+                    localizationFeature.Catalog = catalog;
                 }
                 catch (CultureNotFoundException)
                 {

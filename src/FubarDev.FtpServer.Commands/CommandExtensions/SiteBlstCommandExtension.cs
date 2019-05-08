@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 
 using FubarDev.FtpServer.Authentication;
 using FubarDev.FtpServer.BackgroundTransfer;
+using FubarDev.FtpServer.Features;
 
 using JetBrains.Annotations;
 
@@ -108,7 +109,7 @@ namespace FubarDev.FtpServer.CommandExtensions
 
         private async Task<IFtpResponse> ExecuteSend(TcpClient responseSocket)
         {
-            var encoding = Data.NlstEncoding ?? Connection.Encoding;
+            var encoding = Connection.Features.Get<IEncodingFeature>().Encoding;
             var responseStream = responseSocket.GetStream();
             using (var stream = await Connection.CreateEncryptedStream(responseStream).ConfigureAwait(false))
             {

@@ -10,6 +10,7 @@ using FubarDev.FtpServer.Authentication;
 using FubarDev.FtpServer.Authorization;
 using FubarDev.FtpServer.BackgroundTransfer;
 using FubarDev.FtpServer.CommandHandlers;
+using FubarDev.FtpServer.Features;
 using FubarDev.FtpServer.FileSystem;
 using FubarDev.FtpServer.Localization;
 
@@ -50,7 +51,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddScoped<IFtpLoginStateMachine, FtpLoginStateMachine>();
 
             services.AddScoped<IFtpHostSelector, SingleFtpHostSelector>();
-            services.AddScoped(sp => sp.GetRequiredService<IFtpHostSelector>().SelectedHost);
+            services.AddScoped(sp => sp.GetRequiredService<IFtpConnection>().Features.Get<ISelectedHostFeature>().SelectedHost);
 
             services.AddSingleton<IFtpCatalogLoader, DefaultFtpCatalogLoader>();
 

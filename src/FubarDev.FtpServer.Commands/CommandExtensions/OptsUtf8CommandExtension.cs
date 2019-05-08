@@ -6,6 +6,8 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
+using FubarDev.FtpServer.Features;
+
 using JetBrains.Annotations;
 
 namespace FubarDev.FtpServer.CommandExtensions
@@ -37,16 +39,18 @@ namespace FubarDev.FtpServer.CommandExtensions
         /// <inheritdoc />
         public override Task<IFtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
         {
+            var encodingFeature = Connection.Features.Get<IEncodingFeature>();
             switch (command.Argument.ToUpperInvariant())
             {
                 case "ON":
-                    Connection.Encoding = Encoding.UTF8;
+                    encodingFeature.Encoding = Encoding.UTF8;
                     break;
                 case "":
-                    Connection.Data.NlstEncoding = null;
+                    encodingFeature.Encoding = Encoding.UTF8;
+                    encodingFeature.NlstEncoding = encodingFeature.DefaultEncoding;
                     break;
                 case "NLST":
-                    Connection.Data.NlstEncoding = Encoding.UTF8;
+                    encodingFeature.NlstEncoding = Encoding.UTF8;
                     break;
                 default:
                     return Task.FromResult<IFtpResponse>(new FtpResponse(501, T("Syntax error in parameters or arguments.")));

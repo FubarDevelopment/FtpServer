@@ -9,6 +9,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using FubarDev.FtpServer.Authentication;
 using FubarDev.FtpServer.Authorization;
+using FubarDev.FtpServer.Features;
+
 using JetBrains.Annotations;
 
 namespace FubarDev.FtpServer
@@ -46,9 +48,6 @@ namespace FubarDev.FtpServer
             new Transition(SecurityStatus.NeedAccount, SecurityStatus.Authenticated, "ACCT", 5),
         };
 
-        [NotNull]
-        private readonly IFtpHostSelector _hostSelector;
-
         [CanBeNull]
         private IAuthenticationMechanism _filteredAuthenticationMechanism;
 
@@ -65,13 +64,10 @@ namespace FubarDev.FtpServer
         /// Initializes a new instance of the <see cref="FtpLoginStateMachine"/> class.
         /// </summary>
         /// <param name="connection">The FTP connection.</param>
-        /// <param name="hostSelector">The FTP host selector.</param>
         public FtpLoginStateMachine(
-            [NotNull] IFtpConnection connection,
-            [NotNull] IFtpHostSelector hostSelector)
+            [NotNull] IFtpConnection connection)
             : base(connection, _transitions, SecurityStatus.Unauthenticated)
         {
-            _hostSelector = hostSelector;
         }
 
         /// <inheritdoc />
@@ -79,6 +75,11 @@ namespace FubarDev.FtpServer
 
         /// <inheritdoc />
         public IAuthorizationMechanism SelectedAuthorizationMechanism => _selectedAuthorizationMechanism;
+
+        /// <summary>
+        /// Gets the selected host.
+        /// </summary>
+        public IFtpHost SelectedHost => Connection.Features.Get<ISelectedHostFeature>().SelectedHost;
 
         /// <inheritdoc />
         protected override Task<IFtpResponse> ExecuteCommandAsync(FtpCommand ftpCommand, CancellationToken cancellationToken = default)
@@ -107,7 +108,7 @@ namespace FubarDev.FtpServer
             {
                 _filteredAuthenticationMechanism = null;
                 _selectedAuthenticationMechanism = null;
-                foreach (var authenticationMechanism in _hostSelector.SelectedHost.AuthenticationMechanisms)
+                foreach (var authenticationMechanism in SelectedHost.AuthenticationMechanisms)
                 {
                     authenticationMechanism.Reset();
                 }
@@ -117,7 +118,7 @@ namespace FubarDev.FtpServer
                 _selectedAuthorizationMechanism = null;
                 _filteredAuthorizationMechanism = null;
 
-                foreach (var authorizationMechanism in _hostSelector.SelectedHost.AuthorizationMechanisms)
+                foreach (var authorizationMechanism in SelectedHost.AuthorizationMechanisms)
                 {
                     authorizationMechanism.Reset(SelectedAuthenticationMechanism);
                 }
@@ -147,7 +148,7 @@ namespace FubarDev.FtpServer
 
         private async Task<IFtpResponse> HandleAuthAsync(string argument, CancellationToken cancellationToken)
         {
-            var authenticationMechanism = _hostSelector.SelectedHost.AuthenticationMechanisms
+            var authenticationMechanism = SelectedHost.AuthenticationMechanisms
                .SingleOrDefault(x => x.CanHandle(argument));
             if (authenticationMechanism == null)
             {
@@ -188,7 +189,7 @@ namespace FubarDev.FtpServer
         private async Task<IFtpResponse> HandleUserAsync(string argument, CancellationToken cancellationToken)
         {
             var results = new List<Tuple<IFtpResponse, IAuthorizationMechanism>>();
-            foreach (var authorizationMechanism in _hostSelector.SelectedHost.AuthorizationMechanisms)
+            foreach (var authorizationMechanism in SelectedHost.AuthorizationMechanisms)
             {
                 var response = await authorizationMechanism.HandleUserAsync(argument, cancellationToken)
                     .ConfigureAwait(false);

@@ -8,6 +8,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 
+using FubarDev.FtpServer.Features;
 using FubarDev.FtpServer.FileSystem;
 
 namespace FubarDev.FtpServer.CommandHandlers
@@ -42,9 +43,11 @@ namespace FubarDev.FtpServer.CommandHandlers
                 return new FtpResponse(550, T("Item specified for RNFR doesn't exist."));
             }
 
+            var fsFeature = Connection.Features.Get<IFileSystemFeature>();
+
             var fileName = command.Argument;
-            var tempPath = Data.Path.Clone();
-            var fileInfo = await Data.FileSystem.SearchEntryAsync(tempPath, fileName, cancellationToken).ConfigureAwait(false);
+            var tempPath = fsFeature.Path.Clone();
+            var fileInfo = await fsFeature.FileSystem.SearchEntryAsync(tempPath, fileName, cancellationToken).ConfigureAwait(false);
             if (fileInfo == null)
             {
                 return new FtpResponse(550, T("Directory doesn't exist."));
@@ -62,7 +65,7 @@ namespace FubarDev.FtpServer.CommandHandlers
             }
 
             var targetDir = fileInfo.Directory;
-            await Data.FileSystem.MoveAsync(Data.RenameFrom.Directory, Data.RenameFrom.Entry, targetDir, fileInfo.FileName, cancellationToken).ConfigureAwait(false);
+            await fsFeature.FileSystem.MoveAsync(Data.RenameFrom.Directory, Data.RenameFrom.Entry, targetDir, fileInfo.FileName, cancellationToken).ConfigureAwait(false);
 
             Data.RenameFrom = null;
 

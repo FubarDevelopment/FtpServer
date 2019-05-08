@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
+using FubarDev.FtpServer.Features;
 using FubarDev.FtpServer.FileSystem;
 
 namespace FubarDev.FtpServer.CommandHandlers
@@ -36,9 +37,10 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// <inheritdoc/>
         public override async Task<IFtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
         {
+            var fsFeature = Connection.Features.Get<IFileSystemFeature>();
             var fileName = command.Argument;
-            var tempPath = Data.Path.Clone();
-            var fileInfo = await Data.FileSystem.SearchFileAsync(tempPath, fileName, cancellationToken).ConfigureAwait(false);
+            var tempPath = fsFeature.Path.Clone();
+            var fileInfo = await fsFeature.FileSystem.SearchFileAsync(tempPath, fileName, cancellationToken).ConfigureAwait(false);
             if (fileInfo?.Entry == null)
             {
                 return new FtpResponse(550, T("File not found ({0}).", fileName));

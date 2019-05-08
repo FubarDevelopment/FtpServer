@@ -10,6 +10,8 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
+using FubarDev.FtpServer.Features;
+
 namespace FubarDev.FtpServer.CommandHandlers
 {
     /// <summary>
@@ -35,9 +37,19 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// <inheritdoc/>
         public override Task<IFtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
         {
-            if (Data.TransferTypeCommandUsed != null && !string.Equals(command.Name, Data.TransferTypeCommandUsed, StringComparison.OrdinalIgnoreCase))
+            var transferFeature = Connection.Features.Get<ITransferConfigurationFeature>();
+            if (transferFeature.TransferTypeCommandUsed != null && !string.Equals(
+                command.Name,
+                transferFeature.TransferTypeCommandUsed,
+                StringComparison.OrdinalIgnoreCase))
             {
-                return Task.FromResult<IFtpResponse>(new FtpResponse(500, T("Cannot use {0} when {1} was used before.", command.Name, Data.TransferTypeCommandUsed)));
+                return Task.FromResult<IFtpResponse>(
+                    new FtpResponse(
+                        500,
+                        T(
+                            "Cannot use {0} when {1} was used before.",
+                            command.Name,
+                            transferFeature.TransferTypeCommandUsed)));
             }
 
             try
@@ -48,14 +60,14 @@ namespace FubarDev.FtpServer.CommandHandlers
                     return Task.FromResult<IFtpResponse>(new FtpResponse(501, T("Syntax error in parameters or arguments.")));
                 }
 
-                Data.PortAddress = address;
+                transferFeature.PortAddress = address;
             }
             catch (NotSupportedException ex)
             {
                 return Task.FromResult<IFtpResponse>(new FtpResponse(522, T("Extended port failure - {0}.", ex.Message)));
             }
 
-            Data.TransferTypeCommandUsed = command.Name;
+            transferFeature.TransferTypeCommandUsed = command.Name;
 
             return Task.FromResult<IFtpResponse>(new FtpResponse(200, T("Command okay.")));
         }

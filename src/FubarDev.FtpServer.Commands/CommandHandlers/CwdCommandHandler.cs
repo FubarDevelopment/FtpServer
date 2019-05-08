@@ -8,6 +8,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 
+using FubarDev.FtpServer.Features;
 using FubarDev.FtpServer.FileSystem;
 
 namespace FubarDev.FtpServer.CommandHandlers
@@ -29,6 +30,7 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// <inheritdoc/>
         public override async Task<IFtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
         {
+            var fsFeature = Connection.Features.Get<IFileSystemFeature>();
             var path = command.Argument;
             if (path == ".")
             {
@@ -37,25 +39,25 @@ namespace FubarDev.FtpServer.CommandHandlers
             else if (path == "..")
             {
                 // CDUP
-                if (Data.CurrentDirectory.IsRoot)
+                if (fsFeature.CurrentDirectory.IsRoot)
                 {
                     return new FtpResponse(550, T("Not a valid directory."));
                 }
 
-                Data.Path.Pop();
+                fsFeature.Path.Pop();
             }
             else
             {
-                var tempPath = Data.Path.Clone();
-                var newTargetDir = await Data.FileSystem.GetDirectoryAsync(tempPath, path, cancellationToken).ConfigureAwait(false);
+                var tempPath = fsFeature.Path.Clone();
+                var newTargetDir = await fsFeature.FileSystem.GetDirectoryAsync(tempPath, path, cancellationToken).ConfigureAwait(false);
                 if (newTargetDir == null)
                 {
                     return new FtpResponse(550, T("Not a valid directory."));
                 }
 
-                Data.Path = tempPath;
+                fsFeature.Path = tempPath;
             }
-            return new FtpResponse(250, T("Successful ({0})", Data.Path.GetFullPath()));
+            return new FtpResponse(250, T("Successful ({0})", fsFeature.Path.GetFullPath()));
         }
     }
 }

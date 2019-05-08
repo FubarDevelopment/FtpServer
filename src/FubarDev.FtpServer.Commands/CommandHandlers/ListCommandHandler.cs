@@ -10,12 +10,14 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Sockets;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
 using DotNet.Globbing;
 
 using FubarDev.FtpServer.Authentication;
+using FubarDev.FtpServer.Features;
 using FubarDev.FtpServer.FileSystem;
 using FubarDev.FtpServer.ListFormatters;
 using FubarDev.FtpServer.Utilities;
@@ -70,18 +72,23 @@ namespace FubarDev.FtpServer.CommandHandlers
 
         private async Task<IFtpResponse> ExecuteSend(TcpClient responseSocket, FtpCommand command, CancellationToken cancellationToken)
         {
+            var encodingFeature = Connection.Features.Get<IEncodingFeature>();
+
             // Parse arguments in a way that's compatible with broken FTP clients
             var argument = new ListArguments(command.Argument);
             var showHidden = argument.All;
 
             // Instantiate the formatter
+            Encoding encoding;
             IListFormatter formatter;
             if (string.Equals(command.Name, "NLST", StringComparison.OrdinalIgnoreCase))
             {
+                encoding = encodingFeature.NlstEncoding;
                 formatter = new ShortListFormatter();
             }
             else if (string.Equals(command.Name, "LS", StringComparison.OrdinalIgnoreCase))
             {
+                encoding = encodingFeature.Encoding;
                 if (argument.PreferLong)
                 {
                     formatter = new LongListFormatter();
@@ -93,21 +100,24 @@ namespace FubarDev.FtpServer.CommandHandlers
             }
             else
             {
+                encoding = encodingFeature.Encoding;
                 formatter = new LongListFormatter();
             }
 
             // Parse the given path to determine the mask (e.g. when information about a file was requested)
             var directoriesToProcess = new Queue<DirectoryQueueItem>();
 
+            var fsFeature = Connection.Features.Get<IFileSystemFeature>();
+
             // Use braces to avoid the definition of mask and path in the following parts
             // of this function.
             {
                 var mask = "*";
-                var path = Data.Path.Clone();
+                var path = fsFeature.Path.Clone();
 
                 foreach (var searchPath in argument.Paths)
                 {
-                    var foundEntry = await Data.FileSystem.SearchEntryAsync(path, searchPath, cancellationToken).ConfigureAwait(false);
+                    var foundEntry = await fsFeature.FileSystem.SearchEntryAsync(path, searchPath, cancellationToken).ConfigureAwait(false);
                     if (foundEntry?.Directory == null)
                     {
                         return new FtpResponse(550, T("File system entry not found."));
@@ -126,8 +136,6 @@ namespace FubarDev.FtpServer.CommandHandlers
                 directoriesToProcess.Enqueue(new DirectoryQueueItem(path, mask));
             }
 
-            var encoding = Data.NlstEncoding ?? Connection.Encoding;
-
             using (var stream = await Connection.CreateEncryptedStream(responseSocket.GetStream()).ConfigureAwait(false))
             {
                 using (var writer = new StreamWriter(stream, encoding, 4096, true)
@@ -141,7 +149,7 @@ namespace FubarDev.FtpServer.CommandHandlers
 
                         var currentPath = queueItem.Path;
                         var mask = queueItem.Mask;
-                        var currentDirEntry = currentPath.Count != 0 ? currentPath.Peek() : Data.FileSystem.Root;
+                        var currentDirEntry = currentPath.Count != 0 ? currentPath.Peek() : fsFeature.FileSystem.Root;
 
                         if (argument.Recursive)
                         {
@@ -151,12 +159,12 @@ namespace FubarDev.FtpServer.CommandHandlers
                         }
 
                         var globOptions = new GlobOptions();
-                        globOptions.Evaluation.CaseInsensitive = Data.FileSystem.FileSystemEntryComparer.Equals("a", "A");
+                        globOptions.Evaluation.CaseInsensitive = fsFeature.FileSystem.FileSystemEntryComparer.Equals("a", "A");
 
                         var glob = Glob.Parse(mask, globOptions);
 
-                        var entries = await Data.FileSystem.GetEntriesAsync(currentDirEntry, cancellationToken).ConfigureAwait(false);
-                        var enumerator = new DirectoryListingEnumerator(entries, Data.FileSystem, currentPath, true);
+                        var entries = await fsFeature.FileSystem.GetEntriesAsync(currentDirEntry, cancellationToken).ConfigureAwait(false);
+                        var enumerator = new DirectoryListingEnumerator(entries, fsFeature.FileSystem, currentPath, true);
                         while (enumerator.MoveNext())
                         {
                             var name = enumerator.Name;

@@ -18,11 +18,13 @@ using System.Threading.Tasks;
 
 using FubarDev.FtpServer.BackgroundTransfer;
 using FubarDev.FtpServer.CommandHandlers;
+using FubarDev.FtpServer.Features;
 using FubarDev.FtpServer.FileSystem.Error;
 using FubarDev.FtpServer.Localization;
 
 using JetBrains.Annotations;
 
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -72,6 +74,8 @@ namespace FubarDev.FtpServer
             [NotNull] IServiceProvider serviceProvider,
             [CanBeNull] ILogger<IFtpConnection> logger = null)
         {
+            var features = new FeatureCollection();
+
             var endpoint = (IPEndPoint)socket.Client.RemoteEndPoint;
             RemoteAddress = new Address(endpoint.Address.ToString(), endpoint.Port);
 
@@ -94,9 +98,13 @@ namespace FubarDev.FtpServer
             SocketStream = socketStream;
             OriginalStream = socketStream;
             Log = logger;
-            Encoding = options.Value.DefaultEncoding ?? Encoding.ASCII;
             PromiscuousPasv = options.Value.PromiscuousPasv;
-            Data = new FtpConnectionData(new BackgroundCommandHandler(this), catalogLoader);
+
+            Data = new FtpConnectionData(
+                options.Value.DefaultEncoding ?? Encoding.ASCII,
+                features,
+                new BackgroundCommandHandler(this),
+                catalogLoader);
 
             var commandHandlersList = commandHandlers.ToList();
             var dict = commandHandlersList
@@ -109,6 +117,8 @@ namespace FubarDev.FtpServer
 #pragma warning restore 618
 
             CommandHandlers = dict;
+
+            Features = features;
         }
 
         /// <inheritdoc />
@@ -118,10 +128,18 @@ namespace FubarDev.FtpServer
         public IServiceProvider ConnectionServices { get; }
 
         /// <inheritdoc />
+        public IFeatureCollection Features { get; }
+
+        /// <inheritdoc />
         public IReadOnlyDictionary<string, IFtpCommandHandler> CommandHandlers { get; }
 
         /// <inheritdoc />
-        public Encoding Encoding { get; set; }
+        [Obsolete("Query the information using the IEncodingFeature instead.")]
+        public Encoding Encoding
+        {
+            get => Features.Get<IEncodingFeature>().Encoding;
+            set => Features.Get<IEncodingFeature>().Encoding = value;
+        }
 
         /// <inheritdoc />
         public bool PromiscuousPasv { get; }
@@ -180,7 +198,8 @@ namespace FubarDev.FtpServer
             if (!_closed)
             {
                 Log?.Log(response);
-                var data = Encoding.GetBytes($"{response}\r\n");
+                var encoding = Features.Get<IEncodingFeature>().Encoding;
+                var data = encoding.GetBytes($"{response}\r\n");
                 await SocketStream.WriteAsync(data, 0, data.Length, cancellationToken).ConfigureAwait(false);
                 if (response.AfterWriteAction != null)
                 {
@@ -200,7 +219,8 @@ namespace FubarDev.FtpServer
             if (!_closed)
             {
                 Log?.LogDebug(response);
-                var data = Encoding.GetBytes($"{response}\r\n");
+                var encoding = Features.Get<IEncodingFeature>().Encoding;
+                var data = encoding.GetBytes($"{response}\r\n");
                 await SocketStream.WriteAsync(data, 0, data.Length, cancellationToken).ConfigureAwait(false);
             }
         }
@@ -213,7 +233,8 @@ namespace FubarDev.FtpServer
         [ItemNotNull]
         public async Task<TcpClient> CreateResponseSocket()
         {
-            var portAddress = Data.PortAddress;
+            var transferFeature = Features.Get<ITransferConfigurationFeature>();
+            var portAddress = transferFeature.PortAddress;
             if (portAddress != null)
             {
                 var result = new TcpClient(portAddress.AddressFamily ?? AddressFamily.InterNetwork);
@@ -271,7 +292,7 @@ namespace FubarDev.FtpServer
         /// <returns>The translated message.</returns>
         private string T(string message)
         {
-            return Data.Catalog.GetString(message);
+            return Features.Get<ILocalizationFeature>().Catalog.GetString(message);
         }
 
         /// <summary>
@@ -283,7 +304,7 @@ namespace FubarDev.FtpServer
         [StringFormatMethod("message")]
         private string T(string message, params object[] args)
         {
-            return Data.Catalog.GetString(message, args);
+            return Features.Get<ILocalizationFeature>().Catalog.GetString(message, args);
         }
 
         private async Task ProcessMessages()
@@ -298,7 +319,7 @@ namespace FubarDev.FtpServer
             }
 
             Log?.LogInformation($"Connected from {RemoteAddress.ToString(true)}");
-            var collector = new FtpCommandCollector(() => Encoding);
+            var collector = new FtpCommandCollector(() => Features.Get<IEncodingFeature>().Encoding);
             await WriteAsync(new FtpResponse(220, T("FTP Server Ready")), _cancellationTokenSource.Token)
                .ConfigureAwait(false);
 

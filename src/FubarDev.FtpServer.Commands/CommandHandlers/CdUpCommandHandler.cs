@@ -8,6 +8,8 @@
 using System.Threading;
 using System.Threading.Tasks;
 
+using FubarDev.FtpServer.Features;
+
 namespace FubarDev.FtpServer.CommandHandlers
 {
     /// <summary>
@@ -27,12 +29,13 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// <inheritdoc/>
         public override Task<IFtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
         {
-            if (Data.CurrentDirectory.IsRoot)
+            var fsFeature = Connection.Features.Get<IFileSystemFeature>();
+            if (fsFeature.CurrentDirectory.IsRoot)
             {
                 return Task.FromResult<IFtpResponse>(new FtpResponse(550, T("Not a valid directory.")));
             }
 
-            Data.Path.Pop();
+            fsFeature.Path.Pop();
             return Task.FromResult<IFtpResponse>(new FtpResponse(200, T("Command okay.")));
         }
     }

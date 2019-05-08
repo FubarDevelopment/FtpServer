@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
+using FubarDev.FtpServer.Features;
 using FubarDev.FtpServer.FileSystem;
 
 namespace FubarDev.FtpServer.CommandHandlers
@@ -37,8 +38,9 @@ namespace FubarDev.FtpServer.CommandHandlers
         public override async Task<IFtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
         {
             var path = command.Argument;
-            var currentPath = Data.Path.Clone();
-            var fileInfo = await Data.FileSystem.SearchFileAsync(currentPath, path, cancellationToken).ConfigureAwait(false);
+            var fsFeature = Connection.Features.Get<IFileSystemFeature>();
+            var currentPath = fsFeature.Path.Clone();
+            var fileInfo = await fsFeature.FileSystem.SearchFileAsync(currentPath, path, cancellationToken).ConfigureAwait(false);
             IUnixFileSystemEntry foundEntry = fileInfo?.Entry;
             if (foundEntry == null)
             {
@@ -54,14 +56,14 @@ namespace FubarDev.FtpServer.CommandHandlers
                 }
 
                 path = parts[1];
-                currentPath = Data.Path.Clone();
-                fileInfo = await Data.FileSystem.SearchFileAsync(currentPath, path, cancellationToken).ConfigureAwait(false);
+                currentPath = fsFeature.Path.Clone();
+                fileInfo = await fsFeature.FileSystem.SearchFileAsync(currentPath, path, cancellationToken).ConfigureAwait(false);
                 if (fileInfo?.Entry == null)
                 {
                     return new FtpResponse(550, T("File not found."));
                 }
 
-                foundEntry = await Data.FileSystem.SetMacTimeAsync(fileInfo.Entry, modificationTime, null, null, cancellationToken).ConfigureAwait(false);
+                foundEntry = await fsFeature.FileSystem.SetMacTimeAsync(fileInfo.Entry, modificationTime, null, null, cancellationToken).ConfigureAwait(false);
             }
 
             return new FtpResponse(213, T("{0:yyyyMMddHHmmss.fff}", foundEntry.LastWriteTime?.ToUniversalTime()));

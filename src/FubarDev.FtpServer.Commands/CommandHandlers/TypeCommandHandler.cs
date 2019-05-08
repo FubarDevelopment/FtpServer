@@ -8,6 +8,8 @@
 using System.Threading;
 using System.Threading.Tasks;
 
+using FubarDev.FtpServer.Features;
+
 namespace FubarDev.FtpServer.CommandHandlers
 {
     /// <summary>
@@ -45,7 +47,8 @@ namespace FubarDev.FtpServer.CommandHandlers
 
             if (response.Code == 200)
             {
-                Connection.Data.TransferMode = transferMode;
+                var transferModeFeature = Connection.Features.Get<ITransferConfigurationFeature>();
+                transferModeFeature.TransferMode = transferMode;
             }
 
             return Task.FromResult<IFtpResponse>(response);

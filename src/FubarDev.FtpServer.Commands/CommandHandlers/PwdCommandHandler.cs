@@ -8,6 +8,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 
+using FubarDev.FtpServer.Features;
 using FubarDev.FtpServer.FileSystem;
 
 namespace FubarDev.FtpServer.CommandHandlers
@@ -29,7 +30,8 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// <inheritdoc/>
         public override Task<IFtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
         {
-            var path = Connection.Data.Path.GetFullPath();
+            var fsFeature = Connection.Features.Get<IFileSystemFeature>();
+            var path = fsFeature.Path.GetFullPath();
             if (path.EndsWith("/") && path.Length > 1)
             {
                 path = path.Substring(0, path.Length - 1);

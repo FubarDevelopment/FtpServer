@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using DotNet.Globbing;
 
 using FubarDev.FtpServer.BackgroundTransfer;
+using FubarDev.FtpServer.Features;
 using FubarDev.FtpServer.ListFormatters;
 
 using JetBrains.Annotations;
@@ -67,14 +68,16 @@ namespace FubarDev.FtpServer.CommandHandlers
                 mask += "*";
             }
 
+            var fsFeature = Connection.Features.Get<IFileSystemFeature>();
+
             var globOptions = new GlobOptions();
-            globOptions.Evaluation.CaseInsensitive = Data.FileSystem.FileSystemEntryComparer.Equals("a", "A");
+            globOptions.Evaluation.CaseInsensitive = fsFeature.FileSystem.FileSystemEntryComparer.Equals("a", "A");
 
             var glob = Glob.Parse(mask, globOptions);
 
             var formatter = new LongListFormatter();
 
-            var entries = await Data.FileSystem.GetEntriesAsync(Data.CurrentDirectory, cancellationToken)
+            var entries = await fsFeature.FileSystem.GetEntriesAsync(fsFeature.CurrentDirectory, cancellationToken)
                .ConfigureAwait(false);
             var lines = entries.Where(x => glob.IsMatch(x.Name))
                .Select(x => formatter.Format(x, x.Name))

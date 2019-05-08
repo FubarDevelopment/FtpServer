@@ -12,6 +12,8 @@ using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
 
+using FubarDev.FtpServer.Features;
+
 using JetBrains.Annotations;
 
 using Microsoft.Extensions.Logging;
@@ -45,20 +47,22 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// <inheritdoc/>
         public override async Task<IFtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
         {
+            var transferFeature = Connection.Features.Get<ITransferConfigurationFeature>();
+
             if (Data.PassiveSocketClient != null)
             {
                 Data.PassiveSocketClient.Dispose();
                 Data.PassiveSocketClient = null;
             }
 
-            if (Data.TransferTypeCommandUsed != null && !string.Equals(
+            if (transferFeature.TransferTypeCommandUsed != null && !string.Equals(
                     command.Name,
-                    Data.TransferTypeCommandUsed,
+                    transferFeature.TransferTypeCommandUsed,
                     StringComparison.OrdinalIgnoreCase))
             {
                 return new FtpResponse(
                     500,
-                    $"Cannot use {command.Name} when {Data.TransferTypeCommandUsed} was used before.");
+                    $"Cannot use {command.Name} when {transferFeature.TransferTypeCommandUsed} was used before.");
             }
 
             var desiredPort = 0;
@@ -78,7 +82,7 @@ namespace FubarDev.FtpServer.CommandHandlers
                 }
             }
 
-            Data.TransferTypeCommandUsed = command.Name;
+            transferFeature.TransferTypeCommandUsed = command.Name;
 
             var timeout = TimeSpan.FromSeconds(5);
             try

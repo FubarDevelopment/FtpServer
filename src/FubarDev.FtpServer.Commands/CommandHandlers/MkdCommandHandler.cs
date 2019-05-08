@@ -9,6 +9,7 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 
+using FubarDev.FtpServer.Features;
 using FubarDev.FtpServer.FileSystem;
 
 namespace FubarDev.FtpServer.CommandHandlers
@@ -31,8 +32,9 @@ namespace FubarDev.FtpServer.CommandHandlers
         public override async Task<IFtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
         {
             var directoryName = command.Argument;
-            var currentPath = Data.Path.Clone();
-            var dirInfo = await Data.FileSystem.SearchDirectoryAsync(currentPath, directoryName, cancellationToken).ConfigureAwait(false);
+            var fsFeature = Connection.Features.Get<IFileSystemFeature>();
+            var currentPath = fsFeature.Path.Clone();
+            var dirInfo = await fsFeature.FileSystem.SearchDirectoryAsync(currentPath, directoryName, cancellationToken).ConfigureAwait(false);
             if (dirInfo == null)
             {
                 return new FtpResponse(550, T("Not a valid directory."));
@@ -50,8 +52,8 @@ namespace FubarDev.FtpServer.CommandHandlers
 
             try
             {
-                var targetDirectory = currentPath.Count == 0 ? Data.FileSystem.Root : currentPath.Peek();
-                var newDirectory = await Data.FileSystem.CreateDirectoryAsync(targetDirectory, dirInfo.FileName, cancellationToken).ConfigureAwait(false);
+                var targetDirectory = currentPath.Count == 0 ? fsFeature.FileSystem.Root : currentPath.Peek();
+                var newDirectory = await fsFeature.FileSystem.CreateDirectoryAsync(targetDirectory, dirInfo.FileName, cancellationToken).ConfigureAwait(false);
                 return new FtpResponse(257, T("\"{0}\" created.", currentPath.GetFullPath(newDirectory.Name)));
             }
             catch (IOException)

@@ -11,6 +11,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
+using FubarDev.FtpServer.Features;
 using FubarDev.FtpServer.FileSystem;
 using FubarDev.FtpServer.ListFormatters.Facts;
 
@@ -81,9 +82,11 @@ namespace FubarDev.FtpServer.CommandHandlers
                 factInfos.Add(keyValue[0], keyValue[1]);
             }
 
+            var fsFeature = Connection.Features.Get<IFileSystemFeature>();
+
             var path = parts[1];
-            var currentPath = Data.Path.Clone();
-            var fileInfo = await Data.FileSystem.SearchFileAsync(currentPath, path, cancellationToken).ConfigureAwait(false);
+            var currentPath = fsFeature.Path.Clone();
+            var fileInfo = await fsFeature.FileSystem.SearchFileAsync(currentPath, path, cancellationToken).ConfigureAwait(false);
             if (fileInfo?.Entry == null)
             {
                 return new FtpResponse(550, T("File not found."));
@@ -119,7 +122,7 @@ namespace FubarDev.FtpServer.CommandHandlers
 
             if (creationTime != null || modificationTime != null)
             {
-                await Data.FileSystem.SetMacTimeAsync(fileInfo.Entry, modificationTime, null, creationTime, cancellationToken).ConfigureAwait(false);
+                await fsFeature.FileSystem.SetMacTimeAsync(fileInfo.Entry, modificationTime, null, creationTime, cancellationToken).ConfigureAwait(false);
             }
 
             var fullName = currentPath.GetFullPath() + fileInfo.FileName;

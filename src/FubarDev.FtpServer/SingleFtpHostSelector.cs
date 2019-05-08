@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 
 using FubarDev.FtpServer.Authentication;
 using FubarDev.FtpServer.Authorization;
+using FubarDev.FtpServer.Features;
 
 namespace FubarDev.FtpServer
 {
@@ -30,17 +31,20 @@ namespace FubarDev.FtpServer
             IEnumerable<IAuthenticationMechanism> authenticationMechanisms,
             IEnumerable<IAuthorizationMechanism> authorizationMechanisms)
         {
+            var feature = new SelectedHostFeature(
+                new DefaultFtpHost(authenticationMechanisms.ToList(), authorizationMechanisms.ToList()));
+            connection.Features.Set<ISelectedHostFeature>(feature);
             _connection = connection;
-            SelectedHost = new DefaultFtpHost(authenticationMechanisms.ToList(), authorizationMechanisms.ToList());
         }
 
         /// <inheritdoc />
-        public IFtpHost SelectedHost { get; }
+        public IFtpHost SelectedHost => _connection.Features.Get<ISelectedHostFeature>().SelectedHost;
 
         /// <inheritdoc />
         public Task<IFtpResponse> SelectHostAsync(HostInfo hostInfo, CancellationToken cancellationToken)
         {
-            return Task.FromResult<IFtpResponse>(new FtpResponse(504, _connection.Data.Catalog.GetString("Unknown host \"{0}\"", hostInfo)));
+            var localizationFeature = _connection.Features.Get<ILocalizationFeature>();
+            return Task.FromResult<IFtpResponse>(new FtpResponse(504, localizationFeature.Catalog.GetString("Unknown host \"{0}\"", hostInfo)));
         }
 
         private class DefaultFtpHost : IFtpHost
@@ -61,6 +65,17 @@ namespace FubarDev.FtpServer
 
             /// <inheritdoc />
             public IEnumerable<IAuthorizationMechanism> AuthorizationMechanisms { get; }
+        }
+
+        private class SelectedHostFeature : ISelectedHostFeature
+        {
+            public SelectedHostFeature(IFtpHost host)
+            {
+                SelectedHost = host;
+            }
+
+            /// <inheritdoc />
+            public IFtpHost SelectedHost { get; set; }
         }
     }
 }

@@ -8,6 +8,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 
+using FubarDev.FtpServer.Features;
 using FubarDev.FtpServer.FileSystem;
 
 namespace FubarDev.FtpServer.CommandHandlers
@@ -29,15 +30,16 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// <inheritdoc/>
         public override async Task<IFtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
         {
+            var fsFeature = Connection.Features.Get<IFileSystemFeature>();
             var path = command.Argument;
-            var currentPath = Data.Path.Clone();
-            var subDir = await Data.FileSystem.GetDirectoryAsync(currentPath, path, cancellationToken).ConfigureAwait(false);
+            var currentPath = fsFeature.Path.Clone();
+            var subDir = await fsFeature.FileSystem.GetDirectoryAsync(currentPath, path, cancellationToken).ConfigureAwait(false);
             if (subDir == null)
             {
                 return new FtpResponse(550, T("Not a valid directory."));
             }
 
-            Data.Path = currentPath;
+            fsFeature.Path = currentPath;
             return new FtpResponse(200, T("Directory changed to {0}", currentPath.GetFullPath()));
         }
     }

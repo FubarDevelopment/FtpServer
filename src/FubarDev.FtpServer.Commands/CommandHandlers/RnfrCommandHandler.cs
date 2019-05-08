@@ -8,6 +8,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 
+using FubarDev.FtpServer.Features;
 using FubarDev.FtpServer.FileSystem;
 
 namespace FubarDev.FtpServer.CommandHandlers
@@ -33,8 +34,9 @@ namespace FubarDev.FtpServer.CommandHandlers
         public override async Task<IFtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
         {
             var fileName = command.Argument;
-            var tempPath = Data.Path.Clone();
-            var fileInfo = await Data.FileSystem.SearchEntryAsync(tempPath, fileName, cancellationToken).ConfigureAwait(false);
+            var fsFeature = Connection.Features.Get<IFileSystemFeature>();
+            var tempPath = fsFeature.Path.Clone();
+            var fileInfo = await fsFeature.FileSystem.SearchEntryAsync(tempPath, fileName, cancellationToken).ConfigureAwait(false);
             if (fileInfo == null)
             {
                 return new FtpResponse(550, T("Directory doesn't exist."));
