@@ -133,12 +133,15 @@ namespace FubarDev.FtpServer
         /// </summary>
         /// <param name="token">Cancellation token.</param>
         /// <returns>The new TCP client.</returns>
-        public Task<TcpClient> WaitAnyTcpClientAsync(CancellationToken token)
+        public async Task<TcpClient> WaitAnyTcpClientAsync(CancellationToken token)
         {
-            var index = Task.WaitAny(_acceptors.Cast<Task>().ToArray(), token);
-            var retVal = _acceptors[index];
+            var tasks = _acceptors.Cast<Task>().ToList();
+            tasks.Add(Task.Delay(-1, token));
+            var retVal = await Task.WhenAny(tasks).ConfigureAwait(false);
+            token.ThrowIfCancellationRequested();
+            var index = tasks.IndexOf(retVal);
             _acceptors[index] = _listeners[index].AcceptTcpClientAsync();
-            return retVal;
+            return ((Task<TcpClient>)retVal).Result;
         }
 
         /// <summary>
