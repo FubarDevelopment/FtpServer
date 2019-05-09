@@ -193,8 +193,23 @@ namespace FubarDev.FtpServer
                 Log?.Log(response);
                 var socketStream = Features.Get<ISecureConnectionFeature>().SocketStream;
                 var encoding = Features.Get<IEncodingFeature>().Encoding;
-                var data = encoding.GetBytes($"{response}\r\n");
-                await socketStream.WriteAsync(data, 0, data.Length, cancellationToken).ConfigureAwait(false);
+
+                FtpResponseLine line;
+                object token = null;
+                do
+                {
+                    line = await response.GetNextLineAsync(token, cancellationToken)
+                        .ConfigureAwait(false);
+                    if (line.HasText)
+                    {
+                        var data = encoding.GetBytes($"{line.Text}\r\n");
+                        await socketStream.WriteAsync(data, 0, data.Length, cancellationToken).ConfigureAwait(false);
+                    }
+
+                    token = line.Token;
+                }
+                while (token != null);
+
                 if (response.AfterWriteAction != null)
                 {
                     await response.AfterWriteAction(this, cancellationToken).ConfigureAwait(false);
