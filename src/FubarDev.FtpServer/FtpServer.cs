@@ -275,8 +275,7 @@ namespace FubarDev.FtpServer
                     return;
                 }
 
-                _statistics.ActiveConnections += 1;
-                _statistics.TotalConnections += 1;
+                _statistics.AddConnection();
                 connection.Closed += ConnectionOnClosed;
                 OnConfigureConnection(connection);
                 connection.Start();
@@ -302,7 +301,8 @@ namespace FubarDev.FtpServer
             }
 
             info.Scope.Dispose();
-            _statistics.ActiveConnections -= 1;
+
+            _statistics.CloseConnection();
         }
 
         private class FtpConnectionInfo
