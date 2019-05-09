@@ -9,6 +9,9 @@ using JetBrains.Annotations;
 
 namespace FubarDev.FtpServer.Features
 {
+    /// <summary>
+    /// Information about the current connection.
+    /// </summary>
     public interface IConnectionFeature
     {
         /// <summary>

@@ -20,6 +20,10 @@ namespace FubarDev.FtpServer
     {
         private readonly string _functionName;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FtpFeatureFunctionAttribute"/> class.
+        /// </summary>
+        /// <param name="functionName">The name of the function to be executed.</param>
         public FtpFeatureFunctionAttribute(string functionName)
         {
             _functionName = functionName;

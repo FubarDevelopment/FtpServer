@@ -31,6 +31,12 @@ namespace FubarDev.FtpServer.CommandHandlers
             "^[a-z]{1,8}(-[A-Z]{1,8})*$",
             RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
+        /// <summary>
+        /// Build a string to be returned by the <c>FEAT</c> command handler.
+        /// </summary>
+        /// <param name="connection">The FTP connection.</param>
+        /// <returns>The string to be returned.</returns>
+        [NotNull]
         public static string CreateFeatureString([NotNull] IFtpConnection connection)
         {
             var catalogLoader = connection.ConnectionServices.GetRequiredService<IFtpCatalogLoader>();

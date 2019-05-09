@@ -8,6 +8,9 @@ using JetBrains.Annotations;
 
 namespace FubarDev.FtpServer.Features
 {
+    /// <summary>
+    /// Information about low-level connection information.
+    /// </summary>
     public interface ISecureConnectionFeature
     {
         /// <summary>

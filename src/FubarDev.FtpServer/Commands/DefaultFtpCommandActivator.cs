@@ -16,6 +16,9 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace FubarDev.FtpServer.Commands
 {
+    /// <summary>
+    /// Default implementation of the <see cref="IFtpCommandActivator"/>.
+    /// </summary>
     public class DefaultFtpCommandActivator : IFtpCommandActivator
     {
         [NotNull]
@@ -39,6 +42,12 @@ namespace FubarDev.FtpServer.Commands
         [NotNull]
         private readonly Dictionary<Type, PropertyInfo> _commandContextProperties = new Dictionary<Type, PropertyInfo>();
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DefaultFtpCommandActivator"/> class.
+        /// </summary>
+        /// <param name="serviceProvider">The service provider.</param>
+        /// <param name="commandHandlerProvider">The provider for FTP command handlers.</param>
+        /// <param name="commandHandlerExtensionProvider">The provider for FTP command handler extensions.</param>
         public DefaultFtpCommandActivator(
             [NotNull] IServiceProvider serviceProvider,
             [NotNull] IFtpCommandHandlerProvider commandHandlerProvider,
