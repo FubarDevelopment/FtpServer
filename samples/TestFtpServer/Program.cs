@@ -16,6 +16,7 @@ using FubarDev.FtpServer.AccountManagement;
 using FubarDev.FtpServer.AccountManagement.Directories.RootPerUser;
 using FubarDev.FtpServer.AccountManagement.Directories.SingleRootWithoutHome;
 using FubarDev.FtpServer.Authentication;
+using FubarDev.FtpServer.Features;
 using FubarDev.FtpServer.FileSystem;
 using FubarDev.FtpServer.FileSystem.DotNet;
 using FubarDev.FtpServer.FileSystem.GoogleDrive;
@@ -356,13 +357,14 @@ namespace TestFtpServer
                         // Use an implicit SSL connection (without the AUTHTLS command)
                         ftpServer.ConfigureConnection += (s, e) =>
                         {
+                            var secureConnectionFeature = e.Connection.Features.Get<ISecureConnectionFeature>();
                             var sslStream = sslStreamWrapperFactory.WrapStreamAsync(
-                                    e.Connection.OriginalStream,
+                                    secureConnectionFeature.OriginalStream,
                                     false,
                                     authTlsOptions.Value.ServerCertificate,
                                     CancellationToken.None)
                                .Result;
-                            e.Connection.SocketStream = sslStream;
+                            secureConnectionFeature.SocketStream = sslStream;
                         };
 
                         return ftpServer;
