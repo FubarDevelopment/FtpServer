@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using FubarDev.FtpServer.AccountManagement;
+using FubarDev.FtpServer.Features;
 
 using JetBrains.Annotations;
 
@@ -37,7 +38,7 @@ namespace FubarDev.FtpServer.Authorization.Actions
         {
             var connection = _ftpConnectionAccessor.FtpConnection;
 
-            connection.Data.User = accountInformation.User;
+            connection.Features.Get<IAuthorizationInformationFeature>().User = accountInformation.User;
 
 #pragma warning disable 618
             connection.Data.IsAnonymous = accountInformation.User is IAnonymousFtpUser;

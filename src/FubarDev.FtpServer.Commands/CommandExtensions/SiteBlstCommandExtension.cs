@@ -2,6 +2,7 @@
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net.Sockets;
@@ -11,6 +12,7 @@ using System.Threading.Tasks;
 
 using FubarDev.FtpServer.Authentication;
 using FubarDev.FtpServer.BackgroundTransfer;
+using FubarDev.FtpServer.Features;
 
 using JetBrains.Annotations;
 
@@ -21,6 +23,8 @@ namespace FubarDev.FtpServer.CommandExtensions
     /// <summary>
     /// The implementation of the <c>SITE BLST</c> command.
     /// </summary>
+    [FtpCommandHandlerExtension("BLST", "SITE", true)]
+    [FtpFeatureText("SITE BLST")]
     public class SiteBlstCommandExtension : FtpCommandHandlerExtension
     {
         [NotNull]
@@ -35,24 +39,21 @@ namespace FubarDev.FtpServer.CommandExtensions
         /// <summary>
         /// Initializes a new instance of the <see cref="SiteBlstCommandExtension"/> class.
         /// </summary>
-        /// <param name="connectionAccessor">The accessor to get the connection that is active during the <see cref="Process"/> method execution.</param>
         /// <param name="backgroundTransferWorker">The background transfer worker service.</param>
         /// <param name="sslStreamWrapperFactory">An object to handle SSL streams.</param>
         /// <param name="logger">The logger.</param>
         public SiteBlstCommandExtension(
-            [NotNull] IFtpConnectionAccessor connectionAccessor,
             [NotNull] IBackgroundTransferWorker backgroundTransferWorker,
             [NotNull] ISslStreamWrapperFactory sslStreamWrapperFactory,
             [CanBeNull] ILogger<SiteBlstCommandExtension> logger = null)
-            : base(connectionAccessor, "SITE", "BLST")
         {
             _backgroundTransferWorker = backgroundTransferWorker;
             _sslStreamWrapperFactory = sslStreamWrapperFactory;
             _logger = logger;
-            AnnouncementMode = ExtensionAnnouncementMode.CommandAndExtensionName;
         }
 
         /// <inheritdoc/>
+        [Obsolete("Use the FtpCommandHandlerExtension attribute instead.")]
         public override bool? IsLoginRequired { get; set; } = true;
 
         /// <inheritdoc />
@@ -95,7 +96,8 @@ namespace FubarDev.FtpServer.CommandExtensions
 
         private async Task<IFtpResponse> SendBlstWithDataConnection(CancellationToken cancellationToken)
         {
-            await Connection.WriteAsync(new FtpResponse(150, T("Opening data connection.")), cancellationToken).ConfigureAwait(false);
+            var connFeature = Connection.Features.Get<IConnectionFeature>();
+            await connFeature.ResponseWriter.WriteAsync(new FtpResponse(150, T("Opening data connection.")), cancellationToken).ConfigureAwait(false);
 
             return await Connection.SendResponseAsync(
                 ExecuteSend,
@@ -108,7 +110,7 @@ namespace FubarDev.FtpServer.CommandExtensions
 
         private async Task<IFtpResponse> ExecuteSend(TcpClient responseSocket)
         {
-            var encoding = Data.NlstEncoding ?? Connection.Encoding;
+            var encoding = Connection.Features.Get<IEncodingFeature>().Encoding;
             var responseStream = responseSocket.GetStream();
             using (var stream = await Connection.CreateEncryptedStream(responseStream).ConfigureAwait(false))
             {

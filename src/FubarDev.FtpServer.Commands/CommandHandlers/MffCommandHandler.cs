@@ -11,14 +11,20 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
+using FubarDev.FtpServer.Commands;
+using FubarDev.FtpServer.Features;
 using FubarDev.FtpServer.FileSystem;
 using FubarDev.FtpServer.ListFormatters.Facts;
+
+using JetBrains.Annotations;
 
 namespace FubarDev.FtpServer.CommandHandlers
 {
     /// <summary>
     /// Implements the <c>MFF</c> command.
     /// </summary>
+    [FtpCommandHandler("MFF")]
+    [FtpFeatureFunction(nameof(FeatureStatus))]
     public class MffCommandHandler : FtpCommandHandler
     {
         private static readonly Dictionary<string, CreateFactDelegate> _knownFacts = new Dictionary<string, CreateFactDelegate>(StringComparer.OrdinalIgnoreCase)
@@ -43,21 +49,22 @@ namespace FubarDev.FtpServer.CommandHandlers
             },
         };
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="MffCommandHandler"/> class.
-        /// </summary>
-        /// <param name="connectionAccessor">The accessor to get the connection that is active during the <see cref="Process"/> method execution.</param>
-        public MffCommandHandler(IFtpConnectionAccessor connectionAccessor)
-            : base(connectionAccessor, "MFF")
-        {
-        }
-
         private delegate IFact CreateFactDelegate(string value);
 
-        /// <inheritdoc/>
-        public override IEnumerable<IFeatureInfo> GetSupportedFeatures()
+        /// <summary>
+        /// Gets the feature string for the <c>MFF</c> command.
+        /// </summary>
+        /// <param name="connection">The connection.</param>
+        /// <returns>The feature string.</returns>
+        public static string FeatureStatus([NotNull] IFtpConnection connection)
         {
-            yield return new GenericFeatureInfo("MFF", FeatureStatus, IsLoginRequired);
+            var result = new StringBuilder();
+            result.Append("MFF ");
+            foreach (var fact in _knownFacts)
+            {
+                result.AppendFormat("{0};", fact.Key);
+            }
+            return result.ToString();
         }
 
         /// <inheritdoc/>
@@ -81,9 +88,11 @@ namespace FubarDev.FtpServer.CommandHandlers
                 factInfos.Add(keyValue[0], keyValue[1]);
             }
 
+            var fsFeature = Connection.Features.Get<IFileSystemFeature>();
+
             var path = parts[1];
-            var currentPath = Data.Path.Clone();
-            var fileInfo = await Data.FileSystem.SearchFileAsync(currentPath, path, cancellationToken).ConfigureAwait(false);
+            var currentPath = fsFeature.Path.Clone();
+            var fileInfo = await fsFeature.FileSystem.SearchFileAsync(currentPath, path, cancellationToken).ConfigureAwait(false);
             if (fileInfo?.Entry == null)
             {
                 return new FtpResponse(550, T("File not found."));
@@ -119,7 +128,7 @@ namespace FubarDev.FtpServer.CommandHandlers
 
             if (creationTime != null || modificationTime != null)
             {
-                await Data.FileSystem.SetMacTimeAsync(fileInfo.Entry, modificationTime, null, creationTime, cancellationToken).ConfigureAwait(false);
+                await fsFeature.FileSystem.SetMacTimeAsync(fileInfo.Entry, modificationTime, null, creationTime, cancellationToken).ConfigureAwait(false);
             }
 
             var fullName = currentPath.GetFullPath() + fileInfo.FileName;
@@ -132,17 +141,6 @@ namespace FubarDev.FtpServer.CommandHandlers
             responseText.AppendFormat(" {0}", fullName);
 
             return new FtpResponse(213, responseText.ToString());
-        }
-
-        private static string FeatureStatus(IFtpConnection connection)
-        {
-            var result = new StringBuilder();
-            result.Append("MFF ");
-            foreach (var fact in _knownFacts)
-            {
-                result.AppendFormat("{0};", fact.Key);
-            }
-            return result.ToString();
         }
     }
 }

@@ -8,6 +8,8 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
+using FubarDev.FtpServer.Features;
+
 using JetBrains.Annotations;
 
 namespace FubarDev.FtpServer
@@ -159,7 +161,7 @@ namespace FubarDev.FtpServer
         /// <returns>The translated message.</returns>
         protected string T(string message)
         {
-            return Connection.Data.Catalog.GetString(message);
+            return Connection.Features.Get<ILocalizationFeature>().Catalog.GetString(message);
         }
 
         /// <summary>
@@ -171,7 +173,7 @@ namespace FubarDev.FtpServer
         [StringFormatMethod("message")]
         protected string T(string message, params object[] args)
         {
-            return Connection.Data.Catalog.GetString(message, args);
+            return Connection.Features.Get<ILocalizationFeature>().Catalog.GetString(message, args);
         }
 
         /// <summary>

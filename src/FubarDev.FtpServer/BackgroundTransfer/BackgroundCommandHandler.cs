@@ -12,6 +12,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
+using FubarDev.FtpServer.Features;
 #if !NETSTANDARD1_3
 using Microsoft.Extensions.Logging;
 #endif
@@ -56,11 +57,13 @@ namespace FubarDev.FtpServer.BackgroundTransfer
                 _handlerTask = handler.Process(command, _cancellationTokenSource.Token);
             }
 
+            var localizationFeature = _connection.Features.Get<ILocalizationFeature>();
+
             var taskCanceled = _handlerTask
                 .ContinueWith<IFtpResponse>(
                     t =>
                     {
-                        var response = new FtpResponse(426, _connection.Data.Catalog.GetString("Connection closed; transfer aborted."));
+                        var response = new FtpResponse(426, localizationFeature.Catalog.GetString("Connection closed; transfer aborted."));
                         Debug.WriteLine($"Background task cancelled with response {response}");
                         return response;
                     },
@@ -82,7 +85,7 @@ namespace FubarDev.FtpServer.BackgroundTransfer
                     {
                         var ex = t.Exception;
                         _connection.Log?.LogError(ex, "Error while processing background command {0}", command);
-                        var response = new FtpResponse(501, _connection.Data.Catalog.GetString("Syntax error in parameters or arguments."));
+                        var response = new FtpResponse(501, localizationFeature.Catalog.GetString("Syntax error in parameters or arguments."));
                         Debug.WriteLine($"Background task failed with response {response}");
                         return response;
                     },

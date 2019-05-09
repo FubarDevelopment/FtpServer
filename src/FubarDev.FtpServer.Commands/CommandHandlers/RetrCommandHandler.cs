@@ -12,6 +12,8 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using FubarDev.FtpServer.Authentication;
+using FubarDev.FtpServer.Commands;
+using FubarDev.FtpServer.Features;
 using FubarDev.FtpServer.FileSystem;
 
 using JetBrains.Annotations;
@@ -21,6 +23,7 @@ namespace FubarDev.FtpServer.CommandHandlers
     /// <summary>
     /// Implements the <c>RETR</c> command.
     /// </summary>
+    [FtpCommandHandler("RETR", isAbortable: true)]
     public class RetrCommandHandler : FtpCommandHandler
     {
         private const int BufferSize = 4096;
@@ -31,41 +34,41 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// <summary>
         /// Initializes a new instance of the <see cref="RetrCommandHandler"/> class.
         /// </summary>
-        /// <param name="connectionAccessor">The accessor to get the connection that is active during the <see cref="Process"/> method execution.</param>
         /// <param name="sslStreamWrapperFactory">An object to handle SSL streams.</param>
         public RetrCommandHandler(
-            [NotNull] IFtpConnectionAccessor connectionAccessor,
             [NotNull] ISslStreamWrapperFactory sslStreamWrapperFactory)
-            : base(connectionAccessor, "RETR")
         {
             _sslStreamWrapperFactory = sslStreamWrapperFactory;
         }
 
         /// <inheritdoc/>
-        public override bool IsAbortable => true;
-
-        /// <inheritdoc/>
         public override async Task<IFtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
         {
-            var restartPosition = Data.RestartPosition;
-            Data.RestartPosition = null;
+            var restartPosition = Connection.Features.Get<IRestCommandFeature>()?.RestartPosition;
+            Connection.Features.Set<IRestCommandFeature>(null);
 
-            if (!Data.TransferMode.IsBinary && Data.TransferMode.FileType != FtpFileType.Ascii)
+            var transferMode = Connection.Features.Get<ITransferConfigurationFeature>().TransferMode;
+            if (!transferMode.IsBinary && transferMode.FileType != FtpFileType.Ascii)
             {
                 throw new NotSupportedException();
             }
 
+            var fsFeature = Connection.Features.Get<IFileSystemFeature>();
+
             var fileName = command.Argument;
-            var currentPath = Data.Path.Clone();
-            var fileInfo = await Data.FileSystem.SearchFileAsync(currentPath, fileName, cancellationToken).ConfigureAwait(false);
+            var currentPath = fsFeature.Path.Clone();
+            var fileInfo = await fsFeature.FileSystem.SearchFileAsync(currentPath, fileName, cancellationToken).ConfigureAwait(false);
             if (fileInfo?.Entry == null)
             {
                 return new FtpResponse(550, T("File doesn't exist."));
             }
 
-            using (var input = await Data.FileSystem.OpenReadAsync(fileInfo.Entry, restartPosition ?? 0, cancellationToken).ConfigureAwait(false))
+            var connFeature = Connection.Features.Get<IConnectionFeature>();
+            using (var input = await fsFeature.FileSystem.OpenReadAsync(fileInfo.Entry, restartPosition ?? 0, cancellationToken).ConfigureAwait(false))
             {
-                await Connection.WriteAsync(new FtpResponse(150, T("Opening connection for data transfer.")), cancellationToken).ConfigureAwait(false);
+                await connFeature.ResponseWriter
+                   .WriteAsync(new FtpResponse(150, T("Opening connection for data transfer.")), cancellationToken)
+                   .ConfigureAwait(false);
 
                 // ReSharper disable once AccessToDisposedClosure
                 return await Connection.SendResponseAsync(

@@ -6,6 +6,8 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
+using FubarDev.FtpServer.Commands;
+
 using Microsoft.Extensions.DependencyInjection;
 
 namespace FubarDev.FtpServer.CommandHandlers
@@ -13,20 +15,9 @@ namespace FubarDev.FtpServer.CommandHandlers
     /// <summary>
     /// The <c>PBSZ</c> command handler.
     /// </summary>
+    [FtpCommandHandler("PBSZ", isLoginRequired: false)]
     public class PbszCommandHandler : FtpCommandHandler
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="PbszCommandHandler"/> class.
-        /// </summary>
-        /// <param name="connectionAccessor">The accessor to get the connection that is active during the <see cref="Process"/> method execution.</param>
-        public PbszCommandHandler(IFtpConnectionAccessor connectionAccessor)
-            : base(connectionAccessor, "PBSZ")
-        {
-        }
-
-        /// <inheritdoc/>
-        public override bool IsLoginRequired => false;
-
         /// <inheritdoc/>
         public override Task<IFtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
         {

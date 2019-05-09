@@ -6,7 +6,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-using JetBrains.Annotations;
+using FubarDev.FtpServer.Commands;
 
 using Microsoft.Extensions.DependencyInjection;
 
@@ -15,20 +15,9 @@ namespace FubarDev.FtpServer.CommandHandlers
     /// <summary>
     /// The <c>ADAT</c> command handler.
     /// </summary>
+    [FtpCommandHandler("ADAT", isLoginRequired: false)]
     public class AdatCommandHandler : FtpCommandHandler
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="AdatCommandHandler"/> class.
-        /// </summary>
-        /// <param name="connectionAccessor">The FTP connection accessor.</param>
-        public AdatCommandHandler([NotNull] IFtpConnectionAccessor connectionAccessor)
-            : base(connectionAccessor, "ADAT")
-        {
-        }
-
-        /// <inheritdoc />
-        public override bool IsLoginRequired => false;
-
         /// <inheritdoc />
         public override Task<IFtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
         {

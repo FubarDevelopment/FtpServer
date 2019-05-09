@@ -5,10 +5,13 @@
 // <author>Mark Junker</author>
 //-----------------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
+using FubarDev.FtpServer.Commands;
+using FubarDev.FtpServer.Features;
 using FubarDev.FtpServer.FileSystem;
 using FubarDev.FtpServer.ListFormatters.Facts;
 
@@ -17,23 +20,10 @@ namespace FubarDev.FtpServer.CommandHandlers
     /// <summary>
     /// Implements the <c>MFMT</c> command.
     /// </summary>
+    [FtpCommandHandler("MFMT")]
+    [FtpFeatureText("MFMT")]
     public class MfmtCommandHandler : FtpCommandHandler
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="MfmtCommandHandler"/> class.
-        /// </summary>
-        /// <param name="connectionAccessor">The accessor to get the connection that is active during the <see cref="Process"/> method execution.</param>
-        public MfmtCommandHandler(IFtpConnectionAccessor connectionAccessor)
-            : base(connectionAccessor, "MFMT")
-        {
-        }
-
-        /// <inheritdoc/>
-        public override IEnumerable<IFeatureInfo> GetSupportedFeatures()
-        {
-            yield return new GenericFeatureInfo("MFMT", IsLoginRequired);
-        }
-
         /// <inheritdoc/>
         public override async Task<IFtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
         {
@@ -48,15 +38,17 @@ namespace FubarDev.FtpServer.CommandHandlers
                 return new FtpResponse(551, T("Invalid timestamp."));
             }
 
+            var fsFeature = Connection.Features.Get<IFileSystemFeature>();
+
             var path = parts[1];
-            var currentPath = Data.Path.Clone();
-            var fileInfo = await Data.FileSystem.SearchFileAsync(currentPath, path, cancellationToken).ConfigureAwait(false);
+            var currentPath = fsFeature.Path.Clone();
+            var fileInfo = await fsFeature.FileSystem.SearchFileAsync(currentPath, path, cancellationToken).ConfigureAwait(false);
             if (fileInfo?.Entry == null)
             {
                 return new FtpResponse(550, T("File not found."));
             }
 
-            await Data.FileSystem.SetMacTimeAsync(fileInfo.Entry, modificationTime, null, null, cancellationToken).ConfigureAwait(false);
+            await fsFeature.FileSystem.SetMacTimeAsync(fileInfo.Entry, modificationTime, null, null, cancellationToken).ConfigureAwait(false);
 
             var fact = new ModifyFact(modificationTime);
             var fullName = currentPath.GetFullPath() + fileInfo.FileName;

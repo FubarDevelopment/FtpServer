@@ -10,7 +10,11 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
+using FubarDev.FtpServer.AccountManagement;
 using FubarDev.FtpServer.Authentication;
+using FubarDev.FtpServer.Commands;
+using FubarDev.FtpServer.Features;
+using FubarDev.FtpServer.Features.Impl;
 using FubarDev.FtpServer.FileSystem;
 using FubarDev.FtpServer.ListFormatters;
 using FubarDev.FtpServer.Utilities;
@@ -22,8 +26,11 @@ using Microsoft.Extensions.Logging;
 namespace FubarDev.FtpServer.CommandHandlers
 {
     /// <summary>
-    /// The implementation of the <c>MLST</c> command.
+    /// The implementation of the <c>MLST</c> and <c>MLSD</c> commands.
     /// </summary>
+    [FtpCommandHandler("MLST")]
+    [FtpCommandHandler("MLSD")]
+    [FtpFeatureFunction(nameof(FeatureStatus))]
     public class MlstCommandHandler : FtpCommandHandler
     {
         /// <summary>
@@ -40,23 +47,32 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// <summary>
         /// Initializes a new instance of the <see cref="MlstCommandHandler"/> class.
         /// </summary>
-        /// <param name="connectionAccessor">The accessor to get the connection that is active during the <see cref="Process"/> method execution.</param>
         /// <param name="sslStreamWrapperFactory">An object to handle SSL streams.</param>
         /// <param name="logger">The logger.</param>
         public MlstCommandHandler(
-            [NotNull] IFtpConnectionAccessor connectionAccessor,
             [NotNull] ISslStreamWrapperFactory sslStreamWrapperFactory,
             [CanBeNull] ILogger<MlstCommandHandler> logger = null)
-            : base(connectionAccessor, "MLST", "MLSD")
         {
             _sslStreamWrapperFactory = sslStreamWrapperFactory;
             _logger = logger;
         }
 
-        /// <inheritdoc/>
-        public override IEnumerable<IFeatureInfo> GetSupportedFeatures()
+        /// <summary>
+        /// Gets the feature string for the <c>MFF</c> command.
+        /// </summary>
+        /// <param name="connection">The connection.</param>
+        /// <returns>The feature string.</returns>
+        public static string FeatureStatus([NotNull] IFtpConnection connection)
         {
-            yield return new GenericFeatureInfo("MLST", FeatureStatus, IsLoginRequired);
+            var factsFeature = connection.Features.Get<IMlstFactsFeature>() ?? CreateMlstFactsFeature();
+            var result = new StringBuilder();
+            result.Append("MLST ");
+            foreach (var fact in KnownFacts)
+            {
+                result.AppendFormat("{0}{1};", fact, factsFeature.ActiveMlstFacts.Contains(fact) ? "*" : string.Empty);
+            }
+
+            return result.ToString();
         }
 
         /// <inheritdoc/>
@@ -71,30 +87,31 @@ namespace FubarDev.FtpServer.CommandHandlers
             return ProcessMlstAsync(command, cancellationToken);
         }
 
-        private static string FeatureStatus(IFtpConnection connection)
+        internal static IMlstFactsFeature CreateMlstFactsFeature()
         {
-            var result = new StringBuilder();
-            result.Append("MLST ");
-            foreach (var fact in KnownFacts)
+            var factsFeature = new MlstFactsFeature();
+            foreach (var knownFact in MlstCommandHandler.KnownFacts)
             {
-                result.AppendFormat("{0}{1};", fact, connection.Data.ActiveMlstFacts.Contains(fact) ? "*" : string.Empty);
+                factsFeature.ActiveMlstFacts.Add(knownFact);
             }
-            return result.ToString();
+
+            return factsFeature;
         }
 
         private async Task<IFtpResponse> ProcessMlstAsync(FtpCommand command, CancellationToken cancellationToken)
         {
             var argument = command.Argument;
-            var path = Data.Path.Clone();
+            var fsFeature = Connection.Features.Get<IFileSystemFeature>();
+            var path = fsFeature.Path.Clone();
             IUnixFileSystemEntry targetEntry;
 
             if (string.IsNullOrEmpty(argument))
             {
-                targetEntry = path.Count == 0 ? Data.FileSystem.Root : path.Peek();
+                targetEntry = path.Count == 0 ? fsFeature.FileSystem.Root : path.Peek();
             }
             else
             {
-                var foundEntry = await Data.FileSystem.SearchEntryAsync(path, argument, cancellationToken).ConfigureAwait(false);
+                var foundEntry = await fsFeature.FileSystem.SearchEntryAsync(path, argument, cancellationToken).ConfigureAwait(false);
                 if (foundEntry?.Entry == null)
                 {
                     return new FtpResponse(550, T("File system entry not found."));
@@ -103,22 +120,26 @@ namespace FubarDev.FtpServer.CommandHandlers
                 targetEntry = foundEntry.Entry;
             }
 
-            return new MlstFtpResponse(Data, targetEntry, path);
+            var authInfoFeature = Connection.Features.Get<IAuthorizationInformationFeature>();
+
+            var factsFeature = Connection.Features.Get<IMlstFactsFeature>() ?? CreateMlstFactsFeature();
+            return new MlstFtpResponse(factsFeature.ActiveMlstFacts, authInfoFeature.User, fsFeature.FileSystem, targetEntry, path);
         }
 
         private async Task<IFtpResponse> ProcessMlsdAsync(FtpCommand command, CancellationToken cancellationToken)
         {
             var argument = command.Argument;
-            var path = Data.Path.Clone();
+            var fsFeature = Connection.Features.Get<IFileSystemFeature>();
+            var path = fsFeature.Path.Clone();
             IUnixDirectoryEntry dirEntry;
 
             if (string.IsNullOrEmpty(argument))
             {
-                dirEntry = path.Count == 0 ? Data.FileSystem.Root : path.Peek();
+                dirEntry = path.Count == 0 ? fsFeature.FileSystem.Root : path.Peek();
             }
             else
             {
-                var foundEntry = await Data.FileSystem.SearchEntryAsync(path, argument, cancellationToken).ConfigureAwait(false);
+                var foundEntry = await fsFeature.FileSystem.SearchEntryAsync(path, argument, cancellationToken).ConfigureAwait(false);
                 if (foundEntry?.Entry == null)
                 {
                     return new FtpResponse(550, T("File system entry not found."));
@@ -136,10 +157,15 @@ namespace FubarDev.FtpServer.CommandHandlers
                 }
             }
 
-            await Connection.WriteAsync(new FtpResponse(150, T("Opening data connection.")), cancellationToken).ConfigureAwait(false);
+            var connFeature = Connection.Features.Get<IConnectionFeature>();
+            await connFeature.ResponseWriter
+               .WriteAsync(new FtpResponse(150, T("Opening data connection.")), cancellationToken)
+               .ConfigureAwait(false);
 
+            var authInfoFeature = Connection.Features.Get<IAuthorizationInformationFeature>();
+            var factsFeature = Connection.Features.Get<IMlstFactsFeature>() ?? CreateMlstFactsFeature();
             return await Connection.SendResponseAsync(
-                    client => ExecuteSendAsync(client, path, dirEntry, cancellationToken),
+                    client => ExecuteSendAsync(client, authInfoFeature.User, fsFeature.FileSystem, path, dirEntry, factsFeature, cancellationToken),
                     ex =>
                     {
                         _logger?.LogError(ex, ex.Message);
@@ -150,11 +176,14 @@ namespace FubarDev.FtpServer.CommandHandlers
 
         private async Task<IFtpResponse> ExecuteSendAsync(
             TcpClient responseSocket,
+            IFtpUser user,
+            IUnixFileSystem fileSystem,
             Stack<IUnixDirectoryEntry> path,
             IUnixDirectoryEntry dirEntry,
+            IMlstFactsFeature factsFeature,
             CancellationToken cancellationToken)
         {
-            var encoding = Data.NlstEncoding ?? Connection.Encoding;
+            var encoding = Connection.Features.Get<IEncodingFeature>().Encoding;
             using (var stream = await Connection.CreateEncryptedStream(responseSocket.GetStream()).ConfigureAwait(false))
             {
                 using (var writer = new StreamWriter(stream, encoding, 4096, true)
@@ -162,9 +191,9 @@ namespace FubarDev.FtpServer.CommandHandlers
                     NewLine = "\r\n",
                 })
                 {
-                    var entries = await Data.FileSystem.GetEntriesAsync(dirEntry, cancellationToken).ConfigureAwait(false);
-                    var enumerator = new DirectoryListingEnumerator(entries, Data.FileSystem, path, true);
-                    var formatter = new FactsListFormatter(Data.User, enumerator, Data.ActiveMlstFacts, false);
+                    var entries = await fileSystem.GetEntriesAsync(dirEntry, cancellationToken).ConfigureAwait(false);
+                    var enumerator = new DirectoryListingEnumerator(entries, fileSystem, path, true);
+                    var formatter = new FactsListFormatter(user, enumerator, factsFeature.ActiveMlstFacts, false);
                     while (enumerator.MoveNext())
                     {
                         var name = enumerator.Name;
@@ -189,17 +218,23 @@ namespace FubarDev.FtpServer.CommandHandlers
 
         private class MlstFtpResponse : FtpResponseList<Tuple<DirectoryListingEnumerator, FactsListFormatter>>
         {
-            private readonly FtpConnectionData _data;
+            private readonly ISet<string> _activeMlstFacts;
+            private readonly IFtpUser _user;
+            private readonly IUnixFileSystem _fileSystem;
             private readonly IUnixFileSystemEntry _targetEntry;
             private readonly Stack<IUnixDirectoryEntry> _path;
 
             public MlstFtpResponse(
-                FtpConnectionData data,
+                ISet<string> activeMlstFacts,
+                IFtpUser user,
+                IUnixFileSystem fileSystem,
                 IUnixFileSystemEntry targetEntry,
                 Stack<IUnixDirectoryEntry> path)
                 : base(250, $" {targetEntry.Name}", "End")
             {
-                _data = data;
+                _activeMlstFacts = activeMlstFacts;
+                _user = user;
+                _fileSystem = fileSystem;
                 _targetEntry = targetEntry;
                 _path = path;
             }
@@ -212,8 +247,8 @@ namespace FubarDev.FtpServer.CommandHandlers
                     _targetEntry,
                 };
 
-                var enumerator = new DirectoryListingEnumerator(entries, _data.FileSystem, _path, false);
-                var formatter = new FactsListFormatter(_data.User, enumerator, _data.ActiveMlstFacts, true);
+                var enumerator = new DirectoryListingEnumerator(entries, _fileSystem, _path, false);
+                var formatter = new FactsListFormatter(_user, enumerator, _activeMlstFacts, true);
 
                 return Task.FromResult(Tuple.Create(enumerator, formatter));
             }

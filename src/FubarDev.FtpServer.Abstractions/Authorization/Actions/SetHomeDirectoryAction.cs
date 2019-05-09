@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
+using FubarDev.FtpServer.Features;
 using FubarDev.FtpServer.FileSystem;
 
 using JetBrains.Annotations;
@@ -57,7 +58,8 @@ namespace FubarDev.FtpServer.Authorization.Actions
         public async Task AuthorizedAsync(IAccountInformation accountInformation, CancellationToken cancellationToken)
         {
             var connection = _ftpConnectionAccessor.FtpConnection;
-            var fileSystem = connection.Data.FileSystem;
+            var fsFeature = connection.Features.Get<IFileSystemFeature>();
+            var fileSystem = fsFeature.FileSystem;
             var directories = _accountDirectoryQuery.GetDirectories(accountInformation);
             Stack<IUnixDirectoryEntry> path = null;
             if (!string.IsNullOrEmpty(directories.HomePath))
@@ -92,7 +94,7 @@ namespace FubarDev.FtpServer.Authorization.Actions
                 }
             }
 
-            connection.Data.Path = path ?? new Stack<IUnixDirectoryEntry>();
+            fsFeature.Path = path ?? new Stack<IUnixDirectoryEntry>();
         }
     }
 }

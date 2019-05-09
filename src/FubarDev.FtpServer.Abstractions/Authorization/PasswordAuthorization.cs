@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 
 using FubarDev.FtpServer.AccountManagement;
 using FubarDev.FtpServer.Authentication;
+using FubarDev.FtpServer.Features;
 
 using JetBrains.Annotations;
 
@@ -91,7 +92,7 @@ namespace FubarDev.FtpServer.Authorization
             _userName = userIdentifier;
             _needsPassword = true;
 
-            Connection.Data.User = new UnauthenticatedUser(userIdentifier);
+            Connection.Features.Get<IAuthorizationInformationFeature>().User = new UnauthenticatedUser(userIdentifier);
 
             return Task.FromResult<IFtpResponse>(new FtpResponse(331, T("User {0} logged in, needs password", userIdentifier)));
         }

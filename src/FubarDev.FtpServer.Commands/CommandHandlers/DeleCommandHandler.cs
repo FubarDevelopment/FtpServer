@@ -9,6 +9,8 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
+using FubarDev.FtpServer.Commands;
+using FubarDev.FtpServer.Features;
 using FubarDev.FtpServer.FileSystem;
 
 using JetBrains.Annotations;
@@ -20,6 +22,7 @@ namespace FubarDev.FtpServer.CommandHandlers
     /// <summary>
     /// Implements the <c>DELE</c> command.
     /// </summary>
+    [FtpCommandHandler("DELE")]
     public class DeleCommandHandler : FtpCommandHandler
     {
         [CanBeNull]
@@ -28,10 +31,8 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// <summary>
         /// Initializes a new instance of the <see cref="DeleCommandHandler"/> class.
         /// </summary>
-        /// <param name="connectionAccessor">The accessor to get the connection that is active during the <see cref="Process"/> method execution.</param>
         /// <param name="logger">The logger.</param>
-        public DeleCommandHandler([NotNull] IFtpConnectionAccessor connectionAccessor, [CanBeNull] ILogger<DeleCommandHandler> logger = null)
-            : base(connectionAccessor, "DELE")
+        public DeleCommandHandler([CanBeNull] ILogger<DeleCommandHandler> logger = null)
         {
             _logger = logger;
         }
@@ -40,8 +41,9 @@ namespace FubarDev.FtpServer.CommandHandlers
         public override async Task<IFtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
         {
             var path = command.Argument;
-            var currentPath = Data.Path.Clone();
-            var fileInfo = await Data.FileSystem.SearchFileAsync(currentPath, path, cancellationToken).ConfigureAwait(false);
+            var fsFeature = Connection.Features.Get<IFileSystemFeature>();
+            var currentPath = fsFeature.Path.Clone();
+            var fileInfo = await fsFeature.FileSystem.SearchFileAsync(currentPath, path, cancellationToken).ConfigureAwait(false);
             if (fileInfo?.Entry == null)
             {
                 return new FtpResponse(550, T("File does not exist."));
@@ -49,7 +51,7 @@ namespace FubarDev.FtpServer.CommandHandlers
 
             try
             {
-                await Data.FileSystem.UnlinkAsync(fileInfo.Entry, cancellationToken).ConfigureAwait(false);
+                await fsFeature.FileSystem.UnlinkAsync(fileInfo.Entry, cancellationToken).ConfigureAwait(false);
                 return new FtpResponse(250, T("File deleted successfully."));
             }
             catch (Exception ex)

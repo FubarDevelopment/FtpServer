@@ -10,6 +10,8 @@ using System.Threading.Tasks;
 using DotNet.Globbing;
 
 using FubarDev.FtpServer.BackgroundTransfer;
+using FubarDev.FtpServer.Commands;
+using FubarDev.FtpServer.Features;
 using FubarDev.FtpServer.ListFormatters;
 
 using JetBrains.Annotations;
@@ -19,6 +21,7 @@ namespace FubarDev.FtpServer.CommandHandlers
     /// <summary>
     /// The <c>STAT</c> command handler.
     /// </summary>
+    [FtpCommandHandler("STAT")]
     public class StatCommandHandler : FtpCommandHandler
     {
         [NotNull]
@@ -30,14 +33,11 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// <summary>
         /// Initializes a new instance of the <see cref="StatCommandHandler"/> class.
         /// </summary>
-        /// <param name="connectionAccessor">The accessor to get the connection that is active during the <see cref="Process"/> method execution.</param>
         /// <param name="server">The FTP server.</param>
         /// <param name="backgroundTransferWorker">The background transfer worker service.</param>
         public StatCommandHandler(
-            [NotNull] IFtpConnectionAccessor connectionAccessor,
             [NotNull] IFtpServer server,
             [NotNull] IBackgroundTransferWorker backgroundTransferWorker)
-            : base(connectionAccessor, "STAT")
         {
             _server = server;
             _backgroundTransferWorker = backgroundTransferWorker;
@@ -67,14 +67,16 @@ namespace FubarDev.FtpServer.CommandHandlers
                 mask += "*";
             }
 
+            var fsFeature = Connection.Features.Get<IFileSystemFeature>();
+
             var globOptions = new GlobOptions();
-            globOptions.Evaluation.CaseInsensitive = Data.FileSystem.FileSystemEntryComparer.Equals("a", "A");
+            globOptions.Evaluation.CaseInsensitive = fsFeature.FileSystem.FileSystemEntryComparer.Equals("a", "A");
 
             var glob = Glob.Parse(mask, globOptions);
 
             var formatter = new LongListFormatter();
 
-            var entries = await Data.FileSystem.GetEntriesAsync(Data.CurrentDirectory, cancellationToken)
+            var entries = await fsFeature.FileSystem.GetEntriesAsync(fsFeature.CurrentDirectory, cancellationToken)
                .ConfigureAwait(false);
             var lines = entries.Where(x => glob.IsMatch(x.Name))
                .Select(x => formatter.Format(x, x.Name))

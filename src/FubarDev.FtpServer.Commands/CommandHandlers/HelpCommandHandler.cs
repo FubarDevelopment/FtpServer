@@ -5,25 +5,16 @@
 using System.Threading;
 using System.Threading.Tasks;
 
+using FubarDev.FtpServer.Commands;
+
 namespace FubarDev.FtpServer.CommandHandlers
 {
     /// <summary>
     /// The <c>HELP</c> command handler.
     /// </summary>
+    [FtpCommandHandler("HELP", isLoginRequired: false)]
     public class HelpCommandHandler : FtpCommandHandler
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="HelpCommandHandler"/> class.
-        /// </summary>
-        /// <param name="connectionAccessor">The accessor to get the connection that is active during the <see cref="Process"/> method execution.</param>
-        public HelpCommandHandler(IFtpConnectionAccessor connectionAccessor)
-            : base(connectionAccessor, "HELP")
-        {
-        }
-
-        /// <inheritdoc/>
-        public override bool IsLoginRequired => false;
-
         /// <inheritdoc/>
         public override Task<IFtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
         {

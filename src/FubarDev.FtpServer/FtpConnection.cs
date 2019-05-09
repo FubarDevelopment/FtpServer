@@ -9,20 +9,23 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
+using System.Threading.Channels;
 using System.Threading.Tasks;
 
 using FubarDev.FtpServer.BackgroundTransfer;
 using FubarDev.FtpServer.CommandHandlers;
+using FubarDev.FtpServer.Commands;
+using FubarDev.FtpServer.Features;
 using FubarDev.FtpServer.FileSystem.Error;
 using FubarDev.FtpServer.Localization;
 
 using JetBrains.Annotations;
 
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -36,16 +39,20 @@ namespace FubarDev.FtpServer
     {
         private readonly CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
 
+        [NotNull]
         private readonly TcpClient _socket;
 
         [NotNull]
         private readonly IFtpConnectionAccessor _connectionAccessor;
 
+        [NotNull]
+        private readonly IFtpCommandActivator _commandActivator;
+
+        [CanBeNull]
         private readonly IDisposable _loggerScope;
 
         [NotNull]
-        [ItemNotNull]
-        private readonly IReadOnlyCollection<IFtpCommandHandlerExtension> _extensions;
+        private readonly Channel<IFtpResponse> _responseChannel;
 
         private bool _closed;
 
@@ -55,60 +62,62 @@ namespace FubarDev.FtpServer
         /// Initializes a new instance of the <see cref="FtpConnection"/> class.
         /// </summary>
         /// <param name="socket">The socket to use to communicate with the client.</param>
+        /// <param name="options">The options for the FTP connection.</param>
         /// <param name="connectionAccessor">The accessor to get the connection that is active during the <see cref="FtpCommandHandler.Process"/> method execution.</param>
-        /// <param name="commandHandlerExtensions">The registered command handler extensions.</param>
+        /// <param name="commandActivator">Activator for FTP commands.</param>
+        /// <param name="catalogLoader">The catalog loader for the FTP server.</param>
         /// <param name="serviceProvider">The service provider for the connection.</param>
         /// <param name="logger">The logger for the FTP connection.</param>
-        /// <param name="options">The options for the FTP connection.</param>
-        /// <param name="commandHandlers">The registered command handlers.</param>
-        /// <param name="catalogLoader">The catalog loader for the FTP server.</param>
         public FtpConnection(
             [NotNull] TcpClient socket,
             [NotNull] IOptions<FtpConnectionOptions> options,
             [NotNull] IFtpConnectionAccessor connectionAccessor,
-            [NotNull, ItemNotNull] IEnumerable<IFtpCommandHandler> commandHandlers,
-            [NotNull, ItemNotNull] IEnumerable<IFtpCommandHandlerExtension> commandHandlerExtensions,
+            [NotNull] IFtpCommandActivator commandActivator,
             [NotNull] IFtpCatalogLoader catalogLoader,
             [NotNull] IServiceProvider serviceProvider,
             [CanBeNull] ILogger<IFtpConnection> logger = null)
         {
-            var endpoint = (IPEndPoint)socket.Client.RemoteEndPoint;
-            RemoteAddress = new Address(endpoint.Address.ToString(), endpoint.Port);
-
             ConnectionServices = serviceProvider;
+
+            var endpoint = (IPEndPoint)socket.Client.RemoteEndPoint;
+            var remoteAddress = new Address(endpoint.Address.ToString(), endpoint.Port);
 
             var properties = new Dictionary<string, object>
             {
-                ["RemoteAddress"] = RemoteAddress.ToString(true),
-                ["RemoteIp"] = RemoteAddress.IPAddress?.ToString(),
-                ["RemotePort"] = RemoteAddress.Port,
+                ["RemoteAddress"] = remoteAddress.ToString(true),
+                ["RemoteIp"] = remoteAddress.IPAddress?.ToString(),
+                ["RemotePort"] = remoteAddress.Port,
             };
 
             _loggerScope = logger?.BeginScope(properties);
 
             _socket = socket;
             _connectionAccessor = connectionAccessor;
+            _commandActivator = commandActivator;
+            var responseChannel = _responseChannel = Channel.CreateBounded<IFtpResponse>(new BoundedChannelOptions(3));
 
-            var socketStream = socket.GetStream();
-
-            SocketStream = socketStream;
-            OriginalStream = socketStream;
             Log = logger;
-            Encoding = options.Value.DefaultEncoding ?? Encoding.ASCII;
-            PromiscuousPasv = options.Value.PromiscuousPasv;
-            Data = new FtpConnectionData(new BackgroundCommandHandler(this), catalogLoader);
 
-            var commandHandlersList = commandHandlers.ToList();
-            var dict = commandHandlersList
-                .SelectMany(x => x.Names, (item, name) => new { Name = name, Item = item })
-                .ToLookup(x => x.Name, x => x.Item, StringComparer.OrdinalIgnoreCase)
-                .ToDictionary(x => x.Key, x => x.Last(), StringComparer.OrdinalIgnoreCase);
+            var parentFeatures = new FeatureCollection();
+            var connectionFeature = new ConnectionFeature(
+                (IPEndPoint)socket.Client.LocalEndPoint,
+                remoteAddress,
+                responseChannel);
+            parentFeatures.Set<IConnectionFeature>(connectionFeature);
 
+            var secureConnectionFeature = new SecureConnectionFeature(socket);
+            parentFeatures.Set<ISecureConnectionFeature>(secureConnectionFeature);
+
+            var features = new FeatureCollection(parentFeatures);
 #pragma warning disable 618
-            _extensions = commandHandlerExtensions.Concat(commandHandlersList.SelectMany(x => x.GetExtensions())).ToList();
+            Data = new FtpConnectionData(
+                options.Value.DefaultEncoding ?? Encoding.ASCII,
+                features,
+                new BackgroundCommandHandler(this),
+                catalogLoader);
 #pragma warning restore 618
 
-            CommandHandlers = dict;
+            Features = features;
         }
 
         /// <inheritdoc />
@@ -118,34 +127,52 @@ namespace FubarDev.FtpServer
         public IServiceProvider ConnectionServices { get; }
 
         /// <inheritdoc />
-        public IReadOnlyDictionary<string, IFtpCommandHandler> CommandHandlers { get; }
+        public IFeatureCollection Features { get; }
 
         /// <inheritdoc />
-        public Encoding Encoding { get; set; }
+        [Obsolete("Query the information using the IEncodingFeature instead.")]
+        public Encoding Encoding
+        {
+            get => Features.Get<IEncodingFeature>().Encoding;
+            set => Features.Get<IEncodingFeature>().Encoding = value;
+        }
 
         /// <inheritdoc />
-        public bool PromiscuousPasv { get; }
-
-        /// <inheritdoc />
+        [Obsolete("Query the information using the Features property instead.")]
         public FtpConnectionData Data { get; }
 
         /// <inheritdoc />
         public ILogger Log { get; }
 
         /// <inheritdoc />
-        public IPEndPoint LocalEndPoint => (IPEndPoint)_socket.Client.LocalEndPoint;
+        [Obsolete("Query the information using the IConnectionFeature instead.")]
+        public IPEndPoint LocalEndPoint
+            => Features.Get<IConnectionFeature>().LocalEndPoint;
 
         /// <inheritdoc />
-        public Stream OriginalStream { get; }
+        [Obsolete("Query the information using the IConnectionFeature instead.")]
+        public Address RemoteAddress
+            => Features.Get<IConnectionFeature>().RemoteAddress;
 
         /// <inheritdoc />
-        public Stream SocketStream { get; set; }
+        [Obsolete("Query the information using the IConnectionFeature instead.")]
+        public ChannelWriter<IFtpResponse> ResponseWriter => Features.Get<IConnectionFeature>().ResponseWriter;
 
         /// <inheritdoc />
-        public bool IsSecure => !ReferenceEquals(SocketStream, OriginalStream);
+        [Obsolete("Query the information using the ISecureConnectionFeature instead.")]
+        public Stream OriginalStream => Features.Get<ISecureConnectionFeature>().OriginalStream;
 
         /// <inheritdoc />
-        public Address RemoteAddress { get; }
+        [Obsolete("Query the information using the ISecureConnectionFeature instead.")]
+        public Stream SocketStream
+        {
+            get => Features.Get<ISecureConnectionFeature>().SocketStream;
+            set => Features.Get<ISecureConnectionFeature>().SocketStream = value;
+        }
+
+        /// <inheritdoc />
+        [Obsolete("Query the information using the ISecureConnectionFeature instead.")]
+        public bool IsSecure => Features.Get<ISecureConnectionFeature>().IsSecure;
 
         /// <summary>
         /// Gets the cancellation token to use to signal a task cancellation.
@@ -175,18 +202,10 @@ namespace FubarDev.FtpServer
         /// <param name="response">The response to write to the client.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>The task.</returns>
-        public async Task WriteAsync(IFtpResponse response, CancellationToken cancellationToken)
+        [Obsolete("Use the IConnectionFeature.ResponseWriter instead.")]
+        public Task WriteAsync(IFtpResponse response, CancellationToken cancellationToken)
         {
-            if (!_closed)
-            {
-                Log?.Log(response);
-                var data = Encoding.GetBytes($"{response}\r\n");
-                await SocketStream.WriteAsync(data, 0, data.Length, cancellationToken).ConfigureAwait(false);
-                if (response.AfterWriteAction != null)
-                {
-                    await response.AfterWriteAction(this, cancellationToken).ConfigureAwait(false);
-                }
-            }
+            return WriteResponseAsync(response, cancellationToken);
         }
 
         /// <summary>
@@ -195,13 +214,16 @@ namespace FubarDev.FtpServer
         /// <param name="response">The response to write to the client.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>The task.</returns>
+        [Obsolete("Use the IConnectionFeature.ResponseWriter instead.")]
         public async Task WriteAsync(string response, CancellationToken cancellationToken)
         {
             if (!_closed)
             {
                 Log?.LogDebug(response);
-                var data = Encoding.GetBytes($"{response}\r\n");
-                await SocketStream.WriteAsync(data, 0, data.Length, cancellationToken).ConfigureAwait(false);
+                var socketStream = Features.Get<ISecureConnectionFeature>().SocketStream;
+                var encoding = Features.Get<IEncodingFeature>().Encoding;
+                var data = encoding.GetBytes($"{response}\r\n");
+                await socketStream.WriteAsync(data, 0, data.Length, cancellationToken).ConfigureAwait(false);
             }
         }
 
@@ -209,11 +231,10 @@ namespace FubarDev.FtpServer
         /// Creates a response socket for e.g. LIST/NLST.
         /// </summary>
         /// <returns>The data connection.</returns>
-        [NotNull]
-        [ItemNotNull]
         public async Task<TcpClient> CreateResponseSocket()
         {
-            var portAddress = Data.PortAddress;
+            var transferFeature = Features.Get<ITransferConfigurationFeature>();
+            var portAddress = transferFeature.PortAddress;
             if (portAddress != null)
             {
                 var result = new TcpClient(portAddress.AddressFamily ?? AddressFamily.InterNetwork);
@@ -221,12 +242,14 @@ namespace FubarDev.FtpServer
                 return result;
             }
 
-            if (Data.PassiveSocketClient == null)
+            var passiveSocketClient = Features.Get<ISecureConnectionFeature>().PassiveSocketClient;
+
+            if (passiveSocketClient == null)
             {
                 throw new InvalidOperationException("Passive connection expected, but none found");
             }
 
-            return Data.PassiveSocketClient;
+            return passiveSocketClient;
         }
 
         /// <summary>
@@ -236,12 +259,14 @@ namespace FubarDev.FtpServer
         /// <returns>The encrypted stream.</returns>
         public Task<Stream> CreateEncryptedStream(Stream unencryptedStream)
         {
-            if (Data.CreateEncryptedStream == null)
+            var createEncryptedStream = Features.Get<ISecureConnectionFeature>().CreateEncryptedStream;
+
+            if (createEncryptedStream == null)
             {
                 return Task.FromResult(unencryptedStream);
             }
 
-            return Data.CreateEncryptedStream(unencryptedStream);
+            return createEncryptedStream(unencryptedStream);
         }
 
         /// <inheritdoc/>
@@ -252,16 +277,70 @@ namespace FubarDev.FtpServer
                 Close();
             }
 
-            if (!ReferenceEquals(SocketStream, OriginalStream))
+            var secureConnectionFeature = Features.Get<ISecureConnectionFeature>();
+            var socketStream = secureConnectionFeature.SocketStream;
+            var originalStream = secureConnectionFeature.OriginalStream;
+            if (!ReferenceEquals(socketStream, originalStream))
             {
-                SocketStream.Dispose();
-                SocketStream = OriginalStream;
+                socketStream.Dispose();
+                secureConnectionFeature.SocketStream = originalStream;
             }
 
             _socket.Dispose();
             _cancellationTokenSource.Dispose();
+#pragma warning disable 618
             Data.Dispose();
+#pragma warning restore 618
             _loggerScope?.Dispose();
+        }
+
+        private static bool IsIOException(Exception ex)
+        {
+            switch (ex)
+            {
+                case IOException _:
+                    return true;
+                case AggregateException aggEx:
+                    return aggEx.InnerException is IOException;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Writes a FTP response to a client.
+        /// </summary>
+        /// <param name="response">The response to write to the client.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <returns>The task.</returns>
+        private async Task WriteResponseAsync(IFtpResponse response, CancellationToken cancellationToken)
+        {
+            if (!_closed)
+            {
+                Log?.Log(response);
+                var socketStream = Features.Get<ISecureConnectionFeature>().SocketStream;
+                var encoding = Features.Get<IEncodingFeature>().Encoding;
+
+                object token = null;
+                do
+                {
+                    var line = await response.GetNextLineAsync(token, cancellationToken)
+                       .ConfigureAwait(false);
+                    if (line.HasText)
+                    {
+                        var data = encoding.GetBytes($"{line.Text}\r\n");
+                        await socketStream.WriteAsync(data, 0, data.Length, cancellationToken).ConfigureAwait(false);
+                    }
+
+                    token = line.Token;
+                }
+                while (token != null);
+
+                if (response.AfterWriteAction != null)
+                {
+                    await response.AfterWriteAction(this, cancellationToken).ConfigureAwait(false);
+                }
+            }
         }
 
         /// <summary>
@@ -271,7 +350,7 @@ namespace FubarDev.FtpServer
         /// <returns>The translated message.</returns>
         private string T(string message)
         {
-            return Data.Catalog.GetString(message);
+            return Features.Get<ILocalizationFeature>().Catalog.GetString(message);
         }
 
         /// <summary>
@@ -283,7 +362,7 @@ namespace FubarDev.FtpServer
         [StringFormatMethod("message")]
         private string T(string message, params object[] args)
         {
-            return Data.Catalog.GetString(message, args);
+            return Features.Get<ILocalizationFeature>().Catalog.GetString(message, args);
         }
 
         private async Task ProcessMessages()
@@ -291,15 +370,13 @@ namespace FubarDev.FtpServer
             // Initialize the FTP connection accessor
             _connectionAccessor.FtpConnection = this;
 
-            // Initialize the connection data
-            foreach (var extension in _extensions)
-            {
-                extension.InitializeConnectionData();
-            }
+            var connectionFeature = Features.Get<IConnectionFeature>();
+            Log?.LogInformation($"Connected from {connectionFeature.RemoteAddress.ToString(true)}");
 
-            Log?.LogInformation($"Connected from {RemoteAddress.ToString(true)}");
-            var collector = new FtpCommandCollector(() => Encoding);
-            await WriteAsync(new FtpResponse(220, T("FTP Server Ready")), _cancellationTokenSource.Token)
+            var responseSender = SendResponsesAsync(_responseChannel, _cancellationTokenSource.Token);
+
+            var collector = new FtpCommandCollector(() => Features.Get<IEncodingFeature>().Encoding);
+            await _responseChannel.Writer.WriteAsync(new FtpResponse(220, T("FTP Server Ready")), _cancellationTokenSource.Token)
                .ConfigureAwait(false);
 
             var loginStateMachine = ConnectionServices.GetRequiredService<IFtpLoginStateMachine>();
@@ -312,10 +389,11 @@ namespace FubarDev.FtpServer
                 {
                     if (readTask == null)
                     {
-                        readTask = SocketStream.ReadAsync(buffer, 0, buffer.Length, _cancellationTokenSource.Token);
+                        var socketStream = Features.Get<ISecureConnectionFeature>().SocketStream;
+                        readTask = socketStream.ReadAsync(buffer, 0, buffer.Length, _cancellationTokenSource.Token);
                     }
 
-                    var tasks = new List<Task>() { readTask };
+                    var tasks = new List<Task>() { readTask, responseSender };
                     if (_activeBackgroundTask != null)
                     {
                         tasks.Add(_activeBackgroundTask);
@@ -324,12 +402,12 @@ namespace FubarDev.FtpServer
                     Debug.WriteLine($"Waiting for {tasks.Count} tasks");
                     var completedTask = Task.WaitAny(tasks.ToArray(), _cancellationTokenSource.Token);
                     Debug.WriteLine($"Task {completedTask} completed");
-                    if (completedTask == 1)
+                    if (completedTask == 2)
                     {
                         var response = _activeBackgroundTask?.Result;
                         if (response != null)
                         {
-                            await WriteAsync(response, _cancellationTokenSource.Token)
+                            await _responseChannel.Writer.WriteAsync(response, _cancellationTokenSource.Token)
                                .ConfigureAwait(false);
                         }
 
@@ -364,29 +442,70 @@ namespace FubarDev.FtpServer
             }
             finally
             {
-                Log?.LogInformation($"Disconnection from {RemoteAddress.ToString(true)}");
+                Log?.LogInformation($"Disconnection from {connectionFeature.RemoteAddress.ToString(true)}");
                 _closed = true;
+#pragma warning disable 618
                 Data.BackgroundCommandHandler.Cancel();
-                if (!ReferenceEquals(SocketStream, OriginalStream))
+#pragma warning restore 618
+
+                var secureConnectionFeature = Features.Get<ISecureConnectionFeature>();
+                var socketStream = secureConnectionFeature.SocketStream;
+                var originalStream = secureConnectionFeature.OriginalStream;
+                if (!ReferenceEquals(socketStream, originalStream))
                 {
-                    SocketStream.Dispose();
-                    SocketStream = OriginalStream;
+                    socketStream.Dispose();
+                    secureConnectionFeature.SocketStream = originalStream;
                 }
                 _socket.Dispose();
                 OnClosed();
             }
         }
 
+        [NotNull]
+        private async Task SendResponsesAsync(
+            [NotNull] ChannelReader<IFtpResponse> responseReader,
+            CancellationToken cancellationToken)
+        {
+            try
+            {
+                while (!cancellationToken.IsCancellationRequested)
+                {
+                    var hasResponse = await responseReader.WaitToReadAsync(cancellationToken)
+                       .ConfigureAwait(false);
+                    if (!hasResponse)
+                    {
+                        return;
+                    }
+
+                    while (responseReader.TryRead(out var response))
+                    {
+                        await WriteResponseAsync(response, cancellationToken)
+                           .ConfigureAwait(false);
+                    }
+                }
+            }
+            catch (Exception ex) when (IsIOException(ex) && cancellationToken.IsCancellationRequested)
+            {
+                Log?.LogWarning("Last response probably incomplete.");
+            }
+
+            Log?.LogInformation("Stopped sending responses.");
+        }
+
         private async Task ProcessMessage(IFtpLoginStateMachine loginStateMachine, FtpCommand command)
         {
             IFtpResponse response;
             Log?.Trace(command);
-            var result = FindCommandHandler(command);
+            var context = new FtpCommandContext(command)
+            {
+                Connection = this,
+            };
+            var result = _commandActivator.Create(context);
             if (result != null)
             {
-                var handler = result.Item2;
-                var handlerCommand = result.Item1;
-                var isLoginRequired = result.Item3;
+                var handler = result.Handler;
+                var handlerCommand = result.CommandContext.Command;
+                var isLoginRequired = result.Information.IsLoginRequired;
                 if (isLoginRequired && loginStateMachine.Status != SecurityStatus.Authorized)
                 {
                     response = new FtpResponse(530, T("Not logged in."));
@@ -395,11 +514,12 @@ namespace FubarDev.FtpServer
                 {
                     try
                     {
-                        var cmdHandler = handler as FtpCommandHandler;
-                        var isAbortable = cmdHandler?.IsAbortable ?? false;
+                        var isAbortable = result.Information.IsAbortable;
                         if (isAbortable)
                         {
+#pragma warning disable 618
                             var newBackgroundTask = Data.BackgroundCommandHandler.Execute(handler, handlerCommand);
+#pragma warning restore 618
                             if (newBackgroundTask != null)
                             {
                                 _activeBackgroundTask = newBackgroundTask;
@@ -442,37 +562,64 @@ namespace FubarDev.FtpServer
 
             if (response != null)
             {
-                await WriteAsync(response, _cancellationTokenSource.Token).ConfigureAwait(false);
+                await _responseChannel.Writer.WriteAsync(response, _cancellationTokenSource.Token).ConfigureAwait(false);
                 if (response.Code == 421)
                 {
-                    SocketStream.Flush();
+                    var socketStream = Features.Get<ISecureConnectionFeature>().SocketStream;
+                    socketStream.Flush();
                     Close();
                 }
             }
         }
 
-        private Tuple<FtpCommand, IFtpCommandBase, bool> FindCommandHandler(FtpCommand command)
-        {
-            if (!CommandHandlers.TryGetValue(command.Name, out var handler))
-            {
-                return null;
-            }
-
-            if (!string.IsNullOrWhiteSpace(command.Argument) && handler is IFtpCommandHandlerExtensionHost extensionHost)
-            {
-                var extensionCommand = FtpCommand.Parse(command.Argument);
-                if (extensionHost.Extensions.TryGetValue(extensionCommand.Name, out var extension))
-                {
-                    return Tuple.Create(extensionCommand, (IFtpCommandBase)extension, extension.IsLoginRequired ?? handler.IsLoginRequired);
-                }
-            }
-
-            return Tuple.Create(command, (IFtpCommandBase)handler, handler.IsLoginRequired);
-        }
-
         private void OnClosed()
         {
             Closed?.Invoke(this, new EventArgs());
+        }
+
+        private class ConnectionFeature : IConnectionFeature
+        {
+            public ConnectionFeature(
+                IPEndPoint localEndPoint,
+                Address remoteAddress,
+                ChannelWriter<IFtpResponse> responseWriter)
+            {
+                LocalEndPoint = localEndPoint;
+                RemoteAddress = remoteAddress;
+                ResponseWriter = responseWriter;
+            }
+
+            /// <inheritdoc />
+            public IPEndPoint LocalEndPoint { get; }
+
+            /// <inheritdoc />
+            public Address RemoteAddress { get; }
+
+            /// <inheritdoc />
+            public ChannelWriter<IFtpResponse> ResponseWriter { get; }
+        }
+
+        private class SecureConnectionFeature : ISecureConnectionFeature
+        {
+            public SecureConnectionFeature(TcpClient tcpClient)
+            {
+                OriginalStream = SocketStream = tcpClient.GetStream();
+            }
+
+            /// <inheritdoc />
+            public Stream OriginalStream { get; }
+
+            /// <inheritdoc />
+            public Stream SocketStream { get; set; }
+
+            /// <inheritdoc />
+            public bool IsSecure => !ReferenceEquals(SocketStream, OriginalStream);
+
+            /// <inheritdoc />
+            public TcpClient PassiveSocketClient { get; set; }
+
+            /// <inheritdoc />
+            public CreateEncryptedStreamDelegate CreateEncryptedStream { get; set; }
         }
     }
 }

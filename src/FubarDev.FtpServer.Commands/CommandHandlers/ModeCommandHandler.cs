@@ -9,22 +9,16 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
+using FubarDev.FtpServer.Commands;
+
 namespace FubarDev.FtpServer.CommandHandlers
 {
     /// <summary>
     /// Implements the <c>MODE</c> command.
     /// </summary>
+    [FtpCommandHandler("MODE")]
     public class ModeCommandHandler : FtpCommandHandler
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ModeCommandHandler"/> class.
-        /// </summary>
-        /// <param name="connectionAccessor">The accessor to get the connection that is active during the <see cref="Process"/> method execution.</param>
-        public ModeCommandHandler(IFtpConnectionAccessor connectionAccessor)
-            : base(connectionAccessor, "MODE")
-        {
-        }
-
         /// <inheritdoc/>
         public override Task<IFtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
         {

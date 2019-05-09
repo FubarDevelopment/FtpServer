@@ -3,19 +3,23 @@
 // </copyright>
 
 using System;
+using System.Reflection;
 
 using FubarDev.FtpServer;
 using FubarDev.FtpServer.AccountManagement.Directories.SingleRootWithoutHome;
 using FubarDev.FtpServer.Authentication;
 using FubarDev.FtpServer.Authorization;
 using FubarDev.FtpServer.BackgroundTransfer;
+using FubarDev.FtpServer.CommandExtensions;
 using FubarDev.FtpServer.CommandHandlers;
+using FubarDev.FtpServer.Commands;
 using FubarDev.FtpServer.FileSystem;
 using FubarDev.FtpServer.Localization;
 
 using JetBrains.Annotations;
 
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Logging;
 
 // ReSharper disable once CheckNamespace
 namespace Microsoft.Extensions.DependencyInjection
@@ -43,6 +47,33 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddSingleton<IPasvAddressResolver, SimplePasvAddressResolver>();
             services.AddSingleton<IFtpConnectionAccessor, FtpConnectionAccessor>();
 
+            var commandAssembly = typeof(PassCommandHandler).GetTypeInfo().Assembly;
+
+            // Command handlers
+            services.AddSingleton<IFtpCommandHandlerScanner>(
+                _ => new AssemblyFtpCommandHandlerScanner(commandAssembly));
+#pragma warning disable CS0612 // Typ oder Element ist veraltet
+            services.AddScoped<IFtpCommandHandlerScanner, ServiceFtpCommandHandlerScanner>();
+#pragma warning restore CS0612 // Typ oder Element ist veraltet
+            services.TryAddScoped<IFtpCommandHandlerProvider, DefaultFtpCommandHandlerProvider>();
+
+            // Command handler extensions
+            services.AddSingleton<IFtpCommandHandlerExtensionScanner>(
+                sp => new AssemblyFtpCommandHandlerExtensionScanner(
+                    sp.GetRequiredService<IFtpCommandHandlerProvider>(),
+                    sp.GetService<ILogger<AssemblyFtpCommandHandlerExtensionScanner>>(),
+                    commandAssembly));
+#pragma warning disable CS0612 // Typ oder Element ist veraltet
+            services.AddScoped<IFtpCommandHandlerExtensionScanner, ServiceFtpCommandHandlerExtensionScanner>();
+#pragma warning restore CS0612 // Typ oder Element ist veraltet
+            services.TryAddScoped<IFtpCommandHandlerExtensionProvider, DefaultFtpCommandHandlerExtensionProvider>();
+
+            // Activator for FTP commands (and extensions)
+            services.AddScoped<IFtpCommandActivator, DefaultFtpCommandActivator>();
+
+            // Feature provider
+            services.AddScoped<IFeatureInfoProvider, DefaultFeatureInfoProvider>();
+
             services.AddScoped<TcpSocketClientAccessor>();
             services.AddScoped(sp => sp.GetRequiredService<TcpSocketClientAccessor>().TcpSocketClient);
 
@@ -68,14 +99,6 @@ namespace Microsoft.Extensions.DependencyInjection
             services.Scan(
                 sel => sel.FromAssemblyOf<IAuthorizationAction>()
                    .AddClasses(filter => filter.AssignableTo<IAuthorizationAction>()).As<IAuthorizationAction>().WithSingletonLifetime());
-
-            services.Scan(
-                sel => sel.FromAssemblyOf<PassCommandHandler>()
-                    .AddClasses(filter => filter.AssignableTo<IFtpCommandHandlerExtension>()).As<IFtpCommandHandlerExtension>().WithSingletonLifetime());
-
-            services.Scan(
-                sel => sel.FromAssemblyOf<PassCommandHandler>()
-                    .AddClasses(filter => filter.AssignableTo<IFtpCommandHandler>()).As<IFtpCommandHandler>().WithSingletonLifetime());
 
             services.Scan(
                 sel => sel.FromAssemblyOf<PasswordAuthorization>()

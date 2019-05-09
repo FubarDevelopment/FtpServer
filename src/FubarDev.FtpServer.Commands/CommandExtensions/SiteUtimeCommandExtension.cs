@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
+using FubarDev.FtpServer.Features;
 using FubarDev.FtpServer.FileSystem;
 
 using JetBrains.Annotations;
@@ -18,21 +19,11 @@ namespace FubarDev.FtpServer.CommandExtensions
     /// <remarks>
     /// This doesn't exist as RFC. Instead, it's only documented
     /// on the <a href="http://www.proftpd.org/docs/contrib/mod_site_misc.html">ProFTPd site</a>.
+    /// This extension is hidden, according to https://ghisler.ch/board/viewtopic.php?t=24952.
     /// </remarks>
+    [FtpCommandHandlerExtension("UTIME", "SITE")]
     public class SiteUtimeCommandExtension : FtpCommandHandlerExtension
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="SiteUtimeCommandExtension"/> class.
-        /// </summary>
-        /// <param name="connectionAccessor">The accessor to get the connection that is active during the <see cref="Process"/> method execution.</param>
-        public SiteUtimeCommandExtension([NotNull] IFtpConnectionAccessor connectionAccessor)
-            : base(connectionAccessor, "SITE", "UTIME")
-        {
-            // This extension is hidden, accoding to
-            // https://ghisler.ch/board/viewtopic.php?t=24952
-            AnnouncementMode = ExtensionAnnouncementMode.Hidden;
-        }
-
         /// <inheritdoc />
         public override void InitializeConnectionData()
         {
@@ -105,14 +96,15 @@ namespace FubarDev.FtpServer.CommandExtensions
                 return new FtpResponse(501, T("No file name."));
             }
 
-            var currentPath = Data.Path.Clone();
-            var foundEntry = await Data.FileSystem.SearchEntryAsync(currentPath, path, cancellationToken).ConfigureAwait(false);
+            var fsFeature = Connection.Features.Get<IFileSystemFeature>();
+            var currentPath = fsFeature.Path.Clone();
+            var foundEntry = await fsFeature.FileSystem.SearchEntryAsync(currentPath, path, cancellationToken).ConfigureAwait(false);
             if (foundEntry?.Entry == null)
             {
                 return new FtpResponse(550, T("File system entry not found."));
             }
 
-            await Data.FileSystem.SetMacTimeAsync(foundEntry.Entry, modificationTime, accessTime, creationTime, cancellationToken).ConfigureAwait(false);
+            await fsFeature.FileSystem.SetMacTimeAsync(foundEntry.Entry, modificationTime, accessTime, creationTime, cancellationToken).ConfigureAwait(false);
 
             return new FtpResponse(220, T("Timestamps set."));
         }
@@ -135,14 +127,15 @@ namespace FubarDev.FtpServer.CommandExtensions
                 return new FtpResponse(501, T("No file name."));
             }
 
-            var currentPath = Data.Path.Clone();
-            var foundEntry = await Data.FileSystem.SearchEntryAsync(currentPath, path, cancellationToken).ConfigureAwait(false);
+            var fsFeature = Connection.Features.Get<IFileSystemFeature>();
+            var currentPath = fsFeature.Path.Clone();
+            var foundEntry = await fsFeature.FileSystem.SearchEntryAsync(currentPath, path, cancellationToken).ConfigureAwait(false);
             if (foundEntry?.Entry == null)
             {
                 return new FtpResponse(550, T("File system entry not found."));
             }
 
-            await Data.FileSystem.SetMacTimeAsync(foundEntry.Entry, modificationTime, null, null, cancellationToken).ConfigureAwait(false);
+            await fsFeature.FileSystem.SetMacTimeAsync(foundEntry.Entry, modificationTime, null, null, cancellationToken).ConfigureAwait(false);
 
             return new FtpResponse(220, T("Modification time set."));
         }

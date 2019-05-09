@@ -5,6 +5,8 @@
 using System.Threading;
 using System.Threading.Tasks;
 
+using FubarDev.FtpServer.Commands;
+using FubarDev.FtpServer.Features;
 using JetBrains.Annotations;
 
 using Microsoft.Extensions.DependencyInjection;
@@ -14,32 +16,22 @@ namespace FubarDev.FtpServer.CommandHandlers
     /// <summary>
     /// Implementation of the <c>REIN</c> command.
     /// </summary>
+    [FtpCommandHandler("REIN", isLoginRequired: false)]
     public class ReinCommandHandler : FtpCommandHandler
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ReinCommandHandler"/> class.
-        /// </summary>
-        /// <param name="connectionAccessor">The FTP connection accessor.</param>
-        public ReinCommandHandler([NotNull] IFtpConnectionAccessor connectionAccessor)
-            : base(connectionAccessor, "REIN")
-        {
-        }
-
-        /// <inheritdoc />
-        public override bool IsLoginRequired => false;
-
         /// <inheritdoc />
         public override async Task<IFtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
         {
             var loginStateMachine = Connection.ConnectionServices.GetRequiredService<IFtpLoginStateMachine>();
             loginStateMachine.Reset();
 
-            if (Connection.SocketStream != Connection.OriginalStream)
+            var secureConnectionFeature = Connection.Features.Get<ISecureConnectionFeature>();
+            if (secureConnectionFeature.SocketStream != secureConnectionFeature.OriginalStream)
             {
-                await Connection.SocketStream.FlushAsync(cancellationToken)
+                await secureConnectionFeature.SocketStream.FlushAsync(cancellationToken)
                    .ConfigureAwait(false);
-                Connection.SocketStream.Dispose();
-                Connection.SocketStream = Connection.OriginalStream;
+                secureConnectionFeature.SocketStream.Dispose();
+                secureConnectionFeature.SocketStream = secureConnectionFeature.OriginalStream;
             }
 
             return new FtpResponse(220, T("FTP Server Ready"));

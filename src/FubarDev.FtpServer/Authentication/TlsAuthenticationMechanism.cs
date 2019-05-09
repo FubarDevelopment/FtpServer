@@ -8,7 +8,7 @@ using System.IO;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading;
 using System.Threading.Tasks;
-
+using FubarDev.FtpServer.Features;
 using JetBrains.Annotations;
 
 using Microsoft.Extensions.Logging;
@@ -19,7 +19,12 @@ namespace FubarDev.FtpServer.Authentication
     /// <summary>
     /// Implementation for the <c>AUTH TLS</c> command.
     /// </summary>
+    [FtpFeatureText("AUTH TLS")]
+    [FtpFeatureText("PBSZ")]
+    [FtpFeatureText("PROT")]
+#pragma warning disable CS0618 // Typ oder Element ist veraltet
     public class TlsAuthenticationMechanism : AuthenticationMechanism, IFeatureHost
+#pragma warning restore CS0618 // Typ oder Element ist veraltet
     {
         [NotNull]
         private readonly ISslStreamWrapperFactory _sslStreamWrapperFactory;
@@ -66,29 +71,31 @@ namespace FubarDev.FtpServer.Authentication
             {
                 AfterWriteAction = async (conn, ct) =>
                 {
-                    await conn.SocketStream.FlushAsync(ct).ConfigureAwait(false);
+                    var secureConnectionFeature = conn.Features.Get<ISecureConnectionFeature>();
+                    await secureConnectionFeature.SocketStream.FlushAsync(ct).ConfigureAwait(false);
 
                     try
                     {
                         var sslStream = await _sslStreamWrapperFactory.WrapStreamAsync(
-                                conn.OriginalStream,
+                                secureConnectionFeature.OriginalStream,
                                 true,
                                 _serverCertificate,
                                 cancellationToken)
                            .ConfigureAwait(false);
-                        if (conn.SocketStream != conn.OriginalStream)
+                        if (secureConnectionFeature.SocketStream != secureConnectionFeature.OriginalStream)
                         {
                             // Close old SSL connection.
-                            await _sslStreamWrapperFactory.CloseStreamAsync(conn.SocketStream, cancellationToken)
+                            await _sslStreamWrapperFactory.CloseStreamAsync(secureConnectionFeature.SocketStream, cancellationToken)
                                .ConfigureAwait(false);
                         }
 
-                        conn.SocketStream = sslStream;
+                        secureConnectionFeature.SocketStream = sslStream;
                     }
                     catch (Exception ex)
                     {
                         conn.Log?.LogWarning(0, ex, "SSL stream authentication failed: {0}", ex.Message);
-                        await conn
+                        var connFeature = conn.Features.Get<IConnectionFeature>();
+                        await connFeature.ResponseWriter
                            .WriteAsync(new FtpResponse(421, T("TLS authentication failed")), ct)
                            .ConfigureAwait(false);
                     }
@@ -118,13 +125,14 @@ namespace FubarDev.FtpServer.Authentication
         /// <inheritdoc />
         public override Task<IFtpResponse> HandleProtAsync(string protCode, CancellationToken cancellationToken)
         {
+            var secureConnectionFeature = Connection.Features.Get<ISecureConnectionFeature>();
             switch (protCode.ToUpperInvariant())
             {
                 case "C":
-                    Connection.Data.CreateEncryptedStream = null;
+                    secureConnectionFeature.CreateEncryptedStream = null;
                     break;
                 case "P":
-                    Connection.Data.CreateEncryptedStream = CreateSslStream;
+                    secureConnectionFeature.CreateEncryptedStream = CreateSslStream;
                     break;
                 default:
                     return Task.FromResult<IFtpResponse>(new FtpResponse(SecurityActionResult.RequestedProtLevelNotSupported, T("A data channel protection level other than C, or P is not supported.")));
@@ -134,7 +142,8 @@ namespace FubarDev.FtpServer.Authentication
         }
 
         /// <inheritdoc />
-        public IEnumerable<IFeatureInfo> GetSupportedFeatures()
+        [Obsolete("FTP command handlers (and other types) are now annotated with attributes implementing IFeatureInfo.")]
+        public IEnumerable<IFeatureInfo> GetSupportedFeatures(IFtpConnection connection)
         {
             if (_serverCertificate != null)
             {

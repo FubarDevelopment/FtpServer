@@ -9,6 +9,8 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
+using FubarDev.FtpServer.Commands;
+using FubarDev.FtpServer.Features;
 using FubarDev.FtpServer.FileSystem;
 
 namespace FubarDev.FtpServer.CommandHandlers
@@ -16,23 +18,16 @@ namespace FubarDev.FtpServer.CommandHandlers
     /// <summary>
     /// Implements the <c>XRMD</c> command.
     /// </summary>
+    [FtpCommandHandler("XRMD")]
     public class XrmdCommandHandler : FtpCommandHandler
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="XrmdCommandHandler"/> class.
-        /// </summary>
-        /// <param name="connectionAccessor">The accessor to get the connection that is active during the <see cref="Process"/> method execution.</param>
-        public XrmdCommandHandler(IFtpConnectionAccessor connectionAccessor)
-            : base(connectionAccessor, "XRMD")
-        {
-        }
-
         /// <inheritdoc/>
         public override async Task<IFtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
         {
+            var fsFeature = Connection.Features.Get<IFileSystemFeature>();
             var path = command.Argument;
-            var currentPath = Data.Path.Clone();
-            var subDir = await Data.FileSystem.GetDirectoryAsync(currentPath, path, cancellationToken).ConfigureAwait(false);
+            var currentPath = fsFeature.Path.Clone();
+            var subDir = await fsFeature.FileSystem.GetDirectoryAsync(currentPath, path, cancellationToken).ConfigureAwait(false);
             if (subDir == null)
             {
                 return new FtpResponse(550, T("Not a valid directory."));
@@ -40,12 +35,12 @@ namespace FubarDev.FtpServer.CommandHandlers
 
             try
             {
-                if (Data.Path.IsChildOfOrSameAs(currentPath, Data.FileSystem))
+                if (fsFeature.Path.IsChildOfOrSameAs(currentPath, fsFeature.FileSystem))
                 {
                     return new FtpResponse(550, T("Not a valid directory (is same or parent of current directory)."));
                 }
 
-                await Data.FileSystem.UnlinkAsync(subDir, cancellationToken).ConfigureAwait(false);
+                await fsFeature.FileSystem.UnlinkAsync(subDir, cancellationToken).ConfigureAwait(false);
                 return new FtpResponse(250, T("Directory removed."));
             }
             catch (Exception)

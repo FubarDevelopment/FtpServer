@@ -7,9 +7,13 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+
+using FubarDev.FtpServer.Commands;
+using FubarDev.FtpServer.Features;
 
 using JetBrains.Annotations;
 
@@ -20,39 +24,56 @@ namespace FubarDev.FtpServer.CommandHandlers
     /// </summary>
     public abstract class FtpCommandHandler : IFtpCommandHandler
     {
-        private readonly IFtpConnectionAccessor _connectionAccessor;
+        private readonly IReadOnlyCollection<string> _names;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FtpCommandHandler"/> class.
         /// </summary>
-        /// <param name="connectionAccessor">The accessor to get the connection that is active during the <see cref="Process"/> method execution.</param>
+        protected FtpCommandHandler()
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FtpCommandHandler"/> class.
+        /// </summary>
         /// <param name="name">The command name.</param>
         /// <param name="alternativeNames">Alternative names.</param>
-        protected FtpCommandHandler([NotNull] IFtpConnectionAccessor connectionAccessor, [NotNull] string name, [NotNull, ItemNotNull] params string[] alternativeNames)
+        [Obsolete("The mapping from name to command handler is created by using the FtpCommandHandlerAttribute.")]
+        protected FtpCommandHandler([NotNull] string name, [NotNull, ItemNotNull] params string[] alternativeNames)
         {
-            _connectionAccessor = connectionAccessor;
             var names = new List<string>
             {
                 name,
             };
             names.AddRange(alternativeNames);
-            Names = names;
+            _names = names;
         }
 
         /// <inheritdoc />
-        public IReadOnlyCollection<string> Names { get; }
+        [Obsolete("The mapping from name to command handler is created by using the FtpCommandHandlerAttribute.")]
+        public IReadOnlyCollection<string> Names => _names ?? throw new InvalidOperationException("Obsolete property \"Names\" called for a command handler.");
 
         /// <inheritdoc />
+        [Obsolete("Information about an FTP command handler can be queried through the IFtpCommandHandlerProvider service.")]
         public virtual bool IsLoginRequired => true;
 
         /// <inheritdoc />
+        [Obsolete("Information about an FTP command handler can be queried through the IFtpCommandHandlerProvider service.")]
         public virtual bool IsAbortable => false;
+
+        /// <summary>
+        /// Gets or sets the FTP command context.
+        /// </summary>
+        [CanBeNull]
+        [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global", Justification = "Set using reflection.")]
+        [SuppressMessage("ReSharper", "MemberCanBePrivate.Global", Justification = "Required for setting through reflection.")]
+        public FtpCommandContext CommandContext { get; set; }
 
         /// <summary>
         /// Gets the connection this command was created for.
         /// </summary>
         [NotNull]
-        protected IFtpConnection Connection => _connectionAccessor.FtpConnection ?? throw new InvalidOperationException("The connection information was used outside of an active connection.");
+        protected IFtpConnection Connection => CommandContext?.Connection ?? throw new InvalidOperationException("The connection information was used outside of an active connection.");
 
         /// <summary>
         /// Gets the connection data.
@@ -61,7 +82,8 @@ namespace FubarDev.FtpServer.CommandHandlers
         protected FtpConnectionData Data => Connection.Data;
 
         /// <inheritdoc />
-        public virtual IEnumerable<IFeatureInfo> GetSupportedFeatures()
+        [Obsolete("FTP command handlers (and other types) are now annotated with attributes implementing IFeatureInfo.")]
+        public virtual IEnumerable<IFeatureInfo> GetSupportedFeatures(IFtpConnection connection)
         {
             return Enumerable.Empty<IFeatureInfo>();
         }
@@ -82,7 +104,7 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// <returns>The translated message.</returns>
         protected string T(string message)
         {
-            return Connection.Data.Catalog.GetString(message);
+            return Connection.Features.Get<ILocalizationFeature>().Catalog.GetString(message);
         }
 
         /// <summary>
@@ -94,7 +116,7 @@ namespace FubarDev.FtpServer.CommandHandlers
         [StringFormatMethod("message")]
         protected string T(string message, params object[] args)
         {
-            return Connection.Data.Catalog.GetString(message, args);
+            return Connection.Features.Get<ILocalizationFeature>().Catalog.GetString(message, args);
         }
     }
 }

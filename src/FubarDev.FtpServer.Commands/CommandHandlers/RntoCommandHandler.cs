@@ -8,6 +8,8 @@
 using System.Threading;
 using System.Threading.Tasks;
 
+using FubarDev.FtpServer.Commands;
+using FubarDev.FtpServer.Features;
 using FubarDev.FtpServer.FileSystem;
 
 namespace FubarDev.FtpServer.CommandHandlers
@@ -15,36 +17,28 @@ namespace FubarDev.FtpServer.CommandHandlers
     /// <summary>
     /// Implements the <c>RNTO</c> command.
     /// </summary>
+    [FtpCommandHandler("RNTO", true)]
     public class RntoCommandHandler : FtpCommandHandler
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="RntoCommandHandler"/> class.
-        /// </summary>
-        /// <param name="connectionAccessor">The accessor to get the connection that is active during the <see cref="Process"/> method execution.</param>
-        public RntoCommandHandler(IFtpConnectionAccessor connectionAccessor)
-            : base(connectionAccessor, "RNTO")
-        {
-        }
-
-        /// <inheritdoc/>
-        public override bool IsAbortable => true;
-
         /// <inheritdoc/>
         public override async Task<IFtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
         {
-            if (Data.RenameFrom == null)
+            var renameFrom = Connection.Features.Get<IRenameCommandFeature>()?.RenameFrom;
+            if (renameFrom == null)
             {
                 return new FtpResponse(503, T("RNTO must be preceded by a RNFR."));
             }
 
-            if (Data.RenameFrom.Entry == null)
+            if (renameFrom.Entry == null)
             {
                 return new FtpResponse(550, T("Item specified for RNFR doesn't exist."));
             }
 
+            var fsFeature = Connection.Features.Get<IFileSystemFeature>();
+
             var fileName = command.Argument;
-            var tempPath = Data.Path.Clone();
-            var fileInfo = await Data.FileSystem.SearchEntryAsync(tempPath, fileName, cancellationToken).ConfigureAwait(false);
+            var tempPath = fsFeature.Path.Clone();
+            var fileInfo = await fsFeature.FileSystem.SearchEntryAsync(tempPath, fileName, cancellationToken).ConfigureAwait(false);
             if (fileInfo == null)
             {
                 return new FtpResponse(550, T("Directory doesn't exist."));
@@ -62,9 +56,9 @@ namespace FubarDev.FtpServer.CommandHandlers
             }
 
             var targetDir = fileInfo.Directory;
-            await Data.FileSystem.MoveAsync(Data.RenameFrom.Directory, Data.RenameFrom.Entry, targetDir, fileInfo.FileName, cancellationToken).ConfigureAwait(false);
+            await fsFeature.FileSystem.MoveAsync(renameFrom.Directory, renameFrom.Entry, targetDir, fileInfo.FileName, cancellationToken).ConfigureAwait(false);
 
-            Data.RenameFrom = null;
+            Connection.Features.Set<IRenameCommandFeature>(null);
 
             return new FtpResponse(250, T("Renamed file successfully."));
         }

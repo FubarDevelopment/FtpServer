@@ -7,6 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using FubarDev.FtpServer.AccountManagement;
+using FubarDev.FtpServer.Features;
 using FubarDev.FtpServer.FileSystem;
 
 using JetBrains.Annotations;
@@ -45,11 +46,12 @@ namespace FubarDev.FtpServer.Authorization.Actions
         {
             var connection = _ftpConnectionAccessor.FtpConnection;
 
-            connection.Data.FileSystem = await _fileSystemFactory
+            var fsFeature = connection.Features.Get<IFileSystemFeature>();
+            fsFeature.FileSystem = await _fileSystemFactory
                .Create(accountInformation)
                .ConfigureAwait(false);
 
-            connection.Data.Path = new Stack<IUnixDirectoryEntry>();
+            fsFeature.Path = new Stack<IUnixDirectoryEntry>();
         }
     }
 }

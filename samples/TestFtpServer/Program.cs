@@ -16,6 +16,7 @@ using FubarDev.FtpServer.AccountManagement;
 using FubarDev.FtpServer.AccountManagement.Directories.RootPerUser;
 using FubarDev.FtpServer.AccountManagement.Directories.SingleRootWithoutHome;
 using FubarDev.FtpServer.Authentication;
+using FubarDev.FtpServer.Features;
 using FubarDev.FtpServer.FileSystem;
 using FubarDev.FtpServer.FileSystem.DotNet;
 using FubarDev.FtpServer.FileSystem.GoogleDrive;
@@ -120,6 +121,7 @@ namespace TestFtpServer
                         options.PassivePortRange = (iPorts[0], iPorts[1]) ;
                     }
                 },
+                { "promiscuous", "Allows promiscuous PASV", v => options.PromiscuousPasv = v != null },
                 "FTPS",
                 { "c|certificate=", "Set the SSL certificate", v => options.ServerCertificateFile = v },
                 { "P|password=", "Password for the SSL certificate", v => options.ServerCertificatePassword = v },
@@ -314,6 +316,7 @@ namespace TestFtpServer
                             opt.PasvMaxPort = options.PassivePortRange.Value.Item2;
                         }
                     })
+               .Configure<PasvCommandOptions>(opt => opt.PromiscuousPasv = options.PromiscuousPasv)
                .Configure<GoogleDriveOptions>(opt => opt.UseBackgroundUpload = options.UseBackgroundUpload)
                .Configure<PamMembershipProviderOptions>(opt => opt.IgnoreAccountManagement = options.NoPamAccountManagement);
 
@@ -354,13 +357,14 @@ namespace TestFtpServer
                         // Use an implicit SSL connection (without the AUTHTLS command)
                         ftpServer.ConfigureConnection += (s, e) =>
                         {
+                            var secureConnectionFeature = e.Connection.Features.Get<ISecureConnectionFeature>();
                             var sslStream = sslStreamWrapperFactory.WrapStreamAsync(
-                                    e.Connection.OriginalStream,
+                                    secureConnectionFeature.OriginalStream,
                                     false,
                                     authTlsOptions.Value.ServerCertificate,
                                     CancellationToken.None)
                                .Result;
-                            e.Connection.SocketStream = sslStream;
+                            secureConnectionFeature.SocketStream = sslStream;
                         };
 
                         return ftpServer;

@@ -5,7 +5,7 @@
 using System;
 using System.Net.Sockets;
 using System.Threading.Tasks;
-
+using FubarDev.FtpServer.Features;
 using JetBrains.Annotations;
 
 namespace FubarDev.FtpServer
@@ -46,7 +46,7 @@ namespace FubarDev.FtpServer
             finally
             {
                 responseSocket.Dispose();
-                connection.Data.PassiveSocketClient = null;
+                connection.Features.Get<ISecureConnectionFeature>().PassiveSocketClient = null;
             }
         }
     }

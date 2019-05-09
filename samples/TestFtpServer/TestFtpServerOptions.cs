@@ -82,6 +82,15 @@ namespace TestFtpServer
         public DirectoryLayout DirectoryLayout { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether to accept PASV connections from any source.
+        /// </summary>
+        /// <remarks>
+        /// If false (default), connections to a PASV port will only be accepted from the same IP that issued
+        /// the respective PASV command.
+        /// </remarks>
+        public bool PromiscuousPasv { get; set; }
+
+        /// <summary>
         /// Gets the requested or the default port.
         /// </summary>
         /// <returns></returns>

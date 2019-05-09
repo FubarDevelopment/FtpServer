@@ -12,6 +12,8 @@ using System.Threading.Tasks;
 
 using FubarDev.FtpServer.Authentication;
 using FubarDev.FtpServer.BackgroundTransfer;
+using FubarDev.FtpServer.Commands;
+using FubarDev.FtpServer.Features;
 using FubarDev.FtpServer.FileSystem;
 
 using JetBrains.Annotations;
@@ -21,6 +23,7 @@ namespace FubarDev.FtpServer.CommandHandlers
     /// <summary>
     /// Implements the <c>APPE</c> command.
     /// </summary>
+    [FtpCommandHandler("APPE", isAbortable: true)]
     public class AppeCommandHandler : FtpCommandHandler
     {
         [NotNull]
@@ -32,29 +35,24 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// <summary>
         /// Initializes a new instance of the <see cref="AppeCommandHandler"/> class.
         /// </summary>
-        /// <param name="connectionAccessor">The accessor to get the connection that is active during the <see cref="Process"/> method execution.</param>
         /// <param name="backgroundTransferWorker">The background transfer worker service.</param>
         /// <param name="sslStreamWrapperFactory">An object to handle SSL streams.</param>
         public AppeCommandHandler(
-            [NotNull] IFtpConnectionAccessor connectionAccessor,
             [NotNull] IBackgroundTransferWorker backgroundTransferWorker,
             [NotNull] ISslStreamWrapperFactory sslStreamWrapperFactory)
-            : base(connectionAccessor, "APPE")
         {
             _backgroundTransferWorker = backgroundTransferWorker;
             _sslStreamWrapperFactory = sslStreamWrapperFactory;
         }
 
         /// <inheritdoc/>
-        public override bool IsAbortable => true;
-
-        /// <inheritdoc/>
         public override async Task<IFtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
         {
-            var restartPosition = Data.RestartPosition;
-            Data.RestartPosition = null;
+            var restartPosition = Connection.Features.Get<IRestCommandFeature>()?.RestartPosition;
+            Connection.Features.Set<IRestCommandFeature>(null);
 
-            if (!Data.TransferMode.IsBinary && Data.TransferMode.FileType != FtpFileType.Ascii)
+            var transferMode = Connection.Features.Get<ITransferConfigurationFeature>().TransferMode;
+            if (!transferMode.IsBinary && transferMode.FileType != FtpFileType.Ascii)
             {
                 throw new NotSupportedException();
             }
@@ -65,8 +63,9 @@ namespace FubarDev.FtpServer.CommandHandlers
                 return new FtpResponse(501, T("No file name specified"));
             }
 
-            var currentPath = Data.Path.Clone();
-            var fileInfo = await Data.FileSystem.SearchFileAsync(currentPath, fileName, cancellationToken).ConfigureAwait(false);
+            var fsFeature = Connection.Features.Get<IFileSystemFeature>();
+            var currentPath = fsFeature.Path.Clone();
+            var fileInfo = await fsFeature.FileSystem.SearchFileAsync(currentPath, fileName, cancellationToken).ConfigureAwait(false);
             if (fileInfo == null)
             {
                 return new FtpResponse(550, T("Not a valid directory."));
@@ -77,7 +76,10 @@ namespace FubarDev.FtpServer.CommandHandlers
                 return new FtpResponse(553, T("File name not allowed."));
             }
 
-            await Connection.WriteAsync(new FtpResponse(150, T("Opening connection for data transfer.")), cancellationToken).ConfigureAwait(false);
+            var connFeature = Connection.Features.Get<IConnectionFeature>();
+            await connFeature.ResponseWriter
+               .WriteAsync(new FtpResponse(150, T("Opening connection for data transfer.")), cancellationToken)
+               .ConfigureAwait(false);
 
             return await Connection
                 .SendResponseAsync(client => ExecuteSend(client, fileInfo, restartPosition, cancellationToken))
@@ -90,6 +92,7 @@ namespace FubarDev.FtpServer.CommandHandlers
             long? restartPosition,
             CancellationToken cancellationToken)
         {
+            var fsFeature = Connection.Features.Get<IFileSystemFeature>();
             var responseStream = responseSocket.GetStream();
             responseStream.ReadTimeout = 10000;
 
@@ -100,7 +103,7 @@ namespace FubarDev.FtpServer.CommandHandlers
                 {
                     if (fileInfo.Entry == null)
                     {
-                        backgroundTransfer = await Data.FileSystem
+                        backgroundTransfer = await fsFeature.FileSystem
                             .CreateAsync(
                                 fileInfo.Directory,
                                 fileInfo.FileName ?? throw new InvalidOperationException(),
@@ -110,13 +113,13 @@ namespace FubarDev.FtpServer.CommandHandlers
                     }
                     else
                     {
-                        backgroundTransfer = await Data.FileSystem
+                        backgroundTransfer = await fsFeature.FileSystem
                             .ReplaceAsync(fileInfo.Entry, stream, cancellationToken).ConfigureAwait(false);
                     }
                 }
                 else
                 {
-                    backgroundTransfer = await Data.FileSystem
+                    backgroundTransfer = await fsFeature.FileSystem
                         .AppendAsync(fileInfo.Entry, restartPosition, stream, cancellationToken)
                         .ConfigureAwait(false);
                 }

@@ -122,6 +122,7 @@ namespace FubarDev.FtpServer
 
                     case FtpResponseListStatus.Finished:
                         resultLine = null;
+                        statusStore = null;
                         break;
 
                     default:

@@ -8,22 +8,16 @@
 using System.Threading;
 using System.Threading.Tasks;
 
+using FubarDev.FtpServer.Commands;
+
 namespace FubarDev.FtpServer.CommandHandlers
 {
     /// <summary>
     /// Implements the <c>NOOP</c> command.
     /// </summary>
+    [FtpCommandHandler("NOOP")]
     public class NoOpCommandHandler : FtpCommandHandler
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="NoOpCommandHandler"/> class.
-        /// </summary>
-        /// <param name="connectionAccessor">The accessor to get the connection that is active during the <see cref="Process"/> method execution.</param>
-        public NoOpCommandHandler(IFtpConnectionAccessor connectionAccessor)
-            : base(connectionAccessor, "NOOP")
-        {
-        }
-
         /// <inheritdoc/>
         public override Task<IFtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
         {

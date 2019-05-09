@@ -8,25 +8,18 @@
 using System.Threading;
 using System.Threading.Tasks;
 
+using FubarDev.FtpServer.Commands;
+using FubarDev.FtpServer.Features;
+
 namespace FubarDev.FtpServer.CommandHandlers
 {
     /// <summary>
     /// Implements the <c>QUIT</c> command.
     /// </summary>
+    [FtpCommandHandler("QUIT", isLoginRequired: false)]
+    [FtpCommandHandler("LOGOUT", isLoginRequired: false)]
     public class QuitCommandHandler : FtpCommandHandler
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="QuitCommandHandler"/> class.
-        /// </summary>
-        /// <param name="connectionAccessor">The accessor to get the connection that is active during the <see cref="Process"/> method execution.</param>
-        public QuitCommandHandler(IFtpConnectionAccessor connectionAccessor)
-            : base(connectionAccessor, "QUIT", "LOGOUT")
-        {
-        }
-
-        /// <inheritdoc />
-        public override bool IsLoginRequired { get; } = false;
-
         /// <inheritdoc/>
         public override Task<IFtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
         {
@@ -34,7 +27,8 @@ namespace FubarDev.FtpServer.CommandHandlers
             {
                 AfterWriteAction = async (conn, ct) =>
                 {
-                    await conn.SocketStream.FlushAsync(ct)
+                    var secureConnectionFeature = conn.Features.Get<ISecureConnectionFeature>();
+                    await secureConnectionFeature.SocketStream.FlushAsync(ct)
                        .ConfigureAwait(false);
                     conn.Close();
                 },

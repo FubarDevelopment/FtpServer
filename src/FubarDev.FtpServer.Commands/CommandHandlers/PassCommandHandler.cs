@@ -8,6 +8,8 @@
 using System.Threading;
 using System.Threading.Tasks;
 
+using FubarDev.FtpServer.Commands;
+
 using JetBrains.Annotations;
 
 using Microsoft.Extensions.DependencyInjection;
@@ -17,21 +19,9 @@ namespace FubarDev.FtpServer.CommandHandlers
     /// <summary>
     /// Implements the <c>PASS</c> command.
     /// </summary>
+    [FtpCommandHandler("PASS", isLoginRequired: false)]
     public class PassCommandHandler : FtpCommandHandler
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="PassCommandHandler"/> class.
-        /// </summary>
-        /// <param name="connectionAccessor">The accessor to get the connection that is active during the <see cref="Process"/> method execution.</param>
-        public PassCommandHandler(
-            [NotNull] IFtpConnectionAccessor connectionAccessor)
-            : base(connectionAccessor, "PASS")
-        {
-        }
-
-        /// <inheritdoc/>
-        public override bool IsLoginRequired => false;
-
         /// <inheritdoc/>
         public override Task<IFtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
         {

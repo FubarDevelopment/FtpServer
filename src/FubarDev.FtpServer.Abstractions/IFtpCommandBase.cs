@@ -2,6 +2,7 @@
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -20,6 +21,7 @@ namespace FubarDev.FtpServer
         /// </summary>
         [NotNull]
         [ItemNotNull]
+        [Obsolete("The mapping from name to command handler is created by using the FtpCommandHandlerAttribute.")]
         IReadOnlyCollection<string> Names { get; }
 
         /// <summary>
