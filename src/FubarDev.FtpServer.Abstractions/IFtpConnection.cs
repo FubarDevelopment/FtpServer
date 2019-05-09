@@ -13,7 +13,7 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-
+using FubarDev.FtpServer.Features;
 using JetBrains.Annotations;
 
 using Microsoft.AspNetCore.Http.Features;
@@ -24,7 +24,7 @@ namespace FubarDev.FtpServer
     /// <summary>
     /// The interface for an FTP connection.
     /// </summary>
-    public interface IFtpConnection : IDisposable
+    public interface IFtpConnection : IConnectionFeature, IDisposable
     {
         /// <summary>
         /// Gets or sets the event handler that is triggered when the connection is closed.
@@ -63,33 +63,24 @@ namespace FubarDev.FtpServer
         ILogger Log { get; }
 
         /// <summary>
-        /// Gets the local end point.
-        /// </summary>
-        [NotNull]
-        IPEndPoint LocalEndPoint { get; }
-
-        /// <summary>
         /// Gets the control connection stream.
         /// </summary>
         [NotNull]
+        [Obsolete("Query the information using the ISecureConnectionFeature instead.")]
         Stream OriginalStream { get; }
 
         /// <summary>
         /// Gets or sets the control connection stream.
         /// </summary>
         [NotNull]
+        [Obsolete("Query the information using the ISecureConnectionFeature instead.")]
         Stream SocketStream { get; set; }
 
         /// <summary>
         /// Gets a value indicating whether this is a secure connection.
         /// </summary>
+        [Obsolete("Query the information using the ISecureConnectionFeature instead.")]
         bool IsSecure { get; }
-
-        /// <summary>
-        /// Gets the remote address of the client.
-        /// </summary>
-        [NotNull]
-        Address RemoteAddress { get; }
 
         /// <summary>
         /// Gets the cancellation token to use to signal a task cancellation.

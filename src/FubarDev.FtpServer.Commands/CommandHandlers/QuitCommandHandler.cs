@@ -9,6 +9,7 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using FubarDev.FtpServer.Commands;
+using FubarDev.FtpServer.Features;
 
 namespace FubarDev.FtpServer.CommandHandlers
 {
@@ -26,7 +27,8 @@ namespace FubarDev.FtpServer.CommandHandlers
             {
                 AfterWriteAction = async (conn, ct) =>
                 {
-                    await conn.SocketStream.FlushAsync(ct)
+                    var secureConnectionFeature = conn.Features.Get<ISecureConnectionFeature>();
+                    await secureConnectionFeature.SocketStream.FlushAsync(ct)
                        .ConfigureAwait(false);
                     conn.Close();
                 },

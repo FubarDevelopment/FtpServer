@@ -145,7 +145,12 @@ namespace FubarDev.FtpServer
         /// Gets or sets the data connection for a passive data transfer.
         /// </summary>
         [CanBeNull]
-        public TcpClient PassiveSocketClient { get; set; }
+        [Obsolete("Query the information using the ISecureConnectionFeature instead.")]
+        public TcpClient PassiveSocketClient
+        {
+            get => _featureCollection.Get<ISecureConnectionFeature>().PassiveSocketClient;
+            set => _featureCollection.Get<ISecureConnectionFeature>().PassiveSocketClient = value;
+        }
 
         /// <summary>
         /// Gets the <see cref="BackgroundCommandHandler"/> that's required for the <c>ABOR</c> command.
@@ -206,7 +211,7 @@ namespace FubarDev.FtpServer
                 {
                     if (feature == null)
                     {
-                        feature = new RenameCommandFeature();
+                        feature = new RenameCommandFeature(value);
                         _featureCollection.Set(feature);
                     }
 
@@ -230,7 +235,12 @@ namespace FubarDev.FtpServer
         /// Gets or sets a delegate that allows the creation of an encrypted stream.
         /// </summary>
         [CanBeNull]
-        public CreateEncryptedStreamDelegate CreateEncryptedStream { get; set; }
+        [Obsolete("Query the information using the ISecureConnectionFeature instead.")]
+        public CreateEncryptedStreamDelegate CreateEncryptedStream
+        {
+            get => _featureCollection.Get<ISecureConnectionFeature>().CreateEncryptedStream;
+            set => _featureCollection.Get<ISecureConnectionFeature>().CreateEncryptedStream = value;
+        }
 
         /// <summary>
         /// Gets or sets user data as <c>dynamic</c> object.
@@ -241,9 +251,10 @@ namespace FubarDev.FtpServer
         /// <inheritdoc/>
         public void Dispose()
         {
-            PassiveSocketClient?.Dispose();
+            var secureConnectionFeature = _featureCollection.Get<ISecureConnectionFeature>();
+            secureConnectionFeature.PassiveSocketClient?.Dispose();
             (_featureCollection.Get<IFileSystemFeature>() as IDisposable)?.Dispose();
-            PassiveSocketClient = null;
+            secureConnectionFeature.PassiveSocketClient = null;
         }
 
         /// <summary>
@@ -260,6 +271,11 @@ namespace FubarDev.FtpServer
         /// </summary>
         private class RenameCommandFeature : IRenameCommandFeature
         {
+            public RenameCommandFeature(SearchResult<IUnixFileSystemEntry> renameFrom)
+            {
+                RenameFrom = renameFrom;
+            }
+
             /// <inheritdoc />
             public SearchResult<IUnixFileSystemEntry> RenameFrom { get; set; }
         }

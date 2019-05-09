@@ -6,7 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using FubarDev.FtpServer.Commands;
-
+using FubarDev.FtpServer.Features;
 using JetBrains.Annotations;
 
 using Microsoft.Extensions.DependencyInjection;
@@ -25,12 +25,13 @@ namespace FubarDev.FtpServer.CommandHandlers
             var loginStateMachine = Connection.ConnectionServices.GetRequiredService<IFtpLoginStateMachine>();
             loginStateMachine.Reset();
 
-            if (Connection.SocketStream != Connection.OriginalStream)
+            var secureConnectionFeature = Connection.Features.Get<ISecureConnectionFeature>();
+            if (secureConnectionFeature.SocketStream != secureConnectionFeature.OriginalStream)
             {
-                await Connection.SocketStream.FlushAsync(cancellationToken)
+                await secureConnectionFeature.SocketStream.FlushAsync(cancellationToken)
                    .ConfigureAwait(false);
-                Connection.SocketStream.Dispose();
-                Connection.SocketStream = Connection.OriginalStream;
+                secureConnectionFeature.SocketStream.Dispose();
+                secureConnectionFeature.SocketStream = secureConnectionFeature.OriginalStream;
             }
 
             return new FtpResponse(220, T("FTP Server Ready"));

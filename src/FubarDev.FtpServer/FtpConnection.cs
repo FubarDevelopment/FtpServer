@@ -72,18 +72,16 @@ namespace FubarDev.FtpServer
             [NotNull] IServiceProvider serviceProvider,
             [CanBeNull] ILogger<IFtpConnection> logger = null)
         {
-            var features = new FeatureCollection();
+            ConnectionServices = serviceProvider;
 
             var endpoint = (IPEndPoint)socket.Client.RemoteEndPoint;
-            RemoteAddress = new Address(endpoint.Address.ToString(), endpoint.Port);
-
-            ConnectionServices = serviceProvider;
+            var remoteAddress = new Address(endpoint.Address.ToString(), endpoint.Port);
 
             var properties = new Dictionary<string, object>
             {
-                ["RemoteAddress"] = RemoteAddress.ToString(true),
-                ["RemoteIp"] = RemoteAddress.IPAddress?.ToString(),
-                ["RemotePort"] = RemoteAddress.Port,
+                ["RemoteAddress"] = remoteAddress.ToString(true),
+                ["RemoteIp"] = remoteAddress.IPAddress?.ToString(),
+                ["RemotePort"] = remoteAddress.Port,
             };
 
             _loggerScope = logger?.BeginScope(properties);
@@ -92,12 +90,18 @@ namespace FubarDev.FtpServer
             _connectionAccessor = connectionAccessor;
             _commandActivator = commandActivator;
 
-            var socketStream = socket.GetStream();
-
-            SocketStream = socketStream;
-            OriginalStream = socketStream;
             Log = logger;
 
+            var parentFeatures = new FeatureCollection();
+            var connectionFeature = new ConnectionFeature(
+                (IPEndPoint)socket.Client.LocalEndPoint,
+                remoteAddress);
+            parentFeatures.Set<IConnectionFeature>(connectionFeature);
+
+            var secureConnectionFeature = new SecureConnectionFeature(socket);
+            parentFeatures.Set<ISecureConnectionFeature>(secureConnectionFeature);
+
+            var features = new FeatureCollection(parentFeatures);
             Data = new FtpConnectionData(
                 options.Value.DefaultEncoding ?? Encoding.ASCII,
                 features,
@@ -131,19 +135,28 @@ namespace FubarDev.FtpServer
         public ILogger Log { get; }
 
         /// <inheritdoc />
-        public IPEndPoint LocalEndPoint => (IPEndPoint)_socket.Client.LocalEndPoint;
+        public IPEndPoint LocalEndPoint
+            => Features.Get<IConnectionFeature>().LocalEndPoint;
 
         /// <inheritdoc />
-        public Stream OriginalStream { get; }
+        public Address RemoteAddress
+            => Features.Get<IConnectionFeature>().RemoteAddress;
 
         /// <inheritdoc />
-        public Stream SocketStream { get; set; }
+        [Obsolete("Query the information using the ISecureConnectionFeature instead.")]
+        public Stream OriginalStream => Features.Get<ISecureConnectionFeature>().OriginalStream;
 
         /// <inheritdoc />
-        public bool IsSecure => !ReferenceEquals(SocketStream, OriginalStream);
+        [Obsolete("Query the information using the ISecureConnectionFeature instead.")]
+        public Stream SocketStream
+        {
+            get => Features.Get<ISecureConnectionFeature>().SocketStream;
+            set => Features.Get<ISecureConnectionFeature>().SocketStream = value;
+        }
 
         /// <inheritdoc />
-        public Address RemoteAddress { get; }
+        [Obsolete("Query the information using the ISecureConnectionFeature instead.")]
+        public bool IsSecure => Features.Get<ISecureConnectionFeature>().IsSecure;
 
         /// <summary>
         /// Gets the cancellation token to use to signal a task cancellation.
@@ -178,9 +191,10 @@ namespace FubarDev.FtpServer
             if (!_closed)
             {
                 Log?.Log(response);
+                var socketStream = Features.Get<ISecureConnectionFeature>().SocketStream;
                 var encoding = Features.Get<IEncodingFeature>().Encoding;
                 var data = encoding.GetBytes($"{response}\r\n");
-                await SocketStream.WriteAsync(data, 0, data.Length, cancellationToken).ConfigureAwait(false);
+                await socketStream.WriteAsync(data, 0, data.Length, cancellationToken).ConfigureAwait(false);
                 if (response.AfterWriteAction != null)
                 {
                     await response.AfterWriteAction(this, cancellationToken).ConfigureAwait(false);
@@ -199,9 +213,10 @@ namespace FubarDev.FtpServer
             if (!_closed)
             {
                 Log?.LogDebug(response);
+                var socketStream = Features.Get<ISecureConnectionFeature>().SocketStream;
                 var encoding = Features.Get<IEncodingFeature>().Encoding;
                 var data = encoding.GetBytes($"{response}\r\n");
-                await SocketStream.WriteAsync(data, 0, data.Length, cancellationToken).ConfigureAwait(false);
+                await socketStream.WriteAsync(data, 0, data.Length, cancellationToken).ConfigureAwait(false);
             }
         }
 
@@ -222,12 +237,14 @@ namespace FubarDev.FtpServer
                 return result;
             }
 
-            if (Data.PassiveSocketClient == null)
+            var passiveSocketClient = Features.Get<ISecureConnectionFeature>().PassiveSocketClient;
+
+            if (passiveSocketClient == null)
             {
                 throw new InvalidOperationException("Passive connection expected, but none found");
             }
 
-            return Data.PassiveSocketClient;
+            return passiveSocketClient;
         }
 
         /// <summary>
@@ -237,12 +254,14 @@ namespace FubarDev.FtpServer
         /// <returns>The encrypted stream.</returns>
         public Task<Stream> CreateEncryptedStream(Stream unencryptedStream)
         {
-            if (Data.CreateEncryptedStream == null)
+            var createEncryptedStream = Features.Get<ISecureConnectionFeature>().CreateEncryptedStream;
+
+            if (createEncryptedStream == null)
             {
                 return Task.FromResult(unencryptedStream);
             }
 
-            return Data.CreateEncryptedStream(unencryptedStream);
+            return createEncryptedStream(unencryptedStream);
         }
 
         /// <inheritdoc/>
@@ -253,10 +272,13 @@ namespace FubarDev.FtpServer
                 Close();
             }
 
-            if (!ReferenceEquals(SocketStream, OriginalStream))
+            var secureConnectionFeature = Features.Get<ISecureConnectionFeature>();
+            var socketStream = secureConnectionFeature.SocketStream;
+            var originalStream = secureConnectionFeature.OriginalStream;
+            if (!ReferenceEquals(socketStream, originalStream))
             {
-                SocketStream.Dispose();
-                SocketStream = OriginalStream;
+                socketStream.Dispose();
+                secureConnectionFeature.SocketStream = originalStream;
             }
 
             _socket.Dispose();
@@ -307,7 +329,8 @@ namespace FubarDev.FtpServer
                 {
                     if (readTask == null)
                     {
-                        readTask = SocketStream.ReadAsync(buffer, 0, buffer.Length, _cancellationTokenSource.Token);
+                        var socketStream = Features.Get<ISecureConnectionFeature>().SocketStream;
+                        readTask = socketStream.ReadAsync(buffer, 0, buffer.Length, _cancellationTokenSource.Token);
                     }
 
                     var tasks = new List<Task>() { readTask };
@@ -362,10 +385,14 @@ namespace FubarDev.FtpServer
                 Log?.LogInformation($"Disconnection from {RemoteAddress.ToString(true)}");
                 _closed = true;
                 Data.BackgroundCommandHandler.Cancel();
-                if (!ReferenceEquals(SocketStream, OriginalStream))
+
+                var secureConnectionFeature = Features.Get<ISecureConnectionFeature>();
+                var socketStream = secureConnectionFeature.SocketStream;
+                var originalStream = secureConnectionFeature.OriginalStream;
+                if (!ReferenceEquals(socketStream, originalStream))
                 {
-                    SocketStream.Dispose();
-                    SocketStream = OriginalStream;
+                    socketStream.Dispose();
+                    secureConnectionFeature.SocketStream = originalStream;
                 }
                 _socket.Dispose();
                 OnClosed();
@@ -443,7 +470,8 @@ namespace FubarDev.FtpServer
                 await WriteAsync(response, _cancellationTokenSource.Token).ConfigureAwait(false);
                 if (response.Code == 421)
                 {
-                    SocketStream.Flush();
+                    var socketStream = Features.Get<ISecureConnectionFeature>().SocketStream;
+                    socketStream.Flush();
                     Close();
                 }
             }
@@ -452,6 +480,46 @@ namespace FubarDev.FtpServer
         private void OnClosed()
         {
             Closed?.Invoke(this, new EventArgs());
+        }
+
+        private class ConnectionFeature : IConnectionFeature
+        {
+            public ConnectionFeature(
+                IPEndPoint localEndPoint,
+                Address remoteAddress)
+            {
+                LocalEndPoint = localEndPoint;
+                RemoteAddress = remoteAddress;
+            }
+
+            /// <inheritdoc />
+            public IPEndPoint LocalEndPoint { get; }
+
+            /// <inheritdoc />
+            public Address RemoteAddress { get; }
+        }
+
+        private class SecureConnectionFeature : ISecureConnectionFeature
+        {
+            public SecureConnectionFeature(TcpClient tcpClient)
+            {
+                OriginalStream = SocketStream = tcpClient.GetStream();
+            }
+
+            /// <inheritdoc />
+            public Stream OriginalStream { get; }
+
+            /// <inheritdoc />
+            public Stream SocketStream { get; set; }
+
+            /// <inheritdoc />
+            public bool IsSecure => !ReferenceEquals(SocketStream, OriginalStream);
+
+            /// <inheritdoc />
+            public TcpClient PassiveSocketClient { get; set; }
+
+            /// <inheritdoc />
+            public CreateEncryptedStreamDelegate CreateEncryptedStream { get; set; }
         }
     }
 }

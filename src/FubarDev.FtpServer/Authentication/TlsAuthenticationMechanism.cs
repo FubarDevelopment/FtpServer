@@ -8,7 +8,7 @@ using System.IO;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading;
 using System.Threading.Tasks;
-
+using FubarDev.FtpServer.Features;
 using JetBrains.Annotations;
 
 using Microsoft.Extensions.Logging;
@@ -71,24 +71,25 @@ namespace FubarDev.FtpServer.Authentication
             {
                 AfterWriteAction = async (conn, ct) =>
                 {
-                    await conn.SocketStream.FlushAsync(ct).ConfigureAwait(false);
+                    var secureConnectionFeature = conn.Features.Get<ISecureConnectionFeature>();
+                    await secureConnectionFeature.SocketStream.FlushAsync(ct).ConfigureAwait(false);
 
                     try
                     {
                         var sslStream = await _sslStreamWrapperFactory.WrapStreamAsync(
-                                conn.OriginalStream,
+                                secureConnectionFeature.OriginalStream,
                                 true,
                                 _serverCertificate,
                                 cancellationToken)
                            .ConfigureAwait(false);
-                        if (conn.SocketStream != conn.OriginalStream)
+                        if (secureConnectionFeature.SocketStream != secureConnectionFeature.OriginalStream)
                         {
                             // Close old SSL connection.
-                            await _sslStreamWrapperFactory.CloseStreamAsync(conn.SocketStream, cancellationToken)
+                            await _sslStreamWrapperFactory.CloseStreamAsync(secureConnectionFeature.SocketStream, cancellationToken)
                                .ConfigureAwait(false);
                         }
 
-                        conn.SocketStream = sslStream;
+                        secureConnectionFeature.SocketStream = sslStream;
                     }
                     catch (Exception ex)
                     {
@@ -123,13 +124,14 @@ namespace FubarDev.FtpServer.Authentication
         /// <inheritdoc />
         public override Task<IFtpResponse> HandleProtAsync(string protCode, CancellationToken cancellationToken)
         {
+            var secureConnectionFeature = Connection.Features.Get<ISecureConnectionFeature>();
             switch (protCode.ToUpperInvariant())
             {
                 case "C":
-                    Connection.Data.CreateEncryptedStream = null;
+                    secureConnectionFeature.CreateEncryptedStream = null;
                     break;
                 case "P":
-                    Connection.Data.CreateEncryptedStream = CreateSslStream;
+                    secureConnectionFeature.CreateEncryptedStream = CreateSslStream;
                     break;
                 default:
                     return Task.FromResult<IFtpResponse>(new FtpResponse(SecurityActionResult.RequestedProtLevelNotSupported, T("A data channel protection level other than C, or P is not supported.")));

@@ -52,11 +52,12 @@ namespace FubarDev.FtpServer.CommandHandlers
         public override async Task<IFtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
         {
             var transferFeature = Connection.Features.Get<ITransferConfigurationFeature>();
+            var secureConnectionFeature = Connection.Features.Get<ISecureConnectionFeature>();
 
-            if (Data.PassiveSocketClient != null)
+            if (secureConnectionFeature.PassiveSocketClient != null)
             {
-                Data.PassiveSocketClient.Dispose();
-                Data.PassiveSocketClient = null;
+                secureConnectionFeature.PassiveSocketClient.Dispose();
+                secureConnectionFeature.PassiveSocketClient = null;
             }
 
             if (transferFeature.TransferTypeCommandUsed != null && !string.Equals(
@@ -132,7 +133,7 @@ namespace FubarDev.FtpServer.CommandHandlers
                             Connection.Log?.LogDebug($"Data connection accepted from {pasvRemoteAddress}");
                         }
 
-                        Data.PassiveSocketClient = passiveClient;
+                        secureConnectionFeature.PassiveSocketClient = passiveClient;
                     }
                 }
             }
