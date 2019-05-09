@@ -59,12 +59,6 @@ namespace FubarDev.FtpServer.CommandExtensions
         public string ExtensionFor => _extensionFor ?? throw new InvalidOperationException("Obsolete property \"ExtensionFor\" called for a command handler extension.");
 
         /// <summary>
-        /// Gets or sets the extension announcement mode.
-        /// </summary>
-        [Obsolete("Use the FtpCommandHandlerExtension attribute instead.")]
-        public ExtensionAnnouncementMode AnnouncementMode { get; set; } = ExtensionAnnouncementMode.Hidden;
-
-        /// <summary>
         /// Gets or sets the FTP command context.
         /// </summary>
         [CanBeNull]

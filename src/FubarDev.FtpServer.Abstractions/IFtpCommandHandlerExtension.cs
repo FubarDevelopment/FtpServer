@@ -27,11 +27,6 @@ namespace FubarDev.FtpServer
         string ExtensionFor { get; }
 
         /// <summary>
-        /// Gets the extension announcement mode.
-        /// </summary>
-        ExtensionAnnouncementMode AnnouncementMode { get; }
-
-        /// <summary>
         /// Called to initialize the connection data.
         /// </summary>
         void InitializeConnectionData();
