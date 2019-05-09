@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 
 using FubarDev.FtpServer.Authentication;
 using FubarDev.FtpServer.BackgroundTransfer;
+using FubarDev.FtpServer.Commands;
 using FubarDev.FtpServer.Features;
 using FubarDev.FtpServer.FileSystem;
 
@@ -22,6 +23,7 @@ namespace FubarDev.FtpServer.CommandHandlers
     /// <summary>
     /// This class implements the STOR command (4.1.3.).
     /// </summary>
+    [FtpCommandHandler("STOR", true)]
     public class StorCommandHandler : FtpCommandHandler
     {
         [NotNull]
@@ -38,14 +40,10 @@ namespace FubarDev.FtpServer.CommandHandlers
         public StorCommandHandler(
             [NotNull] IBackgroundTransferWorker backgroundTransferWorker,
             [NotNull] ISslStreamWrapperFactory sslStreamWrapperFactory)
-            : base("STOR")
         {
             _backgroundTransferWorker = backgroundTransferWorker;
             _sslStreamWrapperFactory = sslStreamWrapperFactory;
         }
-
-        /// <inheritdoc/>
-        public override bool IsAbortable => true;
 
         /// <inheritdoc/>
         public override async Task<IFtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)

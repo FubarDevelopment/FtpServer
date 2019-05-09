@@ -5,6 +5,8 @@
 using System.Threading;
 using System.Threading.Tasks;
 
+using FubarDev.FtpServer.Commands;
+
 using JetBrains.Annotations;
 
 using Microsoft.Extensions.DependencyInjection;
@@ -14,19 +16,9 @@ namespace FubarDev.FtpServer.CommandHandlers
     /// <summary>
     /// Implementation of the <c>REIN</c> command.
     /// </summary>
+    [FtpCommandHandler("REIN", isLoginRequired: false)]
     public class ReinCommandHandler : FtpCommandHandler
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ReinCommandHandler"/> class.
-        /// </summary>
-        public ReinCommandHandler()
-            : base("REIN")
-        {
-        }
-
-        /// <inheritdoc />
-        public override bool IsLoginRequired => false;
-
         /// <inheritdoc />
         public override async Task<IFtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
         {

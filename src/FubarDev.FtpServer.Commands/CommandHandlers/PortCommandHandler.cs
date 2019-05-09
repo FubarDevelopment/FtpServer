@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
+using FubarDev.FtpServer.Commands;
 using FubarDev.FtpServer.Features;
 
 namespace FubarDev.FtpServer.CommandHandlers
@@ -17,22 +18,11 @@ namespace FubarDev.FtpServer.CommandHandlers
     /// <summary>
     /// Implements the <c>PORT</c> and <c>EPRT</c> commands.
     /// </summary>
+    [FtpCommandHandler("PORT")]
+    [FtpCommandHandler("EPRT")]
+    [FtpFeatureText("EPRT")]
     public class PortCommandHandler : FtpCommandHandler
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="PortCommandHandler"/> class.
-        /// </summary>
-        public PortCommandHandler()
-            : base("PORT", "EPRT")
-        {
-        }
-
-        /// <inheritdoc/>
-        public override IEnumerable<IFeatureInfo> GetSupportedFeatures(IFtpConnection connection)
-        {
-            yield return new GenericFeatureInfo("EPRT", IsLoginRequired);
-        }
-
         /// <inheritdoc/>
         public override Task<IFtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
         {

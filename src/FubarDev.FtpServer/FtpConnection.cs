@@ -18,6 +18,7 @@ using System.Threading.Tasks;
 
 using FubarDev.FtpServer.BackgroundTransfer;
 using FubarDev.FtpServer.CommandHandlers;
+using FubarDev.FtpServer.Commands;
 using FubarDev.FtpServer.Features;
 using FubarDev.FtpServer.FileSystem.Error;
 using FubarDev.FtpServer.Localization;
@@ -384,7 +385,7 @@ namespace FubarDev.FtpServer
             {
                 var handler = result.Handler;
                 var handlerCommand = result.CommandContext.Command;
-                var isLoginRequired = result.IsLoginRequired;
+                var isLoginRequired = result.Information.IsLoginRequired;
                 if (isLoginRequired && loginStateMachine.Status != SecurityStatus.Authorized)
                 {
                     response = new FtpResponse(530, T("Not logged in."));
@@ -393,8 +394,7 @@ namespace FubarDev.FtpServer
                 {
                     try
                     {
-                        var cmdHandler = handler as FtpCommandHandler;
-                        var isAbortable = cmdHandler?.IsAbortable ?? false;
+                        var isAbortable = result.Information.IsAbortable;
                         if (isAbortable)
                         {
                             var newBackgroundTask = Data.BackgroundCommandHandler.Execute(handler, handlerCommand);

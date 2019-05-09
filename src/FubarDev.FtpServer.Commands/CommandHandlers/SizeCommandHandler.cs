@@ -5,10 +5,12 @@
 // <author>Mark Junker</author>
 //-----------------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
+using FubarDev.FtpServer.Commands;
 using FubarDev.FtpServer.Features;
 using FubarDev.FtpServer.FileSystem;
 
@@ -17,22 +19,10 @@ namespace FubarDev.FtpServer.CommandHandlers
     /// <summary>
     /// Implements the <c>SIZE</c> command.
     /// </summary>
+    [FtpCommandHandler("SIZE")]
+    [FtpFeatureText("SIZE")]
     public class SizeCommandHandler : FtpCommandHandler
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="SizeCommandHandler"/> class.
-        /// </summary>
-        public SizeCommandHandler()
-            : base("SIZE")
-        {
-        }
-
-        /// <inheritdoc/>
-        public override IEnumerable<IFeatureInfo> GetSupportedFeatures(IFtpConnection connection)
-        {
-            yield return new GenericFeatureInfo("SIZE", IsLoginRequired);
-        }
-
         /// <inheritdoc/>
         public override async Task<IFtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
         {

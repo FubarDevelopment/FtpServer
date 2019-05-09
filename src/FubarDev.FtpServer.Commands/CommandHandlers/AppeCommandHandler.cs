@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 
 using FubarDev.FtpServer.Authentication;
 using FubarDev.FtpServer.BackgroundTransfer;
+using FubarDev.FtpServer.Commands;
 using FubarDev.FtpServer.Features;
 using FubarDev.FtpServer.FileSystem;
 
@@ -22,6 +23,7 @@ namespace FubarDev.FtpServer.CommandHandlers
     /// <summary>
     /// Implements the <c>APPE</c> command.
     /// </summary>
+    [FtpCommandHandler("APPE", isAbortable: true)]
     public class AppeCommandHandler : FtpCommandHandler
     {
         [NotNull]
@@ -38,14 +40,10 @@ namespace FubarDev.FtpServer.CommandHandlers
         public AppeCommandHandler(
             [NotNull] IBackgroundTransferWorker backgroundTransferWorker,
             [NotNull] ISslStreamWrapperFactory sslStreamWrapperFactory)
-            : base("APPE")
         {
             _backgroundTransferWorker = backgroundTransferWorker;
             _sslStreamWrapperFactory = sslStreamWrapperFactory;
         }
-
-        /// <inheritdoc/>
-        public override bool IsAbortable => true;
 
         /// <inheritdoc/>
         public override async Task<IFtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)

@@ -2,10 +2,13 @@
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
+using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
+
+using FubarDev.FtpServer.Commands;
 
 using JetBrains.Annotations;
 
@@ -16,25 +19,10 @@ namespace FubarDev.FtpServer.CommandHandlers
     /// <summary>
     /// Implementation of the <c>HOST</c> command.
     /// </summary>
+    [FtpCommandHandler("HOST", isLoginRequired: false)]
+    [FtpFeatureText("HOST")]
     public class HostCommandHandler : FtpCommandHandler
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="HostCommandHandler"/> class.
-        /// </summary>
-        public HostCommandHandler()
-            : base("HOST")
-        {
-        }
-
-        /// <inheritdoc />
-        public override bool IsLoginRequired => false;
-
-        /// <inheritdoc />
-        public override IEnumerable<IFeatureInfo> GetSupportedFeatures(IFtpConnection connection)
-        {
-            yield return new GenericFeatureInfo("HOST", false);
-        }
-
         /// <inheritdoc />
         public override Task<IFtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
         {

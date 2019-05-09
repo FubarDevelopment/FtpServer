@@ -8,6 +8,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 
+using FubarDev.FtpServer.Commands;
 using FubarDev.FtpServer.Features;
 using FubarDev.FtpServer.FileSystem;
 
@@ -18,19 +19,9 @@ namespace FubarDev.FtpServer.CommandHandlers
     /// <summary>
     /// Implements the <c>RNFR</c> command.
     /// </summary>
+    [FtpCommandHandler("RNFR", isAbortable: true)]
     public class RnfrCommandHandler : FtpCommandHandler
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="RnfrCommandHandler"/> class.
-        /// </summary>
-        public RnfrCommandHandler()
-            : base("RNFR")
-        {
-        }
-
-        /// <inheritdoc/>
-        public override bool IsAbortable => true;
-
         /// <inheritdoc/>
         public override async Task<IFtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
         {

@@ -12,6 +12,7 @@ namespace FubarDev.FtpServer
     internal static class FtpCommandExtensionExtensions
     {
         [CanBeNull]
+        [Obsolete]
         public static string ToFeatureString([NotNull] this IFtpCommandHandlerExtension extension)
         {
             switch (extension.AnnouncementMode)

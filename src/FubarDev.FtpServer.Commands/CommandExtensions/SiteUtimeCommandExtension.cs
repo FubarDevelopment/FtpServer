@@ -19,20 +19,11 @@ namespace FubarDev.FtpServer.CommandExtensions
     /// <remarks>
     /// This doesn't exist as RFC. Instead, it's only documented
     /// on the <a href="http://www.proftpd.org/docs/contrib/mod_site_misc.html">ProFTPd site</a>.
+    /// This extension is hidden, according to https://ghisler.ch/board/viewtopic.php?t=24952.
     /// </remarks>
+    [FtpCommandHandlerExtension("UTIME", "SITE")]
     public class SiteUtimeCommandExtension : FtpCommandHandlerExtension
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="SiteUtimeCommandExtension"/> class.
-        /// </summary>
-        public SiteUtimeCommandExtension()
-            : base("SITE", "UTIME")
-        {
-            // This extension is hidden, accoding to
-            // https://ghisler.ch/board/viewtopic.php?t=24952
-            AnnouncementMode = ExtensionAnnouncementMode.Hidden;
-        }
-
         /// <inheritdoc />
         public override void InitializeConnectionData()
         {

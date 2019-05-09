@@ -4,7 +4,7 @@
 
 using JetBrains.Annotations;
 
-namespace FubarDev.FtpServer
+namespace FubarDev.FtpServer.Commands
 {
     public class FtpCommandContext
     {

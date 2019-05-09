@@ -12,6 +12,7 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using FubarDev.FtpServer.Authentication;
+using FubarDev.FtpServer.Commands;
 using FubarDev.FtpServer.Features;
 using FubarDev.FtpServer.FileSystem;
 
@@ -22,6 +23,7 @@ namespace FubarDev.FtpServer.CommandHandlers
     /// <summary>
     /// Implements the <c>RETR</c> command.
     /// </summary>
+    [FtpCommandHandler("RETR", isAbortable: true)]
     public class RetrCommandHandler : FtpCommandHandler
     {
         private const int BufferSize = 4096;
@@ -35,13 +37,9 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// <param name="sslStreamWrapperFactory">An object to handle SSL streams.</param>
         public RetrCommandHandler(
             [NotNull] ISslStreamWrapperFactory sslStreamWrapperFactory)
-            : base("RETR")
         {
             _sslStreamWrapperFactory = sslStreamWrapperFactory;
         }
-
-        /// <inheritdoc/>
-        public override bool IsAbortable => true;
 
         /// <inheritdoc/>
         public override async Task<IFtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)

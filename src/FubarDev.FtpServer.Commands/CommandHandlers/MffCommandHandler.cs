@@ -11,15 +11,20 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
+using FubarDev.FtpServer.Commands;
 using FubarDev.FtpServer.Features;
 using FubarDev.FtpServer.FileSystem;
 using FubarDev.FtpServer.ListFormatters.Facts;
+
+using JetBrains.Annotations;
 
 namespace FubarDev.FtpServer.CommandHandlers
 {
     /// <summary>
     /// Implements the <c>MFF</c> command.
     /// </summary>
+    [FtpCommandHandler("MFF")]
+    [FtpFeatureFunction(nameof(FeatureStatus))]
     public class MffCommandHandler : FtpCommandHandler
     {
         private static readonly Dictionary<string, CreateFactDelegate> _knownFacts = new Dictionary<string, CreateFactDelegate>(StringComparer.OrdinalIgnoreCase)
@@ -44,20 +49,22 @@ namespace FubarDev.FtpServer.CommandHandlers
             },
         };
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="MffCommandHandler"/> class.
-        /// </summary>
-        public MffCommandHandler()
-            : base("MFF")
-        {
-        }
-
         private delegate IFact CreateFactDelegate(string value);
 
-        /// <inheritdoc/>
-        public override IEnumerable<IFeatureInfo> GetSupportedFeatures(IFtpConnection connection)
+        /// <summary>
+        /// Gets the feature string for the <c>MFF</c> command.
+        /// </summary>
+        /// <param name="connection">The connection.</param>
+        /// <returns>The feature string.</returns>
+        public static string FeatureStatus([NotNull] IFtpConnection connection)
         {
-            yield return new GenericFeatureInfo("MFF", FeatureStatus, IsLoginRequired);
+            var result = new StringBuilder();
+            result.Append("MFF ");
+            foreach (var fact in _knownFacts)
+            {
+                result.AppendFormat("{0};", fact.Key);
+            }
+            return result.ToString();
         }
 
         /// <inheritdoc/>
@@ -134,17 +141,6 @@ namespace FubarDev.FtpServer.CommandHandlers
             responseText.AppendFormat(" {0}", fullName);
 
             return new FtpResponse(213, responseText.ToString());
-        }
-
-        private static string FeatureStatus(IFtpConnection connection)
-        {
-            var result = new StringBuilder();
-            result.Append("MFF ");
-            foreach (var fact in _knownFacts)
-            {
-                result.AppendFormat("{0};", fact.Key);
-            }
-            return result.ToString();
         }
     }
 }

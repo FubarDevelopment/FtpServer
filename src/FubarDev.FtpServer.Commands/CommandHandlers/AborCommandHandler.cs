@@ -8,21 +8,16 @@
 using System.Threading;
 using System.Threading.Tasks;
 
+using FubarDev.FtpServer.Commands;
+
 namespace FubarDev.FtpServer.CommandHandlers
 {
     /// <summary>
     /// Implements the <c>ABOR</c> command.
     /// </summary>
+    [FtpCommandHandler("ABOR")]
     public class AborCommandHandler : FtpCommandHandler
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="AborCommandHandler"/> class.
-        /// </summary>
-        public AborCommandHandler()
-            : base("ABOR")
-        {
-        }
-
         /// <inheritdoc/>
         public override Task<IFtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
         {

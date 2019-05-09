@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using DotNet.Globbing;
 
 using FubarDev.FtpServer.BackgroundTransfer;
+using FubarDev.FtpServer.Commands;
 using FubarDev.FtpServer.Features;
 using FubarDev.FtpServer.ListFormatters;
 
@@ -20,6 +21,7 @@ namespace FubarDev.FtpServer.CommandHandlers
     /// <summary>
     /// The <c>STAT</c> command handler.
     /// </summary>
+    [FtpCommandHandler("STAT")]
     public class StatCommandHandler : FtpCommandHandler
     {
         [NotNull]
@@ -36,7 +38,6 @@ namespace FubarDev.FtpServer.CommandHandlers
         public StatCommandHandler(
             [NotNull] IFtpServer server,
             [NotNull] IBackgroundTransferWorker backgroundTransferWorker)
-            : base("STAT")
         {
             _server = server;
             _backgroundTransferWorker = backgroundTransferWorker;

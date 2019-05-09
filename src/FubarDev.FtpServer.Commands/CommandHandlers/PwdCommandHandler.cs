@@ -8,6 +8,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 
+using FubarDev.FtpServer.Commands;
 using FubarDev.FtpServer.Features;
 using FubarDev.FtpServer.FileSystem;
 
@@ -16,16 +17,10 @@ namespace FubarDev.FtpServer.CommandHandlers
     /// <summary>
     /// Implements the <c>PWD</c> command.
     /// </summary>
+    [FtpCommandHandler("PWD")]
+    [FtpCommandHandler("XPWD")]
     public class PwdCommandHandler : FtpCommandHandler
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="PwdCommandHandler"/> class.
-        /// </summary>
-        public PwdCommandHandler()
-            : base("PWD", "XPWD")
-        {
-        }
-
         /// <inheritdoc/>
         public override Task<IFtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
         {

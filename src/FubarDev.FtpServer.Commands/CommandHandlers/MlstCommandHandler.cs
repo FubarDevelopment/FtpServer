@@ -12,7 +12,9 @@ using System.Threading.Tasks;
 
 using FubarDev.FtpServer.AccountManagement;
 using FubarDev.FtpServer.Authentication;
+using FubarDev.FtpServer.Commands;
 using FubarDev.FtpServer.Features;
+using FubarDev.FtpServer.Features.Impl;
 using FubarDev.FtpServer.FileSystem;
 using FubarDev.FtpServer.ListFormatters;
 using FubarDev.FtpServer.Utilities;
@@ -24,8 +26,11 @@ using Microsoft.Extensions.Logging;
 namespace FubarDev.FtpServer.CommandHandlers
 {
     /// <summary>
-    /// The implementation of the <c>MLST</c> command.
+    /// The implementation of the <c>MLST</c> and <c>MLSD</c> commands.
     /// </summary>
+    [FtpCommandHandler("MLST")]
+    [FtpCommandHandler("MLSD")]
+    [FtpFeatureFunction(nameof(FeatureStatus))]
     public class MlstCommandHandler : FtpCommandHandler
     {
         /// <summary>
@@ -47,16 +52,27 @@ namespace FubarDev.FtpServer.CommandHandlers
         public MlstCommandHandler(
             [NotNull] ISslStreamWrapperFactory sslStreamWrapperFactory,
             [CanBeNull] ILogger<MlstCommandHandler> logger = null)
-            : base("MLST", "MLSD")
         {
             _sslStreamWrapperFactory = sslStreamWrapperFactory;
             _logger = logger;
         }
 
-        /// <inheritdoc/>
-        public override IEnumerable<IFeatureInfo> GetSupportedFeatures(IFtpConnection connection)
+        /// <summary>
+        /// Gets the feature string for the <c>MFF</c> command.
+        /// </summary>
+        /// <param name="connection">The connection.</param>
+        /// <returns>The feature string.</returns>
+        public static string FeatureStatus([NotNull] IFtpConnection connection)
         {
-            yield return new GenericFeatureInfo("MLST", FeatureStatus, IsLoginRequired);
+            var factsFeature = connection.Features.Get<IMlstFactsFeature>() ?? CreateMlstFactsFeature();
+            var result = new StringBuilder();
+            result.Append("MLST ");
+            foreach (var fact in KnownFacts)
+            {
+                result.AppendFormat("{0}{1};", fact, factsFeature.ActiveMlstFacts.Contains(fact) ? "*" : string.Empty);
+            }
+
+            return result.ToString();
         }
 
         /// <inheritdoc/>
@@ -71,16 +87,15 @@ namespace FubarDev.FtpServer.CommandHandlers
             return ProcessMlstAsync(command, cancellationToken);
         }
 
-        private static string FeatureStatus(IFtpConnection connection)
+        internal static IMlstFactsFeature CreateMlstFactsFeature()
         {
-            var factsFeature = connection.Features.Get<IMlstFactsFeature>();
-            var result = new StringBuilder();
-            result.Append("MLST ");
-            foreach (var fact in KnownFacts)
+            var factsFeature = new MlstFactsFeature();
+            foreach (var knownFact in MlstCommandHandler.KnownFacts)
             {
-                result.AppendFormat("{0}{1};", fact, factsFeature.ActiveMlstFacts.Contains(fact) ? "*" : string.Empty);
+                factsFeature.ActiveMlstFacts.Add(knownFact);
             }
-            return result.ToString();
+
+            return factsFeature;
         }
 
         private async Task<IFtpResponse> ProcessMlstAsync(FtpCommand command, CancellationToken cancellationToken)
@@ -107,7 +122,7 @@ namespace FubarDev.FtpServer.CommandHandlers
 
             var authInfoFeature = Connection.Features.Get<IAuthorizationInformationFeature>();
 
-            var factsFeature = Connection.Features.Get<IMlstFactsFeature>();
+            var factsFeature = Connection.Features.Get<IMlstFactsFeature>() ?? CreateMlstFactsFeature();
             return new MlstFtpResponse(factsFeature.ActiveMlstFacts, authInfoFeature.User, fsFeature.FileSystem, targetEntry, path);
         }
 
@@ -145,7 +160,7 @@ namespace FubarDev.FtpServer.CommandHandlers
             await Connection.WriteAsync(new FtpResponse(150, T("Opening data connection.")), cancellationToken).ConfigureAwait(false);
 
             var authInfoFeature = Connection.Features.Get<IAuthorizationInformationFeature>();
-            var factsFeature = Connection.Features.Get<IMlstFactsFeature>();
+            var factsFeature = Connection.Features.Get<IMlstFactsFeature>() ?? CreateMlstFactsFeature();
             return await Connection.SendResponseAsync(
                     client => ExecuteSendAsync(client, authInfoFeature.User, fsFeature.FileSystem, path, dirEntry, factsFeature, cancellationToken),
                     ex =>

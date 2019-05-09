@@ -12,6 +12,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
+using FubarDev.FtpServer.Commands;
 using FubarDev.FtpServer.Features;
 
 using JetBrains.Annotations;
@@ -23,11 +24,21 @@ namespace FubarDev.FtpServer.CommandHandlers
     /// </summary>
     public abstract class FtpCommandHandler : IFtpCommandHandler
     {
+        private readonly IReadOnlyCollection<string> _names;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FtpCommandHandler"/> class.
+        /// </summary>
+        protected FtpCommandHandler()
+        {
+        }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="FtpCommandHandler"/> class.
         /// </summary>
         /// <param name="name">The command name.</param>
         /// <param name="alternativeNames">Alternative names.</param>
+        [Obsolete("The mapping from name to command handler is created by using the FtpCommandHandlerAttribute.")]
         protected FtpCommandHandler([NotNull] string name, [NotNull, ItemNotNull] params string[] alternativeNames)
         {
             var names = new List<string>
@@ -35,16 +46,19 @@ namespace FubarDev.FtpServer.CommandHandlers
                 name,
             };
             names.AddRange(alternativeNames);
-            Names = names;
+            _names = names;
         }
 
         /// <inheritdoc />
-        public IReadOnlyCollection<string> Names { get; }
+        [Obsolete("The mapping from name to command handler is created by using the FtpCommandHandlerAttribute.")]
+        public IReadOnlyCollection<string> Names => _names ?? throw new InvalidOperationException("Obsolete property \"Names\" called for a command handler.");
 
         /// <inheritdoc />
+        [Obsolete("Information about an FTP command handler can be queried through the IFtpCommandHandlerProvider service.")]
         public virtual bool IsLoginRequired => true;
 
         /// <inheritdoc />
+        [Obsolete("Information about an FTP command handler can be queried through the IFtpCommandHandlerProvider service.")]
         public virtual bool IsAbortable => false;
 
         /// <summary>
@@ -68,6 +82,7 @@ namespace FubarDev.FtpServer.CommandHandlers
         protected FtpConnectionData Data => Connection.Data;
 
         /// <inheritdoc />
+        [Obsolete("FTP command handlers (and other types) are now annotated with attributes implementing IFeatureInfo.")]
         public virtual IEnumerable<IFeatureInfo> GetSupportedFeatures(IFtpConnection connection)
         {
             return Enumerable.Empty<IFeatureInfo>();

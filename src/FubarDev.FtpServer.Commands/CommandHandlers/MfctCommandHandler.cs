@@ -5,10 +5,12 @@
 // <author>Mark Junker</author>
 //-----------------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
+using FubarDev.FtpServer.Commands;
 using FubarDev.FtpServer.Features;
 using FubarDev.FtpServer.FileSystem;
 using FubarDev.FtpServer.ListFormatters.Facts;
@@ -18,22 +20,10 @@ namespace FubarDev.FtpServer.CommandHandlers
     /// <summary>
     /// Implements the <c>MFCT</c> command.
     /// </summary>
+    [FtpCommandHandler("MFCT")]
+    [FtpFeatureText("MFCT")]
     public class MfctCommandHandler : FtpCommandHandler
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="MfctCommandHandler"/> class.
-        /// </summary>
-        public MfctCommandHandler()
-            : base("MFCT")
-        {
-        }
-
-        /// <inheritdoc/>
-        public override IEnumerable<IFeatureInfo> GetSupportedFeatures(IFtpConnection connection)
-        {
-            yield return new GenericFeatureInfo("MFCT", IsLoginRequired);
-        }
-
         /// <inheritdoc/>
         public override async Task<IFtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
         {

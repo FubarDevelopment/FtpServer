@@ -12,6 +12,7 @@ using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
 
+using FubarDev.FtpServer.Commands;
 using FubarDev.FtpServer.Features;
 
 using JetBrains.Annotations;
@@ -24,6 +25,9 @@ namespace FubarDev.FtpServer.CommandHandlers
     /// <summary>
     /// The command handler for the <c>PASV</c> (4.1.2.) and <c>EPSV</c> commands.
     /// </summary>
+    [FtpCommandHandler("PASV")]
+    [FtpCommandHandler("EPSV")]
+    [FtpFeatureText("EPSV")]
     public class PasvCommandHandler : FtpCommandHandler
     {
         [NotNull]
@@ -39,16 +43,9 @@ namespace FubarDev.FtpServer.CommandHandlers
         public PasvCommandHandler(
             [NotNull] IPasvListenerFactory pasvListenerFactory,
             [NotNull] IOptions<PasvCommandOptions> options)
-            : base("PASV", "EPSV")
         {
             _pasvListenerFactory = pasvListenerFactory;
             _promiscuousPasv = options.Value.PromiscuousPasv;
-        }
-
-        /// <inheritdoc/>
-        public override IEnumerable<IFeatureInfo> GetSupportedFeatures(IFtpConnection connection)
-        {
-            yield return new GenericFeatureInfo("EPSV", IsLoginRequired);
         }
 
         /// <inheritdoc/>

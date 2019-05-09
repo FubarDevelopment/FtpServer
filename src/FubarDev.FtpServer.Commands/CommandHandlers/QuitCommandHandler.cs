@@ -8,24 +8,17 @@
 using System.Threading;
 using System.Threading.Tasks;
 
+using FubarDev.FtpServer.Commands;
+
 namespace FubarDev.FtpServer.CommandHandlers
 {
     /// <summary>
     /// Implements the <c>QUIT</c> command.
     /// </summary>
+    [FtpCommandHandler("QUIT", isLoginRequired: false)]
+    [FtpCommandHandler("LOGOUT", isLoginRequired: false)]
     public class QuitCommandHandler : FtpCommandHandler
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="QuitCommandHandler"/> class.
-        /// </summary>
-        public QuitCommandHandler()
-            : base("QUIT", "LOGOUT")
-        {
-        }
-
-        /// <inheritdoc />
-        public override bool IsLoginRequired { get; } = false;
-
         /// <inheritdoc/>
         public override Task<IFtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
         {

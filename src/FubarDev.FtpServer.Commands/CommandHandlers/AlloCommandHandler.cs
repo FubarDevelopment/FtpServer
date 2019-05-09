@@ -8,24 +8,16 @@
 using System.Threading;
 using System.Threading.Tasks;
 
+using FubarDev.FtpServer.Commands;
+
 namespace FubarDev.FtpServer.CommandHandlers
 {
     /// <summary>
     /// Implements the <c>ALLO</c> command.
     /// </summary>
+    [FtpCommandHandler("ALLO", isLoginRequired: false)]
     public class AlloCommandHandler : FtpCommandHandler
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="AlloCommandHandler"/> class.
-        /// </summary>
-        public AlloCommandHandler()
-            : base("ALLO")
-        {
-        }
-
-        /// <inheritdoc/>
-        public override bool IsLoginRequired => false;
-
         /// <inheritdoc/>
         public override Task<IFtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
         {

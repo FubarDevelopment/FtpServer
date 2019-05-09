@@ -8,6 +8,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
 
+using FubarDev.FtpServer.Commands;
 using FubarDev.FtpServer.Features;
 
 using JetBrains.Annotations;
@@ -19,12 +20,23 @@ namespace FubarDev.FtpServer.CommandExtensions
     /// </summary>
     public abstract class FtpCommandHandlerExtension : IFtpCommandHandlerExtension
     {
+        private readonly IReadOnlyCollection<string> _names;
+        private readonly string _extensionFor;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FtpCommandHandlerExtension"/> class.
+        /// </summary>
+        protected FtpCommandHandlerExtension()
+        {
+        }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="FtpCommandHandlerExtension"/> class.
         /// </summary>
         /// <param name="extensionFor">The name of the command this extension is for.</param>
         /// <param name="name">The command name.</param>
         /// <param name="alternativeNames">Alternative names.</param>
+        [Obsolete("Use the FtpCommandHandlerExtensionAttribute together with an additional IFtpCommandHandlerExtensionScanner.")]
         protected FtpCommandHandlerExtension([NotNull] string extensionFor, [NotNull] string name, [NotNull, ItemNotNull] params string[] alternativeNames)
         {
             var names = new List<string>
@@ -32,22 +44,24 @@ namespace FubarDev.FtpServer.CommandExtensions
                 name,
             };
             names.AddRange(alternativeNames);
-            Names = names;
-            ExtensionFor = extensionFor;
+            _names = names;
+            _extensionFor = extensionFor;
         }
 
         /// <inheritdoc />
-        public IReadOnlyCollection<string> Names { get; }
+        public IReadOnlyCollection<string> Names => _names ?? throw new InvalidOperationException("Obsolete property \"Names\" called for a command handler extension.");
 
         /// <inheritdoc />
+        [Obsolete("Use the FtpCommandHandlerExtension attribute instead.")]
         public virtual bool? IsLoginRequired { get; set; }
 
         /// <inheritdoc />
-        public string ExtensionFor { get; }
+        public string ExtensionFor => _extensionFor ?? throw new InvalidOperationException("Obsolete property \"ExtensionFor\" called for a command handler extension.");
 
         /// <summary>
         /// Gets or sets the extension announcement mode.
         /// </summary>
+        [Obsolete("Use the FtpCommandHandlerExtension attribute instead.")]
         public ExtensionAnnouncementMode AnnouncementMode { get; set; } = ExtensionAnnouncementMode.Hidden;
 
         /// <summary>

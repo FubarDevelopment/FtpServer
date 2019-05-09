@@ -2,7 +2,9 @@
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
-namespace FubarDev.FtpServer
+using JetBrains.Annotations;
+
+namespace FubarDev.FtpServer.Commands
 {
     /// <summary>
     /// Information about the selected FTP command handler.
@@ -14,27 +16,33 @@ namespace FubarDev.FtpServer
         /// </summary>
         /// <param name="handler">The FTP command handler.</param>
         /// <param name="commandContext">The FTP command context.</param>
-        /// <param name="isLoginRequired">Indicates whether a successful login is required.</param>
-        public FtpCommandSelection(IFtpCommandBase handler, FtpCommandContext commandContext, bool isLoginRequired)
+        /// <param name="handlerInformation">The FTP command handler information.</param>
+        public FtpCommandSelection(
+            [NotNull] IFtpCommandBase handler,
+            [NotNull] FtpCommandContext commandContext,
+            [NotNull] IFtpCommandInformation handlerInformation)
         {
             Handler = handler;
             CommandContext = commandContext;
-            IsLoginRequired = isLoginRequired;
+            Information = handlerInformation;
         }
 
         /// <summary>
         /// Gets the command.
         /// </summary>
+        [NotNull]
         public FtpCommandContext CommandContext { get; }
 
         /// <summary>
         /// Gets the command handler.
         /// </summary>
+        [NotNull]
         public IFtpCommandBase Handler { get; }
 
         /// <summary>
         /// Gets a value indicating whether a successful login is required.
         /// </summary>
-        public bool IsLoginRequired { get; }
+        [NotNull]
+        public IFtpCommandInformation Information { get; }
     }
 }

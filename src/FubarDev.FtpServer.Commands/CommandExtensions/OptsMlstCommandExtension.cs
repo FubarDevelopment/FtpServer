@@ -7,38 +7,26 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using FubarDev.FtpServer.CommandHandlers;
+using FubarDev.FtpServer.Commands;
 using FubarDev.FtpServer.Features;
 using FubarDev.FtpServer.Features.Impl;
-
-using JetBrains.Annotations;
 
 namespace FubarDev.FtpServer.CommandExtensions
 {
     /// <summary>
     /// <c>MLST</c> extension for the <c>OPTS</c> command.
     /// </summary>
+    /// <remarks>
+    /// Don't announce this extension, because it gets already announced
+    /// by the MLST command itself.
+    /// </remarks>
+    [FtpCommandHandlerExtension("MLST", "OPTS")]
     public class OptsMlstCommandExtension : FtpCommandHandlerExtension
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="OptsMlstCommandExtension"/> class.
-        /// </summary>
-        public OptsMlstCommandExtension()
-            : base("OPTS", "MLST")
-        {
-            // Don't announce this extension, because it gets already announced
-            // by the MLST command itself.
-            AnnouncementMode = ExtensionAnnouncementMode.Hidden;
-        }
-
         /// <inheritdoc />
         public override void InitializeConnectionData()
         {
-            var factsFeature = new MlstFactsFeature();
-            Connection.Features.Set<IMlstFactsFeature>(factsFeature);
-            foreach (var knownFact in MlstCommandHandler.KnownFacts)
-            {
-                factsFeature.ActiveMlstFacts.Add(knownFact);
-            }
+            Connection.Features.Set(MlstCommandHandler.CreateMlstFactsFeature());
         }
 
         /// <inheritdoc />

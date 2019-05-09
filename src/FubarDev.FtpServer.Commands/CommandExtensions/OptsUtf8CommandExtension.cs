@@ -2,10 +2,12 @@
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
+using System;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
+using FubarDev.FtpServer.Commands;
 using FubarDev.FtpServer.Features;
 
 using JetBrains.Annotations;
@@ -15,19 +17,13 @@ namespace FubarDev.FtpServer.CommandExtensions
     /// <summary>
     /// The implementation of the <c>OPTS UTF8</c> command.
     /// </summary>
+    [FtpCommandHandlerExtension("UTF8", "OPTS", false)]
+    [FtpCommandHandlerExtension("UTF-8", "OPTS", false)]
+    [FtpFeatureText("UTF8")]
     public class OptsUtf8CommandExtension : FtpCommandHandlerExtension
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="OptsUtf8CommandExtension"/> class.
-        /// </summary>
-        public OptsUtf8CommandExtension()
-            : base("OPTS", "UTF8", "UTF-8")
-        {
-            // Announce it as UTF8 only.
-            AnnouncementMode = ExtensionAnnouncementMode.ExtensionName;
-        }
-
         /// <inheritdoc />
+        [Obsolete("Use the FtpCommandHandlerExtension attribute instead.")]
         public override bool? IsLoginRequired { get; set; } = false;
 
         /// <inheritdoc />

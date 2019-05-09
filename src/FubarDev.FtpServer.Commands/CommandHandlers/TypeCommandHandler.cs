@@ -8,6 +8,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 
+using FubarDev.FtpServer.Commands;
 using FubarDev.FtpServer.Features;
 
 namespace FubarDev.FtpServer.CommandHandlers
@@ -15,16 +16,9 @@ namespace FubarDev.FtpServer.CommandHandlers
     /// <summary>
     /// Implements the <c>TYPE</c> command.
     /// </summary>
+    [FtpCommandHandler("TYPE")]
     public class TypeCommandHandler : FtpCommandHandler
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="TypeCommandHandler"/> class.
-        /// </summary>
-        public TypeCommandHandler()
-            : base("TYPE")
-        {
-        }
-
         /// <inheritdoc/>
         public override Task<IFtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
         {

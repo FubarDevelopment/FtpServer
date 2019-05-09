@@ -9,21 +9,16 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
+using FubarDev.FtpServer.Commands;
+
 namespace FubarDev.FtpServer.CommandHandlers
 {
     /// <summary>
     /// Implements the <c>STRU</c> command.
     /// </summary>
+    [FtpCommandHandler("STRU")]
     public class StruCommandHandler : FtpCommandHandler
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="StruCommandHandler"/> class.
-        /// </summary>
-        public StruCommandHandler()
-            : base("STRU")
-        {
-        }
-
         /// <inheritdoc/>
         public override Task<IFtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
         {

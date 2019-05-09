@@ -8,6 +8,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 
+using FubarDev.FtpServer.Commands;
 using FubarDev.FtpServer.Features;
 using FubarDev.FtpServer.FileSystem;
 
@@ -16,19 +17,9 @@ namespace FubarDev.FtpServer.CommandHandlers
     /// <summary>
     /// Implements the <c>RNTO</c> command.
     /// </summary>
+    [FtpCommandHandler("RNTO", true)]
     public class RntoCommandHandler : FtpCommandHandler
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="RntoCommandHandler"/> class.
-        /// </summary>
-        public RntoCommandHandler()
-            : base("RNTO")
-        {
-        }
-
-        /// <inheritdoc/>
-        public override bool IsAbortable => true;
-
         /// <inheritdoc/>
         public override async Task<IFtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
         {

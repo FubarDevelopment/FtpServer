@@ -2,6 +2,7 @@
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net.Sockets;
@@ -22,6 +23,8 @@ namespace FubarDev.FtpServer.CommandExtensions
     /// <summary>
     /// The implementation of the <c>SITE BLST</c> command.
     /// </summary>
+    [FtpCommandHandlerExtension("BLST", "SITE", true)]
+    [FtpFeatureText("SITE BLST")]
     public class SiteBlstCommandExtension : FtpCommandHandlerExtension
     {
         [NotNull]
@@ -43,15 +46,14 @@ namespace FubarDev.FtpServer.CommandExtensions
             [NotNull] IBackgroundTransferWorker backgroundTransferWorker,
             [NotNull] ISslStreamWrapperFactory sslStreamWrapperFactory,
             [CanBeNull] ILogger<SiteBlstCommandExtension> logger = null)
-            : base("SITE", "BLST")
         {
             _backgroundTransferWorker = backgroundTransferWorker;
             _sslStreamWrapperFactory = sslStreamWrapperFactory;
             _logger = logger;
-            AnnouncementMode = ExtensionAnnouncementMode.CommandAndExtensionName;
         }
 
         /// <inheritdoc/>
+        [Obsolete("Use the FtpCommandHandlerExtension attribute instead.")]
         public override bool? IsLoginRequired { get; set; } = true;
 
         /// <inheritdoc />

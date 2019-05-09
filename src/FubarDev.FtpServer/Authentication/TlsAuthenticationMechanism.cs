@@ -19,7 +19,12 @@ namespace FubarDev.FtpServer.Authentication
     /// <summary>
     /// Implementation for the <c>AUTH TLS</c> command.
     /// </summary>
+    [FtpFeatureText("AUTH TLS")]
+    [FtpFeatureText("PBSZ")]
+    [FtpFeatureText("PROT")]
+#pragma warning disable CS0618 // Typ oder Element ist veraltet
     public class TlsAuthenticationMechanism : AuthenticationMechanism, IFeatureHost
+#pragma warning restore CS0618 // Typ oder Element ist veraltet
     {
         [NotNull]
         private readonly ISslStreamWrapperFactory _sslStreamWrapperFactory;
@@ -134,6 +139,7 @@ namespace FubarDev.FtpServer.Authentication
         }
 
         /// <inheritdoc />
+        [Obsolete("FTP command handlers (and other types) are now annotated with attributes implementing IFeatureInfo.")]
         public IEnumerable<IFeatureInfo> GetSupportedFeatures(IFtpConnection connection)
         {
             if (_serverCertificate != null)

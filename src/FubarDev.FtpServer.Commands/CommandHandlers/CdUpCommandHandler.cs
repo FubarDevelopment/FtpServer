@@ -8,6 +8,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 
+using FubarDev.FtpServer.Commands;
 using FubarDev.FtpServer.Features;
 
 namespace FubarDev.FtpServer.CommandHandlers
@@ -15,16 +16,10 @@ namespace FubarDev.FtpServer.CommandHandlers
     /// <summary>
     /// Implements the <c>CDUP</c> command.
     /// </summary>
+    [FtpCommandHandler("CDUP")]
+    [FtpCommandHandler("XCUP")]
     public class CdUpCommandHandler : FtpCommandHandler
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="CdUpCommandHandler"/> class.
-        /// </summary>
-        public CdUpCommandHandler()
-            : base("CDUP", "XCUP")
-        {
-        }
-
         /// <inheritdoc/>
         public override Task<IFtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
         {

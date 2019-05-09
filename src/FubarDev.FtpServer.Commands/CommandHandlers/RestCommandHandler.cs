@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
+using FubarDev.FtpServer.Commands;
 using FubarDev.FtpServer.Features;
 
 namespace FubarDev.FtpServer.CommandHandlers
@@ -17,22 +18,10 @@ namespace FubarDev.FtpServer.CommandHandlers
     /// <summary>
     /// Implements the <c>REST</c> command.
     /// </summary>
+    [FtpCommandHandler("REST")]
+    [FtpFeatureText("REST STREAM")]
     public class RestCommandHandler : FtpCommandHandler
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="RestCommandHandler"/> class.
-        /// </summary>
-        public RestCommandHandler()
-            : base("REST")
-        {
-        }
-
-        /// <inheritdoc/>
-        public override IEnumerable<IFeatureInfo> GetSupportedFeatures(IFtpConnection connection)
-        {
-            yield return new GenericFeatureInfo("REST", conn => "REST STREAM", IsLoginRequired);
-        }
-
         /// <inheritdoc/>
         public override Task<IFtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
         {

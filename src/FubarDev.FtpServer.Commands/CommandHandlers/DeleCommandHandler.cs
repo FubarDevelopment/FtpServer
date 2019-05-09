@@ -9,6 +9,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
+using FubarDev.FtpServer.Commands;
 using FubarDev.FtpServer.Features;
 using FubarDev.FtpServer.FileSystem;
 
@@ -21,6 +22,7 @@ namespace FubarDev.FtpServer.CommandHandlers
     /// <summary>
     /// Implements the <c>DELE</c> command.
     /// </summary>
+    [FtpCommandHandler("DELE")]
     public class DeleCommandHandler : FtpCommandHandler
     {
         [CanBeNull]
@@ -31,7 +33,6 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// </summary>
         /// <param name="logger">The logger.</param>
         public DeleCommandHandler([CanBeNull] ILogger<DeleCommandHandler> logger = null)
-            : base("DELE")
         {
             _logger = logger;
         }

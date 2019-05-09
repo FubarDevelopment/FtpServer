@@ -17,6 +17,7 @@ using System.Threading.Tasks;
 using DotNet.Globbing;
 
 using FubarDev.FtpServer.Authentication;
+using FubarDev.FtpServer.Commands;
 using FubarDev.FtpServer.Features;
 using FubarDev.FtpServer.FileSystem;
 using FubarDev.FtpServer.ListFormatters;
@@ -31,6 +32,9 @@ namespace FubarDev.FtpServer.CommandHandlers
     /// <summary>
     /// Implements the <c>LIST</c> and <c>NLST</c> commands.
     /// </summary>
+    [FtpCommandHandler("LIST")]
+    [FtpCommandHandler("NLST")]
+    [FtpCommandHandler("LS")]
     public class ListCommandHandler : FtpCommandHandler
     {
         [NotNull]
@@ -47,7 +51,6 @@ namespace FubarDev.FtpServer.CommandHandlers
         public ListCommandHandler(
             [NotNull] ISslStreamWrapperFactory sslStreamWrapperFactory,
             [CanBeNull] ILogger<ListCommandHandler> logger = null)
-            : base("LIST", "NLST", "LS")
         {
             _sslStreamWrapperFactory = sslStreamWrapperFactory;
             _logger = logger;

@@ -8,6 +8,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 
+using FubarDev.FtpServer.Commands;
 using FubarDev.FtpServer.Features;
 
 using Microsoft.Extensions.Options;
@@ -17,6 +18,7 @@ namespace FubarDev.FtpServer.CommandHandlers
     /// <summary>
     /// Implements the <c>SYST</c> command.
     /// </summary>
+    [FtpCommandHandler("SYST")]
     public class SystCommandHandler : FtpCommandHandler
     {
         private readonly string _operatingSystem;
@@ -26,7 +28,6 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// </summary>
         /// <param name="options">Options for the SYST command.</param>
         public SystCommandHandler(IOptions<SystCommandOptions> options)
-            : base("SYST")
         {
             _operatingSystem = options.Value.OperatingSystem ?? "UNIX";
         }

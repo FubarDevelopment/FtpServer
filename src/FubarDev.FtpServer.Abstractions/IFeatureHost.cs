@@ -2,6 +2,7 @@
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
+using System;
 using System.Collections.Generic;
 
 using JetBrains.Annotations;
@@ -11,6 +12,7 @@ namespace FubarDev.FtpServer
     /// <summary>
     /// Interface for something that may host FTP features.
     /// </summary>
+    [Obsolete("FTP command handlers (and other types) are now annotated with attributes implementing IFeatureInfo.")]
     public interface IFeatureHost
     {
         /// <summary>
@@ -20,6 +22,7 @@ namespace FubarDev.FtpServer
         /// <returns>A list of features supported by this command handler.</returns>
         [NotNull]
         [ItemNotNull]
+        [Obsolete("FTP command handlers (and other types) are now annotated with attributes implementing IFeatureInfo.")]
         IEnumerable<IFeatureInfo> GetSupportedFeatures([NotNull] IFtpConnection connection);
     }
 }
