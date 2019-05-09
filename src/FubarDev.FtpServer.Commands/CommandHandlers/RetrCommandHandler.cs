@@ -63,9 +63,12 @@ namespace FubarDev.FtpServer.CommandHandlers
                 return new FtpResponse(550, T("File doesn't exist."));
             }
 
+            var connFeature = Connection.Features.Get<IConnectionFeature>();
             using (var input = await fsFeature.FileSystem.OpenReadAsync(fileInfo.Entry, restartPosition ?? 0, cancellationToken).ConfigureAwait(false))
             {
-                await Connection.WriteAsync(new FtpResponse(150, T("Opening connection for data transfer.")), cancellationToken).ConfigureAwait(false);
+                await connFeature.ResponseWriter
+                   .WriteAsync(new FtpResponse(150, T("Opening connection for data transfer.")), cancellationToken)
+                   .ConfigureAwait(false);
 
                 // ReSharper disable once AccessToDisposedClosure
                 return await Connection.SendResponseAsync(

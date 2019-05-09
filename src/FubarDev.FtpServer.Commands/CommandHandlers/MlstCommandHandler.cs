@@ -157,7 +157,10 @@ namespace FubarDev.FtpServer.CommandHandlers
                 }
             }
 
-            await Connection.WriteAsync(new FtpResponse(150, T("Opening data connection.")), cancellationToken).ConfigureAwait(false);
+            var connFeature = Connection.Features.Get<IConnectionFeature>();
+            await connFeature.ResponseWriter
+               .WriteAsync(new FtpResponse(150, T("Opening data connection.")), cancellationToken)
+               .ConfigureAwait(false);
 
             var authInfoFeature = Connection.Features.Get<IAuthorizationInformationFeature>();
             var factsFeature = Connection.Features.Get<IMlstFactsFeature>() ?? CreateMlstFactsFeature();

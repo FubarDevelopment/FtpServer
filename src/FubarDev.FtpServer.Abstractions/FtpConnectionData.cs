@@ -271,7 +271,7 @@ namespace FubarDev.FtpServer
         /// </summary>
         private class RenameCommandFeature : IRenameCommandFeature
         {
-            public RenameCommandFeature(SearchResult<IUnixFileSystemEntry> renameFrom)
+            public RenameCommandFeature([NotNull] SearchResult<IUnixFileSystemEntry> renameFrom)
             {
                 RenameFrom = renameFrom;
             }

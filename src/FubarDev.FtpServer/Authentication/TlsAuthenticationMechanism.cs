@@ -94,7 +94,8 @@ namespace FubarDev.FtpServer.Authentication
                     catch (Exception ex)
                     {
                         conn.Log?.LogWarning(0, ex, "SSL stream authentication failed: {0}", ex.Message);
-                        await conn
+                        var connFeature = conn.Features.Get<IConnectionFeature>();
+                        await connFeature.ResponseWriter
                            .WriteAsync(new FtpResponse(421, T("TLS authentication failed")), ct)
                            .ConfigureAwait(false);
                     }

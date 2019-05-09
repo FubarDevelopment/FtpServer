@@ -3,6 +3,8 @@
 // </copyright>
 
 using System.Net;
+using System.Threading.Channels;
+
 using JetBrains.Annotations;
 
 namespace FubarDev.FtpServer.Features
@@ -20,5 +22,10 @@ namespace FubarDev.FtpServer.Features
         /// </summary>
         [NotNull]
         Address RemoteAddress { get; }
+
+        /// <summary>
+        /// Gets the response writer.
+        /// </summary>
+        ChannelWriter<IFtpResponse> ResponseWriter { get; }
     }
 }

@@ -104,6 +104,8 @@ namespace FubarDev.FtpServer
         /// <param name="response">The response to write to the client.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>The task.</returns>
+        [Obsolete("Use the IConnectionFeature.ResponseWriter instead.")]
+        [NotNull]
         Task WriteAsync([NotNull] IFtpResponse response, CancellationToken cancellationToken);
 
         /// <summary>
@@ -112,12 +114,16 @@ namespace FubarDev.FtpServer
         /// <param name="response">The response to write to the client.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>The task.</returns>
+        [Obsolete("Use the IConnectionFeature.ResponseWriter instead.")]
+        [NotNull]
         Task WriteAsync([NotNull] string response, CancellationToken cancellationToken);
 
         /// <summary>
         /// Creates a response socket for e.g. LIST/NLST.
         /// </summary>
         /// <returns>The data connection.</returns>
+        [NotNull]
+        [ItemNotNull]
         Task<TcpClient> CreateResponseSocket();
 
         /// <summary>

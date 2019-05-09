@@ -9,8 +9,11 @@ using System;
 using System.Collections.Concurrent;
 using System.Linq;
 using System.Net.Sockets;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+
+using FubarDev.FtpServer.Features;
 
 using JetBrains.Annotations;
 
@@ -263,7 +266,9 @@ namespace FubarDev.FtpServer
                 if (MaxActiveConnections != 0 && _statistics.ActiveConnections >= MaxActiveConnections)
                 {
                     var response = new FtpResponse(10068, "Too many users, server is full.");
-                    connection.WriteAsync(response, CancellationToken.None).Wait();
+                    var responseBuffer = Encoding.UTF8.GetBytes($"{response}\r\n");
+                    var secureConnectionFeature = connection.Features.Get<ISecureConnectionFeature>();
+                    secureConnectionFeature.SocketStream.Write(responseBuffer, 0, responseBuffer.Length);
                     client.Dispose();
                     scope.Dispose();
                     return;

@@ -9,11 +9,11 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
+using System.Threading.Channels;
 using System.Threading.Tasks;
 
 using FubarDev.FtpServer.BackgroundTransfer;
@@ -39,6 +39,7 @@ namespace FubarDev.FtpServer
     {
         private readonly CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
 
+        [NotNull]
         private readonly TcpClient _socket;
 
         [NotNull]
@@ -47,7 +48,11 @@ namespace FubarDev.FtpServer
         [NotNull]
         private readonly IFtpCommandActivator _commandActivator;
 
+        [CanBeNull]
         private readonly IDisposable _loggerScope;
+
+        [NotNull]
+        private readonly Channel<IFtpResponse> _responseChannel;
 
         private bool _closed;
 
@@ -89,24 +94,28 @@ namespace FubarDev.FtpServer
             _socket = socket;
             _connectionAccessor = connectionAccessor;
             _commandActivator = commandActivator;
+            var responseChannel = _responseChannel = Channel.CreateBounded<IFtpResponse>(new BoundedChannelOptions(3));
 
             Log = logger;
 
             var parentFeatures = new FeatureCollection();
             var connectionFeature = new ConnectionFeature(
                 (IPEndPoint)socket.Client.LocalEndPoint,
-                remoteAddress);
+                remoteAddress,
+                responseChannel);
             parentFeatures.Set<IConnectionFeature>(connectionFeature);
 
             var secureConnectionFeature = new SecureConnectionFeature(socket);
             parentFeatures.Set<ISecureConnectionFeature>(secureConnectionFeature);
 
             var features = new FeatureCollection(parentFeatures);
+#pragma warning disable 618
             Data = new FtpConnectionData(
                 options.Value.DefaultEncoding ?? Encoding.ASCII,
                 features,
                 new BackgroundCommandHandler(this),
                 catalogLoader);
+#pragma warning restore 618
 
             Features = features;
         }
@@ -129,18 +138,25 @@ namespace FubarDev.FtpServer
         }
 
         /// <inheritdoc />
+        [Obsolete("Query the information using the Features property instead.")]
         public FtpConnectionData Data { get; }
 
         /// <inheritdoc />
         public ILogger Log { get; }
 
         /// <inheritdoc />
+        [Obsolete("Query the information using the IConnectionFeature instead.")]
         public IPEndPoint LocalEndPoint
             => Features.Get<IConnectionFeature>().LocalEndPoint;
 
         /// <inheritdoc />
+        [Obsolete("Query the information using the IConnectionFeature instead.")]
         public Address RemoteAddress
             => Features.Get<IConnectionFeature>().RemoteAddress;
+
+        /// <inheritdoc />
+        [Obsolete("Query the information using the IConnectionFeature instead.")]
+        public ChannelWriter<IFtpResponse> ResponseWriter => Features.Get<IConnectionFeature>().ResponseWriter;
 
         /// <inheritdoc />
         [Obsolete("Query the information using the ISecureConnectionFeature instead.")]
@@ -186,35 +202,10 @@ namespace FubarDev.FtpServer
         /// <param name="response">The response to write to the client.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>The task.</returns>
-        public async Task WriteAsync(IFtpResponse response, CancellationToken cancellationToken)
+        [Obsolete("Use the IConnectionFeature.ResponseWriter instead.")]
+        public Task WriteAsync(IFtpResponse response, CancellationToken cancellationToken)
         {
-            if (!_closed)
-            {
-                Log?.Log(response);
-                var socketStream = Features.Get<ISecureConnectionFeature>().SocketStream;
-                var encoding = Features.Get<IEncodingFeature>().Encoding;
-
-                FtpResponseLine line;
-                object token = null;
-                do
-                {
-                    line = await response.GetNextLineAsync(token, cancellationToken)
-                        .ConfigureAwait(false);
-                    if (line.HasText)
-                    {
-                        var data = encoding.GetBytes($"{line.Text}\r\n");
-                        await socketStream.WriteAsync(data, 0, data.Length, cancellationToken).ConfigureAwait(false);
-                    }
-
-                    token = line.Token;
-                }
-                while (token != null);
-
-                if (response.AfterWriteAction != null)
-                {
-                    await response.AfterWriteAction(this, cancellationToken).ConfigureAwait(false);
-                }
-            }
+            return WriteResponseAsync(response, cancellationToken);
         }
 
         /// <summary>
@@ -223,6 +214,7 @@ namespace FubarDev.FtpServer
         /// <param name="response">The response to write to the client.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>The task.</returns>
+        [Obsolete("Use the IConnectionFeature.ResponseWriter instead.")]
         public async Task WriteAsync(string response, CancellationToken cancellationToken)
         {
             if (!_closed)
@@ -239,8 +231,6 @@ namespace FubarDev.FtpServer
         /// Creates a response socket for e.g. LIST/NLST.
         /// </summary>
         /// <returns>The data connection.</returns>
-        [NotNull]
-        [ItemNotNull]
         public async Task<TcpClient> CreateResponseSocket()
         {
             var transferFeature = Features.Get<ITransferConfigurationFeature>();
@@ -298,8 +288,59 @@ namespace FubarDev.FtpServer
 
             _socket.Dispose();
             _cancellationTokenSource.Dispose();
+#pragma warning disable 618
             Data.Dispose();
+#pragma warning restore 618
             _loggerScope?.Dispose();
+        }
+
+        private static bool IsIOException(Exception ex)
+        {
+            switch (ex)
+            {
+                case IOException _:
+                    return true;
+                case AggregateException aggEx:
+                    return aggEx.InnerException is IOException;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Writes a FTP response to a client.
+        /// </summary>
+        /// <param name="response">The response to write to the client.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <returns>The task.</returns>
+        private async Task WriteResponseAsync(IFtpResponse response, CancellationToken cancellationToken)
+        {
+            if (!_closed)
+            {
+                Log?.Log(response);
+                var socketStream = Features.Get<ISecureConnectionFeature>().SocketStream;
+                var encoding = Features.Get<IEncodingFeature>().Encoding;
+
+                object token = null;
+                do
+                {
+                    var line = await response.GetNextLineAsync(token, cancellationToken)
+                       .ConfigureAwait(false);
+                    if (line.HasText)
+                    {
+                        var data = encoding.GetBytes($"{line.Text}\r\n");
+                        await socketStream.WriteAsync(data, 0, data.Length, cancellationToken).ConfigureAwait(false);
+                    }
+
+                    token = line.Token;
+                }
+                while (token != null);
+
+                if (response.AfterWriteAction != null)
+                {
+                    await response.AfterWriteAction(this, cancellationToken).ConfigureAwait(false);
+                }
+            }
         }
 
         /// <summary>
@@ -329,9 +370,13 @@ namespace FubarDev.FtpServer
             // Initialize the FTP connection accessor
             _connectionAccessor.FtpConnection = this;
 
-            Log?.LogInformation($"Connected from {RemoteAddress.ToString(true)}");
+            var connectionFeature = Features.Get<IConnectionFeature>();
+            Log?.LogInformation($"Connected from {connectionFeature.RemoteAddress.ToString(true)}");
+
+            var responseSender = SendResponsesAsync(_responseChannel, _cancellationTokenSource.Token);
+
             var collector = new FtpCommandCollector(() => Features.Get<IEncodingFeature>().Encoding);
-            await WriteAsync(new FtpResponse(220, T("FTP Server Ready")), _cancellationTokenSource.Token)
+            await _responseChannel.Writer.WriteAsync(new FtpResponse(220, T("FTP Server Ready")), _cancellationTokenSource.Token)
                .ConfigureAwait(false);
 
             var loginStateMachine = ConnectionServices.GetRequiredService<IFtpLoginStateMachine>();
@@ -348,7 +393,7 @@ namespace FubarDev.FtpServer
                         readTask = socketStream.ReadAsync(buffer, 0, buffer.Length, _cancellationTokenSource.Token);
                     }
 
-                    var tasks = new List<Task>() { readTask };
+                    var tasks = new List<Task>() { readTask, responseSender };
                     if (_activeBackgroundTask != null)
                     {
                         tasks.Add(_activeBackgroundTask);
@@ -357,12 +402,12 @@ namespace FubarDev.FtpServer
                     Debug.WriteLine($"Waiting for {tasks.Count} tasks");
                     var completedTask = Task.WaitAny(tasks.ToArray(), _cancellationTokenSource.Token);
                     Debug.WriteLine($"Task {completedTask} completed");
-                    if (completedTask == 1)
+                    if (completedTask == 2)
                     {
                         var response = _activeBackgroundTask?.Result;
                         if (response != null)
                         {
-                            await WriteAsync(response, _cancellationTokenSource.Token)
+                            await _responseChannel.Writer.WriteAsync(response, _cancellationTokenSource.Token)
                                .ConfigureAwait(false);
                         }
 
@@ -397,9 +442,11 @@ namespace FubarDev.FtpServer
             }
             finally
             {
-                Log?.LogInformation($"Disconnection from {RemoteAddress.ToString(true)}");
+                Log?.LogInformation($"Disconnection from {connectionFeature.RemoteAddress.ToString(true)}");
                 _closed = true;
+#pragma warning disable 618
                 Data.BackgroundCommandHandler.Cancel();
+#pragma warning restore 618
 
                 var secureConnectionFeature = Features.Get<ISecureConnectionFeature>();
                 var socketStream = secureConnectionFeature.SocketStream;
@@ -412,6 +459,37 @@ namespace FubarDev.FtpServer
                 _socket.Dispose();
                 OnClosed();
             }
+        }
+
+        [NotNull]
+        private async Task SendResponsesAsync(
+            [NotNull] ChannelReader<IFtpResponse> responseReader,
+            CancellationToken cancellationToken)
+        {
+            try
+            {
+                while (!cancellationToken.IsCancellationRequested)
+                {
+                    var hasResponse = await responseReader.WaitToReadAsync(cancellationToken)
+                       .ConfigureAwait(false);
+                    if (!hasResponse)
+                    {
+                        return;
+                    }
+
+                    while (responseReader.TryRead(out var response))
+                    {
+                        await WriteResponseAsync(response, cancellationToken)
+                           .ConfigureAwait(false);
+                    }
+                }
+            }
+            catch (Exception ex) when (IsIOException(ex) && cancellationToken.IsCancellationRequested)
+            {
+                Log?.LogWarning("Last response probably incomplete.");
+            }
+
+            Log?.LogInformation("Stopped sending responses.");
         }
 
         private async Task ProcessMessage(IFtpLoginStateMachine loginStateMachine, FtpCommand command)
@@ -439,7 +517,9 @@ namespace FubarDev.FtpServer
                         var isAbortable = result.Information.IsAbortable;
                         if (isAbortable)
                         {
+#pragma warning disable 618
                             var newBackgroundTask = Data.BackgroundCommandHandler.Execute(handler, handlerCommand);
+#pragma warning restore 618
                             if (newBackgroundTask != null)
                             {
                                 _activeBackgroundTask = newBackgroundTask;
@@ -482,7 +562,7 @@ namespace FubarDev.FtpServer
 
             if (response != null)
             {
-                await WriteAsync(response, _cancellationTokenSource.Token).ConfigureAwait(false);
+                await _responseChannel.Writer.WriteAsync(response, _cancellationTokenSource.Token).ConfigureAwait(false);
                 if (response.Code == 421)
                 {
                     var socketStream = Features.Get<ISecureConnectionFeature>().SocketStream;
@@ -501,10 +581,12 @@ namespace FubarDev.FtpServer
         {
             public ConnectionFeature(
                 IPEndPoint localEndPoint,
-                Address remoteAddress)
+                Address remoteAddress,
+                ChannelWriter<IFtpResponse> responseWriter)
             {
                 LocalEndPoint = localEndPoint;
                 RemoteAddress = remoteAddress;
+                ResponseWriter = responseWriter;
             }
 
             /// <inheritdoc />
@@ -512,6 +594,9 @@ namespace FubarDev.FtpServer
 
             /// <inheritdoc />
             public Address RemoteAddress { get; }
+
+            /// <inheritdoc />
+            public ChannelWriter<IFtpResponse> ResponseWriter { get; }
         }
 
         private class SecureConnectionFeature : ISecureConnectionFeature

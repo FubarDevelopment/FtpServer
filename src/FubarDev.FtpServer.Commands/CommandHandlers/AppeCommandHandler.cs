@@ -76,7 +76,10 @@ namespace FubarDev.FtpServer.CommandHandlers
                 return new FtpResponse(553, T("File name not allowed."));
             }
 
-            await Connection.WriteAsync(new FtpResponse(150, T("Opening connection for data transfer.")), cancellationToken).ConfigureAwait(false);
+            var connFeature = Connection.Features.Get<IConnectionFeature>();
+            await connFeature.ResponseWriter
+               .WriteAsync(new FtpResponse(150, T("Opening connection for data transfer.")), cancellationToken)
+               .ConfigureAwait(false);
 
             return await Connection
                 .SendResponseAsync(client => ExecuteSend(client, fileInfo, restartPosition, cancellationToken))

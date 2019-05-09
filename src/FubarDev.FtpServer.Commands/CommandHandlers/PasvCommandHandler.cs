@@ -99,18 +99,19 @@ namespace FubarDev.FtpServer.CommandHandlers
                 {
                     var address = listener.PasvEndPoint.Address;
 
+                    var connFeature = Connection.Features.Get<IConnectionFeature>();
                     var localPort = listener.PasvEndPoint.Port;
                     if (isEpsv || address.AddressFamily == AddressFamily.InterNetworkV6)
                     {
                         var listenerAddress = new Address(localPort);
-                        await Connection.WriteAsync(
+                        await connFeature.ResponseWriter.WriteAsync(
                             new FtpResponse(229, T("Entering Extended Passive Mode ({0}).", listenerAddress)),
                             cancellationToken).ConfigureAwait(false);
                     }
                     else
                     {
                         var listenerAddress = new Address(address.ToString(), localPort);
-                        await Connection.WriteAsync(
+                        await connFeature.ResponseWriter.WriteAsync(
                             new FtpResponse(227, T("Entering Passive Mode ({0}).", listenerAddress)),
                             cancellationToken).ConfigureAwait(false);
                     }
