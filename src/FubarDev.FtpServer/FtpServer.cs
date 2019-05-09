@@ -36,11 +36,6 @@ namespace FubarDev.FtpServer
         private readonly object _stopLocker = new object();
 
         /// <summary>
-        /// Mutex for the creation of a new connection scope.
-        /// </summary>
-        private readonly object _newConnectionScopeLock = new object();
-
-        /// <summary>
         /// Semaphore that gets released when the listener stopped.
         /// </summary>
         private readonly SemaphoreSlim _stoppedSemaphore = new SemaphoreSlim(0, 1);
@@ -255,12 +250,7 @@ namespace FubarDev.FtpServer
 
         private void AddClient(TcpClient client)
         {
-            IServiceScope scope;
-            lock (_newConnectionScopeLock)
-            {
-                scope = _serviceProvider.CreateScope();
-            }
-
+            var scope = _serviceProvider.CreateScope();
             try
             {
                 var socketAccessor = scope.ServiceProvider.GetRequiredService<TcpSocketClientAccessor>();
