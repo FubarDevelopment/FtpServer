@@ -31,9 +31,6 @@ namespace FubarDev.FtpServer.Commands
         private readonly ILookup<string, IFtpCommandHandlerExtensionInformation> _hostToExtensionInfo;
 
         [NotNull]
-        private readonly IDictionary<string, IFtpCommandHandlerExtensionInformation> _nameToExtensionInfo;
-
-        [NotNull]
         private readonly Dictionary<Type, IFtpCommandHandler> _commandHandlers = new Dictionary<Type, IFtpCommandHandler>();
 
         [NotNull]
@@ -60,9 +57,6 @@ namespace FubarDev.FtpServer.Commands
             _hostToExtensionInfo = commandHandlerExtensionProvider.CommandHandlerExtensions.ToLookup(
                 x => x.ExtensionOf.Name,
                 StringComparer.OrdinalIgnoreCase);
-            _nameToExtensionInfo = commandHandlerExtensionProvider.CommandHandlerExtensions.ToDictionary(
-                x => x.Name,
-                StringComparer.OrdinalIgnoreCase);
         }
 
         /// <inheritdoc />
@@ -71,7 +65,7 @@ namespace FubarDev.FtpServer.Commands
             var result = ActivateCommandHandler(context);
             if (result != null)
             {
-                ActivateProperty(result.Handler, result.CommandContext);
+                ActivateProperty(result.Handler, context);
             }
 
             return result;
@@ -106,7 +100,7 @@ namespace FubarDev.FtpServer.Commands
 
             if (_commandHandlers.TryGetValue(handlerInfo.Type, out var handler))
             {
-                return new FtpCommandSelection(handler, context, handlerInfo);
+                return new FtpCommandSelection(handler, handlerInfo);
             }
 
 #pragma warning disable 612
@@ -127,24 +121,10 @@ namespace FubarDev.FtpServer.Commands
                 var extensions = ActivateExtensions(context, handlerInfo).ToList();
                 extensionHost.Extensions = extensions.ToDictionary(x => x.Item2.Name, x => x.Item1);
             }
-            else
-            {
-                extensionHost = null;
-            }
 
             _commandHandlers.Add(handlerInfo.Type, handler);
 
-            if (!string.IsNullOrWhiteSpace(context.Command.Argument) && extensionHost != null)
-            {
-                var extensionCommand = FtpCommand.Parse(context.Command.Argument);
-                if (extensionHost.Extensions.TryGetValue(extensionCommand.Name, out var extension))
-                {
-                    var extensionInfo = _nameToExtensionInfo[extensionCommand.Name];
-                    return new FtpCommandSelection(extension, CreateContext(context, extensionCommand), extensionInfo);
-                }
-            }
-
-            return new FtpCommandSelection(handler, context, handlerInfo);
+            return new FtpCommandSelection(handler, handlerInfo);
         }
 
         [NotNull]
@@ -181,11 +161,6 @@ namespace FubarDev.FtpServer.Commands
 
                 yield return Tuple.Create(extension, extensionInfo);
             }
-        }
-
-        private FtpCommandContext CreateContext(FtpCommandContext oldContext, FtpCommand command)
-        {
-            return new FtpCommandContext(command, oldContext.ResponseWriter, oldContext.Connection);
         }
     }
 }

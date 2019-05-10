@@ -502,7 +502,6 @@ namespace FubarDev.FtpServer
             if (result != null)
             {
                 var handler = result.Handler;
-                var handlerCommand = result.CommandContext.Command;
                 var isLoginRequired = result.Information.IsLoginRequired;
                 if (isLoginRequired && loginStateMachine.Status != SecurityStatus.Authorized)
                 {
@@ -516,7 +515,7 @@ namespace FubarDev.FtpServer
                         if (isAbortable)
                         {
 #pragma warning disable 618
-                            var newBackgroundTask = Data.BackgroundCommandHandler.Execute(handler, handlerCommand);
+                            var newBackgroundTask = Data.BackgroundCommandHandler.Execute(handler, command);
 #pragma warning restore 618
                             if (newBackgroundTask != null)
                             {
@@ -530,7 +529,7 @@ namespace FubarDev.FtpServer
                         }
                         else
                         {
-                            response = await handler.Process(handlerCommand, _cancellationTokenSource.Token)
+                            response = await handler.Process(command, _cancellationTokenSource.Token)
                                 .ConfigureAwait(false);
                         }
                     }

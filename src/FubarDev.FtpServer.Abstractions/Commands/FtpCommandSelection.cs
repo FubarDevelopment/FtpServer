@@ -15,23 +15,14 @@ namespace FubarDev.FtpServer.Commands
         /// Initializes a new instance of the <see cref="FtpCommandSelection"/> class.
         /// </summary>
         /// <param name="handler">The FTP command handler.</param>
-        /// <param name="commandContext">The FTP command context.</param>
         /// <param name="handlerInformation">The FTP command handler information.</param>
         public FtpCommandSelection(
             [NotNull] IFtpCommandBase handler,
-            [NotNull] FtpCommandContext commandContext,
             [NotNull] IFtpCommandInformation handlerInformation)
         {
             Handler = handler;
-            CommandContext = commandContext;
             Information = handlerInformation;
         }
-
-        /// <summary>
-        /// Gets the command.
-        /// </summary>
-        [NotNull]
-        public FtpCommandContext CommandContext { get; }
 
         /// <summary>
         /// Gets the command handler.
