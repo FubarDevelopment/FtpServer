@@ -39,10 +39,10 @@ namespace QuickStart
 
                 // Start the FTP server
                 await ftpServerHost.StartAsync(CancellationToken.None);
-    
+
                 Console.WriteLine("Press ENTER/RETURN to close the test application.");
                 Console.ReadLine();
-    
+
                 // Stop the FTP server
                 await ftpServerHost.StopAsync(CancellationToken.None);
             }
