@@ -46,7 +46,7 @@ namespace FubarDev.FtpServer.Tests
         [InlineData("a", "//a")]
         public void TestRootRemovalNonWindows(string expected, string input)
         {
-            Skip.If(RuntimeEnvironment.OperatingSystemPlatform == Platform.Windows, "Works only on Windows");
+            Skip.If(RuntimeEnvironment.OperatingSystemPlatform == Platform.Windows, "Works only on non-Windows platforms");
             Assert.Equal(expected, input.RemoveRoot());
         }
     }
