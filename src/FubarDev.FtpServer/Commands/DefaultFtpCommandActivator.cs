@@ -119,7 +119,10 @@ namespace FubarDev.FtpServer.Commands
             if (handler is IFtpCommandHandlerExtensionHost extensionHost)
             {
                 var extensions = ActivateExtensions(context, handlerInfo).ToList();
-                extensionHost.Extensions = extensions.ToDictionary(x => x.Item2.Name, x => x.Item1);
+                extensionHost.Extensions = extensions.ToDictionary(
+                    x => x.Item2.Name,
+                    x => x.Item1,
+                    StringComparer.OrdinalIgnoreCase);
             }
 
             _commandHandlers.Add(handlerInfo.Type, handler);
