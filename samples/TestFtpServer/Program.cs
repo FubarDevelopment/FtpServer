@@ -16,6 +16,8 @@ using FubarDev.FtpServer.AccountManagement;
 using FubarDev.FtpServer.AccountManagement.Directories.RootPerUser;
 using FubarDev.FtpServer.AccountManagement.Directories.SingleRootWithoutHome;
 using FubarDev.FtpServer.Authentication;
+using FubarDev.FtpServer.CommandExtensions;
+using FubarDev.FtpServer.Commands;
 using FubarDev.FtpServer.Features;
 using FubarDev.FtpServer.FileSystem;
 using FubarDev.FtpServer.FileSystem.DotNet;
@@ -35,6 +37,10 @@ using Microsoft.Extensions.Options;
 using Mono.Options;
 
 using NLog.Extensions.Logging;
+
+using TestFtpServer.Commands;
+using TestFtpServer.Extensions;
+using TestFtpServer.Utilities;
 
 namespace TestFtpServer
 {
@@ -319,6 +325,20 @@ namespace TestFtpServer
                .Configure<PasvCommandOptions>(opt => opt.PromiscuousPasv = options.PromiscuousPasv)
                .Configure<GoogleDriveOptions>(opt => opt.UseBackgroundUpload = options.UseBackgroundUpload)
                .Configure<PamMembershipProviderOptions>(opt => opt.IgnoreAccountManagement = options.NoPamAccountManagement);
+
+            // Add "Hello" service - unique per FTP connection
+            services.AddScoped<Hello>();
+
+            // Add custom command handlers
+            services.AddSingleton<IFtpCommandHandlerScanner>(
+                _ => new AssemblyFtpCommandHandlerScanner(typeof(HelloFtpCommandHandler).Assembly));
+
+            // Add custom command handler extensions
+            services.AddSingleton<IFtpCommandHandlerExtensionScanner>(
+                sp => new AssemblyFtpCommandHandlerExtensionScanner(
+                    sp.GetRequiredService<IFtpCommandHandlerProvider>(),
+                    sp.GetService<ILogger<AssemblyFtpCommandHandlerExtensionScanner>>(),
+                    typeof(SiteHelloFtpCommandHandlerExtension).Assembly));
 
             switch (options.DirectoryLayout)
             {
