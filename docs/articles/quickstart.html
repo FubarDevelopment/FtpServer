@@ -107,6 +107,8 @@ dotnet add package FubarDev.FtpServer.FileSystem.DotNet
 <section id="tabpanel_CeZOj-G++Q_tabid-30" role="tabpanel" data-tab="tabid-30">
 <pre><code class="lang-cs" name="Program.cs" title="The FTP server">using System;
 using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
 
 using FubarDev.FtpServer;
 using FubarDev.FtpServer.FileSystem.DotNet;
@@ -143,13 +145,13 @@ namespace QuickStart
                 var ftpServerHost = serviceProvider.GetRequiredService&lt;IFtpServerHost&gt;();
 
                 // Start the FTP server
-                ftpServerHost.StartAsync().Wait();
+                ftpServerHost.StartAsync(CancellationToken.None).Wait();
 
                 Console.WriteLine(&quot;Press ENTER/RETURN to close the test application.&quot;);
                 Console.ReadLine();
 
                 // Stop the FTP server
-                ftpServerHost.StopAsync().Wait();
+                ftpServerHost.StopAsync().Wait(CancellationToken.None);
             }
         }
     }

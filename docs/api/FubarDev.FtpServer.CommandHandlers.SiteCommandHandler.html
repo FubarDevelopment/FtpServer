@@ -111,10 +111,16 @@
       <a class="xref" href="FubarDev.FtpServer.CommandHandlers.FtpCommandHandler.html#FubarDev_FtpServer_CommandHandlers_FtpCommandHandler_IsAbortable">FtpCommandHandler.IsAbortable</a>
     </div>
     <div>
+      <a class="xref" href="FubarDev.FtpServer.CommandHandlers.FtpCommandHandler.html#FubarDev_FtpServer_CommandHandlers_FtpCommandHandler_CommandContext">FtpCommandHandler.CommandContext</a>
+    </div>
+    <div>
       <a class="xref" href="FubarDev.FtpServer.CommandHandlers.FtpCommandHandler.html#FubarDev_FtpServer_CommandHandlers_FtpCommandHandler_Connection">FtpCommandHandler.Connection</a>
     </div>
     <div>
       <a class="xref" href="FubarDev.FtpServer.CommandHandlers.FtpCommandHandler.html#FubarDev_FtpServer_CommandHandlers_FtpCommandHandler_Data">FtpCommandHandler.Data</a>
+    </div>
+    <div>
+      <a class="xref" href="FubarDev.FtpServer.CommandHandlers.FtpCommandHandler.html#FubarDev_FtpServer_CommandHandlers_FtpCommandHandler_GetSupportedFeatures_FubarDev_FtpServer_IFtpConnection_">FtpCommandHandler.GetSupportedFeatures(IFtpConnection)</a>
     </div>
     <div>
       <a class="xref" href="FubarDev.FtpServer.CommandHandlers.FtpCommandHandler.html#FubarDev_FtpServer_CommandHandlers_FtpCommandHandler_GetExtensions">FtpCommandHandler.GetExtensions()</a>
@@ -151,50 +157,9 @@
   <h6><strong>Assembly</strong>: FubarDev.FtpServer.Commands.dll</h6>
   <h5 id="FubarDev_FtpServer_CommandHandlers_SiteCommandHandler_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class SiteCommandHandler : FtpCommandHandler, IFtpCommandHandlerExtensionHost, IFtpCommandHandler, IFtpCommandBase, IFeatureHost</code></pre>
+    <pre><code class="lang-csharp hljs">[FtpCommandHandler(&quot;SITE&quot;, false, true)]
+public class SiteCommandHandler : FtpCommandHandler, IFtpCommandHandlerExtensionHost, IFtpCommandHandler, IFtpCommandBase, IFeatureHost</code></pre>
   </div>
-  <h3 id="constructors">Constructors
-  </h3>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_CommandHandlers_SiteCommandHandler__ctor_FubarDev_FtpServer_IFtpConnectionAccessor_System_Collections_Generic_IEnumerable_FubarDev_FtpServer_IFtpCommandHandlerExtension__.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.CommandHandlers.SiteCommandHandler.%23ctor(FubarDev.FtpServer.IFtpConnectionAccessor%2CSystem.Collections.Generic.IEnumerable%7BFubarDev.FtpServer.IFtpCommandHandlerExtension%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.Commands/CommandHandlers/SiteCommandHandler.cs/#L28">View Source</a>
-  </span>
-  <a id="FubarDev_FtpServer_CommandHandlers_SiteCommandHandler__ctor_" data-uid="FubarDev.FtpServer.CommandHandlers.SiteCommandHandler.#ctor*"></a>
-  <h4 id="FubarDev_FtpServer_CommandHandlers_SiteCommandHandler__ctor_FubarDev_FtpServer_IFtpConnectionAccessor_System_Collections_Generic_IEnumerable_FubarDev_FtpServer_IFtpCommandHandlerExtension__" data-uid="FubarDev.FtpServer.CommandHandlers.SiteCommandHandler.#ctor(FubarDev.FtpServer.IFtpConnectionAccessor,System.Collections.Generic.IEnumerable{FubarDev.FtpServer.IFtpCommandHandlerExtension})">SiteCommandHandler(IFtpConnectionAccessor, IEnumerable&lt;IFtpCommandHandlerExtension&gt;)</h4>
-  <div class="markdown level1 summary"><p>Initializes a new instance of the <a class="xref" href="FubarDev.FtpServer.CommandHandlers.SiteCommandHandler.html">SiteCommandHandler</a> class.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public SiteCommandHandler(IFtpConnectionAccessor connectionAccessor, [NotNull, ItemNotNull] IEnumerable&lt;IFtpCommandHandlerExtension&gt; extensions)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="FubarDev.FtpServer.IFtpConnectionAccessor.html">IFtpConnectionAccessor</a></td>
-        <td><span class="parametername">connectionAccessor</span></td>
-        <td><p>The accessor to get the connection that is active during the <a class="xref" href="FubarDev.FtpServer.CommandHandlers.SiteCommandHandler.html#FubarDev_FtpServer_CommandHandlers_SiteCommandHandler_Process_FubarDev_FtpServer_FtpCommand_System_Threading_CancellationToken_">Process(FtpCommand, CancellationToken)</a> method execution.</p>
-</td>
-      </tr>
-      <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable</a>&lt;<a class="xref" href="FubarDev.FtpServer.IFtpCommandHandlerExtension.html">IFtpCommandHandlerExtension</a>&gt;</td>
-        <td><span class="parametername">extensions</span></td>
-        <td><p>All registered extensions.</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
   <h3 id="properties">Properties
   </h3>
   <span class="small pull-right mobile-hide">
@@ -202,16 +167,16 @@
     <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_CommandHandlers_SiteCommandHandler_Extensions.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.CommandHandlers.SiteCommandHandler.Extensions%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.Commands/CommandHandlers/SiteCommandHandler.cs/#L42">View Source</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.Commands/CommandHandlers/SiteCommandHandler.cs/#L24">View Source</a>
   </span>
   <a id="FubarDev_FtpServer_CommandHandlers_SiteCommandHandler_Extensions_" data-uid="FubarDev.FtpServer.CommandHandlers.SiteCommandHandler.Extensions*"></a>
   <h4 id="FubarDev_FtpServer_CommandHandlers_SiteCommandHandler_Extensions" data-uid="FubarDev.FtpServer.CommandHandlers.SiteCommandHandler.Extensions">Extensions</h4>
-  <div class="markdown level1 summary"><p>Gets the extensions hosted by the <a class="xref" href="FubarDev.FtpServer.CommandHandlers.FtpCommandHandler.html">FtpCommandHandler</a>.</p>
+  <div class="markdown level1 summary"><p>Gets or sets the extensions hosted by the <a class="xref" href="FubarDev.FtpServer.CommandHandlers.FtpCommandHandler.html">FtpCommandHandler</a>.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public IDictionary&lt;string, IFtpCommandHandlerExtension&gt; Extensions { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public IDictionary&lt;string, IFtpCommandHandlerExtension&gt; Extensions { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -232,44 +197,10 @@
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_CommandHandlers_SiteCommandHandler_GetSupportedFeatures.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.CommandHandlers.SiteCommandHandler.GetSupportedFeatures%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.Commands/CommandHandlers/SiteCommandHandler.cs/#L45">View Source</a>
-  </span>
-  <a id="FubarDev_FtpServer_CommandHandlers_SiteCommandHandler_GetSupportedFeatures_" data-uid="FubarDev.FtpServer.CommandHandlers.SiteCommandHandler.GetSupportedFeatures*"></a>
-  <h4 id="FubarDev_FtpServer_CommandHandlers_SiteCommandHandler_GetSupportedFeatures" data-uid="FubarDev.FtpServer.CommandHandlers.SiteCommandHandler.GetSupportedFeatures">GetSupportedFeatures()</h4>
-  <div class="markdown level1 summary"><p>Gets a collection of features supported by this command handler.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public override IEnumerable&lt;IFeatureInfo&gt; GetSupportedFeatures()</code></pre>
-  </div>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable</a>&lt;<a class="xref" href="FubarDev.FtpServer.IFeatureInfo.html">IFeatureInfo</a>&gt;</td>
-        <td><p>A list of features supported by this command handler.</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="overrides">Overrides</h5>
-  <div><a class="xref" href="FubarDev.FtpServer.CommandHandlers.FtpCommandHandler.html#FubarDev_FtpServer_CommandHandlers_FtpCommandHandler_GetSupportedFeatures">FtpCommandHandler.GetSupportedFeatures()</a></div>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
     <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_CommandHandlers_SiteCommandHandler_Process_FubarDev_FtpServer_FtpCommand_System_Threading_CancellationToken_.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.CommandHandlers.SiteCommandHandler.Process(FubarDev.FtpServer.FtpCommand%2CSystem.Threading.CancellationToken)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.Commands/CommandHandlers/SiteCommandHandler.cs/#L64">View Source</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.Commands/CommandHandlers/SiteCommandHandler.cs/#L28">View Source</a>
   </span>
   <a id="FubarDev_FtpServer_CommandHandlers_SiteCommandHandler_Process_" data-uid="FubarDev.FtpServer.CommandHandlers.SiteCommandHandler.Process*"></a>
   <h4 id="FubarDev_FtpServer_CommandHandlers_SiteCommandHandler_Process_FubarDev_FtpServer_FtpCommand_System_Threading_CancellationToken_" data-uid="FubarDev.FtpServer.CommandHandlers.SiteCommandHandler.Process(FubarDev.FtpServer.FtpCommand,System.Threading.CancellationToken)">Process(FtpCommand, CancellationToken)</h4>
@@ -346,7 +277,7 @@
                     <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_CommandHandlers_SiteCommandHandler.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.CommandHandlers.SiteCommandHandler%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.Commands/CommandHandlers/SiteCommandHandler.cs/#L18" class="contribution-link">View Source</a>
+                    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.Commands/CommandHandlers/SiteCommandHandler.cs/#L20" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

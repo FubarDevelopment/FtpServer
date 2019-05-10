@@ -93,6 +93,11 @@
   </div>
   <div classs="implements">
     <h5>Implements</h5>
+    <div><a class="xref" href="FubarDev.FtpServer.Features.ILocalizationFeature.html">ILocalizationFeature</a></div>
+    <div><a class="xref" href="FubarDev.FtpServer.Features.IFileSystemFeature.html">IFileSystemFeature</a></div>
+    <div><a class="xref" href="FubarDev.FtpServer.Features.IAuthorizationInformationFeature.html">IAuthorizationInformationFeature</a></div>
+    <div><a class="xref" href="FubarDev.FtpServer.Features.ITransferConfigurationFeature.html">ITransferConfigurationFeature</a></div>
+    <div><a class="xref" href="FubarDev.FtpServer.Features.IMlstFactsFeature.html">IMlstFactsFeature</a></div>
     <div><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.idisposable">IDisposable</a></div>
   </div>
   <div class="inheritedMembers">
@@ -123,25 +128,25 @@
   <h6><strong>Assembly</strong>: FubarDev.FtpServer.Abstractions.dll</h6>
   <h5 id="FubarDev_FtpServer_FtpConnectionData_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public sealed class FtpConnectionData : IDisposable</code></pre>
+    <pre><code class="lang-csharp hljs">public sealed class FtpConnectionData : ILocalizationFeature, IFileSystemFeature, IAuthorizationInformationFeature, ITransferConfigurationFeature, IMlstFactsFeature, IDisposable</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FtpConnectionData__ctor_FubarDev_FtpServer_IBackgroundCommandHandler_FubarDev_FtpServer_Localization_IFtpCatalogLoader_.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FtpConnectionData.%23ctor(FubarDev.FtpServer.IBackgroundCommandHandler%2CFubarDev.FtpServer.Localization.IFtpCatalogLoader)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FtpConnectionData__ctor_System_Text_Encoding_Microsoft_AspNetCore_Http_Features_IFeatureCollection_FubarDev_FtpServer_IBackgroundCommandHandler_FubarDev_FtpServer_Localization_IFtpCatalogLoader_.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FtpConnectionData.%23ctor(System.Text.Encoding%2CMicrosoft.AspNetCore.Http.Features.IFeatureCollection%2CFubarDev.FtpServer.IBackgroundCommandHandler%2CFubarDev.FtpServer.Localization.IFtpCatalogLoader)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.Abstractions/FtpConnectionData.cs/#L36">View Source</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.Abstractions/FtpConnectionData.cs/#L45">View Source</a>
   </span>
   <a id="FubarDev_FtpServer_FtpConnectionData__ctor_" data-uid="FubarDev.FtpServer.FtpConnectionData.#ctor*"></a>
-  <h4 id="FubarDev_FtpServer_FtpConnectionData__ctor_FubarDev_FtpServer_IBackgroundCommandHandler_FubarDev_FtpServer_Localization_IFtpCatalogLoader_" data-uid="FubarDev.FtpServer.FtpConnectionData.#ctor(FubarDev.FtpServer.IBackgroundCommandHandler,FubarDev.FtpServer.Localization.IFtpCatalogLoader)">FtpConnectionData(IBackgroundCommandHandler, IFtpCatalogLoader)</h4>
+  <h4 id="FubarDev_FtpServer_FtpConnectionData__ctor_System_Text_Encoding_Microsoft_AspNetCore_Http_Features_IFeatureCollection_FubarDev_FtpServer_IBackgroundCommandHandler_FubarDev_FtpServer_Localization_IFtpCatalogLoader_" data-uid="FubarDev.FtpServer.FtpConnectionData.#ctor(System.Text.Encoding,Microsoft.AspNetCore.Http.Features.IFeatureCollection,FubarDev.FtpServer.IBackgroundCommandHandler,FubarDev.FtpServer.Localization.IFtpCatalogLoader)">FtpConnectionData(Encoding, IFeatureCollection, IBackgroundCommandHandler, IFtpCatalogLoader)</h4>
   <div class="markdown level1 summary"><p>Initializes a new instance of the <a class="xref" href="FubarDev.FtpServer.FtpConnectionData.html">FtpConnectionData</a> class.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public FtpConnectionData([NotNull] IBackgroundCommandHandler backgroundCommandHandler, [NotNull] IFtpCatalogLoader catalogLoader)</code></pre>
+    <pre><code class="lang-csharp hljs">public FtpConnectionData([NotNull] Encoding defaultEncoding, [NotNull] IFeatureCollection featureCollection, [NotNull] IBackgroundCommandHandler backgroundCommandHandler, [NotNull] IFtpCatalogLoader catalogLoader)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -153,6 +158,18 @@
       </tr>
     </thead>
     <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.text.encoding">Encoding</a></td>
+        <td><span class="parametername">defaultEncoding</span></td>
+        <td><p>The default encoding.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/microsoft.aspnetcore.http.features.ifeaturecollection">IFeatureCollection</a></td>
+        <td><span class="parametername">featureCollection</span></td>
+        <td><p>The feature collection where all features get stored.</p>
+</td>
+      </tr>
       <tr>
         <td><a class="xref" href="FubarDev.FtpServer.IBackgroundCommandHandler.html">IBackgroundCommandHandler</a></td>
         <td><span class="parametername">backgroundCommandHandler</span></td>
@@ -174,7 +191,7 @@
     <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FtpConnectionData_ActiveMlstFacts.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FtpConnectionData.ActiveMlstFacts%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.Abstractions/FtpConnectionData.cs/#L163">View Source</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.Abstractions/FtpConnectionData.cs/#L231">View Source</a>
   </span>
   <a id="FubarDev_FtpServer_FtpConnectionData_ActiveMlstFacts_" data-uid="FubarDev.FtpServer.FtpConnectionData.ActiveMlstFacts*"></a>
   <h4 id="FubarDev_FtpServer_FtpConnectionData_ActiveMlstFacts" data-uid="FubarDev.FtpServer.FtpConnectionData.ActiveMlstFacts">ActiveMlstFacts</h4>
@@ -183,8 +200,7 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[NotNull]
-[ItemNotNull]
+    <pre><code class="lang-csharp hljs">[Obsolete(&quot;Query the information using the IMlstFactsFeature instead.&quot;)]
 public ISet&lt;string&gt; ActiveMlstFacts { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
@@ -207,7 +223,7 @@ public ISet&lt;string&gt; ActiveMlstFacts { get; }</code></pre>
     <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FtpConnectionData_BackgroundCommandHandler.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FtpConnectionData.BackgroundCommandHandler%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.Abstractions/FtpConnectionData.cs/#L137">View Source</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.Abstractions/FtpConnectionData.cs/#L158">View Source</a>
   </span>
   <a id="FubarDev_FtpServer_FtpConnectionData_BackgroundCommandHandler_" data-uid="FubarDev.FtpServer.FtpConnectionData.BackgroundCommandHandler*"></a>
   <h4 id="FubarDev_FtpServer_FtpConnectionData_BackgroundCommandHandler" data-uid="FubarDev.FtpServer.FtpConnectionData.BackgroundCommandHandler">BackgroundCommandHandler</h4>
@@ -239,7 +255,7 @@ public IBackgroundCommandHandler BackgroundCommandHandler { get; }</code></pre>
     <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FtpConnectionData_Catalog.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FtpConnectionData.Catalog%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.Abstractions/FtpConnectionData.cs/#L96">View Source</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.Abstractions/FtpConnectionData.cs/#L121">View Source</a>
   </span>
   <a id="FubarDev_FtpServer_FtpConnectionData_Catalog_" data-uid="FubarDev.FtpServer.FtpConnectionData.Catalog*"></a>
   <h4 id="FubarDev_FtpServer_FtpConnectionData_Catalog" data-uid="FubarDev.FtpServer.FtpConnectionData.Catalog">Catalog</h4>
@@ -248,7 +264,7 @@ public IBackgroundCommandHandler BackgroundCommandHandler { get; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[NotNull]
+    <pre><code class="lang-csharp hljs">[Obsolete(&quot;Query the information using the ILocalizationFeature instead.&quot;)]
 public ICatalog Catalog { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
@@ -271,7 +287,7 @@ public ICatalog Catalog { get; set; }</code></pre>
     <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FtpConnectionData_CreateEncryptedStream.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FtpConnectionData.CreateEncryptedStream%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.Abstractions/FtpConnectionData.cs/#L170">View Source</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.Abstractions/FtpConnectionData.cs/#L237">View Source</a>
   </span>
   <a id="FubarDev_FtpServer_FtpConnectionData_CreateEncryptedStream_" data-uid="FubarDev.FtpServer.FtpConnectionData.CreateEncryptedStream*"></a>
   <h4 id="FubarDev_FtpServer_FtpConnectionData_CreateEncryptedStream" data-uid="FubarDev.FtpServer.FtpConnectionData.CreateEncryptedStream">CreateEncryptedStream</h4>
@@ -281,6 +297,7 @@ public ICatalog Catalog { get; set; }</code></pre>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">[CanBeNull]
+[Obsolete(&quot;Query the information using the ISecureConnectionFeature instead.&quot;)]
 public CreateEncryptedStreamDelegate CreateEncryptedStream { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
@@ -303,16 +320,16 @@ public CreateEncryptedStreamDelegate CreateEncryptedStream { get; set; }</code><
     <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FtpConnectionData_CurrentDirectory.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FtpConnectionData.CurrentDirectory%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.Abstractions/FtpConnectionData.cs/#L102">View Source</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.Abstractions/FtpConnectionData.cs/#L109">View Source</a>
   </span>
   <a id="FubarDev_FtpServer_FtpConnectionData_CurrentDirectory_" data-uid="FubarDev.FtpServer.FtpConnectionData.CurrentDirectory*"></a>
   <h4 id="FubarDev_FtpServer_FtpConnectionData_CurrentDirectory" data-uid="FubarDev.FtpServer.FtpConnectionData.CurrentDirectory">CurrentDirectory</h4>
-  <div class="markdown level1 summary"><p>Gets the current <a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry.html">IUnixDirectoryEntry</a> of the current <a class="xref" href="FubarDev.FtpServer.FtpConnectionData.html#FubarDev_FtpServer_FtpConnectionData_Path">Path</a>.</p>
+  <div class="markdown level1 summary"><p>Gets the current <a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry.html">IUnixDirectoryEntry</a> of the current <a class="xref" href="FubarDev.FtpServer.Features.IFileSystemFeature.html#FubarDev_FtpServer_Features_IFileSystemFeature_Path">Path</a>.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[NotNull]
+    <pre><code class="lang-csharp hljs">[Obsolete(&quot;Query the information using the IFileSystemFeature instead.&quot;)]
 public IUnixDirectoryEntry CurrentDirectory { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
@@ -335,7 +352,7 @@ public IUnixDirectoryEntry CurrentDirectory { get; }</code></pre>
     <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FtpConnectionData_FileSystem.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FtpConnectionData.FileSystem%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.Abstractions/FtpConnectionData.cs/#L77">View Source</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.Abstractions/FtpConnectionData.cs/#L93">View Source</a>
   </span>
   <a id="FubarDev_FtpServer_FtpConnectionData_FileSystem_" data-uid="FubarDev.FtpServer.FtpConnectionData.FileSystem*"></a>
   <h4 id="FubarDev_FtpServer_FtpConnectionData_FileSystem" data-uid="FubarDev.FtpServer.FtpConnectionData.FileSystem">FileSystem</h4>
@@ -344,7 +361,7 @@ public IUnixDirectoryEntry CurrentDirectory { get; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[NotNull]
+    <pre><code class="lang-csharp hljs">[Obsolete(&quot;Query the information using the IFileSystemFeature instead.&quot;)]
 public IUnixFileSystem FileSystem { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
@@ -367,7 +384,7 @@ public IUnixFileSystem FileSystem { get; set; }</code></pre>
     <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FtpConnectionData_IsAnonymous.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FtpConnectionData.IsAnonymous%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.Abstractions/FtpConnectionData.cs/#L65">View Source</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.Abstractions/FtpConnectionData.cs/#L78">View Source</a>
   </span>
   <a id="FubarDev_FtpServer_FtpConnectionData_IsAnonymous_" data-uid="FubarDev.FtpServer.FtpConnectionData.IsAnonymous*"></a>
   <h4 id="FubarDev_FtpServer_FtpConnectionData_IsAnonymous" data-uid="FubarDev.FtpServer.FtpConnectionData.IsAnonymous">IsAnonymous</h4>
@@ -399,7 +416,7 @@ public bool IsAnonymous { get; set; }</code></pre>
     <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FtpConnectionData_IsLoggedIn.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FtpConnectionData.IsLoggedIn%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.Abstractions/FtpConnectionData.cs/#L59">View Source</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.Abstractions/FtpConnectionData.cs/#L72">View Source</a>
   </span>
   <a id="FubarDev_FtpServer_FtpConnectionData_IsLoggedIn_" data-uid="FubarDev.FtpServer.FtpConnectionData.IsLoggedIn*"></a>
   <h4 id="FubarDev_FtpServer_FtpConnectionData_IsLoggedIn" data-uid="FubarDev.FtpServer.FtpConnectionData.IsLoggedIn">IsLoggedIn</h4>
@@ -432,7 +449,7 @@ public bool IsLoggedIn { get; set; }</code></pre>
     <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FtpConnectionData_Language.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FtpConnectionData.Language%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.Abstractions/FtpConnectionData.cs/#L90">View Source</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.Abstractions/FtpConnectionData.cs/#L113">View Source</a>
   </span>
   <a id="FubarDev_FtpServer_FtpConnectionData_Language_" data-uid="FubarDev.FtpServer.FtpConnectionData.Language*"></a>
   <h4 id="FubarDev_FtpServer_FtpConnectionData_Language" data-uid="FubarDev.FtpServer.FtpConnectionData.Language">Language</h4>
@@ -441,7 +458,7 @@ public bool IsLoggedIn { get; set; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[NotNull]
+    <pre><code class="lang-csharp hljs">[Obsolete(&quot;Query the information using the ILocalizationFeature instead.&quot;)]
 public CultureInfo Language { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
@@ -464,7 +481,7 @@ public CultureInfo Language { get; set; }</code></pre>
     <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FtpConnectionData_NlstEncoding.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FtpConnectionData.NlstEncoding%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.Abstractions/FtpConnectionData.cs/#L71">View Source</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.Abstractions/FtpConnectionData.cs/#L84">View Source</a>
   </span>
   <a id="FubarDev_FtpServer_FtpConnectionData_NlstEncoding_" data-uid="FubarDev.FtpServer.FtpConnectionData.NlstEncoding*"></a>
   <h4 id="FubarDev_FtpServer_FtpConnectionData_NlstEncoding" data-uid="FubarDev.FtpServer.FtpConnectionData.NlstEncoding">NlstEncoding</h4>
@@ -473,7 +490,8 @@ public CultureInfo Language { get; set; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[CanBeNull]
+    <pre><code class="lang-csharp hljs">[Obsolete(&quot;Query the information using the IEncodingFeature instead.&quot;)]
+[NotNull]
 public Encoding NlstEncoding { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
@@ -496,7 +514,7 @@ public Encoding NlstEncoding { get; set; }</code></pre>
     <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FtpConnectionData_PassiveSocketClient.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FtpConnectionData.PassiveSocketClient%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.Abstractions/FtpConnectionData.cs/#L131">View Source</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.Abstractions/FtpConnectionData.cs/#L147">View Source</a>
   </span>
   <a id="FubarDev_FtpServer_FtpConnectionData_PassiveSocketClient_" data-uid="FubarDev.FtpServer.FtpConnectionData.PassiveSocketClient*"></a>
   <h4 id="FubarDev_FtpServer_FtpConnectionData_PassiveSocketClient" data-uid="FubarDev.FtpServer.FtpConnectionData.PassiveSocketClient">PassiveSocketClient</h4>
@@ -506,6 +524,7 @@ public Encoding NlstEncoding { get; set; }</code></pre>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">[CanBeNull]
+[Obsolete(&quot;Query the information using the ISecureConnectionFeature instead.&quot;)]
 public TcpClient PassiveSocketClient { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
@@ -528,17 +547,16 @@ public TcpClient PassiveSocketClient { get; set; }</code></pre>
     <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FtpConnectionData_Path.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FtpConnectionData.Path%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.Abstractions/FtpConnectionData.cs/#L83">View Source</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.Abstractions/FtpConnectionData.cs/#L101">View Source</a>
   </span>
   <a id="FubarDev_FtpServer_FtpConnectionData_Path_" data-uid="FubarDev.FtpServer.FtpConnectionData.Path*"></a>
   <h4 id="FubarDev_FtpServer_FtpConnectionData_Path" data-uid="FubarDev.FtpServer.FtpConnectionData.Path">Path</h4>
-  <div class="markdown level1 summary"><p>Gets or sets the current path into the <a class="xref" href="FubarDev.FtpServer.FtpConnectionData.html#FubarDev_FtpServer_FtpConnectionData_FileSystem">FileSystem</a>.</p>
+  <div class="markdown level1 summary"><p>Gets or sets the current path into the <a class="xref" href="FubarDev.FtpServer.Features.IFileSystemFeature.html#FubarDev_FtpServer_Features_IFileSystemFeature_FileSystem">FileSystem</a>.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[NotNull]
-[ItemNotNull]
+    <pre><code class="lang-csharp hljs">[Obsolete(&quot;Query the information using the IFileSystemFeature instead.&quot;)]
 public Stack&lt;IUnixDirectoryEntry&gt; Path { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
@@ -561,7 +579,7 @@ public Stack&lt;IUnixDirectoryEntry&gt; Path { get; set; }</code></pre>
     <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FtpConnectionData_PortAddress.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FtpConnectionData.PortAddress%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.Abstractions/FtpConnectionData.cs/#L125">View Source</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.Abstractions/FtpConnectionData.cs/#L137">View Source</a>
   </span>
   <a id="FubarDev_FtpServer_FtpConnectionData_PortAddress_" data-uid="FubarDev.FtpServer.FtpConnectionData.PortAddress*"></a>
   <h4 id="FubarDev_FtpServer_FtpConnectionData_PortAddress" data-uid="FubarDev.FtpServer.FtpConnectionData.PortAddress">PortAddress</h4>
@@ -570,7 +588,7 @@ public Stack&lt;IUnixDirectoryEntry&gt; Path { get; set; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[CanBeNull]
+    <pre><code class="lang-csharp hljs">[Obsolete(&quot;Query the information using the ITransferConfigurationFeature instead.&quot;)]
 public Address PortAddress { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
@@ -593,7 +611,7 @@ public Address PortAddress { get; set; }</code></pre>
     <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FtpConnectionData_RenameFrom.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FtpConnectionData.RenameFrom%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.Abstractions/FtpConnectionData.cs/#L157">View Source</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.Abstractions/FtpConnectionData.cs/#L202">View Source</a>
   </span>
   <a id="FubarDev_FtpServer_FtpConnectionData_RenameFrom_" data-uid="FubarDev.FtpServer.FtpConnectionData.RenameFrom*"></a>
   <h4 id="FubarDev_FtpServer_FtpConnectionData_RenameFrom" data-uid="FubarDev.FtpServer.FtpConnectionData.RenameFrom">RenameFrom</h4>
@@ -603,6 +621,7 @@ public Address PortAddress { get; set; }</code></pre>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">[CanBeNull]
+[Obsolete(&quot;Query the information using the IRenameCommandFeature instead.&quot;)]
 public SearchResult&lt;IUnixFileSystemEntry&gt; RenameFrom { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
@@ -625,7 +644,7 @@ public SearchResult&lt;IUnixFileSystemEntry&gt; RenameFrom { get; set; }</code><
     <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FtpConnectionData_RestartPosition.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FtpConnectionData.RestartPosition%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.Abstractions/FtpConnectionData.cs/#L152">View Source</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.Abstractions/FtpConnectionData.cs/#L172">View Source</a>
   </span>
   <a id="FubarDev_FtpServer_FtpConnectionData_RestartPosition_" data-uid="FubarDev.FtpServer.FtpConnectionData.RestartPosition*"></a>
   <h4 id="FubarDev_FtpServer_FtpConnectionData_RestartPosition" data-uid="FubarDev.FtpServer.FtpConnectionData.RestartPosition">RestartPosition</h4>
@@ -634,7 +653,8 @@ public SearchResult&lt;IUnixFileSystemEntry&gt; RenameFrom { get; set; }</code><
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public long? RestartPosition { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">[Obsolete(&quot;Query the information using the IRestCommandFeature instead.&quot;)]
+public long? RestartPosition { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -656,7 +676,7 @@ public SearchResult&lt;IUnixFileSystemEntry&gt; RenameFrom { get; set; }</code><
     <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FtpConnectionData_TransferMode.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FtpConnectionData.TransferMode%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.Abstractions/FtpConnectionData.cs/#L119">View Source</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.Abstractions/FtpConnectionData.cs/#L129">View Source</a>
   </span>
   <a id="FubarDev_FtpServer_FtpConnectionData_TransferMode_" data-uid="FubarDev.FtpServer.FtpConnectionData.TransferMode*"></a>
   <h4 id="FubarDev_FtpServer_FtpConnectionData_TransferMode" data-uid="FubarDev.FtpServer.FtpConnectionData.TransferMode">TransferMode</h4>
@@ -665,7 +685,7 @@ public SearchResult&lt;IUnixFileSystemEntry&gt; RenameFrom { get; set; }</code><
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[NotNull]
+    <pre><code class="lang-csharp hljs">[Obsolete(&quot;Query the information using the ITransferConfigurationFeature instead.&quot;)]
 public FtpTransferMode TransferMode { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
@@ -688,7 +708,7 @@ public FtpTransferMode TransferMode { get; set; }</code></pre>
     <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FtpConnectionData_TransferTypeCommandUsed.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FtpConnectionData.TransferTypeCommandUsed%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.Abstractions/FtpConnectionData.cs/#L146">View Source</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.Abstractions/FtpConnectionData.cs/#L162">View Source</a>
   </span>
   <a id="FubarDev_FtpServer_FtpConnectionData_TransferTypeCommandUsed_" data-uid="FubarDev.FtpServer.FtpConnectionData.TransferTypeCommandUsed*"></a>
   <h4 id="FubarDev_FtpServer_FtpConnectionData_TransferTypeCommandUsed" data-uid="FubarDev.FtpServer.FtpConnectionData.TransferTypeCommandUsed">TransferTypeCommandUsed</h4>
@@ -697,7 +717,7 @@ public FtpTransferMode TransferMode { get; set; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[CanBeNull]
+    <pre><code class="lang-csharp hljs">[Obsolete(&quot;Query the information using the ITransferConfigurationFeature instead.&quot;)]
 public string TransferTypeCommandUsed { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
@@ -723,7 +743,7 @@ public string TransferTypeCommandUsed { get; set; }</code></pre>
     <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FtpConnectionData_User.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FtpConnectionData.User%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.Abstractions/FtpConnectionData.cs/#L52">View Source</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.Abstractions/FtpConnectionData.cs/#L61">View Source</a>
   </span>
   <a id="FubarDev_FtpServer_FtpConnectionData_User_" data-uid="FubarDev.FtpServer.FtpConnectionData.User*"></a>
   <h4 id="FubarDev_FtpServer_FtpConnectionData_User" data-uid="FubarDev.FtpServer.FtpConnectionData.User">User</h4>
@@ -732,7 +752,7 @@ public string TransferTypeCommandUsed { get; set; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[CanBeNull]
+    <pre><code class="lang-csharp hljs">[Obsolete(&quot;User the IAuthorizationInformationFeature services to get the current status.&quot;)]
 public IFtpUser User { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
@@ -755,7 +775,7 @@ public IFtpUser User { get; set; }</code></pre>
     <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FtpConnectionData_UserData.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FtpConnectionData.UserData%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.Abstractions/FtpConnectionData.cs/#L176">View Source</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.Abstractions/FtpConnectionData.cs/#L248">View Source</a>
   </span>
   <a id="FubarDev_FtpServer_FtpConnectionData_UserData_" data-uid="FubarDev.FtpServer.FtpConnectionData.UserData*"></a>
   <h4 id="FubarDev_FtpServer_FtpConnectionData_UserData" data-uid="FubarDev.FtpServer.FtpConnectionData.UserData">UserData</h4>
@@ -764,7 +784,8 @@ public IFtpUser User { get; set; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public dynamic UserData { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">[Obsolete(&quot;Use IFtpConnection.Features to store custom information.&quot;)]
+public dynamic UserData { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -788,7 +809,7 @@ public IFtpUser User { get; set; }</code></pre>
     <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FtpConnectionData_Dispose.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FtpConnectionData.Dispose%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.Abstractions/FtpConnectionData.cs/#L179">View Source</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.Abstractions/FtpConnectionData.cs/#L252">View Source</a>
   </span>
   <a id="FubarDev_FtpServer_FtpConnectionData_Dispose_" data-uid="FubarDev.FtpServer.FtpConnectionData.Dispose*"></a>
   <h4 id="FubarDev_FtpServer_FtpConnectionData_Dispose" data-uid="FubarDev.FtpServer.FtpConnectionData.Dispose">Dispose()</h4>
@@ -799,6 +820,21 @@ public IFtpUser User { get; set; }</code></pre>
     <pre><code class="lang-csharp hljs">public void Dispose()</code></pre>
   </div>
   <h3 id="implements">Implements</h3>
+  <div>
+      <a class="xref" href="FubarDev.FtpServer.Features.ILocalizationFeature.html">ILocalizationFeature</a>
+  </div>
+  <div>
+      <a class="xref" href="FubarDev.FtpServer.Features.IFileSystemFeature.html">IFileSystemFeature</a>
+  </div>
+  <div>
+      <a class="xref" href="FubarDev.FtpServer.Features.IAuthorizationInformationFeature.html">IAuthorizationInformationFeature</a>
+  </div>
+  <div>
+      <a class="xref" href="FubarDev.FtpServer.Features.ITransferConfigurationFeature.html">ITransferConfigurationFeature</a>
+  </div>
+  <div>
+      <a class="xref" href="FubarDev.FtpServer.Features.IMlstFactsFeature.html">IMlstFactsFeature</a>
+  </div>
   <div>
       <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.idisposable">System.IDisposable</a>
   </div>
@@ -813,7 +849,7 @@ public IFtpUser User { get; set; }</code></pre>
                     <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FtpConnectionData.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FtpConnectionData%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.Abstractions/FtpConnectionData.cs/#L29" class="contribution-link">View Source</a>
+                    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.Abstractions/FtpConnectionData.cs/#L32" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

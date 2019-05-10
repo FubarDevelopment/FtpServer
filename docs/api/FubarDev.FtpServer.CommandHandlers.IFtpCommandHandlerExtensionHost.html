@@ -104,7 +104,7 @@
       <a class="xref" href="FubarDev.FtpServer.IFtpCommandBase.html#FubarDev_FtpServer_IFtpCommandBase_Process_FubarDev_FtpServer_FtpCommand_System_Threading_CancellationToken_">IFtpCommandBase.Process(FtpCommand, CancellationToken)</a>
     </div>
     <div>
-      <a class="xref" href="FubarDev.FtpServer.IFeatureHost.html#FubarDev_FtpServer_IFeatureHost_GetSupportedFeatures">IFeatureHost.GetSupportedFeatures()</a>
+      <a class="xref" href="FubarDev.FtpServer.IFeatureHost.html#FubarDev_FtpServer_IFeatureHost_GetSupportedFeatures_FubarDev_FtpServer_IFtpConnection_">IFeatureHost.GetSupportedFeatures(IFtpConnection)</a>
     </div>
   </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="FubarDev.FtpServer.CommandHandlers.html">FubarDev.FtpServer.CommandHandlers</a></h6>
@@ -124,13 +124,13 @@
   </span>
   <a id="FubarDev_FtpServer_CommandHandlers_IFtpCommandHandlerExtensionHost_Extensions_" data-uid="FubarDev.FtpServer.CommandHandlers.IFtpCommandHandlerExtensionHost.Extensions*"></a>
   <h4 id="FubarDev_FtpServer_CommandHandlers_IFtpCommandHandlerExtensionHost_Extensions" data-uid="FubarDev.FtpServer.CommandHandlers.IFtpCommandHandlerExtensionHost.Extensions">Extensions</h4>
-  <div class="markdown level1 summary"><p>Gets the extensions hosted by the <a class="xref" href="FubarDev.FtpServer.CommandHandlers.FtpCommandHandler.html">FtpCommandHandler</a>.</p>
+  <div class="markdown level1 summary"><p>Gets or sets the extensions hosted by the <a class="xref" href="FubarDev.FtpServer.CommandHandlers.FtpCommandHandler.html">FtpCommandHandler</a>.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">[NotNull]
-IDictionary&lt;string, IFtpCommandHandlerExtension&gt; Extensions { get; }</code></pre>
+IDictionary&lt;string, IFtpCommandHandlerExtension&gt; Extensions { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">

@@ -123,7 +123,8 @@
   <h6><strong>Assembly</strong>: FubarDev.FtpServer.Abstractions.dll</h6>
   <h5 id="FubarDev_FtpServer_GenericFeatureInfo_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class GenericFeatureInfo : IFeatureInfo</code></pre>
+    <pre><code class="lang-csharp hljs">[Obsolete(&quot;Use an attribute that implements IFeatureInfo, like - for example - FtpFeatureTextAttribute.&quot;)]
+public class GenericFeatureInfo : IFeatureInfo</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
@@ -132,7 +133,7 @@
     <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_GenericFeatureInfo__ctor_System_String_System_Boolean_System_String___.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.GenericFeatureInfo.%23ctor(System.String%2CSystem.Boolean%2CSystem.String%5B%5D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.Abstractions/GenericFeatureInfo.cs/#L27">View Source</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.Abstractions/GenericFeatureInfo.cs/#L28">View Source</a>
   </span>
   <a id="FubarDev_FtpServer_GenericFeatureInfo__ctor_" data-uid="FubarDev.FtpServer.GenericFeatureInfo.#ctor*"></a>
   <h4 id="FubarDev_FtpServer_GenericFeatureInfo__ctor_System_String_System_Boolean_System_String___" data-uid="FubarDev.FtpServer.GenericFeatureInfo.#ctor(System.String,System.Boolean,System.String[])">GenericFeatureInfo(String, Boolean, String[])</h4>
@@ -141,7 +142,8 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public GenericFeatureInfo([NotNull] string name, bool requiresAuthentication, [NotNull, ItemNotNull] params string[] additionalNames)</code></pre>
+    <pre><code class="lang-csharp hljs">[Obsolete(&quot;Use an attribute that implements IFeatureInfo, like - for example - FtpFeatureTextAttribute.&quot;)]
+public GenericFeatureInfo([NotNull] string name, bool requiresAuthentication, [NotNull, ItemNotNull] params string[] additionalNames)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -178,7 +180,7 @@
     <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_GenericFeatureInfo__ctor_System_String_System_Func_FubarDev_FtpServer_IFtpConnection_System_String__System_Boolean_System_String___.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.GenericFeatureInfo.%23ctor(System.String%2CSystem.Func%7BFubarDev.FtpServer.IFtpConnection%2CSystem.String%7D%2CSystem.Boolean%2CSystem.String%5B%5D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.Abstractions/GenericFeatureInfo.cs/#L39">View Source</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.Abstractions/GenericFeatureInfo.cs/#L41">View Source</a>
   </span>
   <a id="FubarDev_FtpServer_GenericFeatureInfo__ctor_" data-uid="FubarDev.FtpServer.GenericFeatureInfo.#ctor*"></a>
   <h4 id="FubarDev_FtpServer_GenericFeatureInfo__ctor_System_String_System_Func_FubarDev_FtpServer_IFtpConnection_System_String__System_Boolean_System_String___" data-uid="FubarDev.FtpServer.GenericFeatureInfo.#ctor(System.String,System.Func{FubarDev.FtpServer.IFtpConnection,System.String},System.Boolean,System.String[])">GenericFeatureInfo(String, Func&lt;IFtpConnection, String&gt;, Boolean, String[])</h4>
@@ -187,7 +189,8 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public GenericFeatureInfo([NotNull] string name, [CanBeNull] Func&lt;IFtpConnection, string&gt; toString, bool requiresAuthentication, [NotNull, ItemNotNull] params string[] additionalNames)</code></pre>
+    <pre><code class="lang-csharp hljs">[Obsolete(&quot;Use an attribute that implements IFeatureInfo, like - for example - FtpFeatureTextAttribute.&quot;)]
+public GenericFeatureInfo([NotNull] string name, [CanBeNull] Func&lt;IFtpConnection, string&gt; toString, bool requiresAuthentication, [NotNull, ItemNotNull] params string[] additionalNames)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -232,7 +235,7 @@
     <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_GenericFeatureInfo_Names.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.GenericFeatureInfo.Names%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.Abstractions/GenericFeatureInfo.cs/#L54">View Source</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.Abstractions/GenericFeatureInfo.cs/#L57">View Source</a>
   </span>
   <a id="FubarDev_FtpServer_GenericFeatureInfo_Names_" data-uid="FubarDev.FtpServer.GenericFeatureInfo.Names*"></a>
   <h4 id="FubarDev_FtpServer_GenericFeatureInfo_Names" data-uid="FubarDev.FtpServer.GenericFeatureInfo.Names">Names</h4>
@@ -241,7 +244,8 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public ISet&lt;string&gt; Names { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">[Obsolete(&quot;Features don't have names. Use an attribute that implements IFeatureInfo, like - for example - FtpFeatureTextAttribute.&quot;)]
+public ISet&lt;string&gt; Names { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -266,7 +270,7 @@
     <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_GenericFeatureInfo_RequiresAuthentication.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.GenericFeatureInfo.RequiresAuthentication%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.Abstractions/GenericFeatureInfo.cs/#L57">View Source</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.Abstractions/GenericFeatureInfo.cs/#L61">View Source</a>
   </span>
   <a id="FubarDev_FtpServer_GenericFeatureInfo_RequiresAuthentication_" data-uid="FubarDev.FtpServer.GenericFeatureInfo.RequiresAuthentication*"></a>
   <h4 id="FubarDev_FtpServer_GenericFeatureInfo_RequiresAuthentication" data-uid="FubarDev.FtpServer.GenericFeatureInfo.RequiresAuthentication">RequiresAuthentication</h4>
@@ -275,7 +279,8 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public bool RequiresAuthentication { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">[Obsolete(&quot;This requirement is automatically determined through the FTP command handler.&quot;)]
+public bool RequiresAuthentication { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -299,7 +304,7 @@
     <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_GenericFeatureInfo_BuildInfo_FubarDev_FtpServer_IFtpConnection_.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.GenericFeatureInfo.BuildInfo(FubarDev.FtpServer.IFtpConnection)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.Abstractions/GenericFeatureInfo.cs/#L60">View Source</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.Abstractions/GenericFeatureInfo.cs/#L65">View Source</a>
   </span>
   <a id="FubarDev_FtpServer_GenericFeatureInfo_BuildInfo_" data-uid="FubarDev.FtpServer.GenericFeatureInfo.BuildInfo*"></a>
   <h4 id="FubarDev_FtpServer_GenericFeatureInfo_BuildInfo_FubarDev_FtpServer_IFtpConnection_" data-uid="FubarDev.FtpServer.GenericFeatureInfo.BuildInfo(FubarDev.FtpServer.IFtpConnection)">BuildInfo(IFtpConnection)</h4>
@@ -308,7 +313,8 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public string BuildInfo(IFtpConnection connection)</code></pre>
+    <pre><code class="lang-csharp hljs">[Obsolete(&quot;Use BuildInfo(object, IFtpConnection) instead.&quot;)]
+public string BuildInfo(IFtpConnection connection)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -320,6 +326,62 @@
       </tr>
     </thead>
     <tbody>
+      <tr>
+        <td><a class="xref" href="FubarDev.FtpServer.IFtpConnection.html">IFtpConnection</a></td>
+        <td><span class="parametername">connection</span></td>
+        <td><p>The configured connection.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td><p>the informational string to be sent by the <code>FEAT</code> command.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_GenericFeatureInfo_BuildInfo_System_Type_FubarDev_FtpServer_IFtpConnection_.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.GenericFeatureInfo.BuildInfo(System.Type%2CFubarDev.FtpServer.IFtpConnection)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.Abstractions/GenericFeatureInfo.cs/#L77">View Source</a>
+  </span>
+  <a id="FubarDev_FtpServer_GenericFeatureInfo_BuildInfo_" data-uid="FubarDev.FtpServer.GenericFeatureInfo.BuildInfo*"></a>
+  <h4 id="FubarDev_FtpServer_GenericFeatureInfo_BuildInfo_System_Type_FubarDev_FtpServer_IFtpConnection_" data-uid="FubarDev.FtpServer.GenericFeatureInfo.BuildInfo(System.Type,FubarDev.FtpServer.IFtpConnection)">BuildInfo(Type, IFtpConnection)</h4>
+  <div class="markdown level1 summary"><p>Build an informational string to be sent by the <code>FEAT</code> command.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string BuildInfo(Type reference, IFtpConnection connection)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.type">Type</a></td>
+        <td><span class="parametername">reference</span></td>
+        <td><p>The reference object type (e.g. an FTP command handler).</p>
+</td>
+      </tr>
       <tr>
         <td><a class="xref" href="FubarDev.FtpServer.IFtpConnection.html">IFtpConnection</a></td>
         <td><span class="parametername">connection</span></td>

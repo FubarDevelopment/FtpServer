@@ -129,7 +129,7 @@
     <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FtpResponse__ctor_FubarDev_FtpServer_SecurityActionResult_System_String_.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FtpResponse.%23ctor(FubarDev.FtpServer.SecurityActionResult%2CSystem.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.Abstractions/FtpResponse.cs/#L37">View Source</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.Abstractions/FtpResponse.cs/#L36">View Source</a>
   </span>
   <a id="FubarDev_FtpServer_FtpResponse__ctor_" data-uid="FubarDev.FtpServer.FtpResponse.#ctor*"></a>
   <h4 id="FubarDev_FtpServer_FtpResponse__ctor_FubarDev_FtpServer_SecurityActionResult_System_String_" data-uid="FubarDev.FtpServer.FtpResponse.#ctor(FubarDev.FtpServer.SecurityActionResult,System.String)">FtpResponse(SecurityActionResult, String)</h4>
@@ -169,7 +169,7 @@
     <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FtpResponse__ctor_System_Int32_System_String_.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FtpResponse.%23ctor(System.Int32%2CSystem.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.Abstractions/FtpResponse.cs/#L26">View Source</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.Abstractions/FtpResponse.cs/#L25">View Source</a>
   </span>
   <a id="FubarDev_FtpServer_FtpResponse__ctor_" data-uid="FubarDev.FtpServer.FtpResponse.#ctor*"></a>
   <h4 id="FubarDev_FtpServer_FtpResponse__ctor_System_Int32_System_String_" data-uid="FubarDev.FtpServer.FtpResponse.#ctor(System.Int32,System.String)">FtpResponse(Int32, String)</h4>
@@ -211,7 +211,7 @@
     <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FtpResponse_AfterWriteAction.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FtpResponse.AfterWriteAction%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.Abstractions/FtpResponse.cs/#L54">View Source</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.Abstractions/FtpResponse.cs/#L53">View Source</a>
   </span>
   <a id="FubarDev_FtpServer_FtpResponse_AfterWriteAction_" data-uid="FubarDev.FtpServer.FtpResponse.AfterWriteAction*"></a>
   <h4 id="FubarDev_FtpServer_FtpResponse_AfterWriteAction" data-uid="FubarDev.FtpServer.FtpResponse.AfterWriteAction">AfterWriteAction</h4>
@@ -220,7 +220,7 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Func&lt;IFtpConnection, CancellationToken, Task&gt; AfterWriteAction { get; set; }</code></pre>
+    <pre><code class="lang-csharp hljs">public FtpResponseAfterWriteAsyncDelegate AfterWriteAction { get; set; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -232,7 +232,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.func-3">Func</a>&lt;<a class="xref" href="FubarDev.FtpServer.IFtpConnection.html">IFtpConnection</a>, <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.threading.cancellationtoken">CancellationToken</a>, <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.threading.tasks.task">Task</a>&gt;</td>
+        <td><a class="xref" href="FubarDev.FtpServer.FtpResponseAfterWriteAsyncDelegate.html">FtpResponseAfterWriteAsyncDelegate</a></td>
         <td></td>
       </tr>
     </tbody>
@@ -242,7 +242,7 @@
     <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FtpResponse_Code.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FtpResponse.Code%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.Abstractions/FtpResponse.cs/#L43">View Source</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.Abstractions/FtpResponse.cs/#L42">View Source</a>
   </span>
   <a id="FubarDev_FtpServer_FtpResponse_Code_" data-uid="FubarDev.FtpServer.FtpResponse.Code*"></a>
   <h4 id="FubarDev_FtpServer_FtpResponse_Code" data-uid="FubarDev.FtpServer.FtpResponse.Code">Code</h4>
@@ -273,7 +273,7 @@
     <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FtpResponse_Message.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FtpResponse.Message%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.Abstractions/FtpResponse.cs/#L48">View Source</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.Abstractions/FtpResponse.cs/#L47">View Source</a>
   </span>
   <a id="FubarDev_FtpServer_FtpResponse_Message_" data-uid="FubarDev.FtpServer.FtpResponse.Message*"></a>
   <h4 id="FubarDev_FtpServer_FtpResponse_Message" data-uid="FubarDev.FtpServer.FtpResponse.Message">Message</h4>
@@ -307,7 +307,7 @@ public string Message { get; }</code></pre>
     <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FtpResponse_GetNextLineAsync_System_Object_System_Threading_CancellationToken_.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FtpResponse.GetNextLineAsync(System.Object%2CSystem.Threading.CancellationToken)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.Abstractions/FtpResponse.cs/#L63">View Source</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.Abstractions/FtpResponse.cs/#L62">View Source</a>
   </span>
   <a id="FubarDev_FtpServer_FtpResponse_GetNextLineAsync_" data-uid="FubarDev.FtpServer.FtpResponse.GetNextLineAsync*"></a>
   <h4 id="FubarDev_FtpServer_FtpResponse_GetNextLineAsync_System_Object_System_Threading_CancellationToken_" data-uid="FubarDev.FtpServer.FtpResponse.GetNextLineAsync(System.Object,System.Threading.CancellationToken)">GetNextLineAsync(Object, CancellationToken)</h4>
@@ -363,7 +363,7 @@ public string Message { get; }</code></pre>
     <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FtpResponse_ToString.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FtpResponse.ToString%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.Abstractions/FtpResponse.cs/#L57">View Source</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.Abstractions/FtpResponse.cs/#L56">View Source</a>
   </span>
   <a id="FubarDev_FtpServer_FtpResponse_ToString_" data-uid="FubarDev.FtpServer.FtpResponse.ToString*"></a>
   <h4 id="FubarDev_FtpServer_FtpResponse_ToString" data-uid="FubarDev.FtpServer.FtpResponse.ToString">ToString()</h4>
@@ -405,7 +405,7 @@ public string Message { get; }</code></pre>
                     <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FtpResponse.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FtpResponse%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.Abstractions/FtpResponse.cs/#L19" class="contribution-link">View Source</a>
+                    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.Abstractions/FtpResponse.cs/#L18" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

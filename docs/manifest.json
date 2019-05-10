@@ -306,7 +306,7 @@
       "output": {
         ".html": {
           "relative_path": "api/FubarDev.FtpServer.Authentication.AuthenticationMechanism.html",
-          "hash": "UBp5py38DFpKt2mhf3sUnQ=="
+          "hash": "9XbFlVBT6LR01EU1l24pGw=="
         }
       },
       "is_incremental": false,
@@ -354,7 +354,7 @@
       "output": {
         ".html": {
           "relative_path": "api/FubarDev.FtpServer.Authentication.TlsAuthenticationMechanism.html",
-          "hash": "xYGZGC5s4XU1UsglXAiW5A=="
+          "hash": "XH8VhCtY4iD15Iy6IvG0gA=="
         }
       },
       "is_incremental": false,
@@ -378,7 +378,7 @@
       "output": {
         ".html": {
           "relative_path": "api/FubarDev.FtpServer.Authorization.Actions.FillConnectionAccountDataAction.html",
-          "hash": "qoPi/MnRTYtk6aqZq9FAzQ=="
+          "hash": "27Qe2Y4rgeFRPeFjroUwhw=="
         }
       },
       "is_incremental": false,
@@ -390,7 +390,7 @@
       "output": {
         ".html": {
           "relative_path": "api/FubarDev.FtpServer.Authorization.Actions.FillConnectionFileSystemDataAction.html",
-          "hash": "Q4KH06Pz5LRQSz3ToBKlCA=="
+          "hash": "LfxBc08s1i1LUULukWOuFg=="
         }
       },
       "is_incremental": false,
@@ -402,7 +402,7 @@
       "output": {
         ".html": {
           "relative_path": "api/FubarDev.FtpServer.Authorization.Actions.SetHomeDirectoryAction.html",
-          "hash": "V21tuN1FSz2RMT95/Cr8PA=="
+          "hash": "/kp8WgaLl4xEHwyhS8I5uw=="
         }
       },
       "is_incremental": false,
@@ -426,7 +426,7 @@
       "output": {
         ".html": {
           "relative_path": "api/FubarDev.FtpServer.Authorization.Actions.html",
-          "hash": "xQSDao7qwX9piWp/ZHR4ZQ=="
+          "hash": "kq0Eav1I5OJatwfzKQXdyw=="
         }
       },
       "is_incremental": false,
@@ -438,7 +438,7 @@
       "output": {
         ".html": {
           "relative_path": "api/FubarDev.FtpServer.Authorization.AuthorizationMechanism.html",
-          "hash": "7eeM+8XevFrD8EJFJs3qJA=="
+          "hash": "+J8M7s4KXBe3f/TRStQg1g=="
         }
       },
       "is_incremental": false,
@@ -474,7 +474,7 @@
       "output": {
         ".html": {
           "relative_path": "api/FubarDev.FtpServer.Authorization.PasswordAuthorization.html",
-          "hash": "UwvJ5rf+ThN9FQ1wXBMR6A=="
+          "hash": "FLsWbZ31gK9zqMw8t3f6Zg=="
         }
       },
       "is_incremental": false,
@@ -498,7 +498,7 @@
       "output": {
         ".html": {
           "relative_path": "api/FubarDev.FtpServer.BackgroundTransfer.BackgroundCommandHandler.html",
-          "hash": "ReGTHyG9a/8VqF0XMhMjLw=="
+          "hash": "Yq/lM8B+A1tZQlz9zGSwig=="
         }
       },
       "is_incremental": false,
@@ -626,11 +626,95 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "api/FubarDev.FtpServer.CommandExtensions.AssemblyFtpCommandHandlerExtensionScanner.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/FubarDev.FtpServer.CommandExtensions.AssemblyFtpCommandHandlerExtensionScanner.html",
+          "hash": "lHXdo1hBA9kGIEosx4F7jw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/FubarDev.FtpServer.CommandExtensions.DefaultFtpCommandHandlerExtensionProvider.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/FubarDev.FtpServer.CommandExtensions.DefaultFtpCommandHandlerExtensionProvider.html",
+          "hash": "L1EEZVTnwNOusftd+oi+jg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "api/FubarDev.FtpServer.CommandExtensions.FtpCommandHandlerExtension.yml",
       "output": {
         ".html": {
           "relative_path": "api/FubarDev.FtpServer.CommandExtensions.FtpCommandHandlerExtension.html",
-          "hash": "RuAh6F1HUbshj403Dpqfzw=="
+          "hash": "mg9L6IUGbB4LS4P5yfn1xw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/FubarDev.FtpServer.CommandExtensions.FtpCommandHandlerExtensionAttribute.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/FubarDev.FtpServer.CommandExtensions.FtpCommandHandlerExtensionAttribute.html",
+          "hash": "XiMlOCGu7TqAbSXUsm3ajQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/FubarDev.FtpServer.CommandExtensions.IFtpCommandHandlerExtensionInformation.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/FubarDev.FtpServer.CommandExtensions.IFtpCommandHandlerExtensionInformation.html",
+          "hash": "jNSEIv9NMmP8KRpOWJlU4Q=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/FubarDev.FtpServer.CommandExtensions.IFtpCommandHandlerExtensionInstanceInformation.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/FubarDev.FtpServer.CommandExtensions.IFtpCommandHandlerExtensionInstanceInformation.html",
+          "hash": "zN1uBcJOEAH85n2Qcww0TQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/FubarDev.FtpServer.CommandExtensions.IFtpCommandHandlerExtensionProvider.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/FubarDev.FtpServer.CommandExtensions.IFtpCommandHandlerExtensionProvider.html",
+          "hash": "vTzY1sToNKeV2zXX5MNiXg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/FubarDev.FtpServer.CommandExtensions.IFtpCommandHandlerExtensionScanner.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/FubarDev.FtpServer.CommandExtensions.IFtpCommandHandlerExtensionScanner.html",
+          "hash": "MCNYmpmyibntGenr+4/9gA=="
         }
       },
       "is_incremental": false,
@@ -642,7 +726,7 @@
       "output": {
         ".html": {
           "relative_path": "api/FubarDev.FtpServer.CommandExtensions.OptsMlstCommandExtension.html",
-          "hash": "fowPEWqIMHqPCjVkB+lZYg=="
+          "hash": "qyj5b07M+6ws6XR9qES07g=="
         }
       },
       "is_incremental": false,
@@ -654,7 +738,19 @@
       "output": {
         ".html": {
           "relative_path": "api/FubarDev.FtpServer.CommandExtensions.OptsUtf8CommandExtension.html",
-          "hash": "G283jShigJnzgdf2KHGVMA=="
+          "hash": "ne7mFaliu68XQAVf8BtdPA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/FubarDev.FtpServer.CommandExtensions.ServiceFtpCommandHandlerExtensionScanner.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/FubarDev.FtpServer.CommandExtensions.ServiceFtpCommandHandlerExtensionScanner.html",
+          "hash": "CaBcFvd7LqdzZ8dvIrCPoA=="
         }
       },
       "is_incremental": false,
@@ -666,7 +762,7 @@
       "output": {
         ".html": {
           "relative_path": "api/FubarDev.FtpServer.CommandExtensions.SiteBlstCommandExtension.html",
-          "hash": "8g6CARoH5oMWhFGocWuYcw=="
+          "hash": "mmJsPm92+GD0QD0lAKHi+w=="
         }
       },
       "is_incremental": false,
@@ -678,7 +774,7 @@
       "output": {
         ".html": {
           "relative_path": "api/FubarDev.FtpServer.CommandExtensions.SiteUtimeCommandExtension.html",
-          "hash": "Uplv66Y0s4Fi8b8pKETWAg=="
+          "hash": "GhFjhAukC8XYz0JIPmSiJg=="
         }
       },
       "is_incremental": false,
@@ -690,7 +786,7 @@
       "output": {
         ".html": {
           "relative_path": "api/FubarDev.FtpServer.CommandExtensions.html",
-          "hash": "qLKnbmHpxCvDLXrVu1tnjQ=="
+          "hash": "c6x3BxhxzVlN39hMc6TRZA=="
         }
       },
       "is_incremental": false,
@@ -702,7 +798,7 @@
       "output": {
         ".html": {
           "relative_path": "api/FubarDev.FtpServer.CommandHandlers.AborCommandHandler.html",
-          "hash": "/o5Y74bDPKUeETTTmCthow=="
+          "hash": "2ir5kTRGDt3eaojngm7acg=="
         }
       },
       "is_incremental": false,
@@ -714,7 +810,7 @@
       "output": {
         ".html": {
           "relative_path": "api/FubarDev.FtpServer.CommandHandlers.AcctCommandHandler.html",
-          "hash": "2Ps6+bIhv3lIUH5LCuEUaQ=="
+          "hash": "gBnXcp5NEsCSB0il6noLqg=="
         }
       },
       "is_incremental": false,
@@ -726,7 +822,7 @@
       "output": {
         ".html": {
           "relative_path": "api/FubarDev.FtpServer.CommandHandlers.AdatCommandHandler.html",
-          "hash": "xpso73XRjQvJ7awKJtwdLA=="
+          "hash": "BFlttvRfN7E7xoixwb7APA=="
         }
       },
       "is_incremental": false,
@@ -738,7 +834,7 @@
       "output": {
         ".html": {
           "relative_path": "api/FubarDev.FtpServer.CommandHandlers.AlloCommandHandler.html",
-          "hash": "cTkFUn2xc1XyPgp6UDphrg=="
+          "hash": "hBIzrESnCAEnvR5LrehUBA=="
         }
       },
       "is_incremental": false,
@@ -750,7 +846,7 @@
       "output": {
         ".html": {
           "relative_path": "api/FubarDev.FtpServer.CommandHandlers.AppeCommandHandler.html",
-          "hash": "1T0EgEHPql/vgLJ0DszmzA=="
+          "hash": "zJfXuvZompV4Rj/JPupMxQ=="
         }
       },
       "is_incremental": false,
@@ -762,7 +858,7 @@
       "output": {
         ".html": {
           "relative_path": "api/FubarDev.FtpServer.CommandHandlers.AuthCommandHandler.html",
-          "hash": "dapR/EJtSAVmWPMdlVMCsg=="
+          "hash": "SoP2aP6FCrbH/g5w+MX3aw=="
         }
       },
       "is_incremental": false,
@@ -774,7 +870,7 @@
       "output": {
         ".html": {
           "relative_path": "api/FubarDev.FtpServer.CommandHandlers.CdUpCommandHandler.html",
-          "hash": "19T7WvR2icIX+7CKOXBMgw=="
+          "hash": "Q9axHtYhaFgm0kNixdfEDg=="
         }
       },
       "is_incremental": false,
@@ -786,7 +882,7 @@
       "output": {
         ".html": {
           "relative_path": "api/FubarDev.FtpServer.CommandHandlers.CwdCommandHandler.html",
-          "hash": "SFnD8JQYlZfWCTKDfHwhyA=="
+          "hash": "3pQObcwucDYNsY1brCLUdg=="
         }
       },
       "is_incremental": false,
@@ -798,7 +894,7 @@
       "output": {
         ".html": {
           "relative_path": "api/FubarDev.FtpServer.CommandHandlers.DeleCommandHandler.html",
-          "hash": "ET3fXJ+h0x/tKLgtK/sMcQ=="
+          "hash": "ZSvkZnYP1/weSJkRpnX99Q=="
         }
       },
       "is_incremental": false,
@@ -810,7 +906,7 @@
       "output": {
         ".html": {
           "relative_path": "api/FubarDev.FtpServer.CommandHandlers.FeatCommandHandler.html",
-          "hash": "IUfKG55YTaFt6DtrVNEkrw=="
+          "hash": "pF0NoRIUMR/GXesEdyr2RQ=="
         }
       },
       "is_incremental": false,
@@ -822,7 +918,7 @@
       "output": {
         ".html": {
           "relative_path": "api/FubarDev.FtpServer.CommandHandlers.FtpCommandHandler.html",
-          "hash": "ptotMleef5EJfTjZHKRcHQ=="
+          "hash": "KjeBib5tKD5ToFHE8G8i0Q=="
         }
       },
       "is_incremental": false,
@@ -834,7 +930,7 @@
       "output": {
         ".html": {
           "relative_path": "api/FubarDev.FtpServer.CommandHandlers.HelpCommandHandler.html",
-          "hash": "G2x+Nrkul3pnj4X52PEHig=="
+          "hash": "4/btqWfNYhLWgukzu3EIPQ=="
         }
       },
       "is_incremental": false,
@@ -846,7 +942,7 @@
       "output": {
         ".html": {
           "relative_path": "api/FubarDev.FtpServer.CommandHandlers.HostCommandHandler.html",
-          "hash": "LzVlDcoQ2YxjpefYnrjA9w=="
+          "hash": "f3GE4hbCR1O6nmi7PuAJJA=="
         }
       },
       "is_incremental": false,
@@ -858,7 +954,7 @@
       "output": {
         ".html": {
           "relative_path": "api/FubarDev.FtpServer.CommandHandlers.IFtpCommandHandlerExtensionHost.html",
-          "hash": "8V10Gx4QfgDBnhhBbH9Fzg=="
+          "hash": "r7pixmLZHqV7F6Zzl7uSGQ=="
         }
       },
       "is_incremental": false,
@@ -870,7 +966,7 @@
       "output": {
         ".html": {
           "relative_path": "api/FubarDev.FtpServer.CommandHandlers.LangCommandHandler.html",
-          "hash": "AeSvHlePIa7KZlKFp4lDJQ=="
+          "hash": "lSowdY/Izi00Ew4qOjbqWg=="
         }
       },
       "is_incremental": false,
@@ -882,7 +978,7 @@
       "output": {
         ".html": {
           "relative_path": "api/FubarDev.FtpServer.CommandHandlers.ListCommandHandler.html",
-          "hash": "s6xER+QzmNz7rIi17leohw=="
+          "hash": "vEmazuB4ahuDkwwSQrlJIw=="
         }
       },
       "is_incremental": false,
@@ -894,7 +990,7 @@
       "output": {
         ".html": {
           "relative_path": "api/FubarDev.FtpServer.CommandHandlers.MdtmCommandHandler.html",
-          "hash": "YYlsasLzmbfPeZmlhYxW0g=="
+          "hash": "fvjWzRJj0GrXA39NKh/GIg=="
         }
       },
       "is_incremental": false,
@@ -906,7 +1002,7 @@
       "output": {
         ".html": {
           "relative_path": "api/FubarDev.FtpServer.CommandHandlers.MfctCommandHandler.html",
-          "hash": "6ONFpWKPcpWiMq9e0rTExA=="
+          "hash": "aynfa9/kS1Dz41pkBj/5hA=="
         }
       },
       "is_incremental": false,
@@ -918,7 +1014,7 @@
       "output": {
         ".html": {
           "relative_path": "api/FubarDev.FtpServer.CommandHandlers.MffCommandHandler.html",
-          "hash": "owdI3028Ii8If5Yn8+Hh5g=="
+          "hash": "+OVWZS3e3NMR27l1s6x5jQ=="
         }
       },
       "is_incremental": false,
@@ -930,7 +1026,7 @@
       "output": {
         ".html": {
           "relative_path": "api/FubarDev.FtpServer.CommandHandlers.MfmtCommandHandler.html",
-          "hash": "XfO4T5sCFhRoE5zMEltfIw=="
+          "hash": "Z3Qj72E30zA35OtHB025+A=="
         }
       },
       "is_incremental": false,
@@ -942,7 +1038,7 @@
       "output": {
         ".html": {
           "relative_path": "api/FubarDev.FtpServer.CommandHandlers.MkdCommandHandler.html",
-          "hash": "BoJr4Zw1oYRVLKnLhuQ0Zg=="
+          "hash": "BwWndBhgMMw0euENlvBBOQ=="
         }
       },
       "is_incremental": false,
@@ -954,7 +1050,7 @@
       "output": {
         ".html": {
           "relative_path": "api/FubarDev.FtpServer.CommandHandlers.MlstCommandHandler.html",
-          "hash": "DD+Kp8PLXYgett2X9iKuhA=="
+          "hash": "crnN8feNrDiMjJWybc1mPQ=="
         }
       },
       "is_incremental": false,
@@ -966,7 +1062,7 @@
       "output": {
         ".html": {
           "relative_path": "api/FubarDev.FtpServer.CommandHandlers.ModeCommandHandler.html",
-          "hash": "Ku4jAGpocV++4g6kcTnD2Q=="
+          "hash": "yebPUkJyGWFIJFv3vIxNcA=="
         }
       },
       "is_incremental": false,
@@ -978,7 +1074,7 @@
       "output": {
         ".html": {
           "relative_path": "api/FubarDev.FtpServer.CommandHandlers.NoOpCommandHandler.html",
-          "hash": "v8IH9SeOQljUyW/ZT4ObDA=="
+          "hash": "i5O10LOlYQi1KHld+ukcHQ=="
         }
       },
       "is_incremental": false,
@@ -990,7 +1086,7 @@
       "output": {
         ".html": {
           "relative_path": "api/FubarDev.FtpServer.CommandHandlers.OptsCommandHandler.html",
-          "hash": "ehs4jaltv9fdyfHYk48Fdg=="
+          "hash": "7Dc3QXvKBvUogcy1xLCfhA=="
         }
       },
       "is_incremental": false,
@@ -1002,7 +1098,7 @@
       "output": {
         ".html": {
           "relative_path": "api/FubarDev.FtpServer.CommandHandlers.PassCommandHandler.html",
-          "hash": "hJlxeHBUCxRUm8WPYFwT1g=="
+          "hash": "TzQcQKBAcZbU0+Fubq8Kcw=="
         }
       },
       "is_incremental": false,
@@ -1014,7 +1110,7 @@
       "output": {
         ".html": {
           "relative_path": "api/FubarDev.FtpServer.CommandHandlers.PasvCommandHandler.html",
-          "hash": "td2AX1aB2G8L+p1eE/BM+Q=="
+          "hash": "8uUi2I492ORJZiCIilJq6A=="
         }
       },
       "is_incremental": false,
@@ -1026,7 +1122,7 @@
       "output": {
         ".html": {
           "relative_path": "api/FubarDev.FtpServer.CommandHandlers.PbszCommandHandler.html",
-          "hash": "BFTEoXqktCXdM0Y+Qr5zXg=="
+          "hash": "TuxNbTlpanEB2d7Vy1HPew=="
         }
       },
       "is_incremental": false,
@@ -1038,7 +1134,7 @@
       "output": {
         ".html": {
           "relative_path": "api/FubarDev.FtpServer.CommandHandlers.PortCommandHandler.html",
-          "hash": "uGwtIKYeqIzownDlObRV+Q=="
+          "hash": "LivmISnNN5FWwiQ+lt0i3Q=="
         }
       },
       "is_incremental": false,
@@ -1050,7 +1146,7 @@
       "output": {
         ".html": {
           "relative_path": "api/FubarDev.FtpServer.CommandHandlers.ProtCommandHandler.html",
-          "hash": "QYq0o05VacTVHLZzfLRqQQ=="
+          "hash": "GicfF88hhm9A89VOQIrWJQ=="
         }
       },
       "is_incremental": false,
@@ -1062,7 +1158,7 @@
       "output": {
         ".html": {
           "relative_path": "api/FubarDev.FtpServer.CommandHandlers.PwdCommandHandler.html",
-          "hash": "CAChBRw2po3+XAdl+nQuBw=="
+          "hash": "pgu26xP6fmjWsbXSDDRCeg=="
         }
       },
       "is_incremental": false,
@@ -1074,7 +1170,7 @@
       "output": {
         ".html": {
           "relative_path": "api/FubarDev.FtpServer.CommandHandlers.QuitCommandHandler.html",
-          "hash": "LFf/i85yWpnlWYy2hhnDCA=="
+          "hash": "xrKGk7UkYaM5vI8Ovsc3kQ=="
         }
       },
       "is_incremental": false,
@@ -1086,7 +1182,7 @@
       "output": {
         ".html": {
           "relative_path": "api/FubarDev.FtpServer.CommandHandlers.ReinCommandHandler.html",
-          "hash": "B4bvQ0q6+vNwxlXXt45xsg=="
+          "hash": "dWHcjWlk6GksU028GZWYnQ=="
         }
       },
       "is_incremental": false,
@@ -1098,7 +1194,7 @@
       "output": {
         ".html": {
           "relative_path": "api/FubarDev.FtpServer.CommandHandlers.RestCommandHandler.html",
-          "hash": "1lNenR0woZjMRVhcNVXbFA=="
+          "hash": "taABVjo06v7ZoH3CpKDEog=="
         }
       },
       "is_incremental": false,
@@ -1110,7 +1206,7 @@
       "output": {
         ".html": {
           "relative_path": "api/FubarDev.FtpServer.CommandHandlers.RetrCommandHandler.html",
-          "hash": "UNODfd97sNloufoOvwLOQQ=="
+          "hash": "67uHu1jL0VwEmpjjtoovUA=="
         }
       },
       "is_incremental": false,
@@ -1122,7 +1218,7 @@
       "output": {
         ".html": {
           "relative_path": "api/FubarDev.FtpServer.CommandHandlers.RmdCommandHandler.html",
-          "hash": "QclvgVOtv00gq4ujb8I7Pg=="
+          "hash": "fb7sJLk2IfjYHDs+NaXrRQ=="
         }
       },
       "is_incremental": false,
@@ -1134,7 +1230,7 @@
       "output": {
         ".html": {
           "relative_path": "api/FubarDev.FtpServer.CommandHandlers.RnfrCommandHandler.html",
-          "hash": "0C/GKp/i4KOmKKZI1lOtdw=="
+          "hash": "QKYhyP1v9fhj/B64SoFstA=="
         }
       },
       "is_incremental": false,
@@ -1146,7 +1242,7 @@
       "output": {
         ".html": {
           "relative_path": "api/FubarDev.FtpServer.CommandHandlers.RntoCommandHandler.html",
-          "hash": "XBYnSistfQMa7oPl0K05pQ=="
+          "hash": "JBzRWKItn9KChpK8dlNqfQ=="
         }
       },
       "is_incremental": false,
@@ -1158,7 +1254,7 @@
       "output": {
         ".html": {
           "relative_path": "api/FubarDev.FtpServer.CommandHandlers.SiteCommandHandler.html",
-          "hash": "lQ7dNXTpmaeopRO16lhaIA=="
+          "hash": "eLYgREcbeWI51nz9GqSv0g=="
         }
       },
       "is_incremental": false,
@@ -1170,7 +1266,7 @@
       "output": {
         ".html": {
           "relative_path": "api/FubarDev.FtpServer.CommandHandlers.SizeCommandHandler.html",
-          "hash": "hDMPpP0u6nzF0F9CabSvhw=="
+          "hash": "qyeM6FXkxYn6dQbP4HjcmA=="
         }
       },
       "is_incremental": false,
@@ -1182,7 +1278,7 @@
       "output": {
         ".html": {
           "relative_path": "api/FubarDev.FtpServer.CommandHandlers.StatCommandHandler.html",
-          "hash": "2IPBpR9l6/q8y3r+NFlBMw=="
+          "hash": "zIbypsRuUXx/TDZvxUW2jg=="
         }
       },
       "is_incremental": false,
@@ -1194,7 +1290,7 @@
       "output": {
         ".html": {
           "relative_path": "api/FubarDev.FtpServer.CommandHandlers.StorCommandHandler.html",
-          "hash": "G42JcGv/y89NjzPqUt/2IQ=="
+          "hash": "SrzQ+IL4szkXKE2nxerSQg=="
         }
       },
       "is_incremental": false,
@@ -1206,7 +1302,7 @@
       "output": {
         ".html": {
           "relative_path": "api/FubarDev.FtpServer.CommandHandlers.StruCommandHandler.html",
-          "hash": "5ek2KWse+8PvVCuRwxICBw=="
+          "hash": "1mRId9At75iQodU0U7ah6g=="
         }
       },
       "is_incremental": false,
@@ -1218,7 +1314,7 @@
       "output": {
         ".html": {
           "relative_path": "api/FubarDev.FtpServer.CommandHandlers.SystCommandHandler.html",
-          "hash": "bkKX5M9/O2PItQRb8uWb3g=="
+          "hash": "9JXCLnA9l4rRXZfpWo3GAQ=="
         }
       },
       "is_incremental": false,
@@ -1230,7 +1326,7 @@
       "output": {
         ".html": {
           "relative_path": "api/FubarDev.FtpServer.CommandHandlers.TypeCommandHandler.html",
-          "hash": "Z3Kwr46K2AQToA2QFtD4Aw=="
+          "hash": "za0TxEbe6toh27LL37Yryg=="
         }
       },
       "is_incremental": false,
@@ -1242,7 +1338,7 @@
       "output": {
         ".html": {
           "relative_path": "api/FubarDev.FtpServer.CommandHandlers.UserCommandHandler.html",
-          "hash": "CJ/f+DtbiS/tpJeZTD5u2g=="
+          "hash": "WkgvmPlWT5ExeaXhl34mIw=="
         }
       },
       "is_incremental": false,
@@ -1254,7 +1350,7 @@
       "output": {
         ".html": {
           "relative_path": "api/FubarDev.FtpServer.CommandHandlers.XcwdCommandHandler.html",
-          "hash": "jkc9PZTJpsyM+Xvm1+mSyA=="
+          "hash": "Hui/LdrhZYugsm5XIOoUzw=="
         }
       },
       "is_incremental": false,
@@ -1266,7 +1362,7 @@
       "output": {
         ".html": {
           "relative_path": "api/FubarDev.FtpServer.CommandHandlers.XmkdCommandHandler.html",
-          "hash": "wTW/wFOm6VP3SgloI2IS4w=="
+          "hash": "WJW9Kc8I28Hp1Yvx2Fk22A=="
         }
       },
       "is_incremental": false,
@@ -1278,7 +1374,7 @@
       "output": {
         ".html": {
           "relative_path": "api/FubarDev.FtpServer.CommandHandlers.XrmdCommandHandler.html",
-          "hash": "cyUk2reuU3Qvg4txasSBDQ=="
+          "hash": "/VWieQIJ4AZZ8YfDWuaEKA=="
         }
       },
       "is_incremental": false,
@@ -1290,7 +1386,211 @@
       "output": {
         ".html": {
           "relative_path": "api/FubarDev.FtpServer.CommandHandlers.html",
-          "hash": "QwLxyxqlB8KQq+4phpGL9w=="
+          "hash": "TzD2OMbpfBcAc4yCfP1iLA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/FubarDev.FtpServer.Commands.AssemblyFtpCommandHandlerScanner.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/FubarDev.FtpServer.Commands.AssemblyFtpCommandHandlerScanner.html",
+          "hash": "jvMDwYm/9SHao6ERWU6b1Q=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/FubarDev.FtpServer.Commands.DefaultFeatureInfoProvider.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/FubarDev.FtpServer.Commands.DefaultFeatureInfoProvider.html",
+          "hash": "DX4fc5JpUUOf/kIsME4+BA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/FubarDev.FtpServer.Commands.DefaultFtpCommandActivator.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/FubarDev.FtpServer.Commands.DefaultFtpCommandActivator.html",
+          "hash": "iZzLmCrj3AkpMbkKpuMRoA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/FubarDev.FtpServer.Commands.DefaultFtpCommandHandlerProvider.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/FubarDev.FtpServer.Commands.DefaultFtpCommandHandlerProvider.html",
+          "hash": "Z8UyCsnwfg5VVy18O3O0PQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/FubarDev.FtpServer.Commands.FoundFeatureInfo.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/FubarDev.FtpServer.Commands.FoundFeatureInfo.html",
+          "hash": "fUS6BFFlE2VEjDzgtN00IA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/FubarDev.FtpServer.Commands.FtpCommandContext.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/FubarDev.FtpServer.Commands.FtpCommandContext.html",
+          "hash": "TXnU3fL6X3kq22YioEyeXQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/FubarDev.FtpServer.Commands.FtpCommandHandlerAttribute.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/FubarDev.FtpServer.Commands.FtpCommandHandlerAttribute.html",
+          "hash": "TWqJyUlR1Duhd87/kwFwNQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/FubarDev.FtpServer.Commands.FtpCommandSelection.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/FubarDev.FtpServer.Commands.FtpCommandSelection.html",
+          "hash": "hkcXFAQ9N6hw9zDWqbHhgQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/FubarDev.FtpServer.Commands.IFeatureInfoProvider.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/FubarDev.FtpServer.Commands.IFeatureInfoProvider.html",
+          "hash": "5Eb+GwQg7MJtWjI40z66Rw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/FubarDev.FtpServer.Commands.IFtpCommandActivator.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/FubarDev.FtpServer.Commands.IFtpCommandActivator.html",
+          "hash": "YSPZIsU+WVq+kQL7bpu0Mw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/FubarDev.FtpServer.Commands.IFtpCommandHandlerInformation.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/FubarDev.FtpServer.Commands.IFtpCommandHandlerInformation.html",
+          "hash": "VyTUViXofuVznNclVA//rA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/FubarDev.FtpServer.Commands.IFtpCommandHandlerInstanceInformation.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/FubarDev.FtpServer.Commands.IFtpCommandHandlerInstanceInformation.html",
+          "hash": "/ufU6Z3PzKw/KoLf1kUzDQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/FubarDev.FtpServer.Commands.IFtpCommandHandlerProvider.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/FubarDev.FtpServer.Commands.IFtpCommandHandlerProvider.html",
+          "hash": "DxJZypjyUYdMIkPKvwbypQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/FubarDev.FtpServer.Commands.IFtpCommandHandlerScanner.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/FubarDev.FtpServer.Commands.IFtpCommandHandlerScanner.html",
+          "hash": "E+u2qYHl60LNjyP6WagOaw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/FubarDev.FtpServer.Commands.IFtpCommandInformation.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/FubarDev.FtpServer.Commands.IFtpCommandInformation.html",
+          "hash": "84scF4ZzzCut/0ACPyv1gA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/FubarDev.FtpServer.Commands.ServiceFtpCommandHandlerScanner.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/FubarDev.FtpServer.Commands.ServiceFtpCommandHandlerScanner.html",
+          "hash": "jfy1IBMNUdxBIjrBXmEM2g=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/FubarDev.FtpServer.Commands.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/FubarDev.FtpServer.Commands.html",
+          "hash": "d0MGXkuboyo9yyn1nULnmg=="
         }
       },
       "is_incremental": false,
@@ -1358,11 +1658,131 @@
     },
     {
       "type": "ManagedReference",
-      "source_relative_path": "api/FubarDev.FtpServer.ExtensionAnnouncementMode.yml",
+      "source_relative_path": "api/FubarDev.FtpServer.Features.IAuthorizationInformationFeature.yml",
       "output": {
         ".html": {
-          "relative_path": "api/FubarDev.FtpServer.ExtensionAnnouncementMode.html",
-          "hash": "aidyhtkda7M5GGFYSCbpug=="
+          "relative_path": "api/FubarDev.FtpServer.Features.IAuthorizationInformationFeature.html",
+          "hash": "ETprg7K849pVRsSBzoZOSA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/FubarDev.FtpServer.Features.IConnectionFeature.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/FubarDev.FtpServer.Features.IConnectionFeature.html",
+          "hash": "Ga1YNwNSVhp2Jrfr5zvI9Q=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/FubarDev.FtpServer.Features.IEncodingFeature.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/FubarDev.FtpServer.Features.IEncodingFeature.html",
+          "hash": "GujUl3IHXM/k2y0DWZ3ksw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/FubarDev.FtpServer.Features.IFileSystemFeature.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/FubarDev.FtpServer.Features.IFileSystemFeature.html",
+          "hash": "T3saElgZRNdCAUEdAdGQ5g=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/FubarDev.FtpServer.Features.ILocalizationFeature.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/FubarDev.FtpServer.Features.ILocalizationFeature.html",
+          "hash": "orjb23N9cJV+1KJf9rYQxA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/FubarDev.FtpServer.Features.IMlstFactsFeature.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/FubarDev.FtpServer.Features.IMlstFactsFeature.html",
+          "hash": "SYxGjdpSgWnQ3X+miU0rEA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/FubarDev.FtpServer.Features.IRenameCommandFeature.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/FubarDev.FtpServer.Features.IRenameCommandFeature.html",
+          "hash": "lmpzuGeYBtAszJY+TzXrQg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/FubarDev.FtpServer.Features.IRestCommandFeature.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/FubarDev.FtpServer.Features.IRestCommandFeature.html",
+          "hash": "4u0EYHIwuJXM9WzYJuUmEg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/FubarDev.FtpServer.Features.ISecureConnectionFeature.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/FubarDev.FtpServer.Features.ISecureConnectionFeature.html",
+          "hash": "Trr+MtkdmWKJ5qOv8OWAVA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/FubarDev.FtpServer.Features.ITransferConfigurationFeature.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/FubarDev.FtpServer.Features.ITransferConfigurationFeature.html",
+          "hash": "TPdoLiuXhFw+M0NJxK5CNQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/FubarDev.FtpServer.Features.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/FubarDev.FtpServer.Features.html",
+          "hash": "DDj5ReyorFwGL/xQlEBGXw=="
         }
       },
       "is_incremental": false,
@@ -2046,7 +2466,7 @@
       "output": {
         ".html": {
           "relative_path": "api/FubarDev.FtpServer.FtpConnection.html",
-          "hash": "SVFhB7ss0ywCK3Z0QrOoZQ=="
+          "hash": "3slPF8YmmmlbjU+c0CV7kg=="
         }
       },
       "is_incremental": false,
@@ -2070,7 +2490,7 @@
       "output": {
         ".html": {
           "relative_path": "api/FubarDev.FtpServer.FtpConnectionData.html",
-          "hash": "wZEtXA44PzPnRmIEx2wH4Q=="
+          "hash": "cdIFUqBVzxv3mvhYeazmbg=="
         }
       },
       "is_incremental": false,
@@ -2082,7 +2502,31 @@
       "output": {
         ".html": {
           "relative_path": "api/FubarDev.FtpServer.FtpConnectionOptions.html",
-          "hash": "lPugqpBiLUyeiSjIuiT9VA=="
+          "hash": "2oXhHUKPewMXKOeveUz+gA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/FubarDev.FtpServer.FtpFeatureFunctionAttribute.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/FubarDev.FtpServer.FtpFeatureFunctionAttribute.html",
+          "hash": "oOenVmcef5v0YYmAS1w4yg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/FubarDev.FtpServer.FtpFeatureTextAttribute.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/FubarDev.FtpServer.FtpFeatureTextAttribute.html",
+          "hash": "cxz685qhaBi+8Z0jj09XEA=="
         }
       },
       "is_incremental": false,
@@ -2118,7 +2562,7 @@
       "output": {
         ".html": {
           "relative_path": "api/FubarDev.FtpServer.FtpLoginStateMachine.html",
-          "hash": "9MqNH4IKv9Yh3U9dZmwB3A=="
+          "hash": "dkg0cfuj+OcTHpY0MU0iRw=="
         }
       },
       "is_incremental": false,
@@ -2130,7 +2574,19 @@
       "output": {
         ".html": {
           "relative_path": "api/FubarDev.FtpServer.FtpResponse.html",
-          "hash": "5uUCTXjQYBtqRoq00TWbrg=="
+          "hash": "1mt8u7V7EDHyLvs04HT+AA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/FubarDev.FtpServer.FtpResponseAfterWriteAsyncDelegate.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/FubarDev.FtpServer.FtpResponseAfterWriteAsyncDelegate.html",
+          "hash": "t1E6dJSmF8E3jPGVoLxOZw=="
         }
       },
       "is_incremental": false,
@@ -2154,7 +2610,7 @@
       "output": {
         ".html": {
           "relative_path": "api/FubarDev.FtpServer.FtpResponseList-1.html",
-          "hash": "c3cCpEkJJGJOY1N/v3GVkA=="
+          "hash": "PeSx3jDUgnqWm3nw/o4gFg=="
         }
       },
       "is_incremental": false,
@@ -2178,7 +2634,7 @@
       "output": {
         ".html": {
           "relative_path": "api/FubarDev.FtpServer.FtpServer.html",
-          "hash": "PPpuJMB+8hH5u40fjr62Cw=="
+          "hash": "01LV5ZZ/R7hbITRWJVuygA=="
         }
       },
       "is_incremental": false,
@@ -2222,23 +2678,11 @@
     },
     {
       "type": "ManagedReference",
-      "source_relative_path": "api/FubarDev.FtpServer.FtpServerStatistics.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/FubarDev.FtpServer.FtpServerStatistics.html",
-          "hash": "o6eD2BHAr3oR+bSSbhroXA=="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
       "source_relative_path": "api/FubarDev.FtpServer.FtpStateMachine-1.Transition.yml",
       "output": {
         ".html": {
           "relative_path": "api/FubarDev.FtpServer.FtpStateMachine-1.Transition.html",
-          "hash": "Lj/J3Yxu+2lMcADaMla4qA=="
+          "hash": "o7KQwTlHujd2lj1boPde/w=="
         }
       },
       "is_incremental": false,
@@ -2250,7 +2694,7 @@
       "output": {
         ".html": {
           "relative_path": "api/FubarDev.FtpServer.FtpStateMachine-1.html",
-          "hash": "6HpzYfwMXTP3BWBTyU3xfg=="
+          "hash": "Fc7LFCSYVUYowCqf4VcEAw=="
         }
       },
       "is_incremental": false,
@@ -2274,7 +2718,7 @@
       "output": {
         ".html": {
           "relative_path": "api/FubarDev.FtpServer.GenericFeatureInfo.html",
-          "hash": "cs/M94jJvChRFqWkveQd6w=="
+          "hash": "tINfw/yGDwZCEfWXo2IQrg=="
         }
       },
       "is_incremental": false,
@@ -2334,7 +2778,7 @@
       "output": {
         ".html": {
           "relative_path": "api/FubarDev.FtpServer.IFeatureHost.html",
-          "hash": "ljROaFMJ0Azs/vEAInVALA=="
+          "hash": "reBNIEj/o8hqvzF0r01YIg=="
         }
       },
       "is_incremental": false,
@@ -2346,7 +2790,7 @@
       "output": {
         ".html": {
           "relative_path": "api/FubarDev.FtpServer.IFeatureInfo.html",
-          "hash": "/BUe44K3NP53pIgj7u+PrA=="
+          "hash": "1n/7OfTFMZvVdZ3w16YJSQ=="
         }
       },
       "is_incremental": false,
@@ -2358,7 +2802,7 @@
       "output": {
         ".html": {
           "relative_path": "api/FubarDev.FtpServer.IFtpCommandBase.html",
-          "hash": "BhkFntMumuNDULLQNigXBg=="
+          "hash": "0Re3+700YV06tMntsJHWDg=="
         }
       },
       "is_incremental": false,
@@ -2370,7 +2814,7 @@
       "output": {
         ".html": {
           "relative_path": "api/FubarDev.FtpServer.IFtpCommandHandler.html",
-          "hash": "o4WKgzHW8YkeIXme67X50A=="
+          "hash": "E3gALn5pUmw7uniNlI0TvA=="
         }
       },
       "is_incremental": false,
@@ -2382,7 +2826,7 @@
       "output": {
         ".html": {
           "relative_path": "api/FubarDev.FtpServer.IFtpCommandHandlerExtension.html",
-          "hash": "XIGfS5srb0DACRcHA60fVg=="
+          "hash": "UYCpeFZQ1rDD1xa5WyeLgQ=="
         }
       },
       "is_incremental": false,
@@ -2394,7 +2838,7 @@
       "output": {
         ".html": {
           "relative_path": "api/FubarDev.FtpServer.IFtpConnection.html",
-          "hash": "IfF/+8AQmMhB1mXfWY0u+g=="
+          "hash": "QzwpFhZxNBL+Aojs5/krJA=="
         }
       },
       "is_incremental": false,
@@ -2430,7 +2874,7 @@
       "output": {
         ".html": {
           "relative_path": "api/FubarDev.FtpServer.IFtpHostSelector.html",
-          "hash": "tsIg43rKnQPETz3ZEwCizQ=="
+          "hash": "NhZpmenEvP/EW0RMhsvzTA=="
         }
       },
       "is_incremental": false,
@@ -2454,7 +2898,7 @@
       "output": {
         ".html": {
           "relative_path": "api/FubarDev.FtpServer.IFtpResponse.html",
-          "hash": "z7Qnp5NG/tzLmWCQKxiegA=="
+          "hash": "kUj5HF6eYUKF0lvGbsCscg=="
         }
       },
       "is_incremental": false,
@@ -2478,7 +2922,7 @@
       "output": {
         ".html": {
           "relative_path": "api/FubarDev.FtpServer.IFtpServerBuilder.html",
-          "hash": "H9U53WkqLeO+jc/j+sqOFg=="
+          "hash": "oO18cGe2NvFW+CWCKGJK1w=="
         }
       },
       "is_incremental": false,
@@ -2798,95 +3242,11 @@
     },
     {
       "type": "ManagedReference",
-      "source_relative_path": "api/FubarDev.FtpServer.MembershipProvider.Pam.Directories.PamAccountDirectoryQuery.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/FubarDev.FtpServer.MembershipProvider.Pam.Directories.PamAccountDirectoryQuery.html",
-          "hash": "ljVSvqhlPGismRExExWnLw=="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/FubarDev.FtpServer.MembershipProvider.Pam.Directories.PamAccountDirectoryQueryOptions.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/FubarDev.FtpServer.MembershipProvider.Pam.Directories.PamAccountDirectoryQueryOptions.html",
-          "hash": "nuMHUoM5gP98uGt+gLZSmw=="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/FubarDev.FtpServer.MembershipProvider.Pam.Directories.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/FubarDev.FtpServer.MembershipProvider.Pam.Directories.html",
-          "hash": "5ucnqyiyIquuk2gYfIed9g=="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/FubarDev.FtpServer.MembershipProvider.Pam.PamFtpUser.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/FubarDev.FtpServer.MembershipProvider.Pam.PamFtpUser.html",
-          "hash": "3vZ77A64SLwlRygQwLesHA=="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/FubarDev.FtpServer.MembershipProvider.Pam.PamMembershipProvider.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/FubarDev.FtpServer.MembershipProvider.Pam.PamMembershipProvider.html",
-          "hash": "Q8AKR1Fy7z7y1cG+5nB0Lg=="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/FubarDev.FtpServer.MembershipProvider.Pam.PamMembershipProviderOptions.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/FubarDev.FtpServer.MembershipProvider.Pam.PamMembershipProviderOptions.html",
-          "hash": "SlWnBAN/3AUlgNnXeCjQbw=="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "api/FubarDev.FtpServer.MembershipProvider.Pam.yml",
-      "output": {
-        ".html": {
-          "relative_path": "api/FubarDev.FtpServer.MembershipProvider.Pam.html",
-          "hash": "ogJFQrMWv9V+bu1futdDYw=="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
       "source_relative_path": "api/FubarDev.FtpServer.MultiBindingTcpListener.yml",
       "output": {
         ".html": {
           "relative_path": "api/FubarDev.FtpServer.MultiBindingTcpListener.html",
-          "hash": "2SgBpmMZIQCUkhvSwLrR7w=="
+          "hash": "PurJDVzYNVy1QklYfjLm5w=="
         }
       },
       "is_incremental": false,
@@ -2894,11 +3254,11 @@
     },
     {
       "type": "ManagedReference",
-      "source_relative_path": "api/FubarDev.FtpServer.PamFtpServerBuilderExtensions.yml",
+      "source_relative_path": "api/FubarDev.FtpServer.PasvCommandOptions.yml",
       "output": {
         ".html": {
-          "relative_path": "api/FubarDev.FtpServer.PamFtpServerBuilderExtensions.html",
-          "hash": "Sr+jTb9EsqRNFBre9y1z/g=="
+          "relative_path": "api/FubarDev.FtpServer.PasvCommandOptions.html",
+          "hash": "KuEmLygfK+WWhvBCwRf5MQ=="
         }
       },
       "is_incremental": false,
@@ -3006,7 +3366,7 @@
       "output": {
         ".html": {
           "relative_path": "api/FubarDev.FtpServer.SingleFtpHostSelector.html",
-          "hash": "SSxnBDvM3c8nvv+t5VLWUQ=="
+          "hash": "nyYfo1Ppgs5xg06/O8JBpw=="
         }
       },
       "is_incremental": false,
@@ -3090,7 +3450,7 @@
       "output": {
         ".html": {
           "relative_path": "api/FubarDev.FtpServer.html",
-          "hash": "G3xL7xf7UwmcSfBPeuxY9A=="
+          "hash": "Aveecb/VLzu3N/bwZovrbA=="
         }
       },
       "is_incremental": false,
@@ -3102,7 +3462,7 @@
       "output": {
         ".html": {
           "relative_path": "api/Microsoft.Extensions.DependencyInjection.ServiceCollectionExtensions.html",
-          "hash": "g0qRzbQO9mc7LLoagJKvgg=="
+          "hash": "gv5FRsmc/fWTTW9XsDpHOg=="
         }
       },
       "is_incremental": false,
@@ -3138,7 +3498,7 @@
       "output": {
         ".html": {
           "relative_path": "api/toc.html",
-          "hash": "yGMcOhGsWXXhFw86gyg1ig=="
+          "hash": "O8cDTq22Q281BL3n32obeA=="
         }
       },
       "is_incremental": false,
@@ -3270,7 +3630,7 @@
       "output": {
         ".html": {
           "relative_path": "articles/quickstart.html",
-          "hash": "43UMHHu3f+sRv6dS85abPg=="
+          "hash": "kYQtam2PCXhWh4AofEGbjA=="
         }
       },
       "is_incremental": false,
@@ -3294,7 +3654,7 @@
       "output": {
         ".html": {
           "relative_path": "articles/upgrade-3.0.html",
-          "hash": "eVehnXf1zafceYioSUrlOg=="
+          "hash": "f9BhMap2g0ZNStlkKq2iug=="
         }
       },
       "is_incremental": false,
@@ -3341,17 +3701,17 @@
           "total_file_count": 0,
           "skipped_file_count": 0
         },
-        "ManagedReferenceDocumentProcessor": {
-          "can_incremental": true,
-          "incrementalPhase": "build",
-          "total_file_count": 259,
-          "skipped_file_count": 259
-        },
         "ConceptualDocumentProcessor": {
           "can_incremental": true,
           "incrementalPhase": "build",
           "total_file_count": 14,
           "skipped_file_count": 13
+        },
+        "ManagedReferenceDocumentProcessor": {
+          "can_incremental": true,
+          "incrementalPhase": "build",
+          "total_file_count": 289,
+          "skipped_file_count": 131
         }
       }
     },

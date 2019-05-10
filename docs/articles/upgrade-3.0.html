@@ -89,7 +89,10 @@
 <li><a href="#membership-provider-changes">Membership provider changes</a></li>
 </ul>
 </li>
-<li><a href="#ftp-command-extensions-changes">FTP command extensions changes</a></li>
+<li><a href="#command-handlers-and-attributes">Command handlers (and attributes)</a></li>
+<li><a href="#command-extensions-and-attributes">Command extensions (and attributes)</a></li>
+<li><a href="#feat-support"><code>FEAT</code> support</a></li>
+<li><a href="#connection">Connection</a></li>
 <li><a href="#connection-data-changes">Connection data changes</a></li>
 <li><a href="#ftp-command-collection-changes">FTP command collection changes</a></li>
 <li><a href="#authorizationauthentication-as-per-rfc-2228">Authorization/authentication as per RFC 2228</a></li>
@@ -113,8 +116,10 @@ and <a class="xref" href="../api/FubarDev.FtpServer.IFtpServerHost.html#FubarDev
 <ul>
 <li>File system</li>
 <li>Membership provider</li>
-<li>FTP command extensions</li>
-<li>Connection data</li>
+<li>Command handlers (and attributes)</li>
+<li>Command extensions (and attributes)</li>
+<li><code>FEAT</code> support</li>
+<li>Connection</li>
 <li>FTP command collection</li>
 </ul>
 <h2 id="file-system-changes">File system changes</h2>
@@ -145,7 +150,7 @@ a given user.</p>
 <td>Gives every user its own root directory. Useful, when - for example - the file system root was set to <code>/home</code>.</td>
 </tr>
 <tr>
-<td><a class="xref" href="../api/FubarDev.FtpServer.MembershipProvider.Pam.Directories.PamAccountDirectoryQuery.html"><code>PamAccountDirectoryQuery</code></a></td>
+<td><code>PamAccountDirectoryQuery</code></td>
 <td>Uses home directory information from PAM. The home directory can be configured to be the root instead.</td>
 </tr>
 </tbody>
@@ -154,13 +159,183 @@ a given user.</p>
 <p>The membership provider is now asynchronous which means that the <code>ValidateUser</code> function was
 renamed to <a class="xref" href="../api/FubarDev.FtpServer.AccountManagement.IMembershipProvider.html#FubarDev_FtpServer_AccountManagement_IMembershipProvider_ValidateUserAsync_System_String_System_String_"><code>ValidateUserAsync</code></a>.
 Everything else is the same.</p>
-<h2 id="ftp-command-extensions-changes">FTP command extensions changes</h2>
+<h2 id="command-handlers-and-attributes">Command handlers (and attributes)</h2>
+<p>The command handlers were overhauled in the following areas:</p>
+<ul>
+<li>Lazy initialization
+<ul>
+<li>Removed commands from DI container
+<ul>
+<li>You can still add your FTP command handlers to the DI container, but those may (most likely) be ignored from version 4.0 and up.</li>
+<li>Implement your own <a class="xref" href="../api/FubarDev.FtpServer.Commands.IFtpCommandHandlerScanner.html"><code>IFtpCommandHandlerScanner</code></a> or reuse <a class="xref" href="../api/FubarDev.FtpServer.Commands.AssemblyFtpCommandHandlerScanner.html"><code>AssemblyFtpCommandHandlerScanner</code></a></li>
+</ul>
+</li>
+<li>New <a class="xref" href="../api/FubarDev.FtpServer.Commands.IFtpCommandHandlerScanner.html"><code>IFtpCommandHandlerScanner</code></a> which scans for types that may implement FTP command handlers</li>
+<li>New <a class="xref" href="../api/FubarDev.FtpServer.Commands.IFtpCommandHandlerProvider.html"><code>IFtpCommandHandlerProvider</code></a> which returns information for all found FTP command handler types</li>
+</ul>
+</li>
+<li>Attributes for command information
+<ul>
+<li><a class="xref" href="../api/FubarDev.FtpServer.Commands.FtpCommandHandlerAttribute.html"><code>FtpCommandHandlerAttribute</code></a> which gives the FTP command handler a name and defines if it needs a successful login or if it's abortable</li>
+</ul>
+</li>
+<li>Simplified constructor due to <a class="xref" href="../api/FubarDev.FtpServer.CommandHandlers.FtpCommandHandler.html#FubarDev_FtpServer_CommandHandlers_FtpCommandHandler_CommandContext"><code>CommandContext</code></a> (type <a class="xref" href="../api/FubarDev.FtpServer.Commands.FtpCommandContext.html"><code>FtpCommandContext</code></a>) property injection</li>
+<li>Activated (read: instantiated with property injection) by command name using the <a class="xref" href="../api/FubarDev.FtpServer.Commands.IFtpCommandActivator.html"><code>IFtpCommandActivator</code></a> service</li>
+</ul>
+<h2 id="command-extensions-and-attributes">Command extensions (and attributes)</h2>
 <p>The command extensions cannot be returned by <code>IFtpCommandHandler.GetExtensions()</code> anymore. The extensions were moved to
 their own file and the default extensions are automatically registered as service.</p>
+<ul>
+<li>Lazy initialization
+<ul>
+<li>Removed command extensions from DI container
+<ul>
+<li>You can still add your FTP command handler extensions to the DI container, but those may (most likely) be ignored from version 4.0 and up.</li>
+<li>Implement your own <a class="xref" href="../api/FubarDev.FtpServer.CommandExtensions.IFtpCommandHandlerExtensionScanner.html"><code>IFtpCommandHandlerExtensionScanner</code></a> or reuse <a class="xref" href="../api/FubarDev.FtpServer.CommandExtensions.AssemblyFtpCommandHandlerExtensionScanner.html"><code>AssemblyFtpCommandHandlerExtensionScanner</code></a></li>
+</ul>
+</li>
+<li>New <a class="xref" href="../api/FubarDev.FtpServer.CommandExtensions.IFtpCommandHandlerExtensionScanner.html"><code>IFtpCommandHandlerExtensionScanner</code></a> which scans for types that may implement FTP command handler extensions</li>
+<li>New <a class="xref" href="../api/FubarDev.FtpServer.CommandExtensions.IFtpCommandHandlerExtensionProvider.html"><code>IFtpCommandHandlerExtensionProvider</code></a> which returns information for all found FTP command handler extension types</li>
+</ul>
+</li>
+<li>Attributes for command extension information
+<ul>
+<li><a class="xref" href="../api/FubarDev.FtpServer.CommandExtensions.FtpCommandHandlerExtensionAttribute.html"><code>FtpCommandHandlerExtensionAttribute</code></a> which gives the FTP command handler extension a name and defines the command it extends and if it needs a successful login</li>
+</ul>
+</li>
+<li>Simplified constructor due to <a class="xref" href="../api/FubarDev.FtpServer.CommandExtensions.FtpCommandHandlerExtension.html#FubarDev_FtpServer_CommandExtensions_FtpCommandHandlerExtension_CommandContext"><code>CommandContext</code></a> (type <a class="xref" href="../api/FubarDev.FtpServer.Commands.FtpCommandContext.html"><code>FtpCommandContext</code></a>) property injection</li>
+<li>Automatic indirect activation (read: instantiation with property injection) for the command it belongs to through the <a class="xref" href="../api/FubarDev.FtpServer.Commands.IFtpCommandActivator.html"><code>IFtpCommandActivator</code></a> service</li>
+</ul>
+<h2 id="feat-support"><code>FEAT</code> support</h2>
+<p>There are two new attributes to get the string to be returned by a <code>FEAT</code> command:</p>
+<ul>
+<li><a class="xref" href="../api/FubarDev.FtpServer.FtpFeatureTextAttribute.html"><code>FtpFeatureTextAttribute</code></a> contains the feature text itself</li>
+<li><a class="xref" href="../api/FubarDev.FtpServer.FtpFeatureFunctionAttribute.html"><code>FtpFeatureFunctionAttribute</code></a> contains the name of the static function to be called to get the feature text</li>
+</ul>
+<h2 id="connection">Connection</h2>
+<p>The <a class="xref" href="../api/FubarDev.FtpServer.IFtpConnection.html"><code>IFtpConnection</code></a> API was heavily overhauled to use a feature collection,
+where the features can be queried through the <a class="xref" href="../api/FubarDev.FtpServer.IFtpConnection.html#FubarDev_FtpServer_IFtpConnection_Features"><code>Features</code></a> property. Using the <code>WriteAsync</code>
+function is obsolete. The FTP command handlers should use the <code>CommandContext</code>s
+<a class="xref" href="../api/FubarDev.FtpServer.Commands.FtpCommandContext.html#FubarDev_FtpServer_Commands_FtpCommandContext_ResponseWriter"><code>ResponseWriter</code></a>
+if they need to send out-of-band responses.</p>
+<table>
+<thead>
+<tr>
+<th>Obsolete property</th>
+<th>Target feature</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Encoding</td>
+<td><a class="xref" href="../api/FubarDev.FtpServer.Features.IEncodingFeature.html"><code>IEncodingFeature</code></a></td>
+</tr>
+<tr>
+<td>OriginalStream</td>
+<td><a class="xref" href="../api/FubarDev.FtpServer.Features.ISecureConnectionFeature.html"><code>ISecureConnectionFeature</code></a></td>
+</tr>
+<tr>
+<td>SocketStream</td>
+<td><a class="xref" href="../api/FubarDev.FtpServer.Features.ISecureConnectionFeature.html"><code>ISecureConnectionFeature</code></a></td>
+</tr>
+<tr>
+<td>IsSecure</td>
+<td><a class="xref" href="../api/FubarDev.FtpServer.Features.ISecureConnectionFeature.html"><code>ISecureConnectionFeature</code></a></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Obsolete method</th>
+<th>New home</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>WriteAsync</td>
+<td><a class="xref" href="../api/FubarDev.FtpServer.CommandHandlers.FtpCommandHandler.html#FubarDev_FtpServer_CommandHandlers_FtpCommandHandler_CommandContext"><code>FtpCommandHandler.CommandContext.ResponseWriter</code></a> or <a class="xref" href="../api/FubarDev.FtpServer.CommandExtensions.FtpCommandHandlerExtension.html#FubarDev_FtpServer_CommandExtensions_FtpCommandHandlerExtension_CommandContext"><code>FtpCommandHandlerExtension.CommandContext.ResponseWriter</code></a></td>
+</tr>
+</tbody>
+</table>
 <h2 id="connection-data-changes">Connection data changes</h2>
+<p>The whole <a class="xref" href="../api/FubarDev.FtpServer.FtpConnectionData.html"><code>FtpConnectionData</code></a> class is marked as obsolete.</p>
 <p>The connection datas <code>IsAnonymous</code> property is obsolete. An anonymous user is now detected by testing if
 the <a class="xref" href="../api/FubarDev.FtpServer.FtpConnectionData.html#FubarDev_FtpServer_FtpConnectionData_User"><code>FtpConnectionData.User</code></a>
 implements <a class="xref" href="../api/FubarDev.FtpServer.AccountManagement.IAnonymousFtpUser.html"><code>IAnonymousFtpUser</code></a>.</p>
+<p>Most of the properties of <a class="xref" href="../api/FubarDev.FtpServer.IFtpConnection.html#FubarDev_FtpServer_IFtpConnection_Data"><code>IFtpConnection.Data</code></a> were moved to a corresponding
+feature.</p>
+<table>
+<thead>
+<tr>
+<th>Obsolete property</th>
+<th>Target feature</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>NlstEncoding</td>
+<td><a class="xref" href="../api/FubarDev.FtpServer.Features.IEncodingFeature.html"><code>IEncodingFeature</code></a></td>
+</tr>
+<tr>
+<td>User</td>
+<td><a class="xref" href="../api/FubarDev.FtpServer.Features.IAuthorizationInformationFeature.html"><code>IAuthorizationInformationFeature</code></a></td>
+</tr>
+<tr>
+<td>FileSystem</td>
+<td><a class="xref" href="../api/FubarDev.FtpServer.Features.IFileSystemFeature.html"><code>IFileSystemFeature</code></a></td>
+</tr>
+<tr>
+<td>Path</td>
+<td><a class="xref" href="../api/FubarDev.FtpServer.Features.IFileSystemFeature.html"><code>IFileSystemFeature</code></a></td>
+</tr>
+<tr>
+<td>CurrentDirectory</td>
+<td><a class="xref" href="../api/FubarDev.FtpServer.Features.IFileSystemFeature.html"><code>IFileSystemFeature</code></a></td>
+</tr>
+<tr>
+<td>Language</td>
+<td><a class="xref" href="../api/FubarDev.FtpServer.Features.ILocalizationFeature.html"><code>ILocalizationFeature</code></a></td>
+</tr>
+<tr>
+<td>Catalog</td>
+<td><a class="xref" href="../api/FubarDev.FtpServer.Features.ILocalizationFeature.html"><code>ILocalizationFeature</code></a></td>
+</tr>
+<tr>
+<td>TransferMode</td>
+<td><a class="xref" href="../api/FubarDev.FtpServer.Features.ITransferConfigurationFeature.html"><code>ITransferConfigurationFeature</code></a></td>
+</tr>
+<tr>
+<td>PortAddress</td>
+<td><a class="xref" href="../api/FubarDev.FtpServer.Features.ITransferConfigurationFeature.html"><code>ITransferConfigurationFeature</code></a></td>
+</tr>
+<tr>
+<td>TransferTypeCommandUsed</td>
+<td><a class="xref" href="../api/FubarDev.FtpServer.Features.ITransferConfigurationFeature.html"><code>ITransferConfigurationFeature</code></a></td>
+</tr>
+<tr>
+<td>RestartPosition</td>
+<td><a class="xref" href="../api/FubarDev.FtpServer.Features.IRestCommandFeature.html"><code>IRestCommandFeature</code></a></td>
+</tr>
+<tr>
+<td>RenameFrom</td>
+<td><a class="xref" href="../api/FubarDev.FtpServer.Features.IRenameCommandFeature.html"><code>IRenameCommandFeature</code></a></td>
+</tr>
+<tr>
+<td>ActiveMlstFacts</td>
+<td><a class="xref" href="../api/FubarDev.FtpServer.Features.IMlstFactsFeature.html"><code>IMlstFactsFeature</code></a></td>
+</tr>
+<tr>
+<td>PassiveSocketClient</td>
+<td><a class="xref" href="../api/FubarDev.FtpServer.Features.ISecureConnectionFeature.html"><code>ISecureConnectionFeature</code></a></td>
+</tr>
+<tr>
+<td>CreateEncryptedStream</td>
+<td><a class="xref" href="../api/FubarDev.FtpServer.Features.ISecureConnectionFeature.html"><code>ISecureConnectionFeature</code></a></td>
+</tr>
+</tbody>
+</table>
+<p>There's no direct replacement for the <code>UserData</code> property, but you can use the feature collection too.</p>
 <h2 id="ftp-command-collection-changes">FTP command collection changes</h2>
 <p>We're now using <code>ReadOnlySpan</code> for both <a class="xref" href="../api/FubarDev.FtpServer.TelnetInputParser-1.html"><code>TelnetInputParser</code></a>
 and <a class="xref" href="../api/FubarDev.FtpServer.FtpCommandCollector.html"><code>FtpCommandCollector</code></a>.</p>
@@ -169,11 +344,11 @@ and <a class="xref" href="../api/FubarDev.FtpServer.FtpCommandCollector.html"><c
 specified in the <a href="https://tools.ietf.org/rfc/rfc2228.txt">RFC 2228</a>.</p>
 <p>This results in additional interfaces/extension points, like</p>
 <ul>
-<li><code>IAuthorizationMechanism</code></li>
-<li><code>IAuthenticationMechanism</code></li>
+<li><a class="xref" href="../api/FubarDev.FtpServer.Authorization.IAuthorizationMechanism.html"><code>IAuthorizationMechanism</code></a></li>
+<li><a class="xref" href="../api/FubarDev.FtpServer.Authentication.IAuthenticationMechanism.html"><code>IAuthenticationMechanism</code></a></li>
 </ul>
 <p>There is also a new extension point for actions to be called when
-the user is fully authorized: <code>IAuthorizationAction</code>. You can develop
+the user is fully authorized: <a class="xref" href="../api/FubarDev.FtpServer.Authorization.IAuthorizationAction.html"><code>IAuthorizationAction</code></a>. You can develop
 your own action, but you should only use an <a class="xref" href="../api/FubarDev.FtpServer.Authorization.IAuthorizationAction.html#FubarDev_FtpServer_Authorization_IAuthorizationAction_Level"><code>IAuthorizationAction.Level</code></a>
 below 1000. The values from 1000 (incl.) to 2000 (incl.) are reserved by
 the FTP server and are used to initialize the FTP connection data.</p>
@@ -193,7 +368,6 @@ the FTP server and are used to initialize the FTP connection data.</p>
 <h2 id="whats-changed">What's changed?</h2>
 <ul>
 <li>Google drive upload without background uploader</li>
-<li>BREAKING: The FTP commands are now registered as singletons to improve performance</li>
 <li>BREAKING: Usage of <code>ReadOnlySpan</code> in the FTP command collector</li>
 <li>BREAKING: <a class="xref" href="../api/FubarDev.FtpServer.FileSystem.IFileSystemClassFactory.html#FubarDev_FtpServer_FileSystem_IFileSystemClassFactory_Create_FubarDev_FtpServer_IAccountInformation_"><code>IFileSystemClassFactory.Create</code></a>
 takes an <a class="xref" href="../api/FubarDev.FtpServer.IAccountInformation.html"><code>IAccountInformation</code></a></li>
@@ -201,11 +375,14 @@ takes an <a class="xref" href="../api/FubarDev.FtpServer.IAccountInformation.htm
 <li>BREAKING: <code>FtpConnectionData.IsAnonymous</code> is obsolete, the anonymous user is now of type <a class="xref" href="../api/FubarDev.FtpServer.AccountManagement.IAnonymousFtpUser.html"><code>IAnonymousFtpUser</code></a></li>
 <li>The <code>IFtpCommandHandler.GetExtensions()</code> is now deprecated as all extensions that were previously returned here have
 their own implementation now</li>
+<li>BREAKING: Moved <a class="xref" href="../api/FubarDev.FtpServer.PasvCommandOptions.html#FubarDev_FtpServer_PasvCommandOptions_PromiscuousPasv"><code>PromiscuousPasv</code></a> into <a class="xref" href="../api/FubarDev.FtpServer.PasvCommandOptions.html"><code>PasvCommandOptions</code></a></li>
 </ul>
 <h2 id="whats-fixed">What's fixed?</h2>
 <ul>
 <li>AUTH TLS fails gracefully when no SSL certificate is configured</li>
 <li><code>SITE BLST</code> works again</li>
+<li>Fixed deadlock in <a class="xref" href="../api/FubarDev.FtpServer.MultiBindingTcpListener.html"><code>MultiBindingTcpListener</code></a></li>
+<li>Thread safe increment/decrement for connection counter (fixes <a href="https://github.com/FubarDevelopment/FtpServer/issues/68">#68</a>)</li>
 </ul>
 <h1 id="a-look-into-the-future">A look into the future</h1>
 <p>The 4.x version will drop support for .NET Standard 1.3 and - most likely - .NET 4.6.1 as

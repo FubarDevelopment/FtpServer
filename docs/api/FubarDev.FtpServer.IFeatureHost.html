@@ -90,19 +90,20 @@
   <h6><strong>Assembly</strong>: FubarDev.FtpServer.Abstractions.dll</h6>
   <h5 id="FubarDev_FtpServer_IFeatureHost_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public interface IFeatureHost</code></pre>
+    <pre><code class="lang-csharp hljs">[Obsolete(&quot;FTP command handlers (and other types) are now annotated with attributes implementing IFeatureInfo.&quot;)]
+public interface IFeatureHost</code></pre>
   </div>
   <h3 id="methods">Methods
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_IFeatureHost_GetSupportedFeatures.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.IFeatureHost.GetSupportedFeatures%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_IFeatureHost_GetSupportedFeatures_FubarDev_FtpServer_IFtpConnection_.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.IFeatureHost.GetSupportedFeatures(FubarDev.FtpServer.IFtpConnection)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.Abstractions/IFeatureHost.cs/#L20">View Source</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.Abstractions/IFeatureHost.cs/#L23">View Source</a>
   </span>
   <a id="FubarDev_FtpServer_IFeatureHost_GetSupportedFeatures_" data-uid="FubarDev.FtpServer.IFeatureHost.GetSupportedFeatures*"></a>
-  <h4 id="FubarDev_FtpServer_IFeatureHost_GetSupportedFeatures" data-uid="FubarDev.FtpServer.IFeatureHost.GetSupportedFeatures">GetSupportedFeatures()</h4>
+  <h4 id="FubarDev_FtpServer_IFeatureHost_GetSupportedFeatures_FubarDev_FtpServer_IFtpConnection_" data-uid="FubarDev.FtpServer.IFeatureHost.GetSupportedFeatures(FubarDev.FtpServer.IFtpConnection)">GetSupportedFeatures(IFtpConnection)</h4>
   <div class="markdown level1 summary"><p>Gets a collection of features supported by this command handler.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
@@ -110,8 +111,27 @@
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">[NotNull]
 [ItemNotNull]
-IEnumerable&lt;IFeatureInfo&gt; GetSupportedFeatures()</code></pre>
+[Obsolete(&quot;FTP command handlers (and other types) are now annotated with attributes implementing IFeatureInfo.&quot;)]
+IEnumerable&lt;IFeatureInfo&gt; GetSupportedFeatures([NotNull] IFtpConnection connection)</code></pre>
   </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="FubarDev.FtpServer.IFtpConnection.html">IFtpConnection</a></td>
+        <td><span class="parametername">connection</span></td>
+        <td><p>The FTP connection.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
   <h5 class="returns">Returns</h5>
   <table class="table table-bordered table-striped table-condensed">
     <thead>
@@ -139,7 +159,7 @@ IEnumerable&lt;IFeatureInfo&gt; GetSupportedFeatures()</code></pre>
                     <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_IFeatureHost.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.IFeatureHost%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.Abstractions/IFeatureHost.cs/#L14" class="contribution-link">View Source</a>
+                    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.Abstractions/IFeatureHost.cs/#L15" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>
