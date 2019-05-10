@@ -1,5 +1,7 @@
 ﻿using System;
 using System.IO;
+using System.Threading;
+using System.Threading.Tasks;
 
 using FubarDev.FtpServer;
 using FubarDev.FtpServer.FileSystem.DotNet;
@@ -36,13 +38,13 @@ namespace QuickStart
                 var ftpServerHost = serviceProvider.GetRequiredService<IFtpServerHost>();
 
                 // Start the FTP server
-                ftpServerHost.StartAsync().Wait();
+                ftpServerHost.StartAsync(CancellationToken.None).Wait();
 
                 Console.WriteLine("Press ENTER/RETURN to close the test application.");
                 Console.ReadLine();
 
                 // Stop the FTP server
-                ftpServerHost.StopAsync().Wait();
+                ftpServerHost.StopAsync().Wait(CancellationToken.None);
             }
         }
     }

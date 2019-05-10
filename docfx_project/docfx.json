@@ -6,6 +6,9 @@
           "src": "../src",
           "files": [
             "**.csproj"
+          ],
+          "exclude": [
+            "FubarDev.FtpServer.MembershipProvider.Pam/*.csproj"
           ]
         }
       ],
