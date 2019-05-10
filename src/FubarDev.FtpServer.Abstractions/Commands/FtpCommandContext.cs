@@ -2,6 +2,8 @@
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
+using System.Threading.Channels;
+
 using JetBrains.Annotations;
 
 namespace FubarDev.FtpServer.Commands
@@ -15,9 +17,16 @@ namespace FubarDev.FtpServer.Commands
         /// Initializes a new instance of the <see cref="FtpCommandContext"/> class.
         /// </summary>
         /// <param name="command">The FTP command.</param>
-        public FtpCommandContext([NotNull] FtpCommand command)
+        /// <param name="responseWriter">The FTP response writer.</param>
+        /// <param name="connection">The FTP connection.</param>
+        public FtpCommandContext(
+            [NotNull] FtpCommand command,
+            [NotNull] ChannelWriter<IFtpResponse> responseWriter,
+            [NotNull] IFtpConnection connection)
         {
             Command = command;
+            ResponseWriter = responseWriter;
+            Connection = connection;
         }
 
         /// <summary>
@@ -27,9 +36,15 @@ namespace FubarDev.FtpServer.Commands
         public FtpCommand Command { get; }
 
         /// <summary>
-        /// Gets or sets the FTP connection.
+        /// Gets the FTP connection.
         /// </summary>
-        [CanBeNull]
-        public IFtpConnection Connection { get; set; }
+        [NotNull]
+        public IFtpConnection Connection { get; }
+
+        /// <summary>
+        /// Gets the response writer.
+        /// </summary>
+        [NotNull]
+        public ChannelWriter<IFtpResponse> ResponseWriter { get; }
     }
 }

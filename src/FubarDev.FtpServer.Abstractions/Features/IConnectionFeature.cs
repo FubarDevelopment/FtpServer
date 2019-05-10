@@ -25,10 +25,5 @@ namespace FubarDev.FtpServer.Features
         /// </summary>
         [NotNull]
         Address RemoteAddress { get; }
-
-        /// <summary>
-        /// Gets the response writer.
-        /// </summary>
-        ChannelWriter<IFtpResponse> ResponseWriter { get; }
     }
 }

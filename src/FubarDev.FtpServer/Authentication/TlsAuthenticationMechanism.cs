@@ -90,14 +90,13 @@ namespace FubarDev.FtpServer.Authentication
                         }
 
                         secureConnectionFeature.SocketStream = sslStream;
+
+                        return null;
                     }
                     catch (Exception ex)
                     {
                         conn.Log?.LogWarning(0, ex, "SSL stream authentication failed: {0}", ex.Message);
-                        var connFeature = conn.Features.Get<IConnectionFeature>();
-                        await connFeature.ResponseWriter
-                           .WriteAsync(new FtpResponse(421, T("TLS authentication failed")), ct)
-                           .ConfigureAwait(false);
+                        return new FtpResponse(421, T("TLS authentication failed"));
                     }
                 },
             };

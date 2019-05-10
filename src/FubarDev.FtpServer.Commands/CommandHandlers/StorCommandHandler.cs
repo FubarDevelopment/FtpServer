@@ -79,8 +79,7 @@ namespace FubarDev.FtpServer.CommandHandlers
 
             var doReplace = restartPosition.GetValueOrDefault() == 0 && fileInfo.Entry != null;
 
-            var connFeature = Connection.Features.Get<IConnectionFeature>();
-            await connFeature.ResponseWriter
+            await CommandContext.ResponseWriter
                .WriteAsync(new FtpResponse(150, T("Opening connection for data transfer.")), cancellationToken)
                .ConfigureAwait(false);
 

@@ -22,6 +22,8 @@ namespace FubarDev.FtpServer.CommandExtensions
     {
         private readonly IReadOnlyCollection<string> _names;
         private readonly string _extensionFor;
+        [CanBeNull]
+        private FtpCommandContext _commandContext;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FtpCommandHandlerExtension"/> class.
@@ -61,16 +63,20 @@ namespace FubarDev.FtpServer.CommandExtensions
         /// <summary>
         /// Gets or sets the FTP command context.
         /// </summary>
-        [CanBeNull]
+        [NotNull]
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global", Justification = "Set using reflection.")]
-        [SuppressMessage("ReSharper", "MemberCanBePrivate.Global", Justification = "Required for setting through reflection.")]
-        public FtpCommandContext CommandContext { get; set; }
+        [SuppressMessage("ReSharper", "MemberCanBeProtected.Global", Justification = "Required for setting through reflection.")]
+        public FtpCommandContext CommandContext
+        {
+            get => _commandContext ?? throw new InvalidOperationException("The context was used outside of an active connection.");
+            set => _commandContext = value;
+        }
 
         /// <summary>
         /// Gets the connection this command was created for.
         /// </summary>
         [NotNull]
-        protected IFtpConnection Connection => CommandContext?.Connection ?? throw new InvalidOperationException("The connection information was used outside of an active connection.");
+        protected IFtpConnection Connection => CommandContext.Connection ?? throw new InvalidOperationException("The connection information was used outside of an active connection.");
 
         /// <summary>
         /// Gets the connection data.

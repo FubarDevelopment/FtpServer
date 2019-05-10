@@ -185,10 +185,7 @@ namespace FubarDev.FtpServer.Commands
 
         private FtpCommandContext CreateContext(FtpCommandContext oldContext, FtpCommand command)
         {
-            return new FtpCommandContext(command)
-            {
-                Connection = oldContext.Connection,
-            };
+            return new FtpCommandContext(command, oldContext.ResponseWriter, oldContext.Connection);
         }
     }
 }

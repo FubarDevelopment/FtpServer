@@ -59,8 +59,7 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// <inheritdoc/>
         public override async Task<IFtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
         {
-            var connFeature = Connection.Features.Get<IConnectionFeature>();
-            await connFeature.ResponseWriter
+            await CommandContext.ResponseWriter
                .WriteAsync(new FtpResponse(150, T("Opening data connection.")), cancellationToken)
                .ConfigureAwait(false);
 

@@ -96,8 +96,7 @@ namespace FubarDev.FtpServer.CommandExtensions
 
         private async Task<IFtpResponse> SendBlstWithDataConnection(CancellationToken cancellationToken)
         {
-            var connFeature = Connection.Features.Get<IConnectionFeature>();
-            await connFeature.ResponseWriter.WriteAsync(new FtpResponse(150, T("Opening data connection.")), cancellationToken).ConfigureAwait(false);
+            await CommandContext.ResponseWriter.WriteAsync(new FtpResponse(150, T("Opening data connection.")), cancellationToken).ConfigureAwait(false);
 
             return await Connection.SendResponseAsync(
                 ExecuteSend,

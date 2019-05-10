@@ -94,15 +94,14 @@ namespace FubarDev.FtpServer
             _socket = socket;
             _connectionAccessor = connectionAccessor;
             _commandActivator = commandActivator;
-            var responseChannel = _responseChannel = Channel.CreateBounded<IFtpResponse>(new BoundedChannelOptions(3));
+            _responseChannel = Channel.CreateBounded<IFtpResponse>(new BoundedChannelOptions(3));
 
             Log = logger;
 
             var parentFeatures = new FeatureCollection();
             var connectionFeature = new ConnectionFeature(
                 (IPEndPoint)socket.Client.LocalEndPoint,
-                remoteAddress,
-                responseChannel);
+                remoteAddress);
             parentFeatures.Set<IConnectionFeature>(connectionFeature);
 
             var secureConnectionFeature = new SecureConnectionFeature(socket);
@@ -153,10 +152,6 @@ namespace FubarDev.FtpServer
         [Obsolete("Query the information using the IConnectionFeature instead.")]
         public Address RemoteAddress
             => Features.Get<IConnectionFeature>().RemoteAddress;
-
-        /// <inheritdoc />
-        [Obsolete("Query the information using the IConnectionFeature instead.")]
-        public ChannelWriter<IFtpResponse> ResponseWriter => Features.Get<IConnectionFeature>().ResponseWriter;
 
         /// <inheritdoc />
         [Obsolete("Query the information using the ISecureConnectionFeature instead.")]
@@ -338,7 +333,13 @@ namespace FubarDev.FtpServer
 
                 if (response.AfterWriteAction != null)
                 {
-                    await response.AfterWriteAction(this, cancellationToken).ConfigureAwait(false);
+                    var nextResponse = await response.AfterWriteAction(this, cancellationToken)
+                       .ConfigureAwait(false);
+                    if (nextResponse != null)
+                    {
+                        await WriteResponseAsync(nextResponse, cancellationToken)
+                           .ConfigureAwait(false);
+                    }
                 }
             }
         }
@@ -496,10 +497,7 @@ namespace FubarDev.FtpServer
         {
             IFtpResponse response;
             Log?.Trace(command);
-            var context = new FtpCommandContext(command)
-            {
-                Connection = this,
-            };
+            var context = new FtpCommandContext(command, _responseChannel, this);
             var result = _commandActivator.Create(context);
             if (result != null)
             {
@@ -580,13 +578,11 @@ namespace FubarDev.FtpServer
         private class ConnectionFeature : IConnectionFeature
         {
             public ConnectionFeature(
-                IPEndPoint localEndPoint,
-                Address remoteAddress,
-                ChannelWriter<IFtpResponse> responseWriter)
+                [NotNull] IPEndPoint localEndPoint,
+                [NotNull] Address remoteAddress)
             {
                 LocalEndPoint = localEndPoint;
                 RemoteAddress = remoteAddress;
-                ResponseWriter = responseWriter;
             }
 
             /// <inheritdoc />
@@ -594,14 +590,11 @@ namespace FubarDev.FtpServer
 
             /// <inheritdoc />
             public Address RemoteAddress { get; }
-
-            /// <inheritdoc />
-            public ChannelWriter<IFtpResponse> ResponseWriter { get; }
         }
 
         private class SecureConnectionFeature : ISecureConnectionFeature
         {
-            public SecureConnectionFeature(TcpClient tcpClient)
+            public SecureConnectionFeature([NotNull] TcpClient tcpClient)
             {
                 OriginalStream = SocketStream = tcpClient.GetStream();
             }

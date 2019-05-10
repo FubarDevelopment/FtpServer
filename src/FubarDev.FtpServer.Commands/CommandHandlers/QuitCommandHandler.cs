@@ -31,6 +31,7 @@ namespace FubarDev.FtpServer.CommandHandlers
                     await secureConnectionFeature.SocketStream.FlushAsync(ct)
                        .ConfigureAwait(false);
                     conn.Close();
+                    return null;
                 },
             });
         }

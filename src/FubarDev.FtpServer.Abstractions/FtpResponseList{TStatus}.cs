@@ -44,7 +44,7 @@ namespace FubarDev.FtpServer
         /// <summary>
         /// Gets or sets the async action to execute after sending the response to the client.
         /// </summary>
-        public Func<IFtpConnection, CancellationToken, Task> AfterWriteAction { get; set; }
+        public FtpResponseAfterWriteAsyncDelegate AfterWriteAction { get; set; }
 
         /// <summary>
         /// Gets the message for the first line.
