@@ -449,7 +449,7 @@ namespace FubarDev.FtpServer
                         foreach (var command in commands)
                         {
                             Log?.Trace(command);
-                            var context = new FtpCommandContext(command, _responseChannel, this);
+                            var context = new FtpContext(command, _responseChannel, this);
                             await requestDelegate(context)
                                .ConfigureAwait(false);
                         }
@@ -529,7 +529,7 @@ namespace FubarDev.FtpServer
         /// <param name="context">The context for the FTP command execution.</param>
         /// <returns>The task.</returns>
         [NotNull]
-        private async Task DispatchCommandAsync([NotNull] FtpCommandContext context)
+        private async Task DispatchCommandAsync([NotNull] FtpContext context)
         {
             var loginStateMachine =
                 _loginStateMachine
@@ -537,7 +537,8 @@ namespace FubarDev.FtpServer
 
             IFtpResponse response;
             var command = context.Command;
-            var result = _commandActivator.Create(context);
+            var commandHandlerContext = new FtpCommandHandlerContext(context);
+            var result = _commandActivator.Create(commandHandlerContext);
             if (result != null)
             {
                 var handler = result.Handler;

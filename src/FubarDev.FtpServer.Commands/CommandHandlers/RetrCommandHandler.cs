@@ -65,7 +65,7 @@ namespace FubarDev.FtpServer.CommandHandlers
 
             using (var input = await fsFeature.FileSystem.OpenReadAsync(fileInfo.Entry, restartPosition ?? 0, cancellationToken).ConfigureAwait(false))
             {
-                await CommandContext.ResponseWriter
+                await FtpContext.ResponseWriter
                    .WriteAsync(new FtpResponse(150, T("Opening connection for data transfer.")), cancellationToken)
                    .ConfigureAwait(false);
 

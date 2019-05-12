@@ -157,7 +157,7 @@ namespace FubarDev.FtpServer.CommandHandlers
                 }
             }
 
-            await CommandContext.ResponseWriter
+            await FtpContext.ResponseWriter
                .WriteAsync(new FtpResponse(150, T("Opening data connection.")), cancellationToken)
                .ConfigureAwait(false);
 

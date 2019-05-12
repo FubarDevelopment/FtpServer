@@ -8,7 +8,6 @@ using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
 
-using FubarDev.FtpServer.Commands;
 using FubarDev.FtpServer.Features;
 
 using JetBrains.Annotations;
@@ -23,7 +22,7 @@ namespace FubarDev.FtpServer.CommandExtensions
         private readonly IReadOnlyCollection<string> _names;
         private readonly string _extensionFor;
         [CanBeNull]
-        private FtpCommandContext _commandContext;
+        private FtpCommandHandlerContext _commandHandlerContext;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FtpCommandHandlerExtension"/> class.
@@ -66,17 +65,23 @@ namespace FubarDev.FtpServer.CommandExtensions
         [NotNull]
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global", Justification = "Set using reflection.")]
         [SuppressMessage("ReSharper", "MemberCanBeProtected.Global", Justification = "Required for setting through reflection.")]
-        public FtpCommandContext CommandContext
+        public FtpCommandHandlerContext CommandContext
         {
-            get => _commandContext ?? throw new InvalidOperationException("The context was used outside of an active connection.");
-            set => _commandContext = value;
+            get => _commandHandlerContext ?? throw new InvalidOperationException("The context was used outside of an active connection.");
+            set => _commandHandlerContext = value;
         }
 
         /// <summary>
         /// Gets the connection this command was created for.
         /// </summary>
         [NotNull]
-        protected IFtpConnection Connection => CommandContext.Connection ?? throw new InvalidOperationException("The connection information was used outside of an active connection.");
+        protected FtpContext FtpContext => CommandContext.FtpContext ?? throw new InvalidOperationException("The connection information was used outside of an active connection.");
+
+        /// <summary>
+        /// Gets the connection this command was created for.
+        /// </summary>
+        [NotNull]
+        protected IFtpConnection Connection => FtpContext.Connection;
 
         /// <summary>
         /// Gets the connection data.

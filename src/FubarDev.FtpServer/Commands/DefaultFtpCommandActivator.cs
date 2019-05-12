@@ -60,7 +60,7 @@ namespace FubarDev.FtpServer.Commands
         }
 
         /// <inheritdoc />
-        public FtpCommandSelection Create(FtpCommandContext context)
+        public FtpCommandSelection Create(FtpCommandHandlerContext context)
         {
             var result = ActivateCommandHandler(context);
             if (result != null)
@@ -71,7 +71,7 @@ namespace FubarDev.FtpServer.Commands
             return result;
         }
 
-        private void ActivateProperty([NotNull] object handler, [NotNull] FtpCommandContext context)
+        private void ActivateProperty([NotNull] object handler, [NotNull] FtpCommandHandlerContext context)
         {
             var property = GetCommandContextProperty(handler.GetType());
             property?.SetValue(handler, context);
@@ -85,15 +85,15 @@ namespace FubarDev.FtpServer.Commands
                 return commandContextProperty;
             }
 
-            commandContextProperty = type.GetRuntimeProperties().FirstOrDefault(x => x.PropertyType == typeof(FtpCommandContext));
+            commandContextProperty = type.GetRuntimeProperties().FirstOrDefault(x => x.PropertyType == typeof(FtpCommandHandlerContext));
             _commandContextProperties[type] = commandContextProperty;
             return commandContextProperty;
         }
 
         [CanBeNull]
-        private FtpCommandSelection ActivateCommandHandler([NotNull] FtpCommandContext context)
+        private FtpCommandSelection ActivateCommandHandler([NotNull] FtpCommandHandlerContext context)
         {
-            if (!_nameToHandlerInfo.TryGetValue(context.Command.Name, out var handlerInfo))
+            if (!_nameToHandlerInfo.TryGetValue(context.FtpContext.Command.Name, out var handlerInfo))
             {
                 return null;
             }
@@ -132,7 +132,9 @@ namespace FubarDev.FtpServer.Commands
 
         [NotNull]
         [ItemNotNull]
-        private IEnumerable<Tuple<IFtpCommandHandlerExtension, IFtpCommandHandlerExtensionInformation>> ActivateExtensions([NotNull] FtpCommandContext context, [NotNull] IFtpCommandHandlerInformation handlerInfo)
+        private IEnumerable<Tuple<IFtpCommandHandlerExtension, IFtpCommandHandlerExtensionInformation>> ActivateExtensions(
+            [NotNull] FtpCommandHandlerContext context,
+            [NotNull] IFtpCommandHandlerInformation handlerInfo)
         {
             var extensionInfos = _hostToExtensionInfo[handlerInfo.Name].ToList();
             var typesToInfos = extensionInfos.ToLookup(x => x.Type);

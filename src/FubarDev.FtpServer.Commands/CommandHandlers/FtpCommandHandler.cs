@@ -25,8 +25,9 @@ namespace FubarDev.FtpServer.CommandHandlers
     public abstract class FtpCommandHandler : IFtpCommandHandler
     {
         private readonly IReadOnlyCollection<string> _names;
+
         [CanBeNull]
-        private FtpCommandContext _commandContext;
+        private FtpCommandHandlerContext _commandHandlerContext;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FtpCommandHandler"/> class.
@@ -69,17 +70,23 @@ namespace FubarDev.FtpServer.CommandHandlers
         [NotNull]
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global", Justification = "Set using reflection.")]
         [SuppressMessage("ReSharper", "MemberCanBeProtected.Global", Justification = "Required for setting through reflection.")]
-        public FtpCommandContext CommandContext
+        public FtpCommandHandlerContext CommandContext
         {
-            get => _commandContext ?? throw new InvalidOperationException("The context was used outside of an active connection.");
-            set => _commandContext = value;
+            get => _commandHandlerContext ?? throw new InvalidOperationException("The context was used outside of an active connection.");
+            set => _commandHandlerContext = value;
         }
 
         /// <summary>
         /// Gets the connection this command was created for.
         /// </summary>
         [NotNull]
-        protected IFtpConnection Connection => CommandContext.Connection ?? throw new InvalidOperationException("The connection information was used outside of an active connection.");
+        protected FtpContext FtpContext => CommandContext.FtpContext ?? throw new InvalidOperationException("The connection information was used outside of an active connection.");
+
+        /// <summary>
+        /// Gets the connection this command was created for.
+        /// </summary>
+        [NotNull]
+        protected IFtpConnection Connection => FtpContext.Connection;
 
         /// <summary>
         /// Gets the connection data.

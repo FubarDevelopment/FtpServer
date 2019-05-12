@@ -22,6 +22,6 @@ namespace FubarDev.FtpServer
         /// <param name="next">The next middleware.</param>
         /// <returns>The task.</returns>
         [NotNull]
-        Task InvokeAsync([NotNull] FtpCommandContext context, [NotNull] FtpRequestDelegate next);
+        Task InvokeAsync([NotNull] FtpContext context, [NotNull] FtpRequestDelegate next);
     }
 }
