@@ -78,7 +78,7 @@ The command handlers were overhauled in the following areas:
   - New [`IFtpCommandHandlerProvider`](xref:FubarDev.FtpServer.Commands.IFtpCommandHandlerProvider) which returns information for all found FTP command handler types
 - Attributes for command information
   - [`FtpCommandHandlerAttribute`](xref:FubarDev.FtpServer.Commands.FtpCommandHandlerAttribute) which gives the FTP command handler a name and defines if it needs a successful login or if it's abortable
-- Simplified constructor due to [`CommandContext`](xref:FubarDev.FtpServer.CommandHandlers.FtpCommandHandler.CommandContext) (type [`FtpCommandContext`](xref:FubarDev.FtpServer.Commands.FtpCommandContext)) property injection
+- Simplified constructor due to [`CommandContext`](xref:FubarDev.FtpServer.CommandHandlers.FtpCommandHandler.CommandContext) (type [`FtpCommandHandlerContext`](xref:FubarDev.FtpServer.FtpCommandHandlerContext)) property injection
 - Activated (read: instantiated with property injection) by command name using the [`IFtpCommandActivator`](xref:FubarDev.FtpServer.Commands.IFtpCommandActivator) service
 
 ## Command extensions (and attributes)
@@ -94,7 +94,7 @@ their own file and the default extensions are automatically registered as servic
   - New [`IFtpCommandHandlerExtensionProvider`](xref:FubarDev.FtpServer.CommandExtensions.IFtpCommandHandlerExtensionProvider) which returns information for all found FTP command handler extension types
 - Attributes for command extension information
   - [`FtpCommandHandlerExtensionAttribute`](xref:FubarDev.FtpServer.CommandExtensions.FtpCommandHandlerExtensionAttribute) which gives the FTP command handler extension a name and defines the command it extends and if it needs a successful login
-- Simplified constructor due to [`CommandContext`](xref:FubarDev.FtpServer.CommandExtensions.FtpCommandHandlerExtension.CommandContext) (type [`FtpCommandContext`](xref:FubarDev.FtpServer.Commands.FtpCommandContext)) property injection
+- Simplified constructor due to [`CommandContext`](xref:FubarDev.FtpServer.CommandExtensions.FtpCommandHandlerExtension.CommandContext) (type [`FtpCommandHandlerContext`](xref:FubarDev.FtpServer.FtpCommandHandlerContext)) property injection
 - Automatic indirect activation (read: instantiation with property injection) for the command it belongs to through the [`IFtpCommandActivator`](xref:FubarDev.FtpServer.Commands.IFtpCommandActivator) service
 
 ## `FEAT` support
@@ -109,7 +109,7 @@ There are two new attributes to get the string to be returned by a `FEAT` comman
 The [`IFtpConnection`](xref:FubarDev.FtpServer.IFtpConnection) API was heavily overhauled to use a feature collection,
 where the features can be queried through the [`Features`](xref:FubarDev.FtpServer.IFtpConnection.Features) property. Using the `WriteAsync`
 function is obsolete. The FTP command handlers should use the `CommandContext`s
-[`ResponseWriter`](xref:FubarDev.FtpServer.Commands.FtpCommandContext.ResponseWriter)
+[`ResponseWriter`](xref:FubarDev.FtpServer.FtpContext.ResponseWriter)
 if they need to send out-of-band responses.
 
 Obsolete property | Target feature
@@ -180,7 +180,7 @@ the FTP server and are used to initialize the FTP connection data.
 
 You're now able to inject your own FTP middleware. This allows
 custom command handlers, logging, and other features. You must
-implement and register the [`IFtpMiddleware`](xref:FubarDev.FtpServer.IFtpMiddleware`) interface
+implement and register the [`IFtpMiddleware`](xref:FubarDev.FtpServer.IFtpMiddleware) interface
 as service in your dependency injection container.
 
 # Changelog
@@ -196,7 +196,7 @@ as service in your dependency injection container.
 - New [`IAnonymousFtpUser`](xref:FubarDev.FtpServer.AccountManagement.IAnonymousFtpUser) interface
 - New RFC 2228 compliant authentication/authorization
 - Root and home directories for an account can be queried
-- New [`IFtpMiddleware`](xref:FubarDev.FtpServer.IFtpMiddleware`) interface for custom middleware
+- New [`IFtpMiddleware`](xref:FubarDev.FtpServer.IFtpMiddleware) interface for custom middleware
 
 ## What's changed?
 
