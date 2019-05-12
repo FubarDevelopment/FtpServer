@@ -2115,6 +2115,19 @@ references:
   isSpec: "True"
   fullName: FubarDev.FtpServer.CommandExtensions.FtpCommandHandlerExtension.ExtensionFor
   nameWithType: FtpCommandHandlerExtension.ExtensionFor
+- uid: FubarDev.FtpServer.CommandExtensions.FtpCommandHandlerExtension.FtpContext
+  name: FtpContext
+  href: api/FubarDev.FtpServer.CommandExtensions.FtpCommandHandlerExtension.html#FubarDev_FtpServer_CommandExtensions_FtpCommandHandlerExtension_FtpContext
+  commentId: P:FubarDev.FtpServer.CommandExtensions.FtpCommandHandlerExtension.FtpContext
+  fullName: FubarDev.FtpServer.CommandExtensions.FtpCommandHandlerExtension.FtpContext
+  nameWithType: FtpCommandHandlerExtension.FtpContext
+- uid: FubarDev.FtpServer.CommandExtensions.FtpCommandHandlerExtension.FtpContext*
+  name: FtpContext
+  href: api/FubarDev.FtpServer.CommandExtensions.FtpCommandHandlerExtension.html#FubarDev_FtpServer_CommandExtensions_FtpCommandHandlerExtension_FtpContext_
+  commentId: Overload:FubarDev.FtpServer.CommandExtensions.FtpCommandHandlerExtension.FtpContext
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.CommandExtensions.FtpCommandHandlerExtension.FtpContext
+  nameWithType: FtpCommandHandlerExtension.FtpContext
 - uid: FubarDev.FtpServer.CommandExtensions.FtpCommandHandlerExtension.InitializeConnectionData
   name: InitializeConnectionData()
   href: api/FubarDev.FtpServer.CommandExtensions.FtpCommandHandlerExtension.html#FubarDev_FtpServer_CommandExtensions_FtpCommandHandlerExtension_InitializeConnectionData
@@ -2852,6 +2865,19 @@ references:
   isSpec: "True"
   fullName: FubarDev.FtpServer.CommandHandlers.FtpCommandHandler.Data
   nameWithType: FtpCommandHandler.Data
+- uid: FubarDev.FtpServer.CommandHandlers.FtpCommandHandler.FtpContext
+  name: FtpContext
+  href: api/FubarDev.FtpServer.CommandHandlers.FtpCommandHandler.html#FubarDev_FtpServer_CommandHandlers_FtpCommandHandler_FtpContext
+  commentId: P:FubarDev.FtpServer.CommandHandlers.FtpCommandHandler.FtpContext
+  fullName: FubarDev.FtpServer.CommandHandlers.FtpCommandHandler.FtpContext
+  nameWithType: FtpCommandHandler.FtpContext
+- uid: FubarDev.FtpServer.CommandHandlers.FtpCommandHandler.FtpContext*
+  name: FtpContext
+  href: api/FubarDev.FtpServer.CommandHandlers.FtpCommandHandler.html#FubarDev_FtpServer_CommandHandlers_FtpCommandHandler_FtpContext_
+  commentId: Overload:FubarDev.FtpServer.CommandHandlers.FtpCommandHandler.FtpContext
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.CommandHandlers.FtpCommandHandler.FtpContext
+  nameWithType: FtpCommandHandler.FtpContext
 - uid: FubarDev.FtpServer.CommandHandlers.FtpCommandHandler.GetExtensions
   name: GetExtensions()
   href: api/FubarDev.FtpServer.CommandHandlers.FtpCommandHandler.html#FubarDev_FtpServer_CommandHandlers_FtpCommandHandler_GetExtensions
@@ -3934,12 +3960,12 @@ references:
   isSpec: "True"
   fullName: FubarDev.FtpServer.Commands.DefaultFtpCommandActivator.DefaultFtpCommandActivator
   nameWithType: DefaultFtpCommandActivator.DefaultFtpCommandActivator
-- uid: FubarDev.FtpServer.Commands.DefaultFtpCommandActivator.Create(FubarDev.FtpServer.Commands.FtpCommandContext)
-  name: Create(FtpCommandContext)
-  href: api/FubarDev.FtpServer.Commands.DefaultFtpCommandActivator.html#FubarDev_FtpServer_Commands_DefaultFtpCommandActivator_Create_FubarDev_FtpServer_Commands_FtpCommandContext_
-  commentId: M:FubarDev.FtpServer.Commands.DefaultFtpCommandActivator.Create(FubarDev.FtpServer.Commands.FtpCommandContext)
-  fullName: FubarDev.FtpServer.Commands.DefaultFtpCommandActivator.Create(FubarDev.FtpServer.Commands.FtpCommandContext)
-  nameWithType: DefaultFtpCommandActivator.Create(FtpCommandContext)
+- uid: FubarDev.FtpServer.Commands.DefaultFtpCommandActivator.Create(FubarDev.FtpServer.FtpCommandHandlerContext)
+  name: Create(FtpCommandHandlerContext)
+  href: api/FubarDev.FtpServer.Commands.DefaultFtpCommandActivator.html#FubarDev_FtpServer_Commands_DefaultFtpCommandActivator_Create_FubarDev_FtpServer_FtpCommandHandlerContext_
+  commentId: M:FubarDev.FtpServer.Commands.DefaultFtpCommandActivator.Create(FubarDev.FtpServer.FtpCommandHandlerContext)
+  fullName: FubarDev.FtpServer.Commands.DefaultFtpCommandActivator.Create(FubarDev.FtpServer.FtpCommandHandlerContext)
+  nameWithType: DefaultFtpCommandActivator.Create(FtpCommandHandlerContext)
 - uid: FubarDev.FtpServer.Commands.DefaultFtpCommandActivator.Create*
   name: Create
   href: api/FubarDev.FtpServer.Commands.DefaultFtpCommandActivator.html#FubarDev_FtpServer_Commands_DefaultFtpCommandActivator_Create_
@@ -4104,67 +4130,6 @@ references:
   isSpec: "True"
   fullName: FubarDev.FtpServer.Commands.FoundFeatureInfo.IsExtension
   nameWithType: FoundFeatureInfo.IsExtension
-- uid: FubarDev.FtpServer.Commands.FtpCommandContext
-  name: FtpCommandContext
-  href: api/FubarDev.FtpServer.Commands.FtpCommandContext.html
-  commentId: T:FubarDev.FtpServer.Commands.FtpCommandContext
-  fullName: FubarDev.FtpServer.Commands.FtpCommandContext
-  nameWithType: FtpCommandContext
-- uid: FubarDev.FtpServer.Commands.FtpCommandContext.#ctor(FubarDev.FtpServer.FtpCommand,System.Threading.Channels.ChannelWriter{FubarDev.FtpServer.IFtpResponse},FubarDev.FtpServer.IFtpConnection)
-  name: FtpCommandContext(FtpCommand, ChannelWriter<IFtpResponse>, IFtpConnection)
-  href: api/FubarDev.FtpServer.Commands.FtpCommandContext.html#FubarDev_FtpServer_Commands_FtpCommandContext__ctor_FubarDev_FtpServer_FtpCommand_System_Threading_Channels_ChannelWriter_FubarDev_FtpServer_IFtpResponse__FubarDev_FtpServer_IFtpConnection_
-  commentId: M:FubarDev.FtpServer.Commands.FtpCommandContext.#ctor(FubarDev.FtpServer.FtpCommand,System.Threading.Channels.ChannelWriter{FubarDev.FtpServer.IFtpResponse},FubarDev.FtpServer.IFtpConnection)
-  name.vb: FtpCommandContext(FtpCommand, ChannelWriter(Of IFtpResponse), IFtpConnection)
-  fullName: FubarDev.FtpServer.Commands.FtpCommandContext.FtpCommandContext(FubarDev.FtpServer.FtpCommand, System.Threading.Channels.ChannelWriter<FubarDev.FtpServer.IFtpResponse>, FubarDev.FtpServer.IFtpConnection)
-  fullName.vb: FubarDev.FtpServer.Commands.FtpCommandContext.FtpCommandContext(FubarDev.FtpServer.FtpCommand, System.Threading.Channels.ChannelWriter(Of FubarDev.FtpServer.IFtpResponse), FubarDev.FtpServer.IFtpConnection)
-  nameWithType: FtpCommandContext.FtpCommandContext(FtpCommand, ChannelWriter<IFtpResponse>, IFtpConnection)
-  nameWithType.vb: FtpCommandContext.FtpCommandContext(FtpCommand, ChannelWriter(Of IFtpResponse), IFtpConnection)
-- uid: FubarDev.FtpServer.Commands.FtpCommandContext.#ctor*
-  name: FtpCommandContext
-  href: api/FubarDev.FtpServer.Commands.FtpCommandContext.html#FubarDev_FtpServer_Commands_FtpCommandContext__ctor_
-  commentId: Overload:FubarDev.FtpServer.Commands.FtpCommandContext.#ctor
-  isSpec: "True"
-  fullName: FubarDev.FtpServer.Commands.FtpCommandContext.FtpCommandContext
-  nameWithType: FtpCommandContext.FtpCommandContext
-- uid: FubarDev.FtpServer.Commands.FtpCommandContext.Command
-  name: Command
-  href: api/FubarDev.FtpServer.Commands.FtpCommandContext.html#FubarDev_FtpServer_Commands_FtpCommandContext_Command
-  commentId: P:FubarDev.FtpServer.Commands.FtpCommandContext.Command
-  fullName: FubarDev.FtpServer.Commands.FtpCommandContext.Command
-  nameWithType: FtpCommandContext.Command
-- uid: FubarDev.FtpServer.Commands.FtpCommandContext.Command*
-  name: Command
-  href: api/FubarDev.FtpServer.Commands.FtpCommandContext.html#FubarDev_FtpServer_Commands_FtpCommandContext_Command_
-  commentId: Overload:FubarDev.FtpServer.Commands.FtpCommandContext.Command
-  isSpec: "True"
-  fullName: FubarDev.FtpServer.Commands.FtpCommandContext.Command
-  nameWithType: FtpCommandContext.Command
-- uid: FubarDev.FtpServer.Commands.FtpCommandContext.Connection
-  name: Connection
-  href: api/FubarDev.FtpServer.Commands.FtpCommandContext.html#FubarDev_FtpServer_Commands_FtpCommandContext_Connection
-  commentId: P:FubarDev.FtpServer.Commands.FtpCommandContext.Connection
-  fullName: FubarDev.FtpServer.Commands.FtpCommandContext.Connection
-  nameWithType: FtpCommandContext.Connection
-- uid: FubarDev.FtpServer.Commands.FtpCommandContext.Connection*
-  name: Connection
-  href: api/FubarDev.FtpServer.Commands.FtpCommandContext.html#FubarDev_FtpServer_Commands_FtpCommandContext_Connection_
-  commentId: Overload:FubarDev.FtpServer.Commands.FtpCommandContext.Connection
-  isSpec: "True"
-  fullName: FubarDev.FtpServer.Commands.FtpCommandContext.Connection
-  nameWithType: FtpCommandContext.Connection
-- uid: FubarDev.FtpServer.Commands.FtpCommandContext.ResponseWriter
-  name: ResponseWriter
-  href: api/FubarDev.FtpServer.Commands.FtpCommandContext.html#FubarDev_FtpServer_Commands_FtpCommandContext_ResponseWriter
-  commentId: P:FubarDev.FtpServer.Commands.FtpCommandContext.ResponseWriter
-  fullName: FubarDev.FtpServer.Commands.FtpCommandContext.ResponseWriter
-  nameWithType: FtpCommandContext.ResponseWriter
-- uid: FubarDev.FtpServer.Commands.FtpCommandContext.ResponseWriter*
-  name: ResponseWriter
-  href: api/FubarDev.FtpServer.Commands.FtpCommandContext.html#FubarDev_FtpServer_Commands_FtpCommandContext_ResponseWriter_
-  commentId: Overload:FubarDev.FtpServer.Commands.FtpCommandContext.ResponseWriter
-  isSpec: "True"
-  fullName: FubarDev.FtpServer.Commands.FtpCommandContext.ResponseWriter
-  nameWithType: FtpCommandContext.ResponseWriter
 - uid: FubarDev.FtpServer.Commands.FtpCommandHandlerAttribute
   name: FtpCommandHandlerAttribute
   href: api/FubarDev.FtpServer.Commands.FtpCommandHandlerAttribute.html
@@ -4293,12 +4258,12 @@ references:
   commentId: T:FubarDev.FtpServer.Commands.IFtpCommandActivator
   fullName: FubarDev.FtpServer.Commands.IFtpCommandActivator
   nameWithType: IFtpCommandActivator
-- uid: FubarDev.FtpServer.Commands.IFtpCommandActivator.Create(FubarDev.FtpServer.Commands.FtpCommandContext)
-  name: Create(FtpCommandContext)
-  href: api/FubarDev.FtpServer.Commands.IFtpCommandActivator.html#FubarDev_FtpServer_Commands_IFtpCommandActivator_Create_FubarDev_FtpServer_Commands_FtpCommandContext_
-  commentId: M:FubarDev.FtpServer.Commands.IFtpCommandActivator.Create(FubarDev.FtpServer.Commands.FtpCommandContext)
-  fullName: FubarDev.FtpServer.Commands.IFtpCommandActivator.Create(FubarDev.FtpServer.Commands.FtpCommandContext)
-  nameWithType: IFtpCommandActivator.Create(FtpCommandContext)
+- uid: FubarDev.FtpServer.Commands.IFtpCommandActivator.Create(FubarDev.FtpServer.FtpCommandHandlerContext)
+  name: Create(FtpCommandHandlerContext)
+  href: api/FubarDev.FtpServer.Commands.IFtpCommandActivator.html#FubarDev_FtpServer_Commands_IFtpCommandActivator_Create_FubarDev_FtpServer_FtpCommandHandlerContext_
+  commentId: M:FubarDev.FtpServer.Commands.IFtpCommandActivator.Create(FubarDev.FtpServer.FtpCommandHandlerContext)
+  fullName: FubarDev.FtpServer.Commands.IFtpCommandActivator.Create(FubarDev.FtpServer.FtpCommandHandlerContext)
+  nameWithType: IFtpCommandActivator.Create(FtpCommandHandlerContext)
 - uid: FubarDev.FtpServer.Commands.IFtpCommandActivator.Create*
   name: Create
   href: api/FubarDev.FtpServer.Commands.IFtpCommandActivator.html#FubarDev_FtpServer_Commands_IFtpCommandActivator_Create_
@@ -8438,6 +8403,38 @@ references:
   isSpec: "True"
   fullName: FubarDev.FtpServer.FtpCommandCollector.IsEmpty
   nameWithType: FtpCommandCollector.IsEmpty
+- uid: FubarDev.FtpServer.FtpCommandHandlerContext
+  name: FtpCommandHandlerContext
+  href: api/FubarDev.FtpServer.FtpCommandHandlerContext.html
+  commentId: T:FubarDev.FtpServer.FtpCommandHandlerContext
+  fullName: FubarDev.FtpServer.FtpCommandHandlerContext
+  nameWithType: FtpCommandHandlerContext
+- uid: FubarDev.FtpServer.FtpCommandHandlerContext.#ctor(FubarDev.FtpServer.FtpContext)
+  name: FtpCommandHandlerContext(FtpContext)
+  href: api/FubarDev.FtpServer.FtpCommandHandlerContext.html#FubarDev_FtpServer_FtpCommandHandlerContext__ctor_FubarDev_FtpServer_FtpContext_
+  commentId: M:FubarDev.FtpServer.FtpCommandHandlerContext.#ctor(FubarDev.FtpServer.FtpContext)
+  fullName: FubarDev.FtpServer.FtpCommandHandlerContext.FtpCommandHandlerContext(FubarDev.FtpServer.FtpContext)
+  nameWithType: FtpCommandHandlerContext.FtpCommandHandlerContext(FtpContext)
+- uid: FubarDev.FtpServer.FtpCommandHandlerContext.#ctor*
+  name: FtpCommandHandlerContext
+  href: api/FubarDev.FtpServer.FtpCommandHandlerContext.html#FubarDev_FtpServer_FtpCommandHandlerContext__ctor_
+  commentId: Overload:FubarDev.FtpServer.FtpCommandHandlerContext.#ctor
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.FtpCommandHandlerContext.FtpCommandHandlerContext
+  nameWithType: FtpCommandHandlerContext.FtpCommandHandlerContext
+- uid: FubarDev.FtpServer.FtpCommandHandlerContext.FtpContext
+  name: FtpContext
+  href: api/FubarDev.FtpServer.FtpCommandHandlerContext.html#FubarDev_FtpServer_FtpCommandHandlerContext_FtpContext
+  commentId: P:FubarDev.FtpServer.FtpCommandHandlerContext.FtpContext
+  fullName: FubarDev.FtpServer.FtpCommandHandlerContext.FtpContext
+  nameWithType: FtpCommandHandlerContext.FtpContext
+- uid: FubarDev.FtpServer.FtpCommandHandlerContext.FtpContext*
+  name: FtpContext
+  href: api/FubarDev.FtpServer.FtpCommandHandlerContext.html#FubarDev_FtpServer_FtpCommandHandlerContext_FtpContext_
+  commentId: Overload:FubarDev.FtpServer.FtpCommandHandlerContext.FtpContext
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.FtpCommandHandlerContext.FtpContext
+  nameWithType: FtpCommandHandlerContext.FtpContext
 - uid: FubarDev.FtpServer.FtpCommandHandlerProcessDelegate
   name: FtpCommandHandlerProcessDelegate
   href: api/FubarDev.FtpServer.FtpCommandHandlerProcessDelegate.html
@@ -8485,6 +8482,19 @@ references:
   commentId: E:FubarDev.FtpServer.FtpConnection.Closed
   fullName: FubarDev.FtpServer.FtpConnection.Closed
   nameWithType: FtpConnection.Closed
+- uid: FubarDev.FtpServer.FtpConnection.ConnectionId
+  name: ConnectionId
+  href: api/FubarDev.FtpServer.FtpConnection.html#FubarDev_FtpServer_FtpConnection_ConnectionId
+  commentId: P:FubarDev.FtpServer.FtpConnection.ConnectionId
+  fullName: FubarDev.FtpServer.FtpConnection.ConnectionId
+  nameWithType: FtpConnection.ConnectionId
+- uid: FubarDev.FtpServer.FtpConnection.ConnectionId*
+  name: ConnectionId
+  href: api/FubarDev.FtpServer.FtpConnection.html#FubarDev_FtpServer_FtpConnection_ConnectionId_
+  commentId: Overload:FubarDev.FtpServer.FtpConnection.ConnectionId
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.FtpConnection.ConnectionId
+  nameWithType: FtpConnection.ConnectionId
 - uid: FubarDev.FtpServer.FtpConnection.ConnectionServices
   name: ConnectionServices
   href: api/FubarDev.FtpServer.FtpConnection.html#FubarDev_FtpServer_FtpConnection_ConnectionServices
@@ -8705,6 +8715,38 @@ references:
   isSpec: "True"
   fullName: FubarDev.FtpServer.FtpConnectionAccessor.FtpConnection
   nameWithType: FtpConnectionAccessor.FtpConnection
+- uid: FubarDev.FtpServer.FtpConnectionContext
+  name: FtpConnectionContext
+  href: api/FubarDev.FtpServer.FtpConnectionContext.html
+  commentId: T:FubarDev.FtpServer.FtpConnectionContext
+  fullName: FubarDev.FtpServer.FtpConnectionContext
+  nameWithType: FtpConnectionContext
+- uid: FubarDev.FtpServer.FtpConnectionContext.ConnectionId
+  name: ConnectionId
+  href: api/FubarDev.FtpServer.FtpConnectionContext.html#FubarDev_FtpServer_FtpConnectionContext_ConnectionId
+  commentId: P:FubarDev.FtpServer.FtpConnectionContext.ConnectionId
+  fullName: FubarDev.FtpServer.FtpConnectionContext.ConnectionId
+  nameWithType: FtpConnectionContext.ConnectionId
+- uid: FubarDev.FtpServer.FtpConnectionContext.ConnectionId*
+  name: ConnectionId
+  href: api/FubarDev.FtpServer.FtpConnectionContext.html#FubarDev_FtpServer_FtpConnectionContext_ConnectionId_
+  commentId: Overload:FubarDev.FtpServer.FtpConnectionContext.ConnectionId
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.FtpConnectionContext.ConnectionId
+  nameWithType: FtpConnectionContext.ConnectionId
+- uid: FubarDev.FtpServer.FtpConnectionContext.Features
+  name: Features
+  href: api/FubarDev.FtpServer.FtpConnectionContext.html#FubarDev_FtpServer_FtpConnectionContext_Features
+  commentId: P:FubarDev.FtpServer.FtpConnectionContext.Features
+  fullName: FubarDev.FtpServer.FtpConnectionContext.Features
+  nameWithType: FtpConnectionContext.Features
+- uid: FubarDev.FtpServer.FtpConnectionContext.Features*
+  name: Features
+  href: api/FubarDev.FtpServer.FtpConnectionContext.html#FubarDev_FtpServer_FtpConnectionContext_Features_
+  commentId: Overload:FubarDev.FtpServer.FtpConnectionContext.Features
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.FtpConnectionContext.Features
+  nameWithType: FtpConnectionContext.Features
 - uid: FubarDev.FtpServer.FtpConnectionData
   name: FtpConnectionData
   href: api/FubarDev.FtpServer.FtpConnectionData.html
@@ -9003,6 +9045,67 @@ references:
   isSpec: "True"
   fullName: FubarDev.FtpServer.FtpConnectionOptions.DefaultEncoding
   nameWithType: FtpConnectionOptions.DefaultEncoding
+- uid: FubarDev.FtpServer.FtpContext
+  name: FtpContext
+  href: api/FubarDev.FtpServer.FtpContext.html
+  commentId: T:FubarDev.FtpServer.FtpContext
+  fullName: FubarDev.FtpServer.FtpContext
+  nameWithType: FtpContext
+- uid: FubarDev.FtpServer.FtpContext.#ctor(FubarDev.FtpServer.FtpCommand,System.Threading.Channels.ChannelWriter{FubarDev.FtpServer.IFtpResponse},FubarDev.FtpServer.IFtpConnection)
+  name: FtpContext(FtpCommand, ChannelWriter<IFtpResponse>, IFtpConnection)
+  href: api/FubarDev.FtpServer.FtpContext.html#FubarDev_FtpServer_FtpContext__ctor_FubarDev_FtpServer_FtpCommand_System_Threading_Channels_ChannelWriter_FubarDev_FtpServer_IFtpResponse__FubarDev_FtpServer_IFtpConnection_
+  commentId: M:FubarDev.FtpServer.FtpContext.#ctor(FubarDev.FtpServer.FtpCommand,System.Threading.Channels.ChannelWriter{FubarDev.FtpServer.IFtpResponse},FubarDev.FtpServer.IFtpConnection)
+  name.vb: FtpContext(FtpCommand, ChannelWriter(Of IFtpResponse), IFtpConnection)
+  fullName: FubarDev.FtpServer.FtpContext.FtpContext(FubarDev.FtpServer.FtpCommand, System.Threading.Channels.ChannelWriter<FubarDev.FtpServer.IFtpResponse>, FubarDev.FtpServer.IFtpConnection)
+  fullName.vb: FubarDev.FtpServer.FtpContext.FtpContext(FubarDev.FtpServer.FtpCommand, System.Threading.Channels.ChannelWriter(Of FubarDev.FtpServer.IFtpResponse), FubarDev.FtpServer.IFtpConnection)
+  nameWithType: FtpContext.FtpContext(FtpCommand, ChannelWriter<IFtpResponse>, IFtpConnection)
+  nameWithType.vb: FtpContext.FtpContext(FtpCommand, ChannelWriter(Of IFtpResponse), IFtpConnection)
+- uid: FubarDev.FtpServer.FtpContext.#ctor*
+  name: FtpContext
+  href: api/FubarDev.FtpServer.FtpContext.html#FubarDev_FtpServer_FtpContext__ctor_
+  commentId: Overload:FubarDev.FtpServer.FtpContext.#ctor
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.FtpContext.FtpContext
+  nameWithType: FtpContext.FtpContext
+- uid: FubarDev.FtpServer.FtpContext.Command
+  name: Command
+  href: api/FubarDev.FtpServer.FtpContext.html#FubarDev_FtpServer_FtpContext_Command
+  commentId: P:FubarDev.FtpServer.FtpContext.Command
+  fullName: FubarDev.FtpServer.FtpContext.Command
+  nameWithType: FtpContext.Command
+- uid: FubarDev.FtpServer.FtpContext.Command*
+  name: Command
+  href: api/FubarDev.FtpServer.FtpContext.html#FubarDev_FtpServer_FtpContext_Command_
+  commentId: Overload:FubarDev.FtpServer.FtpContext.Command
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.FtpContext.Command
+  nameWithType: FtpContext.Command
+- uid: FubarDev.FtpServer.FtpContext.Connection
+  name: Connection
+  href: api/FubarDev.FtpServer.FtpContext.html#FubarDev_FtpServer_FtpContext_Connection
+  commentId: P:FubarDev.FtpServer.FtpContext.Connection
+  fullName: FubarDev.FtpServer.FtpContext.Connection
+  nameWithType: FtpContext.Connection
+- uid: FubarDev.FtpServer.FtpContext.Connection*
+  name: Connection
+  href: api/FubarDev.FtpServer.FtpContext.html#FubarDev_FtpServer_FtpContext_Connection_
+  commentId: Overload:FubarDev.FtpServer.FtpContext.Connection
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.FtpContext.Connection
+  nameWithType: FtpContext.Connection
+- uid: FubarDev.FtpServer.FtpContext.ResponseWriter
+  name: ResponseWriter
+  href: api/FubarDev.FtpServer.FtpContext.html#FubarDev_FtpServer_FtpContext_ResponseWriter
+  commentId: P:FubarDev.FtpServer.FtpContext.ResponseWriter
+  fullName: FubarDev.FtpServer.FtpContext.ResponseWriter
+  nameWithType: FtpContext.ResponseWriter
+- uid: FubarDev.FtpServer.FtpContext.ResponseWriter*
+  name: ResponseWriter
+  href: api/FubarDev.FtpServer.FtpContext.html#FubarDev_FtpServer_FtpContext_ResponseWriter_
+  commentId: Overload:FubarDev.FtpServer.FtpContext.ResponseWriter
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.FtpContext.ResponseWriter
+  nameWithType: FtpContext.ResponseWriter
 - uid: FubarDev.FtpServer.FtpFeatureFunctionAttribute
   name: FtpFeatureFunctionAttribute
   href: api/FubarDev.FtpServer.FtpFeatureFunctionAttribute.html
@@ -9282,6 +9385,12 @@ references:
   isSpec: "True"
   fullName: FubarDev.FtpServer.FtpLoginStateMachine.UnhandledCommandAsync
   nameWithType: FtpLoginStateMachine.UnhandledCommandAsync
+- uid: FubarDev.FtpServer.FtpRequestDelegate
+  name: FtpRequestDelegate
+  href: api/FubarDev.FtpServer.FtpRequestDelegate.html
+  commentId: T:FubarDev.FtpServer.FtpRequestDelegate
+  fullName: FubarDev.FtpServer.FtpRequestDelegate
+  nameWithType: FtpRequestDelegate
 - uid: FubarDev.FtpServer.FtpResponse
   name: FtpResponse
   href: api/FubarDev.FtpServer.FtpResponse.html
@@ -11143,6 +11252,25 @@ references:
   isSpec: "True"
   fullName: FubarDev.FtpServer.IFtpLoginStateMachine.SelectedAuthorizationMechanism
   nameWithType: IFtpLoginStateMachine.SelectedAuthorizationMechanism
+- uid: FubarDev.FtpServer.IFtpMiddleware
+  name: IFtpMiddleware
+  href: api/FubarDev.FtpServer.IFtpMiddleware.html
+  commentId: T:FubarDev.FtpServer.IFtpMiddleware
+  fullName: FubarDev.FtpServer.IFtpMiddleware
+  nameWithType: IFtpMiddleware
+- uid: FubarDev.FtpServer.IFtpMiddleware.InvokeAsync(FubarDev.FtpServer.FtpContext,FubarDev.FtpServer.FtpRequestDelegate)
+  name: InvokeAsync(FtpContext, FtpRequestDelegate)
+  href: api/FubarDev.FtpServer.IFtpMiddleware.html#FubarDev_FtpServer_IFtpMiddleware_InvokeAsync_FubarDev_FtpServer_FtpContext_FubarDev_FtpServer_FtpRequestDelegate_
+  commentId: M:FubarDev.FtpServer.IFtpMiddleware.InvokeAsync(FubarDev.FtpServer.FtpContext,FubarDev.FtpServer.FtpRequestDelegate)
+  fullName: FubarDev.FtpServer.IFtpMiddleware.InvokeAsync(FubarDev.FtpServer.FtpContext, FubarDev.FtpServer.FtpRequestDelegate)
+  nameWithType: IFtpMiddleware.InvokeAsync(FtpContext, FtpRequestDelegate)
+- uid: FubarDev.FtpServer.IFtpMiddleware.InvokeAsync*
+  name: InvokeAsync
+  href: api/FubarDev.FtpServer.IFtpMiddleware.html#FubarDev_FtpServer_IFtpMiddleware_InvokeAsync_
+  commentId: Overload:FubarDev.FtpServer.IFtpMiddleware.InvokeAsync
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.IFtpMiddleware.InvokeAsync
+  nameWithType: IFtpMiddleware.InvokeAsync
 - uid: FubarDev.FtpServer.IFtpResponse
   name: IFtpResponse
   href: api/FubarDev.FtpServer.IFtpResponse.html

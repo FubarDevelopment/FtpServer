@@ -89,7 +89,8 @@
   <div class="inheritance">
     <h5>Inheritance</h5>
     <div class="level0"><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object">Object</a></div>
-    <div class="level1"><span class="xref">FtpConnection</span></div>
+    <div class="level1"><a class="xref" href="FubarDev.FtpServer.FtpConnectionContext.html">FtpConnectionContext</a></div>
+    <div class="level2"><span class="xref">FtpConnection</span></div>
   </div>
   <div classs="implements">
     <h5>Implements</h5>
@@ -125,7 +126,7 @@
   <h6><strong>Assembly</strong>: FubarDev.FtpServer.dll</h6>
   <h5 id="FubarDev_FtpServer_FtpConnection_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public sealed class FtpConnection : IFtpConnection, IConnectionFeature, IDisposable</code></pre>
+    <pre><code class="lang-csharp hljs">public sealed class FtpConnection : FtpConnectionContext, IFtpConnection, IConnectionFeature, IDisposable</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
@@ -134,7 +135,7 @@
     <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FtpConnection__ctor_System_Net_Sockets_TcpClient_Microsoft_Extensions_Options_IOptions_FubarDev_FtpServer_FtpConnectionOptions__FubarDev_FtpServer_IFtpConnectionAccessor_FubarDev_FtpServer_Commands_IFtpCommandActivator_FubarDev_FtpServer_Localization_IFtpCatalogLoader_System_IServiceProvider_Microsoft_Extensions_Logging_ILogger_FubarDev_FtpServer_IFtpConnection__.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FtpConnection.%23ctor(System.Net.Sockets.TcpClient%2CMicrosoft.Extensions.Options.IOptions%7BFubarDev.FtpServer.FtpConnectionOptions%7D%2CFubarDev.FtpServer.IFtpConnectionAccessor%2CFubarDev.FtpServer.Commands.IFtpCommandActivator%2CFubarDev.FtpServer.Localization.IFtpCatalogLoader%2CSystem.IServiceProvider%2CMicrosoft.Extensions.Logging.ILogger%7BFubarDev.FtpServer.IFtpConnection%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer/FtpConnection.cs/#L71">View Source</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer/FtpConnection.cs/#L77">View Source</a>
   </span>
   <a id="FubarDev_FtpServer_FtpConnection__ctor_" data-uid="FubarDev.FtpServer.FtpConnection.#ctor*"></a>
   <h4 id="FubarDev_FtpServer_FtpConnection__ctor_System_Net_Sockets_TcpClient_Microsoft_Extensions_Options_IOptions_FubarDev_FtpServer_FtpConnectionOptions__FubarDev_FtpServer_IFtpConnectionAccessor_FubarDev_FtpServer_Commands_IFtpCommandActivator_FubarDev_FtpServer_Localization_IFtpCatalogLoader_System_IServiceProvider_Microsoft_Extensions_Logging_ILogger_FubarDev_FtpServer_IFtpConnection__" data-uid="FubarDev.FtpServer.FtpConnection.#ctor(System.Net.Sockets.TcpClient,Microsoft.Extensions.Options.IOptions{FubarDev.FtpServer.FtpConnectionOptions},FubarDev.FtpServer.IFtpConnectionAccessor,FubarDev.FtpServer.Commands.IFtpCommandActivator,FubarDev.FtpServer.Localization.IFtpCatalogLoader,System.IServiceProvider,Microsoft.Extensions.Logging.ILogger{FubarDev.FtpServer.IFtpConnection})">FtpConnection(TcpClient, IOptions&lt;FtpConnectionOptions&gt;, IFtpConnectionAccessor, IFtpCommandActivator, IFtpCatalogLoader, IServiceProvider, ILogger&lt;IFtpConnection&gt;)</h4>
@@ -203,10 +204,43 @@
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
+    <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FtpConnection_ConnectionId.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FtpConnection.ConnectionId%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer/FtpConnection.cs/#L137">View Source</a>
+  </span>
+  <a id="FubarDev_FtpServer_FtpConnection_ConnectionId_" data-uid="FubarDev.FtpServer.FtpConnection.ConnectionId*"></a>
+  <h4 id="FubarDev_FtpServer_FtpConnection_ConnectionId" data-uid="FubarDev.FtpServer.FtpConnection.ConnectionId">ConnectionId</h4>
+  <div class="markdown level1 summary"><p>Gets or sets the connection identifier.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override string ConnectionId { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="FubarDev.FtpServer.FtpConnectionContext.html#FubarDev_FtpServer_FtpConnectionContext_ConnectionId">FtpConnectionContext.ConnectionId</a></div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
     <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FtpConnection_ConnectionServices.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FtpConnection.ConnectionServices%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer/FtpConnection.cs/#L126">View Source</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer/FtpConnection.cs/#L134">View Source</a>
   </span>
   <a id="FubarDev_FtpServer_FtpConnection_ConnectionServices_" data-uid="FubarDev.FtpServer.FtpConnection.ConnectionServices*"></a>
   <h4 id="FubarDev_FtpServer_FtpConnection_ConnectionServices" data-uid="FubarDev.FtpServer.FtpConnection.ConnectionServices">ConnectionServices</h4>
@@ -237,7 +271,7 @@
     <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FtpConnection_Data.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FtpConnection.Data%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer/FtpConnection.cs/#L140">View Source</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer/FtpConnection.cs/#L153">View Source</a>
   </span>
   <a id="FubarDev_FtpServer_FtpConnection_Data_" data-uid="FubarDev.FtpServer.FtpConnection.Data*"></a>
   <h4 id="FubarDev_FtpServer_FtpConnection_Data" data-uid="FubarDev.FtpServer.FtpConnection.Data">Data</h4>
@@ -269,7 +303,7 @@ public FtpConnectionData Data { get; }</code></pre>
     <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FtpConnection_Encoding.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FtpConnection.Encoding%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer/FtpConnection.cs/#L132">View Source</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer/FtpConnection.cs/#L145">View Source</a>
   </span>
   <a id="FubarDev_FtpServer_FtpConnection_Encoding_" data-uid="FubarDev.FtpServer.FtpConnection.Encoding*"></a>
   <h4 id="FubarDev_FtpServer_FtpConnection_Encoding" data-uid="FubarDev.FtpServer.FtpConnection.Encoding">Encoding</h4>
@@ -301,7 +335,7 @@ public Encoding Encoding { get; set; }</code></pre>
     <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FtpConnection_Features.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FtpConnection.Features%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer/FtpConnection.cs/#L129">View Source</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer/FtpConnection.cs/#L142">View Source</a>
   </span>
   <a id="FubarDev_FtpServer_FtpConnection_Features_" data-uid="FubarDev.FtpServer.FtpConnection.Features*"></a>
   <h4 id="FubarDev_FtpServer_FtpConnection_Features" data-uid="FubarDev.FtpServer.FtpConnection.Features">Features</h4>
@@ -310,7 +344,7 @@ public Encoding Encoding { get; set; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public IFeatureCollection Features { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public override IFeatureCollection Features { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -327,12 +361,14 @@ public Encoding Encoding { get; set; }</code></pre>
       </tr>
     </tbody>
   </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="FubarDev.FtpServer.FtpConnectionContext.html#FubarDev_FtpServer_FtpConnectionContext_Features">FtpConnectionContext.Features</a></div>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
     <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FtpConnection_IsSecure.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FtpConnection.IsSecure%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer/FtpConnection.cs/#L169">View Source</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer/FtpConnection.cs/#L182">View Source</a>
   </span>
   <a id="FubarDev_FtpServer_FtpConnection_IsSecure_" data-uid="FubarDev.FtpServer.FtpConnection.IsSecure*"></a>
   <h4 id="FubarDev_FtpServer_FtpConnection_IsSecure" data-uid="FubarDev.FtpServer.FtpConnection.IsSecure">IsSecure</h4>
@@ -364,7 +400,7 @@ public bool IsSecure { get; }</code></pre>
     <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FtpConnection_LocalEndPoint.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FtpConnection.LocalEndPoint%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer/FtpConnection.cs/#L147">View Source</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer/FtpConnection.cs/#L160">View Source</a>
   </span>
   <a id="FubarDev_FtpServer_FtpConnection_LocalEndPoint_" data-uid="FubarDev.FtpServer.FtpConnection.LocalEndPoint*"></a>
   <h4 id="FubarDev_FtpServer_FtpConnection_LocalEndPoint" data-uid="FubarDev.FtpServer.FtpConnection.LocalEndPoint">LocalEndPoint</h4>
@@ -396,7 +432,7 @@ public IPEndPoint LocalEndPoint { get; }</code></pre>
     <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FtpConnection_Log.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FtpConnection.Log%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer/FtpConnection.cs/#L144">View Source</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer/FtpConnection.cs/#L157">View Source</a>
   </span>
   <a id="FubarDev_FtpServer_FtpConnection_Log_" data-uid="FubarDev.FtpServer.FtpConnection.Log*"></a>
   <h4 id="FubarDev_FtpServer_FtpConnection_Log" data-uid="FubarDev.FtpServer.FtpConnection.Log">Log</h4>
@@ -427,7 +463,7 @@ public IPEndPoint LocalEndPoint { get; }</code></pre>
     <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FtpConnection_OriginalStream.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FtpConnection.OriginalStream%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer/FtpConnection.cs/#L157">View Source</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer/FtpConnection.cs/#L170">View Source</a>
   </span>
   <a id="FubarDev_FtpServer_FtpConnection_OriginalStream_" data-uid="FubarDev.FtpServer.FtpConnection.OriginalStream*"></a>
   <h4 id="FubarDev_FtpServer_FtpConnection_OriginalStream" data-uid="FubarDev.FtpServer.FtpConnection.OriginalStream">OriginalStream</h4>
@@ -459,7 +495,7 @@ public Stream OriginalStream { get; }</code></pre>
     <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FtpConnection_RemoteAddress.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FtpConnection.RemoteAddress%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer/FtpConnection.cs/#L152">View Source</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer/FtpConnection.cs/#L165">View Source</a>
   </span>
   <a id="FubarDev_FtpServer_FtpConnection_RemoteAddress_" data-uid="FubarDev.FtpServer.FtpConnection.RemoteAddress*"></a>
   <h4 id="FubarDev_FtpServer_FtpConnection_RemoteAddress" data-uid="FubarDev.FtpServer.FtpConnection.RemoteAddress">RemoteAddress</h4>
@@ -491,7 +527,7 @@ public Address RemoteAddress { get; }</code></pre>
     <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FtpConnection_SocketStream.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FtpConnection.SocketStream%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer/FtpConnection.cs/#L161">View Source</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer/FtpConnection.cs/#L174">View Source</a>
   </span>
   <a id="FubarDev_FtpServer_FtpConnection_SocketStream_" data-uid="FubarDev.FtpServer.FtpConnection.SocketStream*"></a>
   <h4 id="FubarDev_FtpServer_FtpConnection_SocketStream" data-uid="FubarDev.FtpServer.FtpConnection.SocketStream">SocketStream</h4>
@@ -525,7 +561,7 @@ public Stream SocketStream { get; set; }</code></pre>
     <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FtpConnection_Close.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FtpConnection.Close%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer/FtpConnection.cs/#L188">View Source</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer/FtpConnection.cs/#L201">View Source</a>
   </span>
   <a id="FubarDev_FtpServer_FtpConnection_Close_" data-uid="FubarDev.FtpServer.FtpConnection.Close*"></a>
   <h4 id="FubarDev_FtpServer_FtpConnection_Close" data-uid="FubarDev.FtpServer.FtpConnection.Close">Close()</h4>
@@ -541,7 +577,7 @@ public Stream SocketStream { get; set; }</code></pre>
     <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FtpConnection_CreateEncryptedStream_System_IO_Stream_.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FtpConnection.CreateEncryptedStream(System.IO.Stream)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer/FtpConnection.cs/#L255">View Source</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer/FtpConnection.cs/#L268">View Source</a>
   </span>
   <a id="FubarDev_FtpServer_FtpConnection_CreateEncryptedStream_" data-uid="FubarDev.FtpServer.FtpConnection.CreateEncryptedStream*"></a>
   <h4 id="FubarDev_FtpServer_FtpConnection_CreateEncryptedStream_System_IO_Stream_" data-uid="FubarDev.FtpServer.FtpConnection.CreateEncryptedStream(System.IO.Stream)">CreateEncryptedStream(Stream)</h4>
@@ -591,7 +627,7 @@ public Stream SocketStream { get; set; }</code></pre>
     <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FtpConnection_CreateResponseSocket.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FtpConnection.CreateResponseSocket%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer/FtpConnection.cs/#L229">View Source</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer/FtpConnection.cs/#L242">View Source</a>
   </span>
   <a id="FubarDev_FtpServer_FtpConnection_CreateResponseSocket_" data-uid="FubarDev.FtpServer.FtpConnection.CreateResponseSocket*"></a>
   <h4 id="FubarDev_FtpServer_FtpConnection_CreateResponseSocket" data-uid="FubarDev.FtpServer.FtpConnection.CreateResponseSocket">CreateResponseSocket()</h4>
@@ -623,7 +659,7 @@ public Stream SocketStream { get; set; }</code></pre>
     <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FtpConnection_Dispose.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FtpConnection.Dispose%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer/FtpConnection.cs/#L268">View Source</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer/FtpConnection.cs/#L281">View Source</a>
   </span>
   <a id="FubarDev_FtpServer_FtpConnection_Dispose_" data-uid="FubarDev.FtpServer.FtpConnection.Dispose*"></a>
   <h4 id="FubarDev_FtpServer_FtpConnection_Dispose" data-uid="FubarDev.FtpServer.FtpConnection.Dispose">Dispose()</h4>
@@ -638,7 +674,7 @@ public Stream SocketStream { get; set; }</code></pre>
     <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FtpConnection_Start.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FtpConnection.Start%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer/FtpConnection.cs/#L180">View Source</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer/FtpConnection.cs/#L193">View Source</a>
   </span>
   <a id="FubarDev_FtpServer_FtpConnection_Start_" data-uid="FubarDev.FtpServer.FtpConnection.Start*"></a>
   <h4 id="FubarDev_FtpServer_FtpConnection_Start" data-uid="FubarDev.FtpServer.FtpConnection.Start">Start()</h4>
@@ -654,7 +690,7 @@ public Stream SocketStream { get; set; }</code></pre>
     <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FtpConnection_WriteAsync_FubarDev_FtpServer_IFtpResponse_System_Threading_CancellationToken_.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FtpConnection.WriteAsync(FubarDev.FtpServer.IFtpResponse%2CSystem.Threading.CancellationToken)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer/FtpConnection.cs/#L200">View Source</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer/FtpConnection.cs/#L213">View Source</a>
   </span>
   <a id="FubarDev_FtpServer_FtpConnection_WriteAsync_" data-uid="FubarDev.FtpServer.FtpConnection.WriteAsync*"></a>
   <h4 id="FubarDev_FtpServer_FtpConnection_WriteAsync_FubarDev_FtpServer_IFtpResponse_System_Threading_CancellationToken_" data-uid="FubarDev.FtpServer.FtpConnection.WriteAsync(FubarDev.FtpServer.IFtpResponse,System.Threading.CancellationToken)">WriteAsync(IFtpResponse, CancellationToken)</h4>
@@ -711,7 +747,7 @@ public Task WriteAsync(IFtpResponse response, CancellationToken cancellationToke
     <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FtpConnection_WriteAsync_System_String_System_Threading_CancellationToken_.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FtpConnection.WriteAsync(System.String%2CSystem.Threading.CancellationToken)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer/FtpConnection.cs/#L212">View Source</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer/FtpConnection.cs/#L225">View Source</a>
   </span>
   <a id="FubarDev_FtpServer_FtpConnection_WriteAsync_" data-uid="FubarDev.FtpServer.FtpConnection.WriteAsync*"></a>
   <h4 id="FubarDev_FtpServer_FtpConnection_WriteAsync_System_String_System_Threading_CancellationToken_" data-uid="FubarDev.FtpServer.FtpConnection.WriteAsync(System.String,System.Threading.CancellationToken)">WriteAsync(String, CancellationToken)</h4>
@@ -770,7 +806,7 @@ public Task WriteAsync(string response, CancellationToken cancellationToken)</co
     <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FtpConnection_Closed.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FtpConnection.Closed%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer/FtpConnection.cs/#L123">View Source</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer/FtpConnection.cs/#L131">View Source</a>
   </span>
   <h4 id="FubarDev_FtpServer_FtpConnection_Closed" data-uid="FubarDev.FtpServer.FtpConnection.Closed">Closed</h4>
   <div class="markdown level1 summary"><p>Gets or sets the event handler that is triggered when the connection is closed.</p>
@@ -816,7 +852,7 @@ public Task WriteAsync(string response, CancellationToken cancellationToken)</co
                     <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FtpConnection.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FtpConnection%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer/FtpConnection.cs/#L38" class="contribution-link">View Source</a>
+                    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer/FtpConnection.cs/#L39" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

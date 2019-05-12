@@ -108,17 +108,26 @@
       <h4><a class="xref" href="FubarDev.FtpServer.FtpCommandCollector.html">FtpCommandCollector</a></h4>
       <section><p>Collects FTP commands using the current <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.text.encoding">Encoding</a>.</p>
 </section>
+      <h4><a class="xref" href="FubarDev.FtpServer.FtpCommandHandlerContext.html">FtpCommandHandlerContext</a></h4>
+      <section><p>The context in which an FTP command gets executed.</p>
+</section>
       <h4><a class="xref" href="FubarDev.FtpServer.FtpConnection.html">FtpConnection</a></h4>
       <section><p>This class represents a FTP connection.</p>
 </section>
       <h4><a class="xref" href="FubarDev.FtpServer.FtpConnectionAccessor.html">FtpConnectionAccessor</a></h4>
       <section><p>Accessor for the active FTP connection.</p>
 </section>
+      <h4><a class="xref" href="FubarDev.FtpServer.FtpConnectionContext.html">FtpConnectionContext</a></h4>
+      <section><p>The FTP connection context.</p>
+</section>
       <h4><a class="xref" href="FubarDev.FtpServer.FtpConnectionData.html">FtpConnectionData</a></h4>
       <section><p>Common data for a <a class="xref" href="FubarDev.FtpServer.IFtpConnection.html">IFtpConnection</a>.</p>
 </section>
       <h4><a class="xref" href="FubarDev.FtpServer.FtpConnectionOptions.html">FtpConnectionOptions</a></h4>
       <section><p>Options for the FTP connection.</p>
+</section>
+      <h4><a class="xref" href="FubarDev.FtpServer.FtpContext.html">FtpContext</a></h4>
+      <section><p>The context in which the command gets executed.</p>
 </section>
       <h4><a class="xref" href="FubarDev.FtpServer.FtpFeatureFunctionAttribute.html">FtpFeatureFunctionAttribute</a></h4>
       <section><p>Selects a function to be used to create the FEAT text.</p>
@@ -251,6 +260,9 @@
       <h4><a class="xref" href="FubarDev.FtpServer.IFtpLoginStateMachine.html">IFtpLoginStateMachine</a></h4>
       <section><p>Interface for a FTP login state machine.</p>
 </section>
+      <h4><a class="xref" href="FubarDev.FtpServer.IFtpMiddleware.html">IFtpMiddleware</a></h4>
+      <section><p>FTP middleware.</p>
+</section>
       <h4><a class="xref" href="FubarDev.FtpServer.IFtpResponse.html">IFtpResponse</a></h4>
       <section><p>Base interface to get the response for an FTP command.</p>
 </section>
@@ -308,6 +320,9 @@
 </section>
       <h4><a class="xref" href="FubarDev.FtpServer.FtpCommandHandlerProcessDelegate.html">FtpCommandHandlerProcessDelegate</a></h4>
       <section><p>Processes the command.</p>
+</section>
+      <h4><a class="xref" href="FubarDev.FtpServer.FtpRequestDelegate.html">FtpRequestDelegate</a></h4>
+      <section><p>The delegate for the next middleware for the current request.</p>
 </section>
       <h4><a class="xref" href="FubarDev.FtpServer.FtpResponseAfterWriteAsyncDelegate.html">FtpResponseAfterWriteAsyncDelegate</a></h4>
       <section><p>Delegate to be called after a response was written.</p>

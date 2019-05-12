@@ -96,6 +96,7 @@
 <li><a href="#connection-data-changes">Connection data changes</a></li>
 <li><a href="#ftp-command-collection-changes">FTP command collection changes</a></li>
 <li><a href="#authorizationauthentication-as-per-rfc-2228">Authorization/authentication as per RFC 2228</a></li>
+<li><a href="#ftp-middleware">FTP middleware</a></li>
 </ul>
 </li>
 <li><a href="#changelog">Changelog</a>
@@ -179,7 +180,7 @@ Everything else is the same.</p>
 <li><a class="xref" href="../api/FubarDev.FtpServer.Commands.FtpCommandHandlerAttribute.html"><code>FtpCommandHandlerAttribute</code></a> which gives the FTP command handler a name and defines if it needs a successful login or if it's abortable</li>
 </ul>
 </li>
-<li>Simplified constructor due to <a class="xref" href="../api/FubarDev.FtpServer.CommandHandlers.FtpCommandHandler.html#FubarDev_FtpServer_CommandHandlers_FtpCommandHandler_CommandContext"><code>CommandContext</code></a> (type <a class="xref" href="../api/FubarDev.FtpServer.Commands.FtpCommandContext.html"><code>FtpCommandContext</code></a>) property injection</li>
+<li>Simplified constructor due to <a class="xref" href="../api/FubarDev.FtpServer.CommandHandlers.FtpCommandHandler.html#FubarDev_FtpServer_CommandHandlers_FtpCommandHandler_CommandContext"><code>CommandContext</code></a> (type <a class="xref" href="../api/FubarDev.FtpServer.FtpCommandHandlerContext.html"><code>FtpCommandHandlerContext</code></a>) property injection</li>
 <li>Activated (read: instantiated with property injection) by command name using the <a class="xref" href="../api/FubarDev.FtpServer.Commands.IFtpCommandActivator.html"><code>IFtpCommandActivator</code></a> service</li>
 </ul>
 <h2 id="command-extensions-and-attributes">Command extensions (and attributes)</h2>
@@ -203,7 +204,7 @@ their own file and the default extensions are automatically registered as servic
 <li><a class="xref" href="../api/FubarDev.FtpServer.CommandExtensions.FtpCommandHandlerExtensionAttribute.html"><code>FtpCommandHandlerExtensionAttribute</code></a> which gives the FTP command handler extension a name and defines the command it extends and if it needs a successful login</li>
 </ul>
 </li>
-<li>Simplified constructor due to <a class="xref" href="../api/FubarDev.FtpServer.CommandExtensions.FtpCommandHandlerExtension.html#FubarDev_FtpServer_CommandExtensions_FtpCommandHandlerExtension_CommandContext"><code>CommandContext</code></a> (type <a class="xref" href="../api/FubarDev.FtpServer.Commands.FtpCommandContext.html"><code>FtpCommandContext</code></a>) property injection</li>
+<li>Simplified constructor due to <a class="xref" href="../api/FubarDev.FtpServer.CommandExtensions.FtpCommandHandlerExtension.html#FubarDev_FtpServer_CommandExtensions_FtpCommandHandlerExtension_CommandContext"><code>CommandContext</code></a> (type <a class="xref" href="../api/FubarDev.FtpServer.FtpCommandHandlerContext.html"><code>FtpCommandHandlerContext</code></a>) property injection</li>
 <li>Automatic indirect activation (read: instantiation with property injection) for the command it belongs to through the <a class="xref" href="../api/FubarDev.FtpServer.Commands.IFtpCommandActivator.html"><code>IFtpCommandActivator</code></a> service</li>
 </ul>
 <h2 id="feat-support"><code>FEAT</code> support</h2>
@@ -216,7 +217,7 @@ their own file and the default extensions are automatically registered as servic
 <p>The <a class="xref" href="../api/FubarDev.FtpServer.IFtpConnection.html"><code>IFtpConnection</code></a> API was heavily overhauled to use a feature collection,
 where the features can be queried through the <a class="xref" href="../api/FubarDev.FtpServer.IFtpConnection.html#FubarDev_FtpServer_IFtpConnection_Features"><code>Features</code></a> property. Using the <code>WriteAsync</code>
 function is obsolete. The FTP command handlers should use the <code>CommandContext</code>s
-<a class="xref" href="../api/FubarDev.FtpServer.Commands.FtpCommandContext.html#FubarDev_FtpServer_Commands_FtpCommandContext_ResponseWriter"><code>ResponseWriter</code></a>
+<a class="xref" href="../api/FubarDev.FtpServer.FtpContext.html#FubarDev_FtpServer_FtpContext_ResponseWriter"><code>ResponseWriter</code></a>
 if they need to send out-of-band responses.</p>
 <table>
 <thead>
@@ -352,6 +353,11 @@ the user is fully authorized: <a class="xref" href="../api/FubarDev.FtpServer.Au
 your own action, but you should only use an <a class="xref" href="../api/FubarDev.FtpServer.Authorization.IAuthorizationAction.html#FubarDev_FtpServer_Authorization_IAuthorizationAction_Level"><code>IAuthorizationAction.Level</code></a>
 below 1000. The values from 1000 (incl.) to 2000 (incl.) are reserved by
 the FTP server and are used to initialize the FTP connection data.</p>
+<h2 id="ftp-middleware">FTP middleware</h2>
+<p>You're now able to inject your own FTP middleware. This allows
+custom command handlers, logging, and other features. You must
+implement and register the <a class="xref" href="../api/FubarDev.FtpServer.IFtpMiddleware.html"><code>IFtpMiddleware</code></a> interface
+as service in your dependency injection container.</p>
 <h1 id="changelog">Changelog</h1>
 <h2 id="whats-new">What's new?</h2>
 <ul>
@@ -364,6 +370,7 @@ the FTP server and are used to initialize the FTP connection data.</p>
 <li>New <a class="xref" href="../api/FubarDev.FtpServer.AccountManagement.IAnonymousFtpUser.html"><code>IAnonymousFtpUser</code></a> interface</li>
 <li>New RFC 2228 compliant authentication/authorization</li>
 <li>Root and home directories for an account can be queried</li>
+<li>New <a class="xref" href="../api/FubarDev.FtpServer.IFtpMiddleware.html"><code>IFtpMiddleware</code></a> interface for custom middleware</li>
 </ul>
 <h2 id="whats-changed">What's changed?</h2>
 <ul>

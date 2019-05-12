@@ -499,7 +499,7 @@ Task&lt;TcpClient&gt; CreateResponseSocket()</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[Obsolete(&quot;Use the IConnectionFeature.ResponseWriter instead.&quot;)]
+    <pre><code class="lang-csharp hljs">[Obsolete(&quot;Use the FtpCommandHandler.CommandContext.ResponseWriter or FtpCommandHandlerExtension.CommandContext.ResponseWriter instead.&quot;)]
 [NotNull]
 Task WriteAsync([NotNull] IFtpResponse response, CancellationToken cancellationToken)</code></pre>
   </div>
@@ -557,7 +557,7 @@ Task WriteAsync([NotNull] IFtpResponse response, CancellationToken cancellationT
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[Obsolete(&quot;Use the IConnectionFeature.ResponseWriter instead.&quot;)]
+    <pre><code class="lang-csharp hljs">[Obsolete(&quot;Use the FtpCommandHandler.CommandContext.ResponseWriter or FtpCommandHandlerExtension.CommandContext.ResponseWriter instead.&quot;)]
 [NotNull]
 Task WriteAsync([NotNull] string response, CancellationToken cancellationToken)</code></pre>
   </div>
