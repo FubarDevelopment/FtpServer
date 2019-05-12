@@ -36,7 +36,7 @@ namespace FubarDev.FtpServer
     /// <summary>
     /// This class represents a FTP connection.
     /// </summary>
-    public sealed class FtpConnection : IFtpConnection
+    public sealed class FtpConnection : FtpConnectionContext, IFtpConnection
     {
         private readonly CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
 
@@ -85,6 +85,8 @@ namespace FubarDev.FtpServer
         {
             ConnectionServices = serviceProvider;
 
+            ConnectionId = "FTP-" + Guid.NewGuid().ToString("N");
+
             var endpoint = (IPEndPoint)socket.Client.RemoteEndPoint;
             var remoteAddress = new Address(endpoint.Address.ToString(), endpoint.Port);
 
@@ -132,7 +134,12 @@ namespace FubarDev.FtpServer
         public IServiceProvider ConnectionServices { get; }
 
         /// <inheritdoc />
-        public IFeatureCollection Features { get; }
+        public override string ConnectionId { get; set; }
+
+        /// <summary>
+        /// Gets the feature collection.
+        /// </summary>
+        public override IFeatureCollection Features { get; }
 
         /// <inheritdoc />
         [Obsolete("Query the information using the IEncodingFeature instead.")]
