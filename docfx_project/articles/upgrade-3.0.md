@@ -15,6 +15,7 @@ title: Upgrade from 2.x to 3.0
   - [Connection data changes](#connection-data-changes)
   - [FTP command collection changes](#ftp-command-collection-changes)
   - [Authorization/authentication as per RFC 2228](#authorizationauthentication-as-per-rfc-2228)
+  - [FTP middleware](#ftp-middleware)
 - [Changelog](#changelog)
   - [What's new?](#whats-new)
   - [What's changed?](#whats-changed)
@@ -175,6 +176,13 @@ your own action, but you should only use an [`IAuthorizationAction.Level`](xref:
 below 1000. The values from 1000 (incl.) to 2000 (incl.) are reserved by
 the FTP server and are used to initialize the FTP connection data.
 
+## FTP middleware
+
+You're now able to inject your own FTP middleware. This allows
+custom command handlers, logging, and other features. You must
+implement and register the [`IFtpMiddleware`](xref:FubarDev.FtpServer.IFtpMiddleware`) interface
+as service in your dependency injection container.
+
 # Changelog
 
 ## What's new?
@@ -188,6 +196,7 @@ the FTP server and are used to initialize the FTP connection data.
 - New [`IAnonymousFtpUser`](xref:FubarDev.FtpServer.AccountManagement.IAnonymousFtpUser) interface
 - New RFC 2228 compliant authentication/authorization
 - Root and home directories for an account can be queried
+- New [`IFtpMiddleware`](xref:FubarDev.FtpServer.IFtpMiddleware`) interface for custom middleware
 
 ## What's changed?
 

@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
@@ -56,7 +57,12 @@ namespace FubarDev.FtpServer
 
         private bool _closed;
 
+        [CanBeNull]
+        [ItemNotNull]
         private Task<IFtpResponse> _activeBackgroundTask;
+
+        [CanBeNull]
+        private IFtpLoginStateMachine _loginStateMachine;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FtpConnection"/> class.
@@ -371,17 +377,33 @@ namespace FubarDev.FtpServer
             // Initialize the FTP connection accessor
             _connectionAccessor.FtpConnection = this;
 
+            // Connection information
             var connectionFeature = Features.Get<IConnectionFeature>();
             Log?.LogInformation($"Connected from {connectionFeature.RemoteAddress.ToString(true)}");
 
+            // Initialize response sender
             var responseSender = SendResponsesAsync(_responseChannel, _cancellationTokenSource.Token);
 
-            var collector = new FtpCommandCollector(() => Features.Get<IEncodingFeature>().Encoding);
+            // Send initial response
             await _responseChannel.Writer.WriteAsync(new FtpResponse(220, T("FTP Server Ready")), _cancellationTokenSource.Token)
                .ConfigureAwait(false);
 
-            var loginStateMachine = ConnectionServices.GetRequiredService<IFtpLoginStateMachine>();
+            // Initialize middleware objects
+            var middlewareObjects = ConnectionServices.GetRequiredService<IEnumerable<IFtpMiddleware>>();
+            var nextStep = new FtpRequestDelegate(DispatchCommandAsync);
+            foreach (var middleware in middlewareObjects.Reverse())
+            {
+                var tempStep = nextStep;
+                nextStep = (context) => middleware.InvokeAsync(context, tempStep);
+            }
 
+            var requestDelegate = nextStep;
+
+            // Get the login state machine
+            _loginStateMachine = ConnectionServices.GetRequiredService<IFtpLoginStateMachine>();
+
+            // Command collector
+            var collector = new FtpCommandCollector(() => Features.Get<IEncodingFeature>().Encoding);
             var buffer = new byte[1024];
             try
             {
@@ -426,7 +448,9 @@ namespace FubarDev.FtpServer
                         var commands = collector.Collect(buffer.AsSpan(0, bytesRead));
                         foreach (var command in commands)
                         {
-                            await ProcessMessage(loginStateMachine, command)
+                            Log?.Trace(command);
+                            var context = new FtpCommandContext(command, _responseChannel, this);
+                            await requestDelegate(context)
                                .ConfigureAwait(false);
                         }
                     }
@@ -462,6 +486,12 @@ namespace FubarDev.FtpServer
             }
         }
 
+        /// <summary>
+        /// Send responses to the client.
+        /// </summary>
+        /// <param name="responseReader">Reader for the responses.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <returns>The task.</returns>
         [NotNull]
         private async Task SendResponsesAsync(
             [NotNull] ChannelReader<IFtpResponse> responseReader,
@@ -493,11 +523,20 @@ namespace FubarDev.FtpServer
             Log?.LogInformation("Stopped sending responses.");
         }
 
-        private async Task ProcessMessage(IFtpLoginStateMachine loginStateMachine, FtpCommand command)
+        /// <summary>
+        /// Final (default) dispatch from FTP commands to the handlers.
+        /// </summary>
+        /// <param name="context">The context for the FTP command execution.</param>
+        /// <returns>The task.</returns>
+        [NotNull]
+        private async Task DispatchCommandAsync([NotNull] FtpCommandContext context)
         {
+            var loginStateMachine =
+                _loginStateMachine
+                ?? throw new InvalidOperationException("Login state machine not initialized.");
+
             IFtpResponse response;
-            Log?.Trace(command);
-            var context = new FtpCommandContext(command, _responseChannel, this);
+            var command = context.Command;
             var result = _commandActivator.Create(context);
             if (result != null)
             {
