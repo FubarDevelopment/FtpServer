@@ -6,9 +6,11 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Buffers;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.IO.Pipelines;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
@@ -619,6 +621,83 @@ namespace FubarDev.FtpServer
         private void OnClosed()
         {
             Closed?.Invoke(this, new EventArgs());
+        }
+
+        private async Task FillPipelineAsync(
+            [NotNull] Stream stream,
+            [NotNull] PipeWriter writer,
+            CancellationToken cancellationToken)
+        {
+            var buffer = new byte[1024];
+
+            while (true)
+            {
+                // Allocate at least 512 bytes from the PipeWriter
+                var memory = writer.GetMemory(buffer.Length);
+                try
+                {
+                    int bytesRead = await stream.ReadAsync(buffer, 0, buffer.Length, cancellationToken)
+                       .ConfigureAwait(false);
+                    if (bytesRead == 0)
+                    {
+                        break;
+                    }
+
+                    buffer.AsSpan(0, bytesRead).CopyTo(memory.Span);
+
+                    // Tell the PipeWriter how much was read from the Socket
+                    writer.Advance(bytesRead);
+                }
+                catch (Exception ex)
+                {
+                    Log?.LogError(ex, ex.Message);
+                    break;
+                }
+
+                // Make the data available to the PipeReader
+                var result = await writer.FlushAsync(cancellationToken);
+                if (result.IsCompleted)
+                {
+                    break;
+                }
+            }
+
+            // Tell the PipeReader that there's no more data coming
+            writer.Complete();
+        }
+
+        private async Task ReadCommandsFromPipeline(
+            [NotNull] PipeReader reader,
+            [NotNull] ChannelWriter<FtpCommand> commandWriter,
+            CancellationToken cancellationToken)
+        {
+            var collector = new FtpCommandCollector(() => Features.Get<IEncodingFeature>().Encoding);
+
+            while (!cancellationToken.IsCancellationRequested)
+            {
+                var result = await reader.ReadAsync(cancellationToken)
+                   .ConfigureAwait(false);
+
+                var buffer = result.Buffer;
+                var position = buffer.Start;
+                while (buffer.TryGet(ref position, out var memory))
+                {
+                    var commands = collector.Collect(memory.Span);
+                    foreach (var command in commands)
+                    {
+                        await commandWriter.WriteAsync(command, cancellationToken)
+                           .ConfigureAwait(false);
+                    }
+                }
+
+                // Stop reading if there's no more data coming
+                if (result.IsCompleted)
+                {
+                    break;
+                }
+            }
+
+            reader.Complete();
         }
 
         private class ConnectionFeature : IConnectionFeature
