@@ -44,6 +44,7 @@ namespace FubarDev.FtpServer
         /// <summary>
         /// Gets or sets the async action to execute after sending the response to the client.
         /// </summary>
+        [Obsolete("Use a custom server command.")]
         public FtpResponseAfterWriteAsyncDelegate AfterWriteAction { get; set; }
 
         /// <summary>

@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 
 using FubarDev.FtpServer.Commands;
 using FubarDev.FtpServer.Features;
-
+using FubarDev.FtpServer.ServerCommands;
 using JetBrains.Annotations;
 
 using Microsoft.Extensions.Logging;
@@ -102,15 +102,15 @@ namespace FubarDev.FtpServer.CommandHandlers
                     if (isEpsv || address.AddressFamily == AddressFamily.InterNetworkV6)
                     {
                         var listenerAddress = new Address(localPort);
-                        await FtpContext.ResponseWriter.WriteAsync(
-                            new FtpResponse(229, T("Entering Extended Passive Mode ({0}).", listenerAddress)),
+                        await FtpContext.ServerCommandWriter.WriteAsync(
+                            new SendResponseServerCommand(new FtpResponse(229, T("Entering Extended Passive Mode ({0}).", listenerAddress))),
                             cancellationToken).ConfigureAwait(false);
                     }
                     else
                     {
                         var listenerAddress = new Address(address.ToString(), localPort);
-                        await FtpContext.ResponseWriter.WriteAsync(
-                            new FtpResponse(227, T("Entering Passive Mode ({0}).", listenerAddress)),
+                        await FtpContext.ServerCommandWriter.WriteAsync(
+                            new SendResponseServerCommand(new FtpResponse(227, T("Entering Passive Mode ({0}).", listenerAddress))),
                             cancellationToken).ConfigureAwait(false);
                     }
 

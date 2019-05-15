@@ -103,7 +103,7 @@ namespace FubarDev.FtpServer
         /// <param name="response">The response to write to the client.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>The task.</returns>
-        [Obsolete("Use the FtpCommandHandler.CommandContext.ResponseWriter or FtpCommandHandlerExtension.CommandContext.ResponseWriter instead.")]
+        [Obsolete("Use the FtpCommandHandler.CommandContext.ServerCommandWriter or FtpCommandHandlerExtension.CommandContext.ServerCommandWriter instead.")]
         [NotNull]
         Task WriteAsync([NotNull] IFtpResponse response, CancellationToken cancellationToken);
 
@@ -113,7 +113,7 @@ namespace FubarDev.FtpServer
         /// <param name="response">The response to write to the client.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>The task.</returns>
-        [Obsolete("Use the FtpCommandHandler.CommandContext.ResponseWriter or FtpCommandHandlerExtension.CommandContext.ResponseWriter instead.")]
+        [Obsolete("Use the FtpCommandHandler.CommandContext.ServerCommandWriter or FtpCommandHandlerExtension.CommandContext.ServerCommandWriter instead.")]
         [NotNull]
         Task WriteAsync([NotNull] string response, CancellationToken cancellationToken);
 

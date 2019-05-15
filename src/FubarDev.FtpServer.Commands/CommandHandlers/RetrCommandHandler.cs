@@ -15,7 +15,7 @@ using FubarDev.FtpServer.Authentication;
 using FubarDev.FtpServer.Commands;
 using FubarDev.FtpServer.Features;
 using FubarDev.FtpServer.FileSystem;
-
+using FubarDev.FtpServer.ServerCommands;
 using JetBrains.Annotations;
 
 namespace FubarDev.FtpServer.CommandHandlers
@@ -65,8 +65,10 @@ namespace FubarDev.FtpServer.CommandHandlers
 
             using (var input = await fsFeature.FileSystem.OpenReadAsync(fileInfo.Entry, restartPosition ?? 0, cancellationToken).ConfigureAwait(false))
             {
-                await FtpContext.ResponseWriter
-                   .WriteAsync(new FtpResponse(150, T("Opening connection for data transfer.")), cancellationToken)
+                await FtpContext.ServerCommandWriter
+                   .WriteAsync(
+                        new SendResponseServerCommand(new FtpResponse(150, T("Opening connection for data transfer."))),
+                        cancellationToken)
                    .ConfigureAwait(false);
 
                 // ReSharper disable once AccessToDisposedClosure
