@@ -6,14 +6,15 @@
 //-----------------------------------------------------------------------
 
 using System;
-using System.Buffers;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.IO.Pipelines;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Net;
 using System.Net.Sockets;
+using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Threading.Channels;
@@ -23,8 +24,10 @@ using FubarDev.FtpServer.BackgroundTransfer;
 using FubarDev.FtpServer.CommandHandlers;
 using FubarDev.FtpServer.Commands;
 using FubarDev.FtpServer.Features;
+using FubarDev.FtpServer.Features.Impl;
 using FubarDev.FtpServer.FileSystem.Error;
 using FubarDev.FtpServer.Localization;
+using FubarDev.FtpServer.ServerCommands;
 
 using JetBrains.Annotations;
 
@@ -55,7 +58,10 @@ namespace FubarDev.FtpServer
         private readonly IDisposable _loggerScope;
 
         [NotNull]
-        private readonly Channel<IFtpResponse> _responseChannel;
+        private readonly Channel<IServerCommand> _serverCommandChannel;
+
+        [NotNull]
+        private readonly Dictionary<Type, Delegate> _serverCommandHandlerDelegates = new Dictionary<Type, Delegate>();
 
         private bool _closed;
 
@@ -104,7 +110,7 @@ namespace FubarDev.FtpServer
             _socket = socket;
             _connectionAccessor = connectionAccessor;
             _commandActivator = commandActivator;
-            _responseChannel = Channel.CreateBounded<IFtpResponse>(new BoundedChannelOptions(3));
+            _serverCommandChannel = Channel.CreateBounded<IServerCommand>(new BoundedChannelOptions(3));
 
             Log = logger;
 
@@ -113,9 +119,8 @@ namespace FubarDev.FtpServer
                 (IPEndPoint)socket.Client.LocalEndPoint,
                 remoteAddress);
             parentFeatures.Set<IConnectionFeature>(connectionFeature);
-
-            var secureConnectionFeature = new SecureConnectionFeature(socket);
-            parentFeatures.Set<ISecureConnectionFeature>(secureConnectionFeature);
+            parentFeatures.Set<ISecureConnectionFeature>(new SecureConnectionFeature(socket));
+            parentFeatures.Set<IServerCommandFeature>(new ServerCommandFeature(_serverCommandChannel));
 
             var features = new FeatureCollection(parentFeatures);
 #pragma warning disable 618
@@ -212,10 +217,13 @@ namespace FubarDev.FtpServer
         /// <param name="response">The response to write to the client.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>The task.</returns>
-        [Obsolete("Use the IConnectionFeature.ResponseWriter instead.")]
-        public Task WriteAsync(IFtpResponse response, CancellationToken cancellationToken)
+        [Obsolete("Use the IConnectionFeature.ServerCommandWriter instead.")]
+        public async Task WriteAsync(IFtpResponse response, CancellationToken cancellationToken)
         {
-            return WriteResponseAsync(response, cancellationToken);
+            await _serverCommandChannel.Writer.WriteAsync(
+                    new SendResponseServerCommand(response),
+                    cancellationToken)
+               .ConfigureAwait(false);
         }
 
         /// <summary>
@@ -224,7 +232,7 @@ namespace FubarDev.FtpServer
         /// <param name="response">The response to write to the client.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>The task.</returns>
-        [Obsolete("Use the IConnectionFeature.ResponseWriter instead.")]
+        [Obsolete("Use the IConnectionFeature.ServerCommandWriter instead.")]
         public async Task WriteAsync(string response, CancellationToken cancellationToken)
         {
             if (!_closed)
@@ -318,48 +326,6 @@ namespace FubarDev.FtpServer
         }
 
         /// <summary>
-        /// Writes a FTP response to a client.
-        /// </summary>
-        /// <param name="response">The response to write to the client.</param>
-        /// <param name="cancellationToken">The cancellation token.</param>
-        /// <returns>The task.</returns>
-        private async Task WriteResponseAsync(IFtpResponse response, CancellationToken cancellationToken)
-        {
-            if (!_closed)
-            {
-                Log?.Log(response);
-                var socketStream = Features.Get<ISecureConnectionFeature>().SocketStream;
-                var encoding = Features.Get<IEncodingFeature>().Encoding;
-
-                object token = null;
-                do
-                {
-                    var line = await response.GetNextLineAsync(token, cancellationToken)
-                       .ConfigureAwait(false);
-                    if (line.HasText)
-                    {
-                        var data = encoding.GetBytes($"{line.Text}\r\n");
-                        await socketStream.WriteAsync(data, 0, data.Length, cancellationToken).ConfigureAwait(false);
-                    }
-
-                    token = line.Token;
-                }
-                while (token != null);
-
-                if (response.AfterWriteAction != null)
-                {
-                    var nextResponse = await response.AfterWriteAction(this, cancellationToken)
-                       .ConfigureAwait(false);
-                    if (nextResponse != null)
-                    {
-                        await WriteResponseAsync(nextResponse, cancellationToken)
-                           .ConfigureAwait(false);
-                    }
-                }
-            }
-        }
-
-        /// <summary>
         /// Translates a message using the current catalog of the active connection.
         /// </summary>
         /// <param name="message">The message to translate.</param>
@@ -391,10 +357,12 @@ namespace FubarDev.FtpServer
             Log?.LogInformation($"Connected from {connectionFeature.RemoteAddress.ToString(true)}");
 
             // Initialize response sender
-            var responseSender = SendResponsesAsync(_responseChannel, _cancellationTokenSource.Token);
+            var responseSender = SendResponsesAsync(_serverCommandChannel, _cancellationTokenSource.Token);
 
             // Send initial response
-            await _responseChannel.Writer.WriteAsync(new FtpResponse(220, T("FTP Server Ready")), _cancellationTokenSource.Token)
+            await _serverCommandChannel.Writer.WriteAsync(
+                    new SendResponseServerCommand(new FtpResponse(220, T("FTP Server Ready"))),
+                    _cancellationTokenSource.Token)
                .ConfigureAwait(false);
 
             // Initialize middleware objects
@@ -439,7 +407,9 @@ namespace FubarDev.FtpServer
                         var response = _activeBackgroundTask?.Result;
                         if (response != null)
                         {
-                            await _responseChannel.Writer.WriteAsync(response, _cancellationTokenSource.Token)
+                            await _serverCommandChannel.Writer.WriteAsync(
+                                    new SendResponseServerCommand(response),
+                                    _cancellationTokenSource.Token)
                                .ConfigureAwait(false);
                         }
 
@@ -458,7 +428,7 @@ namespace FubarDev.FtpServer
                         foreach (var command in commands)
                         {
                             Log?.Trace(command);
-                            var context = new FtpContext(command, _responseChannel, this);
+                            var context = new FtpContext(command, _serverCommandChannel, this);
                             await requestDelegate(context)
                                .ConfigureAwait(false);
                         }
@@ -498,28 +468,28 @@ namespace FubarDev.FtpServer
         /// <summary>
         /// Send responses to the client.
         /// </summary>
-        /// <param name="responseReader">Reader for the responses.</param>
+        /// <param name="serverCommandReader">Reader for the responses.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>The task.</returns>
         [NotNull]
         private async Task SendResponsesAsync(
-            [NotNull] ChannelReader<IFtpResponse> responseReader,
+            [NotNull] ChannelReader<IServerCommand> serverCommandReader,
             CancellationToken cancellationToken)
         {
             try
             {
                 while (!cancellationToken.IsCancellationRequested)
                 {
-                    var hasResponse = await responseReader.WaitToReadAsync(cancellationToken)
+                    var hasResponse = await serverCommandReader.WaitToReadAsync(cancellationToken)
                        .ConfigureAwait(false);
                     if (!hasResponse)
                     {
                         return;
                     }
 
-                    while (responseReader.TryRead(out var response))
+                    while (serverCommandReader.TryRead(out var response))
                     {
-                        await WriteResponseAsync(response, cancellationToken)
+                        await ExecuteServerCommandAsync(response, cancellationToken)
                            .ConfigureAwait(false);
                     }
                 }
@@ -530,6 +500,32 @@ namespace FubarDev.FtpServer
             }
 
             Log?.LogInformation("Stopped sending responses.");
+        }
+
+        [NotNull]
+        private Task ExecuteServerCommandAsync(
+            [NotNull] IServerCommand serverCommand,
+            CancellationToken cancellationToken)
+        {
+            var serverCommandType = serverCommand.GetType();
+            if (!_serverCommandHandlerDelegates.TryGetValue(serverCommandType, out var cmdDelegate))
+            {
+                var handlerType = typeof(IServerCommandHandler<>).MakeGenericType(serverCommandType);
+                var executeAsyncMethod = handlerType.GetRuntimeMethod("ExecuteAsync", new[] { serverCommandType, typeof(CancellationToken) });
+                var handler = ConnectionServices.GetRequiredService(handlerType);
+                var commandParameter = Expression.Parameter(serverCommandType, "serverCommand");
+                var cancellationTokenParameter = Expression.Parameter(typeof(CancellationToken), "cancellationToken");
+                var call = Expression.Call(
+                    Expression.Constant(handler),
+                    executeAsyncMethod,
+                    commandParameter,
+                    cancellationTokenParameter);
+                var expr = Expression.Lambda(call, commandParameter, cancellationTokenParameter);
+                cmdDelegate = expr.Compile();
+                _serverCommandHandlerDelegates.Add(serverCommandType, cmdDelegate);
+            }
+
+            return (Task)cmdDelegate.DynamicInvoke(serverCommand, cancellationToken);
         }
 
         /// <summary>
@@ -608,7 +604,10 @@ namespace FubarDev.FtpServer
 
             if (response != null)
             {
-                await _responseChannel.Writer.WriteAsync(response, _cancellationTokenSource.Token).ConfigureAwait(false);
+                await _serverCommandChannel.Writer.WriteAsync(
+                        new SendResponseServerCommand(response),
+                        _cancellationTokenSource.Token)
+                   .ConfigureAwait(false);
                 if (response.Code == 421)
                 {
                     var socketStream = Features.Get<ISecureConnectionFeature>().SocketStream;

@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using FubarDev.FtpServer.Authentication;
 using FubarDev.FtpServer.BackgroundTransfer;
 using FubarDev.FtpServer.Features;
+using FubarDev.FtpServer.ServerCommands;
 
 using JetBrains.Annotations;
 
@@ -96,7 +97,10 @@ namespace FubarDev.FtpServer.CommandExtensions
 
         private async Task<IFtpResponse> SendBlstWithDataConnection(CancellationToken cancellationToken)
         {
-            await FtpContext.ResponseWriter.WriteAsync(new FtpResponse(150, T("Opening data connection.")), cancellationToken).ConfigureAwait(false);
+            await FtpContext.ServerCommandWriter.WriteAsync(
+                    new SendResponseServerCommand(new FtpResponse(150, T("Opening data connection."))),
+                    cancellationToken)
+               .ConfigureAwait(false);
 
             return await Connection.SendResponseAsync(
                 ExecuteSend,

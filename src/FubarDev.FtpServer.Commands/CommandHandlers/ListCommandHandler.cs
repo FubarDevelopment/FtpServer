@@ -21,6 +21,7 @@ using FubarDev.FtpServer.Commands;
 using FubarDev.FtpServer.Features;
 using FubarDev.FtpServer.FileSystem;
 using FubarDev.FtpServer.ListFormatters;
+using FubarDev.FtpServer.ServerCommands;
 using FubarDev.FtpServer.Utilities;
 
 using JetBrains.Annotations;
@@ -59,8 +60,10 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// <inheritdoc/>
         public override async Task<IFtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
         {
-            await FtpContext.ResponseWriter
-               .WriteAsync(new FtpResponse(150, T("Opening data connection.")), cancellationToken)
+            await FtpContext.ServerCommandWriter
+               .WriteAsync(
+                    new SendResponseServerCommand(new FtpResponse(150, T("Opening data connection."))),
+                    cancellationToken)
                .ConfigureAwait(false);
 
             return await Connection.SendResponseAsync(

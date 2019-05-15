@@ -15,6 +15,7 @@ using FubarDev.FtpServer.BackgroundTransfer;
 using FubarDev.FtpServer.Commands;
 using FubarDev.FtpServer.Features;
 using FubarDev.FtpServer.FileSystem;
+using FubarDev.FtpServer.ServerCommands;
 
 using JetBrains.Annotations;
 
@@ -76,8 +77,10 @@ namespace FubarDev.FtpServer.CommandHandlers
                 return new FtpResponse(553, T("File name not allowed."));
             }
 
-            await FtpContext.ResponseWriter
-               .WriteAsync(new FtpResponse(150, T("Opening connection for data transfer.")), cancellationToken)
+            await FtpContext.ServerCommandWriter
+               .WriteAsync(
+                    new SendResponseServerCommand(new FtpResponse(150, T("Opening connection for data transfer."))),
+                    cancellationToken)
                .ConfigureAwait(false);
 
             return await Connection

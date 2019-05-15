@@ -15,6 +15,7 @@ using FubarDev.FtpServer.CommandHandlers;
 using FubarDev.FtpServer.Commands;
 using FubarDev.FtpServer.FileSystem;
 using FubarDev.FtpServer.Localization;
+using FubarDev.FtpServer.ServerCommands;
 
 using JetBrains.Annotations;
 
@@ -107,6 +108,10 @@ namespace Microsoft.Extensions.DependencyInjection
             services.Scan(
                 sel => sel.FromAssemblyOf<TlsAuthenticationMechanism>()
                    .AddClasses(filter => filter.AssignableTo<IAuthenticationMechanism>()).As<IAuthenticationMechanism>().WithScopedLifetime());
+
+            services
+               .AddScoped<IServerCommandHandler<SendResponseServerCommand>, SendResponseServerCommandHandler>()
+               .AddScoped<IServerCommandHandler<CloseConnectionServerCommand>, CloseConnectionServerCommandHandler>();
 
             configure(new FtpServerBuilder(services));
 

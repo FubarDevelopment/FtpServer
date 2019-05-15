@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 
 using FubarDev.FtpServer.Commands;
 using FubarDev.FtpServer.Features;
+using FubarDev.FtpServer.ServerCommands;
 
 namespace FubarDev.FtpServer.CommandHandlers
 {
@@ -21,19 +22,17 @@ namespace FubarDev.FtpServer.CommandHandlers
     public class QuitCommandHandler : FtpCommandHandler
     {
         /// <inheritdoc/>
-        public override Task<IFtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
+        public override async Task<IFtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
         {
-            return Task.FromResult<IFtpResponse>(new FtpResponse(221, T("Service closing control connection."))
-            {
-                AfterWriteAction = async (conn, ct) =>
-                {
-                    var secureConnectionFeature = conn.Features.Get<ISecureConnectionFeature>();
-                    await secureConnectionFeature.SocketStream.FlushAsync(ct)
-                       .ConfigureAwait(false);
-                    conn.Close();
-                    return null;
-                },
-            });
+            await FtpContext.ServerCommandWriter.WriteAsync(
+                    new SendResponseServerCommand(new FtpResponse(221, T("Service closing control connection."))),
+                    cancellationToken)
+               .ConfigureAwait(false);
+            await FtpContext.ServerCommandWriter.WriteAsync(
+                    new CloseConnectionServerCommand(),
+                    cancellationToken)
+               .ConfigureAwait(false);
+            return null;
         }
     }
 }

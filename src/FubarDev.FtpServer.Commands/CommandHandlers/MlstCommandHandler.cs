@@ -17,6 +17,7 @@ using FubarDev.FtpServer.Features;
 using FubarDev.FtpServer.Features.Impl;
 using FubarDev.FtpServer.FileSystem;
 using FubarDev.FtpServer.ListFormatters;
+using FubarDev.FtpServer.ServerCommands;
 using FubarDev.FtpServer.Utilities;
 
 using JetBrains.Annotations;
@@ -157,8 +158,10 @@ namespace FubarDev.FtpServer.CommandHandlers
                 }
             }
 
-            await FtpContext.ResponseWriter
-               .WriteAsync(new FtpResponse(150, T("Opening data connection.")), cancellationToken)
+            await FtpContext.ServerCommandWriter
+               .WriteAsync(
+                    new SendResponseServerCommand(new FtpResponse(150, T("Opening data connection."))),
+                    cancellationToken)
                .ConfigureAwait(false);
 
             var authInfoFeature = Connection.Features.Get<IAuthorizationInformationFeature>();

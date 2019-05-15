@@ -4,6 +4,8 @@
 
 using System.Threading.Channels;
 
+using FubarDev.FtpServer.ServerCommands;
+
 using JetBrains.Annotations;
 
 namespace FubarDev.FtpServer
@@ -17,15 +19,15 @@ namespace FubarDev.FtpServer
         /// Initializes a new instance of the <see cref="FtpContext"/> class.
         /// </summary>
         /// <param name="command">The FTP command.</param>
-        /// <param name="responseWriter">The FTP response writer.</param>
+        /// <param name="serverCommandWriter">The FTP response writer.</param>
         /// <param name="connection">The FTP connection.</param>
         public FtpContext(
             [NotNull] FtpCommand command,
-            [NotNull] ChannelWriter<IFtpResponse> responseWriter,
+            [NotNull] ChannelWriter<IServerCommand> serverCommandWriter,
             [NotNull] IFtpConnection connection)
         {
             Command = command;
-            ResponseWriter = responseWriter;
+            ServerCommandWriter = serverCommandWriter;
             Connection = connection;
         }
 
@@ -45,6 +47,6 @@ namespace FubarDev.FtpServer
         /// Gets the response writer.
         /// </summary>
         [NotNull]
-        public ChannelWriter<IFtpResponse> ResponseWriter { get; }
+        public ChannelWriter<IServerCommand> ServerCommandWriter { get; }
     }
 }
