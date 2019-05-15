@@ -9,6 +9,8 @@ using System.Security.Cryptography.X509Certificates;
 using System.Threading;
 using System.Threading.Tasks;
 using FubarDev.FtpServer.Features;
+using FubarDev.FtpServer.ServerCommands;
+
 using JetBrains.Annotations;
 
 using Microsoft.Extensions.Logging;
@@ -60,48 +62,26 @@ namespace FubarDev.FtpServer.Authentication
         }
 
         /// <inheritdoc />
-        public override Task<IFtpResponse> HandleAuthAsync(string methodIdentifier, CancellationToken cancellationToken)
+        public override async Task<IFtpResponse> HandleAuthAsync(string methodIdentifier, CancellationToken cancellationToken)
         {
+            var serverCommandWriter = Connection.Features.Get<IServerCommandFeature>().ServerCommandWriter;
+
             if (_serverCertificate == null)
             {
-                return Task.FromResult<IFtpResponse>(new FtpResponse(502, T("TLS not configured")));
+                return new FtpResponse(421, T("TLS not configured"));
             }
 
-            var response = new FtpResponse(234, T("Enabling TLS Connection"))
-            {
-                AfterWriteAction = async (conn, ct) =>
-                {
-                    var secureConnectionFeature = conn.Features.Get<ISecureConnectionFeature>();
-                    await secureConnectionFeature.SocketStream.FlushAsync(ct).ConfigureAwait(false);
+            var enableTlsResponse = new FtpResponse(234, T("Enabling TLS Connection"));
+            await serverCommandWriter.WriteAsync(
+                    new SendResponseServerCommand(enableTlsResponse),
+                    cancellationToken)
+               .ConfigureAwait(false);
 
-                    try
-                    {
-                        var sslStream = await _sslStreamWrapperFactory.WrapStreamAsync(
-                                secureConnectionFeature.OriginalStream,
-                                true,
-                                _serverCertificate,
-                                cancellationToken)
-                           .ConfigureAwait(false);
-                        if (secureConnectionFeature.SocketStream != secureConnectionFeature.OriginalStream)
-                        {
-                            // Close old SSL connection.
-                            await _sslStreamWrapperFactory.CloseStreamAsync(secureConnectionFeature.SocketStream, cancellationToken)
-                               .ConfigureAwait(false);
-                        }
-
-                        secureConnectionFeature.SocketStream = sslStream;
-
-                        return null;
-                    }
-                    catch (Exception ex)
-                    {
-                        conn.Log?.LogWarning(0, ex, "SSL stream authentication failed: {0}", ex.Message);
-                        return new FtpResponse(421, T("TLS authentication failed"));
-                    }
-                },
-            };
-
-            return Task.FromResult<IFtpResponse>(response);
+            await serverCommandWriter.WriteAsync(
+                    new TlsEnableServerCommand(),
+                    cancellationToken)
+               .ConfigureAwait(false);
+            return new FtpResponse(234, null);
         }
 
         /// <inheritdoc />

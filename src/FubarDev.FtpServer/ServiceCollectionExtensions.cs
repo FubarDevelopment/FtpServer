@@ -111,7 +111,8 @@ namespace Microsoft.Extensions.DependencyInjection
 
             services
                .AddScoped<IServerCommandHandler<SendResponseServerCommand>, SendResponseServerCommandHandler>()
-               .AddScoped<IServerCommandHandler<CloseConnectionServerCommand>, CloseConnectionServerCommandHandler>();
+               .AddScoped<IServerCommandHandler<CloseConnectionServerCommand>, CloseConnectionServerCommandHandler>()
+               .AddScoped<IServerCommandHandler<TlsEnableServerCommand>, TlsEnableServerCommandHandler>();
 
             configure(new FtpServerBuilder(services));
 
