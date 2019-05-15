@@ -100,6 +100,12 @@ namespace FubarDev.FtpServer
 
             SetStatus(foundStatus.Target);
 
+            // Ugh ... this is a hack, but I have to fix this later.
+            if (response is FtpResponse ftpResponse && ftpResponse.Message == null)
+            {
+                return null;
+            }
+
             return response;
         }
 
