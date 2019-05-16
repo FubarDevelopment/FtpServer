@@ -13,37 +13,48 @@ using JetBrains.Annotations;
 
 namespace FubarDev.FtpServer.ConnectionHandlers
 {
-    public class NetworkStreamWriter : ICommunicationService
+    /// <summary>
+    /// Reads from a pipe and writes to a stream.
+    /// </summary>
+    public class NetworkStreamWriter : INetworkStreamService
     {
-        [NotNull]
-        private readonly Stream _stream;
-
         [NotNull]
         private readonly PipeReader _pipeReader;
 
         [NotNull]
         private readonly CancellationTokenSource _jobStopped = new CancellationTokenSource();
 
-        [NotNull]
-        private readonly CancellationTokenSource _jobPaused = new CancellationTokenSource();
-
         private readonly CancellationToken _connectionClosed;
+
+        [NotNull]
+        private CancellationTokenSource _jobPaused = new CancellationTokenSource();
 
         [NotNull]
         private Task _task = Task.CompletedTask;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="NetworkStreamWriter"/> class.
+        /// </summary>
+        /// <param name="stream">The stream to write to.</param>
+        /// <param name="pipeReader">The pipe to read from.</param>
+        /// <param name="connectionClosed">Cancellation token for a closed connection.</param>
         public NetworkStreamWriter(
             [NotNull] Stream stream,
             [NotNull] PipeReader pipeReader,
             CancellationToken connectionClosed)
         {
-            _stream = stream;
+            Stream = stream;
             _pipeReader = pipeReader;
             _connectionClosed = connectionClosed;
         }
 
+        /// <inheritdoc />
+        public Stream Stream { get; set; }
+
+        /// <inheritdoc />
         public ConnectionStatus Status { get; private set; } = ConnectionStatus.ReadyToRun;
 
+        /// <inheritdoc />
         public Task StartAsync(CancellationToken cancellationToken)
         {
             if (Status != ConnectionStatus.ReadyToRun)
@@ -52,7 +63,7 @@ namespace FubarDev.FtpServer.ConnectionHandlers
             }
 
             _task = SendPipelineAsync(
-                _stream,
+                Stream,
                 _pipeReader,
                 _connectionClosed,
                 _jobStopped.Token,
@@ -62,6 +73,7 @@ namespace FubarDev.FtpServer.ConnectionHandlers
             return Task.CompletedTask;
         }
 
+        /// <inheritdoc />
         public Task StopAsync(CancellationToken cancellationToken)
         {
             if (Status != ConnectionStatus.Running)
@@ -74,6 +86,7 @@ namespace FubarDev.FtpServer.ConnectionHandlers
             return _task;
         }
 
+        /// <inheritdoc />
         public async Task PauseAsync(CancellationToken cancellationToken)
         {
             if (Status != ConnectionStatus.Running)
@@ -84,9 +97,10 @@ namespace FubarDev.FtpServer.ConnectionHandlers
             _jobPaused.Cancel();
 
             await _task.ConfigureAwait(false);
-            await FlushAsync(_stream, _pipeReader, cancellationToken);
+            await FlushAsync(Stream, _pipeReader, cancellationToken);
         }
 
+        /// <inheritdoc />
         public Task ContinueAsync(CancellationToken cancellationToken)
         {
             if (Status != ConnectionStatus.Paused)
@@ -94,8 +108,10 @@ namespace FubarDev.FtpServer.ConnectionHandlers
                 throw new InvalidOperationException($"Status must be {ConnectionStatus.ReadyToRun}, but was {Status}.");
             }
 
+            _jobPaused = new CancellationTokenSource();
+
             _task = SendPipelineAsync(
-                _stream,
+                Stream,
                 _pipeReader,
                 _connectionClosed,
                 _jobStopped.Token,
@@ -143,6 +159,8 @@ namespace FubarDev.FtpServer.ConnectionHandlers
                     // data might be lost.
                     await SendDataToStream(readResult.Buffer, stream, CancellationToken.None)
                        .ConfigureAwait(false);
+
+                    reader.AdvanceTo(readResult.Buffer.End);
 
                     if (readResult.IsCanceled || readResult.IsCompleted)
                     {

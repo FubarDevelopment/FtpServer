@@ -5,11 +5,13 @@
 using System.Threading;
 using System.Threading.Tasks;
 
+using FubarDev.FtpServer.Authentication;
 using FubarDev.FtpServer.Features;
+using FubarDev.FtpServer.ServerCommands;
 
 using JetBrains.Annotations;
 
-namespace FubarDev.FtpServer.ServerCommands
+namespace FubarDev.FtpServer.ServerCommandHandlers
 {
     /// <summary>
     /// Handler for the <see cref="CloseConnectionServerCommand"/>.
@@ -19,14 +21,20 @@ namespace FubarDev.FtpServer.ServerCommands
         [NotNull]
         private readonly IFtpConnectionAccessor _connectionAccessor;
 
+        [NotNull]
+        private readonly ISslStreamWrapperFactory _sslStreamWrapperFactory;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="CloseConnectionServerCommandHandler"/> class.
         /// </summary>
         /// <param name="connectionAccessor">The FTP connection accessor.</param>
+        /// <param name="sslStreamWrapperFactory">The SSL stream wrapper factory.</param>
         public CloseConnectionServerCommandHandler(
-            [NotNull] IFtpConnectionAccessor connectionAccessor)
+            [NotNull] IFtpConnectionAccessor connectionAccessor,
+            [NotNull] ISslStreamWrapperFactory sslStreamWrapperFactory)
         {
             _connectionAccessor = connectionAccessor;
+            _sslStreamWrapperFactory = sslStreamWrapperFactory;
         }
 
         /// <inheritdoc />
@@ -34,9 +42,17 @@ namespace FubarDev.FtpServer.ServerCommands
         {
             var connection = _connectionAccessor.FtpConnection;
             var secureConnectionFeature = connection.Features.Get<ISecureConnectionFeature>();
-            await secureConnectionFeature.SocketStream.FlushAsync(cancellationToken)
+            var socketStream = secureConnectionFeature.SocketStream;
+            await socketStream.FlushAsync(cancellationToken)
                .ConfigureAwait(false);
-            connection.Close();
+
+            // Close the SSL stream.
+            await secureConnectionFeature.CloseEncryptedControlStream(
+                    secureConnectionFeature.SocketStream,
+                    cancellationToken)
+               .ConfigureAwait(false);
+
+            await connection.StopAsync();
         }
     }
 }

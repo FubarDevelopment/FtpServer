@@ -12,37 +12,48 @@ using JetBrains.Annotations;
 
 namespace FubarDev.FtpServer.ConnectionHandlers
 {
-    public class NetworkStreamReader : ICommunicationService
+    /// <summary>
+    /// Reads from a stream and writes into a pipeline.
+    /// </summary>
+    public class NetworkStreamReader : INetworkStreamService
     {
-        [NotNull]
-        private readonly Stream _stream;
-
         [NotNull]
         private readonly PipeWriter _pipeWriter;
 
         [NotNull]
         private readonly CancellationTokenSource _jobStopped = new CancellationTokenSource();
 
-        [NotNull]
-        private readonly CancellationTokenSource _jobPaused = new CancellationTokenSource();
+        private readonly CancellationTokenSource _connectionClosedCts;
 
-        private readonly CancellationToken _connectionClosed;
+        [NotNull]
+        private CancellationTokenSource _jobPaused = new CancellationTokenSource();
 
         [NotNull]
         private Task _task = Task.CompletedTask;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="NetworkStreamReader"/> class.
+        /// </summary>
+        /// <param name="stream">The stream to read from.</param>
+        /// <param name="pipeWriter">The pipeline to write to.</param>
+        /// <param name="connectionClosedCts">Cancellation token source for a closed connection.</param>
         public NetworkStreamReader(
             [NotNull] Stream stream,
             [NotNull] PipeWriter pipeWriter,
-            CancellationToken connectionClosed)
+            CancellationTokenSource connectionClosedCts)
         {
-            _stream = stream;
+            Stream = stream;
             _pipeWriter = pipeWriter;
-            _connectionClosed = connectionClosed;
+            _connectionClosedCts = connectionClosedCts;
         }
 
+        /// <inheritdoc />
+        public Stream Stream { get; set; }
+
+        /// <inheritdoc />
         public ConnectionStatus Status { get; private set; } = ConnectionStatus.ReadyToRun;
 
+        /// <inheritdoc />
         public Task StartAsync(CancellationToken cancellationToken)
         {
             if (Status != ConnectionStatus.ReadyToRun)
@@ -51,9 +62,9 @@ namespace FubarDev.FtpServer.ConnectionHandlers
             }
 
             _task = FillPipelineAsync(
-                _stream,
+                Stream,
                 _pipeWriter,
-                _connectionClosed,
+                _connectionClosedCts,
                 _jobStopped.Token,
                 _jobPaused.Token,
                 new Progress<ConnectionStatus>(status => Status = status));
@@ -61,6 +72,7 @@ namespace FubarDev.FtpServer.ConnectionHandlers
             return Task.CompletedTask;
         }
 
+        /// <inheritdoc />
         public Task StopAsync(CancellationToken cancellationToken)
         {
             if (Status != ConnectionStatus.Running)
@@ -73,6 +85,7 @@ namespace FubarDev.FtpServer.ConnectionHandlers
             return _task;
         }
 
+        /// <inheritdoc />
         public Task PauseAsync(CancellationToken cancellationToken)
         {
             if (Status != ConnectionStatus.Running)
@@ -85,6 +98,7 @@ namespace FubarDev.FtpServer.ConnectionHandlers
             return _task;
         }
 
+        /// <inheritdoc />
         public Task ContinueAsync(CancellationToken cancellationToken)
         {
             if (Status != ConnectionStatus.Paused)
@@ -92,10 +106,12 @@ namespace FubarDev.FtpServer.ConnectionHandlers
                 throw new InvalidOperationException($"Status must be {ConnectionStatus.ReadyToRun}, but was {Status}.");
             }
 
+            _jobPaused = new CancellationTokenSource();
+
             _task = FillPipelineAsync(
-                _stream,
+                Stream,
                 _pipeWriter,
-                _connectionClosed,
+                _connectionClosedCts,
                 _jobStopped.Token,
                 _jobPaused.Token,
                 new Progress<ConnectionStatus>(status => Status = status));
@@ -107,12 +123,12 @@ namespace FubarDev.FtpServer.ConnectionHandlers
         private static async Task FillPipelineAsync(
             [NotNull] Stream stream,
             [NotNull] PipeWriter writer,
-            CancellationToken connectionClosed,
+            CancellationTokenSource connectionClosedCts,
             CancellationToken jobStopped,
             CancellationToken jobPaused,
             IProgress<ConnectionStatus> statusProgress)
         {
-            var globalCts = CancellationTokenSource.CreateLinkedTokenSource(connectionClosed, jobStopped, jobPaused);
+            var globalCts = CancellationTokenSource.CreateLinkedTokenSource(connectionClosedCts.Token, jobStopped, jobPaused);
             var buffer = new byte[1024];
 
             statusProgress.Report(ConnectionStatus.Running);
@@ -169,6 +185,10 @@ namespace FubarDev.FtpServer.ConnectionHandlers
             // Tell the PipeReader that there's no more data coming
             writer.Complete(exception);
 
+            // Signal a closed connection.
+            connectionClosedCts.Cancel();
+
+            // Change the status
             statusProgress.Report(ConnectionStatus.Stopped);
         }
 

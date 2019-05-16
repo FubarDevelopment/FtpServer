@@ -2,14 +2,16 @@
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 
 using FubarDev.FtpServer.Features;
+using FubarDev.FtpServer.ServerCommands;
 
 using JetBrains.Annotations;
 
-namespace FubarDev.FtpServer.ServerCommands
+namespace FubarDev.FtpServer.ServerCommandHandlers
 {
     /// <summary>
     /// Command handler for the <see cref="SendResponseServerCommand"/>.
@@ -41,8 +43,11 @@ namespace FubarDev.FtpServer.ServerCommands
             CancellationToken cancellationToken)
         {
             connection.Log?.Log(response);
-            var socketStream = connection.Features.Get<ISecureConnectionFeature>().SocketStream;
+
+            var networkStreamFeature = connection.Features.Get<INetworkStreamFeature>();
             var encoding = connection.Features.Get<IEncodingFeature>().Encoding;
+
+            var writer = networkStreamFeature.Output;
 
             object token = null;
             do
@@ -52,7 +57,14 @@ namespace FubarDev.FtpServer.ServerCommands
                 if (line.HasText)
                 {
                     var data = encoding.GetBytes($"{line.Text}\r\n");
-                    await socketStream.WriteAsync(data, 0, data.Length, cancellationToken).ConfigureAwait(false);
+                    var memory = writer.GetMemory(data.Length);
+                    data.AsSpan().CopyTo(memory.Span);
+                    writer.Advance(data.Length);
+                    var flushResult = await writer.FlushAsync(cancellationToken);
+                    if (flushResult.IsCanceled || flushResult.IsCompleted)
+                    {
+                        break;
+                    }
                 }
 
                 token = line.Token;

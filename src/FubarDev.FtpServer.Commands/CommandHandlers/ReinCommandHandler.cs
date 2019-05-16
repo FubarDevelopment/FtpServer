@@ -5,8 +5,11 @@
 using System.Threading;
 using System.Threading.Tasks;
 
+using FubarDev.FtpServer.Authentication;
 using FubarDev.FtpServer.Commands;
 using FubarDev.FtpServer.Features;
+
+using JetBrains.Annotations;
 
 using Microsoft.Extensions.DependencyInjection;
 
@@ -18,6 +21,13 @@ namespace FubarDev.FtpServer.CommandHandlers
     [FtpCommandHandler("REIN", isLoginRequired: false)]
     public class ReinCommandHandler : FtpCommandHandler
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ReinCommandHandler"/> class.
+        /// </summary>
+        public ReinCommandHandler()
+        {
+        }
+
         /// <inheritdoc />
         public override async Task<IFtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
         {
@@ -25,13 +35,12 @@ namespace FubarDev.FtpServer.CommandHandlers
             loginStateMachine.Reset();
 
             var secureConnectionFeature = Connection.Features.Get<ISecureConnectionFeature>();
-            if (secureConnectionFeature.SocketStream != secureConnectionFeature.OriginalStream)
-            {
-                await secureConnectionFeature.SocketStream.FlushAsync(cancellationToken)
-                   .ConfigureAwait(false);
-                secureConnectionFeature.SocketStream.Dispose();
-                secureConnectionFeature.SocketStream = secureConnectionFeature.OriginalStream;
-            }
+            await secureConnectionFeature.SocketStream.FlushAsync(cancellationToken)
+               .ConfigureAwait(false);
+            await secureConnectionFeature.CloseEncryptedControlStream(
+                    secureConnectionFeature.SocketStream,
+                    cancellationToken)
+               .ConfigureAwait(false);
 
             return new FtpResponse(220, T("FTP Server Ready"));
         }

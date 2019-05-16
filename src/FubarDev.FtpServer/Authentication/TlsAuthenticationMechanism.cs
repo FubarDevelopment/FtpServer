@@ -70,6 +70,11 @@ namespace FubarDev.FtpServer.Authentication
                 return new FtpResponse(421, T("TLS not configured"));
             }
 
+            await serverCommandWriter.WriteAsync(
+                    new PauseConnectionServerCommand(),
+                    cancellationToken)
+               .ConfigureAwait(false);
+
             var enableTlsResponse = new FtpResponse(234, T("Enabling TLS Connection"));
             await serverCommandWriter.WriteAsync(
                     new SendResponseServerCommand(enableTlsResponse),
@@ -80,6 +85,12 @@ namespace FubarDev.FtpServer.Authentication
                     new TlsEnableServerCommand(),
                     cancellationToken)
                .ConfigureAwait(false);
+
+            await serverCommandWriter.WriteAsync(
+                    new ResumeConnectionServerCommand(),
+                    cancellationToken)
+               .ConfigureAwait(false);
+
             return new FtpResponse(234, null);
         }
 
