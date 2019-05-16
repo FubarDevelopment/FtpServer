@@ -7,10 +7,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-using FubarDev.FtpServer.Commands;
 using FubarDev.FtpServer.Features;
-
-using JetBrains.Annotations;
 
 namespace FubarDev.FtpServer.CommandExtensions
 {

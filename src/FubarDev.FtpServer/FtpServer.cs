@@ -219,7 +219,7 @@ namespace FubarDev.FtpServer
                         {
                             var acceptTask = listener.WaitAnyTcpClientAsync(_cancellationTokenSource.Token);
                             var client = acceptTask.Result;
-                            AddClient(client);
+                            await AddClientAsync(client).ConfigureAwait(false);
                         }
                     }
                     catch (OperationCanceledException)
@@ -236,7 +236,7 @@ namespace FubarDev.FtpServer
 
                         foreach (var connection in _connections.Keys.ToList())
                         {
-                            connection.Close();
+                            await connection.StopAsync().ConfigureAwait(false);
                         }
                     }
                 }
@@ -251,7 +251,7 @@ namespace FubarDev.FtpServer
             });
         }
 
-        private void AddClient(TcpClient client)
+        private async Task AddClientAsync(TcpClient client)
         {
             var scope = _serviceProvider.CreateScope();
             try
@@ -283,7 +283,8 @@ namespace FubarDev.FtpServer
                 _statistics.AddConnection();
                 connection.Closed += ConnectionOnClosed;
                 OnConfigureConnection(connection);
-                connection.Start();
+                await connection.StartAsync()
+                   .ConfigureAwait(false);
             }
             catch (Exception ex)
             {

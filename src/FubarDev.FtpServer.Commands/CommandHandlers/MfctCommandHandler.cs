@@ -5,8 +5,6 @@
 // <author>Mark Junker</author>
 //-----------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -53,7 +51,7 @@ namespace FubarDev.FtpServer.CommandHandlers
             var fact = new CreateFact(createTime);
             var fullName = currentPath.GetFullPath() + fileInfo.FileName;
 
-            return new FtpResponse(213, T("{0}={1}; {2}", fact.Name, fact.Value, fullName));
+            return new FtpResponse(213, $"{fact.Name}={fact.Value}; {fullName}");
         }
     }
 }

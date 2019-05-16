@@ -41,5 +41,12 @@ namespace FubarDev.FtpServer.Features
         /// </summary>
         [CanBeNull]
         CreateEncryptedStreamDelegate CreateEncryptedStream { get; set; }
+
+        /// <summary>
+        /// Gets or sets a delegate that closes an encrypted control stream.
+        /// </summary>
+        /// <remarks>This doesn't apply to encrypted data streams.</remarks>
+        [NotNull]
+        CloseEncryptedStreamDelegate CloseEncryptedControlStream { get; set; }
     }
 }

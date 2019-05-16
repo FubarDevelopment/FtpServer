@@ -4,8 +4,6 @@
 
 using System.Threading.Tasks;
 
-using FubarDev.FtpServer.Commands;
-
 using JetBrains.Annotations;
 
 namespace FubarDev.FtpServer

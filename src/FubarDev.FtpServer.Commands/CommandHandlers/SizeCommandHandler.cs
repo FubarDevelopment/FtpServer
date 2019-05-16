@@ -5,8 +5,7 @@
 // <author>Mark Junker</author>
 //-----------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
+using System.Globalization;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -35,7 +34,7 @@ namespace FubarDev.FtpServer.CommandHandlers
                 return new FtpResponse(550, T("File not found ({0}).", fileName));
             }
 
-            return new FtpResponse(213, T("{0}", fileInfo.Entry.Size));
+            return new FtpResponse(213, string.Format(CultureInfo.InvariantCulture, "{0}", fileInfo.Entry.Size));
         }
     }
 }

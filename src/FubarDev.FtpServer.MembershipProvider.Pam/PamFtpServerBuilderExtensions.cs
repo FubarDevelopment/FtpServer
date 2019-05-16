@@ -5,7 +5,6 @@
 using System;
 
 using FubarDev.FtpServer.AccountManagement;
-using FubarDev.FtpServer.AccountManagement.Directories.RootPerUser;
 using FubarDev.FtpServer.FileSystem;
 using FubarDev.FtpServer.MembershipProvider.Pam;
 using FubarDev.FtpServer.MembershipProvider.Pam.Directories;

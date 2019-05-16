@@ -7,9 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using FubarDev.FtpServer.CommandHandlers;
-using FubarDev.FtpServer.Commands;
 using FubarDev.FtpServer.Features;
-using FubarDev.FtpServer.Features.Impl;
 
 namespace FubarDev.FtpServer.CommandExtensions
 {

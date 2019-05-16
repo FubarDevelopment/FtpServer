@@ -2,12 +2,9 @@
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
-using System;
-
 using FubarDev.FtpServer.AccountManagement;
 using FubarDev.FtpServer.FileSystem.Generic;
 using JetBrains.Annotations;
-using Mono.Unix;
 
 namespace FubarDev.FtpServer.FileSystem.Unix
 {

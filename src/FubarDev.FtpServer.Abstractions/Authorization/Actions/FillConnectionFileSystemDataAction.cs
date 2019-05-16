@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-using FubarDev.FtpServer.AccountManagement;
 using FubarDev.FtpServer.Features;
 using FubarDev.FtpServer.FileSystem;
 

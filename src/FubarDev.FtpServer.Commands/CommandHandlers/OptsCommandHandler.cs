@@ -7,13 +7,10 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
 using FubarDev.FtpServer.Commands;
-
-using JetBrains.Annotations;
 
 namespace FubarDev.FtpServer.CommandHandlers
 {

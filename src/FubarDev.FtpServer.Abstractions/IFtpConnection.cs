@@ -90,12 +90,16 @@ namespace FubarDev.FtpServer
         /// <summary>
         /// Starts processing of messages for this connection.
         /// </summary>
-        void Start();
+        /// <returns>The task.</returns>
+        [NotNull]
+        Task StartAsync();
 
         /// <summary>
         /// Closes the connection.
         /// </summary>
-        void Close();
+        /// <returns>The task.</returns>
+        [NotNull]
+        Task StopAsync();
 
         /// <summary>
         /// Writes a FTP response to a client.
