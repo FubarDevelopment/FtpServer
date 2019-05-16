@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 
 using FubarDev.FtpServer.Commands;
 using FubarDev.FtpServer.Features;
-using JetBrains.Annotations;
 
 using Microsoft.Extensions.DependencyInjection;
 

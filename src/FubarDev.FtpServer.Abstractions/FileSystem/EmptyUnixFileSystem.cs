@@ -23,7 +23,7 @@ namespace FubarDev.FtpServer.FileSystem
         /// </summary>
         public EmptyUnixFileSystem()
         {
-            Root = new EmptyRootDirectory(this);
+            Root = new EmptyRootDirectory();
         }
 
         /// <inheritdoc/>
@@ -100,16 +100,13 @@ namespace FubarDev.FtpServer.FileSystem
 
         private class EmptyRootDirectory : IUnixDirectoryEntry
         {
-            public EmptyRootDirectory(EmptyUnixFileSystem fileSystem)
+            public EmptyRootDirectory()
             {
-                FileSystem = fileSystem;
                 var accessMode = new GenericAccessMode(true, false, false);
                 Permissions = new GenericUnixPermissions(accessMode, accessMode, accessMode);
             }
 
             public DateTimeOffset? CreatedTime => null;
-
-            public IUnixFileSystem FileSystem { get; }
 
             public string Group => "group";
 

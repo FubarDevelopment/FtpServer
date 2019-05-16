@@ -2,8 +2,6 @@
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
-using System;
-
 using FubarDev.FtpServer.AccountManagement;
 
 using JetBrains.Annotations;

@@ -13,7 +13,6 @@ using FubarDev.FtpServer.ServerCommands;
 
 using JetBrains.Annotations;
 
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
 namespace FubarDev.FtpServer.Authentication

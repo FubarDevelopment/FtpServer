@@ -147,9 +147,9 @@ namespace FubarDev.FtpServer.FileSystem.InMemory
             temp.Write(entry.Data, 0, entry.Data.Length);
 
             // Set new write position (if given)
-            if (startPosition is long startPos)
+            if (startPosition.HasValue)
             {
-                temp.Position = startPos;
+                temp.Position = startPosition.Value;
             }
 
             // Copy given data

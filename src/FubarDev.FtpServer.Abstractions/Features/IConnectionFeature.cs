@@ -3,7 +3,6 @@
 // </copyright>
 
 using System.Net;
-using System.Threading.Channels;
 
 using JetBrains.Annotations;
 

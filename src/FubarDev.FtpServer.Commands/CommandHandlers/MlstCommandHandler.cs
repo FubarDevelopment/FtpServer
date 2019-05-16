@@ -91,7 +91,7 @@ namespace FubarDev.FtpServer.CommandHandlers
         internal static IMlstFactsFeature CreateMlstFactsFeature()
         {
             var factsFeature = new MlstFactsFeature();
-            foreach (var knownFact in MlstCommandHandler.KnownFacts)
+            foreach (var knownFact in KnownFacts)
             {
                 factsFeature.ActiveMlstFacts.Add(knownFact);
             }

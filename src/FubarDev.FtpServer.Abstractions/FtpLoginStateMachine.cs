@@ -9,11 +9,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using FubarDev.FtpServer.Authentication;
 using FubarDev.FtpServer.Authorization;
-using FubarDev.FtpServer.Features;
 
 using JetBrains.Annotations;
-
-using Microsoft.Extensions.DependencyInjection;
 
 namespace FubarDev.FtpServer
 {
