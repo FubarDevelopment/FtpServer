@@ -12,13 +12,11 @@ using System.Threading.Tasks;
 using System.Xml;
 
 using FubarDev.FtpServer;
-using FubarDev.FtpServer.AccountManagement;
 using FubarDev.FtpServer.AccountManagement.Directories.RootPerUser;
 using FubarDev.FtpServer.AccountManagement.Directories.SingleRootWithoutHome;
 using FubarDev.FtpServer.Authentication;
 using FubarDev.FtpServer.CommandExtensions;
 using FubarDev.FtpServer.Commands;
-using FubarDev.FtpServer.Features;
 using FubarDev.FtpServer.FileSystem;
 using FubarDev.FtpServer.FileSystem.DotNet;
 using FubarDev.FtpServer.FileSystem.GoogleDrive;
@@ -26,10 +24,12 @@ using FubarDev.FtpServer.FileSystem.InMemory;
 using FubarDev.FtpServer.FileSystem.Unix;
 using FubarDev.FtpServer.MembershipProvider.Pam;
 using FubarDev.FtpServer.MembershipProvider.Pam.Directories;
+using FubarDev.FtpServer.ServerCommandHandlers;
 
 using Google.Apis.Auth.OAuth2;
 using Google.Apis.Drive.v3;
 
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -39,6 +39,7 @@ using Mono.Options;
 using NLog.Extensions.Logging;
 
 using TestFtpServer.Commands;
+using TestFtpServer.Configuration;
 using TestFtpServer.Extensions;
 using TestFtpServer.Utilities;
 
@@ -46,27 +47,32 @@ namespace TestFtpServer
 {
     internal static class Program
     {
-        private static int Main(string[] args)
+        private static async Task<int> Main(string[] args)
         {
-            var options = new TestFtpServerOptions();
+            var config = new ConfigurationBuilder()
+               .AddJsonFile("appsettings.json")
+               .AddJsonFile("appsettings.Development.json", true)
+               .Build();
+
+            var options = config.Get<FtpOptions>();
 
             var optionSet = new CommandSet("ftpserver")
             {
                 "usage: ftpserver [OPTIONS] <COMMAND> [COMMAND-OPTIONS]",
-                { "h|?|help", "Show help", v => options.ShowHelp = v != null },
+                { "?|help", "Show help", v => { /* Handled internally by the Options class. */ } },
                 "Authentication",
                 { "authentication=", "Sets the authentication (custom, anonymous)", v =>
                     {
                         switch (v)
                         {
                             case "custom":
-                                options.MembershipProviderType |= MembershipProviderType.Custom;
+                                options.Authentication |= MembershipProviderType.Custom;
                                 break;
                             case "anonymous":
-                                options.MembershipProviderType |= MembershipProviderType.Anonymous;
+                                options.Authentication |= MembershipProviderType.Anonymous;
                                 break;
                             case "pam":
-                                options.MembershipProviderType |= MembershipProviderType.PAM;
+                                options.Authentication |= MembershipProviderType.PAM;
                                 break;
                             default:
                                 throw new ApplicationException("Invalid authentication module");
@@ -74,31 +80,23 @@ namespace TestFtpServer
                     }
                 },
                 "PAM authentication workarounds",
-                { "no-pam-account-management", "Disable the PAM account management", v => options.NoPamAccountManagement = v != null },
-                "Directory layout (filesystem, unix))",
+                { "no-pam-account-management", "Disable the PAM account management", v => options.Pam.NoAccountManagement = v != null },
+                "Directory layout (system-io, unix))",
                 { "l|layout=", "Directory layout", v =>                     {
                         switch (v)
                         {
                             case "default":
-                            case "root":
-                            case "single":
                             case "single-root":
-                                options.DirectoryLayout = DirectoryLayout.SingleRoot;
+                                options.LayoutType = FileSystemLayoutType.SingleRoot;
                                 break;
                             case "root-per-user":
-                            case "per-user-root":
-                            case "per-user":
-                                options.DirectoryLayout = DirectoryLayout.RootPerUser;
+                                options.LayoutType = FileSystemLayoutType.RootPerUser;
                                 break;
-                            case "pam":
-                            case "passwd":
                             case "pam-home":
-                            case "passwd-home":
-                                options.DirectoryLayout = DirectoryLayout.PamHomeDirectory;
+                                options.LayoutType = FileSystemLayoutType.PamHome;
                                 break;
-                            case "pam-root":
-                            case "passwd-root":
-                                options.DirectoryLayout = DirectoryLayout.PamHomeDirectoryAsRoot;
+                            case "pam-home-chroot":
+                                options.LayoutType = FileSystemLayoutType.PamHomeChroot;
                                 break;
                             default:
                                 throw new ApplicationException("Invalid authentication module");
@@ -106,38 +104,20 @@ namespace TestFtpServer
                     }
                 },
                 "Server",
-                { "a|address=", "Sets the IP address or host name", v => options.ServerAddress = v },
-                { "p|port=", "Sets the listen port", v => options.Port = Convert.ToInt32(v) },
-                { "s|pasv=", "Sets the range for PASV ports, specify as FIRST:LAST", v =>
-                    {
-                        var sPorts = v.Split(new[] { ':' }, StringSplitOptions.RemoveEmptyEntries);
-
-                        if (sPorts.Length != 2)
-                        {
-                            throw new ApplicationException("Need exactly two ports for PASV port range");
-                        }
-
-                        var iPorts = sPorts.Select(s => Convert.ToInt32(s)).ToArray();
-
-                        if (iPorts[1] < iPorts[0])
-                        {
-                            throw new ApplicationException("PASV start port must be smaller than end port");
-                        }
-
-                        options.PassivePortRange = (iPorts[0], iPorts[1]) ;
-                    }
-                },
-                { "promiscuous", "Allows promiscuous PASV", v => options.PromiscuousPasv = v != null },
+                { "a|address=", "Sets the IP address or host name", v => options.Server.Address = v },
+                { "p|port=", "Sets the listen port", v => options.Server.Port = Convert.ToInt32(v) },
+                { "s|pasv=", "Sets the range for PASV ports, specify as FIRST:LAST", v => options.Server.Pasv.Range = v },
+                { "promiscuous", "Allows promiscuous PASV", v => options.Server.Pasv.Promiscuous = v != null },
                 "FTPS",
-                { "c|certificate=", "Set the SSL certificate", v => options.ServerCertificateFile = v },
-                { "P|password=", "Password for the SSL certificate", v => options.ServerCertificatePassword = v },
-                { "i|implicit", "Use implicit FTPS", v => options.ImplicitFtps = XmlConvert.ToBoolean(v.ToLowerInvariant()) },
+                { "c|certificate=", "Set the SSL certificate", v => options.Ftps.Certificate = v },
+                { "P|password=", "Password for the SSL certificate", v => options.Ftps.Password = v },
+                { "i|implicit", "Use implicit FTPS", v => options.Ftps.Implicit = XmlConvert.ToBoolean(v.ToLowerInvariant()) },
                 "Backends",
-                new Command("filesystem", "Use the System.IO file system access")
+                new Command("system-io", "Use the System.IO file system access")
                 {
                     Options = new OptionSet()
                     {
-                        "usage: ftpserver filesystem [ROOT-DIRECTORY]",
+                        "usage: ftpserver system-io [ROOT-DIRECTORY]",
                     },
                     Run = a => RunWithFileSystemAsync(a.ToArray(), options).Wait(),
                 },
@@ -146,7 +126,6 @@ namespace TestFtpServer
                     Options = new OptionSet()
                     {
                         "usage: ftpserver unix",
-                        { "no-id-change", "Don't change the effective user id for file operations", v => options.DisableUserIdSwitch = v != null }
                     },
                     Run = a => RunWithUnixFileSystemAsync(options).Wait(),
                 },
@@ -155,19 +134,19 @@ namespace TestFtpServer
                     Options = new OptionSet()
                     {
                         "usage: ftpserver in-memory [OPTIONS]",
-                        { "keep-anonymous", "Keep anonymous in-memory file systems", v => options.KeepAnonymousInMemoryFileSystem = v != null }
+                        { "keep-anonymous", "Keep anonymous in-memory file systems", v => options.InMemory.KeepAnonymous = v != null }
                     },
                     Run = a => RunWithInMemoryFileSystemAsync(options).Wait(),
                 },
                 new CommandSet("google-drive")
                 {
-                    { "b|background|background-upload", "Use background upload", v => options.UseBackgroundUpload = v != null },
+                    { "b|background|background-upload", "Use background upload", v => options.GoogleDrive.BackgroundUpload = v != null },
                     new Command("user", "Use a users Google Drive as file system")
                     {
                         Options = new OptionSet()
                         {
                             "usage: ftpserver google-drive user <CLIENT-SECRETS-FILE> <USERNAME>",
-                            { "r|refresh", "Refresh the access token", v => options.RefreshToken = v != null },
+                            { "r|refresh", "Refresh the access token", v => options.GoogleDrive.User.RefreshToken = v != null },
                         },
                         Run = a => RunWithGoogleDriveUserAsync(a.ToArray(), options).Wait(),
                     },
@@ -182,40 +161,87 @@ namespace TestFtpServer
                 },
             };
 
+            if (args.Length == 0)
+            {
+                await RunFromOptions(options).ConfigureAwait(false);
+            }
+
             return optionSet.Run(args);
         }
 
-        private static Task RunWithInMemoryFileSystemAsync(TestFtpServerOptions options)
+        private static async Task RunFromOptions(FtpOptions options)
+        {
+            options.Validate();
+            var services = CreateServices(options);
+
+            switch (options.BackendType)
+            {
+                case FileSystemType.InMemory:
+                    services
+                       .Configure<InMemoryFileSystemOptions>(
+                            opt => opt.KeepAnonymousFileSystem = options.InMemory.KeepAnonymous)
+                       .AddFtpServer(sb => sb.ConfigureAuthentication(options).UseInMemoryFileSystem());
+                    break;
+                case FileSystemType.SystemIO:
+                    services
+                       .Configure<DotNetFileSystemOptions>(opt => opt.RootPath = options.SystemIo.Root)
+                       .AddFtpServer(sb => sb.ConfigureAuthentication(options).UseDotNetFileSystem());
+                    break;
+                case FileSystemType.Unix:
+                    services
+                       .Configure<UnixFileSystemOptions>(opt => opt.Root = options.Unix.Root)
+                       .AddFtpServer(sb => sb.ConfigureAuthentication(options).UseUnixFileSystem());
+                    break;
+                case FileSystemType.GoogleDriveUser:
+                    var userCredential = await GetUserCredential(
+                        options.GoogleDrive.User.ClientSecrets ?? throw new ArgumentNullException(nameof(options.GoogleDrive.User.ClientSecrets), "Client secrets file not specified."),
+                        options.GoogleDrive.User.UserName ?? throw new ArgumentNullException(nameof(options.GoogleDrive.User.ClientSecrets), "User name not specified."),
+                        options.GoogleDrive.User.RefreshToken);
+                    services
+                       .AddFtpServer(sb => sb.ConfigureAuthentication(options).UseGoogleDrive(userCredential));
+                    break;
+                case FileSystemType.GoogleDriveService:
+                    var serviceCredential = GoogleCredential
+                       .FromFile(options.GoogleDrive.Service.CredentialFile)
+                       .CreateScoped(DriveService.Scope.Drive, DriveService.Scope.DriveFile);
+                    services
+                       .AddFtpServer(sb => sb.ConfigureAuthentication(options).UseGoogleDrive(serviceCredential));
+                    break;
+            }
+
+            await RunAsync(services).ConfigureAwait(false);
+        }
+
+        private static Task RunWithInMemoryFileSystemAsync(FtpOptions options)
         {
             options.Validate();
             var services = CreateServices(options)
                .Configure<InMemoryFileSystemOptions>(
-                    opt => opt.KeepAnonymousFileSystem = options.KeepAnonymousInMemoryFileSystem)
-               .AddFtpServer(sb => Configure(sb, options).UseInMemoryFileSystem());
+                    opt => opt.KeepAnonymousFileSystem = options.InMemory.KeepAnonymous)
+               .AddFtpServer(sb => sb.ConfigureAuthentication(options).UseInMemoryFileSystem());
             return RunAsync(services);
         }
 
-        private static Task RunWithFileSystemAsync(string[] args, TestFtpServerOptions options)
+        private static Task RunWithFileSystemAsync(string[] args, FtpOptions options)
         {
             options.Validate();
             var rootDir =
                 args.Length != 0 ? args[0] : Path.Combine(Path.GetTempPath(), "TestFtpServer");
             var services = CreateServices(options)
                .Configure<DotNetFileSystemOptions>(opt => opt.RootPath = rootDir)
-               .AddFtpServer(sb => Configure(sb, options).UseDotNetFileSystem());
+               .AddFtpServer(sb => sb.ConfigureAuthentication(options).UseDotNetFileSystem());
             return RunAsync(services);
         }
 
-        private static Task RunWithUnixFileSystemAsync(TestFtpServerOptions options)
+        private static Task RunWithUnixFileSystemAsync(FtpOptions options)
         {
             options.Validate();
             var services = CreateServices(options)
-               .Configure<UnixFileSystemOptions>(opt => opt.DisableUserIdSwitch = options.DisableUserIdSwitch)
-               .AddFtpServer(sb => Configure(sb, options).UseUnixFileSystem());
+               .AddFtpServer(sb => sb.ConfigureAuthentication(options).UseUnixFileSystem());
             return RunAsync(services);
         }
 
-        private static async Task RunWithGoogleDriveUserAsync(string[] args, TestFtpServerOptions options)
+        private static async Task RunWithGoogleDriveUserAsync(string[] args, FtpOptions options)
         {
             options.Validate();
             if (args.Length != 2)
@@ -226,8 +252,23 @@ namespace TestFtpServer
             var clientSecretsFile = args[0];
             var userName = args[1];
 
+            var credential = await GetUserCredential(
+                clientSecretsFile,
+                userName,
+                options.GoogleDrive.User.RefreshToken);
+
+            var services = CreateServices(options)
+               .AddFtpServer(sb => sb.ConfigureAuthentication(options).UseGoogleDrive(credential));
+            await RunAsync(services).ConfigureAwait(false);
+        }
+
+        private static async Task<UserCredential> GetUserCredential(
+            string clientSecretsFile,
+            string userName,
+            bool refreshToken)
+        {
             UserCredential credential;
-            using (var secretsSource = new FileStream(clientSecretsFile, FileMode.Open))
+            await using (var secretsSource = new FileStream(clientSecretsFile, FileMode.Open))
             {
                 var secrets = GoogleClientSecrets.Load(secretsSource);
                 credential = await GoogleWebAuthorizationBroker.AuthorizeAsync(
@@ -235,18 +276,17 @@ namespace TestFtpServer
                     new[] { DriveService.Scope.DriveFile, DriveService.Scope.Drive },
                     userName,
                     CancellationToken.None);
-                if (options.RefreshToken)
-                {
-                    await credential.RefreshTokenAsync(CancellationToken.None);
-                }
             }
 
-            var services = CreateServices(options)
-               .AddFtpServer(sb => Configure(sb, options).UseGoogleDrive(credential));
-            await RunAsync(services).ConfigureAwait(false);
+            if (refreshToken)
+            {
+                await credential.RefreshTokenAsync(CancellationToken.None);
+            }
+
+            return credential;
         }
 
-        private static Task RunWithGoogleDriveServiceAsync(string[] args, TestFtpServerOptions options)
+        private static Task RunWithGoogleDriveServiceAsync(string[] args, FtpOptions options)
         {
             options.Validate();
             if (args.Length != 1)
@@ -260,7 +300,7 @@ namespace TestFtpServer
                 .CreateScoped(DriveService.Scope.Drive, DriveService.Scope.DriveFile);
 
             var services = CreateServices(options)
-               .AddFtpServer(sb => Configure(sb, options).UseGoogleDrive(credential));
+               .AddFtpServer(sb => sb.ConfigureAuthentication(options).UseGoogleDrive(credential));
             return RunAsync(services);
         }
 
@@ -291,7 +331,7 @@ namespace TestFtpServer
             }
         }
 
-        private static IServiceCollection CreateServices(TestFtpServerOptions options)
+        private static IServiceCollection CreateServices(FtpOptions options)
         {
             var services = new ServiceCollection()
                .AddLogging(cfg => cfg.SetMinimumLevel(LogLevel.Trace))
@@ -299,32 +339,32 @@ namespace TestFtpServer
                .Configure<AuthTlsOptions>(
                     opt =>
                     {
-                        if (options.ServerCertificateFile != null)
+                        if (!string.IsNullOrEmpty(options.Ftps.Certificate))
                         {
                             opt.ServerCertificate = new X509Certificate2(
-                                options.ServerCertificateFile,
-                                options.ServerCertificatePassword);
+                                options.Ftps.Certificate,
+                                options.Ftps.Password);
                         }
                     })
                .Configure<FtpConnectionOptions>(opt => opt.DefaultEncoding = Encoding.ASCII)
-               .Configure<FtpServerOptions>(
+               .Configure<FubarDev.FtpServer.FtpServerOptions>(
                     opt =>
                     {
-                        opt.ServerAddress = options.ServerAddress;
-                        opt.Port = options.GetPort();
+                        opt.ServerAddress = options.Server.Address;
+                        opt.Port = options.GetServerPort();
                     })
                .Configure<SimplePasvOptions>(
                     opt =>
                     {
-                        if (options.PassivePortRange != null)
+                        var portRange = options.GetPasvPortRange();
+                        if (portRange != null)
                         {
-                            opt.PasvMinPort = options.PassivePortRange.Value.Item1;
-                            opt.PasvMaxPort = options.PassivePortRange.Value.Item2;
+                            (opt.PasvMinPort, opt.PasvMaxPort) = portRange.Value;
                         }
                     })
-               .Configure<PasvCommandOptions>(opt => opt.PromiscuousPasv = options.PromiscuousPasv)
-               .Configure<GoogleDriveOptions>(opt => opt.UseBackgroundUpload = options.UseBackgroundUpload)
-               .Configure<PamMembershipProviderOptions>(opt => opt.IgnoreAccountManagement = options.NoPamAccountManagement);
+               .Configure<PasvCommandOptions>(opt => opt.PromiscuousPasv = options.Server.Pasv.Promiscuous)
+               .Configure<GoogleDriveOptions>(opt => opt.UseBackgroundUpload = options.GoogleDrive.BackgroundUpload)
+               .Configure<PamMembershipProviderOptions>(opt => opt.IgnoreAccountManagement = options.Pam.NoAccountManagement);
 
             // Add "Hello" service - unique per FTP connection
             services.AddScoped<Hello>();
@@ -340,33 +380,33 @@ namespace TestFtpServer
                     sp.GetService<ILogger<AssemblyFtpCommandHandlerExtensionScanner>>(),
                     typeof(SiteHelloFtpCommandHandlerExtension).Assembly));
 
-            switch (options.DirectoryLayout)
+            switch (options.LayoutType)
             {
-                case DirectoryLayout.SingleRoot:
+                case FileSystemLayoutType.SingleRoot:
                     services.AddSingleton<IAccountDirectoryQuery, SingleRootWithoutHomeAccountDirectoryQuery>();
                     break;
-                case DirectoryLayout.RootPerUser:
+                case FileSystemLayoutType.RootPerUser:
                     services
                        .AddSingleton<IAccountDirectoryQuery, RootPerUserAccountDirectoryQuery>()
                        .Configure<RootPerUserAccountDirectoryQueryOptions>(opt => opt.AnonymousRootPerEmail = true);
                     break;
-                case DirectoryLayout.PamHomeDirectory:
+                case FileSystemLayoutType.PamHome:
                     services
                        .AddSingleton<IAccountDirectoryQuery, PamAccountDirectoryQuery>()
-                       .Configure<PamAccountDirectoryQueryOptions>(opt => opt.AnonymousRootDirectory = "/tmp");
+                       .Configure<PamAccountDirectoryQueryOptions>(opt => opt.AnonymousRootDirectory = Path.GetTempPath());
                     break;
-                case DirectoryLayout.PamHomeDirectoryAsRoot:
+                case FileSystemLayoutType.PamHomeChroot:
                     services
                        .AddSingleton<IAccountDirectoryQuery, PamAccountDirectoryQuery>()
                        .Configure<PamAccountDirectoryQueryOptions>(opt =>
                         {
-                            opt.AnonymousRootDirectory = "/tmp";
+                            opt.AnonymousRootDirectory = Path.GetTempPath();
                             opt.UserHomeIsRoot = true;
                         });
                     break;
             }
 
-            if (options.ImplicitFtps)
+            if (options.Ftps.Implicit)
             {
                 services.Decorate<IFtpServer>(
                     (ftpServer, serviceProvider) =>
@@ -377,14 +417,11 @@ namespace TestFtpServer
                         // Use an implicit SSL connection (without the AUTHTLS command)
                         ftpServer.ConfigureConnection += (s, e) =>
                         {
-                            var secureConnectionFeature = e.Connection.Features.Get<ISecureConnectionFeature>();
-                            var sslStream = sslStreamWrapperFactory.WrapStreamAsync(
-                                    secureConnectionFeature.OriginalStream,
-                                    false,
-                                    authTlsOptions.Value.ServerCertificate,
-                                    CancellationToken.None)
-                               .Result;
-                            secureConnectionFeature.SocketStream = sslStream;
+                            TlsEnableServerCommandHandler.EnableTlsAsync(
+                                e.Connection,
+                                authTlsOptions.Value.ServerCertificate,
+                                sslStreamWrapperFactory,
+                                CancellationToken.None).Wait();
                         };
 
                         return ftpServer;
@@ -392,31 +429,6 @@ namespace TestFtpServer
             }
 
             return services;
-        }
-
-        private static IFtpServerBuilder Configure(IFtpServerBuilder builder, TestFtpServerOptions options)
-        {
-            if (options.MembershipProviderType == MembershipProviderType.Default)
-            {
-                return builder.EnableAnonymousAuthentication();
-            }
-
-            if ((options.MembershipProviderType & MembershipProviderType.Anonymous) != 0)
-            {
-                builder = builder.EnableAnonymousAuthentication();
-            }
-
-            if ((options.MembershipProviderType & MembershipProviderType.Custom) != 0)
-            {
-                builder.Services.AddSingleton<IMembershipProvider, CustomMembershipProvider>();
-            }
-
-            if ((options.MembershipProviderType & MembershipProviderType.PAM) != 0)
-            {
-                builder = builder.EnablePamAuthentication();
-            }
-
-            return builder;
         }
     }
 }

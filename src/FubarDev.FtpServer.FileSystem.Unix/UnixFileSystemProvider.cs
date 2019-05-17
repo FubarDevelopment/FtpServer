@@ -38,7 +38,8 @@ namespace FubarDev.FtpServer.FileSystem.Unix
         public Task<IUnixFileSystem> Create(IAccountInformation accountInformation)
         {
             var directories = _accountDirectoryQuery.GetDirectories(accountInformation);
-            var rootPath = Path.Combine("/", directories.RootPath ?? string.Empty);
+            var basePath = _options.Root ?? "/";
+            var rootPath = Path.Combine(basePath, directories.RootPath ?? string.Empty);
             var userInfo = GetUserInfo(accountInformation);
             var root = new UnixDirectoryInfo(rootPath);
             var rootEntry = new UnixDirectoryEntry(root, accountInformation.User, userInfo);

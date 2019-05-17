@@ -1,8 +1,7 @@
 {
   "profiles": {
     "TestFtpServer": {
-      "commandName": "Project",
-      "commandLineArgs": "filesystem -l per-user"
+      "commandName": "Project"
     }
   }
 }

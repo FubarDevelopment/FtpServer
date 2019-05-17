@@ -618,11 +618,11 @@ namespace FubarDev.FtpServer
 
             var requestDelegate = nextStep;
 
-            // Get the login state machine
-            _loginStateMachine = ConnectionServices.GetRequiredService<IFtpLoginStateMachine>();
-
             try
             {
+                // Get the login state machine
+                _loginStateMachine = ConnectionServices.GetRequiredService<IFtpLoginStateMachine>();
+
                 Task<bool> readTask = null;
                 while (!cancellationToken.IsCancellationRequested)
                 {
@@ -677,6 +677,11 @@ namespace FubarDev.FtpServer
                         }
                     }
                 }
+            }
+            catch (Exception ex)
+            {
+                Log?.LogError(ex, ex.Message);
+                throw;
             }
             finally
             {
