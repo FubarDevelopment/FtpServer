@@ -590,6 +590,12 @@ namespace FubarDev.FtpServer
             catch (Exception ex) when (IsIOException(ex))
             {
                 Log?.LogWarning("Connection lost or closed by client.");
+                Abort();
+            }
+            catch (Exception ex)
+            {
+                Log?.LogError(ex, "Closing connection due to error {0}.", ex.Message);
+                Abort();
             }
             finally
             {
