@@ -118,6 +118,10 @@ namespace FubarDev.FtpServer
                             resultLine = $"{Code} {EndMessage}".TrimEnd();
                             _buildStatus = FtpResponseListStatus.Finished;
                         }
+                        else
+                        {
+                            resultLine = " " + resultLine;
+                        }
 
                         break;
 
@@ -139,7 +143,7 @@ namespace FubarDev.FtpServer
             {
                 if (statusStore.Enumerator.MoveNext())
                 {
-                    resultLine = statusStore.Enumerator.Current;
+                    resultLine = " " + statusStore.Enumerator.Current;
                 }
                 else
                 {

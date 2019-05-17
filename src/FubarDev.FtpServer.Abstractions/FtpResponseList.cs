@@ -36,7 +36,11 @@ namespace FubarDev.FtpServer
         /// <inheritdoc />
         public override string ToString()
         {
-            return string.Join(Environment.NewLine, GetLines());
+            return string.Join(
+                Environment.NewLine,
+                $"{Code}-{StartMessage}".TrimEnd(),
+                " ... stripped ...",
+                $"{Code} {EndMessage}".TrimEnd());
         }
 
         /// <inheritdoc />
@@ -55,18 +59,6 @@ namespace FubarDev.FtpServer
 
             status.Dispose();
             return Task.FromResult<string>(null);
-        }
-
-        private IEnumerable<string> GetLines()
-        {
-            yield return $"{Code}-{StartMessage}".TrimEnd();
-
-            foreach (var line in _lines)
-            {
-                yield return string.Concat(" ", line);
-            }
-
-            yield return $"{Code} {EndMessage}".TrimEnd();
         }
     }
 }

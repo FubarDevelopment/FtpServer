@@ -11,6 +11,8 @@ using FubarDev.FtpServer.ServerCommands;
 
 using JetBrains.Annotations;
 
+using Microsoft.Extensions.Logging;
+
 namespace FubarDev.FtpServer.ServerCommandHandlers
 {
     /// <summary>
@@ -42,7 +44,7 @@ namespace FubarDev.FtpServer.ServerCommandHandlers
             IFtpResponse response,
             CancellationToken cancellationToken)
         {
-            connection.Log?.Log(response);
+            // connection.Log?.Log(response);
 
             var networkStreamFeature = connection.Features.Get<INetworkStreamFeature>();
             var encoding = connection.Features.Get<IEncodingFeature>().Encoding;
@@ -56,6 +58,7 @@ namespace FubarDev.FtpServer.ServerCommandHandlers
                    .ConfigureAwait(false);
                 if (line.HasText)
                 {
+                    connection.Log?.LogDebug(line.Text);
                     var data = encoding.GetBytes($"{line.Text}\r\n");
                     var memory = writer.GetMemory(data.Length);
                     data.AsSpan().CopyTo(memory.Span);
@@ -65,6 +68,11 @@ namespace FubarDev.FtpServer.ServerCommandHandlers
                     {
                         break;
                     }
+                }
+
+                if (!line.HasMoreData)
+                {
+                    break;
                 }
 
                 token = line.Token;
