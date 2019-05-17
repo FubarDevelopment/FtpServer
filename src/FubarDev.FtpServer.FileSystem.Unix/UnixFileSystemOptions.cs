@@ -12,6 +12,6 @@ namespace FubarDev.FtpServer.FileSystem.Unix
         /// <summary>
         /// Gets or sets a value indicating whether the user ID should be changed during file system operations.
         /// </summary>
-        public bool DisableUserIdSwitch { get; set; }
+        public bool EnableUserIdSwitch { get; set; }
     }
 }

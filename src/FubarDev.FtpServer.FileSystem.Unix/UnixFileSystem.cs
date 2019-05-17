@@ -273,7 +273,7 @@ namespace FubarDev.FtpServer.FileSystem.Unix
 
         private IDisposable ChangeIds()
         {
-            if (_options.DisableUserIdSwitch)
+            if (!_options.EnableUserIdSwitch)
             {
                 return EmptyDisposable.Empty;
             }
