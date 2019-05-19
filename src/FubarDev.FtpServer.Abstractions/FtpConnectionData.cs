@@ -36,10 +36,6 @@ namespace FubarDev.FtpServer
         [NotNull]
         private readonly IFeatureCollection _featureCollection;
 
-        [NotNull]
-        [ItemNotNull]
-        private readonly Lazy<IBackgroundCommandHandler> _backgroundCommandHandler;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="FtpConnectionData"/> class.
         /// </summary>
@@ -54,8 +50,6 @@ namespace FubarDev.FtpServer
             [NotNull] IFtpCatalogLoader catalogLoader)
         {
             _featureCollection = featureCollection;
-            _backgroundCommandHandler = new Lazy<IBackgroundCommandHandler>(
-                () => connection.ConnectionServices.GetRequiredService<IBackgroundCommandHandler>());
             featureCollection.Set<ILocalizationFeature>(new LocalizationFeature(catalogLoader));
             featureCollection.Set<IFileSystemFeature>(new FileSystemFeature());
             featureCollection.Set<IAuthorizationInformationFeature>(new AuthorizationInformationFeature());
@@ -161,9 +155,9 @@ namespace FubarDev.FtpServer
         /// <summary>
         /// Gets the <see cref="IBackgroundCommandHandler"/> that's required for the <c>ABOR</c> command.
         /// </summary>
-        [NotNull]
+        [CanBeNull]
         [Obsolete("Query IBackgroundTaskLifetimeFeature to get information about an active background task (if non-null).")]
-        public IBackgroundCommandHandler BackgroundCommandHandler => _backgroundCommandHandler.Value;
+        public IBackgroundCommandHandler BackgroundCommandHandler => null;
 
         /// <inheritdoc />
         [Obsolete("Query the information using the ITransferConfigurationFeature instead.")]

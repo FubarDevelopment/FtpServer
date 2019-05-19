@@ -2,6 +2,8 @@
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
+using System;
+using System.Threading;
 using System.Threading.Tasks;
 
 using JetBrains.Annotations;
@@ -14,23 +16,37 @@ namespace FubarDev.FtpServer.Features.Impl
     public class BackgroundTaskLifetimeFeature : IBackgroundTaskLifetimeFeature
     {
         [NotNull]
-        private readonly IBackgroundCommandHandler _backgroundCommandHandler;
+        private readonly CancellationTokenSource _taskCts = new CancellationTokenSource();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BackgroundTaskLifetimeFeature"/> class.
         /// </summary>
         /// <param name="command">The FTP command to be run in the background.</param>
-        /// <param name="backgroundCommandHandler">The background command handler.</param>
         /// <param name="commandHandler">The FTP command handler.</param>
+        /// <param name="backgroundTask">The task that gets run in the background.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
         public BackgroundTaskLifetimeFeature(
+            [NotNull] IFtpCommandBase commandHandler,
             [NotNull] FtpCommand command,
-            [NotNull] IBackgroundCommandHandler backgroundCommandHandler,
-            [NotNull] IFtpCommandBase commandHandler)
+            [NotNull] Func<CancellationToken, Task> backgroundTask,
+            CancellationToken cancellationToken)
         {
-            _backgroundCommandHandler = backgroundCommandHandler;
             Command = command;
             Handler = commandHandler;
-            Task = backgroundCommandHandler.Execute(commandHandler, command);
+            Task = Task.Run(
+                async () =>
+                {
+                    var registration = cancellationToken.Register(() => _taskCts.Cancel());
+                    try
+                    {
+                        await backgroundTask(_taskCts.Token)
+                           .ConfigureAwait(false);
+                    }
+                    finally
+                    {
+                        registration.Dispose();
+                    }
+                });
         }
 
         /// <inheritdoc />
@@ -40,12 +56,12 @@ namespace FubarDev.FtpServer.Features.Impl
         public IFtpCommandBase Handler { get; }
 
         /// <inheritdoc />
-        public Task<IFtpResponse> Task { get; }
+        public Task Task { get; }
 
         /// <inheritdoc />
         public void Abort()
         {
-            _backgroundCommandHandler.Cancel();
+            _taskCts.Cancel();
         }
     }
 }

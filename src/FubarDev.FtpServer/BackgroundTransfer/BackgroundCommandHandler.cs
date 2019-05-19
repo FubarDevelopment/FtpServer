@@ -25,6 +25,7 @@ namespace FubarDev.FtpServer.BackgroundTransfer
     /// <remarks>
     /// This allows the implementation of the <c>ABOR</c> command.
     /// </remarks>
+    [Obsolete("Not needed any more. Command execution was streamlined.")]
     public sealed class BackgroundCommandHandler : IBackgroundCommandHandler, IDisposable
     {
         private readonly IFtpConnection _connection;

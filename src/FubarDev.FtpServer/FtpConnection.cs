@@ -400,13 +400,32 @@ namespace FubarDev.FtpServer
                     }
                 }
             }
-            catch (Exception ex) when (ex.IsIOException() && cancellationToken.IsCancellationRequested)
+            catch (Exception ex)
             {
-                Log?.LogWarning("Last response probably incomplete.");
-            }
-            catch (Exception ex) when (ex.IsIOException())
-            {
-                Log?.LogWarning("Connection lost or closed by client. Remaining output discarded.");
+                var exception = ex;
+                while (exception is AggregateException aggregateException)
+                {
+                    exception = aggregateException.InnerException;
+                }
+
+                switch (exception)
+                {
+                    case IOException _:
+                        if (cancellationToken.IsCancellationRequested)
+                        {
+                            Log?.LogWarning("Last response probably incomplete.");
+                        }
+                        else
+                        {
+                            Log?.LogWarning("Connection lost or closed by client. Remaining output discarded.");
+                        }
+
+                        break;
+
+                    case OperationCanceledException _:
+                        // Cancelled
+                        break;
+                }
             }
             finally
             {
@@ -532,20 +551,17 @@ namespace FubarDev.FtpServer
 
                     Debug.WriteLine($"Waiting for {tasks.Count} tasks");
                     var completedTask = await Task.WhenAny(tasks.ToArray()).ConfigureAwait(false);
+                    if (completedTask == null)
+                    {
+                        break;
+                    }
+
                     Debug.WriteLine($"Task {completedTask} completed");
 
                     // ReSharper disable once PatternAlwaysOfType
-                    if (backgroundTaskLifetimeService?.Task is Task<IFtpResponse> backgroundTask && completedTask == backgroundTask)
+                    if (backgroundTaskLifetimeService?.Task  == completedTask)
                     {
-                        var response = await backgroundTask.ConfigureAwait(false);
-                        if (response != null)
-                        {
-                            await _serverCommandChannel.Writer.WriteAsync(
-                                    new SendResponseServerCommand(response),
-                                    _cancellationTokenSource.Token)
-                               .ConfigureAwait(false);
-                        }
-
+                        await completedTask.ConfigureAwait(false);
                         Features.Set<IBackgroundTaskLifetimeFeature>(null);
                     }
                     else if (completedTask != readTask)

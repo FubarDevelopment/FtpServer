@@ -30,7 +30,7 @@ namespace FubarDev.FtpServer.Features
         /// </summary>
         [NotNull]
         [ItemCanBeNull]
-        Task<IFtpResponse> Task { get; }
+        Task Task { get; }
 
         /// <summary>
         /// Aborts the command that is run in the background.

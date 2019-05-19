@@ -75,9 +75,9 @@ namespace FubarDev.FtpServer.ConnectionHandlers
         /// <inheritdoc />
         public Task StopAsync(CancellationToken cancellationToken)
         {
-            if (Status != ConnectionStatus.Running)
+            if (Status != ConnectionStatus.Running && Status != ConnectionStatus.Stopped)
             {
-                throw new InvalidOperationException($"Status must be {ConnectionStatus.ReadyToRun}, but was {Status}.");
+                throw new InvalidOperationException($"Status must be {ConnectionStatus.Running}, but was {Status}.");
             }
 
             _jobStopped.Cancel();
@@ -90,7 +90,7 @@ namespace FubarDev.FtpServer.ConnectionHandlers
         {
             if (Status != ConnectionStatus.Running)
             {
-                throw new InvalidOperationException($"Status must be {ConnectionStatus.ReadyToRun}, but was {Status}.");
+                throw new InvalidOperationException($"Status must be {ConnectionStatus.Running}, but was {Status}.");
             }
 
             _jobPaused.Cancel();
@@ -103,7 +103,7 @@ namespace FubarDev.FtpServer.ConnectionHandlers
         {
             if (Status != ConnectionStatus.Paused)
             {
-                throw new InvalidOperationException($"Status must be {ConnectionStatus.ReadyToRun}, but was {Status}.");
+                throw new InvalidOperationException($"Status must be {ConnectionStatus.Paused}, but was {Status}.");
             }
 
             _jobPaused = new CancellationTokenSource();

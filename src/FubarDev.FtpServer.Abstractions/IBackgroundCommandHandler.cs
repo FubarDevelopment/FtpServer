@@ -2,6 +2,7 @@
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
+using System;
 using System.Threading.Tasks;
 
 using JetBrains.Annotations;
@@ -14,6 +15,7 @@ namespace FubarDev.FtpServer
     /// <remarks>
     /// This allows the implementation of the <c>ABOR</c> command.
     /// </remarks>
+    [Obsolete("Not needed any more. Command execution was streamlined.")]
     public interface IBackgroundCommandHandler
     {
         /// <summary>
