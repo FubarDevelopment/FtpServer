@@ -21,6 +21,7 @@ using FubarDev.FtpServer.Localization;
 using JetBrains.Annotations;
 
 using Microsoft.AspNetCore.Http.Features;
+using Microsoft.Extensions.DependencyInjection;
 
 using NGettext;
 
@@ -35,21 +36,26 @@ namespace FubarDev.FtpServer
         [NotNull]
         private readonly IFeatureCollection _featureCollection;
 
+        [NotNull]
+        [ItemNotNull]
+        private readonly Lazy<IBackgroundCommandHandler> _backgroundCommandHandler;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="FtpConnectionData"/> class.
         /// </summary>
+        /// <param name="connection">The FTP connection.</param>
         /// <param name="defaultEncoding">The default encoding.</param>
         /// <param name="featureCollection">The feature collection where all features get stored.</param>
-        /// <param name="backgroundCommandHandler">Utility module that allows background execution of an FTP command.</param>
         /// <param name="catalogLoader">The catalog loader for the FTP server.</param>
         public FtpConnectionData(
+            [NotNull] IFtpConnection connection,
             [NotNull] Encoding defaultEncoding,
             [NotNull] IFeatureCollection featureCollection,
-            [NotNull] IBackgroundCommandHandler backgroundCommandHandler,
             [NotNull] IFtpCatalogLoader catalogLoader)
         {
             _featureCollection = featureCollection;
-            BackgroundCommandHandler = backgroundCommandHandler;
+            _backgroundCommandHandler = new Lazy<IBackgroundCommandHandler>(
+                () => connection.ConnectionServices.GetRequiredService<IBackgroundCommandHandler>());
             featureCollection.Set<ILocalizationFeature>(new LocalizationFeature(catalogLoader));
             featureCollection.Set<IFileSystemFeature>(new FileSystemFeature());
             featureCollection.Set<IAuthorizationInformationFeature>(new AuthorizationInformationFeature());
@@ -153,10 +159,11 @@ namespace FubarDev.FtpServer
         }
 
         /// <summary>
-        /// Gets the <see cref="BackgroundCommandHandler"/> that's required for the <c>ABOR</c> command.
+        /// Gets the <see cref="IBackgroundCommandHandler"/> that's required for the <c>ABOR</c> command.
         /// </summary>
         [NotNull]
-        public IBackgroundCommandHandler BackgroundCommandHandler { get; }
+        [Obsolete("Query IBackgroundTaskLifetimeFeature to get information about an active background task (if non-null).")]
+        public IBackgroundCommandHandler BackgroundCommandHandler => _backgroundCommandHandler.Value;
 
         /// <inheritdoc />
         [Obsolete("Query the information using the ITransferConfigurationFeature instead.")]

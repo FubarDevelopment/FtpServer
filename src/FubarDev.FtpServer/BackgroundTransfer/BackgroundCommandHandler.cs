@@ -50,7 +50,7 @@ namespace FubarDev.FtpServer.BackgroundTransfer
             {
                 if (_handlerTask != null)
                 {
-                    return null;
+                    throw new InvalidOperationException($"Only one task can be executed in the background.");
                 }
 
                 _cancellationTokenSource = new CancellationTokenSource();

@@ -81,6 +81,8 @@ namespace Microsoft.Extensions.DependencyInjection
 
             services.AddScoped<IFtpConnection, FtpConnection>();
             services.AddScoped<IFtpLoginStateMachine, FtpLoginStateMachine>();
+            services.AddScoped<IBackgroundCommandHandler>(sp => new BackgroundCommandHandler(sp.GetRequiredService<IFtpConnection>()));
+            services.AddScoped<IFtpCommandDispatcher, DefaultFtpCommandDispatcher>();
 
             services.AddScoped<IFtpHostSelector, SingleFtpHostSelector>();
             services.AddScoped(sp => sp.GetRequiredService<IFtpHostSelector>().SelectedHost);

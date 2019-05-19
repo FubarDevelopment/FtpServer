@@ -18,13 +18,11 @@ using System.Threading;
 using System.Threading.Channels;
 using System.Threading.Tasks;
 
-using FubarDev.FtpServer.BackgroundTransfer;
 using FubarDev.FtpServer.CommandHandlers;
 using FubarDev.FtpServer.Commands;
 using FubarDev.FtpServer.ConnectionHandlers;
 using FubarDev.FtpServer.Features;
 using FubarDev.FtpServer.Features.Impl;
-using FubarDev.FtpServer.FileSystem.Error;
 using FubarDev.FtpServer.Localization;
 using FubarDev.FtpServer.ServerCommands;
 
@@ -49,9 +47,6 @@ namespace FubarDev.FtpServer
 
         [NotNull]
         private readonly IFtpConnectionAccessor _connectionAccessor;
-
-        [NotNull]
-        private readonly IFtpCommandActivator _commandActivator;
 
         [NotNull]
         private readonly IServerCommandExecutor _serverCommandExecutor;
@@ -79,13 +74,6 @@ namespace FubarDev.FtpServer
 
         private bool _closed;
 
-        [CanBeNull]
-        [ItemNotNull]
-        private Task<IFtpResponse> _activeBackgroundTask;
-
-        [CanBeNull]
-        private IFtpLoginStateMachine _loginStateMachine;
-
         private Task _commandChannelReader;
 
         private Task _serverCommandHandler;
@@ -96,7 +84,6 @@ namespace FubarDev.FtpServer
         /// <param name="socket">The socket to use to communicate with the client.</param>
         /// <param name="options">The options for the FTP connection.</param>
         /// <param name="connectionAccessor">The accessor to get the connection that is active during the <see cref="FtpCommandHandler.Process"/> method execution.</param>
-        /// <param name="commandActivator">Activator for FTP commands.</param>
         /// <param name="catalogLoader">The catalog loader for the FTP server.</param>
         /// <param name="serverCommandExecutor">The executor for server commands.</param>
         /// <param name="serviceProvider">The service provider for the connection.</param>
@@ -105,7 +92,6 @@ namespace FubarDev.FtpServer
             [NotNull] TcpClient socket,
             [NotNull] IOptions<FtpConnectionOptions> options,
             [NotNull] IFtpConnectionAccessor connectionAccessor,
-            [NotNull] IFtpCommandActivator commandActivator,
             [NotNull] IFtpCatalogLoader catalogLoader,
             [NotNull] IServerCommandExecutor serverCommandExecutor,
             [NotNull] IServiceProvider serviceProvider,
@@ -129,7 +115,6 @@ namespace FubarDev.FtpServer
 
             _socket = socket;
             _connectionAccessor = connectionAccessor;
-            _commandActivator = commandActivator;
             _serverCommandExecutor = serverCommandExecutor;
             _serverCommandChannel = Channel.CreateBounded<IServerCommand>(new BoundedChannelOptions(3));
 
@@ -159,9 +144,9 @@ namespace FubarDev.FtpServer
             var features = new FeatureCollection(parentFeatures);
 #pragma warning disable 618
             Data = new FtpConnectionData(
+                this,
                 options.Value.DefaultEncoding ?? Encoding.ASCII,
                 features,
-                new BackgroundCommandHandler(this),
                 catalogLoader);
 #pragma warning restore 618
 
@@ -365,9 +350,6 @@ namespace FubarDev.FtpServer
         {
             _closed = true;
             _cancellationTokenSource.Cancel(true);
-#pragma warning disable 618
-            Data.BackgroundCommandHandler.Cancel();
-#pragma warning restore 618
 
             var secureConnectionFeature = Features.Get<ISecureConnectionFeature>();
             var socketStream = secureConnectionFeature.SocketStream;
@@ -387,18 +369,6 @@ namespace FubarDev.FtpServer
         private string T(string message)
         {
             return Features.Get<ILocalizationFeature>().Catalog.GetString(message);
-        }
-
-        /// <summary>
-        /// Translates a message using the current catalog of the active connection.
-        /// </summary>
-        /// <param name="message">The message to translate.</param>
-        /// <param name="args">The format arguments.</param>
-        /// <returns>The translated message.</returns>
-        [StringFormatMethod("message")]
-        private string T(string message, params object[] args)
-        {
-            return Features.Get<ILocalizationFeature>().Catalog.GetString(message, args);
         }
 
         /// <summary>
@@ -450,87 +420,10 @@ namespace FubarDev.FtpServer
         /// <param name="context">The context for the FTP command execution.</param>
         /// <returns>The task.</returns>
         [NotNull]
-        private async Task DispatchCommandAsync([NotNull] FtpContext context)
+        private Task DispatchCommandAsync([NotNull] FtpContext context)
         {
-            var loginStateMachine =
-                _loginStateMachine
-                ?? throw new InvalidOperationException("Login state machine not initialized.");
-
-            IFtpResponse response;
-            var command = context.Command;
-            var commandHandlerContext = new FtpCommandHandlerContext(context);
-            var result = _commandActivator.Create(commandHandlerContext);
-            if (result != null)
-            {
-                var handler = result.Handler;
-                var isLoginRequired = result.Information.IsLoginRequired;
-                if (isLoginRequired && loginStateMachine.Status != SecurityStatus.Authorized)
-                {
-                    response = new FtpResponse(530, T("Not logged in."));
-                }
-                else
-                {
-                    try
-                    {
-                        var isAbortable = result.Information.IsAbortable;
-                        if (isAbortable)
-                        {
-#pragma warning disable 618
-                            var newBackgroundTask = Data.BackgroundCommandHandler.Execute(handler, command);
-#pragma warning restore 618
-                            if (newBackgroundTask != null)
-                            {
-                                _activeBackgroundTask = newBackgroundTask;
-                                response = null;
-                            }
-                            else
-                            {
-                                response = new FtpResponse(503, T("Parallel commands aren't allowed."));
-                            }
-                        }
-                        else
-                        {
-                            response = await handler.Process(command, _cancellationTokenSource.Token)
-                                .ConfigureAwait(false);
-                        }
-                    }
-                    catch (FileSystemException fse)
-                    {
-                        var message = fse.Message != null ? $"{fse.FtpErrorName}: {fse.Message}" : fse.FtpErrorName;
-                        Log?.LogInformation($"Rejected command ({command}) with error {fse.FtpErrorCode} {message}");
-                        response = new FtpResponse(fse.FtpErrorCode, message);
-                    }
-                    catch (NotSupportedException nse)
-                    {
-                        var message = nse.Message ?? T("Command {0} not supported", command);
-                        Log?.LogInformation(message);
-                        response = new FtpResponse(502, message);
-                    }
-                    catch (Exception ex)
-                    {
-                        Log?.LogError(ex, "Failed to process message ({0})", command);
-                        response = new FtpResponse(501, T("Syntax error in parameters or arguments."));
-                    }
-                }
-            }
-            else
-            {
-                response = new FtpResponse(500, T("Syntax error, command unrecognized."));
-            }
-
-            if (response != null)
-            {
-                await _serverCommandChannel.Writer.WriteAsync(
-                        new SendResponseServerCommand(response),
-                        _cancellationTokenSource.Token)
-                   .ConfigureAwait(false);
-                if (response.Code == 421)
-                {
-                    var socketStream = Features.Get<ISecureConnectionFeature>().SocketStream;
-                    socketStream.Flush();
-                    await StopAsync().ConfigureAwait(false);
-                }
-            }
+            var dispatcher = ConnectionServices.GetRequiredService<IFtpCommandDispatcher>();
+            return dispatcher.DispatchAsync(context, _cancellationTokenSource.Token);
         }
 
         private void OnClosed()
@@ -622,9 +515,6 @@ namespace FubarDev.FtpServer
 
             try
             {
-                // Get the login state machine
-                _loginStateMachine = ConnectionServices.GetRequiredService<IFtpLoginStateMachine>();
-
                 Task<bool> readTask = null;
                 while (!cancellationToken.IsCancellationRequested)
                 {
@@ -634,18 +524,20 @@ namespace FubarDev.FtpServer
                     }
 
                     var tasks = new List<Task>() { readTask, Task.Delay(-1, _cancellationTokenSource.Token) };
-                    if (_activeBackgroundTask != null)
+                    var backgroundTaskLifetimeService = Features.Get<IBackgroundTaskLifetimeFeature>();
+                    if (backgroundTaskLifetimeService != null)
                     {
-                        tasks.Add(_activeBackgroundTask);
+                        tasks.Add(backgroundTaskLifetimeService.Task);
                     }
 
                     Debug.WriteLine($"Waiting for {tasks.Count} tasks");
                     var completedTask = await Task.WhenAny(tasks.ToArray()).ConfigureAwait(false);
                     Debug.WriteLine($"Task {completedTask} completed");
 
-                    if (completedTask == _activeBackgroundTask)
+                    // ReSharper disable once PatternAlwaysOfType
+                    if (backgroundTaskLifetimeService?.Task is Task<IFtpResponse> backgroundTask && completedTask == backgroundTask)
                     {
-                        var response = _activeBackgroundTask?.Result;
+                        var response = await backgroundTask.ConfigureAwait(false);
                         if (response != null)
                         {
                             await _serverCommandChannel.Writer.WriteAsync(
@@ -654,7 +546,7 @@ namespace FubarDev.FtpServer
                                .ConfigureAwait(false);
                         }
 
-                        _activeBackgroundTask = null;
+                        Features.Set<IBackgroundTaskLifetimeFeature>(null);
                     }
                     else if (completedTask != readTask)
                     {

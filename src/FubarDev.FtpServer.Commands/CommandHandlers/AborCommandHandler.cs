@@ -9,6 +9,7 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using FubarDev.FtpServer.Commands;
+using FubarDev.FtpServer.Features;
 
 namespace FubarDev.FtpServer.CommandHandlers
 {
@@ -21,8 +22,10 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// <inheritdoc/>
         public override Task<IFtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
         {
-            if (Data.BackgroundCommandHandler.Cancel())
+            var backgroundTaskLifetimeFeature = Connection.Features.Get<IBackgroundTaskLifetimeFeature>();
+            if (backgroundTaskLifetimeFeature != null)
             {
+                backgroundTaskLifetimeFeature.Abort();
                 return Task.FromResult<IFtpResponse>(new FtpResponse(226, T("File transfer aborting.")));
             }
 
