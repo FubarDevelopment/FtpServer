@@ -73,7 +73,8 @@ namespace FubarDev.FtpServer.Authentication
         /// <inheritdoc />
         public override bool CanHandle(string methodIdentifier)
         {
-            return string.Equals(methodIdentifier.Trim(), "TLS", StringComparison.OrdinalIgnoreCase);
+            return string.Equals(methodIdentifier.Trim(), "TLS", StringComparison.OrdinalIgnoreCase)
+                   || string.Equals(methodIdentifier.Trim(), "SSL", StringComparison.OrdinalIgnoreCase);
         }
 
         /// <inheritdoc />
