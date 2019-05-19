@@ -162,7 +162,7 @@ namespace FubarDev.FtpServer.ConnectionHandlers
                         break;
                     }
                 }
-                catch (Exception ex) when (IsOperationCancelledException(ex))
+                catch (Exception ex) when (ex.IsOperationCancelledException())
                 {
                     // The job was aborted by one of the three cancellation tokens.
                     break;
@@ -190,19 +190,6 @@ namespace FubarDev.FtpServer.ConnectionHandlers
 
             // Change the status
             statusProgress.Report(ConnectionStatus.Stopped);
-        }
-
-        private static bool IsOperationCancelledException(Exception ex)
-        {
-            switch (ex)
-            {
-                case OperationCanceledException _:
-                    return true;
-                case AggregateException aggEx:
-                    return aggEx.InnerException is OperationCanceledException;
-            }
-
-            return false;
         }
     }
 }

@@ -361,19 +361,6 @@ namespace FubarDev.FtpServer
             _loggerScope?.Dispose();
         }
 
-        private static bool IsIOException(Exception ex)
-        {
-            switch (ex)
-            {
-                case IOException _:
-                    return true;
-                case AggregateException aggEx:
-                    return aggEx.InnerException is IOException;
-            }
-
-            return false;
-        }
-
         private void Abort()
         {
             _closed = true;
@@ -443,11 +430,11 @@ namespace FubarDev.FtpServer
                     }
                 }
             }
-            catch (Exception ex) when (IsIOException(ex) && cancellationToken.IsCancellationRequested)
+            catch (Exception ex) when (ex.IsIOException() && cancellationToken.IsCancellationRequested)
             {
                 Log?.LogWarning("Last response probably incomplete.");
             }
-            catch (Exception ex) when (IsIOException(ex))
+            catch (Exception ex) when (ex.IsIOException())
             {
                 Log?.LogWarning("Connection lost or closed by client. Remaining output discarded.");
             }
@@ -587,10 +574,19 @@ namespace FubarDev.FtpServer
                     }
                 }
             }
-            catch (Exception ex) when (IsIOException(ex))
+            catch (Exception ex) when (ex.IsIOException() && !cancellationToken.IsCancellationRequested)
             {
                 Log?.LogWarning("Connection lost or closed by client.");
                 Abort();
+            }
+            catch (Exception ex) when (ex.IsIOException())
+            {
+                // Most likely closed by server.
+                Abort();
+            }
+            catch (Exception ex) when (ex.IsOperationCancelledException())
+            {
+                // Connection most likely closed due to QUIT command.
             }
             catch (Exception ex)
             {
