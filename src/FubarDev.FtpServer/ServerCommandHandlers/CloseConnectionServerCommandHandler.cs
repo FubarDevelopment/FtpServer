@@ -11,6 +11,8 @@ using FubarDev.FtpServer.ServerCommands;
 
 using JetBrains.Annotations;
 
+using Microsoft.Extensions.Logging;
+
 namespace FubarDev.FtpServer.ServerCommandHandlers
 {
     /// <summary>
@@ -21,20 +23,14 @@ namespace FubarDev.FtpServer.ServerCommandHandlers
         [NotNull]
         private readonly IFtpConnectionAccessor _connectionAccessor;
 
-        [NotNull]
-        private readonly ISslStreamWrapperFactory _sslStreamWrapperFactory;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="CloseConnectionServerCommandHandler"/> class.
         /// </summary>
         /// <param name="connectionAccessor">The FTP connection accessor.</param>
-        /// <param name="sslStreamWrapperFactory">The SSL stream wrapper factory.</param>
         public CloseConnectionServerCommandHandler(
-            [NotNull] IFtpConnectionAccessor connectionAccessor,
-            [NotNull] ISslStreamWrapperFactory sslStreamWrapperFactory)
+            [NotNull] IFtpConnectionAccessor connectionAccessor)
         {
             _connectionAccessor = connectionAccessor;
-            _sslStreamWrapperFactory = sslStreamWrapperFactory;
         }
 
         /// <inheritdoc />
@@ -52,7 +48,8 @@ namespace FubarDev.FtpServer.ServerCommandHandlers
                     cancellationToken)
                .ConfigureAwait(false);
 
-            await connection.StopAsync();
+            await Task.WhenAny(connection.StopAsync(), Task.Delay(-1, cancellationToken))
+               .ConfigureAwait(false);
         }
     }
 }
