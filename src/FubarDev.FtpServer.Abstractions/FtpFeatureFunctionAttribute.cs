@@ -45,10 +45,17 @@ namespace FubarDev.FtpServer
         }
 
         /// <inheritdoc />
-        public string BuildInfo(Type reference, IFtpConnection connection)
+        public IEnumerable<string> BuildInfo(Type reference, IFtpConnection connection)
         {
             var method = reference.GetTypeInfo().GetDeclaredMethod(_functionName);
-            return (string)method.Invoke(null, new object[] { connection });
+            var result = method
+               .Invoke(null, new object[] {connection});
+            if (result is string s)
+            {
+                return new[] { s };
+            }
+
+            return (IEnumerable<string>)result;
         }
     }
 }

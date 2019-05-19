@@ -54,7 +54,7 @@ namespace FubarDev.FtpServer.CommandHandlers
                .Concat(GetLegacyFeatureInfoItems(_commandHandlerProvider.CommandHandlers))
 #pragma warning restore CS0612 // Typ oder Element ist veraltet
                .Where(x => IsFeatureAllowed(x, isAuthorized))
-               .Select(BuildInfo)
+               .SelectMany(BuildInfo)
                .Distinct(StringComparer.OrdinalIgnoreCase)
                .OrderBy(x => x, StringComparer.OrdinalIgnoreCase)
                .ToList();
@@ -84,7 +84,7 @@ namespace FubarDev.FtpServer.CommandHandlers
             }
         }
 
-        private string BuildInfo(FoundFeatureInfo foundFeatureInfo)
+        private IEnumerable<string> BuildInfo(FoundFeatureInfo foundFeatureInfo)
         {
             if (foundFeatureInfo.IsCommandHandler)
             {

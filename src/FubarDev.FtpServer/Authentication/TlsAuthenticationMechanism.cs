@@ -13,6 +13,7 @@ using FubarDev.FtpServer.ServerCommands;
 
 using JetBrains.Annotations;
 
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 
 namespace FubarDev.FtpServer.Authentication
@@ -20,9 +21,7 @@ namespace FubarDev.FtpServer.Authentication
     /// <summary>
     /// Implementation for the <c>AUTH TLS</c> command.
     /// </summary>
-    [FtpFeatureText("AUTH TLS")]
-    [FtpFeatureText("PBSZ")]
-    [FtpFeatureText("PROT")]
+    [FtpFeatureFunction(nameof(CreateAuthTlsFeatureString))]
 #pragma warning disable CS0618 // Typ oder Element ist veraltet
     public class TlsAuthenticationMechanism : AuthenticationMechanism, IFeatureHost
 #pragma warning restore CS0618 // Typ oder Element ist veraltet
@@ -47,6 +46,23 @@ namespace FubarDev.FtpServer.Authentication
         {
             _sslStreamWrapperFactory = sslStreamWrapperFactory;
             _serverCertificate = options.Value.ServerCertificate;
+        }
+
+        /// <summary>
+        /// Build a string to be returned by the <c>FEAT</c> command handler.
+        /// </summary>
+        /// <param name="connection">The FTP connection.</param>
+        /// <returns>The string(s) to be returned.</returns>
+        [NotNull]
+        public static IEnumerable<string> CreateAuthTlsFeatureString([NotNull] IFtpConnection connection)
+        {
+            var options = connection.ConnectionServices.GetRequiredService<IOptions<AuthTlsOptions>>();
+            if (options.Value.ServerCertificate != null)
+            {
+                return new[] { "AUTH TLS", "PBSZ", "PROT" };
+            }
+
+            return new string[0];
         }
 
         /// <inheritdoc />
