@@ -83,7 +83,7 @@ namespace FubarDev.FtpServer.Authentication
 
             if (_serverCertificate == null)
             {
-                return new FtpResponse(421, T("TLS not configured"));
+                return new FtpResponse(500, T("Syntax error, command unrecognized."));
             }
 
             await serverCommandWriter.WriteAsync(
@@ -119,31 +119,55 @@ namespace FubarDev.FtpServer.Authentication
         /// <inheritdoc />
         public override Task<IFtpResponse> HandlePbszAsync(long size, CancellationToken cancellationToken)
         {
-            if (size != 0)
+            IFtpResponse response;
+
+            if (_serverCertificate == null)
             {
-                return Task.FromResult<IFtpResponse>(new FtpResponse(501, T("A protection buffer size other than 0 is not supported. Use PBSZ=0 instead.")));
+                response = new FtpResponse(500, T("Syntax error, command unrecognized."));
+            }
+            else if (size != 0)
+            {
+                response = new FtpResponse(501, T("A protection buffer size other than 0 is not supported. Use PBSZ=0 instead."));
+            }
+            else
+            {
+                response = new FtpResponse(200, T("Protection buffer size set to {0}.", size));
             }
 
-            return Task.FromResult<IFtpResponse>(new FtpResponse(200, T("Protection buffer size set to {0}.", size)));
+            return Task.FromResult(response);
         }
 
         /// <inheritdoc />
         public override Task<IFtpResponse> HandleProtAsync(string protCode, CancellationToken cancellationToken)
         {
-            var secureConnectionFeature = Connection.Features.Get<ISecureConnectionFeature>();
-            switch (protCode.ToUpperInvariant())
+            IFtpResponse response;
+
+            if (_serverCertificate == null)
             {
-                case "C":
-                    secureConnectionFeature.CreateEncryptedStream = null;
-                    break;
-                case "P":
-                    secureConnectionFeature.CreateEncryptedStream = CreateSslStream;
-                    break;
-                default:
-                    return Task.FromResult<IFtpResponse>(new FtpResponse(SecurityActionResult.RequestedProtLevelNotSupported, T("A data channel protection level other than C, or P is not supported.")));
+                response = new FtpResponse(500, T("Syntax error, command unrecognized."));
+            }
+            else
+            {
+                var secureConnectionFeature = Connection.Features.Get<ISecureConnectionFeature>();
+                switch (protCode.ToUpperInvariant())
+                {
+                    case "C":
+                        secureConnectionFeature.CreateEncryptedStream = null;
+                        response = new FtpResponse(200, T("Data channel protection level set to {0}.", protCode));
+                        break;
+                    case "P":
+                        secureConnectionFeature.CreateEncryptedStream = CreateSslStream;
+                        response = new FtpResponse(200, T("Data channel protection level set to {0}.", protCode));
+                        break;
+                    default:
+                        response = new FtpResponse(
+                            SecurityActionResult.RequestedProtLevelNotSupported,
+                            T("A data channel protection level other than C, or P is not supported."));
+                        break;
+                }
             }
 
-            return Task.FromResult<IFtpResponse>(new FtpResponse(200, T("Data channel protection level set to {0}.", protCode)));
+            return Task.FromResult(response);
         }
 
         /// <inheritdoc />
