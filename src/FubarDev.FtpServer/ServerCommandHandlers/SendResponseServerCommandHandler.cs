@@ -44,8 +44,6 @@ namespace FubarDev.FtpServer.ServerCommandHandlers
             IFtpResponse response,
             CancellationToken cancellationToken)
         {
-            // connection.Log?.Log(response);
-
             var networkStreamFeature = connection.Features.Get<INetworkStreamFeature>();
             var encoding = connection.Features.Get<IEncodingFeature>().Encoding;
 

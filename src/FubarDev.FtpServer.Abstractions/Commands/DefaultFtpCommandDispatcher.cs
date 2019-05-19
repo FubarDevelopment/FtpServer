@@ -17,6 +17,9 @@ using Microsoft.Extensions.Logging;
 
 namespace FubarDev.FtpServer.Commands
 {
+    /// <summary>
+    /// Default implementation of <see cref="IFtpCommandDispatcher"/>.
+    /// </summary>
     public class DefaultFtpCommandDispatcher : IFtpCommandDispatcher
     {
         [NotNull]
@@ -28,6 +31,13 @@ namespace FubarDev.FtpServer.Commands
         [NotNull]
         private readonly IBackgroundCommandHandler _backgroundCommandHandler;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DefaultFtpCommandDispatcher"/> class.
+        /// </summary>
+        /// <param name="connection">The FTP connection.</param>
+        /// <param name="loginStateMachine">The login state machine.</param>
+        /// <param name="commandActivator">The command activator.</param>
+        /// <param name="backgroundCommandHandler">The background command handler.</param>
         public DefaultFtpCommandDispatcher(
             [NotNull] IFtpConnection connection,
             [NotNull] IFtpLoginStateMachine loginStateMachine,

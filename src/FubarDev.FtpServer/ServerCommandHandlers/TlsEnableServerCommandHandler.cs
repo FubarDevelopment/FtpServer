@@ -54,7 +54,7 @@ namespace FubarDev.FtpServer.ServerCommandHandlers
         /// Enables TLS on a connection that isn't reading or writing (read: that's not started yet or is paused).
         /// </summary>
         /// <param name="connection">The FTP connection to activate TLS for.</param>
-        /// <param name="certificate">The X.509 certificate to use (with private key)</param>
+        /// <param name="certificate">The X.509 certificate to use (with private key).</param>
         /// <param name="sslStreamWrapperFactory">The SSL stream wrapper factory.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>

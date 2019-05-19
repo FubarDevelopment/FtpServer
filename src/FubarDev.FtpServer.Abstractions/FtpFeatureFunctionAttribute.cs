@@ -49,7 +49,7 @@ namespace FubarDev.FtpServer
         {
             var method = reference.GetTypeInfo().GetDeclaredMethod(_functionName);
             var result = method
-               .Invoke(null, new object[] {connection});
+               .Invoke(null, new object[] { connection });
             if (result is string s)
             {
                 return new[] { s };
