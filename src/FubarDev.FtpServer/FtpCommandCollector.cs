@@ -168,6 +168,15 @@ namespace FubarDev.FtpServer
             {
                 return _collector.InternalCollect(data);
             }
+
+            /// <inheritdoc />
+            protected override IEnumerable<FtpCommand> InterruptProcess()
+            {
+                return new []
+                {
+                    new FtpCommand("ABOR", null),
+                };
+            }
         }
     }
 }
