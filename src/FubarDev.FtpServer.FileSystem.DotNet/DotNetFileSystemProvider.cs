@@ -47,7 +47,7 @@ namespace FubarDev.FtpServer.FileSystem.DotNet
         {
             _accountDirectoryQuery = accountDirectoryQuery;
             _logger = logger;
-            _rootPath = options.Value.RootPath ?? Path.GetTempPath();
+            _rootPath = string.IsNullOrEmpty(options.Value.RootPath) ? Path.GetTempPath() : options.Value.RootPath;
             _streamBufferSize = options.Value.StreamBufferSize ?? DotNetFileSystem.DefaultStreamBufferSize;
             _allowNonEmptyDirectoryDelete = options.Value.AllowNonEmptyDirectoryDelete;
         }
