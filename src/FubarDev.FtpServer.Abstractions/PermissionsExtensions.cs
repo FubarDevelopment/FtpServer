@@ -27,8 +27,9 @@ namespace FubarDev.FtpServer
         [NotNull]
         public static IAccessMode GetAccessModeFor([NotNull] this IUnixPermissions permissions, [NotNull] IUnixOwner entity, [NotNull] IFtpUser user)
         {
-            var isUser = string.Equals(entity.Owner, user.Name, StringComparison.OrdinalIgnoreCase);
-            var isGroup = user.IsInGroup(entity.Group);
+            var isUser = string.Equals(entity.GetOwner(), user.Name, StringComparison.OrdinalIgnoreCase);
+            var group = entity.GetGroup();
+            var isGroup = group != null && user.IsInGroup(group);
             var canRead = (isUser && permissions.User.Read)
                           || (isGroup && permissions.Group.Read)
                           || permissions.Other.Read;
@@ -39,6 +40,32 @@ namespace FubarDev.FtpServer
                              || (isGroup && permissions.Group.Execute)
                              || permissions.Other.Execute;
             return new GenericAccessMode(canRead, canWrite, canExecute);
+        }
+
+        [CanBeNull]
+        private static string GetOwner([NotNull] this IUnixOwner entity)
+        {
+            try
+            {
+                return entity.Owner;
+            }
+            catch (ArgumentException)
+            {
+                return null;
+            }
+        }
+
+        [CanBeNull]
+        private static string GetGroup([NotNull] this IUnixOwner entity)
+        {
+            try
+            {
+                return entity.Group;
+            }
+            catch (ArgumentException)
+            {
+                return null;
+            }
         }
     }
 }
