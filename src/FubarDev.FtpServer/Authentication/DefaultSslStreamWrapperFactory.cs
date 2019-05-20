@@ -43,8 +43,12 @@ namespace FubarDev.FtpServer.Authentication
         {
             if (sslStream is SslStream s)
             {
-                await s.ShutdownAsync();
-                await s.FlushAsync(cancellationToken);
+                await s.ShutdownAsync().ConfigureAwait(false);
+
+                // Why is this needed? I get a GnuTLS error -110 when it's not called!
+                await Task.Yield();
+
+                await s.FlushAsync(cancellationToken).ConfigureAwait(false);
                 s.Close();
             }
         }
