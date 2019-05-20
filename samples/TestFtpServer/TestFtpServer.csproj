@@ -39,7 +39,7 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <None Update="test.pfx">
+    <None Update="*.pfx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
