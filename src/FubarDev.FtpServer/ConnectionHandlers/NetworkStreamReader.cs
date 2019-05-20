@@ -75,9 +75,9 @@ namespace FubarDev.FtpServer.ConnectionHandlers
         /// <inheritdoc />
         public Task StopAsync(CancellationToken cancellationToken)
         {
-            if (Status != ConnectionStatus.Running && Status != ConnectionStatus.Stopped)
+            if (Status != ConnectionStatus.Running && Status != ConnectionStatus.Stopped && Status != ConnectionStatus.Paused)
             {
-                throw new InvalidOperationException($"Status must be {ConnectionStatus.Running}, but was {Status}.");
+                throw new InvalidOperationException($"Status must be {ConnectionStatus.Running}, {ConnectionStatus.Stopped}, or {ConnectionStatus.Paused}, but was {Status}.");
             }
 
             _jobStopped.Cancel();
