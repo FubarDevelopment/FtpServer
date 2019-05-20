@@ -172,7 +172,7 @@ namespace FubarDev.FtpServer
             /// <inheritdoc />
             protected override IEnumerable<FtpCommand> InterruptProcess()
             {
-                return new []
+                return new[]
                 {
                     new FtpCommand("ABOR", null),
                 };
