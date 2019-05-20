@@ -15,9 +15,25 @@ namespace TestFtpServer.Configuration
     {
         private FileSystemLayoutType? _layout;
         private FileSystemType _backend = FileSystemType.InMemory;
+
+        /// <summary>
+        /// Gets or sets authentication providers to use.
+        /// </summary>
         public MembershipProviderType Authentication { get; set; } = MembershipProviderType.Default;
+
+        /// <summary>
+        /// Gets or sets the PAM authorization options.
+        /// </summary>
         public PamAuthOptions Pam { get; set; } = new PamAuthOptions();
+
+        /// <summary>
+        /// Gets or sets the FTP server options.
+        /// </summary>
         public FtpServerOptions Server { get; set; } = new FtpServerOptions();
+
+        /// <summary>
+        /// Gets or sets the FTPS options.
+        /// </summary>
         public FtpsOptions Ftps { get; set; } = new FtpsOptions();
 
         /// <summary>
