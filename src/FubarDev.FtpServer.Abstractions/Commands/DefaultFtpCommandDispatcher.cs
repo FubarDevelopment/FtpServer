@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -31,20 +32,33 @@ namespace FubarDev.FtpServer.Commands
         [NotNull]
         private readonly IFtpCommandActivator _commandActivator;
 
+        [NotNull]
+        private readonly FtpCommandExecutionDelegate _executionDelegate;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="DefaultFtpCommandDispatcher"/> class.
         /// </summary>
         /// <param name="connection">The FTP connection.</param>
         /// <param name="loginStateMachine">The login state machine.</param>
         /// <param name="commandActivator">The command activator.</param>
+        /// <param name="middlewareObjects">The list of middleware objects.</param>
         public DefaultFtpCommandDispatcher(
             [NotNull] IFtpConnection connection,
             [NotNull] IFtpLoginStateMachine loginStateMachine,
-            [NotNull] IFtpCommandActivator commandActivator)
+            [NotNull] IFtpCommandActivator commandActivator,
+            [NotNull, ItemNotNull] IEnumerable<IFtpCommandMiddleware> middlewareObjects)
         {
             _connection = connection;
             _loginStateMachine = loginStateMachine;
             _commandActivator = commandActivator;
+            var nextStep = new FtpCommandExecutionDelegate(ExecuteCommandAsync);
+            foreach (var middleware in middlewareObjects.Reverse())
+            {
+                var tempStep = nextStep;
+                nextStep = (context) => middleware.InvokeAsync(context, tempStep);
+            }
+
+            _executionDelegate = nextStep;
         }
 
         [CanBeNull]
@@ -81,12 +95,13 @@ namespace FubarDev.FtpServer.Commands
 
             if (result.Information.IsAbortable)
             {
-                await ExecuteBackgroundCommandAsync(handler, context, cancellationToken)
+                await ExecuteBackgroundCommandAsync(context, handler, cancellationToken)
                    .ConfigureAwait(false);
             }
             else
             {
-                await ExecuteCommandAsync(handler, context, cancellationToken)
+                var executionContext = new FtpExecutionContext(context, handler, cancellationToken);
+                await _executionDelegate(executionContext)
                    .ConfigureAwait(false);
             }
         }
@@ -117,8 +132,8 @@ namespace FubarDev.FtpServer.Commands
 
         [NotNull]
         private Task ExecuteBackgroundCommandAsync(
+            [NotNull] FtpContext context,
             [NotNull] IFtpCommandBase handler,
-            [NotNull] FtpContext ftpContext,
             CancellationToken cancellationToken)
         {
             var backgroundTaskFeature = _connection.Features.Get<IBackgroundTaskLifetimeFeature>();
@@ -126,8 +141,12 @@ namespace FubarDev.FtpServer.Commands
             {
                 backgroundTaskFeature = new BackgroundTaskLifetimeFeature(
                     handler,
-                    ftpContext.Command,
-                    ct => ExecuteCommandAsync(handler, ftpContext, ct),
+                    context.Command,
+                    ct =>
+                    {
+                        var executionContext = new FtpExecutionContext(context, handler, ct);
+                        return _executionDelegate(executionContext);
+                    },
                     cancellationToken);
                 _connection.Features.Set(backgroundTaskFeature);
                 return Task.CompletedTask;
@@ -140,16 +159,14 @@ namespace FubarDev.FtpServer.Commands
 
         [NotNull]
         private async Task ExecuteCommandAsync(
-            [NotNull] IFtpCommandBase handler,
-            [NotNull] FtpContext ftpContext,
-            CancellationToken cancellationToken)
+            [NotNull] FtpExecutionContext context)
         {
-            var localizationFeature = ftpContext.Connection.Features.Get<ILocalizationFeature>();
-            var command = ftpContext.Command;
+            var localizationFeature = context.Connection.Features.Get<ILocalizationFeature>();
+            var command = context.Command;
             IFtpResponse response;
             try
             {
-                response = await handler.Process(ftpContext.Command, cancellationToken)
+                response = await context.CommandHandler.Process(command, context.CommandAborted)
                    .ConfigureAwait(false);
             }
             catch (Exception ex)
@@ -192,7 +209,7 @@ namespace FubarDev.FtpServer.Commands
 
             if (response != null)
             {
-                await SendResponseAsync(response, cancellationToken)
+                await SendResponseAsync(response, context.CommandAborted)
                    .ConfigureAwait(false);
             }
         }
