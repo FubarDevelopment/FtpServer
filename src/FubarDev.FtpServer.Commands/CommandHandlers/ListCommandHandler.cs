@@ -160,7 +160,7 @@ namespace FubarDev.FtpServer.CommandHandlers
                         if (argument.Recursive)
                         {
                             var line = currentPath.ToDisplayString() + ":";
-                            Connection.Log?.LogDebug(line);
+                            Connection.Log?.LogTrace(line);
                             await writer.WriteLineAsync(line).ConfigureAwait(false);
                         }
 
@@ -204,7 +204,7 @@ namespace FubarDev.FtpServer.CommandHandlers
                             }
 
                             var line = formatter.Format(entry, name);
-                            Connection.Log?.LogDebug(line);
+                            Connection.Log?.LogTrace(line);
                             await writer.WriteLineAsync(line).ConfigureAwait(false);
                         }
                     }

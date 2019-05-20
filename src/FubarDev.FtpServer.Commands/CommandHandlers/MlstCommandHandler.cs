@@ -201,7 +201,7 @@ namespace FubarDev.FtpServer.CommandHandlers
                         var name = enumerator.Name;
                         var entry = enumerator.Entry;
                         var line = formatter.Format(entry, name);
-                        Connection.Log?.LogDebug(line);
+                        Connection.Log?.LogTrace(line);
                         await writer.WriteLineAsync(line).ConfigureAwait(false);
                     }
 
