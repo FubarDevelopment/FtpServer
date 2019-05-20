@@ -21,12 +21,12 @@ namespace FubarDev.FtpServer
         /// </summary>
         /// <param name="log">The <see cref="ILogger"/> to use.</param>
         /// <param name="command">The <see cref="FtpCommand"/> to log.</param>
-        public static void Trace([NotNull] this ILogger log, [NotNull] FtpCommand command)
+        public static void Command([NotNull] this ILogger log, [NotNull] FtpCommand command)
         {
             var arguments = string.Equals(command.Name, "PASS", System.StringComparison.OrdinalIgnoreCase)
                 ? @"**************** (password omitted)"
                 : command.Argument;
-            log.LogTrace("{name} {arguments}", command.Name, arguments);
+            log.LogDebug("{name} {arguments}", command.Name, arguments);
         }
 
         /// <summary>
