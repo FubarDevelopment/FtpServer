@@ -6,8 +6,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-using FubarDev.FtpServer.AccountManagement;
-
 using Mono.Unix;
 
 namespace FubarDev.FtpServer.MembershipProvider.Pam
@@ -15,7 +13,7 @@ namespace FubarDev.FtpServer.MembershipProvider.Pam
     /// <summary>
     /// An FTP user implementation backed by PAM user information.
     /// </summary>
-    public class PamFtpUser : IFtpUser
+    public class PamFtpUser : IUnixUser
     {
         private readonly ISet<string> _userGroupNames;
 
@@ -34,6 +32,8 @@ namespace FubarDev.FtpServer.MembershipProvider.Pam
                 StringComparer.Ordinal);
             Name = userInfo.UserName;
             HomeDirectory = userInfo.HomeDirectory;
+            UserId = userInfo.UserId;
+            GroupId = userInfo.GroupId;
         }
 
         /// <inheritdoc />
@@ -43,6 +43,12 @@ namespace FubarDev.FtpServer.MembershipProvider.Pam
         /// Gets the users home directory.
         /// </summary>
         public string HomeDirectory { get; }
+
+        /// <inheritdoc />
+        public long UserId { get; }
+
+        /// <inheritdoc />
+        public long GroupId { get; }
 
         /// <inheritdoc />
         public bool IsInGroup(string groupName)

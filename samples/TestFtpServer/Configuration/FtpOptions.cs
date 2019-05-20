@@ -22,6 +22,16 @@ namespace TestFtpServer.Configuration
         public MembershipProviderType Authentication { get; set; } = MembershipProviderType.Default;
 
         /// <summary>
+        /// Gets or sets a value indicating whether user/group IDs will be set for file system operations.
+        /// </summary>
+        public bool SetFileSystemId { get; set; }
+
+        /// <summary>
+        /// Gets or sets the bits to be removed from the default file system entry permissions.
+        /// </summary>
+        public string? Umask { get; set; }
+
+        /// <summary>
         /// Gets or sets the PAM authorization options.
         /// </summary>
         public PamAuthOptions Pam { get; set; } = new PamAuthOptions();

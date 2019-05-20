@@ -29,15 +29,18 @@ using FubarDev.FtpServer.ServerCommandHandlers;
 using Google.Apis.Auth.OAuth2;
 using Google.Apis.Drive.v3;
 
+using Microsoft.DotNet.PlatformAbstractions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
 using Mono.Options;
+using Mono.Unix.Native;
 
 using NLog.Extensions.Logging;
 
+using TestFtpServer.CommandMiddlewares;
 using TestFtpServer.Commands;
 using TestFtpServer.Configuration;
 using TestFtpServer.Extensions;
@@ -172,25 +175,29 @@ namespace TestFtpServer
         private static async Task RunFromOptions(FtpOptions options)
         {
             options.Validate();
-            var services = CreateServices(options);
+            IServiceCollection services;
 
             switch (options.BackendType)
             {
                 case FileSystemType.InMemory:
-                    services
+                    services = CreateServices(
+                            options,
+                            svc => svc
+                               .AddFtpServer(sb => sb.ConfigureAuthentication(options).UseInMemoryFileSystem()))
                        .Configure<InMemoryFileSystemOptions>(
-                            opt => opt.KeepAnonymousFileSystem = options.InMemory.KeepAnonymous)
-                       .AddFtpServer(sb => sb.ConfigureAuthentication(options).UseInMemoryFileSystem());
+                            opt => opt.KeepAnonymousFileSystem = options.InMemory.KeepAnonymous);
                     break;
                 case FileSystemType.SystemIO:
-                    services
-                       .Configure<DotNetFileSystemOptions>(opt => opt.RootPath = options.SystemIo.Root)
-                       .AddFtpServer(sb => sb.ConfigureAuthentication(options).UseDotNetFileSystem());
+                    services = CreateServices(
+                            options,
+                            svc => svc.AddFtpServer(sb => sb.ConfigureAuthentication(options).UseDotNetFileSystem()))
+                       .Configure<DotNetFileSystemOptions>(opt => opt.RootPath = options.SystemIo.Root);
                     break;
                 case FileSystemType.Unix:
-                    services
-                       .Configure<UnixFileSystemOptions>(opt => opt.Root = options.Unix.Root)
-                       .AddFtpServer(sb => sb.ConfigureAuthentication(options).UseUnixFileSystem());
+                    services = CreateServices(
+                            options,
+                            svc => svc.AddFtpServer(sb => sb.ConfigureAuthentication(options).UseUnixFileSystem()))
+                       .Configure<UnixFileSystemOptions>(opt => opt.Root = options.Unix.Root);
                     break;
                 case FileSystemType.GoogleDriveUser:
                     var userCredential = await GetUserCredential(
@@ -202,16 +209,23 @@ namespace TestFtpServer
                                 "User name not specified."),
                             options.GoogleDrive.User.RefreshToken)
                        .ConfigureAwait(false);
-                    services
-                       .AddFtpServer(sb => sb.ConfigureAuthentication(options).UseGoogleDrive(userCredential));
+                    services = CreateServices(
+                        options,
+                        svc => svc.AddFtpServer(
+                            sb => sb.ConfigureAuthentication(options).UseGoogleDrive(userCredential)));
                     break;
                 case FileSystemType.GoogleDriveService:
                     var serviceCredential = GoogleCredential
                        .FromFile(options.GoogleDrive.Service.CredentialFile)
                        .CreateScoped(DriveService.Scope.Drive, DriveService.Scope.DriveFile);
-                    services
-                       .AddFtpServer(sb => sb.ConfigureAuthentication(options).UseGoogleDrive(serviceCredential));
+                    services = CreateServices(
+                        options,
+                        svc => svc.AddFtpServer(
+                            sb => sb.ConfigureAuthentication(options).UseGoogleDrive(serviceCredential)));
                     break;
+                default:
+                    throw new NotSupportedException(
+                        $"Backend of type {options.Backend} cannot be run from configuration file options.");
             }
 
             await RunAsync(services).ConfigureAwait(false);
@@ -220,10 +234,11 @@ namespace TestFtpServer
         private static Task RunWithInMemoryFileSystemAsync(FtpOptions options)
         {
             options.Validate();
-            var services = CreateServices(options)
+            var services = CreateServices(
+                    options,
+                    svc => svc.AddFtpServer(sb => sb.ConfigureAuthentication(options).UseInMemoryFileSystem()))
                .Configure<InMemoryFileSystemOptions>(
-                    opt => opt.KeepAnonymousFileSystem = options.InMemory.KeepAnonymous)
-               .AddFtpServer(sb => sb.ConfigureAuthentication(options).UseInMemoryFileSystem());
+                    opt => opt.KeepAnonymousFileSystem = options.InMemory.KeepAnonymous);
             return RunAsync(services);
         }
 
@@ -232,17 +247,19 @@ namespace TestFtpServer
             options.Validate();
             var rootDir =
                 args.Length != 0 ? args[0] : Path.Combine(Path.GetTempPath(), "TestFtpServer");
-            var services = CreateServices(options)
-               .Configure<DotNetFileSystemOptions>(opt => opt.RootPath = rootDir)
-               .AddFtpServer(sb => sb.ConfigureAuthentication(options).UseDotNetFileSystem());
+            var services = CreateServices(
+                    options,
+                    svc => svc.AddFtpServer(sb => sb.ConfigureAuthentication(options).UseDotNetFileSystem()))
+               .Configure<DotNetFileSystemOptions>(opt => opt.RootPath = rootDir);
             return RunAsync(services);
         }
 
         private static Task RunWithUnixFileSystemAsync(FtpOptions options)
         {
             options.Validate();
-            var services = CreateServices(options)
-               .AddFtpServer(sb => sb.ConfigureAuthentication(options).UseUnixFileSystem());
+            var services = CreateServices(
+                options,
+                svc => svc.AddFtpServer(sb => sb.ConfigureAuthentication(options).UseUnixFileSystem()));
             return RunAsync(services);
         }
 
@@ -263,8 +280,9 @@ namespace TestFtpServer
                     options.GoogleDrive.User.RefreshToken)
                .ConfigureAwait(false);
 
-            var services = CreateServices(options)
-               .AddFtpServer(sb => sb.ConfigureAuthentication(options).UseGoogleDrive(credential));
+            var services = CreateServices(
+                options,
+                svc => svc.AddFtpServer(sb => sb.ConfigureAuthentication(options).UseGoogleDrive(credential)));
             await RunAsync(services).ConfigureAwait(false);
         }
 
@@ -307,8 +325,9 @@ namespace TestFtpServer
                 .FromFile(serviceCredentialFile)
                 .CreateScoped(DriveService.Scope.Drive, DriveService.Scope.DriveFile);
 
-            var services = CreateServices(options)
-               .AddFtpServer(sb => sb.ConfigureAuthentication(options).UseGoogleDrive(credential));
+            var services = CreateServices(
+                options,
+                svc => svc.AddFtpServer(sb => sb.ConfigureAuthentication(options).UseGoogleDrive(credential)));
             return RunAsync(services);
         }
 
@@ -339,7 +358,9 @@ namespace TestFtpServer
             }
         }
 
-        private static IServiceCollection CreateServices(FtpOptions options)
+        private static IServiceCollection CreateServices(
+            FtpOptions options,
+            Action<IServiceCollection> configureFtpServerAction)
         {
             var services = new ServiceCollection()
                .AddLogging(cfg => cfg.SetMinimumLevel(LogLevel.Trace))
@@ -372,7 +393,8 @@ namespace TestFtpServer
                     })
                .Configure<PasvCommandOptions>(opt => opt.PromiscuousPasv = options.Server.Pasv.Promiscuous)
                .Configure<GoogleDriveOptions>(opt => opt.UseBackgroundUpload = options.GoogleDrive.BackgroundUpload)
-               .Configure<PamMembershipProviderOptions>(opt => opt.IgnoreAccountManagement = options.Pam.NoAccountManagement);
+               .Configure<PamMembershipProviderOptions>(
+                    opt => opt.IgnoreAccountManagement = options.Pam.NoAccountManagement);
 
             // Add "Hello" service - unique per FTP connection
             services.AddScoped<Hello>();
@@ -387,6 +409,13 @@ namespace TestFtpServer
                     sp.GetRequiredService<IFtpCommandHandlerProvider>(),
                     sp.GetService<ILogger<AssemblyFtpCommandHandlerExtensionScanner>>(),
                     typeof(SiteHelloFtpCommandHandlerExtension).Assembly));
+
+            if (options.SetFileSystemId)
+            {
+                services.AddScoped<IFtpCommandMiddleware, FsIdChanger>();
+            }
+
+            configureFtpServerAction(services);
 
             switch (options.LayoutType)
             {
@@ -414,15 +443,15 @@ namespace TestFtpServer
                     break;
             }
 
-            if (options.Ftps.Implicit)
-            {
-                services.Decorate<IFtpServer>(
-                    (ftpServer, serviceProvider) =>
+            services.Decorate<IFtpServer>(
+                (ftpServer, serviceProvider) =>
+                {
+                    if (options.Ftps.Implicit)
                     {
                         var authTlsOptions = serviceProvider.GetRequiredService<IOptions<AuthTlsOptions>>();
                         var sslStreamWrapperFactory = serviceProvider.GetRequiredService<ISslStreamWrapperFactory>();
 
-                        // Use an implicit SSL connection (without the AUTHTLS command)
+                        // Use an implicit SSL connection (without the AUTH TLS command)
                         ftpServer.ConfigureConnection += (s, e) =>
                         {
                             TlsEnableServerCommandHandler.EnableTlsAsync(
@@ -431,10 +460,21 @@ namespace TestFtpServer
                                 sslStreamWrapperFactory,
                                 CancellationToken.None).Wait();
                         };
+                    }
 
-                        return ftpServer;
-                    });
-            }
+                    /* Setting the umask is only valid for non-Windows platforms. */
+                    if (!string.IsNullOrEmpty(options.Umask)
+                        && RuntimeEnvironment.OperatingSystemPlatform != Platform.Windows)
+                    {
+                        var umask = options.Umask.StartsWith("0")
+                            ? Convert.ToInt32(options.Umask, 8)
+                            : Convert.ToInt32(options.Umask, 10);
+
+                        Syscall.umask((FilePermissions)umask);
+                    }
+
+                    return ftpServer;
+                });
 
             return services;
         }

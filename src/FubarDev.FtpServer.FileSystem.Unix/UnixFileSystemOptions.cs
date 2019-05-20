@@ -13,10 +13,5 @@ namespace FubarDev.FtpServer.FileSystem.Unix
         /// Gets or sets the default root path.
         /// </summary>
         public string Root { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether the user ID should be changed during file system operations.
-        /// </summary>
-        public bool EnableUserIdSwitch { get; set; }
     }
 }
