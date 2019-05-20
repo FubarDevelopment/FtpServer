@@ -34,6 +34,13 @@ namespace FubarDev.FtpServer.ServerCommandHandlers
         public async Task ExecuteAsync(CloseConnectionServerCommand command, CancellationToken cancellationToken)
         {
             var connection = _connectionAccessor.FtpConnection;
+
+            // Pause the sender (which also flushes the remaining data)
+            var networkStreamFeature = connection.Features.Get<INetworkStreamFeature>();
+            await networkStreamFeature.StreamWriterService.PauseAsync(cancellationToken)
+               .ConfigureAwait(false);
+
+            // Flush the stream
             var secureConnectionFeature = connection.Features.Get<ISecureConnectionFeature>();
             var socketStream = secureConnectionFeature.SocketStream;
             await socketStream.FlushAsync(cancellationToken)
