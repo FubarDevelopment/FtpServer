@@ -4,18 +4,25 @@ title: Upgrade from 2.x to 3.0
 ---
 
 - [Overview](#overview)
-  - [File system changes](#file-system-changes)
-  - [Account management changes](#account-management-changes)
-    - [Account directories queryable](#account-directories-queryable)
-    - [Membership provider changes](#membership-provider-changes)
+- [File system changes](#file-system-changes)
+- [Authorization/authentication as per RFC 2228](#authorizationauthentication-as-per-rfc-2228)
+  - [Account directories queryable](#account-directories-queryable)
+  - [Membership provider changes](#membership-provider-changes)
+- [Connection](#connection)
+  - [Connection data changes](#connection-data-changes)
+- [FTP middleware](#ftp-middleware)
+  - [FTP request middleware](#ftp-request-middleware)
+  - [FTP command execution middleware](#ftp-command-execution-middleware)
+- [Server commands](#server-commands)
+  - [`CloseConnectionServerCommand`](#closeconnectionservercommand)
+  - [`SendResponseServerCommand`](#sendresponseservercommand)
+- [FTP command execution](#ftp-command-execution)
+  - [`FtpContext`](#ftpcontext)
   - [Command handlers (and attributes)](#command-handlers-and-attributes)
   - [Command extensions (and attributes)](#command-extensions-and-attributes)
   - [`FEAT` support](#feat-support)
-  - [Connection](#connection)
-  - [Connection data changes](#connection-data-changes)
+- [Internals](#internals)
   - [FTP command collection changes](#ftp-command-collection-changes)
-  - [Authorization/authentication as per RFC 2228](#authorizationauthentication-as-per-rfc-2228)
-  - [FTP middleware](#ftp-middleware)
 - [Changelog](#changelog)
   - [What's new?](#whats-new)
   - [What's changed?](#whats-changed)
@@ -39,7 +46,7 @@ You will notice breaking changes in the following areas:
 - Connection
 - FTP command collection
 
-## File system changes
+# File system changes
 
 There are two important changes:
 
@@ -47,9 +54,23 @@ There are two important changes:
 now requires an [`IAccountInformation`](xref:FubarDev.FtpServer.IAccountInformation) parameter
 - The [`IUnixFileSystemEntry`](xref:FubarDev.FtpServer.FileSystem.IUnixFileSystemEntry) doesn't contain the `FileSystem` property anymore.
 
-## Account management changes
+# Authorization/authentication as per RFC 2228
 
-### Account directories queryable
+The authorization/authentication stack is new and implemented as
+specified in the [RFC 2228](https://tools.ietf.org/rfc/rfc2228.txt).
+
+This results in additional interfaces/extension points, like
+
+- [`IAuthorizationMechanism`](xref:FubarDev.FtpServer.Authorization.IAuthorizationMechanism)
+- [`IAuthenticationMechanism`](xref:FubarDev.FtpServer.Authentication.IAuthenticationMechanism)
+
+There is also a new extension point for actions to be called when
+the user is fully authorized: [`IAuthorizationAction`](xref:FubarDev.FtpServer.Authorization.IAuthorizationAction). You can develop
+your own action, but you should only use an [`IAuthorizationAction.Level`](xref:FubarDev.FtpServer.Authorization.IAuthorizationAction.Level)
+below 1000. The values from 1000 (incl.) to 2000 (incl.) are reserved by
+the FTP server and are used to initialize the FTP connection data.
+
+## Account directories queryable
 
 A new interface has been introduced to get the root and home directories for
 a given user.
@@ -60,11 +81,118 @@ Type name | Description
 [`RootPerUserAccountDirectoryQuery`](xref:FubarDev.FtpServer.AccountManagement.Directories.RootPerUser.RootPerUserAccountDirectoryQuery) | Gives every user its own root directory. Useful, when - for example - the file system root was set to `/home`.
 `PamAccountDirectoryQuery` | Uses home directory information from PAM. The home directory can be configured to be the root instead.
 
-### Membership provider changes
+## Membership provider changes
 
 The membership provider is now asynchronous which means that the `ValidateUser` function was
 renamed to [`ValidateUserAsync`](xref:FubarDev.FtpServer.AccountManagement.IMembershipProvider.ValidateUserAsync(System.String,System.String)).
 Everything else is the same.
+
+# Connection
+
+The [`IFtpConnection`](xref:FubarDev.FtpServer.IFtpConnection) API was heavily overhauled to use a feature collection,
+where the features can be queried through the [`Features`](xref:FubarDev.FtpServer.IFtpConnection.Features) property. Using the `WriteAsync`
+function is obsolete. The FTP command handlers should use the `CommandContext`s
+[`ServerCommandWriter`](xref:FubarDev.FtpServer.FtpContext.ServerCommandWriter)
+if they need to send out-of-band responses.
+
+Obsolete property | Target feature
+------------------|----------------------------------
+Encoding          | [`IEncodingFeature`](xref:FubarDev.FtpServer.Features.IEncodingFeature)
+OriginalStream    | [`ISecureConnectionFeature`](xref:FubarDev.FtpServer.Features.ISecureConnectionFeature)
+SocketStream      | [`ISecureConnectionFeature`](xref:FubarDev.FtpServer.Features.ISecureConnectionFeature)
+IsSecure          | [`ISecureConnectionFeature`](xref:FubarDev.FtpServer.Features.ISecureConnectionFeature)
+
+Obsolete method   | New home
+------------------|--------------------------------------------------------
+WriteAsync        | [`FtpCommandHandler.CommandContext.ResponseWriter`](xref:FubarDev.FtpServer.CommandHandlers.FtpCommandHandler.CommandContext) or [`FtpCommandHandlerExtension.CommandContext.ResponseWriter`](xref:FubarDev.FtpServer.CommandExtensions.FtpCommandHandlerExtension.CommandContext)
+
+## Connection data changes
+
+The whole [`FtpConnectionData`](xref:FubarDev.FtpServer.FtpConnectionData) class is marked as obsolete.
+
+The connection datas `IsAnonymous` property is obsolete. An anonymous user is now detected by testing if
+the [`FtpConnectionData.User`](xref:FubarDev.FtpServer.FtpConnectionData.User)
+implements [`IAnonymousFtpUser`](xref:FubarDev.FtpServer.AccountManagement.IAnonymousFtpUser).
+
+Most of the properties of [`IFtpConnection.Data`](xref:FubarDev.FtpServer.IFtpConnection.Data) were moved to a corresponding
+feature.
+
+Obsolete property       | Target feature
+------------------------|----------------------------------
+NlstEncoding            | [`IEncodingFeature`](xref:FubarDev.FtpServer.Features.IEncodingFeature)
+User                    | [`IAuthorizationInformationFeature`](xref:FubarDev.FtpServer.Features.IAuthorizationInformationFeature)
+FileSystem              | [`IFileSystemFeature`](xref:FubarDev.FtpServer.Features.IFileSystemFeature)
+Path                    | [`IFileSystemFeature`](xref:FubarDev.FtpServer.Features.IFileSystemFeature)
+CurrentDirectory        | [`IFileSystemFeature`](xref:FubarDev.FtpServer.Features.IFileSystemFeature)
+Language                | [`ILocalizationFeature`](xref:FubarDev.FtpServer.Features.ILocalizationFeature)
+Catalog                 | [`ILocalizationFeature`](xref:FubarDev.FtpServer.Features.ILocalizationFeature)
+TransferMode            | [`ITransferConfigurationFeature`](xref:FubarDev.FtpServer.Features.ITransferConfigurationFeature)
+PortAddress             | [`ITransferConfigurationFeature`](xref:FubarDev.FtpServer.Features.ITransferConfigurationFeature)
+TransferTypeCommandUsed | [`ITransferConfigurationFeature`](xref:FubarDev.FtpServer.Features.ITransferConfigurationFeature)
+RestartPosition         | [`IRestCommandFeature`](xref:FubarDev.FtpServer.Features.IRestCommandFeature)
+RenameFrom              | [`IRenameCommandFeature`](xref:FubarDev.FtpServer.Features.IRenameCommandFeature)
+ActiveMlstFacts         | [`IMlstFactsFeature`](xref:FubarDev.FtpServer.Features.IMlstFactsFeature)
+PassiveSocketClient     | [`ISecureConnectionFeature`](xref:FubarDev.FtpServer.Features.ISecureConnectionFeature)
+BackgroundCommandHandler| [`IBackgroundTaskLifetimeFeature`](xref:FubarDev.FtpServer.Features.IBackgroundTaskLifetimeFeature)
+CreateEncryptedStream   | [`ISecureConnectionFeature`](xref:FubarDev.FtpServer.Features.ISecureConnectionFeature)
+
+
+There's no direct replacement for the `UserData` property, but you can use the feature collection too.
+
+# FTP middleware
+
+There are two types of middlewares:
+
+- FTP request middleware (between FTP command collection and dispatch)
+- FTP command execution middleware (between FTP command dispatch and execution)
+
+## FTP request middleware
+
+This middleware allows interception and modification of the received
+FTP commands. You must implement and register the
+[`IFtpMiddleware`](xref:FubarDev.FtpServer.IFtpMiddleware) interface as
+service in your dependency injection container.
+
+## FTP command execution middleware
+
+The difference between this and the former middleware is, that the FTP command
+handler for the FTP command is already selected and you can only intercept
+the FTP commands or do something special.
+
+You must implement and register the
+[`IFtpCommandMiddleware`](xref:FubarDev.FtpServer.Commands.IFtpCommandMiddleware) interface as
+service in your dependency injection container.
+
+An example is the `FsIdChanger` in the `TestFtpServer` project. This middleware
+sets - for every authenticated user - the UID/GID for file system access.
+
+# Server commands
+
+We're now supporting custom FTP server commands. Those commands must implement
+[`IServerCommand`](xref:FubarDev.FtpServer.ServerCommands.IServerCommand) and
+must have a corresponding handler ([`IServerCommandHandler<TCommand>`](xref:FubarDev.FtpServer.ServerCommands.IServerCommandHandler`1)).
+
+## [`CloseConnectionServerCommand`](xref:FubarDev.FtpServer.ServerCommands.CloseConnectionServerCommand)
+
+This command closes the FTP connection.
+
+## [`SendResponseServerCommand`](xref:FubarDev.FtpServer.ServerCommands.SendResponseServerCommand)
+
+This command sends a response to the client.
+
+# FTP command execution
+
+Massive changes were done to the FTP command execution. The center
+of this changes is the new [`FtpContext`](xref:FubarDev.FtpServer.FtpContext)
+which provides a new way to access all necessary information like
+the FTP connection, the command information and a channel to send
+server commands (which replaces `IFtpConnection.WriteAsync`).
+
+## [`FtpContext`](xref:FubarDev.FtpServer.FtpContext)
+
+The new [`FtpContext`](xref:FubarDev.FtpServer.FtpContext) is the FTP
+servers equivalent of ASP.NET Core's `HttpContext` and provides access
+to all information required to execute the FTP commands.
 
 ## Command handlers (and attributes)
 
@@ -104,84 +232,12 @@ There are two new attributes to get the string to be returned by a `FEAT` comman
 - [`FtpFeatureTextAttribute`](xref:FubarDev.FtpServer.FtpFeatureTextAttribute) contains the feature text itself
 - [`FtpFeatureFunctionAttribute`](xref:FubarDev.FtpServer.FtpFeatureFunctionAttribute) contains the name of the static function to be called to get the feature text
 
-## Connection
-
-The [`IFtpConnection`](xref:FubarDev.FtpServer.IFtpConnection) API was heavily overhauled to use a feature collection,
-where the features can be queried through the [`Features`](xref:FubarDev.FtpServer.IFtpConnection.Features) property. Using the `WriteAsync`
-function is obsolete. The FTP command handlers should use the `CommandContext`s
-[`ResponseWriter`](xref:FubarDev.FtpServer.FtpContext.ResponseWriter)
-if they need to send out-of-band responses.
-
-Obsolete property | Target feature
-------------------|----------------------------------
-Encoding          | [`IEncodingFeature`](xref:FubarDev.FtpServer.Features.IEncodingFeature)
-OriginalStream    | [`ISecureConnectionFeature`](xref:FubarDev.FtpServer.Features.ISecureConnectionFeature)
-SocketStream      | [`ISecureConnectionFeature`](xref:FubarDev.FtpServer.Features.ISecureConnectionFeature)
-IsSecure          | [`ISecureConnectionFeature`](xref:FubarDev.FtpServer.Features.ISecureConnectionFeature)
-
-Obsolete method   | New home
-------------------|--------------------------------------------------------
-WriteAsync        | [`FtpCommandHandler.CommandContext.ResponseWriter`](xref:FubarDev.FtpServer.CommandHandlers.FtpCommandHandler.CommandContext) or [`FtpCommandHandlerExtension.CommandContext.ResponseWriter`](xref:FubarDev.FtpServer.CommandExtensions.FtpCommandHandlerExtension.CommandContext)
-
-
-## Connection data changes
-
-The whole [`FtpConnectionData`](xref:FubarDev.FtpServer.FtpConnectionData) class is marked as obsolete.
-
-The connection datas `IsAnonymous` property is obsolete. An anonymous user is now detected by testing if
-the [`FtpConnectionData.User`](xref:FubarDev.FtpServer.FtpConnectionData.User)
-implements [`IAnonymousFtpUser`](xref:FubarDev.FtpServer.AccountManagement.IAnonymousFtpUser).
-
-Most of the properties of [`IFtpConnection.Data`](xref:FubarDev.FtpServer.IFtpConnection.Data) were moved to a corresponding
-feature.
-
-Obsolete property       | Target feature
-------------------------|----------------------------------
-NlstEncoding            | [`IEncodingFeature`](xref:FubarDev.FtpServer.Features.IEncodingFeature)
-User                    | [`IAuthorizationInformationFeature`](xref:FubarDev.FtpServer.Features.IAuthorizationInformationFeature)
-FileSystem              | [`IFileSystemFeature`](xref:FubarDev.FtpServer.Features.IFileSystemFeature)
-Path                    | [`IFileSystemFeature`](xref:FubarDev.FtpServer.Features.IFileSystemFeature)
-CurrentDirectory        | [`IFileSystemFeature`](xref:FubarDev.FtpServer.Features.IFileSystemFeature)
-Language                | [`ILocalizationFeature`](xref:FubarDev.FtpServer.Features.ILocalizationFeature)
-Catalog                 | [`ILocalizationFeature`](xref:FubarDev.FtpServer.Features.ILocalizationFeature)
-TransferMode            | [`ITransferConfigurationFeature`](xref:FubarDev.FtpServer.Features.ITransferConfigurationFeature)
-PortAddress             | [`ITransferConfigurationFeature`](xref:FubarDev.FtpServer.Features.ITransferConfigurationFeature)
-TransferTypeCommandUsed | [`ITransferConfigurationFeature`](xref:FubarDev.FtpServer.Features.ITransferConfigurationFeature)
-RestartPosition         | [`IRestCommandFeature`](xref:FubarDev.FtpServer.Features.IRestCommandFeature)
-RenameFrom              | [`IRenameCommandFeature`](xref:FubarDev.FtpServer.Features.IRenameCommandFeature)
-ActiveMlstFacts         | [`IMlstFactsFeature`](xref:FubarDev.FtpServer.Features.IMlstFactsFeature)
-PassiveSocketClient     | [`ISecureConnectionFeature`](xref:FubarDev.FtpServer.Features.ISecureConnectionFeature)
-CreateEncryptedStream   | [`ISecureConnectionFeature`](xref:FubarDev.FtpServer.Features.ISecureConnectionFeature)
-
-There's no direct replacement for the `UserData` property, but you can use the feature collection too.
+# Internals
 
 ## FTP command collection changes
 
 We're now using `ReadOnlySpan` for both [`TelnetInputParser`](xref:FubarDev.FtpServer.TelnetInputParser`1)
 and [`FtpCommandCollector`](xref:FubarDev.FtpServer.FtpCommandCollector).
-
-## Authorization/authentication as per RFC 2228
-
-The authorization/authentication stack is new and implemented as
-specified in the [RFC 2228](https://tools.ietf.org/rfc/rfc2228.txt).
-
-This results in additional interfaces/extension points, like
-
-- [`IAuthorizationMechanism`](xref:FubarDev.FtpServer.Authorization.IAuthorizationMechanism)
-- [`IAuthenticationMechanism`](xref:FubarDev.FtpServer.Authentication.IAuthenticationMechanism)
-
-There is also a new extension point for actions to be called when
-the user is fully authorized: [`IAuthorizationAction`](xref:FubarDev.FtpServer.Authorization.IAuthorizationAction). You can develop
-your own action, but you should only use an [`IAuthorizationAction.Level`](xref:FubarDev.FtpServer.Authorization.IAuthorizationAction.Level)
-below 1000. The values from 1000 (incl.) to 2000 (incl.) are reserved by
-the FTP server and are used to initialize the FTP connection data.
-
-## FTP middleware
-
-You're now able to inject your own FTP middleware. This allows
-custom command handlers, logging, and other features. You must
-implement and register the [`IFtpMiddleware`](xref:FubarDev.FtpServer.IFtpMiddleware) interface
-as service in your dependency injection container.
 
 # Changelog
 
@@ -196,7 +252,8 @@ as service in your dependency injection container.
 - New [`IAnonymousFtpUser`](xref:FubarDev.FtpServer.AccountManagement.IAnonymousFtpUser) interface
 - New RFC 2228 compliant authentication/authorization
 - Root and home directories for an account can be queried
-- New [`IFtpMiddleware`](xref:FubarDev.FtpServer.IFtpMiddleware) interface for custom middleware
+- New [`IFtpMiddleware`](xref:FubarDev.FtpServer.IFtpMiddleware) interface for custom request middleware
+- New [`IFtpCommandMiddleware`](xref:FubarDev.FtpServer.Commands.IFtpCommandMiddleware) interface for custom command execution middleware
 
 ## What's changed?
 
@@ -224,5 +281,4 @@ the FTP Server will be reimplemented as `ConnectionHandler` which will result in
 improvements:
 
 - Easy hosting in an ASP.NET Core application
-- Usage of pipelines when possible (`AUTH TLS` might cause problems)
 - Using the ASP.NET Core connection state management
