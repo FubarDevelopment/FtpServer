@@ -21,7 +21,6 @@ using FubarDev.FtpServer.Localization;
 using JetBrains.Annotations;
 
 using Microsoft.AspNetCore.Http.Features;
-using Microsoft.Extensions.DependencyInjection;
 
 using NGettext;
 
@@ -39,12 +38,10 @@ namespace FubarDev.FtpServer
         /// <summary>
         /// Initializes a new instance of the <see cref="FtpConnectionData"/> class.
         /// </summary>
-        /// <param name="connection">The FTP connection.</param>
         /// <param name="defaultEncoding">The default encoding.</param>
         /// <param name="featureCollection">The feature collection where all features get stored.</param>
         /// <param name="catalogLoader">The catalog loader for the FTP server.</param>
         public FtpConnectionData(
-            [NotNull] IFtpConnection connection,
             [NotNull] Encoding defaultEncoding,
             [NotNull] IFeatureCollection featureCollection,
             [NotNull] IFtpCatalogLoader catalogLoader)

@@ -97,7 +97,7 @@ namespace FubarDev.FtpServer.ConnectionHandlers
             _jobPaused.Cancel();
 
             await _task.ConfigureAwait(false);
-            await FlushAsync(Stream, _pipeReader, cancellationToken);
+            await FlushAsync(Stream, _pipeReader, cancellationToken).ConfigureAwait(false);
         }
 
         /// <inheritdoc />
@@ -209,7 +209,7 @@ namespace FubarDev.FtpServer.ConnectionHandlers
                    .ConfigureAwait(false);
             }
 
-            await stream.FlushAsync(cancellationToken);
+            await stream.FlushAsync(cancellationToken).ConfigureAwait(false);
         }
     }
 }

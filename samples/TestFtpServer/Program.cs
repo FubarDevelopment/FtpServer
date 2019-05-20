@@ -194,9 +194,14 @@ namespace TestFtpServer
                     break;
                 case FileSystemType.GoogleDriveUser:
                     var userCredential = await GetUserCredential(
-                        options.GoogleDrive.User.ClientSecrets ?? throw new ArgumentNullException(nameof(options.GoogleDrive.User.ClientSecrets), "Client secrets file not specified."),
-                        options.GoogleDrive.User.UserName ?? throw new ArgumentNullException(nameof(options.GoogleDrive.User.ClientSecrets), "User name not specified."),
-                        options.GoogleDrive.User.RefreshToken);
+                            options.GoogleDrive.User.ClientSecrets ?? throw new ArgumentNullException(
+                                nameof(options.GoogleDrive.User.ClientSecrets),
+                                "Client secrets file not specified."),
+                            options.GoogleDrive.User.UserName ?? throw new ArgumentNullException(
+                                nameof(options.GoogleDrive.User.ClientSecrets),
+                                "User name not specified."),
+                            options.GoogleDrive.User.RefreshToken)
+                       .ConfigureAwait(false);
                     services
                        .AddFtpServer(sb => sb.ConfigureAuthentication(options).UseGoogleDrive(userCredential));
                     break;
@@ -253,9 +258,10 @@ namespace TestFtpServer
             var userName = args[1];
 
             var credential = await GetUserCredential(
-                clientSecretsFile,
-                userName,
-                options.GoogleDrive.User.RefreshToken);
+                    clientSecretsFile,
+                    userName,
+                    options.GoogleDrive.User.RefreshToken)
+               .ConfigureAwait(false);
 
             var services = CreateServices(options)
                .AddFtpServer(sb => sb.ConfigureAuthentication(options).UseGoogleDrive(credential));
@@ -272,15 +278,17 @@ namespace TestFtpServer
             {
                 var secrets = GoogleClientSecrets.Load(secretsSource);
                 credential = await GoogleWebAuthorizationBroker.AuthorizeAsync(
-                    secrets.Secrets,
-                    new[] { DriveService.Scope.DriveFile, DriveService.Scope.Drive },
-                    userName,
-                    CancellationToken.None);
+                        secrets.Secrets,
+                        new[] { DriveService.Scope.DriveFile, DriveService.Scope.Drive },
+                        userName,
+                        CancellationToken.None)
+                   .ConfigureAwait(false);
             }
 
             if (refreshToken)
             {
-                await credential.RefreshTokenAsync(CancellationToken.None);
+                await credential.RefreshTokenAsync(CancellationToken.None)
+                   .ConfigureAwait(false);
             }
 
             return credential;

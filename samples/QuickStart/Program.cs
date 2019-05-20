@@ -38,13 +38,13 @@ namespace QuickStart
                 var ftpServerHost = serviceProvider.GetRequiredService<IFtpServerHost>();
 
                 // Start the FTP server
-                await ftpServerHost.StartAsync(CancellationToken.None);
+                await ftpServerHost.StartAsync(CancellationToken.None).ConfigureAwait(false);
 
                 Console.WriteLine("Press ENTER/RETURN to close the test application.");
                 Console.ReadLine();
 
                 // Stop the FTP server
-                await ftpServerHost.StopAsync(CancellationToken.None);
+                await ftpServerHost.StopAsync(CancellationToken.None).ConfigureAwait(false);
             }
         }
     }

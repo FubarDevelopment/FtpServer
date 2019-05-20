@@ -14,9 +14,9 @@ namespace FubarDev.FtpServer.FileSystem.Unix
             [NotNull] this IUnixDirectoryEntry entry,
             [NotNull] IFtpUser ftpUser)
         {
-            bool canRead = false;
-            bool canWrite = false;
-            bool canExecute = false;
+            var canRead = false;
+            var canWrite = false;
+            var canExecute = false;
 
             void UpdatePermissions(
                 IAccessMode toApply)

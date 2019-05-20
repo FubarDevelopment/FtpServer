@@ -92,9 +92,10 @@ namespace FubarDev.FtpServer.CommandHandlers
             try
             {
                 using (var listener = await _pasvListenerFactory.CreateTcpListenerAsync(
-                    Connection,
-                    desiredPort,
-                    cancellationToken))
+                        Connection,
+                        desiredPort,
+                        cancellationToken)
+                   .ConfigureAwait(false))
                 {
                     var address = listener.PasvEndPoint.Address;
                     var localPort = listener.PasvEndPoint.Port;
@@ -102,14 +103,16 @@ namespace FubarDev.FtpServer.CommandHandlers
                     {
                         var listenerAddress = new Address(localPort);
                         await FtpContext.ServerCommandWriter.WriteAsync(
-                            new SendResponseServerCommand(new FtpResponse(229, T("Entering Extended Passive Mode ({0}).", listenerAddress))),
+                            new SendResponseServerCommand(
+                                new FtpResponse(229, T("Entering Extended Passive Mode ({0}).", listenerAddress))),
                             cancellationToken).ConfigureAwait(false);
                     }
                     else
                     {
                         var listenerAddress = new Address(address.ToString(), localPort);
                         await FtpContext.ServerCommandWriter.WriteAsync(
-                            new SendResponseServerCommand(new FtpResponse(227, T("Entering Passive Mode ({0}).", listenerAddress))),
+                            new SendResponseServerCommand(
+                                new FtpResponse(227, T("Entering Passive Mode ({0}).", listenerAddress))),
                             cancellationToken).ConfigureAwait(false);
                     }
 

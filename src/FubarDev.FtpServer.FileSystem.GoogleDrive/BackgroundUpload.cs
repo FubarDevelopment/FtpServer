@@ -67,7 +67,7 @@ namespace FubarDev.FtpServer.FileSystem.GoogleDrive
         /// <inheritdoc />
         public async Task Start(IProgress<long> progress, CancellationToken cancellationToken)
         {
-            using (var stream = await _tempData.OpenAsync())
+            using (var stream = await _tempData.OpenAsync().ConfigureAwait(false))
             {
                 try
                 {
@@ -77,7 +77,7 @@ namespace FubarDev.FtpServer.FileSystem.GoogleDrive
                         stream,
                         "application/octet-stream");
                     upload.ProgressChanged += (uploadProgress) => { progress.Report(uploadProgress.BytesSent); };
-                    var result = await upload.UploadAsync(cancellationToken);
+                    var result = await upload.UploadAsync(cancellationToken).ConfigureAwait(false);
                     if (result.Status == UploadStatus.Failed)
                     {
                         throw new IOException(result.Exception.Message, result.Exception);

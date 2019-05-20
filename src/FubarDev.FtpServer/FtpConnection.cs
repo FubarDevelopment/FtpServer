@@ -144,7 +144,6 @@ namespace FubarDev.FtpServer
             var features = new FeatureCollection(parentFeatures);
 #pragma warning disable 618
             Data = new FtpConnectionData(
-                this,
                 options.Value.DefaultEncoding ?? Encoding.ASCII,
                 features,
                 catalogLoader);
@@ -559,7 +558,7 @@ namespace FubarDev.FtpServer
                     Debug.WriteLine($"Task {completedTask} completed");
 
                     // ReSharper disable once PatternAlwaysOfType
-                    if (backgroundTaskLifetimeService?.Task  == completedTask)
+                    if (backgroundTaskLifetimeService?.Task == completedTask)
                     {
                         await completedTask.ConfigureAwait(false);
                         Features.Set<IBackgroundTaskLifetimeFeature>(null);

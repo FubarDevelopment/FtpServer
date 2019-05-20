@@ -181,7 +181,7 @@ namespace FubarDev.FtpServer.ServerCommandHandlers
             }
             finally
             {
-                await readerDisposeFunc();
+                await readerDisposeFunc().ConfigureAwait(false);
             }
 
             return secureConnectionFeature.OriginalStream;

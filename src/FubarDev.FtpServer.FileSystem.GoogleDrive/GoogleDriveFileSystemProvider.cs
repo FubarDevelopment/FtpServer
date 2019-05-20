@@ -47,7 +47,9 @@ namespace FubarDev.FtpServer.FileSystem.GoogleDrive
         public async Task<IUnixFileSystem> Create(IAccountInformation accountInformation)
         {
             var (driveService, rootItem) = await _serviceProvider.GetUserRootAsync(
-                accountInformation, CancellationToken.None);
+                    accountInformation,
+                    CancellationToken.None)
+               .ConfigureAwait(false);
             return new GoogleDriveFileSystem(driveService, rootItem, _temporaryDataFactory, _options.UseBackgroundUpload);
         }
     }

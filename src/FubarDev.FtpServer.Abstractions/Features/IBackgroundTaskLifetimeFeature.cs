@@ -29,7 +29,6 @@ namespace FubarDev.FtpServer.Features
         /// Gets the abortable task.
         /// </summary>
         [NotNull]
-        [ItemCanBeNull]
         Task Task { get; }
 
         /// <summary>

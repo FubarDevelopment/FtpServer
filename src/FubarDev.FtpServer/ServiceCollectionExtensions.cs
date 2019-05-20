@@ -81,7 +81,9 @@ namespace Microsoft.Extensions.DependencyInjection
 
             services.AddScoped<IFtpConnection, FtpConnection>();
             services.AddScoped<IFtpLoginStateMachine, FtpLoginStateMachine>();
+#pragma warning disable 618
             services.AddScoped<IBackgroundCommandHandler>(sp => new BackgroundCommandHandler(sp.GetRequiredService<IFtpConnection>()));
+#pragma warning restore 618
             services.AddScoped<IFtpCommandDispatcher, DefaultFtpCommandDispatcher>();
 
             services.AddScoped<IFtpHostSelector, SingleFtpHostSelector>();

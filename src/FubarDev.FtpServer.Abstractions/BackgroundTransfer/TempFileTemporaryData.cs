@@ -41,7 +41,7 @@ namespace FubarDev.FtpServer.BackgroundTransfer
         {
             using (var output = new FileStream(_tempFileName, FileMode.Truncate))
             {
-                await input.CopyToAsync(output, DefaultCopyBufferSize, cancellationToken);
+                await input.CopyToAsync(output, DefaultCopyBufferSize, cancellationToken).ConfigureAwait(false);
             }
         }
 
