@@ -8,7 +8,7 @@
     <title>Upgrade from 2.x to 3.0 | FTP Server documentation </title>
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Upgrade from 2.x to 3.0 | FTP Server documentation ">
-    <meta name="generator" content="docfx 2.42.1.0">
+    <meta name="generator" content="docfx 2.42.3.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -80,23 +80,42 @@
 
 
 <ul>
-<li><a href="#overview">Overview</a>
-<ul>
+<li><a href="#overview">Overview</a></li>
 <li><a href="#file-system-changes">File system changes</a></li>
-<li><a href="#account-management-changes">Account management changes</a>
+<li><a href="#authorizationauthentication-as-per-rfc-2228">Authorization/authentication as per RFC 2228</a>
 <ul>
 <li><a href="#account-directories-queryable">Account directories queryable</a></li>
 <li><a href="#membership-provider-changes">Membership provider changes</a></li>
 </ul>
 </li>
+<li><a href="#connection">Connection</a>
+<ul>
+<li><a href="#connection-data-changes">Connection data changes</a></li>
+</ul>
+</li>
+<li><a href="#ftp-middleware">FTP middleware</a>
+<ul>
+<li><a href="#ftp-request-middleware">FTP request middleware</a></li>
+<li><a href="#ftp-command-execution-middleware">FTP command execution middleware</a></li>
+</ul>
+</li>
+<li><a href="#server-commands">Server commands</a>
+<ul>
+<li><a href="#closeconnectionservercommand"><code>CloseConnectionServerCommand</code></a></li>
+<li><a href="#sendresponseservercommand"><code>SendResponseServerCommand</code></a></li>
+</ul>
+</li>
+<li><a href="#ftp-command-execution">FTP command execution</a>
+<ul>
+<li><a href="#ftpcontext"><code>FtpContext</code></a></li>
 <li><a href="#command-handlers-and-attributes">Command handlers (and attributes)</a></li>
 <li><a href="#command-extensions-and-attributes">Command extensions (and attributes)</a></li>
 <li><a href="#feat-support"><code>FEAT</code> support</a></li>
-<li><a href="#connection">Connection</a></li>
-<li><a href="#connection-data-changes">Connection data changes</a></li>
+</ul>
+</li>
+<li><a href="#internals">Internals</a>
+<ul>
 <li><a href="#ftp-command-collection-changes">FTP command collection changes</a></li>
-<li><a href="#authorizationauthentication-as-per-rfc-2228">Authorization/authentication as per RFC 2228</a></li>
-<li><a href="#ftp-middleware">FTP middleware</a></li>
 </ul>
 </li>
 <li><a href="#changelog">Changelog</a>
@@ -123,15 +142,27 @@ and <a class="xref" href="../api/FubarDev.FtpServer.IFtpServerHost.html#FubarDev
 <li>Connection</li>
 <li>FTP command collection</li>
 </ul>
-<h2 id="file-system-changes">File system changes</h2>
+<h1 id="file-system-changes">File system changes</h1>
 <p>There are two important changes:</p>
 <ul>
 <li><a class="xref" href="../api/FubarDev.FtpServer.FileSystem.IFileSystemClassFactory.html#FubarDev_FtpServer_FileSystem_IFileSystemClassFactory_Create_FubarDev_FtpServer_IAccountInformation_"><code>IFileSystemClassFactory.Create</code></a>
 now requires an <a class="xref" href="../api/FubarDev.FtpServer.IAccountInformation.html"><code>IAccountInformation</code></a> parameter</li>
 <li>The <a class="xref" href="../api/FubarDev.FtpServer.FileSystem.IUnixFileSystemEntry.html"><code>IUnixFileSystemEntry</code></a> doesn't contain the <code>FileSystem</code> property anymore.</li>
 </ul>
-<h2 id="account-management-changes">Account management changes</h2>
-<h3 id="account-directories-queryable">Account directories queryable</h3>
+<h1 id="authorizationauthentication-as-per-rfc-2228">Authorization/authentication as per RFC 2228</h1>
+<p>The authorization/authentication stack is new and implemented as
+specified in the <a href="https://tools.ietf.org/rfc/rfc2228.txt">RFC 2228</a>.</p>
+<p>This results in additional interfaces/extension points, like</p>
+<ul>
+<li><a class="xref" href="../api/FubarDev.FtpServer.Authorization.IAuthorizationMechanism.html"><code>IAuthorizationMechanism</code></a></li>
+<li><a class="xref" href="../api/FubarDev.FtpServer.Authentication.IAuthenticationMechanism.html"><code>IAuthenticationMechanism</code></a></li>
+</ul>
+<p>There is also a new extension point for actions to be called when
+the user is fully authorized: <a class="xref" href="../api/FubarDev.FtpServer.Authorization.IAuthorizationAction.html"><code>IAuthorizationAction</code></a>. You can develop
+your own action, but you should only use an <a class="xref" href="../api/FubarDev.FtpServer.Authorization.IAuthorizationAction.html#FubarDev_FtpServer_Authorization_IAuthorizationAction_Level"><code>IAuthorizationAction.Level</code></a>
+below 1000. The values from 1000 (incl.) to 2000 (incl.) are reserved by
+the FTP server and are used to initialize the FTP connection data.</p>
+<h2 id="account-directories-queryable">Account directories queryable</h2>
 <p>A new interface has been introduced to get the root and home directories for
 a given user.</p>
 <table>
@@ -156,68 +187,15 @@ a given user.</p>
 </tr>
 </tbody>
 </table>
-<h3 id="membership-provider-changes">Membership provider changes</h3>
+<h2 id="membership-provider-changes">Membership provider changes</h2>
 <p>The membership provider is now asynchronous which means that the <code>ValidateUser</code> function was
 renamed to <a class="xref" href="../api/FubarDev.FtpServer.AccountManagement.IMembershipProvider.html#FubarDev_FtpServer_AccountManagement_IMembershipProvider_ValidateUserAsync_System_String_System_String_"><code>ValidateUserAsync</code></a>.
 Everything else is the same.</p>
-<h2 id="command-handlers-and-attributes">Command handlers (and attributes)</h2>
-<p>The command handlers were overhauled in the following areas:</p>
-<ul>
-<li>Lazy initialization
-<ul>
-<li>Removed commands from DI container
-<ul>
-<li>You can still add your FTP command handlers to the DI container, but those may (most likely) be ignored from version 4.0 and up.</li>
-<li>Implement your own <a class="xref" href="../api/FubarDev.FtpServer.Commands.IFtpCommandHandlerScanner.html"><code>IFtpCommandHandlerScanner</code></a> or reuse <a class="xref" href="../api/FubarDev.FtpServer.Commands.AssemblyFtpCommandHandlerScanner.html"><code>AssemblyFtpCommandHandlerScanner</code></a></li>
-</ul>
-</li>
-<li>New <a class="xref" href="../api/FubarDev.FtpServer.Commands.IFtpCommandHandlerScanner.html"><code>IFtpCommandHandlerScanner</code></a> which scans for types that may implement FTP command handlers</li>
-<li>New <a class="xref" href="../api/FubarDev.FtpServer.Commands.IFtpCommandHandlerProvider.html"><code>IFtpCommandHandlerProvider</code></a> which returns information for all found FTP command handler types</li>
-</ul>
-</li>
-<li>Attributes for command information
-<ul>
-<li><a class="xref" href="../api/FubarDev.FtpServer.Commands.FtpCommandHandlerAttribute.html"><code>FtpCommandHandlerAttribute</code></a> which gives the FTP command handler a name and defines if it needs a successful login or if it's abortable</li>
-</ul>
-</li>
-<li>Simplified constructor due to <a class="xref" href="../api/FubarDev.FtpServer.CommandHandlers.FtpCommandHandler.html#FubarDev_FtpServer_CommandHandlers_FtpCommandHandler_CommandContext"><code>CommandContext</code></a> (type <a class="xref" href="../api/FubarDev.FtpServer.FtpCommandHandlerContext.html"><code>FtpCommandHandlerContext</code></a>) property injection</li>
-<li>Activated (read: instantiated with property injection) by command name using the <a class="xref" href="../api/FubarDev.FtpServer.Commands.IFtpCommandActivator.html"><code>IFtpCommandActivator</code></a> service</li>
-</ul>
-<h2 id="command-extensions-and-attributes">Command extensions (and attributes)</h2>
-<p>The command extensions cannot be returned by <code>IFtpCommandHandler.GetExtensions()</code> anymore. The extensions were moved to
-their own file and the default extensions are automatically registered as service.</p>
-<ul>
-<li>Lazy initialization
-<ul>
-<li>Removed command extensions from DI container
-<ul>
-<li>You can still add your FTP command handler extensions to the DI container, but those may (most likely) be ignored from version 4.0 and up.</li>
-<li>Implement your own <a class="xref" href="../api/FubarDev.FtpServer.CommandExtensions.IFtpCommandHandlerExtensionScanner.html"><code>IFtpCommandHandlerExtensionScanner</code></a> or reuse <a class="xref" href="../api/FubarDev.FtpServer.CommandExtensions.AssemblyFtpCommandHandlerExtensionScanner.html"><code>AssemblyFtpCommandHandlerExtensionScanner</code></a></li>
-</ul>
-</li>
-<li>New <a class="xref" href="../api/FubarDev.FtpServer.CommandExtensions.IFtpCommandHandlerExtensionScanner.html"><code>IFtpCommandHandlerExtensionScanner</code></a> which scans for types that may implement FTP command handler extensions</li>
-<li>New <a class="xref" href="../api/FubarDev.FtpServer.CommandExtensions.IFtpCommandHandlerExtensionProvider.html"><code>IFtpCommandHandlerExtensionProvider</code></a> which returns information for all found FTP command handler extension types</li>
-</ul>
-</li>
-<li>Attributes for command extension information
-<ul>
-<li><a class="xref" href="../api/FubarDev.FtpServer.CommandExtensions.FtpCommandHandlerExtensionAttribute.html"><code>FtpCommandHandlerExtensionAttribute</code></a> which gives the FTP command handler extension a name and defines the command it extends and if it needs a successful login</li>
-</ul>
-</li>
-<li>Simplified constructor due to <a class="xref" href="../api/FubarDev.FtpServer.CommandExtensions.FtpCommandHandlerExtension.html#FubarDev_FtpServer_CommandExtensions_FtpCommandHandlerExtension_CommandContext"><code>CommandContext</code></a> (type <a class="xref" href="../api/FubarDev.FtpServer.FtpCommandHandlerContext.html"><code>FtpCommandHandlerContext</code></a>) property injection</li>
-<li>Automatic indirect activation (read: instantiation with property injection) for the command it belongs to through the <a class="xref" href="../api/FubarDev.FtpServer.Commands.IFtpCommandActivator.html"><code>IFtpCommandActivator</code></a> service</li>
-</ul>
-<h2 id="feat-support"><code>FEAT</code> support</h2>
-<p>There are two new attributes to get the string to be returned by a <code>FEAT</code> command:</p>
-<ul>
-<li><a class="xref" href="../api/FubarDev.FtpServer.FtpFeatureTextAttribute.html"><code>FtpFeatureTextAttribute</code></a> contains the feature text itself</li>
-<li><a class="xref" href="../api/FubarDev.FtpServer.FtpFeatureFunctionAttribute.html"><code>FtpFeatureFunctionAttribute</code></a> contains the name of the static function to be called to get the feature text</li>
-</ul>
-<h2 id="connection">Connection</h2>
+<h1 id="connection">Connection</h1>
 <p>The <a class="xref" href="../api/FubarDev.FtpServer.IFtpConnection.html"><code>IFtpConnection</code></a> API was heavily overhauled to use a feature collection,
 where the features can be queried through the <a class="xref" href="../api/FubarDev.FtpServer.IFtpConnection.html#FubarDev_FtpServer_IFtpConnection_Features"><code>Features</code></a> property. Using the <code>WriteAsync</code>
 function is obsolete. The FTP command handlers should use the <code>CommandContext</code>s
-<a class="xref" href="../api/FubarDev.FtpServer.FtpContext.html#FubarDev_FtpServer_FtpContext_ResponseWriter"><code>ResponseWriter</code></a>
+<a class="xref" href="../api/FubarDev.FtpServer.FtpContext.html#FubarDev_FtpServer_FtpContext_ServerCommandWriter"><code>ServerCommandWriter</code></a>
 if they need to send out-of-band responses.</p>
 <table>
 <thead>
@@ -331,33 +309,111 @@ feature.</p>
 <td><a class="xref" href="../api/FubarDev.FtpServer.Features.ISecureConnectionFeature.html"><code>ISecureConnectionFeature</code></a></td>
 </tr>
 <tr>
+<td>BackgroundCommandHandler</td>
+<td><a class="xref" href="../api/FubarDev.FtpServer.Features.IBackgroundTaskLifetimeFeature.html"><code>IBackgroundTaskLifetimeFeature</code></a></td>
+</tr>
+<tr>
 <td>CreateEncryptedStream</td>
 <td><a class="xref" href="../api/FubarDev.FtpServer.Features.ISecureConnectionFeature.html"><code>ISecureConnectionFeature</code></a></td>
 </tr>
 </tbody>
 </table>
 <p>There's no direct replacement for the <code>UserData</code> property, but you can use the feature collection too.</p>
+<h1 id="ftp-middleware">FTP middleware</h1>
+<p>There are two types of middlewares:</p>
+<ul>
+<li>FTP request middleware (between FTP command collection and dispatch)</li>
+<li>FTP command execution middleware (between FTP command dispatch and execution)</li>
+</ul>
+<h2 id="ftp-request-middleware">FTP request middleware</h2>
+<p>This middleware allows interception and modification of the received
+FTP commands. You must implement and register the
+<a class="xref" href="../api/FubarDev.FtpServer.IFtpMiddleware.html"><code>IFtpMiddleware</code></a> interface as
+service in your dependency injection container.</p>
+<h2 id="ftp-command-execution-middleware">FTP command execution middleware</h2>
+<p>The difference between this and the former middleware is, that the FTP command
+handler for the FTP command is already selected and you can only intercept
+the FTP commands or do something special.</p>
+<p>You must implement and register the
+<a class="xref" href="../api/FubarDev.FtpServer.Commands.IFtpCommandMiddleware.html"><code>IFtpCommandMiddleware</code></a> interface as
+service in your dependency injection container.</p>
+<p>An example is the <code>FsIdChanger</code> in the <code>TestFtpServer</code> project. This middleware
+sets - for every authenticated user - the UID/GID for file system access.</p>
+<h1 id="server-commands">Server commands</h1>
+<p>We're now supporting custom FTP server commands. Those commands must implement
+<a class="xref" href="../api/FubarDev.FtpServer.ServerCommands.IServerCommand.html"><code>IServerCommand</code></a> and
+must have a corresponding handler (<a class="xref" href="../api/FubarDev.FtpServer.ServerCommands.IServerCommandHandler-1.html"><code>IServerCommandHandler&lt;TCommand&gt;</code></a>).</p>
+<h2 id="closeconnectionservercommand"><a class="xref" href="../api/FubarDev.FtpServer.ServerCommands.CloseConnectionServerCommand.html"><code>CloseConnectionServerCommand</code></a></h2>
+<p>This command closes the FTP connection.</p>
+<h2 id="sendresponseservercommand"><a class="xref" href="../api/FubarDev.FtpServer.ServerCommands.SendResponseServerCommand.html"><code>SendResponseServerCommand</code></a></h2>
+<p>This command sends a response to the client.</p>
+<h1 id="ftp-command-execution">FTP command execution</h1>
+<p>Massive changes were done to the FTP command execution. The center
+of this changes is the new <a class="xref" href="../api/FubarDev.FtpServer.FtpContext.html"><code>FtpContext</code></a>
+which provides a new way to access all necessary information like
+the FTP connection, the command information and a channel to send
+server commands (which replaces <code>IFtpConnection.WriteAsync</code>).</p>
+<h2 id="ftpcontext"><a class="xref" href="../api/FubarDev.FtpServer.FtpContext.html"><code>FtpContext</code></a></h2>
+<p>The new <a class="xref" href="../api/FubarDev.FtpServer.FtpContext.html"><code>FtpContext</code></a> is the FTP
+servers equivalent of ASP.NET Core's <code>HttpContext</code> and provides access
+to all information required to execute the FTP commands.</p>
+<h2 id="command-handlers-and-attributes">Command handlers (and attributes)</h2>
+<p>The command handlers were overhauled in the following areas:</p>
+<ul>
+<li>Lazy initialization
+<ul>
+<li>Removed commands from DI container
+<ul>
+<li>You can still add your FTP command handlers to the DI container, but those may (most likely) be ignored from version 4.0 and up.</li>
+<li>Implement your own <a class="xref" href="../api/FubarDev.FtpServer.Commands.IFtpCommandHandlerScanner.html"><code>IFtpCommandHandlerScanner</code></a> or reuse <a class="xref" href="../api/FubarDev.FtpServer.Commands.AssemblyFtpCommandHandlerScanner.html"><code>AssemblyFtpCommandHandlerScanner</code></a></li>
+</ul>
+</li>
+<li>New <a class="xref" href="../api/FubarDev.FtpServer.Commands.IFtpCommandHandlerScanner.html"><code>IFtpCommandHandlerScanner</code></a> which scans for types that may implement FTP command handlers</li>
+<li>New <a class="xref" href="../api/FubarDev.FtpServer.Commands.IFtpCommandHandlerProvider.html"><code>IFtpCommandHandlerProvider</code></a> which returns information for all found FTP command handler types</li>
+</ul>
+</li>
+<li>Attributes for command information
+<ul>
+<li><a class="xref" href="../api/FubarDev.FtpServer.Commands.FtpCommandHandlerAttribute.html"><code>FtpCommandHandlerAttribute</code></a> which gives the FTP command handler a name and defines if it needs a successful login or if it's abortable</li>
+</ul>
+</li>
+<li>Simplified constructor due to <a class="xref" href="../api/FubarDev.FtpServer.CommandHandlers.FtpCommandHandler.html#FubarDev_FtpServer_CommandHandlers_FtpCommandHandler_CommandContext"><code>CommandContext</code></a> (type <a class="xref" href="../api/FubarDev.FtpServer.FtpCommandHandlerContext.html"><code>FtpCommandHandlerContext</code></a>) property injection</li>
+<li>Activated (read: instantiated with property injection) by command name using the <a class="xref" href="../api/FubarDev.FtpServer.Commands.IFtpCommandActivator.html"><code>IFtpCommandActivator</code></a> service</li>
+</ul>
+<h2 id="command-extensions-and-attributes">Command extensions (and attributes)</h2>
+<p>The command extensions cannot be returned by <code>IFtpCommandHandler.GetExtensions()</code> anymore. The extensions were moved to
+their own file and the default extensions are automatically registered as service.</p>
+<ul>
+<li>Lazy initialization
+<ul>
+<li>Removed command extensions from DI container
+<ul>
+<li>You can still add your FTP command handler extensions to the DI container, but those may (most likely) be ignored from version 4.0 and up.</li>
+<li>Implement your own <a class="xref" href="../api/FubarDev.FtpServer.CommandExtensions.IFtpCommandHandlerExtensionScanner.html"><code>IFtpCommandHandlerExtensionScanner</code></a> or reuse <a class="xref" href="../api/FubarDev.FtpServer.CommandExtensions.AssemblyFtpCommandHandlerExtensionScanner.html"><code>AssemblyFtpCommandHandlerExtensionScanner</code></a></li>
+</ul>
+</li>
+<li>New <a class="xref" href="../api/FubarDev.FtpServer.CommandExtensions.IFtpCommandHandlerExtensionScanner.html"><code>IFtpCommandHandlerExtensionScanner</code></a> which scans for types that may implement FTP command handler extensions</li>
+<li>New <a class="xref" href="../api/FubarDev.FtpServer.CommandExtensions.IFtpCommandHandlerExtensionProvider.html"><code>IFtpCommandHandlerExtensionProvider</code></a> which returns information for all found FTP command handler extension types</li>
+</ul>
+</li>
+<li>Attributes for command extension information
+<ul>
+<li><a class="xref" href="../api/FubarDev.FtpServer.CommandExtensions.FtpCommandHandlerExtensionAttribute.html"><code>FtpCommandHandlerExtensionAttribute</code></a> which gives the FTP command handler extension a name and defines the command it extends and if it needs a successful login</li>
+</ul>
+</li>
+<li>Simplified constructor due to <a class="xref" href="../api/FubarDev.FtpServer.CommandExtensions.FtpCommandHandlerExtension.html#FubarDev_FtpServer_CommandExtensions_FtpCommandHandlerExtension_CommandContext"><code>CommandContext</code></a> (type <a class="xref" href="../api/FubarDev.FtpServer.FtpCommandHandlerContext.html"><code>FtpCommandHandlerContext</code></a>) property injection</li>
+<li>Automatic indirect activation (read: instantiation with property injection) for the command it belongs to through the <a class="xref" href="../api/FubarDev.FtpServer.Commands.IFtpCommandActivator.html"><code>IFtpCommandActivator</code></a> service</li>
+</ul>
+<h2 id="feat-support"><code>FEAT</code> support</h2>
+<p>There are two new attributes to get the string to be returned by a <code>FEAT</code> command:</p>
+<ul>
+<li><a class="xref" href="../api/FubarDev.FtpServer.FtpFeatureTextAttribute.html"><code>FtpFeatureTextAttribute</code></a> contains the feature text itself</li>
+<li><a class="xref" href="../api/FubarDev.FtpServer.FtpFeatureFunctionAttribute.html"><code>FtpFeatureFunctionAttribute</code></a> contains the name of the static function to be called to get the feature text</li>
+</ul>
+<h1 id="internals">Internals</h1>
 <h2 id="ftp-command-collection-changes">FTP command collection changes</h2>
 <p>We're now using <code>ReadOnlySpan</code> for both <a class="xref" href="../api/FubarDev.FtpServer.TelnetInputParser-1.html"><code>TelnetInputParser</code></a>
 and <a class="xref" href="../api/FubarDev.FtpServer.FtpCommandCollector.html"><code>FtpCommandCollector</code></a>.</p>
-<h2 id="authorizationauthentication-as-per-rfc-2228">Authorization/authentication as per RFC 2228</h2>
-<p>The authorization/authentication stack is new and implemented as
-specified in the <a href="https://tools.ietf.org/rfc/rfc2228.txt">RFC 2228</a>.</p>
-<p>This results in additional interfaces/extension points, like</p>
-<ul>
-<li><a class="xref" href="../api/FubarDev.FtpServer.Authorization.IAuthorizationMechanism.html"><code>IAuthorizationMechanism</code></a></li>
-<li><a class="xref" href="../api/FubarDev.FtpServer.Authentication.IAuthenticationMechanism.html"><code>IAuthenticationMechanism</code></a></li>
-</ul>
-<p>There is also a new extension point for actions to be called when
-the user is fully authorized: <a class="xref" href="../api/FubarDev.FtpServer.Authorization.IAuthorizationAction.html"><code>IAuthorizationAction</code></a>. You can develop
-your own action, but you should only use an <a class="xref" href="../api/FubarDev.FtpServer.Authorization.IAuthorizationAction.html#FubarDev_FtpServer_Authorization_IAuthorizationAction_Level"><code>IAuthorizationAction.Level</code></a>
-below 1000. The values from 1000 (incl.) to 2000 (incl.) are reserved by
-the FTP server and are used to initialize the FTP connection data.</p>
-<h2 id="ftp-middleware">FTP middleware</h2>
-<p>You're now able to inject your own FTP middleware. This allows
-custom command handlers, logging, and other features. You must
-implement and register the <a class="xref" href="../api/FubarDev.FtpServer.IFtpMiddleware.html"><code>IFtpMiddleware</code></a> interface
-as service in your dependency injection container.</p>
 <h1 id="changelog">Changelog</h1>
 <h2 id="whats-new">What's new?</h2>
 <ul>
@@ -370,7 +426,8 @@ as service in your dependency injection container.</p>
 <li>New <a class="xref" href="../api/FubarDev.FtpServer.AccountManagement.IAnonymousFtpUser.html"><code>IAnonymousFtpUser</code></a> interface</li>
 <li>New RFC 2228 compliant authentication/authorization</li>
 <li>Root and home directories for an account can be queried</li>
-<li>New <a class="xref" href="../api/FubarDev.FtpServer.IFtpMiddleware.html"><code>IFtpMiddleware</code></a> interface for custom middleware</li>
+<li>New <a class="xref" href="../api/FubarDev.FtpServer.IFtpMiddleware.html"><code>IFtpMiddleware</code></a> interface for custom request middleware</li>
+<li>New <a class="xref" href="../api/FubarDev.FtpServer.Commands.IFtpCommandMiddleware.html"><code>IFtpCommandMiddleware</code></a> interface for custom command execution middleware</li>
 </ul>
 <h2 id="whats-changed">What's changed?</h2>
 <ul>
@@ -397,7 +454,6 @@ the FTP Server will be reimplemented as <code>ConnectionHandler</code> which wil
 improvements:</p>
 <ul>
 <li>Easy hosting in an ASP.NET Core application</li>
-<li>Usage of pipelines when possible (<code>AUTH TLS</code> might cause problems)</li>
 <li>Using the ASP.NET Core connection state management</li>
 </ul>
 </article>

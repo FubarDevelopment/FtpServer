@@ -1038,6 +1038,19 @@ references:
   isSpec: "True"
   fullName: FubarDev.FtpServer.Authentication.TlsAuthenticationMechanism.CanHandle
   nameWithType: TlsAuthenticationMechanism.CanHandle
+- uid: FubarDev.FtpServer.Authentication.TlsAuthenticationMechanism.CreateAuthTlsFeatureString(FubarDev.FtpServer.IFtpConnection)
+  name: CreateAuthTlsFeatureString(IFtpConnection)
+  href: api/FubarDev.FtpServer.Authentication.TlsAuthenticationMechanism.html#FubarDev_FtpServer_Authentication_TlsAuthenticationMechanism_CreateAuthTlsFeatureString_FubarDev_FtpServer_IFtpConnection_
+  commentId: M:FubarDev.FtpServer.Authentication.TlsAuthenticationMechanism.CreateAuthTlsFeatureString(FubarDev.FtpServer.IFtpConnection)
+  fullName: FubarDev.FtpServer.Authentication.TlsAuthenticationMechanism.CreateAuthTlsFeatureString(FubarDev.FtpServer.IFtpConnection)
+  nameWithType: TlsAuthenticationMechanism.CreateAuthTlsFeatureString(IFtpConnection)
+- uid: FubarDev.FtpServer.Authentication.TlsAuthenticationMechanism.CreateAuthTlsFeatureString*
+  name: CreateAuthTlsFeatureString
+  href: api/FubarDev.FtpServer.Authentication.TlsAuthenticationMechanism.html#FubarDev_FtpServer_Authentication_TlsAuthenticationMechanism_CreateAuthTlsFeatureString_
+  commentId: Overload:FubarDev.FtpServer.Authentication.TlsAuthenticationMechanism.CreateAuthTlsFeatureString
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.Authentication.TlsAuthenticationMechanism.CreateAuthTlsFeatureString
+  nameWithType: TlsAuthenticationMechanism.CreateAuthTlsFeatureString
 - uid: FubarDev.FtpServer.Authentication.TlsAuthenticationMechanism.GetSupportedFeatures(FubarDev.FtpServer.IFtpConnection)
   name: GetSupportedFeatures(IFtpConnection)
   href: api/FubarDev.FtpServer.Authentication.TlsAuthenticationMechanism.html#FubarDev_FtpServer_Authentication_TlsAuthenticationMechanism_GetSupportedFeatures_FubarDev_FtpServer_IFtpConnection_
@@ -1959,6 +1972,12 @@ references:
   commentId: T:FubarDev.FtpServer.BackgroundTransfer.TemporaryDataFactory.CreateAsyncDelegate
   fullName: FubarDev.FtpServer.BackgroundTransfer.TemporaryDataFactory.CreateAsyncDelegate
   nameWithType: TemporaryDataFactory.CreateAsyncDelegate
+- uid: FubarDev.FtpServer.CloseEncryptedStreamDelegate
+  name: CloseEncryptedStreamDelegate
+  href: api/FubarDev.FtpServer.CloseEncryptedStreamDelegate.html
+  commentId: T:FubarDev.FtpServer.CloseEncryptedStreamDelegate
+  fullName: FubarDev.FtpServer.CloseEncryptedStreamDelegate
+  nameWithType: CloseEncryptedStreamDelegate
 - uid: FubarDev.FtpServer.CommandExtensions
   name: FubarDev.FtpServer.CommandExtensions
   href: api/FubarDev.FtpServer.CommandExtensions.html
@@ -3760,6 +3779,19 @@ references:
   isSpec: "True"
   fullName: FubarDev.FtpServer.CommandHandlers.SystCommandHandler.SystCommandHandler
   nameWithType: SystCommandHandler.SystCommandHandler
+- uid: FubarDev.FtpServer.CommandHandlers.SystCommandHandler.IsLoginRequired
+  name: IsLoginRequired
+  href: api/FubarDev.FtpServer.CommandHandlers.SystCommandHandler.html#FubarDev_FtpServer_CommandHandlers_SystCommandHandler_IsLoginRequired
+  commentId: P:FubarDev.FtpServer.CommandHandlers.SystCommandHandler.IsLoginRequired
+  fullName: FubarDev.FtpServer.CommandHandlers.SystCommandHandler.IsLoginRequired
+  nameWithType: SystCommandHandler.IsLoginRequired
+- uid: FubarDev.FtpServer.CommandHandlers.SystCommandHandler.IsLoginRequired*
+  name: IsLoginRequired
+  href: api/FubarDev.FtpServer.CommandHandlers.SystCommandHandler.html#FubarDev_FtpServer_CommandHandlers_SystCommandHandler_IsLoginRequired_
+  commentId: Overload:FubarDev.FtpServer.CommandHandlers.SystCommandHandler.IsLoginRequired
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.CommandHandlers.SystCommandHandler.IsLoginRequired
+  nameWithType: SystCommandHandler.IsLoginRequired
 - uid: FubarDev.FtpServer.CommandHandlers.SystCommandHandler.Process(FubarDev.FtpServer.FtpCommand,System.Threading.CancellationToken)
   name: Process(FtpCommand, CancellationToken)
   href: api/FubarDev.FtpServer.CommandHandlers.SystCommandHandler.html#FubarDev_FtpServer_CommandHandlers_SystCommandHandler_Process_FubarDev_FtpServer_FtpCommand_System_Threading_CancellationToken_
@@ -3973,6 +4005,41 @@ references:
   isSpec: "True"
   fullName: FubarDev.FtpServer.Commands.DefaultFtpCommandActivator.Create
   nameWithType: DefaultFtpCommandActivator.Create
+- uid: FubarDev.FtpServer.Commands.DefaultFtpCommandDispatcher
+  name: DefaultFtpCommandDispatcher
+  href: api/FubarDev.FtpServer.Commands.DefaultFtpCommandDispatcher.html
+  commentId: T:FubarDev.FtpServer.Commands.DefaultFtpCommandDispatcher
+  fullName: FubarDev.FtpServer.Commands.DefaultFtpCommandDispatcher
+  nameWithType: DefaultFtpCommandDispatcher
+- uid: FubarDev.FtpServer.Commands.DefaultFtpCommandDispatcher.#ctor(FubarDev.FtpServer.IFtpConnection,FubarDev.FtpServer.IFtpLoginStateMachine,FubarDev.FtpServer.Commands.IFtpCommandActivator,System.Collections.Generic.IEnumerable{FubarDev.FtpServer.Commands.IFtpCommandMiddleware})
+  name: DefaultFtpCommandDispatcher(IFtpConnection, IFtpLoginStateMachine, IFtpCommandActivator, IEnumerable<IFtpCommandMiddleware>)
+  href: api/FubarDev.FtpServer.Commands.DefaultFtpCommandDispatcher.html#FubarDev_FtpServer_Commands_DefaultFtpCommandDispatcher__ctor_FubarDev_FtpServer_IFtpConnection_FubarDev_FtpServer_IFtpLoginStateMachine_FubarDev_FtpServer_Commands_IFtpCommandActivator_System_Collections_Generic_IEnumerable_FubarDev_FtpServer_Commands_IFtpCommandMiddleware__
+  commentId: M:FubarDev.FtpServer.Commands.DefaultFtpCommandDispatcher.#ctor(FubarDev.FtpServer.IFtpConnection,FubarDev.FtpServer.IFtpLoginStateMachine,FubarDev.FtpServer.Commands.IFtpCommandActivator,System.Collections.Generic.IEnumerable{FubarDev.FtpServer.Commands.IFtpCommandMiddleware})
+  name.vb: DefaultFtpCommandDispatcher(IFtpConnection, IFtpLoginStateMachine, IFtpCommandActivator, IEnumerable(Of IFtpCommandMiddleware))
+  fullName: FubarDev.FtpServer.Commands.DefaultFtpCommandDispatcher.DefaultFtpCommandDispatcher(FubarDev.FtpServer.IFtpConnection, FubarDev.FtpServer.IFtpLoginStateMachine, FubarDev.FtpServer.Commands.IFtpCommandActivator, System.Collections.Generic.IEnumerable<FubarDev.FtpServer.Commands.IFtpCommandMiddleware>)
+  fullName.vb: FubarDev.FtpServer.Commands.DefaultFtpCommandDispatcher.DefaultFtpCommandDispatcher(FubarDev.FtpServer.IFtpConnection, FubarDev.FtpServer.IFtpLoginStateMachine, FubarDev.FtpServer.Commands.IFtpCommandActivator, System.Collections.Generic.IEnumerable(Of FubarDev.FtpServer.Commands.IFtpCommandMiddleware))
+  nameWithType: DefaultFtpCommandDispatcher.DefaultFtpCommandDispatcher(IFtpConnection, IFtpLoginStateMachine, IFtpCommandActivator, IEnumerable<IFtpCommandMiddleware>)
+  nameWithType.vb: DefaultFtpCommandDispatcher.DefaultFtpCommandDispatcher(IFtpConnection, IFtpLoginStateMachine, IFtpCommandActivator, IEnumerable(Of IFtpCommandMiddleware))
+- uid: FubarDev.FtpServer.Commands.DefaultFtpCommandDispatcher.#ctor*
+  name: DefaultFtpCommandDispatcher
+  href: api/FubarDev.FtpServer.Commands.DefaultFtpCommandDispatcher.html#FubarDev_FtpServer_Commands_DefaultFtpCommandDispatcher__ctor_
+  commentId: Overload:FubarDev.FtpServer.Commands.DefaultFtpCommandDispatcher.#ctor
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.Commands.DefaultFtpCommandDispatcher.DefaultFtpCommandDispatcher
+  nameWithType: DefaultFtpCommandDispatcher.DefaultFtpCommandDispatcher
+- uid: FubarDev.FtpServer.Commands.DefaultFtpCommandDispatcher.DispatchAsync(FubarDev.FtpServer.FtpContext,System.Threading.CancellationToken)
+  name: DispatchAsync(FtpContext, CancellationToken)
+  href: api/FubarDev.FtpServer.Commands.DefaultFtpCommandDispatcher.html#FubarDev_FtpServer_Commands_DefaultFtpCommandDispatcher_DispatchAsync_FubarDev_FtpServer_FtpContext_System_Threading_CancellationToken_
+  commentId: M:FubarDev.FtpServer.Commands.DefaultFtpCommandDispatcher.DispatchAsync(FubarDev.FtpServer.FtpContext,System.Threading.CancellationToken)
+  fullName: FubarDev.FtpServer.Commands.DefaultFtpCommandDispatcher.DispatchAsync(FubarDev.FtpServer.FtpContext, System.Threading.CancellationToken)
+  nameWithType: DefaultFtpCommandDispatcher.DispatchAsync(FtpContext, CancellationToken)
+- uid: FubarDev.FtpServer.Commands.DefaultFtpCommandDispatcher.DispatchAsync*
+  name: DispatchAsync
+  href: api/FubarDev.FtpServer.Commands.DefaultFtpCommandDispatcher.html#FubarDev_FtpServer_Commands_DefaultFtpCommandDispatcher_DispatchAsync_
+  commentId: Overload:FubarDev.FtpServer.Commands.DefaultFtpCommandDispatcher.DispatchAsync
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.Commands.DefaultFtpCommandDispatcher.DispatchAsync
+  nameWithType: DefaultFtpCommandDispatcher.DispatchAsync
 - uid: FubarDev.FtpServer.Commands.DefaultFtpCommandHandlerProvider
   name: DefaultFtpCommandHandlerProvider
   href: api/FubarDev.FtpServer.Commands.DefaultFtpCommandHandlerProvider.html
@@ -4130,6 +4197,12 @@ references:
   isSpec: "True"
   fullName: FubarDev.FtpServer.Commands.FoundFeatureInfo.IsExtension
   nameWithType: FoundFeatureInfo.IsExtension
+- uid: FubarDev.FtpServer.Commands.FtpCommandExecutionDelegate
+  name: FtpCommandExecutionDelegate
+  href: api/FubarDev.FtpServer.Commands.FtpCommandExecutionDelegate.html
+  commentId: T:FubarDev.FtpServer.Commands.FtpCommandExecutionDelegate
+  fullName: FubarDev.FtpServer.Commands.FtpCommandExecutionDelegate
+  nameWithType: FtpCommandExecutionDelegate
 - uid: FubarDev.FtpServer.Commands.FtpCommandHandlerAttribute
   name: FtpCommandHandlerAttribute
   href: api/FubarDev.FtpServer.Commands.FtpCommandHandlerAttribute.html
@@ -4233,6 +4306,51 @@ references:
   isSpec: "True"
   fullName: FubarDev.FtpServer.Commands.FtpCommandSelection.Information
   nameWithType: FtpCommandSelection.Information
+- uid: FubarDev.FtpServer.Commands.FtpExecutionContext
+  name: FtpExecutionContext
+  href: api/FubarDev.FtpServer.Commands.FtpExecutionContext.html
+  commentId: T:FubarDev.FtpServer.Commands.FtpExecutionContext
+  fullName: FubarDev.FtpServer.Commands.FtpExecutionContext
+  nameWithType: FtpExecutionContext
+- uid: FubarDev.FtpServer.Commands.FtpExecutionContext.#ctor(FubarDev.FtpServer.FtpContext,FubarDev.FtpServer.IFtpCommandBase,System.Threading.CancellationToken)
+  name: FtpExecutionContext(FtpContext, IFtpCommandBase, CancellationToken)
+  href: api/FubarDev.FtpServer.Commands.FtpExecutionContext.html#FubarDev_FtpServer_Commands_FtpExecutionContext__ctor_FubarDev_FtpServer_FtpContext_FubarDev_FtpServer_IFtpCommandBase_System_Threading_CancellationToken_
+  commentId: M:FubarDev.FtpServer.Commands.FtpExecutionContext.#ctor(FubarDev.FtpServer.FtpContext,FubarDev.FtpServer.IFtpCommandBase,System.Threading.CancellationToken)
+  fullName: FubarDev.FtpServer.Commands.FtpExecutionContext.FtpExecutionContext(FubarDev.FtpServer.FtpContext, FubarDev.FtpServer.IFtpCommandBase, System.Threading.CancellationToken)
+  nameWithType: FtpExecutionContext.FtpExecutionContext(FtpContext, IFtpCommandBase, CancellationToken)
+- uid: FubarDev.FtpServer.Commands.FtpExecutionContext.#ctor*
+  name: FtpExecutionContext
+  href: api/FubarDev.FtpServer.Commands.FtpExecutionContext.html#FubarDev_FtpServer_Commands_FtpExecutionContext__ctor_
+  commentId: Overload:FubarDev.FtpServer.Commands.FtpExecutionContext.#ctor
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.Commands.FtpExecutionContext.FtpExecutionContext
+  nameWithType: FtpExecutionContext.FtpExecutionContext
+- uid: FubarDev.FtpServer.Commands.FtpExecutionContext.CommandAborted
+  name: CommandAborted
+  href: api/FubarDev.FtpServer.Commands.FtpExecutionContext.html#FubarDev_FtpServer_Commands_FtpExecutionContext_CommandAborted
+  commentId: P:FubarDev.FtpServer.Commands.FtpExecutionContext.CommandAborted
+  fullName: FubarDev.FtpServer.Commands.FtpExecutionContext.CommandAborted
+  nameWithType: FtpExecutionContext.CommandAborted
+- uid: FubarDev.FtpServer.Commands.FtpExecutionContext.CommandAborted*
+  name: CommandAborted
+  href: api/FubarDev.FtpServer.Commands.FtpExecutionContext.html#FubarDev_FtpServer_Commands_FtpExecutionContext_CommandAborted_
+  commentId: Overload:FubarDev.FtpServer.Commands.FtpExecutionContext.CommandAborted
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.Commands.FtpExecutionContext.CommandAborted
+  nameWithType: FtpExecutionContext.CommandAborted
+- uid: FubarDev.FtpServer.Commands.FtpExecutionContext.CommandHandler
+  name: CommandHandler
+  href: api/FubarDev.FtpServer.Commands.FtpExecutionContext.html#FubarDev_FtpServer_Commands_FtpExecutionContext_CommandHandler
+  commentId: P:FubarDev.FtpServer.Commands.FtpExecutionContext.CommandHandler
+  fullName: FubarDev.FtpServer.Commands.FtpExecutionContext.CommandHandler
+  nameWithType: FtpExecutionContext.CommandHandler
+- uid: FubarDev.FtpServer.Commands.FtpExecutionContext.CommandHandler*
+  name: CommandHandler
+  href: api/FubarDev.FtpServer.Commands.FtpExecutionContext.html#FubarDev_FtpServer_Commands_FtpExecutionContext_CommandHandler_
+  commentId: Overload:FubarDev.FtpServer.Commands.FtpExecutionContext.CommandHandler
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.Commands.FtpExecutionContext.CommandHandler
+  nameWithType: FtpExecutionContext.CommandHandler
 - uid: FubarDev.FtpServer.Commands.IFeatureInfoProvider
   name: IFeatureInfoProvider
   href: api/FubarDev.FtpServer.Commands.IFeatureInfoProvider.html
@@ -4271,6 +4389,25 @@ references:
   isSpec: "True"
   fullName: FubarDev.FtpServer.Commands.IFtpCommandActivator.Create
   nameWithType: IFtpCommandActivator.Create
+- uid: FubarDev.FtpServer.Commands.IFtpCommandDispatcher
+  name: IFtpCommandDispatcher
+  href: api/FubarDev.FtpServer.Commands.IFtpCommandDispatcher.html
+  commentId: T:FubarDev.FtpServer.Commands.IFtpCommandDispatcher
+  fullName: FubarDev.FtpServer.Commands.IFtpCommandDispatcher
+  nameWithType: IFtpCommandDispatcher
+- uid: FubarDev.FtpServer.Commands.IFtpCommandDispatcher.DispatchAsync(FubarDev.FtpServer.FtpContext,System.Threading.CancellationToken)
+  name: DispatchAsync(FtpContext, CancellationToken)
+  href: api/FubarDev.FtpServer.Commands.IFtpCommandDispatcher.html#FubarDev_FtpServer_Commands_IFtpCommandDispatcher_DispatchAsync_FubarDev_FtpServer_FtpContext_System_Threading_CancellationToken_
+  commentId: M:FubarDev.FtpServer.Commands.IFtpCommandDispatcher.DispatchAsync(FubarDev.FtpServer.FtpContext,System.Threading.CancellationToken)
+  fullName: FubarDev.FtpServer.Commands.IFtpCommandDispatcher.DispatchAsync(FubarDev.FtpServer.FtpContext, System.Threading.CancellationToken)
+  nameWithType: IFtpCommandDispatcher.DispatchAsync(FtpContext, CancellationToken)
+- uid: FubarDev.FtpServer.Commands.IFtpCommandDispatcher.DispatchAsync*
+  name: DispatchAsync
+  href: api/FubarDev.FtpServer.Commands.IFtpCommandDispatcher.html#FubarDev_FtpServer_Commands_IFtpCommandDispatcher_DispatchAsync_
+  commentId: Overload:FubarDev.FtpServer.Commands.IFtpCommandDispatcher.DispatchAsync
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.Commands.IFtpCommandDispatcher.DispatchAsync
+  nameWithType: IFtpCommandDispatcher.DispatchAsync
 - uid: FubarDev.FtpServer.Commands.IFtpCommandHandlerInformation
   name: IFtpCommandHandlerInformation
   href: api/FubarDev.FtpServer.Commands.IFtpCommandHandlerInformation.html
@@ -4405,6 +4542,25 @@ references:
   isSpec: "True"
   fullName: FubarDev.FtpServer.Commands.IFtpCommandInformation.Name
   nameWithType: IFtpCommandInformation.Name
+- uid: FubarDev.FtpServer.Commands.IFtpCommandMiddleware
+  name: IFtpCommandMiddleware
+  href: api/FubarDev.FtpServer.Commands.IFtpCommandMiddleware.html
+  commentId: T:FubarDev.FtpServer.Commands.IFtpCommandMiddleware
+  fullName: FubarDev.FtpServer.Commands.IFtpCommandMiddleware
+  nameWithType: IFtpCommandMiddleware
+- uid: FubarDev.FtpServer.Commands.IFtpCommandMiddleware.InvokeAsync(FubarDev.FtpServer.Commands.FtpExecutionContext,FubarDev.FtpServer.Commands.FtpCommandExecutionDelegate)
+  name: InvokeAsync(FtpExecutionContext, FtpCommandExecutionDelegate)
+  href: api/FubarDev.FtpServer.Commands.IFtpCommandMiddleware.html#FubarDev_FtpServer_Commands_IFtpCommandMiddleware_InvokeAsync_FubarDev_FtpServer_Commands_FtpExecutionContext_FubarDev_FtpServer_Commands_FtpCommandExecutionDelegate_
+  commentId: M:FubarDev.FtpServer.Commands.IFtpCommandMiddleware.InvokeAsync(FubarDev.FtpServer.Commands.FtpExecutionContext,FubarDev.FtpServer.Commands.FtpCommandExecutionDelegate)
+  fullName: FubarDev.FtpServer.Commands.IFtpCommandMiddleware.InvokeAsync(FubarDev.FtpServer.Commands.FtpExecutionContext, FubarDev.FtpServer.Commands.FtpCommandExecutionDelegate)
+  nameWithType: IFtpCommandMiddleware.InvokeAsync(FtpExecutionContext, FtpCommandExecutionDelegate)
+- uid: FubarDev.FtpServer.Commands.IFtpCommandMiddleware.InvokeAsync*
+  name: InvokeAsync
+  href: api/FubarDev.FtpServer.Commands.IFtpCommandMiddleware.html#FubarDev_FtpServer_Commands_IFtpCommandMiddleware_InvokeAsync_
+  commentId: Overload:FubarDev.FtpServer.Commands.IFtpCommandMiddleware.InvokeAsync
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.Commands.IFtpCommandMiddleware.InvokeAsync
+  nameWithType: IFtpCommandMiddleware.InvokeAsync
 - uid: FubarDev.FtpServer.Commands.ServiceFtpCommandHandlerScanner
   name: ServiceFtpCommandHandlerScanner
   href: api/FubarDev.FtpServer.Commands.ServiceFtpCommandHandlerScanner.html
@@ -4494,6 +4650,332 @@ references:
   isSpec: "True"
   fullName: FubarDev.FtpServer.ConnectionExtensions.SendResponseAsync
   nameWithType: ConnectionExtensions.SendResponseAsync
+- uid: FubarDev.FtpServer.ConnectionHandlers
+  name: FubarDev.FtpServer.ConnectionHandlers
+  href: api/FubarDev.FtpServer.ConnectionHandlers.html
+  commentId: N:FubarDev.FtpServer.ConnectionHandlers
+  fullName: FubarDev.FtpServer.ConnectionHandlers
+  nameWithType: FubarDev.FtpServer.ConnectionHandlers
+- uid: FubarDev.FtpServer.ConnectionHandlers.ConnectionStatus
+  name: ConnectionStatus
+  href: api/FubarDev.FtpServer.ConnectionHandlers.ConnectionStatus.html
+  commentId: T:FubarDev.FtpServer.ConnectionHandlers.ConnectionStatus
+  fullName: FubarDev.FtpServer.ConnectionHandlers.ConnectionStatus
+  nameWithType: ConnectionStatus
+- uid: FubarDev.FtpServer.ConnectionHandlers.ConnectionStatus.Paused
+  name: Paused
+  href: api/FubarDev.FtpServer.ConnectionHandlers.ConnectionStatus.html#FubarDev_FtpServer_ConnectionHandlers_ConnectionStatus_Paused
+  commentId: F:FubarDev.FtpServer.ConnectionHandlers.ConnectionStatus.Paused
+  fullName: FubarDev.FtpServer.ConnectionHandlers.ConnectionStatus.Paused
+  nameWithType: ConnectionStatus.Paused
+- uid: FubarDev.FtpServer.ConnectionHandlers.ConnectionStatus.ReadyToRun
+  name: ReadyToRun
+  href: api/FubarDev.FtpServer.ConnectionHandlers.ConnectionStatus.html#FubarDev_FtpServer_ConnectionHandlers_ConnectionStatus_ReadyToRun
+  commentId: F:FubarDev.FtpServer.ConnectionHandlers.ConnectionStatus.ReadyToRun
+  fullName: FubarDev.FtpServer.ConnectionHandlers.ConnectionStatus.ReadyToRun
+  nameWithType: ConnectionStatus.ReadyToRun
+- uid: FubarDev.FtpServer.ConnectionHandlers.ConnectionStatus.Running
+  name: Running
+  href: api/FubarDev.FtpServer.ConnectionHandlers.ConnectionStatus.html#FubarDev_FtpServer_ConnectionHandlers_ConnectionStatus_Running
+  commentId: F:FubarDev.FtpServer.ConnectionHandlers.ConnectionStatus.Running
+  fullName: FubarDev.FtpServer.ConnectionHandlers.ConnectionStatus.Running
+  nameWithType: ConnectionStatus.Running
+- uid: FubarDev.FtpServer.ConnectionHandlers.ConnectionStatus.Started
+  name: Started
+  href: api/FubarDev.FtpServer.ConnectionHandlers.ConnectionStatus.html#FubarDev_FtpServer_ConnectionHandlers_ConnectionStatus_Started
+  commentId: F:FubarDev.FtpServer.ConnectionHandlers.ConnectionStatus.Started
+  fullName: FubarDev.FtpServer.ConnectionHandlers.ConnectionStatus.Started
+  nameWithType: ConnectionStatus.Started
+- uid: FubarDev.FtpServer.ConnectionHandlers.ConnectionStatus.Stopped
+  name: Stopped
+  href: api/FubarDev.FtpServer.ConnectionHandlers.ConnectionStatus.html#FubarDev_FtpServer_ConnectionHandlers_ConnectionStatus_Stopped
+  commentId: F:FubarDev.FtpServer.ConnectionHandlers.ConnectionStatus.Stopped
+  fullName: FubarDev.FtpServer.ConnectionHandlers.ConnectionStatus.Stopped
+  nameWithType: ConnectionStatus.Stopped
+- uid: FubarDev.FtpServer.ConnectionHandlers.ICommunicationService
+  name: ICommunicationService
+  href: api/FubarDev.FtpServer.ConnectionHandlers.ICommunicationService.html
+  commentId: T:FubarDev.FtpServer.ConnectionHandlers.ICommunicationService
+  fullName: FubarDev.FtpServer.ConnectionHandlers.ICommunicationService
+  nameWithType: ICommunicationService
+- uid: FubarDev.FtpServer.ConnectionHandlers.ICommunicationService.ContinueAsync(System.Threading.CancellationToken)
+  name: ContinueAsync(CancellationToken)
+  href: api/FubarDev.FtpServer.ConnectionHandlers.ICommunicationService.html#FubarDev_FtpServer_ConnectionHandlers_ICommunicationService_ContinueAsync_System_Threading_CancellationToken_
+  commentId: M:FubarDev.FtpServer.ConnectionHandlers.ICommunicationService.ContinueAsync(System.Threading.CancellationToken)
+  fullName: FubarDev.FtpServer.ConnectionHandlers.ICommunicationService.ContinueAsync(System.Threading.CancellationToken)
+  nameWithType: ICommunicationService.ContinueAsync(CancellationToken)
+- uid: FubarDev.FtpServer.ConnectionHandlers.ICommunicationService.ContinueAsync*
+  name: ContinueAsync
+  href: api/FubarDev.FtpServer.ConnectionHandlers.ICommunicationService.html#FubarDev_FtpServer_ConnectionHandlers_ICommunicationService_ContinueAsync_
+  commentId: Overload:FubarDev.FtpServer.ConnectionHandlers.ICommunicationService.ContinueAsync
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.ConnectionHandlers.ICommunicationService.ContinueAsync
+  nameWithType: ICommunicationService.ContinueAsync
+- uid: FubarDev.FtpServer.ConnectionHandlers.ICommunicationService.PauseAsync(System.Threading.CancellationToken)
+  name: PauseAsync(CancellationToken)
+  href: api/FubarDev.FtpServer.ConnectionHandlers.ICommunicationService.html#FubarDev_FtpServer_ConnectionHandlers_ICommunicationService_PauseAsync_System_Threading_CancellationToken_
+  commentId: M:FubarDev.FtpServer.ConnectionHandlers.ICommunicationService.PauseAsync(System.Threading.CancellationToken)
+  fullName: FubarDev.FtpServer.ConnectionHandlers.ICommunicationService.PauseAsync(System.Threading.CancellationToken)
+  nameWithType: ICommunicationService.PauseAsync(CancellationToken)
+- uid: FubarDev.FtpServer.ConnectionHandlers.ICommunicationService.PauseAsync*
+  name: PauseAsync
+  href: api/FubarDev.FtpServer.ConnectionHandlers.ICommunicationService.html#FubarDev_FtpServer_ConnectionHandlers_ICommunicationService_PauseAsync_
+  commentId: Overload:FubarDev.FtpServer.ConnectionHandlers.ICommunicationService.PauseAsync
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.ConnectionHandlers.ICommunicationService.PauseAsync
+  nameWithType: ICommunicationService.PauseAsync
+- uid: FubarDev.FtpServer.ConnectionHandlers.ICommunicationService.StartAsync(System.Threading.CancellationToken)
+  name: StartAsync(CancellationToken)
+  href: api/FubarDev.FtpServer.ConnectionHandlers.ICommunicationService.html#FubarDev_FtpServer_ConnectionHandlers_ICommunicationService_StartAsync_System_Threading_CancellationToken_
+  commentId: M:FubarDev.FtpServer.ConnectionHandlers.ICommunicationService.StartAsync(System.Threading.CancellationToken)
+  fullName: FubarDev.FtpServer.ConnectionHandlers.ICommunicationService.StartAsync(System.Threading.CancellationToken)
+  nameWithType: ICommunicationService.StartAsync(CancellationToken)
+- uid: FubarDev.FtpServer.ConnectionHandlers.ICommunicationService.StartAsync*
+  name: StartAsync
+  href: api/FubarDev.FtpServer.ConnectionHandlers.ICommunicationService.html#FubarDev_FtpServer_ConnectionHandlers_ICommunicationService_StartAsync_
+  commentId: Overload:FubarDev.FtpServer.ConnectionHandlers.ICommunicationService.StartAsync
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.ConnectionHandlers.ICommunicationService.StartAsync
+  nameWithType: ICommunicationService.StartAsync
+- uid: FubarDev.FtpServer.ConnectionHandlers.ICommunicationService.Status
+  name: Status
+  href: api/FubarDev.FtpServer.ConnectionHandlers.ICommunicationService.html#FubarDev_FtpServer_ConnectionHandlers_ICommunicationService_Status
+  commentId: P:FubarDev.FtpServer.ConnectionHandlers.ICommunicationService.Status
+  fullName: FubarDev.FtpServer.ConnectionHandlers.ICommunicationService.Status
+  nameWithType: ICommunicationService.Status
+- uid: FubarDev.FtpServer.ConnectionHandlers.ICommunicationService.Status*
+  name: Status
+  href: api/FubarDev.FtpServer.ConnectionHandlers.ICommunicationService.html#FubarDev_FtpServer_ConnectionHandlers_ICommunicationService_Status_
+  commentId: Overload:FubarDev.FtpServer.ConnectionHandlers.ICommunicationService.Status
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.ConnectionHandlers.ICommunicationService.Status
+  nameWithType: ICommunicationService.Status
+- uid: FubarDev.FtpServer.ConnectionHandlers.ICommunicationService.StopAsync(System.Threading.CancellationToken)
+  name: StopAsync(CancellationToken)
+  href: api/FubarDev.FtpServer.ConnectionHandlers.ICommunicationService.html#FubarDev_FtpServer_ConnectionHandlers_ICommunicationService_StopAsync_System_Threading_CancellationToken_
+  commentId: M:FubarDev.FtpServer.ConnectionHandlers.ICommunicationService.StopAsync(System.Threading.CancellationToken)
+  fullName: FubarDev.FtpServer.ConnectionHandlers.ICommunicationService.StopAsync(System.Threading.CancellationToken)
+  nameWithType: ICommunicationService.StopAsync(CancellationToken)
+- uid: FubarDev.FtpServer.ConnectionHandlers.ICommunicationService.StopAsync*
+  name: StopAsync
+  href: api/FubarDev.FtpServer.ConnectionHandlers.ICommunicationService.html#FubarDev_FtpServer_ConnectionHandlers_ICommunicationService_StopAsync_
+  commentId: Overload:FubarDev.FtpServer.ConnectionHandlers.ICommunicationService.StopAsync
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.ConnectionHandlers.ICommunicationService.StopAsync
+  nameWithType: ICommunicationService.StopAsync
+- uid: FubarDev.FtpServer.ConnectionHandlers.INetworkStreamService
+  name: INetworkStreamService
+  href: api/FubarDev.FtpServer.ConnectionHandlers.INetworkStreamService.html
+  commentId: T:FubarDev.FtpServer.ConnectionHandlers.INetworkStreamService
+  fullName: FubarDev.FtpServer.ConnectionHandlers.INetworkStreamService
+  nameWithType: INetworkStreamService
+- uid: FubarDev.FtpServer.ConnectionHandlers.INetworkStreamService.Stream
+  name: Stream
+  href: api/FubarDev.FtpServer.ConnectionHandlers.INetworkStreamService.html#FubarDev_FtpServer_ConnectionHandlers_INetworkStreamService_Stream
+  commentId: P:FubarDev.FtpServer.ConnectionHandlers.INetworkStreamService.Stream
+  fullName: FubarDev.FtpServer.ConnectionHandlers.INetworkStreamService.Stream
+  nameWithType: INetworkStreamService.Stream
+- uid: FubarDev.FtpServer.ConnectionHandlers.INetworkStreamService.Stream*
+  name: Stream
+  href: api/FubarDev.FtpServer.ConnectionHandlers.INetworkStreamService.html#FubarDev_FtpServer_ConnectionHandlers_INetworkStreamService_Stream_
+  commentId: Overload:FubarDev.FtpServer.ConnectionHandlers.INetworkStreamService.Stream
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.ConnectionHandlers.INetworkStreamService.Stream
+  nameWithType: INetworkStreamService.Stream
+- uid: FubarDev.FtpServer.ConnectionHandlers.NetworkStreamReader
+  name: NetworkStreamReader
+  href: api/FubarDev.FtpServer.ConnectionHandlers.NetworkStreamReader.html
+  commentId: T:FubarDev.FtpServer.ConnectionHandlers.NetworkStreamReader
+  fullName: FubarDev.FtpServer.ConnectionHandlers.NetworkStreamReader
+  nameWithType: NetworkStreamReader
+- uid: FubarDev.FtpServer.ConnectionHandlers.NetworkStreamReader.#ctor(System.IO.Stream,System.IO.Pipelines.PipeWriter,System.Threading.CancellationTokenSource)
+  name: NetworkStreamReader(Stream, PipeWriter, CancellationTokenSource)
+  href: api/FubarDev.FtpServer.ConnectionHandlers.NetworkStreamReader.html#FubarDev_FtpServer_ConnectionHandlers_NetworkStreamReader__ctor_System_IO_Stream_System_IO_Pipelines_PipeWriter_System_Threading_CancellationTokenSource_
+  commentId: M:FubarDev.FtpServer.ConnectionHandlers.NetworkStreamReader.#ctor(System.IO.Stream,System.IO.Pipelines.PipeWriter,System.Threading.CancellationTokenSource)
+  fullName: FubarDev.FtpServer.ConnectionHandlers.NetworkStreamReader.NetworkStreamReader(System.IO.Stream, System.IO.Pipelines.PipeWriter, System.Threading.CancellationTokenSource)
+  nameWithType: NetworkStreamReader.NetworkStreamReader(Stream, PipeWriter, CancellationTokenSource)
+- uid: FubarDev.FtpServer.ConnectionHandlers.NetworkStreamReader.#ctor*
+  name: NetworkStreamReader
+  href: api/FubarDev.FtpServer.ConnectionHandlers.NetworkStreamReader.html#FubarDev_FtpServer_ConnectionHandlers_NetworkStreamReader__ctor_
+  commentId: Overload:FubarDev.FtpServer.ConnectionHandlers.NetworkStreamReader.#ctor
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.ConnectionHandlers.NetworkStreamReader.NetworkStreamReader
+  nameWithType: NetworkStreamReader.NetworkStreamReader
+- uid: FubarDev.FtpServer.ConnectionHandlers.NetworkStreamReader.ContinueAsync(System.Threading.CancellationToken)
+  name: ContinueAsync(CancellationToken)
+  href: api/FubarDev.FtpServer.ConnectionHandlers.NetworkStreamReader.html#FubarDev_FtpServer_ConnectionHandlers_NetworkStreamReader_ContinueAsync_System_Threading_CancellationToken_
+  commentId: M:FubarDev.FtpServer.ConnectionHandlers.NetworkStreamReader.ContinueAsync(System.Threading.CancellationToken)
+  fullName: FubarDev.FtpServer.ConnectionHandlers.NetworkStreamReader.ContinueAsync(System.Threading.CancellationToken)
+  nameWithType: NetworkStreamReader.ContinueAsync(CancellationToken)
+- uid: FubarDev.FtpServer.ConnectionHandlers.NetworkStreamReader.ContinueAsync*
+  name: ContinueAsync
+  href: api/FubarDev.FtpServer.ConnectionHandlers.NetworkStreamReader.html#FubarDev_FtpServer_ConnectionHandlers_NetworkStreamReader_ContinueAsync_
+  commentId: Overload:FubarDev.FtpServer.ConnectionHandlers.NetworkStreamReader.ContinueAsync
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.ConnectionHandlers.NetworkStreamReader.ContinueAsync
+  nameWithType: NetworkStreamReader.ContinueAsync
+- uid: FubarDev.FtpServer.ConnectionHandlers.NetworkStreamReader.PauseAsync(System.Threading.CancellationToken)
+  name: PauseAsync(CancellationToken)
+  href: api/FubarDev.FtpServer.ConnectionHandlers.NetworkStreamReader.html#FubarDev_FtpServer_ConnectionHandlers_NetworkStreamReader_PauseAsync_System_Threading_CancellationToken_
+  commentId: M:FubarDev.FtpServer.ConnectionHandlers.NetworkStreamReader.PauseAsync(System.Threading.CancellationToken)
+  fullName: FubarDev.FtpServer.ConnectionHandlers.NetworkStreamReader.PauseAsync(System.Threading.CancellationToken)
+  nameWithType: NetworkStreamReader.PauseAsync(CancellationToken)
+- uid: FubarDev.FtpServer.ConnectionHandlers.NetworkStreamReader.PauseAsync*
+  name: PauseAsync
+  href: api/FubarDev.FtpServer.ConnectionHandlers.NetworkStreamReader.html#FubarDev_FtpServer_ConnectionHandlers_NetworkStreamReader_PauseAsync_
+  commentId: Overload:FubarDev.FtpServer.ConnectionHandlers.NetworkStreamReader.PauseAsync
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.ConnectionHandlers.NetworkStreamReader.PauseAsync
+  nameWithType: NetworkStreamReader.PauseAsync
+- uid: FubarDev.FtpServer.ConnectionHandlers.NetworkStreamReader.StartAsync(System.Threading.CancellationToken)
+  name: StartAsync(CancellationToken)
+  href: api/FubarDev.FtpServer.ConnectionHandlers.NetworkStreamReader.html#FubarDev_FtpServer_ConnectionHandlers_NetworkStreamReader_StartAsync_System_Threading_CancellationToken_
+  commentId: M:FubarDev.FtpServer.ConnectionHandlers.NetworkStreamReader.StartAsync(System.Threading.CancellationToken)
+  fullName: FubarDev.FtpServer.ConnectionHandlers.NetworkStreamReader.StartAsync(System.Threading.CancellationToken)
+  nameWithType: NetworkStreamReader.StartAsync(CancellationToken)
+- uid: FubarDev.FtpServer.ConnectionHandlers.NetworkStreamReader.StartAsync*
+  name: StartAsync
+  href: api/FubarDev.FtpServer.ConnectionHandlers.NetworkStreamReader.html#FubarDev_FtpServer_ConnectionHandlers_NetworkStreamReader_StartAsync_
+  commentId: Overload:FubarDev.FtpServer.ConnectionHandlers.NetworkStreamReader.StartAsync
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.ConnectionHandlers.NetworkStreamReader.StartAsync
+  nameWithType: NetworkStreamReader.StartAsync
+- uid: FubarDev.FtpServer.ConnectionHandlers.NetworkStreamReader.Status
+  name: Status
+  href: api/FubarDev.FtpServer.ConnectionHandlers.NetworkStreamReader.html#FubarDev_FtpServer_ConnectionHandlers_NetworkStreamReader_Status
+  commentId: P:FubarDev.FtpServer.ConnectionHandlers.NetworkStreamReader.Status
+  fullName: FubarDev.FtpServer.ConnectionHandlers.NetworkStreamReader.Status
+  nameWithType: NetworkStreamReader.Status
+- uid: FubarDev.FtpServer.ConnectionHandlers.NetworkStreamReader.Status*
+  name: Status
+  href: api/FubarDev.FtpServer.ConnectionHandlers.NetworkStreamReader.html#FubarDev_FtpServer_ConnectionHandlers_NetworkStreamReader_Status_
+  commentId: Overload:FubarDev.FtpServer.ConnectionHandlers.NetworkStreamReader.Status
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.ConnectionHandlers.NetworkStreamReader.Status
+  nameWithType: NetworkStreamReader.Status
+- uid: FubarDev.FtpServer.ConnectionHandlers.NetworkStreamReader.StopAsync(System.Threading.CancellationToken)
+  name: StopAsync(CancellationToken)
+  href: api/FubarDev.FtpServer.ConnectionHandlers.NetworkStreamReader.html#FubarDev_FtpServer_ConnectionHandlers_NetworkStreamReader_StopAsync_System_Threading_CancellationToken_
+  commentId: M:FubarDev.FtpServer.ConnectionHandlers.NetworkStreamReader.StopAsync(System.Threading.CancellationToken)
+  fullName: FubarDev.FtpServer.ConnectionHandlers.NetworkStreamReader.StopAsync(System.Threading.CancellationToken)
+  nameWithType: NetworkStreamReader.StopAsync(CancellationToken)
+- uid: FubarDev.FtpServer.ConnectionHandlers.NetworkStreamReader.StopAsync*
+  name: StopAsync
+  href: api/FubarDev.FtpServer.ConnectionHandlers.NetworkStreamReader.html#FubarDev_FtpServer_ConnectionHandlers_NetworkStreamReader_StopAsync_
+  commentId: Overload:FubarDev.FtpServer.ConnectionHandlers.NetworkStreamReader.StopAsync
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.ConnectionHandlers.NetworkStreamReader.StopAsync
+  nameWithType: NetworkStreamReader.StopAsync
+- uid: FubarDev.FtpServer.ConnectionHandlers.NetworkStreamReader.Stream
+  name: Stream
+  href: api/FubarDev.FtpServer.ConnectionHandlers.NetworkStreamReader.html#FubarDev_FtpServer_ConnectionHandlers_NetworkStreamReader_Stream
+  commentId: P:FubarDev.FtpServer.ConnectionHandlers.NetworkStreamReader.Stream
+  fullName: FubarDev.FtpServer.ConnectionHandlers.NetworkStreamReader.Stream
+  nameWithType: NetworkStreamReader.Stream
+- uid: FubarDev.FtpServer.ConnectionHandlers.NetworkStreamReader.Stream*
+  name: Stream
+  href: api/FubarDev.FtpServer.ConnectionHandlers.NetworkStreamReader.html#FubarDev_FtpServer_ConnectionHandlers_NetworkStreamReader_Stream_
+  commentId: Overload:FubarDev.FtpServer.ConnectionHandlers.NetworkStreamReader.Stream
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.ConnectionHandlers.NetworkStreamReader.Stream
+  nameWithType: NetworkStreamReader.Stream
+- uid: FubarDev.FtpServer.ConnectionHandlers.NetworkStreamWriter
+  name: NetworkStreamWriter
+  href: api/FubarDev.FtpServer.ConnectionHandlers.NetworkStreamWriter.html
+  commentId: T:FubarDev.FtpServer.ConnectionHandlers.NetworkStreamWriter
+  fullName: FubarDev.FtpServer.ConnectionHandlers.NetworkStreamWriter
+  nameWithType: NetworkStreamWriter
+- uid: FubarDev.FtpServer.ConnectionHandlers.NetworkStreamWriter.#ctor(System.IO.Stream,System.IO.Pipelines.PipeReader,System.Threading.CancellationToken)
+  name: NetworkStreamWriter(Stream, PipeReader, CancellationToken)
+  href: api/FubarDev.FtpServer.ConnectionHandlers.NetworkStreamWriter.html#FubarDev_FtpServer_ConnectionHandlers_NetworkStreamWriter__ctor_System_IO_Stream_System_IO_Pipelines_PipeReader_System_Threading_CancellationToken_
+  commentId: M:FubarDev.FtpServer.ConnectionHandlers.NetworkStreamWriter.#ctor(System.IO.Stream,System.IO.Pipelines.PipeReader,System.Threading.CancellationToken)
+  fullName: FubarDev.FtpServer.ConnectionHandlers.NetworkStreamWriter.NetworkStreamWriter(System.IO.Stream, System.IO.Pipelines.PipeReader, System.Threading.CancellationToken)
+  nameWithType: NetworkStreamWriter.NetworkStreamWriter(Stream, PipeReader, CancellationToken)
+- uid: FubarDev.FtpServer.ConnectionHandlers.NetworkStreamWriter.#ctor*
+  name: NetworkStreamWriter
+  href: api/FubarDev.FtpServer.ConnectionHandlers.NetworkStreamWriter.html#FubarDev_FtpServer_ConnectionHandlers_NetworkStreamWriter__ctor_
+  commentId: Overload:FubarDev.FtpServer.ConnectionHandlers.NetworkStreamWriter.#ctor
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.ConnectionHandlers.NetworkStreamWriter.NetworkStreamWriter
+  nameWithType: NetworkStreamWriter.NetworkStreamWriter
+- uid: FubarDev.FtpServer.ConnectionHandlers.NetworkStreamWriter.ContinueAsync(System.Threading.CancellationToken)
+  name: ContinueAsync(CancellationToken)
+  href: api/FubarDev.FtpServer.ConnectionHandlers.NetworkStreamWriter.html#FubarDev_FtpServer_ConnectionHandlers_NetworkStreamWriter_ContinueAsync_System_Threading_CancellationToken_
+  commentId: M:FubarDev.FtpServer.ConnectionHandlers.NetworkStreamWriter.ContinueAsync(System.Threading.CancellationToken)
+  fullName: FubarDev.FtpServer.ConnectionHandlers.NetworkStreamWriter.ContinueAsync(System.Threading.CancellationToken)
+  nameWithType: NetworkStreamWriter.ContinueAsync(CancellationToken)
+- uid: FubarDev.FtpServer.ConnectionHandlers.NetworkStreamWriter.ContinueAsync*
+  name: ContinueAsync
+  href: api/FubarDev.FtpServer.ConnectionHandlers.NetworkStreamWriter.html#FubarDev_FtpServer_ConnectionHandlers_NetworkStreamWriter_ContinueAsync_
+  commentId: Overload:FubarDev.FtpServer.ConnectionHandlers.NetworkStreamWriter.ContinueAsync
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.ConnectionHandlers.NetworkStreamWriter.ContinueAsync
+  nameWithType: NetworkStreamWriter.ContinueAsync
+- uid: FubarDev.FtpServer.ConnectionHandlers.NetworkStreamWriter.PauseAsync(System.Threading.CancellationToken)
+  name: PauseAsync(CancellationToken)
+  href: api/FubarDev.FtpServer.ConnectionHandlers.NetworkStreamWriter.html#FubarDev_FtpServer_ConnectionHandlers_NetworkStreamWriter_PauseAsync_System_Threading_CancellationToken_
+  commentId: M:FubarDev.FtpServer.ConnectionHandlers.NetworkStreamWriter.PauseAsync(System.Threading.CancellationToken)
+  fullName: FubarDev.FtpServer.ConnectionHandlers.NetworkStreamWriter.PauseAsync(System.Threading.CancellationToken)
+  nameWithType: NetworkStreamWriter.PauseAsync(CancellationToken)
+- uid: FubarDev.FtpServer.ConnectionHandlers.NetworkStreamWriter.PauseAsync*
+  name: PauseAsync
+  href: api/FubarDev.FtpServer.ConnectionHandlers.NetworkStreamWriter.html#FubarDev_FtpServer_ConnectionHandlers_NetworkStreamWriter_PauseAsync_
+  commentId: Overload:FubarDev.FtpServer.ConnectionHandlers.NetworkStreamWriter.PauseAsync
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.ConnectionHandlers.NetworkStreamWriter.PauseAsync
+  nameWithType: NetworkStreamWriter.PauseAsync
+- uid: FubarDev.FtpServer.ConnectionHandlers.NetworkStreamWriter.StartAsync(System.Threading.CancellationToken)
+  name: StartAsync(CancellationToken)
+  href: api/FubarDev.FtpServer.ConnectionHandlers.NetworkStreamWriter.html#FubarDev_FtpServer_ConnectionHandlers_NetworkStreamWriter_StartAsync_System_Threading_CancellationToken_
+  commentId: M:FubarDev.FtpServer.ConnectionHandlers.NetworkStreamWriter.StartAsync(System.Threading.CancellationToken)
+  fullName: FubarDev.FtpServer.ConnectionHandlers.NetworkStreamWriter.StartAsync(System.Threading.CancellationToken)
+  nameWithType: NetworkStreamWriter.StartAsync(CancellationToken)
+- uid: FubarDev.FtpServer.ConnectionHandlers.NetworkStreamWriter.StartAsync*
+  name: StartAsync
+  href: api/FubarDev.FtpServer.ConnectionHandlers.NetworkStreamWriter.html#FubarDev_FtpServer_ConnectionHandlers_NetworkStreamWriter_StartAsync_
+  commentId: Overload:FubarDev.FtpServer.ConnectionHandlers.NetworkStreamWriter.StartAsync
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.ConnectionHandlers.NetworkStreamWriter.StartAsync
+  nameWithType: NetworkStreamWriter.StartAsync
+- uid: FubarDev.FtpServer.ConnectionHandlers.NetworkStreamWriter.Status
+  name: Status
+  href: api/FubarDev.FtpServer.ConnectionHandlers.NetworkStreamWriter.html#FubarDev_FtpServer_ConnectionHandlers_NetworkStreamWriter_Status
+  commentId: P:FubarDev.FtpServer.ConnectionHandlers.NetworkStreamWriter.Status
+  fullName: FubarDev.FtpServer.ConnectionHandlers.NetworkStreamWriter.Status
+  nameWithType: NetworkStreamWriter.Status
+- uid: FubarDev.FtpServer.ConnectionHandlers.NetworkStreamWriter.Status*
+  name: Status
+  href: api/FubarDev.FtpServer.ConnectionHandlers.NetworkStreamWriter.html#FubarDev_FtpServer_ConnectionHandlers_NetworkStreamWriter_Status_
+  commentId: Overload:FubarDev.FtpServer.ConnectionHandlers.NetworkStreamWriter.Status
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.ConnectionHandlers.NetworkStreamWriter.Status
+  nameWithType: NetworkStreamWriter.Status
+- uid: FubarDev.FtpServer.ConnectionHandlers.NetworkStreamWriter.StopAsync(System.Threading.CancellationToken)
+  name: StopAsync(CancellationToken)
+  href: api/FubarDev.FtpServer.ConnectionHandlers.NetworkStreamWriter.html#FubarDev_FtpServer_ConnectionHandlers_NetworkStreamWriter_StopAsync_System_Threading_CancellationToken_
+  commentId: M:FubarDev.FtpServer.ConnectionHandlers.NetworkStreamWriter.StopAsync(System.Threading.CancellationToken)
+  fullName: FubarDev.FtpServer.ConnectionHandlers.NetworkStreamWriter.StopAsync(System.Threading.CancellationToken)
+  nameWithType: NetworkStreamWriter.StopAsync(CancellationToken)
+- uid: FubarDev.FtpServer.ConnectionHandlers.NetworkStreamWriter.StopAsync*
+  name: StopAsync
+  href: api/FubarDev.FtpServer.ConnectionHandlers.NetworkStreamWriter.html#FubarDev_FtpServer_ConnectionHandlers_NetworkStreamWriter_StopAsync_
+  commentId: Overload:FubarDev.FtpServer.ConnectionHandlers.NetworkStreamWriter.StopAsync
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.ConnectionHandlers.NetworkStreamWriter.StopAsync
+  nameWithType: NetworkStreamWriter.StopAsync
+- uid: FubarDev.FtpServer.ConnectionHandlers.NetworkStreamWriter.Stream
+  name: Stream
+  href: api/FubarDev.FtpServer.ConnectionHandlers.NetworkStreamWriter.html#FubarDev_FtpServer_ConnectionHandlers_NetworkStreamWriter_Stream
+  commentId: P:FubarDev.FtpServer.ConnectionHandlers.NetworkStreamWriter.Stream
+  fullName: FubarDev.FtpServer.ConnectionHandlers.NetworkStreamWriter.Stream
+  nameWithType: NetworkStreamWriter.Stream
+- uid: FubarDev.FtpServer.ConnectionHandlers.NetworkStreamWriter.Stream*
+  name: Stream
+  href: api/FubarDev.FtpServer.ConnectionHandlers.NetworkStreamWriter.html#FubarDev_FtpServer_ConnectionHandlers_NetworkStreamWriter_Stream_
+  commentId: Overload:FubarDev.FtpServer.ConnectionHandlers.NetworkStreamWriter.Stream
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.ConnectionHandlers.NetworkStreamWriter.Stream
+  nameWithType: NetworkStreamWriter.Stream
 - uid: FubarDev.FtpServer.ConnectionStatus
   name: ConnectionStatus
   href: api/FubarDev.FtpServer.ConnectionStatus.html
@@ -4568,6 +5050,64 @@ references:
   isSpec: "True"
   fullName: FubarDev.FtpServer.Features.IAuthorizationInformationFeature.User
   nameWithType: IAuthorizationInformationFeature.User
+- uid: FubarDev.FtpServer.Features.IBackgroundTaskLifetimeFeature
+  name: IBackgroundTaskLifetimeFeature
+  href: api/FubarDev.FtpServer.Features.IBackgroundTaskLifetimeFeature.html
+  commentId: T:FubarDev.FtpServer.Features.IBackgroundTaskLifetimeFeature
+  fullName: FubarDev.FtpServer.Features.IBackgroundTaskLifetimeFeature
+  nameWithType: IBackgroundTaskLifetimeFeature
+- uid: FubarDev.FtpServer.Features.IBackgroundTaskLifetimeFeature.Abort
+  name: Abort()
+  href: api/FubarDev.FtpServer.Features.IBackgroundTaskLifetimeFeature.html#FubarDev_FtpServer_Features_IBackgroundTaskLifetimeFeature_Abort
+  commentId: M:FubarDev.FtpServer.Features.IBackgroundTaskLifetimeFeature.Abort
+  fullName: FubarDev.FtpServer.Features.IBackgroundTaskLifetimeFeature.Abort()
+  nameWithType: IBackgroundTaskLifetimeFeature.Abort()
+- uid: FubarDev.FtpServer.Features.IBackgroundTaskLifetimeFeature.Abort*
+  name: Abort
+  href: api/FubarDev.FtpServer.Features.IBackgroundTaskLifetimeFeature.html#FubarDev_FtpServer_Features_IBackgroundTaskLifetimeFeature_Abort_
+  commentId: Overload:FubarDev.FtpServer.Features.IBackgroundTaskLifetimeFeature.Abort
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.Features.IBackgroundTaskLifetimeFeature.Abort
+  nameWithType: IBackgroundTaskLifetimeFeature.Abort
+- uid: FubarDev.FtpServer.Features.IBackgroundTaskLifetimeFeature.Command
+  name: Command
+  href: api/FubarDev.FtpServer.Features.IBackgroundTaskLifetimeFeature.html#FubarDev_FtpServer_Features_IBackgroundTaskLifetimeFeature_Command
+  commentId: P:FubarDev.FtpServer.Features.IBackgroundTaskLifetimeFeature.Command
+  fullName: FubarDev.FtpServer.Features.IBackgroundTaskLifetimeFeature.Command
+  nameWithType: IBackgroundTaskLifetimeFeature.Command
+- uid: FubarDev.FtpServer.Features.IBackgroundTaskLifetimeFeature.Command*
+  name: Command
+  href: api/FubarDev.FtpServer.Features.IBackgroundTaskLifetimeFeature.html#FubarDev_FtpServer_Features_IBackgroundTaskLifetimeFeature_Command_
+  commentId: Overload:FubarDev.FtpServer.Features.IBackgroundTaskLifetimeFeature.Command
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.Features.IBackgroundTaskLifetimeFeature.Command
+  nameWithType: IBackgroundTaskLifetimeFeature.Command
+- uid: FubarDev.FtpServer.Features.IBackgroundTaskLifetimeFeature.Handler
+  name: Handler
+  href: api/FubarDev.FtpServer.Features.IBackgroundTaskLifetimeFeature.html#FubarDev_FtpServer_Features_IBackgroundTaskLifetimeFeature_Handler
+  commentId: P:FubarDev.FtpServer.Features.IBackgroundTaskLifetimeFeature.Handler
+  fullName: FubarDev.FtpServer.Features.IBackgroundTaskLifetimeFeature.Handler
+  nameWithType: IBackgroundTaskLifetimeFeature.Handler
+- uid: FubarDev.FtpServer.Features.IBackgroundTaskLifetimeFeature.Handler*
+  name: Handler
+  href: api/FubarDev.FtpServer.Features.IBackgroundTaskLifetimeFeature.html#FubarDev_FtpServer_Features_IBackgroundTaskLifetimeFeature_Handler_
+  commentId: Overload:FubarDev.FtpServer.Features.IBackgroundTaskLifetimeFeature.Handler
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.Features.IBackgroundTaskLifetimeFeature.Handler
+  nameWithType: IBackgroundTaskLifetimeFeature.Handler
+- uid: FubarDev.FtpServer.Features.IBackgroundTaskLifetimeFeature.Task
+  name: Task
+  href: api/FubarDev.FtpServer.Features.IBackgroundTaskLifetimeFeature.html#FubarDev_FtpServer_Features_IBackgroundTaskLifetimeFeature_Task
+  commentId: P:FubarDev.FtpServer.Features.IBackgroundTaskLifetimeFeature.Task
+  fullName: FubarDev.FtpServer.Features.IBackgroundTaskLifetimeFeature.Task
+  nameWithType: IBackgroundTaskLifetimeFeature.Task
+- uid: FubarDev.FtpServer.Features.IBackgroundTaskLifetimeFeature.Task*
+  name: Task
+  href: api/FubarDev.FtpServer.Features.IBackgroundTaskLifetimeFeature.html#FubarDev_FtpServer_Features_IBackgroundTaskLifetimeFeature_Task_
+  commentId: Overload:FubarDev.FtpServer.Features.IBackgroundTaskLifetimeFeature.Task
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.Features.IBackgroundTaskLifetimeFeature.Task
+  nameWithType: IBackgroundTaskLifetimeFeature.Task
 - uid: FubarDev.FtpServer.Features.IConnectionFeature
   name: IConnectionFeature
   href: api/FubarDev.FtpServer.Features.IConnectionFeature.html
@@ -4741,6 +5281,166 @@ references:
   isSpec: "True"
   fullName: FubarDev.FtpServer.Features.IMlstFactsFeature.ActiveMlstFacts
   nameWithType: IMlstFactsFeature.ActiveMlstFacts
+- uid: FubarDev.FtpServer.Features.Impl
+  name: FubarDev.FtpServer.Features.Impl
+  href: api/FubarDev.FtpServer.Features.Impl.html
+  commentId: N:FubarDev.FtpServer.Features.Impl
+  fullName: FubarDev.FtpServer.Features.Impl
+  nameWithType: FubarDev.FtpServer.Features.Impl
+- uid: FubarDev.FtpServer.Features.Impl.BackgroundTaskLifetimeFeature
+  name: BackgroundTaskLifetimeFeature
+  href: api/FubarDev.FtpServer.Features.Impl.BackgroundTaskLifetimeFeature.html
+  commentId: T:FubarDev.FtpServer.Features.Impl.BackgroundTaskLifetimeFeature
+  fullName: FubarDev.FtpServer.Features.Impl.BackgroundTaskLifetimeFeature
+  nameWithType: BackgroundTaskLifetimeFeature
+- uid: FubarDev.FtpServer.Features.Impl.BackgroundTaskLifetimeFeature.#ctor(FubarDev.FtpServer.IFtpCommandBase,FubarDev.FtpServer.FtpCommand,System.Func{System.Threading.CancellationToken,System.Threading.Tasks.Task},System.Threading.CancellationToken)
+  name: BackgroundTaskLifetimeFeature(IFtpCommandBase, FtpCommand, Func<CancellationToken, Task>, CancellationToken)
+  href: api/FubarDev.FtpServer.Features.Impl.BackgroundTaskLifetimeFeature.html#FubarDev_FtpServer_Features_Impl_BackgroundTaskLifetimeFeature__ctor_FubarDev_FtpServer_IFtpCommandBase_FubarDev_FtpServer_FtpCommand_System_Func_System_Threading_CancellationToken_System_Threading_Tasks_Task__System_Threading_CancellationToken_
+  commentId: M:FubarDev.FtpServer.Features.Impl.BackgroundTaskLifetimeFeature.#ctor(FubarDev.FtpServer.IFtpCommandBase,FubarDev.FtpServer.FtpCommand,System.Func{System.Threading.CancellationToken,System.Threading.Tasks.Task},System.Threading.CancellationToken)
+  name.vb: BackgroundTaskLifetimeFeature(IFtpCommandBase, FtpCommand, Func(Of CancellationToken, Task), CancellationToken)
+  fullName: FubarDev.FtpServer.Features.Impl.BackgroundTaskLifetimeFeature.BackgroundTaskLifetimeFeature(FubarDev.FtpServer.IFtpCommandBase, FubarDev.FtpServer.FtpCommand, System.Func<System.Threading.CancellationToken, System.Threading.Tasks.Task>, System.Threading.CancellationToken)
+  fullName.vb: FubarDev.FtpServer.Features.Impl.BackgroundTaskLifetimeFeature.BackgroundTaskLifetimeFeature(FubarDev.FtpServer.IFtpCommandBase, FubarDev.FtpServer.FtpCommand, System.Func(Of System.Threading.CancellationToken, System.Threading.Tasks.Task), System.Threading.CancellationToken)
+  nameWithType: BackgroundTaskLifetimeFeature.BackgroundTaskLifetimeFeature(IFtpCommandBase, FtpCommand, Func<CancellationToken, Task>, CancellationToken)
+  nameWithType.vb: BackgroundTaskLifetimeFeature.BackgroundTaskLifetimeFeature(IFtpCommandBase, FtpCommand, Func(Of CancellationToken, Task), CancellationToken)
+- uid: FubarDev.FtpServer.Features.Impl.BackgroundTaskLifetimeFeature.#ctor*
+  name: BackgroundTaskLifetimeFeature
+  href: api/FubarDev.FtpServer.Features.Impl.BackgroundTaskLifetimeFeature.html#FubarDev_FtpServer_Features_Impl_BackgroundTaskLifetimeFeature__ctor_
+  commentId: Overload:FubarDev.FtpServer.Features.Impl.BackgroundTaskLifetimeFeature.#ctor
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.Features.Impl.BackgroundTaskLifetimeFeature.BackgroundTaskLifetimeFeature
+  nameWithType: BackgroundTaskLifetimeFeature.BackgroundTaskLifetimeFeature
+- uid: FubarDev.FtpServer.Features.Impl.BackgroundTaskLifetimeFeature.Abort
+  name: Abort()
+  href: api/FubarDev.FtpServer.Features.Impl.BackgroundTaskLifetimeFeature.html#FubarDev_FtpServer_Features_Impl_BackgroundTaskLifetimeFeature_Abort
+  commentId: M:FubarDev.FtpServer.Features.Impl.BackgroundTaskLifetimeFeature.Abort
+  fullName: FubarDev.FtpServer.Features.Impl.BackgroundTaskLifetimeFeature.Abort()
+  nameWithType: BackgroundTaskLifetimeFeature.Abort()
+- uid: FubarDev.FtpServer.Features.Impl.BackgroundTaskLifetimeFeature.Abort*
+  name: Abort
+  href: api/FubarDev.FtpServer.Features.Impl.BackgroundTaskLifetimeFeature.html#FubarDev_FtpServer_Features_Impl_BackgroundTaskLifetimeFeature_Abort_
+  commentId: Overload:FubarDev.FtpServer.Features.Impl.BackgroundTaskLifetimeFeature.Abort
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.Features.Impl.BackgroundTaskLifetimeFeature.Abort
+  nameWithType: BackgroundTaskLifetimeFeature.Abort
+- uid: FubarDev.FtpServer.Features.Impl.BackgroundTaskLifetimeFeature.Command
+  name: Command
+  href: api/FubarDev.FtpServer.Features.Impl.BackgroundTaskLifetimeFeature.html#FubarDev_FtpServer_Features_Impl_BackgroundTaskLifetimeFeature_Command
+  commentId: P:FubarDev.FtpServer.Features.Impl.BackgroundTaskLifetimeFeature.Command
+  fullName: FubarDev.FtpServer.Features.Impl.BackgroundTaskLifetimeFeature.Command
+  nameWithType: BackgroundTaskLifetimeFeature.Command
+- uid: FubarDev.FtpServer.Features.Impl.BackgroundTaskLifetimeFeature.Command*
+  name: Command
+  href: api/FubarDev.FtpServer.Features.Impl.BackgroundTaskLifetimeFeature.html#FubarDev_FtpServer_Features_Impl_BackgroundTaskLifetimeFeature_Command_
+  commentId: Overload:FubarDev.FtpServer.Features.Impl.BackgroundTaskLifetimeFeature.Command
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.Features.Impl.BackgroundTaskLifetimeFeature.Command
+  nameWithType: BackgroundTaskLifetimeFeature.Command
+- uid: FubarDev.FtpServer.Features.Impl.BackgroundTaskLifetimeFeature.Handler
+  name: Handler
+  href: api/FubarDev.FtpServer.Features.Impl.BackgroundTaskLifetimeFeature.html#FubarDev_FtpServer_Features_Impl_BackgroundTaskLifetimeFeature_Handler
+  commentId: P:FubarDev.FtpServer.Features.Impl.BackgroundTaskLifetimeFeature.Handler
+  fullName: FubarDev.FtpServer.Features.Impl.BackgroundTaskLifetimeFeature.Handler
+  nameWithType: BackgroundTaskLifetimeFeature.Handler
+- uid: FubarDev.FtpServer.Features.Impl.BackgroundTaskLifetimeFeature.Handler*
+  name: Handler
+  href: api/FubarDev.FtpServer.Features.Impl.BackgroundTaskLifetimeFeature.html#FubarDev_FtpServer_Features_Impl_BackgroundTaskLifetimeFeature_Handler_
+  commentId: Overload:FubarDev.FtpServer.Features.Impl.BackgroundTaskLifetimeFeature.Handler
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.Features.Impl.BackgroundTaskLifetimeFeature.Handler
+  nameWithType: BackgroundTaskLifetimeFeature.Handler
+- uid: FubarDev.FtpServer.Features.Impl.BackgroundTaskLifetimeFeature.Task
+  name: Task
+  href: api/FubarDev.FtpServer.Features.Impl.BackgroundTaskLifetimeFeature.html#FubarDev_FtpServer_Features_Impl_BackgroundTaskLifetimeFeature_Task
+  commentId: P:FubarDev.FtpServer.Features.Impl.BackgroundTaskLifetimeFeature.Task
+  fullName: FubarDev.FtpServer.Features.Impl.BackgroundTaskLifetimeFeature.Task
+  nameWithType: BackgroundTaskLifetimeFeature.Task
+- uid: FubarDev.FtpServer.Features.Impl.BackgroundTaskLifetimeFeature.Task*
+  name: Task
+  href: api/FubarDev.FtpServer.Features.Impl.BackgroundTaskLifetimeFeature.html#FubarDev_FtpServer_Features_Impl_BackgroundTaskLifetimeFeature_Task_
+  commentId: Overload:FubarDev.FtpServer.Features.Impl.BackgroundTaskLifetimeFeature.Task
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.Features.Impl.BackgroundTaskLifetimeFeature.Task
+  nameWithType: BackgroundTaskLifetimeFeature.Task
+- uid: FubarDev.FtpServer.Features.Impl.ServerCommandFeature
+  name: ServerCommandFeature
+  href: api/FubarDev.FtpServer.Features.Impl.ServerCommandFeature.html
+  commentId: T:FubarDev.FtpServer.Features.Impl.ServerCommandFeature
+  fullName: FubarDev.FtpServer.Features.Impl.ServerCommandFeature
+  nameWithType: ServerCommandFeature
+- uid: FubarDev.FtpServer.Features.Impl.ServerCommandFeature.#ctor(System.Threading.Channels.ChannelWriter{FubarDev.FtpServer.ServerCommands.IServerCommand})
+  name: ServerCommandFeature(ChannelWriter<IServerCommand>)
+  href: api/FubarDev.FtpServer.Features.Impl.ServerCommandFeature.html#FubarDev_FtpServer_Features_Impl_ServerCommandFeature__ctor_System_Threading_Channels_ChannelWriter_FubarDev_FtpServer_ServerCommands_IServerCommand__
+  commentId: M:FubarDev.FtpServer.Features.Impl.ServerCommandFeature.#ctor(System.Threading.Channels.ChannelWriter{FubarDev.FtpServer.ServerCommands.IServerCommand})
+  name.vb: ServerCommandFeature(ChannelWriter(Of IServerCommand))
+  fullName: FubarDev.FtpServer.Features.Impl.ServerCommandFeature.ServerCommandFeature(System.Threading.Channels.ChannelWriter<FubarDev.FtpServer.ServerCommands.IServerCommand>)
+  fullName.vb: FubarDev.FtpServer.Features.Impl.ServerCommandFeature.ServerCommandFeature(System.Threading.Channels.ChannelWriter(Of FubarDev.FtpServer.ServerCommands.IServerCommand))
+  nameWithType: ServerCommandFeature.ServerCommandFeature(ChannelWriter<IServerCommand>)
+  nameWithType.vb: ServerCommandFeature.ServerCommandFeature(ChannelWriter(Of IServerCommand))
+- uid: FubarDev.FtpServer.Features.Impl.ServerCommandFeature.#ctor*
+  name: ServerCommandFeature
+  href: api/FubarDev.FtpServer.Features.Impl.ServerCommandFeature.html#FubarDev_FtpServer_Features_Impl_ServerCommandFeature__ctor_
+  commentId: Overload:FubarDev.FtpServer.Features.Impl.ServerCommandFeature.#ctor
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.Features.Impl.ServerCommandFeature.ServerCommandFeature
+  nameWithType: ServerCommandFeature.ServerCommandFeature
+- uid: FubarDev.FtpServer.Features.Impl.ServerCommandFeature.ServerCommandWriter
+  name: ServerCommandWriter
+  href: api/FubarDev.FtpServer.Features.Impl.ServerCommandFeature.html#FubarDev_FtpServer_Features_Impl_ServerCommandFeature_ServerCommandWriter
+  commentId: P:FubarDev.FtpServer.Features.Impl.ServerCommandFeature.ServerCommandWriter
+  fullName: FubarDev.FtpServer.Features.Impl.ServerCommandFeature.ServerCommandWriter
+  nameWithType: ServerCommandFeature.ServerCommandWriter
+- uid: FubarDev.FtpServer.Features.Impl.ServerCommandFeature.ServerCommandWriter*
+  name: ServerCommandWriter
+  href: api/FubarDev.FtpServer.Features.Impl.ServerCommandFeature.html#FubarDev_FtpServer_Features_Impl_ServerCommandFeature_ServerCommandWriter_
+  commentId: Overload:FubarDev.FtpServer.Features.Impl.ServerCommandFeature.ServerCommandWriter
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.Features.Impl.ServerCommandFeature.ServerCommandWriter
+  nameWithType: ServerCommandFeature.ServerCommandWriter
+- uid: FubarDev.FtpServer.Features.INetworkStreamFeature
+  name: INetworkStreamFeature
+  href: api/FubarDev.FtpServer.Features.INetworkStreamFeature.html
+  commentId: T:FubarDev.FtpServer.Features.INetworkStreamFeature
+  fullName: FubarDev.FtpServer.Features.INetworkStreamFeature
+  nameWithType: INetworkStreamFeature
+- uid: FubarDev.FtpServer.Features.INetworkStreamFeature.Output
+  name: Output
+  href: api/FubarDev.FtpServer.Features.INetworkStreamFeature.html#FubarDev_FtpServer_Features_INetworkStreamFeature_Output
+  commentId: P:FubarDev.FtpServer.Features.INetworkStreamFeature.Output
+  fullName: FubarDev.FtpServer.Features.INetworkStreamFeature.Output
+  nameWithType: INetworkStreamFeature.Output
+- uid: FubarDev.FtpServer.Features.INetworkStreamFeature.Output*
+  name: Output
+  href: api/FubarDev.FtpServer.Features.INetworkStreamFeature.html#FubarDev_FtpServer_Features_INetworkStreamFeature_Output_
+  commentId: Overload:FubarDev.FtpServer.Features.INetworkStreamFeature.Output
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.Features.INetworkStreamFeature.Output
+  nameWithType: INetworkStreamFeature.Output
+- uid: FubarDev.FtpServer.Features.INetworkStreamFeature.StreamReaderService
+  name: StreamReaderService
+  href: api/FubarDev.FtpServer.Features.INetworkStreamFeature.html#FubarDev_FtpServer_Features_INetworkStreamFeature_StreamReaderService
+  commentId: P:FubarDev.FtpServer.Features.INetworkStreamFeature.StreamReaderService
+  fullName: FubarDev.FtpServer.Features.INetworkStreamFeature.StreamReaderService
+  nameWithType: INetworkStreamFeature.StreamReaderService
+- uid: FubarDev.FtpServer.Features.INetworkStreamFeature.StreamReaderService*
+  name: StreamReaderService
+  href: api/FubarDev.FtpServer.Features.INetworkStreamFeature.html#FubarDev_FtpServer_Features_INetworkStreamFeature_StreamReaderService_
+  commentId: Overload:FubarDev.FtpServer.Features.INetworkStreamFeature.StreamReaderService
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.Features.INetworkStreamFeature.StreamReaderService
+  nameWithType: INetworkStreamFeature.StreamReaderService
+- uid: FubarDev.FtpServer.Features.INetworkStreamFeature.StreamWriterService
+  name: StreamWriterService
+  href: api/FubarDev.FtpServer.Features.INetworkStreamFeature.html#FubarDev_FtpServer_Features_INetworkStreamFeature_StreamWriterService
+  commentId: P:FubarDev.FtpServer.Features.INetworkStreamFeature.StreamWriterService
+  fullName: FubarDev.FtpServer.Features.INetworkStreamFeature.StreamWriterService
+  nameWithType: INetworkStreamFeature.StreamWriterService
+- uid: FubarDev.FtpServer.Features.INetworkStreamFeature.StreamWriterService*
+  name: StreamWriterService
+  href: api/FubarDev.FtpServer.Features.INetworkStreamFeature.html#FubarDev_FtpServer_Features_INetworkStreamFeature_StreamWriterService_
+  commentId: Overload:FubarDev.FtpServer.Features.INetworkStreamFeature.StreamWriterService
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.Features.INetworkStreamFeature.StreamWriterService
+  nameWithType: INetworkStreamFeature.StreamWriterService
 - uid: FubarDev.FtpServer.Features.IRenameCommandFeature
   name: IRenameCommandFeature
   href: api/FubarDev.FtpServer.Features.IRenameCommandFeature.html
@@ -4785,6 +5485,19 @@ references:
   commentId: T:FubarDev.FtpServer.Features.ISecureConnectionFeature
   fullName: FubarDev.FtpServer.Features.ISecureConnectionFeature
   nameWithType: ISecureConnectionFeature
+- uid: FubarDev.FtpServer.Features.ISecureConnectionFeature.CloseEncryptedControlStream
+  name: CloseEncryptedControlStream
+  href: api/FubarDev.FtpServer.Features.ISecureConnectionFeature.html#FubarDev_FtpServer_Features_ISecureConnectionFeature_CloseEncryptedControlStream
+  commentId: P:FubarDev.FtpServer.Features.ISecureConnectionFeature.CloseEncryptedControlStream
+  fullName: FubarDev.FtpServer.Features.ISecureConnectionFeature.CloseEncryptedControlStream
+  nameWithType: ISecureConnectionFeature.CloseEncryptedControlStream
+- uid: FubarDev.FtpServer.Features.ISecureConnectionFeature.CloseEncryptedControlStream*
+  name: CloseEncryptedControlStream
+  href: api/FubarDev.FtpServer.Features.ISecureConnectionFeature.html#FubarDev_FtpServer_Features_ISecureConnectionFeature_CloseEncryptedControlStream_
+  commentId: Overload:FubarDev.FtpServer.Features.ISecureConnectionFeature.CloseEncryptedControlStream
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.Features.ISecureConnectionFeature.CloseEncryptedControlStream
+  nameWithType: ISecureConnectionFeature.CloseEncryptedControlStream
 - uid: FubarDev.FtpServer.Features.ISecureConnectionFeature.CreateEncryptedStream
   name: CreateEncryptedStream
   href: api/FubarDev.FtpServer.Features.ISecureConnectionFeature.html#FubarDev_FtpServer_Features_ISecureConnectionFeature_CreateEncryptedStream
@@ -4850,6 +5563,25 @@ references:
   isSpec: "True"
   fullName: FubarDev.FtpServer.Features.ISecureConnectionFeature.SocketStream
   nameWithType: ISecureConnectionFeature.SocketStream
+- uid: FubarDev.FtpServer.Features.IServerCommandFeature
+  name: IServerCommandFeature
+  href: api/FubarDev.FtpServer.Features.IServerCommandFeature.html
+  commentId: T:FubarDev.FtpServer.Features.IServerCommandFeature
+  fullName: FubarDev.FtpServer.Features.IServerCommandFeature
+  nameWithType: IServerCommandFeature
+- uid: FubarDev.FtpServer.Features.IServerCommandFeature.ServerCommandWriter
+  name: ServerCommandWriter
+  href: api/FubarDev.FtpServer.Features.IServerCommandFeature.html#FubarDev_FtpServer_Features_IServerCommandFeature_ServerCommandWriter
+  commentId: P:FubarDev.FtpServer.Features.IServerCommandFeature.ServerCommandWriter
+  fullName: FubarDev.FtpServer.Features.IServerCommandFeature.ServerCommandWriter
+  nameWithType: IServerCommandFeature.ServerCommandWriter
+- uid: FubarDev.FtpServer.Features.IServerCommandFeature.ServerCommandWriter*
+  name: ServerCommandWriter
+  href: api/FubarDev.FtpServer.Features.IServerCommandFeature.html#FubarDev_FtpServer_Features_IServerCommandFeature_ServerCommandWriter_
+  commentId: Overload:FubarDev.FtpServer.Features.IServerCommandFeature.ServerCommandWriter
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.Features.IServerCommandFeature.ServerCommandWriter
+  nameWithType: IServerCommandFeature.ServerCommandWriter
 - uid: FubarDev.FtpServer.Features.ITransferConfigurationFeature
   name: ITransferConfigurationFeature
   href: api/FubarDev.FtpServer.Features.ITransferConfigurationFeature.html
@@ -8182,72 +8914,247 @@ references:
   commentId: N:FubarDev.FtpServer.FileSystem.Unix
   fullName: FubarDev.FtpServer.FileSystem.Unix
   nameWithType: FubarDev.FtpServer.FileSystem.Unix
-- uid: FubarDev.FtpServer.FileSystem.Unix.UnixFileSystemIdChanger
-  name: UnixFileSystemIdChanger
-  href: api/FubarDev.FtpServer.FileSystem.Unix.UnixFileSystemIdChanger.html
-  commentId: T:FubarDev.FtpServer.FileSystem.Unix.UnixFileSystemIdChanger
-  fullName: FubarDev.FtpServer.FileSystem.Unix.UnixFileSystemIdChanger
-  nameWithType: UnixFileSystemIdChanger
-- uid: FubarDev.FtpServer.FileSystem.Unix.UnixFileSystemIdChanger.#ctor(Mono.Unix.UnixUserInfo)
-  name: UnixFileSystemIdChanger(UnixUserInfo)
-  href: api/FubarDev.FtpServer.FileSystem.Unix.UnixFileSystemIdChanger.html#FubarDev_FtpServer_FileSystem_Unix_UnixFileSystemIdChanger__ctor_Mono_Unix_UnixUserInfo_
-  commentId: M:FubarDev.FtpServer.FileSystem.Unix.UnixFileSystemIdChanger.#ctor(Mono.Unix.UnixUserInfo)
-  fullName: FubarDev.FtpServer.FileSystem.Unix.UnixFileSystemIdChanger.UnixFileSystemIdChanger(Mono.Unix.UnixUserInfo)
-  nameWithType: UnixFileSystemIdChanger.UnixFileSystemIdChanger(UnixUserInfo)
-- uid: FubarDev.FtpServer.FileSystem.Unix.UnixFileSystemIdChanger.#ctor*
-  name: UnixFileSystemIdChanger
-  href: api/FubarDev.FtpServer.FileSystem.Unix.UnixFileSystemIdChanger.html#FubarDev_FtpServer_FileSystem_Unix_UnixFileSystemIdChanger__ctor_
-  commentId: Overload:FubarDev.FtpServer.FileSystem.Unix.UnixFileSystemIdChanger.#ctor
+- uid: FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem
+  name: UnixFileSystem
+  href: api/FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.html
+  commentId: T:FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem
+  fullName: FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem
+  nameWithType: UnixFileSystem
+- uid: FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.#ctor(FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry,FubarDev.FtpServer.AccountManagement.IFtpUser,Mono.Unix.UnixUserInfo)
+  name: UnixFileSystem(IUnixDirectoryEntry, IFtpUser, UnixUserInfo)
+  href: api/FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.html#FubarDev_FtpServer_FileSystem_Unix_UnixFileSystem__ctor_FubarDev_FtpServer_FileSystem_IUnixDirectoryEntry_FubarDev_FtpServer_AccountManagement_IFtpUser_Mono_Unix_UnixUserInfo_
+  commentId: M:FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.#ctor(FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry,FubarDev.FtpServer.AccountManagement.IFtpUser,Mono.Unix.UnixUserInfo)
+  fullName: FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.UnixFileSystem(FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry, FubarDev.FtpServer.AccountManagement.IFtpUser, Mono.Unix.UnixUserInfo)
+  nameWithType: UnixFileSystem.UnixFileSystem(IUnixDirectoryEntry, IFtpUser, UnixUserInfo)
+- uid: FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.#ctor*
+  name: UnixFileSystem
+  href: api/FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.html#FubarDev_FtpServer_FileSystem_Unix_UnixFileSystem__ctor_
+  commentId: Overload:FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.#ctor
   isSpec: "True"
-  fullName: FubarDev.FtpServer.FileSystem.Unix.UnixFileSystemIdChanger.UnixFileSystemIdChanger
-  nameWithType: UnixFileSystemIdChanger.UnixFileSystemIdChanger
-- uid: FubarDev.FtpServer.FileSystem.Unix.UnixFileSystemIdChanger.Dispose
-  name: Dispose()
-  href: api/FubarDev.FtpServer.FileSystem.Unix.UnixFileSystemIdChanger.html#FubarDev_FtpServer_FileSystem_Unix_UnixFileSystemIdChanger_Dispose
-  commentId: M:FubarDev.FtpServer.FileSystem.Unix.UnixFileSystemIdChanger.Dispose
-  fullName: FubarDev.FtpServer.FileSystem.Unix.UnixFileSystemIdChanger.Dispose()
-  nameWithType: UnixFileSystemIdChanger.Dispose()
-- uid: FubarDev.FtpServer.FileSystem.Unix.UnixFileSystemIdChanger.Dispose*
-  name: Dispose
-  href: api/FubarDev.FtpServer.FileSystem.Unix.UnixFileSystemIdChanger.html#FubarDev_FtpServer_FileSystem_Unix_UnixFileSystemIdChanger_Dispose_
-  commentId: Overload:FubarDev.FtpServer.FileSystem.Unix.UnixFileSystemIdChanger.Dispose
+  fullName: FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.UnixFileSystem
+  nameWithType: UnixFileSystem.UnixFileSystem
+- uid: FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.AppendAsync(FubarDev.FtpServer.FileSystem.IUnixFileEntry,System.Nullable{System.Int64},System.IO.Stream,System.Threading.CancellationToken)
+  name: AppendAsync(IUnixFileEntry, Nullable<Int64>, Stream, CancellationToken)
+  href: api/FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.html#FubarDev_FtpServer_FileSystem_Unix_UnixFileSystem_AppendAsync_FubarDev_FtpServer_FileSystem_IUnixFileEntry_System_Nullable_System_Int64__System_IO_Stream_System_Threading_CancellationToken_
+  commentId: M:FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.AppendAsync(FubarDev.FtpServer.FileSystem.IUnixFileEntry,System.Nullable{System.Int64},System.IO.Stream,System.Threading.CancellationToken)
+  name.vb: AppendAsync(IUnixFileEntry, Nullable(Of Int64), Stream, CancellationToken)
+  fullName: FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.AppendAsync(FubarDev.FtpServer.FileSystem.IUnixFileEntry, System.Nullable<System.Int64>, System.IO.Stream, System.Threading.CancellationToken)
+  fullName.vb: FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.AppendAsync(FubarDev.FtpServer.FileSystem.IUnixFileEntry, System.Nullable(Of System.Int64), System.IO.Stream, System.Threading.CancellationToken)
+  nameWithType: UnixFileSystem.AppendAsync(IUnixFileEntry, Nullable<Int64>, Stream, CancellationToken)
+  nameWithType.vb: UnixFileSystem.AppendAsync(IUnixFileEntry, Nullable(Of Int64), Stream, CancellationToken)
+- uid: FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.AppendAsync*
+  name: AppendAsync
+  href: api/FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.html#FubarDev_FtpServer_FileSystem_Unix_UnixFileSystem_AppendAsync_
+  commentId: Overload:FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.AppendAsync
   isSpec: "True"
-  fullName: FubarDev.FtpServer.FileSystem.Unix.UnixFileSystemIdChanger.Dispose
-  nameWithType: UnixFileSystemIdChanger.Dispose
+  fullName: FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.AppendAsync
+  nameWithType: UnixFileSystem.AppendAsync
+- uid: FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.CreateAsync(FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry,System.String,System.IO.Stream,System.Threading.CancellationToken)
+  name: CreateAsync(IUnixDirectoryEntry, String, Stream, CancellationToken)
+  href: api/FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.html#FubarDev_FtpServer_FileSystem_Unix_UnixFileSystem_CreateAsync_FubarDev_FtpServer_FileSystem_IUnixDirectoryEntry_System_String_System_IO_Stream_System_Threading_CancellationToken_
+  commentId: M:FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.CreateAsync(FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry,System.String,System.IO.Stream,System.Threading.CancellationToken)
+  fullName: FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.CreateAsync(FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry, System.String, System.IO.Stream, System.Threading.CancellationToken)
+  nameWithType: UnixFileSystem.CreateAsync(IUnixDirectoryEntry, String, Stream, CancellationToken)
+- uid: FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.CreateAsync*
+  name: CreateAsync
+  href: api/FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.html#FubarDev_FtpServer_FileSystem_Unix_UnixFileSystem_CreateAsync_
+  commentId: Overload:FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.CreateAsync
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.CreateAsync
+  nameWithType: UnixFileSystem.CreateAsync
+- uid: FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.CreateDirectoryAsync(FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry,System.String,System.Threading.CancellationToken)
+  name: CreateDirectoryAsync(IUnixDirectoryEntry, String, CancellationToken)
+  href: api/FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.html#FubarDev_FtpServer_FileSystem_Unix_UnixFileSystem_CreateDirectoryAsync_FubarDev_FtpServer_FileSystem_IUnixDirectoryEntry_System_String_System_Threading_CancellationToken_
+  commentId: M:FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.CreateDirectoryAsync(FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry,System.String,System.Threading.CancellationToken)
+  fullName: FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.CreateDirectoryAsync(FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry, System.String, System.Threading.CancellationToken)
+  nameWithType: UnixFileSystem.CreateDirectoryAsync(IUnixDirectoryEntry, String, CancellationToken)
+- uid: FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.CreateDirectoryAsync*
+  name: CreateDirectoryAsync
+  href: api/FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.html#FubarDev_FtpServer_FileSystem_Unix_UnixFileSystem_CreateDirectoryAsync_
+  commentId: Overload:FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.CreateDirectoryAsync
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.CreateDirectoryAsync
+  nameWithType: UnixFileSystem.CreateDirectoryAsync
+- uid: FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.FileSystemEntryComparer
+  name: FileSystemEntryComparer
+  href: api/FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.html#FubarDev_FtpServer_FileSystem_Unix_UnixFileSystem_FileSystemEntryComparer
+  commentId: P:FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.FileSystemEntryComparer
+  fullName: FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.FileSystemEntryComparer
+  nameWithType: UnixFileSystem.FileSystemEntryComparer
+- uid: FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.FileSystemEntryComparer*
+  name: FileSystemEntryComparer
+  href: api/FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.html#FubarDev_FtpServer_FileSystem_Unix_UnixFileSystem_FileSystemEntryComparer_
+  commentId: Overload:FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.FileSystemEntryComparer
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.FileSystemEntryComparer
+  nameWithType: UnixFileSystem.FileSystemEntryComparer
+- uid: FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.GetEntriesAsync(FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry,System.Threading.CancellationToken)
+  name: GetEntriesAsync(IUnixDirectoryEntry, CancellationToken)
+  href: api/FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.html#FubarDev_FtpServer_FileSystem_Unix_UnixFileSystem_GetEntriesAsync_FubarDev_FtpServer_FileSystem_IUnixDirectoryEntry_System_Threading_CancellationToken_
+  commentId: M:FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.GetEntriesAsync(FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry,System.Threading.CancellationToken)
+  fullName: FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.GetEntriesAsync(FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry, System.Threading.CancellationToken)
+  nameWithType: UnixFileSystem.GetEntriesAsync(IUnixDirectoryEntry, CancellationToken)
+- uid: FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.GetEntriesAsync*
+  name: GetEntriesAsync
+  href: api/FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.html#FubarDev_FtpServer_FileSystem_Unix_UnixFileSystem_GetEntriesAsync_
+  commentId: Overload:FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.GetEntriesAsync
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.GetEntriesAsync
+  nameWithType: UnixFileSystem.GetEntriesAsync
+- uid: FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.GetEntryByNameAsync(FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry,System.String,System.Threading.CancellationToken)
+  name: GetEntryByNameAsync(IUnixDirectoryEntry, String, CancellationToken)
+  href: api/FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.html#FubarDev_FtpServer_FileSystem_Unix_UnixFileSystem_GetEntryByNameAsync_FubarDev_FtpServer_FileSystem_IUnixDirectoryEntry_System_String_System_Threading_CancellationToken_
+  commentId: M:FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.GetEntryByNameAsync(FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry,System.String,System.Threading.CancellationToken)
+  fullName: FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.GetEntryByNameAsync(FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry, System.String, System.Threading.CancellationToken)
+  nameWithType: UnixFileSystem.GetEntryByNameAsync(IUnixDirectoryEntry, String, CancellationToken)
+- uid: FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.GetEntryByNameAsync*
+  name: GetEntryByNameAsync
+  href: api/FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.html#FubarDev_FtpServer_FileSystem_Unix_UnixFileSystem_GetEntryByNameAsync_
+  commentId: Overload:FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.GetEntryByNameAsync
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.GetEntryByNameAsync
+  nameWithType: UnixFileSystem.GetEntryByNameAsync
+- uid: FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.MoveAsync(FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry,FubarDev.FtpServer.FileSystem.IUnixFileSystemEntry,FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry,System.String,System.Threading.CancellationToken)
+  name: MoveAsync(IUnixDirectoryEntry, IUnixFileSystemEntry, IUnixDirectoryEntry, String, CancellationToken)
+  href: api/FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.html#FubarDev_FtpServer_FileSystem_Unix_UnixFileSystem_MoveAsync_FubarDev_FtpServer_FileSystem_IUnixDirectoryEntry_FubarDev_FtpServer_FileSystem_IUnixFileSystemEntry_FubarDev_FtpServer_FileSystem_IUnixDirectoryEntry_System_String_System_Threading_CancellationToken_
+  commentId: M:FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.MoveAsync(FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry,FubarDev.FtpServer.FileSystem.IUnixFileSystemEntry,FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry,System.String,System.Threading.CancellationToken)
+  fullName: FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.MoveAsync(FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry, FubarDev.FtpServer.FileSystem.IUnixFileSystemEntry, FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry, System.String, System.Threading.CancellationToken)
+  nameWithType: UnixFileSystem.MoveAsync(IUnixDirectoryEntry, IUnixFileSystemEntry, IUnixDirectoryEntry, String, CancellationToken)
+- uid: FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.MoveAsync*
+  name: MoveAsync
+  href: api/FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.html#FubarDev_FtpServer_FileSystem_Unix_UnixFileSystem_MoveAsync_
+  commentId: Overload:FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.MoveAsync
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.MoveAsync
+  nameWithType: UnixFileSystem.MoveAsync
+- uid: FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.OpenReadAsync(FubarDev.FtpServer.FileSystem.IUnixFileEntry,System.Int64,System.Threading.CancellationToken)
+  name: OpenReadAsync(IUnixFileEntry, Int64, CancellationToken)
+  href: api/FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.html#FubarDev_FtpServer_FileSystem_Unix_UnixFileSystem_OpenReadAsync_FubarDev_FtpServer_FileSystem_IUnixFileEntry_System_Int64_System_Threading_CancellationToken_
+  commentId: M:FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.OpenReadAsync(FubarDev.FtpServer.FileSystem.IUnixFileEntry,System.Int64,System.Threading.CancellationToken)
+  fullName: FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.OpenReadAsync(FubarDev.FtpServer.FileSystem.IUnixFileEntry, System.Int64, System.Threading.CancellationToken)
+  nameWithType: UnixFileSystem.OpenReadAsync(IUnixFileEntry, Int64, CancellationToken)
+- uid: FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.OpenReadAsync*
+  name: OpenReadAsync
+  href: api/FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.html#FubarDev_FtpServer_FileSystem_Unix_UnixFileSystem_OpenReadAsync_
+  commentId: Overload:FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.OpenReadAsync
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.OpenReadAsync
+  nameWithType: UnixFileSystem.OpenReadAsync
+- uid: FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.ReplaceAsync(FubarDev.FtpServer.FileSystem.IUnixFileEntry,System.IO.Stream,System.Threading.CancellationToken)
+  name: ReplaceAsync(IUnixFileEntry, Stream, CancellationToken)
+  href: api/FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.html#FubarDev_FtpServer_FileSystem_Unix_UnixFileSystem_ReplaceAsync_FubarDev_FtpServer_FileSystem_IUnixFileEntry_System_IO_Stream_System_Threading_CancellationToken_
+  commentId: M:FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.ReplaceAsync(FubarDev.FtpServer.FileSystem.IUnixFileEntry,System.IO.Stream,System.Threading.CancellationToken)
+  fullName: FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.ReplaceAsync(FubarDev.FtpServer.FileSystem.IUnixFileEntry, System.IO.Stream, System.Threading.CancellationToken)
+  nameWithType: UnixFileSystem.ReplaceAsync(IUnixFileEntry, Stream, CancellationToken)
+- uid: FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.ReplaceAsync*
+  name: ReplaceAsync
+  href: api/FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.html#FubarDev_FtpServer_FileSystem_Unix_UnixFileSystem_ReplaceAsync_
+  commentId: Overload:FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.ReplaceAsync
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.ReplaceAsync
+  nameWithType: UnixFileSystem.ReplaceAsync
+- uid: FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.Root
+  name: Root
+  href: api/FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.html#FubarDev_FtpServer_FileSystem_Unix_UnixFileSystem_Root
+  commentId: P:FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.Root
+  fullName: FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.Root
+  nameWithType: UnixFileSystem.Root
+- uid: FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.Root*
+  name: Root
+  href: api/FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.html#FubarDev_FtpServer_FileSystem_Unix_UnixFileSystem_Root_
+  commentId: Overload:FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.Root
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.Root
+  nameWithType: UnixFileSystem.Root
+- uid: FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.SetMacTimeAsync(FubarDev.FtpServer.FileSystem.IUnixFileSystemEntry,System.Nullable{System.DateTimeOffset},System.Nullable{System.DateTimeOffset},System.Nullable{System.DateTimeOffset},System.Threading.CancellationToken)
+  name: SetMacTimeAsync(IUnixFileSystemEntry, Nullable<DateTimeOffset>, Nullable<DateTimeOffset>, Nullable<DateTimeOffset>, CancellationToken)
+  href: api/FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.html#FubarDev_FtpServer_FileSystem_Unix_UnixFileSystem_SetMacTimeAsync_FubarDev_FtpServer_FileSystem_IUnixFileSystemEntry_System_Nullable_System_DateTimeOffset__System_Nullable_System_DateTimeOffset__System_Nullable_System_DateTimeOffset__System_Threading_CancellationToken_
+  commentId: M:FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.SetMacTimeAsync(FubarDev.FtpServer.FileSystem.IUnixFileSystemEntry,System.Nullable{System.DateTimeOffset},System.Nullable{System.DateTimeOffset},System.Nullable{System.DateTimeOffset},System.Threading.CancellationToken)
+  name.vb: SetMacTimeAsync(IUnixFileSystemEntry, Nullable(Of DateTimeOffset), Nullable(Of DateTimeOffset), Nullable(Of DateTimeOffset), CancellationToken)
+  fullName: FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.SetMacTimeAsync(FubarDev.FtpServer.FileSystem.IUnixFileSystemEntry, System.Nullable<System.DateTimeOffset>, System.Nullable<System.DateTimeOffset>, System.Nullable<System.DateTimeOffset>, System.Threading.CancellationToken)
+  fullName.vb: FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.SetMacTimeAsync(FubarDev.FtpServer.FileSystem.IUnixFileSystemEntry, System.Nullable(Of System.DateTimeOffset), System.Nullable(Of System.DateTimeOffset), System.Nullable(Of System.DateTimeOffset), System.Threading.CancellationToken)
+  nameWithType: UnixFileSystem.SetMacTimeAsync(IUnixFileSystemEntry, Nullable<DateTimeOffset>, Nullable<DateTimeOffset>, Nullable<DateTimeOffset>, CancellationToken)
+  nameWithType.vb: UnixFileSystem.SetMacTimeAsync(IUnixFileSystemEntry, Nullable(Of DateTimeOffset), Nullable(Of DateTimeOffset), Nullable(Of DateTimeOffset), CancellationToken)
+- uid: FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.SetMacTimeAsync*
+  name: SetMacTimeAsync
+  href: api/FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.html#FubarDev_FtpServer_FileSystem_Unix_UnixFileSystem_SetMacTimeAsync_
+  commentId: Overload:FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.SetMacTimeAsync
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.SetMacTimeAsync
+  nameWithType: UnixFileSystem.SetMacTimeAsync
+- uid: FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.SupportsAppend
+  name: SupportsAppend
+  href: api/FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.html#FubarDev_FtpServer_FileSystem_Unix_UnixFileSystem_SupportsAppend
+  commentId: P:FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.SupportsAppend
+  fullName: FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.SupportsAppend
+  nameWithType: UnixFileSystem.SupportsAppend
+- uid: FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.SupportsAppend*
+  name: SupportsAppend
+  href: api/FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.html#FubarDev_FtpServer_FileSystem_Unix_UnixFileSystem_SupportsAppend_
+  commentId: Overload:FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.SupportsAppend
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.SupportsAppend
+  nameWithType: UnixFileSystem.SupportsAppend
+- uid: FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.SupportsNonEmptyDirectoryDelete
+  name: SupportsNonEmptyDirectoryDelete
+  href: api/FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.html#FubarDev_FtpServer_FileSystem_Unix_UnixFileSystem_SupportsNonEmptyDirectoryDelete
+  commentId: P:FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.SupportsNonEmptyDirectoryDelete
+  fullName: FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.SupportsNonEmptyDirectoryDelete
+  nameWithType: UnixFileSystem.SupportsNonEmptyDirectoryDelete
+- uid: FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.SupportsNonEmptyDirectoryDelete*
+  name: SupportsNonEmptyDirectoryDelete
+  href: api/FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.html#FubarDev_FtpServer_FileSystem_Unix_UnixFileSystem_SupportsNonEmptyDirectoryDelete_
+  commentId: Overload:FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.SupportsNonEmptyDirectoryDelete
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.SupportsNonEmptyDirectoryDelete
+  nameWithType: UnixFileSystem.SupportsNonEmptyDirectoryDelete
+- uid: FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.UnlinkAsync(FubarDev.FtpServer.FileSystem.IUnixFileSystemEntry,System.Threading.CancellationToken)
+  name: UnlinkAsync(IUnixFileSystemEntry, CancellationToken)
+  href: api/FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.html#FubarDev_FtpServer_FileSystem_Unix_UnixFileSystem_UnlinkAsync_FubarDev_FtpServer_FileSystem_IUnixFileSystemEntry_System_Threading_CancellationToken_
+  commentId: M:FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.UnlinkAsync(FubarDev.FtpServer.FileSystem.IUnixFileSystemEntry,System.Threading.CancellationToken)
+  fullName: FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.UnlinkAsync(FubarDev.FtpServer.FileSystem.IUnixFileSystemEntry, System.Threading.CancellationToken)
+  nameWithType: UnixFileSystem.UnlinkAsync(IUnixFileSystemEntry, CancellationToken)
+- uid: FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.UnlinkAsync*
+  name: UnlinkAsync
+  href: api/FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.html#FubarDev_FtpServer_FileSystem_Unix_UnixFileSystem_UnlinkAsync_
+  commentId: Overload:FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.UnlinkAsync
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.UnlinkAsync
+  nameWithType: UnixFileSystem.UnlinkAsync
 - uid: FubarDev.FtpServer.FileSystem.Unix.UnixFileSystemOptions
   name: UnixFileSystemOptions
   href: api/FubarDev.FtpServer.FileSystem.Unix.UnixFileSystemOptions.html
   commentId: T:FubarDev.FtpServer.FileSystem.Unix.UnixFileSystemOptions
   fullName: FubarDev.FtpServer.FileSystem.Unix.UnixFileSystemOptions
   nameWithType: UnixFileSystemOptions
-- uid: FubarDev.FtpServer.FileSystem.Unix.UnixFileSystemOptions.DisableUserIdSwitch
-  name: DisableUserIdSwitch
-  href: api/FubarDev.FtpServer.FileSystem.Unix.UnixFileSystemOptions.html#FubarDev_FtpServer_FileSystem_Unix_UnixFileSystemOptions_DisableUserIdSwitch
-  commentId: P:FubarDev.FtpServer.FileSystem.Unix.UnixFileSystemOptions.DisableUserIdSwitch
-  fullName: FubarDev.FtpServer.FileSystem.Unix.UnixFileSystemOptions.DisableUserIdSwitch
-  nameWithType: UnixFileSystemOptions.DisableUserIdSwitch
-- uid: FubarDev.FtpServer.FileSystem.Unix.UnixFileSystemOptions.DisableUserIdSwitch*
-  name: DisableUserIdSwitch
-  href: api/FubarDev.FtpServer.FileSystem.Unix.UnixFileSystemOptions.html#FubarDev_FtpServer_FileSystem_Unix_UnixFileSystemOptions_DisableUserIdSwitch_
-  commentId: Overload:FubarDev.FtpServer.FileSystem.Unix.UnixFileSystemOptions.DisableUserIdSwitch
+- uid: FubarDev.FtpServer.FileSystem.Unix.UnixFileSystemOptions.Root
+  name: Root
+  href: api/FubarDev.FtpServer.FileSystem.Unix.UnixFileSystemOptions.html#FubarDev_FtpServer_FileSystem_Unix_UnixFileSystemOptions_Root
+  commentId: P:FubarDev.FtpServer.FileSystem.Unix.UnixFileSystemOptions.Root
+  fullName: FubarDev.FtpServer.FileSystem.Unix.UnixFileSystemOptions.Root
+  nameWithType: UnixFileSystemOptions.Root
+- uid: FubarDev.FtpServer.FileSystem.Unix.UnixFileSystemOptions.Root*
+  name: Root
+  href: api/FubarDev.FtpServer.FileSystem.Unix.UnixFileSystemOptions.html#FubarDev_FtpServer_FileSystem_Unix_UnixFileSystemOptions_Root_
+  commentId: Overload:FubarDev.FtpServer.FileSystem.Unix.UnixFileSystemOptions.Root
   isSpec: "True"
-  fullName: FubarDev.FtpServer.FileSystem.Unix.UnixFileSystemOptions.DisableUserIdSwitch
-  nameWithType: UnixFileSystemOptions.DisableUserIdSwitch
+  fullName: FubarDev.FtpServer.FileSystem.Unix.UnixFileSystemOptions.Root
+  nameWithType: UnixFileSystemOptions.Root
 - uid: FubarDev.FtpServer.FileSystem.Unix.UnixFileSystemProvider
   name: UnixFileSystemProvider
   href: api/FubarDev.FtpServer.FileSystem.Unix.UnixFileSystemProvider.html
   commentId: T:FubarDev.FtpServer.FileSystem.Unix.UnixFileSystemProvider
   fullName: FubarDev.FtpServer.FileSystem.Unix.UnixFileSystemProvider
   nameWithType: UnixFileSystemProvider
-- uid: FubarDev.FtpServer.FileSystem.Unix.UnixFileSystemProvider.#ctor(Microsoft.Extensions.Options.IOptions{FubarDev.FtpServer.FileSystem.Unix.UnixFileSystemOptions},FubarDev.FtpServer.FileSystem.IAccountDirectoryQuery)
-  name: UnixFileSystemProvider(IOptions<UnixFileSystemOptions>, IAccountDirectoryQuery)
-  href: api/FubarDev.FtpServer.FileSystem.Unix.UnixFileSystemProvider.html#FubarDev_FtpServer_FileSystem_Unix_UnixFileSystemProvider__ctor_Microsoft_Extensions_Options_IOptions_FubarDev_FtpServer_FileSystem_Unix_UnixFileSystemOptions__FubarDev_FtpServer_FileSystem_IAccountDirectoryQuery_
-  commentId: M:FubarDev.FtpServer.FileSystem.Unix.UnixFileSystemProvider.#ctor(Microsoft.Extensions.Options.IOptions{FubarDev.FtpServer.FileSystem.Unix.UnixFileSystemOptions},FubarDev.FtpServer.FileSystem.IAccountDirectoryQuery)
-  name.vb: UnixFileSystemProvider(IOptions(Of UnixFileSystemOptions), IAccountDirectoryQuery)
-  fullName: FubarDev.FtpServer.FileSystem.Unix.UnixFileSystemProvider.UnixFileSystemProvider(Microsoft.Extensions.Options.IOptions<FubarDev.FtpServer.FileSystem.Unix.UnixFileSystemOptions>, FubarDev.FtpServer.FileSystem.IAccountDirectoryQuery)
-  fullName.vb: FubarDev.FtpServer.FileSystem.Unix.UnixFileSystemProvider.UnixFileSystemProvider(Microsoft.Extensions.Options.IOptions(Of FubarDev.FtpServer.FileSystem.Unix.UnixFileSystemOptions), FubarDev.FtpServer.FileSystem.IAccountDirectoryQuery)
-  nameWithType: UnixFileSystemProvider.UnixFileSystemProvider(IOptions<UnixFileSystemOptions>, IAccountDirectoryQuery)
-  nameWithType.vb: UnixFileSystemProvider.UnixFileSystemProvider(IOptions(Of UnixFileSystemOptions), IAccountDirectoryQuery)
+- uid: FubarDev.FtpServer.FileSystem.Unix.UnixFileSystemProvider.#ctor(Microsoft.Extensions.Options.IOptions{FubarDev.FtpServer.FileSystem.Unix.UnixFileSystemOptions},FubarDev.FtpServer.FileSystem.IAccountDirectoryQuery,Microsoft.Extensions.Logging.ILogger{FubarDev.FtpServer.FileSystem.Unix.UnixFileSystemProvider})
+  name: UnixFileSystemProvider(IOptions<UnixFileSystemOptions>, IAccountDirectoryQuery, ILogger<UnixFileSystemProvider>)
+  href: api/FubarDev.FtpServer.FileSystem.Unix.UnixFileSystemProvider.html#FubarDev_FtpServer_FileSystem_Unix_UnixFileSystemProvider__ctor_Microsoft_Extensions_Options_IOptions_FubarDev_FtpServer_FileSystem_Unix_UnixFileSystemOptions__FubarDev_FtpServer_FileSystem_IAccountDirectoryQuery_Microsoft_Extensions_Logging_ILogger_FubarDev_FtpServer_FileSystem_Unix_UnixFileSystemProvider__
+  commentId: M:FubarDev.FtpServer.FileSystem.Unix.UnixFileSystemProvider.#ctor(Microsoft.Extensions.Options.IOptions{FubarDev.FtpServer.FileSystem.Unix.UnixFileSystemOptions},FubarDev.FtpServer.FileSystem.IAccountDirectoryQuery,Microsoft.Extensions.Logging.ILogger{FubarDev.FtpServer.FileSystem.Unix.UnixFileSystemProvider})
+  name.vb: UnixFileSystemProvider(IOptions(Of UnixFileSystemOptions), IAccountDirectoryQuery, ILogger(Of UnixFileSystemProvider))
+  fullName: FubarDev.FtpServer.FileSystem.Unix.UnixFileSystemProvider.UnixFileSystemProvider(Microsoft.Extensions.Options.IOptions<FubarDev.FtpServer.FileSystem.Unix.UnixFileSystemOptions>, FubarDev.FtpServer.FileSystem.IAccountDirectoryQuery, Microsoft.Extensions.Logging.ILogger<FubarDev.FtpServer.FileSystem.Unix.UnixFileSystemProvider>)
+  fullName.vb: FubarDev.FtpServer.FileSystem.Unix.UnixFileSystemProvider.UnixFileSystemProvider(Microsoft.Extensions.Options.IOptions(Of FubarDev.FtpServer.FileSystem.Unix.UnixFileSystemOptions), FubarDev.FtpServer.FileSystem.IAccountDirectoryQuery, Microsoft.Extensions.Logging.ILogger(Of FubarDev.FtpServer.FileSystem.Unix.UnixFileSystemProvider))
+  nameWithType: UnixFileSystemProvider.UnixFileSystemProvider(IOptions<UnixFileSystemOptions>, IAccountDirectoryQuery, ILogger<UnixFileSystemProvider>)
+  nameWithType.vb: UnixFileSystemProvider.UnixFileSystemProvider(IOptions(Of UnixFileSystemOptions), IAccountDirectoryQuery, ILogger(Of UnixFileSystemProvider))
 - uid: FubarDev.FtpServer.FileSystem.Unix.UnixFileSystemProvider.#ctor*
   name: UnixFileSystemProvider
   href: api/FubarDev.FtpServer.FileSystem.Unix.UnixFileSystemProvider.html#FubarDev_FtpServer_FileSystem_Unix_UnixFileSystemProvider__ctor_
@@ -8447,15 +9354,15 @@ references:
   commentId: T:FubarDev.FtpServer.FtpConnection
   fullName: FubarDev.FtpServer.FtpConnection
   nameWithType: FtpConnection
-- uid: FubarDev.FtpServer.FtpConnection.#ctor(System.Net.Sockets.TcpClient,Microsoft.Extensions.Options.IOptions{FubarDev.FtpServer.FtpConnectionOptions},FubarDev.FtpServer.IFtpConnectionAccessor,FubarDev.FtpServer.Commands.IFtpCommandActivator,FubarDev.FtpServer.Localization.IFtpCatalogLoader,System.IServiceProvider,Microsoft.Extensions.Logging.ILogger{FubarDev.FtpServer.IFtpConnection})
-  name: FtpConnection(TcpClient, IOptions<FtpConnectionOptions>, IFtpConnectionAccessor, IFtpCommandActivator, IFtpCatalogLoader, IServiceProvider, ILogger<IFtpConnection>)
-  href: api/FubarDev.FtpServer.FtpConnection.html#FubarDev_FtpServer_FtpConnection__ctor_System_Net_Sockets_TcpClient_Microsoft_Extensions_Options_IOptions_FubarDev_FtpServer_FtpConnectionOptions__FubarDev_FtpServer_IFtpConnectionAccessor_FubarDev_FtpServer_Commands_IFtpCommandActivator_FubarDev_FtpServer_Localization_IFtpCatalogLoader_System_IServiceProvider_Microsoft_Extensions_Logging_ILogger_FubarDev_FtpServer_IFtpConnection__
-  commentId: M:FubarDev.FtpServer.FtpConnection.#ctor(System.Net.Sockets.TcpClient,Microsoft.Extensions.Options.IOptions{FubarDev.FtpServer.FtpConnectionOptions},FubarDev.FtpServer.IFtpConnectionAccessor,FubarDev.FtpServer.Commands.IFtpCommandActivator,FubarDev.FtpServer.Localization.IFtpCatalogLoader,System.IServiceProvider,Microsoft.Extensions.Logging.ILogger{FubarDev.FtpServer.IFtpConnection})
-  name.vb: FtpConnection(TcpClient, IOptions(Of FtpConnectionOptions), IFtpConnectionAccessor, IFtpCommandActivator, IFtpCatalogLoader, IServiceProvider, ILogger(Of IFtpConnection))
-  fullName: FubarDev.FtpServer.FtpConnection.FtpConnection(System.Net.Sockets.TcpClient, Microsoft.Extensions.Options.IOptions<FubarDev.FtpServer.FtpConnectionOptions>, FubarDev.FtpServer.IFtpConnectionAccessor, FubarDev.FtpServer.Commands.IFtpCommandActivator, FubarDev.FtpServer.Localization.IFtpCatalogLoader, System.IServiceProvider, Microsoft.Extensions.Logging.ILogger<FubarDev.FtpServer.IFtpConnection>)
-  fullName.vb: FubarDev.FtpServer.FtpConnection.FtpConnection(System.Net.Sockets.TcpClient, Microsoft.Extensions.Options.IOptions(Of FubarDev.FtpServer.FtpConnectionOptions), FubarDev.FtpServer.IFtpConnectionAccessor, FubarDev.FtpServer.Commands.IFtpCommandActivator, FubarDev.FtpServer.Localization.IFtpCatalogLoader, System.IServiceProvider, Microsoft.Extensions.Logging.ILogger(Of FubarDev.FtpServer.IFtpConnection))
-  nameWithType: FtpConnection.FtpConnection(TcpClient, IOptions<FtpConnectionOptions>, IFtpConnectionAccessor, IFtpCommandActivator, IFtpCatalogLoader, IServiceProvider, ILogger<IFtpConnection>)
-  nameWithType.vb: FtpConnection.FtpConnection(TcpClient, IOptions(Of FtpConnectionOptions), IFtpConnectionAccessor, IFtpCommandActivator, IFtpCatalogLoader, IServiceProvider, ILogger(Of IFtpConnection))
+- uid: FubarDev.FtpServer.FtpConnection.#ctor(System.Net.Sockets.TcpClient,Microsoft.Extensions.Options.IOptions{FubarDev.FtpServer.FtpConnectionOptions},FubarDev.FtpServer.IFtpConnectionAccessor,FubarDev.FtpServer.Localization.IFtpCatalogLoader,FubarDev.FtpServer.ServerCommands.IServerCommandExecutor,System.IServiceProvider,Microsoft.Extensions.Logging.ILogger{FubarDev.FtpServer.IFtpConnection})
+  name: FtpConnection(TcpClient, IOptions<FtpConnectionOptions>, IFtpConnectionAccessor, IFtpCatalogLoader, IServerCommandExecutor, IServiceProvider, ILogger<IFtpConnection>)
+  href: api/FubarDev.FtpServer.FtpConnection.html#FubarDev_FtpServer_FtpConnection__ctor_System_Net_Sockets_TcpClient_Microsoft_Extensions_Options_IOptions_FubarDev_FtpServer_FtpConnectionOptions__FubarDev_FtpServer_IFtpConnectionAccessor_FubarDev_FtpServer_Localization_IFtpCatalogLoader_FubarDev_FtpServer_ServerCommands_IServerCommandExecutor_System_IServiceProvider_Microsoft_Extensions_Logging_ILogger_FubarDev_FtpServer_IFtpConnection__
+  commentId: M:FubarDev.FtpServer.FtpConnection.#ctor(System.Net.Sockets.TcpClient,Microsoft.Extensions.Options.IOptions{FubarDev.FtpServer.FtpConnectionOptions},FubarDev.FtpServer.IFtpConnectionAccessor,FubarDev.FtpServer.Localization.IFtpCatalogLoader,FubarDev.FtpServer.ServerCommands.IServerCommandExecutor,System.IServiceProvider,Microsoft.Extensions.Logging.ILogger{FubarDev.FtpServer.IFtpConnection})
+  name.vb: FtpConnection(TcpClient, IOptions(Of FtpConnectionOptions), IFtpConnectionAccessor, IFtpCatalogLoader, IServerCommandExecutor, IServiceProvider, ILogger(Of IFtpConnection))
+  fullName: FubarDev.FtpServer.FtpConnection.FtpConnection(System.Net.Sockets.TcpClient, Microsoft.Extensions.Options.IOptions<FubarDev.FtpServer.FtpConnectionOptions>, FubarDev.FtpServer.IFtpConnectionAccessor, FubarDev.FtpServer.Localization.IFtpCatalogLoader, FubarDev.FtpServer.ServerCommands.IServerCommandExecutor, System.IServiceProvider, Microsoft.Extensions.Logging.ILogger<FubarDev.FtpServer.IFtpConnection>)
+  fullName.vb: FubarDev.FtpServer.FtpConnection.FtpConnection(System.Net.Sockets.TcpClient, Microsoft.Extensions.Options.IOptions(Of FubarDev.FtpServer.FtpConnectionOptions), FubarDev.FtpServer.IFtpConnectionAccessor, FubarDev.FtpServer.Localization.IFtpCatalogLoader, FubarDev.FtpServer.ServerCommands.IServerCommandExecutor, System.IServiceProvider, Microsoft.Extensions.Logging.ILogger(Of FubarDev.FtpServer.IFtpConnection))
+  nameWithType: FtpConnection.FtpConnection(TcpClient, IOptions<FtpConnectionOptions>, IFtpConnectionAccessor, IFtpCatalogLoader, IServerCommandExecutor, IServiceProvider, ILogger<IFtpConnection>)
+  nameWithType.vb: FtpConnection.FtpConnection(TcpClient, IOptions(Of FtpConnectionOptions), IFtpConnectionAccessor, IFtpCatalogLoader, IServerCommandExecutor, IServiceProvider, ILogger(Of IFtpConnection))
 - uid: FubarDev.FtpServer.FtpConnection.#ctor*
   name: FtpConnection
   href: api/FubarDev.FtpServer.FtpConnection.html#FubarDev_FtpServer_FtpConnection__ctor_
@@ -8463,19 +9370,6 @@ references:
   isSpec: "True"
   fullName: FubarDev.FtpServer.FtpConnection.FtpConnection
   nameWithType: FtpConnection.FtpConnection
-- uid: FubarDev.FtpServer.FtpConnection.Close
-  name: Close()
-  href: api/FubarDev.FtpServer.FtpConnection.html#FubarDev_FtpServer_FtpConnection_Close
-  commentId: M:FubarDev.FtpServer.FtpConnection.Close
-  fullName: FubarDev.FtpServer.FtpConnection.Close()
-  nameWithType: FtpConnection.Close()
-- uid: FubarDev.FtpServer.FtpConnection.Close*
-  name: Close
-  href: api/FubarDev.FtpServer.FtpConnection.html#FubarDev_FtpServer_FtpConnection_Close_
-  commentId: Overload:FubarDev.FtpServer.FtpConnection.Close
-  isSpec: "True"
-  fullName: FubarDev.FtpServer.FtpConnection.Close
-  nameWithType: FtpConnection.Close
 - uid: FubarDev.FtpServer.FtpConnection.Closed
   name: Closed
   href: api/FubarDev.FtpServer.FtpConnection.html#FubarDev_FtpServer_FtpConnection_Closed
@@ -8664,19 +9558,32 @@ references:
   isSpec: "True"
   fullName: FubarDev.FtpServer.FtpConnection.SocketStream
   nameWithType: FtpConnection.SocketStream
-- uid: FubarDev.FtpServer.FtpConnection.Start
-  name: Start()
-  href: api/FubarDev.FtpServer.FtpConnection.html#FubarDev_FtpServer_FtpConnection_Start
-  commentId: M:FubarDev.FtpServer.FtpConnection.Start
-  fullName: FubarDev.FtpServer.FtpConnection.Start()
-  nameWithType: FtpConnection.Start()
-- uid: FubarDev.FtpServer.FtpConnection.Start*
-  name: Start
-  href: api/FubarDev.FtpServer.FtpConnection.html#FubarDev_FtpServer_FtpConnection_Start_
-  commentId: Overload:FubarDev.FtpServer.FtpConnection.Start
+- uid: FubarDev.FtpServer.FtpConnection.StartAsync
+  name: StartAsync()
+  href: api/FubarDev.FtpServer.FtpConnection.html#FubarDev_FtpServer_FtpConnection_StartAsync
+  commentId: M:FubarDev.FtpServer.FtpConnection.StartAsync
+  fullName: FubarDev.FtpServer.FtpConnection.StartAsync()
+  nameWithType: FtpConnection.StartAsync()
+- uid: FubarDev.FtpServer.FtpConnection.StartAsync*
+  name: StartAsync
+  href: api/FubarDev.FtpServer.FtpConnection.html#FubarDev_FtpServer_FtpConnection_StartAsync_
+  commentId: Overload:FubarDev.FtpServer.FtpConnection.StartAsync
   isSpec: "True"
-  fullName: FubarDev.FtpServer.FtpConnection.Start
-  nameWithType: FtpConnection.Start
+  fullName: FubarDev.FtpServer.FtpConnection.StartAsync
+  nameWithType: FtpConnection.StartAsync
+- uid: FubarDev.FtpServer.FtpConnection.StopAsync
+  name: StopAsync()
+  href: api/FubarDev.FtpServer.FtpConnection.html#FubarDev_FtpServer_FtpConnection_StopAsync
+  commentId: M:FubarDev.FtpServer.FtpConnection.StopAsync
+  fullName: FubarDev.FtpServer.FtpConnection.StopAsync()
+  nameWithType: FtpConnection.StopAsync()
+- uid: FubarDev.FtpServer.FtpConnection.StopAsync*
+  name: StopAsync
+  href: api/FubarDev.FtpServer.FtpConnection.html#FubarDev_FtpServer_FtpConnection_StopAsync_
+  commentId: Overload:FubarDev.FtpServer.FtpConnection.StopAsync
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.FtpConnection.StopAsync
+  nameWithType: FtpConnection.StopAsync
 - uid: FubarDev.FtpServer.FtpConnection.WriteAsync(FubarDev.FtpServer.IFtpResponse,System.Threading.CancellationToken)
   name: WriteAsync(IFtpResponse, CancellationToken)
   href: api/FubarDev.FtpServer.FtpConnection.html#FubarDev_FtpServer_FtpConnection_WriteAsync_FubarDev_FtpServer_IFtpResponse_System_Threading_CancellationToken_
@@ -8753,12 +9660,12 @@ references:
   commentId: T:FubarDev.FtpServer.FtpConnectionData
   fullName: FubarDev.FtpServer.FtpConnectionData
   nameWithType: FtpConnectionData
-- uid: FubarDev.FtpServer.FtpConnectionData.#ctor(System.Text.Encoding,Microsoft.AspNetCore.Http.Features.IFeatureCollection,FubarDev.FtpServer.IBackgroundCommandHandler,FubarDev.FtpServer.Localization.IFtpCatalogLoader)
-  name: FtpConnectionData(Encoding, IFeatureCollection, IBackgroundCommandHandler, IFtpCatalogLoader)
-  href: api/FubarDev.FtpServer.FtpConnectionData.html#FubarDev_FtpServer_FtpConnectionData__ctor_System_Text_Encoding_Microsoft_AspNetCore_Http_Features_IFeatureCollection_FubarDev_FtpServer_IBackgroundCommandHandler_FubarDev_FtpServer_Localization_IFtpCatalogLoader_
-  commentId: M:FubarDev.FtpServer.FtpConnectionData.#ctor(System.Text.Encoding,Microsoft.AspNetCore.Http.Features.IFeatureCollection,FubarDev.FtpServer.IBackgroundCommandHandler,FubarDev.FtpServer.Localization.IFtpCatalogLoader)
-  fullName: FubarDev.FtpServer.FtpConnectionData.FtpConnectionData(System.Text.Encoding, Microsoft.AspNetCore.Http.Features.IFeatureCollection, FubarDev.FtpServer.IBackgroundCommandHandler, FubarDev.FtpServer.Localization.IFtpCatalogLoader)
-  nameWithType: FtpConnectionData.FtpConnectionData(Encoding, IFeatureCollection, IBackgroundCommandHandler, IFtpCatalogLoader)
+- uid: FubarDev.FtpServer.FtpConnectionData.#ctor(System.Text.Encoding,Microsoft.AspNetCore.Http.Features.IFeatureCollection,FubarDev.FtpServer.Localization.IFtpCatalogLoader)
+  name: FtpConnectionData(Encoding, IFeatureCollection, IFtpCatalogLoader)
+  href: api/FubarDev.FtpServer.FtpConnectionData.html#FubarDev_FtpServer_FtpConnectionData__ctor_System_Text_Encoding_Microsoft_AspNetCore_Http_Features_IFeatureCollection_FubarDev_FtpServer_Localization_IFtpCatalogLoader_
+  commentId: M:FubarDev.FtpServer.FtpConnectionData.#ctor(System.Text.Encoding,Microsoft.AspNetCore.Http.Features.IFeatureCollection,FubarDev.FtpServer.Localization.IFtpCatalogLoader)
+  fullName: FubarDev.FtpServer.FtpConnectionData.FtpConnectionData(System.Text.Encoding, Microsoft.AspNetCore.Http.Features.IFeatureCollection, FubarDev.FtpServer.Localization.IFtpCatalogLoader)
+  nameWithType: FtpConnectionData.FtpConnectionData(Encoding, IFeatureCollection, IFtpCatalogLoader)
 - uid: FubarDev.FtpServer.FtpConnectionData.#ctor*
   name: FtpConnectionData
   href: api/FubarDev.FtpServer.FtpConnectionData.html#FubarDev_FtpServer_FtpConnectionData__ctor_
@@ -9051,15 +9958,15 @@ references:
   commentId: T:FubarDev.FtpServer.FtpContext
   fullName: FubarDev.FtpServer.FtpContext
   nameWithType: FtpContext
-- uid: FubarDev.FtpServer.FtpContext.#ctor(FubarDev.FtpServer.FtpCommand,System.Threading.Channels.ChannelWriter{FubarDev.FtpServer.IFtpResponse},FubarDev.FtpServer.IFtpConnection)
-  name: FtpContext(FtpCommand, ChannelWriter<IFtpResponse>, IFtpConnection)
-  href: api/FubarDev.FtpServer.FtpContext.html#FubarDev_FtpServer_FtpContext__ctor_FubarDev_FtpServer_FtpCommand_System_Threading_Channels_ChannelWriter_FubarDev_FtpServer_IFtpResponse__FubarDev_FtpServer_IFtpConnection_
-  commentId: M:FubarDev.FtpServer.FtpContext.#ctor(FubarDev.FtpServer.FtpCommand,System.Threading.Channels.ChannelWriter{FubarDev.FtpServer.IFtpResponse},FubarDev.FtpServer.IFtpConnection)
-  name.vb: FtpContext(FtpCommand, ChannelWriter(Of IFtpResponse), IFtpConnection)
-  fullName: FubarDev.FtpServer.FtpContext.FtpContext(FubarDev.FtpServer.FtpCommand, System.Threading.Channels.ChannelWriter<FubarDev.FtpServer.IFtpResponse>, FubarDev.FtpServer.IFtpConnection)
-  fullName.vb: FubarDev.FtpServer.FtpContext.FtpContext(FubarDev.FtpServer.FtpCommand, System.Threading.Channels.ChannelWriter(Of FubarDev.FtpServer.IFtpResponse), FubarDev.FtpServer.IFtpConnection)
-  nameWithType: FtpContext.FtpContext(FtpCommand, ChannelWriter<IFtpResponse>, IFtpConnection)
-  nameWithType.vb: FtpContext.FtpContext(FtpCommand, ChannelWriter(Of IFtpResponse), IFtpConnection)
+- uid: FubarDev.FtpServer.FtpContext.#ctor(FubarDev.FtpServer.FtpCommand,System.Threading.Channels.ChannelWriter{FubarDev.FtpServer.ServerCommands.IServerCommand},FubarDev.FtpServer.IFtpConnection)
+  name: FtpContext(FtpCommand, ChannelWriter<IServerCommand>, IFtpConnection)
+  href: api/FubarDev.FtpServer.FtpContext.html#FubarDev_FtpServer_FtpContext__ctor_FubarDev_FtpServer_FtpCommand_System_Threading_Channels_ChannelWriter_FubarDev_FtpServer_ServerCommands_IServerCommand__FubarDev_FtpServer_IFtpConnection_
+  commentId: M:FubarDev.FtpServer.FtpContext.#ctor(FubarDev.FtpServer.FtpCommand,System.Threading.Channels.ChannelWriter{FubarDev.FtpServer.ServerCommands.IServerCommand},FubarDev.FtpServer.IFtpConnection)
+  name.vb: FtpContext(FtpCommand, ChannelWriter(Of IServerCommand), IFtpConnection)
+  fullName: FubarDev.FtpServer.FtpContext.FtpContext(FubarDev.FtpServer.FtpCommand, System.Threading.Channels.ChannelWriter<FubarDev.FtpServer.ServerCommands.IServerCommand>, FubarDev.FtpServer.IFtpConnection)
+  fullName.vb: FubarDev.FtpServer.FtpContext.FtpContext(FubarDev.FtpServer.FtpCommand, System.Threading.Channels.ChannelWriter(Of FubarDev.FtpServer.ServerCommands.IServerCommand), FubarDev.FtpServer.IFtpConnection)
+  nameWithType: FtpContext.FtpContext(FtpCommand, ChannelWriter<IServerCommand>, IFtpConnection)
+  nameWithType.vb: FtpContext.FtpContext(FtpCommand, ChannelWriter(Of IServerCommand), IFtpConnection)
 - uid: FubarDev.FtpServer.FtpContext.#ctor*
   name: FtpContext
   href: api/FubarDev.FtpServer.FtpContext.html#FubarDev_FtpServer_FtpContext__ctor_
@@ -9093,19 +10000,19 @@ references:
   isSpec: "True"
   fullName: FubarDev.FtpServer.FtpContext.Connection
   nameWithType: FtpContext.Connection
-- uid: FubarDev.FtpServer.FtpContext.ResponseWriter
-  name: ResponseWriter
-  href: api/FubarDev.FtpServer.FtpContext.html#FubarDev_FtpServer_FtpContext_ResponseWriter
-  commentId: P:FubarDev.FtpServer.FtpContext.ResponseWriter
-  fullName: FubarDev.FtpServer.FtpContext.ResponseWriter
-  nameWithType: FtpContext.ResponseWriter
-- uid: FubarDev.FtpServer.FtpContext.ResponseWriter*
-  name: ResponseWriter
-  href: api/FubarDev.FtpServer.FtpContext.html#FubarDev_FtpServer_FtpContext_ResponseWriter_
-  commentId: Overload:FubarDev.FtpServer.FtpContext.ResponseWriter
+- uid: FubarDev.FtpServer.FtpContext.ServerCommandWriter
+  name: ServerCommandWriter
+  href: api/FubarDev.FtpServer.FtpContext.html#FubarDev_FtpServer_FtpContext_ServerCommandWriter
+  commentId: P:FubarDev.FtpServer.FtpContext.ServerCommandWriter
+  fullName: FubarDev.FtpServer.FtpContext.ServerCommandWriter
+  nameWithType: FtpContext.ServerCommandWriter
+- uid: FubarDev.FtpServer.FtpContext.ServerCommandWriter*
+  name: ServerCommandWriter
+  href: api/FubarDev.FtpServer.FtpContext.html#FubarDev_FtpServer_FtpContext_ServerCommandWriter_
+  commentId: Overload:FubarDev.FtpServer.FtpContext.ServerCommandWriter
   isSpec: "True"
-  fullName: FubarDev.FtpServer.FtpContext.ResponseWriter
-  nameWithType: FtpContext.ResponseWriter
+  fullName: FubarDev.FtpServer.FtpContext.ServerCommandWriter
+  nameWithType: FtpContext.ServerCommandWriter
 - uid: FubarDev.FtpServer.FtpFeatureFunctionAttribute
   name: FtpFeatureFunctionAttribute
   href: api/FubarDev.FtpServer.FtpFeatureFunctionAttribute.html
@@ -10943,19 +11850,6 @@ references:
   commentId: T:FubarDev.FtpServer.IFtpConnection
   fullName: FubarDev.FtpServer.IFtpConnection
   nameWithType: IFtpConnection
-- uid: FubarDev.FtpServer.IFtpConnection.Close
-  name: Close()
-  href: api/FubarDev.FtpServer.IFtpConnection.html#FubarDev_FtpServer_IFtpConnection_Close
-  commentId: M:FubarDev.FtpServer.IFtpConnection.Close
-  fullName: FubarDev.FtpServer.IFtpConnection.Close()
-  nameWithType: IFtpConnection.Close()
-- uid: FubarDev.FtpServer.IFtpConnection.Close*
-  name: Close
-  href: api/FubarDev.FtpServer.IFtpConnection.html#FubarDev_FtpServer_IFtpConnection_Close_
-  commentId: Overload:FubarDev.FtpServer.IFtpConnection.Close
-  isSpec: "True"
-  fullName: FubarDev.FtpServer.IFtpConnection.Close
-  nameWithType: IFtpConnection.Close
 - uid: FubarDev.FtpServer.IFtpConnection.Closed
   name: Closed
   href: api/FubarDev.FtpServer.IFtpConnection.html#FubarDev_FtpServer_IFtpConnection_Closed
@@ -11092,19 +11986,32 @@ references:
   isSpec: "True"
   fullName: FubarDev.FtpServer.IFtpConnection.SocketStream
   nameWithType: IFtpConnection.SocketStream
-- uid: FubarDev.FtpServer.IFtpConnection.Start
-  name: Start()
-  href: api/FubarDev.FtpServer.IFtpConnection.html#FubarDev_FtpServer_IFtpConnection_Start
-  commentId: M:FubarDev.FtpServer.IFtpConnection.Start
-  fullName: FubarDev.FtpServer.IFtpConnection.Start()
-  nameWithType: IFtpConnection.Start()
-- uid: FubarDev.FtpServer.IFtpConnection.Start*
-  name: Start
-  href: api/FubarDev.FtpServer.IFtpConnection.html#FubarDev_FtpServer_IFtpConnection_Start_
-  commentId: Overload:FubarDev.FtpServer.IFtpConnection.Start
+- uid: FubarDev.FtpServer.IFtpConnection.StartAsync
+  name: StartAsync()
+  href: api/FubarDev.FtpServer.IFtpConnection.html#FubarDev_FtpServer_IFtpConnection_StartAsync
+  commentId: M:FubarDev.FtpServer.IFtpConnection.StartAsync
+  fullName: FubarDev.FtpServer.IFtpConnection.StartAsync()
+  nameWithType: IFtpConnection.StartAsync()
+- uid: FubarDev.FtpServer.IFtpConnection.StartAsync*
+  name: StartAsync
+  href: api/FubarDev.FtpServer.IFtpConnection.html#FubarDev_FtpServer_IFtpConnection_StartAsync_
+  commentId: Overload:FubarDev.FtpServer.IFtpConnection.StartAsync
   isSpec: "True"
-  fullName: FubarDev.FtpServer.IFtpConnection.Start
-  nameWithType: IFtpConnection.Start
+  fullName: FubarDev.FtpServer.IFtpConnection.StartAsync
+  nameWithType: IFtpConnection.StartAsync
+- uid: FubarDev.FtpServer.IFtpConnection.StopAsync
+  name: StopAsync()
+  href: api/FubarDev.FtpServer.IFtpConnection.html#FubarDev_FtpServer_IFtpConnection_StopAsync
+  commentId: M:FubarDev.FtpServer.IFtpConnection.StopAsync
+  fullName: FubarDev.FtpServer.IFtpConnection.StopAsync()
+  nameWithType: IFtpConnection.StopAsync()
+- uid: FubarDev.FtpServer.IFtpConnection.StopAsync*
+  name: StopAsync
+  href: api/FubarDev.FtpServer.IFtpConnection.html#FubarDev_FtpServer_IFtpConnection_StopAsync_
+  commentId: Overload:FubarDev.FtpServer.IFtpConnection.StopAsync
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.IFtpConnection.StopAsync
+  nameWithType: IFtpConnection.StopAsync
 - uid: FubarDev.FtpServer.IFtpConnection.WriteAsync(FubarDev.FtpServer.IFtpResponse,System.Threading.CancellationToken)
   name: WriteAsync(IFtpResponse, CancellationToken)
   href: api/FubarDev.FtpServer.IFtpConnection.html#FubarDev_FtpServer_IFtpConnection_WriteAsync_FubarDev_FtpServer_IFtpResponse_System_Threading_CancellationToken_
@@ -12709,6 +13616,365 @@ references:
   commentId: F:FubarDev.FtpServer.SecurityStatus.Unauthenticated
   fullName: FubarDev.FtpServer.SecurityStatus.Unauthenticated
   nameWithType: SecurityStatus.Unauthenticated
+- uid: FubarDev.FtpServer.ServerCommandHandlers
+  name: FubarDev.FtpServer.ServerCommandHandlers
+  href: api/FubarDev.FtpServer.ServerCommandHandlers.html
+  commentId: N:FubarDev.FtpServer.ServerCommandHandlers
+  fullName: FubarDev.FtpServer.ServerCommandHandlers
+  nameWithType: FubarDev.FtpServer.ServerCommandHandlers
+- uid: FubarDev.FtpServer.ServerCommandHandlers.CloseConnectionServerCommandHandler
+  name: CloseConnectionServerCommandHandler
+  href: api/FubarDev.FtpServer.ServerCommandHandlers.CloseConnectionServerCommandHandler.html
+  commentId: T:FubarDev.FtpServer.ServerCommandHandlers.CloseConnectionServerCommandHandler
+  fullName: FubarDev.FtpServer.ServerCommandHandlers.CloseConnectionServerCommandHandler
+  nameWithType: CloseConnectionServerCommandHandler
+- uid: FubarDev.FtpServer.ServerCommandHandlers.CloseConnectionServerCommandHandler.#ctor(FubarDev.FtpServer.IFtpConnectionAccessor)
+  name: CloseConnectionServerCommandHandler(IFtpConnectionAccessor)
+  href: api/FubarDev.FtpServer.ServerCommandHandlers.CloseConnectionServerCommandHandler.html#FubarDev_FtpServer_ServerCommandHandlers_CloseConnectionServerCommandHandler__ctor_FubarDev_FtpServer_IFtpConnectionAccessor_
+  commentId: M:FubarDev.FtpServer.ServerCommandHandlers.CloseConnectionServerCommandHandler.#ctor(FubarDev.FtpServer.IFtpConnectionAccessor)
+  fullName: FubarDev.FtpServer.ServerCommandHandlers.CloseConnectionServerCommandHandler.CloseConnectionServerCommandHandler(FubarDev.FtpServer.IFtpConnectionAccessor)
+  nameWithType: CloseConnectionServerCommandHandler.CloseConnectionServerCommandHandler(IFtpConnectionAccessor)
+- uid: FubarDev.FtpServer.ServerCommandHandlers.CloseConnectionServerCommandHandler.#ctor*
+  name: CloseConnectionServerCommandHandler
+  href: api/FubarDev.FtpServer.ServerCommandHandlers.CloseConnectionServerCommandHandler.html#FubarDev_FtpServer_ServerCommandHandlers_CloseConnectionServerCommandHandler__ctor_
+  commentId: Overload:FubarDev.FtpServer.ServerCommandHandlers.CloseConnectionServerCommandHandler.#ctor
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.ServerCommandHandlers.CloseConnectionServerCommandHandler.CloseConnectionServerCommandHandler
+  nameWithType: CloseConnectionServerCommandHandler.CloseConnectionServerCommandHandler
+- uid: FubarDev.FtpServer.ServerCommandHandlers.CloseConnectionServerCommandHandler.ExecuteAsync(FubarDev.FtpServer.ServerCommands.CloseConnectionServerCommand,System.Threading.CancellationToken)
+  name: ExecuteAsync(CloseConnectionServerCommand, CancellationToken)
+  href: api/FubarDev.FtpServer.ServerCommandHandlers.CloseConnectionServerCommandHandler.html#FubarDev_FtpServer_ServerCommandHandlers_CloseConnectionServerCommandHandler_ExecuteAsync_FubarDev_FtpServer_ServerCommands_CloseConnectionServerCommand_System_Threading_CancellationToken_
+  commentId: M:FubarDev.FtpServer.ServerCommandHandlers.CloseConnectionServerCommandHandler.ExecuteAsync(FubarDev.FtpServer.ServerCommands.CloseConnectionServerCommand,System.Threading.CancellationToken)
+  fullName: FubarDev.FtpServer.ServerCommandHandlers.CloseConnectionServerCommandHandler.ExecuteAsync(FubarDev.FtpServer.ServerCommands.CloseConnectionServerCommand, System.Threading.CancellationToken)
+  nameWithType: CloseConnectionServerCommandHandler.ExecuteAsync(CloseConnectionServerCommand, CancellationToken)
+- uid: FubarDev.FtpServer.ServerCommandHandlers.CloseConnectionServerCommandHandler.ExecuteAsync*
+  name: ExecuteAsync
+  href: api/FubarDev.FtpServer.ServerCommandHandlers.CloseConnectionServerCommandHandler.html#FubarDev_FtpServer_ServerCommandHandlers_CloseConnectionServerCommandHandler_ExecuteAsync_
+  commentId: Overload:FubarDev.FtpServer.ServerCommandHandlers.CloseConnectionServerCommandHandler.ExecuteAsync
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.ServerCommandHandlers.CloseConnectionServerCommandHandler.ExecuteAsync
+  nameWithType: CloseConnectionServerCommandHandler.ExecuteAsync
+- uid: FubarDev.FtpServer.ServerCommandHandlers.PauseConnectionServerCommandHandler
+  name: PauseConnectionServerCommandHandler
+  href: api/FubarDev.FtpServer.ServerCommandHandlers.PauseConnectionServerCommandHandler.html
+  commentId: T:FubarDev.FtpServer.ServerCommandHandlers.PauseConnectionServerCommandHandler
+  fullName: FubarDev.FtpServer.ServerCommandHandlers.PauseConnectionServerCommandHandler
+  nameWithType: PauseConnectionServerCommandHandler
+- uid: FubarDev.FtpServer.ServerCommandHandlers.PauseConnectionServerCommandHandler.#ctor(FubarDev.FtpServer.IFtpConnectionAccessor)
+  name: PauseConnectionServerCommandHandler(IFtpConnectionAccessor)
+  href: api/FubarDev.FtpServer.ServerCommandHandlers.PauseConnectionServerCommandHandler.html#FubarDev_FtpServer_ServerCommandHandlers_PauseConnectionServerCommandHandler__ctor_FubarDev_FtpServer_IFtpConnectionAccessor_
+  commentId: M:FubarDev.FtpServer.ServerCommandHandlers.PauseConnectionServerCommandHandler.#ctor(FubarDev.FtpServer.IFtpConnectionAccessor)
+  fullName: FubarDev.FtpServer.ServerCommandHandlers.PauseConnectionServerCommandHandler.PauseConnectionServerCommandHandler(FubarDev.FtpServer.IFtpConnectionAccessor)
+  nameWithType: PauseConnectionServerCommandHandler.PauseConnectionServerCommandHandler(IFtpConnectionAccessor)
+- uid: FubarDev.FtpServer.ServerCommandHandlers.PauseConnectionServerCommandHandler.#ctor*
+  name: PauseConnectionServerCommandHandler
+  href: api/FubarDev.FtpServer.ServerCommandHandlers.PauseConnectionServerCommandHandler.html#FubarDev_FtpServer_ServerCommandHandlers_PauseConnectionServerCommandHandler__ctor_
+  commentId: Overload:FubarDev.FtpServer.ServerCommandHandlers.PauseConnectionServerCommandHandler.#ctor
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.ServerCommandHandlers.PauseConnectionServerCommandHandler.PauseConnectionServerCommandHandler
+  nameWithType: PauseConnectionServerCommandHandler.PauseConnectionServerCommandHandler
+- uid: FubarDev.FtpServer.ServerCommandHandlers.PauseConnectionServerCommandHandler.ExecuteAsync(FubarDev.FtpServer.ServerCommands.PauseConnectionServerCommand,System.Threading.CancellationToken)
+  name: ExecuteAsync(PauseConnectionServerCommand, CancellationToken)
+  href: api/FubarDev.FtpServer.ServerCommandHandlers.PauseConnectionServerCommandHandler.html#FubarDev_FtpServer_ServerCommandHandlers_PauseConnectionServerCommandHandler_ExecuteAsync_FubarDev_FtpServer_ServerCommands_PauseConnectionServerCommand_System_Threading_CancellationToken_
+  commentId: M:FubarDev.FtpServer.ServerCommandHandlers.PauseConnectionServerCommandHandler.ExecuteAsync(FubarDev.FtpServer.ServerCommands.PauseConnectionServerCommand,System.Threading.CancellationToken)
+  fullName: FubarDev.FtpServer.ServerCommandHandlers.PauseConnectionServerCommandHandler.ExecuteAsync(FubarDev.FtpServer.ServerCommands.PauseConnectionServerCommand, System.Threading.CancellationToken)
+  nameWithType: PauseConnectionServerCommandHandler.ExecuteAsync(PauseConnectionServerCommand, CancellationToken)
+- uid: FubarDev.FtpServer.ServerCommandHandlers.PauseConnectionServerCommandHandler.ExecuteAsync*
+  name: ExecuteAsync
+  href: api/FubarDev.FtpServer.ServerCommandHandlers.PauseConnectionServerCommandHandler.html#FubarDev_FtpServer_ServerCommandHandlers_PauseConnectionServerCommandHandler_ExecuteAsync_
+  commentId: Overload:FubarDev.FtpServer.ServerCommandHandlers.PauseConnectionServerCommandHandler.ExecuteAsync
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.ServerCommandHandlers.PauseConnectionServerCommandHandler.ExecuteAsync
+  nameWithType: PauseConnectionServerCommandHandler.ExecuteAsync
+- uid: FubarDev.FtpServer.ServerCommandHandlers.ResumeConnectionServerCommandHandler
+  name: ResumeConnectionServerCommandHandler
+  href: api/FubarDev.FtpServer.ServerCommandHandlers.ResumeConnectionServerCommandHandler.html
+  commentId: T:FubarDev.FtpServer.ServerCommandHandlers.ResumeConnectionServerCommandHandler
+  fullName: FubarDev.FtpServer.ServerCommandHandlers.ResumeConnectionServerCommandHandler
+  nameWithType: ResumeConnectionServerCommandHandler
+- uid: FubarDev.FtpServer.ServerCommandHandlers.ResumeConnectionServerCommandHandler.#ctor(FubarDev.FtpServer.IFtpConnectionAccessor)
+  name: ResumeConnectionServerCommandHandler(IFtpConnectionAccessor)
+  href: api/FubarDev.FtpServer.ServerCommandHandlers.ResumeConnectionServerCommandHandler.html#FubarDev_FtpServer_ServerCommandHandlers_ResumeConnectionServerCommandHandler__ctor_FubarDev_FtpServer_IFtpConnectionAccessor_
+  commentId: M:FubarDev.FtpServer.ServerCommandHandlers.ResumeConnectionServerCommandHandler.#ctor(FubarDev.FtpServer.IFtpConnectionAccessor)
+  fullName: FubarDev.FtpServer.ServerCommandHandlers.ResumeConnectionServerCommandHandler.ResumeConnectionServerCommandHandler(FubarDev.FtpServer.IFtpConnectionAccessor)
+  nameWithType: ResumeConnectionServerCommandHandler.ResumeConnectionServerCommandHandler(IFtpConnectionAccessor)
+- uid: FubarDev.FtpServer.ServerCommandHandlers.ResumeConnectionServerCommandHandler.#ctor*
+  name: ResumeConnectionServerCommandHandler
+  href: api/FubarDev.FtpServer.ServerCommandHandlers.ResumeConnectionServerCommandHandler.html#FubarDev_FtpServer_ServerCommandHandlers_ResumeConnectionServerCommandHandler__ctor_
+  commentId: Overload:FubarDev.FtpServer.ServerCommandHandlers.ResumeConnectionServerCommandHandler.#ctor
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.ServerCommandHandlers.ResumeConnectionServerCommandHandler.ResumeConnectionServerCommandHandler
+  nameWithType: ResumeConnectionServerCommandHandler.ResumeConnectionServerCommandHandler
+- uid: FubarDev.FtpServer.ServerCommandHandlers.ResumeConnectionServerCommandHandler.ExecuteAsync(FubarDev.FtpServer.ServerCommands.ResumeConnectionServerCommand,System.Threading.CancellationToken)
+  name: ExecuteAsync(ResumeConnectionServerCommand, CancellationToken)
+  href: api/FubarDev.FtpServer.ServerCommandHandlers.ResumeConnectionServerCommandHandler.html#FubarDev_FtpServer_ServerCommandHandlers_ResumeConnectionServerCommandHandler_ExecuteAsync_FubarDev_FtpServer_ServerCommands_ResumeConnectionServerCommand_System_Threading_CancellationToken_
+  commentId: M:FubarDev.FtpServer.ServerCommandHandlers.ResumeConnectionServerCommandHandler.ExecuteAsync(FubarDev.FtpServer.ServerCommands.ResumeConnectionServerCommand,System.Threading.CancellationToken)
+  fullName: FubarDev.FtpServer.ServerCommandHandlers.ResumeConnectionServerCommandHandler.ExecuteAsync(FubarDev.FtpServer.ServerCommands.ResumeConnectionServerCommand, System.Threading.CancellationToken)
+  nameWithType: ResumeConnectionServerCommandHandler.ExecuteAsync(ResumeConnectionServerCommand, CancellationToken)
+- uid: FubarDev.FtpServer.ServerCommandHandlers.ResumeConnectionServerCommandHandler.ExecuteAsync*
+  name: ExecuteAsync
+  href: api/FubarDev.FtpServer.ServerCommandHandlers.ResumeConnectionServerCommandHandler.html#FubarDev_FtpServer_ServerCommandHandlers_ResumeConnectionServerCommandHandler_ExecuteAsync_
+  commentId: Overload:FubarDev.FtpServer.ServerCommandHandlers.ResumeConnectionServerCommandHandler.ExecuteAsync
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.ServerCommandHandlers.ResumeConnectionServerCommandHandler.ExecuteAsync
+  nameWithType: ResumeConnectionServerCommandHandler.ExecuteAsync
+- uid: FubarDev.FtpServer.ServerCommandHandlers.SendResponseServerCommandHandler
+  name: SendResponseServerCommandHandler
+  href: api/FubarDev.FtpServer.ServerCommandHandlers.SendResponseServerCommandHandler.html
+  commentId: T:FubarDev.FtpServer.ServerCommandHandlers.SendResponseServerCommandHandler
+  fullName: FubarDev.FtpServer.ServerCommandHandlers.SendResponseServerCommandHandler
+  nameWithType: SendResponseServerCommandHandler
+- uid: FubarDev.FtpServer.ServerCommandHandlers.SendResponseServerCommandHandler.#ctor(FubarDev.FtpServer.IFtpConnectionAccessor)
+  name: SendResponseServerCommandHandler(IFtpConnectionAccessor)
+  href: api/FubarDev.FtpServer.ServerCommandHandlers.SendResponseServerCommandHandler.html#FubarDev_FtpServer_ServerCommandHandlers_SendResponseServerCommandHandler__ctor_FubarDev_FtpServer_IFtpConnectionAccessor_
+  commentId: M:FubarDev.FtpServer.ServerCommandHandlers.SendResponseServerCommandHandler.#ctor(FubarDev.FtpServer.IFtpConnectionAccessor)
+  fullName: FubarDev.FtpServer.ServerCommandHandlers.SendResponseServerCommandHandler.SendResponseServerCommandHandler(FubarDev.FtpServer.IFtpConnectionAccessor)
+  nameWithType: SendResponseServerCommandHandler.SendResponseServerCommandHandler(IFtpConnectionAccessor)
+- uid: FubarDev.FtpServer.ServerCommandHandlers.SendResponseServerCommandHandler.#ctor*
+  name: SendResponseServerCommandHandler
+  href: api/FubarDev.FtpServer.ServerCommandHandlers.SendResponseServerCommandHandler.html#FubarDev_FtpServer_ServerCommandHandlers_SendResponseServerCommandHandler__ctor_
+  commentId: Overload:FubarDev.FtpServer.ServerCommandHandlers.SendResponseServerCommandHandler.#ctor
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.ServerCommandHandlers.SendResponseServerCommandHandler.SendResponseServerCommandHandler
+  nameWithType: SendResponseServerCommandHandler.SendResponseServerCommandHandler
+- uid: FubarDev.FtpServer.ServerCommandHandlers.SendResponseServerCommandHandler.ExecuteAsync(FubarDev.FtpServer.ServerCommands.SendResponseServerCommand,System.Threading.CancellationToken)
+  name: ExecuteAsync(SendResponseServerCommand, CancellationToken)
+  href: api/FubarDev.FtpServer.ServerCommandHandlers.SendResponseServerCommandHandler.html#FubarDev_FtpServer_ServerCommandHandlers_SendResponseServerCommandHandler_ExecuteAsync_FubarDev_FtpServer_ServerCommands_SendResponseServerCommand_System_Threading_CancellationToken_
+  commentId: M:FubarDev.FtpServer.ServerCommandHandlers.SendResponseServerCommandHandler.ExecuteAsync(FubarDev.FtpServer.ServerCommands.SendResponseServerCommand,System.Threading.CancellationToken)
+  fullName: FubarDev.FtpServer.ServerCommandHandlers.SendResponseServerCommandHandler.ExecuteAsync(FubarDev.FtpServer.ServerCommands.SendResponseServerCommand, System.Threading.CancellationToken)
+  nameWithType: SendResponseServerCommandHandler.ExecuteAsync(SendResponseServerCommand, CancellationToken)
+- uid: FubarDev.FtpServer.ServerCommandHandlers.SendResponseServerCommandHandler.ExecuteAsync*
+  name: ExecuteAsync
+  href: api/FubarDev.FtpServer.ServerCommandHandlers.SendResponseServerCommandHandler.html#FubarDev_FtpServer_ServerCommandHandlers_SendResponseServerCommandHandler_ExecuteAsync_
+  commentId: Overload:FubarDev.FtpServer.ServerCommandHandlers.SendResponseServerCommandHandler.ExecuteAsync
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.ServerCommandHandlers.SendResponseServerCommandHandler.ExecuteAsync
+  nameWithType: SendResponseServerCommandHandler.ExecuteAsync
+- uid: FubarDev.FtpServer.ServerCommandHandlers.TlsEnableServerCommandHandler
+  name: TlsEnableServerCommandHandler
+  href: api/FubarDev.FtpServer.ServerCommandHandlers.TlsEnableServerCommandHandler.html
+  commentId: T:FubarDev.FtpServer.ServerCommandHandlers.TlsEnableServerCommandHandler
+  fullName: FubarDev.FtpServer.ServerCommandHandlers.TlsEnableServerCommandHandler
+  nameWithType: TlsEnableServerCommandHandler
+- uid: FubarDev.FtpServer.ServerCommandHandlers.TlsEnableServerCommandHandler.#ctor(FubarDev.FtpServer.IFtpConnectionAccessor,FubarDev.FtpServer.Authentication.ISslStreamWrapperFactory,Microsoft.Extensions.Options.IOptions{FubarDev.FtpServer.AuthTlsOptions})
+  name: TlsEnableServerCommandHandler(IFtpConnectionAccessor, ISslStreamWrapperFactory, IOptions<AuthTlsOptions>)
+  href: api/FubarDev.FtpServer.ServerCommandHandlers.TlsEnableServerCommandHandler.html#FubarDev_FtpServer_ServerCommandHandlers_TlsEnableServerCommandHandler__ctor_FubarDev_FtpServer_IFtpConnectionAccessor_FubarDev_FtpServer_Authentication_ISslStreamWrapperFactory_Microsoft_Extensions_Options_IOptions_FubarDev_FtpServer_AuthTlsOptions__
+  commentId: M:FubarDev.FtpServer.ServerCommandHandlers.TlsEnableServerCommandHandler.#ctor(FubarDev.FtpServer.IFtpConnectionAccessor,FubarDev.FtpServer.Authentication.ISslStreamWrapperFactory,Microsoft.Extensions.Options.IOptions{FubarDev.FtpServer.AuthTlsOptions})
+  name.vb: TlsEnableServerCommandHandler(IFtpConnectionAccessor, ISslStreamWrapperFactory, IOptions(Of AuthTlsOptions))
+  fullName: FubarDev.FtpServer.ServerCommandHandlers.TlsEnableServerCommandHandler.TlsEnableServerCommandHandler(FubarDev.FtpServer.IFtpConnectionAccessor, FubarDev.FtpServer.Authentication.ISslStreamWrapperFactory, Microsoft.Extensions.Options.IOptions<FubarDev.FtpServer.AuthTlsOptions>)
+  fullName.vb: FubarDev.FtpServer.ServerCommandHandlers.TlsEnableServerCommandHandler.TlsEnableServerCommandHandler(FubarDev.FtpServer.IFtpConnectionAccessor, FubarDev.FtpServer.Authentication.ISslStreamWrapperFactory, Microsoft.Extensions.Options.IOptions(Of FubarDev.FtpServer.AuthTlsOptions))
+  nameWithType: TlsEnableServerCommandHandler.TlsEnableServerCommandHandler(IFtpConnectionAccessor, ISslStreamWrapperFactory, IOptions<AuthTlsOptions>)
+  nameWithType.vb: TlsEnableServerCommandHandler.TlsEnableServerCommandHandler(IFtpConnectionAccessor, ISslStreamWrapperFactory, IOptions(Of AuthTlsOptions))
+- uid: FubarDev.FtpServer.ServerCommandHandlers.TlsEnableServerCommandHandler.#ctor*
+  name: TlsEnableServerCommandHandler
+  href: api/FubarDev.FtpServer.ServerCommandHandlers.TlsEnableServerCommandHandler.html#FubarDev_FtpServer_ServerCommandHandlers_TlsEnableServerCommandHandler__ctor_
+  commentId: Overload:FubarDev.FtpServer.ServerCommandHandlers.TlsEnableServerCommandHandler.#ctor
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.ServerCommandHandlers.TlsEnableServerCommandHandler.TlsEnableServerCommandHandler
+  nameWithType: TlsEnableServerCommandHandler.TlsEnableServerCommandHandler
+- uid: FubarDev.FtpServer.ServerCommandHandlers.TlsEnableServerCommandHandler.EnableTlsAsync(FubarDev.FtpServer.IFtpConnection,System.Security.Cryptography.X509Certificates.X509Certificate2,FubarDev.FtpServer.Authentication.ISslStreamWrapperFactory,System.Threading.CancellationToken)
+  name: EnableTlsAsync(IFtpConnection, X509Certificate2, ISslStreamWrapperFactory, CancellationToken)
+  href: api/FubarDev.FtpServer.ServerCommandHandlers.TlsEnableServerCommandHandler.html#FubarDev_FtpServer_ServerCommandHandlers_TlsEnableServerCommandHandler_EnableTlsAsync_FubarDev_FtpServer_IFtpConnection_System_Security_Cryptography_X509Certificates_X509Certificate2_FubarDev_FtpServer_Authentication_ISslStreamWrapperFactory_System_Threading_CancellationToken_
+  commentId: M:FubarDev.FtpServer.ServerCommandHandlers.TlsEnableServerCommandHandler.EnableTlsAsync(FubarDev.FtpServer.IFtpConnection,System.Security.Cryptography.X509Certificates.X509Certificate2,FubarDev.FtpServer.Authentication.ISslStreamWrapperFactory,System.Threading.CancellationToken)
+  fullName: FubarDev.FtpServer.ServerCommandHandlers.TlsEnableServerCommandHandler.EnableTlsAsync(FubarDev.FtpServer.IFtpConnection, System.Security.Cryptography.X509Certificates.X509Certificate2, FubarDev.FtpServer.Authentication.ISslStreamWrapperFactory, System.Threading.CancellationToken)
+  nameWithType: TlsEnableServerCommandHandler.EnableTlsAsync(IFtpConnection, X509Certificate2, ISslStreamWrapperFactory, CancellationToken)
+- uid: FubarDev.FtpServer.ServerCommandHandlers.TlsEnableServerCommandHandler.EnableTlsAsync*
+  name: EnableTlsAsync
+  href: api/FubarDev.FtpServer.ServerCommandHandlers.TlsEnableServerCommandHandler.html#FubarDev_FtpServer_ServerCommandHandlers_TlsEnableServerCommandHandler_EnableTlsAsync_
+  commentId: Overload:FubarDev.FtpServer.ServerCommandHandlers.TlsEnableServerCommandHandler.EnableTlsAsync
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.ServerCommandHandlers.TlsEnableServerCommandHandler.EnableTlsAsync
+  nameWithType: TlsEnableServerCommandHandler.EnableTlsAsync
+- uid: FubarDev.FtpServer.ServerCommandHandlers.TlsEnableServerCommandHandler.ExecuteAsync(FubarDev.FtpServer.ServerCommands.TlsEnableServerCommand,System.Threading.CancellationToken)
+  name: ExecuteAsync(TlsEnableServerCommand, CancellationToken)
+  href: api/FubarDev.FtpServer.ServerCommandHandlers.TlsEnableServerCommandHandler.html#FubarDev_FtpServer_ServerCommandHandlers_TlsEnableServerCommandHandler_ExecuteAsync_FubarDev_FtpServer_ServerCommands_TlsEnableServerCommand_System_Threading_CancellationToken_
+  commentId: M:FubarDev.FtpServer.ServerCommandHandlers.TlsEnableServerCommandHandler.ExecuteAsync(FubarDev.FtpServer.ServerCommands.TlsEnableServerCommand,System.Threading.CancellationToken)
+  fullName: FubarDev.FtpServer.ServerCommandHandlers.TlsEnableServerCommandHandler.ExecuteAsync(FubarDev.FtpServer.ServerCommands.TlsEnableServerCommand, System.Threading.CancellationToken)
+  nameWithType: TlsEnableServerCommandHandler.ExecuteAsync(TlsEnableServerCommand, CancellationToken)
+- uid: FubarDev.FtpServer.ServerCommandHandlers.TlsEnableServerCommandHandler.ExecuteAsync*
+  name: ExecuteAsync
+  href: api/FubarDev.FtpServer.ServerCommandHandlers.TlsEnableServerCommandHandler.html#FubarDev_FtpServer_ServerCommandHandlers_TlsEnableServerCommandHandler_ExecuteAsync_
+  commentId: Overload:FubarDev.FtpServer.ServerCommandHandlers.TlsEnableServerCommandHandler.ExecuteAsync
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.ServerCommandHandlers.TlsEnableServerCommandHandler.ExecuteAsync
+  nameWithType: TlsEnableServerCommandHandler.ExecuteAsync
+- uid: FubarDev.FtpServer.ServerCommands
+  name: FubarDev.FtpServer.ServerCommands
+  href: api/FubarDev.FtpServer.ServerCommands.html
+  commentId: N:FubarDev.FtpServer.ServerCommands
+  fullName: FubarDev.FtpServer.ServerCommands
+  nameWithType: FubarDev.FtpServer.ServerCommands
+- uid: FubarDev.FtpServer.ServerCommands.CloseConnectionServerCommand
+  name: CloseConnectionServerCommand
+  href: api/FubarDev.FtpServer.ServerCommands.CloseConnectionServerCommand.html
+  commentId: T:FubarDev.FtpServer.ServerCommands.CloseConnectionServerCommand
+  fullName: FubarDev.FtpServer.ServerCommands.CloseConnectionServerCommand
+  nameWithType: CloseConnectionServerCommand
+- uid: FubarDev.FtpServer.ServerCommands.DelegateServerCommandExecutor
+  name: DelegateServerCommandExecutor
+  href: api/FubarDev.FtpServer.ServerCommands.DelegateServerCommandExecutor.html
+  commentId: T:FubarDev.FtpServer.ServerCommands.DelegateServerCommandExecutor
+  fullName: FubarDev.FtpServer.ServerCommands.DelegateServerCommandExecutor
+  nameWithType: DelegateServerCommandExecutor
+- uid: FubarDev.FtpServer.ServerCommands.DelegateServerCommandExecutor.#ctor(FubarDev.FtpServer.IFtpConnectionAccessor)
+  name: DelegateServerCommandExecutor(IFtpConnectionAccessor)
+  href: api/FubarDev.FtpServer.ServerCommands.DelegateServerCommandExecutor.html#FubarDev_FtpServer_ServerCommands_DelegateServerCommandExecutor__ctor_FubarDev_FtpServer_IFtpConnectionAccessor_
+  commentId: M:FubarDev.FtpServer.ServerCommands.DelegateServerCommandExecutor.#ctor(FubarDev.FtpServer.IFtpConnectionAccessor)
+  fullName: FubarDev.FtpServer.ServerCommands.DelegateServerCommandExecutor.DelegateServerCommandExecutor(FubarDev.FtpServer.IFtpConnectionAccessor)
+  nameWithType: DelegateServerCommandExecutor.DelegateServerCommandExecutor(IFtpConnectionAccessor)
+- uid: FubarDev.FtpServer.ServerCommands.DelegateServerCommandExecutor.#ctor*
+  name: DelegateServerCommandExecutor
+  href: api/FubarDev.FtpServer.ServerCommands.DelegateServerCommandExecutor.html#FubarDev_FtpServer_ServerCommands_DelegateServerCommandExecutor__ctor_
+  commentId: Overload:FubarDev.FtpServer.ServerCommands.DelegateServerCommandExecutor.#ctor
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.ServerCommands.DelegateServerCommandExecutor.DelegateServerCommandExecutor
+  nameWithType: DelegateServerCommandExecutor.DelegateServerCommandExecutor
+- uid: FubarDev.FtpServer.ServerCommands.DelegateServerCommandExecutor.ExecuteAsync(FubarDev.FtpServer.ServerCommands.IServerCommand,System.Threading.CancellationToken)
+  name: ExecuteAsync(IServerCommand, CancellationToken)
+  href: api/FubarDev.FtpServer.ServerCommands.DelegateServerCommandExecutor.html#FubarDev_FtpServer_ServerCommands_DelegateServerCommandExecutor_ExecuteAsync_FubarDev_FtpServer_ServerCommands_IServerCommand_System_Threading_CancellationToken_
+  commentId: M:FubarDev.FtpServer.ServerCommands.DelegateServerCommandExecutor.ExecuteAsync(FubarDev.FtpServer.ServerCommands.IServerCommand,System.Threading.CancellationToken)
+  fullName: FubarDev.FtpServer.ServerCommands.DelegateServerCommandExecutor.ExecuteAsync(FubarDev.FtpServer.ServerCommands.IServerCommand, System.Threading.CancellationToken)
+  nameWithType: DelegateServerCommandExecutor.ExecuteAsync(IServerCommand, CancellationToken)
+- uid: FubarDev.FtpServer.ServerCommands.DelegateServerCommandExecutor.ExecuteAsync*
+  name: ExecuteAsync
+  href: api/FubarDev.FtpServer.ServerCommands.DelegateServerCommandExecutor.html#FubarDev_FtpServer_ServerCommands_DelegateServerCommandExecutor_ExecuteAsync_
+  commentId: Overload:FubarDev.FtpServer.ServerCommands.DelegateServerCommandExecutor.ExecuteAsync
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.ServerCommands.DelegateServerCommandExecutor.ExecuteAsync
+  nameWithType: DelegateServerCommandExecutor.ExecuteAsync
+- uid: FubarDev.FtpServer.ServerCommands.IServerCommand
+  name: IServerCommand
+  href: api/FubarDev.FtpServer.ServerCommands.IServerCommand.html
+  commentId: T:FubarDev.FtpServer.ServerCommands.IServerCommand
+  fullName: FubarDev.FtpServer.ServerCommands.IServerCommand
+  nameWithType: IServerCommand
+- uid: FubarDev.FtpServer.ServerCommands.IServerCommandExecutor
+  name: IServerCommandExecutor
+  href: api/FubarDev.FtpServer.ServerCommands.IServerCommandExecutor.html
+  commentId: T:FubarDev.FtpServer.ServerCommands.IServerCommandExecutor
+  fullName: FubarDev.FtpServer.ServerCommands.IServerCommandExecutor
+  nameWithType: IServerCommandExecutor
+- uid: FubarDev.FtpServer.ServerCommands.IServerCommandExecutor.ExecuteAsync(FubarDev.FtpServer.ServerCommands.IServerCommand,System.Threading.CancellationToken)
+  name: ExecuteAsync(IServerCommand, CancellationToken)
+  href: api/FubarDev.FtpServer.ServerCommands.IServerCommandExecutor.html#FubarDev_FtpServer_ServerCommands_IServerCommandExecutor_ExecuteAsync_FubarDev_FtpServer_ServerCommands_IServerCommand_System_Threading_CancellationToken_
+  commentId: M:FubarDev.FtpServer.ServerCommands.IServerCommandExecutor.ExecuteAsync(FubarDev.FtpServer.ServerCommands.IServerCommand,System.Threading.CancellationToken)
+  fullName: FubarDev.FtpServer.ServerCommands.IServerCommandExecutor.ExecuteAsync(FubarDev.FtpServer.ServerCommands.IServerCommand, System.Threading.CancellationToken)
+  nameWithType: IServerCommandExecutor.ExecuteAsync(IServerCommand, CancellationToken)
+- uid: FubarDev.FtpServer.ServerCommands.IServerCommandExecutor.ExecuteAsync*
+  name: ExecuteAsync
+  href: api/FubarDev.FtpServer.ServerCommands.IServerCommandExecutor.html#FubarDev_FtpServer_ServerCommands_IServerCommandExecutor_ExecuteAsync_
+  commentId: Overload:FubarDev.FtpServer.ServerCommands.IServerCommandExecutor.ExecuteAsync
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.ServerCommands.IServerCommandExecutor.ExecuteAsync
+  nameWithType: IServerCommandExecutor.ExecuteAsync
+- uid: FubarDev.FtpServer.ServerCommands.IServerCommandHandler`1
+  name: IServerCommandHandler<TCommand>
+  href: api/FubarDev.FtpServer.ServerCommands.IServerCommandHandler-1.html
+  commentId: T:FubarDev.FtpServer.ServerCommands.IServerCommandHandler`1
+  name.vb: IServerCommandHandler(Of TCommand)
+  fullName: FubarDev.FtpServer.ServerCommands.IServerCommandHandler<TCommand>
+  fullName.vb: FubarDev.FtpServer.ServerCommands.IServerCommandHandler(Of TCommand)
+  nameWithType: IServerCommandHandler<TCommand>
+  nameWithType.vb: IServerCommandHandler(Of TCommand)
+- uid: FubarDev.FtpServer.ServerCommands.IServerCommandHandler`1.ExecuteAsync(`0,System.Threading.CancellationToken)
+  name: ExecuteAsync(TCommand, CancellationToken)
+  href: api/FubarDev.FtpServer.ServerCommands.IServerCommandHandler-1.html#FubarDev_FtpServer_ServerCommands_IServerCommandHandler_1_ExecuteAsync__0_System_Threading_CancellationToken_
+  commentId: M:FubarDev.FtpServer.ServerCommands.IServerCommandHandler`1.ExecuteAsync(`0,System.Threading.CancellationToken)
+  fullName: FubarDev.FtpServer.ServerCommands.IServerCommandHandler<TCommand>.ExecuteAsync(TCommand, System.Threading.CancellationToken)
+  fullName.vb: FubarDev.FtpServer.ServerCommands.IServerCommandHandler(Of TCommand).ExecuteAsync(TCommand, System.Threading.CancellationToken)
+  nameWithType: IServerCommandHandler<TCommand>.ExecuteAsync(TCommand, CancellationToken)
+  nameWithType.vb: IServerCommandHandler(Of TCommand).ExecuteAsync(TCommand, CancellationToken)
+- uid: FubarDev.FtpServer.ServerCommands.IServerCommandHandler`1.ExecuteAsync*
+  name: ExecuteAsync
+  href: api/FubarDev.FtpServer.ServerCommands.IServerCommandHandler-1.html#FubarDev_FtpServer_ServerCommands_IServerCommandHandler_1_ExecuteAsync_
+  commentId: Overload:FubarDev.FtpServer.ServerCommands.IServerCommandHandler`1.ExecuteAsync
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.ServerCommands.IServerCommandHandler<TCommand>.ExecuteAsync
+  fullName.vb: FubarDev.FtpServer.ServerCommands.IServerCommandHandler(Of TCommand).ExecuteAsync
+  nameWithType: IServerCommandHandler<TCommand>.ExecuteAsync
+  nameWithType.vb: IServerCommandHandler(Of TCommand).ExecuteAsync
+- uid: FubarDev.FtpServer.ServerCommands.PauseConnectionServerCommand
+  name: PauseConnectionServerCommand
+  href: api/FubarDev.FtpServer.ServerCommands.PauseConnectionServerCommand.html
+  commentId: T:FubarDev.FtpServer.ServerCommands.PauseConnectionServerCommand
+  fullName: FubarDev.FtpServer.ServerCommands.PauseConnectionServerCommand
+  nameWithType: PauseConnectionServerCommand
+- uid: FubarDev.FtpServer.ServerCommands.ReflectionServerCommandExecutor
+  name: ReflectionServerCommandExecutor
+  href: api/FubarDev.FtpServer.ServerCommands.ReflectionServerCommandExecutor.html
+  commentId: T:FubarDev.FtpServer.ServerCommands.ReflectionServerCommandExecutor
+  fullName: FubarDev.FtpServer.ServerCommands.ReflectionServerCommandExecutor
+  nameWithType: ReflectionServerCommandExecutor
+- uid: FubarDev.FtpServer.ServerCommands.ReflectionServerCommandExecutor.#ctor(FubarDev.FtpServer.IFtpConnectionAccessor)
+  name: ReflectionServerCommandExecutor(IFtpConnectionAccessor)
+  href: api/FubarDev.FtpServer.ServerCommands.ReflectionServerCommandExecutor.html#FubarDev_FtpServer_ServerCommands_ReflectionServerCommandExecutor__ctor_FubarDev_FtpServer_IFtpConnectionAccessor_
+  commentId: M:FubarDev.FtpServer.ServerCommands.ReflectionServerCommandExecutor.#ctor(FubarDev.FtpServer.IFtpConnectionAccessor)
+  fullName: FubarDev.FtpServer.ServerCommands.ReflectionServerCommandExecutor.ReflectionServerCommandExecutor(FubarDev.FtpServer.IFtpConnectionAccessor)
+  nameWithType: ReflectionServerCommandExecutor.ReflectionServerCommandExecutor(IFtpConnectionAccessor)
+- uid: FubarDev.FtpServer.ServerCommands.ReflectionServerCommandExecutor.#ctor*
+  name: ReflectionServerCommandExecutor
+  href: api/FubarDev.FtpServer.ServerCommands.ReflectionServerCommandExecutor.html#FubarDev_FtpServer_ServerCommands_ReflectionServerCommandExecutor__ctor_
+  commentId: Overload:FubarDev.FtpServer.ServerCommands.ReflectionServerCommandExecutor.#ctor
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.ServerCommands.ReflectionServerCommandExecutor.ReflectionServerCommandExecutor
+  nameWithType: ReflectionServerCommandExecutor.ReflectionServerCommandExecutor
+- uid: FubarDev.FtpServer.ServerCommands.ReflectionServerCommandExecutor.ExecuteAsync(FubarDev.FtpServer.ServerCommands.IServerCommand,System.Threading.CancellationToken)
+  name: ExecuteAsync(IServerCommand, CancellationToken)
+  href: api/FubarDev.FtpServer.ServerCommands.ReflectionServerCommandExecutor.html#FubarDev_FtpServer_ServerCommands_ReflectionServerCommandExecutor_ExecuteAsync_FubarDev_FtpServer_ServerCommands_IServerCommand_System_Threading_CancellationToken_
+  commentId: M:FubarDev.FtpServer.ServerCommands.ReflectionServerCommandExecutor.ExecuteAsync(FubarDev.FtpServer.ServerCommands.IServerCommand,System.Threading.CancellationToken)
+  fullName: FubarDev.FtpServer.ServerCommands.ReflectionServerCommandExecutor.ExecuteAsync(FubarDev.FtpServer.ServerCommands.IServerCommand, System.Threading.CancellationToken)
+  nameWithType: ReflectionServerCommandExecutor.ExecuteAsync(IServerCommand, CancellationToken)
+- uid: FubarDev.FtpServer.ServerCommands.ReflectionServerCommandExecutor.ExecuteAsync*
+  name: ExecuteAsync
+  href: api/FubarDev.FtpServer.ServerCommands.ReflectionServerCommandExecutor.html#FubarDev_FtpServer_ServerCommands_ReflectionServerCommandExecutor_ExecuteAsync_
+  commentId: Overload:FubarDev.FtpServer.ServerCommands.ReflectionServerCommandExecutor.ExecuteAsync
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.ServerCommands.ReflectionServerCommandExecutor.ExecuteAsync
+  nameWithType: ReflectionServerCommandExecutor.ExecuteAsync
+- uid: FubarDev.FtpServer.ServerCommands.ResumeConnectionServerCommand
+  name: ResumeConnectionServerCommand
+  href: api/FubarDev.FtpServer.ServerCommands.ResumeConnectionServerCommand.html
+  commentId: T:FubarDev.FtpServer.ServerCommands.ResumeConnectionServerCommand
+  fullName: FubarDev.FtpServer.ServerCommands.ResumeConnectionServerCommand
+  nameWithType: ResumeConnectionServerCommand
+- uid: FubarDev.FtpServer.ServerCommands.SendResponseServerCommand
+  name: SendResponseServerCommand
+  href: api/FubarDev.FtpServer.ServerCommands.SendResponseServerCommand.html
+  commentId: T:FubarDev.FtpServer.ServerCommands.SendResponseServerCommand
+  fullName: FubarDev.FtpServer.ServerCommands.SendResponseServerCommand
+  nameWithType: SendResponseServerCommand
+- uid: FubarDev.FtpServer.ServerCommands.SendResponseServerCommand.#ctor(FubarDev.FtpServer.IFtpResponse)
+  name: SendResponseServerCommand(IFtpResponse)
+  href: api/FubarDev.FtpServer.ServerCommands.SendResponseServerCommand.html#FubarDev_FtpServer_ServerCommands_SendResponseServerCommand__ctor_FubarDev_FtpServer_IFtpResponse_
+  commentId: M:FubarDev.FtpServer.ServerCommands.SendResponseServerCommand.#ctor(FubarDev.FtpServer.IFtpResponse)
+  fullName: FubarDev.FtpServer.ServerCommands.SendResponseServerCommand.SendResponseServerCommand(FubarDev.FtpServer.IFtpResponse)
+  nameWithType: SendResponseServerCommand.SendResponseServerCommand(IFtpResponse)
+- uid: FubarDev.FtpServer.ServerCommands.SendResponseServerCommand.#ctor*
+  name: SendResponseServerCommand
+  href: api/FubarDev.FtpServer.ServerCommands.SendResponseServerCommand.html#FubarDev_FtpServer_ServerCommands_SendResponseServerCommand__ctor_
+  commentId: Overload:FubarDev.FtpServer.ServerCommands.SendResponseServerCommand.#ctor
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.ServerCommands.SendResponseServerCommand.SendResponseServerCommand
+  nameWithType: SendResponseServerCommand.SendResponseServerCommand
+- uid: FubarDev.FtpServer.ServerCommands.SendResponseServerCommand.Response
+  name: Response
+  href: api/FubarDev.FtpServer.ServerCommands.SendResponseServerCommand.html#FubarDev_FtpServer_ServerCommands_SendResponseServerCommand_Response
+  commentId: P:FubarDev.FtpServer.ServerCommands.SendResponseServerCommand.Response
+  fullName: FubarDev.FtpServer.ServerCommands.SendResponseServerCommand.Response
+  nameWithType: SendResponseServerCommand.Response
+- uid: FubarDev.FtpServer.ServerCommands.SendResponseServerCommand.Response*
+  name: Response
+  href: api/FubarDev.FtpServer.ServerCommands.SendResponseServerCommand.html#FubarDev_FtpServer_ServerCommands_SendResponseServerCommand_Response_
+  commentId: Overload:FubarDev.FtpServer.ServerCommands.SendResponseServerCommand.Response
+  isSpec: "True"
+  fullName: FubarDev.FtpServer.ServerCommands.SendResponseServerCommand.Response
+  nameWithType: SendResponseServerCommand.Response
+- uid: FubarDev.FtpServer.ServerCommands.TlsEnableServerCommand
+  name: TlsEnableServerCommand
+  href: api/FubarDev.FtpServer.ServerCommands.TlsEnableServerCommand.html
+  commentId: T:FubarDev.FtpServer.ServerCommands.TlsEnableServerCommand
+  fullName: FubarDev.FtpServer.ServerCommands.TlsEnableServerCommand
+  nameWithType: TlsEnableServerCommand
 - uid: FubarDev.FtpServer.SimplePasvAddressResolver
   name: SimplePasvAddressResolver
   href: api/FubarDev.FtpServer.SimplePasvAddressResolver.html
