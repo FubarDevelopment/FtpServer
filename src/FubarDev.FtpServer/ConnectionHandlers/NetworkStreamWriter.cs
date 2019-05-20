@@ -131,6 +131,7 @@ namespace FubarDev.FtpServer.ConnectionHandlers
             {
                 await SendDataToStream(readResult.Buffer, stream, cancellationToken)
                    .ConfigureAwait(false);
+                reader.AdvanceTo(readResult.Buffer.End);
             }
         }
 
