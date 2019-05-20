@@ -209,8 +209,15 @@ namespace FubarDev.FtpServer.Commands
 
             if (response != null)
             {
-                await SendResponseAsync(response, context.CommandAborted)
-                   .ConfigureAwait(false);
+                try
+                {
+                    await SendResponseAsync(response, context.CommandAborted)
+                       .ConfigureAwait(false);
+                }
+                catch (Exception ex) when (ex.Is<OperationCanceledException>())
+                {
+                    Log?.LogWarning("Sending the response cancelled: {response}", response);
+                }
             }
         }
 
