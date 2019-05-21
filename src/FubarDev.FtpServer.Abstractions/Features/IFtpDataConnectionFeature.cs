@@ -3,6 +3,7 @@
 // </copyright>
 
 using System;
+using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -20,6 +21,15 @@ namespace FubarDev.FtpServer.Features
         /// </summary>
         [CanBeNull]
         FtpCommand Command { get; }
+
+        /// <summary>
+        /// Gets the local end point.
+        /// </summary>
+        /// <remarks>
+        /// This value is unreliable in case of an active data connection.
+        /// </remarks>
+        [NotNull]
+        IPEndPoint LocalEndPoint { get; }
 
         /// <summary>
         /// Gets a new FTP data connection.

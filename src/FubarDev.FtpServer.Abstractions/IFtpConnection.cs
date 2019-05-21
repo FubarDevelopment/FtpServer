@@ -53,6 +53,7 @@ namespace FubarDev.FtpServer
         /// Gets the FTP connection data.
         /// </summary>
         [NotNull]
+        [Obsolete("Query the information using the Features property instead.")]
         FtpConnectionData Data { get; }
 
         /// <summary>
@@ -124,10 +125,12 @@ namespace FubarDev.FtpServer
         /// <summary>
         /// Creates a response socket for e.g. LIST/NLST.
         /// </summary>
+        /// <param name="timeout">The timeout for establishing a data connection.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>The data connection.</returns>
         [NotNull]
         [ItemNotNull]
-        Task<TcpClient> CreateResponseSocket();
+        Task<IFtpDataConnection> OpenDataConnectionAsync(TimeSpan? timeout = null, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Create an encrypted stream.
@@ -136,6 +139,7 @@ namespace FubarDev.FtpServer
         /// <returns>The encrypted stream.</returns>
         [NotNull]
         [ItemNotNull]
+        [Obsolete("The data connection returned by OpenDataConnection is already encrypted.")]
         Task<Stream> CreateEncryptedStream([NotNull] Stream unencryptedStream);
     }
 }

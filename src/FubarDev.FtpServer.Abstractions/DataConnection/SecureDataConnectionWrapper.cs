@@ -32,7 +32,7 @@ namespace FubarDev.FtpServer.DataConnection
 
         [NotNull]
         [ItemNotNull]
-        public async Task<IFtpDataConnection> Wrap([NotNull] IFtpDataConnection dataConnection)
+        public async Task<IFtpDataConnection> WrapAsync([NotNull] IFtpDataConnection dataConnection)
         {
             var connection = _connectionAccessor.FtpConnection;
             var secureConnectionFeature = connection.Features.Get<ISecureConnectionFeature>();

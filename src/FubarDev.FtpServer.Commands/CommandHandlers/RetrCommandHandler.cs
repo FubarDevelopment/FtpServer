@@ -7,16 +7,13 @@
 
 using System;
 using System.IO;
-using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
 
-using FubarDev.FtpServer.Authentication;
 using FubarDev.FtpServer.Commands;
 using FubarDev.FtpServer.Features;
 using FubarDev.FtpServer.FileSystem;
 using FubarDev.FtpServer.ServerCommands;
-using JetBrains.Annotations;
 
 namespace FubarDev.FtpServer.CommandHandlers
 {
@@ -27,19 +24,6 @@ namespace FubarDev.FtpServer.CommandHandlers
     public class RetrCommandHandler : FtpCommandHandler
     {
         private const int BufferSize = 4096;
-
-        [NotNull]
-        private readonly ISslStreamWrapperFactory _sslStreamWrapperFactory;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="RetrCommandHandler"/> class.
-        /// </summary>
-        /// <param name="sslStreamWrapperFactory">An object to handle SSL streams.</param>
-        public RetrCommandHandler(
-            [NotNull] ISslStreamWrapperFactory sslStreamWrapperFactory)
-        {
-            _sslStreamWrapperFactory = sslStreamWrapperFactory;
-        }
 
         /// <inheritdoc/>
         public override async Task<IFtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
@@ -72,31 +56,26 @@ namespace FubarDev.FtpServer.CommandHandlers
                    .ConfigureAwait(false);
 
                 // ReSharper disable once AccessToDisposedClosure
-                return await Connection.SendResponseAsync(
-                        client => ExecuteSendAsync(client, input, cancellationToken))
+                return await Connection.SendDataAsync(
+                        (dataConnection, ct) => ExecuteSendAsync(dataConnection, input, ct),
+                        cancellationToken)
                     .ConfigureAwait(false);
             }
         }
 
         private async Task<IFtpResponse> ExecuteSendAsync(
-            TcpClient responseSocket,
+            IFtpDataConnection dataConnection,
             Stream input,
             CancellationToken cancellationToken)
         {
-            var writeStream = responseSocket.GetStream();
-            writeStream.WriteTimeout = 10000;
-            using (var stream = await Connection.CreateEncryptedStream(writeStream).ConfigureAwait(false))
+            var stream = dataConnection.Stream;
+            stream.WriteTimeout = 10000;
+            var buffer = new byte[BufferSize];
+            int receivedBytes;
+            while ((receivedBytes = await input.ReadAsync(buffer, 0, buffer.Length, cancellationToken)
+               .ConfigureAwait(false)) != 0)
             {
-                var buffer = new byte[BufferSize];
-                int receivedBytes;
-                while ((receivedBytes = await input.ReadAsync(buffer, 0, buffer.Length, cancellationToken)
-                           .ConfigureAwait(false)) != 0)
-                {
-                    await stream.WriteAsync(buffer, 0, receivedBytes, cancellationToken)
-                        .ConfigureAwait(false);
-                }
-
-                await _sslStreamWrapperFactory.CloseStreamAsync(stream, cancellationToken)
+                await stream.WriteAsync(buffer, 0, receivedBytes, cancellationToken)
                    .ConfigureAwait(false);
             }
 

@@ -20,6 +20,11 @@ namespace TestFtpServer.Configuration
         public int? Port { get; set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether the active FTP data connections should be bound to <see cref="Port"/> - 1.
+        /// </summary>
+        public bool UseFtpDataPort { get; set; }
+
+        /// <summary>
         /// Gets or sets the PASV options.
         /// </summary>
         public FtpServerPasvOptions Pasv { get; set; } = new FtpServerPasvOptions();

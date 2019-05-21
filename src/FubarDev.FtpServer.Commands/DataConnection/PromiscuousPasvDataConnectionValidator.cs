@@ -39,7 +39,11 @@ namespace FubarDev.FtpServer.DataConnection
                 return Task.FromResult(ValidationResult.Success);
             }
 
-            var errorMessage = $"Data connection attempt from {pasvRemoteAddress} for control connection from {connection.RemoteAddress.IPAddress}, data connection rejected";
+            var localizationFeature = connection.Features.Get<ILocalizationFeature>();
+            var errorMessage = string.Format(
+                localizationFeature.Catalog.GetString("Data connection attempt from {0} for control connection from {1}, data connection rejected"),
+                pasvRemoteAddress,
+                connection.RemoteAddress.IPAddress);
             connection.Log?.LogWarning(errorMessage);
             return Task.FromResult(new ValidationResult(errorMessage));
         }

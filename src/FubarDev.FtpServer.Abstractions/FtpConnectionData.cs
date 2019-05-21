@@ -130,24 +130,18 @@ namespace FubarDev.FtpServer
             set => _featureCollection.Get<ITransferConfigurationFeature>().TransferMode = value;
         }
 
-        /// <inheritdoc />
-        [Obsolete("Query the information using the ITransferConfigurationFeature instead.")]
-        public Address PortAddress
-        {
-            get => _featureCollection.Get<ITransferConfigurationFeature>().PortAddress;
-            set => _featureCollection.Get<ITransferConfigurationFeature>().PortAddress = value;
-        }
+        /// <summary>
+        /// Gets or sets the address to use for an active data connection.
+        /// </summary>
+        [Obsolete("This property is not used any more. Use IFtpDataConnectionFeature instead.")]
+        public Address PortAddress { get; set; }
 
         /// <summary>
         /// Gets or sets the data connection for a passive data transfer.
         /// </summary>
         [CanBeNull]
-        [Obsolete("Query the information using the ISecureConnectionFeature instead.")]
-        public TcpClient PassiveSocketClient
-        {
-            get => _featureCollection.Get<ISecureConnectionFeature>().PassiveSocketClient;
-            set => _featureCollection.Get<ISecureConnectionFeature>().PassiveSocketClient = value;
-        }
+        [Obsolete("This property is not used any more. Use IFtpDataConnectionFeature instead.")]
+        public TcpClient PassiveSocketClient { get; set; }
 
         /// <summary>
         /// Gets the <see cref="IBackgroundCommandHandler"/> that's required for the <c>ABOR</c> command.
@@ -156,13 +150,14 @@ namespace FubarDev.FtpServer
         [Obsolete("Query IBackgroundTaskLifetimeFeature to get information about an active background task (if non-null).")]
         public IBackgroundCommandHandler BackgroundCommandHandler => null;
 
-        /// <inheritdoc />
-        [Obsolete("Query the information using the ITransferConfigurationFeature instead.")]
-        public string TransferTypeCommandUsed
-        {
-            get => _featureCollection.Get<ITransferConfigurationFeature>().TransferTypeCommandUsed;
-            set => _featureCollection.Get<ITransferConfigurationFeature>().TransferTypeCommandUsed = value;
-        }
+        /// <summary>
+        /// Gets or sets the last used transfer type command.
+        /// </summary>
+        /// <remarks>
+        /// It's not allowed to use PASV when PORT was used previously - and vice versa.
+        /// </remarks>
+        [Obsolete("The restriction was lifted.")]
+        public string TransferTypeCommandUsed { get; set; }
 
         /// <summary>
         /// Gets or sets the restart position for appending data to a file.
@@ -249,10 +244,7 @@ namespace FubarDev.FtpServer
         /// <inheritdoc/>
         public void Dispose()
         {
-            var secureConnectionFeature = _featureCollection.Get<ISecureConnectionFeature>();
-            secureConnectionFeature.PassiveSocketClient?.Dispose();
             (_featureCollection.Get<IFileSystemFeature>() as IDisposable)?.Dispose();
-            secureConnectionFeature.PassiveSocketClient = null;
         }
 
         /// <summary>

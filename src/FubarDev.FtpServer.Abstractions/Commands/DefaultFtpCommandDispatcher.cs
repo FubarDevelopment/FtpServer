@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading;
@@ -179,6 +180,13 @@ namespace FubarDev.FtpServer.Commands
 
                 switch (exception)
                 {
+                    case ValidationException validationException:
+                        response = new FtpResponse(
+                            425,
+                            validationException.Message);
+                        Log?.LogWarning(validationException.Message);
+                        break;
+
                     case OperationCanceledException _:
                         response = new FtpResponse(426, localizationFeature.Catalog.GetString("Connection closed; transfer aborted."));
                         Debug.WriteLine($"Command {command} cancelled with response {response}");

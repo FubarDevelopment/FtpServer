@@ -12,7 +12,6 @@ using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
 
-using FubarDev.FtpServer.Authentication;
 using FubarDev.FtpServer.Features;
 
 using JetBrains.Annotations;
@@ -28,9 +27,6 @@ namespace FubarDev.FtpServer.DataConnection
         private readonly IFtpConnectionAccessor _connectionAccessor;
 
         [NotNull]
-        private readonly ISslStreamWrapperFactory _sslStreamWrapperFactory;
-
-        [NotNull]
         [ItemNotNull]
         private readonly List<IFtpDataConnectionValidator> _validators;
 
@@ -38,15 +34,12 @@ namespace FubarDev.FtpServer.DataConnection
         /// Initializes a new instance of the <see cref="ActiveDataConnectionFeatureFactory"/> class.
         /// </summary>
         /// <param name="connectionAccessor">The FTP connection accessor.</param>
-        /// <param name="sslStreamWrapperFactory">The SSL stream wrapper factory.</param>
         /// <param name="validators">An enumeration of FTP connection validators.</param>
         public ActiveDataConnectionFeatureFactory(
             [NotNull] IFtpConnectionAccessor connectionAccessor,
-            [NotNull] ISslStreamWrapperFactory sslStreamWrapperFactory,
             [NotNull, ItemNotNull] IEnumerable<IFtpDataConnectionValidator> validators)
         {
             _connectionAccessor = connectionAccessor;
-            _sslStreamWrapperFactory = sslStreamWrapperFactory;
             _validators = validators.ToList();
         }
 
@@ -60,38 +53,27 @@ namespace FubarDev.FtpServer.DataConnection
         [NotNull]
         [ItemNotNull]
         public Task<IFtpDataConnectionFeature> CreateFeatureAsync(
-            [NotNull] FtpCommand ftpCommand,
+            [CanBeNull] FtpCommand ftpCommand,
             [NotNull] Address portAddress,
             int? dataPort)
         {
             var connection = _connectionAccessor.FtpConnection;
             var connectionFeature = connection.Features.Get<IConnectionFeature>();
 
-#if NETSTANDARD1_3
-            var client = new TcpClient(connectionFeature.LocalEndPoint.AddressFamily);
-#else
-            TcpClient client;
+            IPEndPoint localEndPoint;
             if (dataPort != null)
             {
-                var localEndPoint = new IPEndPoint(connectionFeature.LocalEndPoint.Address, dataPort.Value);
-                client = new TcpClient(localEndPoint)
-                {
-                    ExclusiveAddressUse = false,
-                };
+                localEndPoint = new IPEndPoint(connectionFeature.LocalEndPoint.Address, dataPort.Value);
             }
             else
             {
-                client = new TcpClient(connectionFeature.LocalEndPoint.AddressFamily);
+                localEndPoint = new IPEndPoint(connectionFeature.LocalEndPoint.Address, 0);
             }
-#endif
 
-            var secureConnectionFeature = connection.Features.Get<ISecureConnectionFeature>();
             return Task.FromResult<IFtpDataConnectionFeature>(
                 new ActiveDataConnectionFeature(
-                    client,
+                    localEndPoint,
                     portAddress,
-                    secureConnectionFeature,
-                    _sslStreamWrapperFactory,
                     _validators,
                     ftpCommand,
                     connection));
@@ -103,15 +85,6 @@ namespace FubarDev.FtpServer.DataConnection
             private readonly Address _portAddress;
 
             [NotNull]
-            private readonly ISecureConnectionFeature _secureConnectionFeature;
-
-            [NotNull]
-            private readonly ISslStreamWrapperFactory _sslStreamWrapperFactory;
-
-            [NotNull]
-            private readonly TcpClient _client;
-
-            [NotNull]
             [ItemNotNull]
             private readonly List<IFtpDataConnectionValidator> _validators;
 
@@ -119,69 +92,114 @@ namespace FubarDev.FtpServer.DataConnection
             private readonly IFtpConnection _ftpConnection;
 
             public ActiveDataConnectionFeature(
-                [NotNull] TcpClient client,
+                [NotNull] IPEndPoint localEndPoint,
                 [NotNull] Address portAddress,
-                [NotNull] ISecureConnectionFeature secureConnectionFeature,
-                [NotNull] ISslStreamWrapperFactory sslStreamWrapperFactory,
                 [NotNull] [ItemNotNull] List<IFtpDataConnectionValidator> validators,
-                [NotNull] FtpCommand command,
+                [CanBeNull] FtpCommand command,
                 [NotNull] IFtpConnection ftpConnection)
             {
                 _portAddress = portAddress;
-                _secureConnectionFeature = secureConnectionFeature;
-                _sslStreamWrapperFactory = sslStreamWrapperFactory;
                 _validators = validators;
                 _ftpConnection = ftpConnection;
+                LocalEndPoint = localEndPoint;
                 Command = command;
-                _client = client;
             }
 
             /// <inheritdoc />
             public FtpCommand Command { get; }
 
             /// <inheritdoc />
+            public IPEndPoint LocalEndPoint { get; }
+
+            /// <inheritdoc />
             public async Task<IFtpDataConnection> GetDataConnectionAsync(TimeSpan timeout, CancellationToken cancellationToken)
             {
-                var connectTask = _client.ConnectAsync(_portAddress.IPAddress, _portAddress.Port);
-                var result = await Task.WhenAny(connectTask, Task.Delay(timeout, cancellationToken))
-                   .ConfigureAwait(false);
-
-                if (result != connectTask)
+#if NETSTANDARD1_3
+                var client = new TcpClient(LocalEndPoint.AddressFamily);
+#else
+                TcpClient client;
+                if (LocalEndPoint.Port != 0)
                 {
-                    if (cancellationToken.IsCancellationRequested)
+                    client = new TcpClient(LocalEndPoint.AddressFamily)
                     {
-                        throw new OperationCanceledException("Opening data connection was aborted", cancellationToken);
-                    }
+                        ExclusiveAddressUse = false,
+                    };
 
-                    throw new TimeoutException();
+                    client.Client.Bind(LocalEndPoint);
                 }
-
-                Stream stream = _client.GetStream();
-
-                if (_secureConnectionFeature.CreateEncryptedStream != null)
+                else
                 {
-                    stream = await _secureConnectionFeature.CreateEncryptedStream(stream)
-                       .ConfigureAwait(false);
+                    client = new TcpClient(LocalEndPoint);
                 }
+#endif
 
-                var dataConnection = new ActiveDataConnection(_client, stream, _sslStreamWrapperFactory);
-                foreach (var validator in _validators)
+                var exceptions = new List<Exception>();
+                var tries = 0;
+                var startTime = DateTime.UtcNow;
+                do
                 {
-                    var validationResult = await validator.IsValidAsync(_ftpConnection, this, dataConnection, cancellationToken)
-                       .ConfigureAwait(false);
-                    if (validationResult != ValidationResult.Success && validationResult != null)
+                    try
                     {
-                        throw new ValidationException(validationResult.ErrorMessage);
+                        tries += 1;
+                        var connectTask = client.ConnectAsync(_portAddress.IPAddress, _portAddress.Port);
+                        var result = await Task.WhenAny(connectTask, Task.Delay(timeout, cancellationToken))
+                           .ConfigureAwait(false);
+
+                        if (result != connectTask)
+                        {
+                            if (cancellationToken.IsCancellationRequested)
+                            {
+                                throw new OperationCanceledException("Opening data connection was aborted", cancellationToken);
+                            }
+
+                            throw new TimeoutException();
+                        }
+
+                        try
+                        {
+                            await connectTask.ConfigureAwait(false);
+                        }
+                        catch (Exception ex)
+                        {
+                            exceptions.Add(ex);
+                            await Task.Delay(20, cancellationToken).ConfigureAwait(false);
+                            await Task.Yield();
+                            continue;
+                        }
+
+                        var dataConnection = new ActiveDataConnection(client);
+                        foreach (var validator in _validators)
+                        {
+                            var validationResult = await validator.IsValidAsync(_ftpConnection, this, dataConnection, cancellationToken)
+                               .ConfigureAwait(false);
+                            if (validationResult != ValidationResult.Success && validationResult != null)
+                            {
+                                throw new ValidationException(validationResult.ErrorMessage);
+                            }
+                        }
+
+                        return dataConnection;
+                    }
+                    catch (Exception) when (CloseTcpClient(client))
+                    {
+                        // Will never be executed!
+                        throw;
                     }
                 }
+                while (tries < 5 || (DateTime.UtcNow - startTime) < timeout);
 
-                return dataConnection;
+                throw new AggregateException(exceptions);
             }
 
             /// <inheritdoc />
             public void Dispose()
             {
-                _client.Dispose();
+            }
+
+            private bool CloseTcpClient(TcpClient client)
+            {
+                client.Dispose();
+                return false;
             }
 
             private class ActiveDataConnection : IFtpDataConnection
@@ -189,19 +207,13 @@ namespace FubarDev.FtpServer.DataConnection
                 [NotNull]
                 private readonly TcpClient _client;
 
-                [NotNull]
-                private readonly ISslStreamWrapperFactory _sslStreamWrapperFactory;
-
                 private bool _closed;
 
                 public ActiveDataConnection(
-                    [NotNull] TcpClient client,
-                    [NotNull] Stream stream,
-                    [NotNull] ISslStreamWrapperFactory sslStreamWrapperFactory)
+                    [NotNull] TcpClient client)
                 {
                     _client = client;
-                    _sslStreamWrapperFactory = sslStreamWrapperFactory;
-                    Stream = stream;
+                    Stream = client.GetStream();
                     LocalAddress = (IPEndPoint)client.Client.LocalEndPoint;
                     RemoteAddress = (IPEndPoint)client.Client.RemoteEndPoint;
                 }
@@ -224,8 +236,8 @@ namespace FubarDev.FtpServer.DataConnection
                     }
 
                     _closed = true;
-                    await _sslStreamWrapperFactory.CloseStreamAsync(Stream, cancellationToken)
-                       .ConfigureAwait(false);
+
+                    await Stream.FlushAsync(cancellationToken).ConfigureAwait(false);
                     _client.Dispose();
                 }
             }

@@ -6,11 +6,9 @@
 //-----------------------------------------------------------------------
 
 using System;
-using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
 
-using FubarDev.FtpServer.Authentication;
 using FubarDev.FtpServer.BackgroundTransfer;
 using FubarDev.FtpServer.Commands;
 using FubarDev.FtpServer.Features;
@@ -30,20 +28,14 @@ namespace FubarDev.FtpServer.CommandHandlers
         [NotNull]
         private readonly IBackgroundTransferWorker _backgroundTransferWorker;
 
-        [NotNull]
-        private readonly ISslStreamWrapperFactory _sslStreamWrapperFactory;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="AppeCommandHandler"/> class.
         /// </summary>
         /// <param name="backgroundTransferWorker">The background transfer worker service.</param>
-        /// <param name="sslStreamWrapperFactory">An object to handle SSL streams.</param>
         public AppeCommandHandler(
-            [NotNull] IBackgroundTransferWorker backgroundTransferWorker,
-            [NotNull] ISslStreamWrapperFactory sslStreamWrapperFactory)
+            [NotNull] IBackgroundTransferWorker backgroundTransferWorker)
         {
             _backgroundTransferWorker = backgroundTransferWorker;
-            _sslStreamWrapperFactory = sslStreamWrapperFactory;
         }
 
         /// <inheritdoc/>
@@ -84,55 +76,51 @@ namespace FubarDev.FtpServer.CommandHandlers
                .ConfigureAwait(false);
 
             return await Connection
-                .SendResponseAsync(client => ExecuteSend(client, fileInfo, restartPosition, cancellationToken))
-                .ConfigureAwait(false);
+               .SendDataAsync(
+                    (dataConnection, ct) => ExecuteSend(dataConnection, fileInfo, restartPosition, ct),
+                    cancellationToken)
+               .ConfigureAwait(false);
         }
 
         private async Task<IFtpResponse> ExecuteSend(
-            TcpClient responseSocket,
+            [NotNull] IFtpDataConnection dataConnection,
             [NotNull] SearchResult<IUnixFileEntry> fileInfo,
             long? restartPosition,
             CancellationToken cancellationToken)
         {
             var fsFeature = Connection.Features.Get<IFileSystemFeature>();
-            var responseStream = responseSocket.GetStream();
-            responseStream.ReadTimeout = 10000;
+            var stream = dataConnection.Stream;
+            stream.ReadTimeout = 10000;
 
-            using (var stream = await Connection.CreateEncryptedStream(responseStream).ConfigureAwait(false))
+            IBackgroundTransfer backgroundTransfer;
+            if ((restartPosition != null && restartPosition.Value == 0) || fileInfo.Entry == null)
             {
-                IBackgroundTransfer backgroundTransfer;
-                if ((restartPosition != null && restartPosition.Value == 0) || fileInfo.Entry == null)
+                if (fileInfo.Entry == null)
                 {
-                    if (fileInfo.Entry == null)
-                    {
-                        backgroundTransfer = await fsFeature.FileSystem
-                            .CreateAsync(
-                                fileInfo.Directory,
-                                fileInfo.FileName ?? throw new InvalidOperationException(),
-                                stream,
-                                cancellationToken)
-                            .ConfigureAwait(false);
-                    }
-                    else
-                    {
-                        backgroundTransfer = await fsFeature.FileSystem
-                            .ReplaceAsync(fileInfo.Entry, stream, cancellationToken).ConfigureAwait(false);
-                    }
+                    backgroundTransfer = await fsFeature.FileSystem
+                       .CreateAsync(
+                            fileInfo.Directory,
+                            fileInfo.FileName ?? throw new InvalidOperationException(),
+                            stream,
+                            cancellationToken)
+                       .ConfigureAwait(false);
                 }
                 else
                 {
                     backgroundTransfer = await fsFeature.FileSystem
-                        .AppendAsync(fileInfo.Entry, restartPosition, stream, cancellationToken)
-                        .ConfigureAwait(false);
+                       .ReplaceAsync(fileInfo.Entry, stream, cancellationToken).ConfigureAwait(false);
                 }
-
-                if (backgroundTransfer != null)
-                {
-                    _backgroundTransferWorker.Enqueue(backgroundTransfer);
-                }
-
-                await _sslStreamWrapperFactory.CloseStreamAsync(stream, cancellationToken)
+            }
+            else
+            {
+                backgroundTransfer = await fsFeature.FileSystem
+                   .AppendAsync(fileInfo.Entry, restartPosition, stream, cancellationToken)
                    .ConfigureAwait(false);
+            }
+
+            if (backgroundTransfer != null)
+            {
+                _backgroundTransferWorker.Enqueue(backgroundTransfer);
             }
 
             return new FtpResponse(226, T("Uploaded file successfully."));

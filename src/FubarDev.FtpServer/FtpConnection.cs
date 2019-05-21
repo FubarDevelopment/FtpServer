@@ -21,6 +21,7 @@ using System.Threading.Tasks;
 using FubarDev.FtpServer.CommandHandlers;
 using FubarDev.FtpServer.Commands;
 using FubarDev.FtpServer.ConnectionHandlers;
+using FubarDev.FtpServer.DataConnection;
 using FubarDev.FtpServer.Features;
 using FubarDev.FtpServer.Features.Impl;
 using FubarDev.FtpServer.Localization;
@@ -51,6 +52,9 @@ namespace FubarDev.FtpServer
         [NotNull]
         private readonly IServerCommandExecutor _serverCommandExecutor;
 
+        [NotNull]
+        private readonly SecureDataConnectionWrapper _secureDataConnectionWrapper;
+
         [CanBeNull]
         private readonly IDisposable _loggerScope;
 
@@ -72,6 +76,11 @@ namespace FubarDev.FtpServer
         [NotNull]
         private readonly Channel<FtpCommand> _ftpCommandChannel = Channel.CreateBounded<FtpCommand>(5);
 
+        [NotNull]
+        private readonly Address _remoteAddress;
+
+        private readonly int? _dataPort;
+
         private bool _closed;
 
         private Task _commandChannelReader;
@@ -83,32 +92,38 @@ namespace FubarDev.FtpServer
         /// </summary>
         /// <param name="socket">The socket to use to communicate with the client.</param>
         /// <param name="options">The options for the FTP connection.</param>
+        /// <param name="portOptions">The <c>PORT</c> command options.</param>
         /// <param name="connectionAccessor">The accessor to get the connection that is active during the <see cref="FtpCommandHandler.Process"/> method execution.</param>
         /// <param name="catalogLoader">The catalog loader for the FTP server.</param>
         /// <param name="serverCommandExecutor">The executor for server commands.</param>
         /// <param name="serviceProvider">The service provider for the connection.</param>
+        /// <param name="secureDataConnectionWrapper">Wraps a data connection into an SSL stream.</param>
         /// <param name="logger">The logger for the FTP connection.</param>
         public FtpConnection(
             [NotNull] TcpClient socket,
             [NotNull] IOptions<FtpConnectionOptions> options,
+            [NotNull] IOptions<PortCommandOptions> portOptions,
             [NotNull] IFtpConnectionAccessor connectionAccessor,
             [NotNull] IFtpCatalogLoader catalogLoader,
             [NotNull] IServerCommandExecutor serverCommandExecutor,
             [NotNull] IServiceProvider serviceProvider,
+            [NotNull] SecureDataConnectionWrapper secureDataConnectionWrapper,
             [CanBeNull] ILogger<IFtpConnection> logger = null)
         {
             ConnectionServices = serviceProvider;
 
             ConnectionId = "FTP-" + Guid.NewGuid().ToString("N");
 
+            _dataPort = portOptions.Value.DataPort;
             var endpoint = (IPEndPoint)socket.Client.RemoteEndPoint;
-            var remoteAddress = new Address(endpoint.Address.ToString(), endpoint.Port);
+            var remoteAddress = _remoteAddress = new Address(endpoint.Address.ToString(), endpoint.Port);
 
             var properties = new Dictionary<string, object>
             {
                 ["RemoteAddress"] = remoteAddress.ToString(true),
                 ["RemoteIp"] = remoteAddress.IPAddress?.ToString(),
                 ["RemotePort"] = remoteAddress.Port,
+                ["ConnectionId"] = ConnectionId,
             };
 
             _loggerScope = logger?.BeginScope(properties);
@@ -116,6 +131,7 @@ namespace FubarDev.FtpServer
             _socket = socket;
             _connectionAccessor = connectionAccessor;
             _serverCommandExecutor = serverCommandExecutor;
+            _secureDataConnectionWrapper = secureDataConnectionWrapper;
             _serverCommandChannel = Channel.CreateBounded<IServerCommand>(new BoundedChannelOptions(3));
 
             Log = logger;
@@ -223,6 +239,12 @@ namespace FubarDev.FtpServer
             // Initialize the FTP connection accessor
             _connectionAccessor.FtpConnection = this;
 
+            // Set the default FTP data connection feature
+            var activeDataConnectionFeatureFactory = ConnectionServices.GetRequiredService<ActiveDataConnectionFeatureFactory>();
+            var dataConnectionFeature = await activeDataConnectionFeatureFactory.CreateFeatureAsync(null, _remoteAddress, _dataPort)
+               .ConfigureAwait(false);
+            Features.Set(dataConnectionFeature);
+
             // Connection information
             var connectionFeature = Features.Get<IConnectionFeature>();
             Log?.LogInformation($"Connected from {connectionFeature.RemoteAddress.ToString(true)}");
@@ -287,29 +309,14 @@ namespace FubarDev.FtpServer
             }
         }
 
-        /// <summary>
-        /// Creates a response socket for e.g. LIST/NLST.
-        /// </summary>
-        /// <returns>The data connection.</returns>
-        public async Task<TcpClient> CreateResponseSocket()
+        /// <inheritdoc/>
+        public async Task<IFtpDataConnection> OpenDataConnectionAsync(TimeSpan? timeout, CancellationToken cancellationToken)
         {
-            var transferFeature = Features.Get<ITransferConfigurationFeature>();
-            var portAddress = transferFeature.PortAddress;
-            if (portAddress != null)
-            {
-                var result = new TcpClient(portAddress.AddressFamily ?? AddressFamily.InterNetwork);
-                await result.ConnectAsync(portAddress.IPAddress, portAddress.Port).ConfigureAwait(false);
-                return result;
-            }
-
-            var passiveSocketClient = Features.Get<ISecureConnectionFeature>().PassiveSocketClient;
-
-            if (passiveSocketClient == null)
-            {
-                throw new InvalidOperationException("Passive connection expected, but none found");
-            }
-
-            return passiveSocketClient;
+            var dataConnectionFeature = Features.Get<IFtpDataConnectionFeature>();
+            var dataConnection = await dataConnectionFeature.GetDataConnectionAsync(timeout ?? TimeSpan.FromSeconds(10), cancellationToken)
+               .ConfigureAwait(false);
+            return await _secureDataConnectionWrapper.WrapAsync(dataConnection)
+               .ConfigureAwait(false);
         }
 
         /// <summary>
@@ -317,6 +324,7 @@ namespace FubarDev.FtpServer
         /// </summary>
         /// <param name="unencryptedStream">The stream to encrypt.</param>
         /// <returns>The encrypted stream.</returns>
+        [Obsolete("The data connection returned by OpenDataConnection is already encrypted.")]
         public Task<Stream> CreateEncryptedStream(Stream unencryptedStream)
         {
             var createEncryptedStream = Features.Get<ISecureConnectionFeature>().CreateEncryptedStream;
@@ -349,6 +357,10 @@ namespace FubarDev.FtpServer
         {
             _closed = true;
             _cancellationTokenSource.Cancel(true);
+
+            var dataConnectionFeature = Features.Get<IFtpDataConnectionFeature>();
+            dataConnectionFeature.Dispose();
+            Features.Set<IFtpDataConnectionFeature>(null);
 
             var secureConnectionFeature = Features.Get<ISecureConnectionFeature>();
             var socketStream = secureConnectionFeature.SocketStream;
@@ -632,9 +644,6 @@ namespace FubarDev.FtpServer
 
             /// <inheritdoc />
             public bool IsSecure => !ReferenceEquals(SocketStream, OriginalStream);
-
-            /// <inheritdoc />
-            public TcpClient PassiveSocketClient { get; set; }
 
             /// <inheritdoc />
             public CreateEncryptedStreamDelegate CreateEncryptedStream { get; set; }

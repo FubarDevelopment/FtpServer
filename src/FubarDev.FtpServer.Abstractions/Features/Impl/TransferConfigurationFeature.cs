@@ -13,9 +13,6 @@ namespace FubarDev.FtpServer.Features.Impl
         public FtpTransferMode TransferMode { get; set; } = new FtpTransferMode(FtpFileType.Ascii);
 
         /// <inheritdoc />
-        public Address PortAddress { get; set; }
-
-        /// <inheritdoc />
         public string TransferTypeCommandUsed { get; set; }
     }
 }

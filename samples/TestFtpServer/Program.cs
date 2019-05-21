@@ -382,6 +382,14 @@ namespace TestFtpServer
                         opt.ServerAddress = options.Server.Address;
                         opt.Port = options.GetServerPort();
                     })
+               .Configure<PortCommandOptions>(
+                    opt =>
+                    {
+                        if (options.Server.UseFtpDataPort)
+                        {
+                            opt.DataPort = options.GetServerPort() - 1;
+                        }
+                    })
                .Configure<SimplePasvOptions>(
                     opt =>
                     {

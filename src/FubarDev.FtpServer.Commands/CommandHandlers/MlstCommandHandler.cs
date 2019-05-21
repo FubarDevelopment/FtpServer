@@ -5,13 +5,11 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
 using FubarDev.FtpServer.AccountManagement;
-using FubarDev.FtpServer.Authentication;
 using FubarDev.FtpServer.Commands;
 using FubarDev.FtpServer.Features;
 using FubarDev.FtpServer.Features.Impl;
@@ -38,25 +36,6 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// The set of well-known facts.
         /// </summary>
         internal static readonly ISet<string> KnownFacts = new HashSet<string> { "type", "size", "perm", "modify", "create" };
-
-        [NotNull]
-        private readonly ISslStreamWrapperFactory _sslStreamWrapperFactory;
-
-        [CanBeNull]
-        private readonly ILogger<MlstCommandHandler> _logger;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="MlstCommandHandler"/> class.
-        /// </summary>
-        /// <param name="sslStreamWrapperFactory">An object to handle SSL streams.</param>
-        /// <param name="logger">The logger.</param>
-        public MlstCommandHandler(
-            [NotNull] ISslStreamWrapperFactory sslStreamWrapperFactory,
-            [CanBeNull] ILogger<MlstCommandHandler> logger = null)
-        {
-            _sslStreamWrapperFactory = sslStreamWrapperFactory;
-            _logger = logger;
-        }
 
         /// <summary>
         /// Gets the feature string for the <c>MFF</c> command.
@@ -166,18 +145,14 @@ namespace FubarDev.FtpServer.CommandHandlers
 
             var authInfoFeature = Connection.Features.Get<IAuthorizationInformationFeature>();
             var factsFeature = Connection.Features.Get<IMlstFactsFeature>() ?? CreateMlstFactsFeature();
-            return await Connection.SendResponseAsync(
-                    client => ExecuteSendAsync(client, authInfoFeature.User, fsFeature.FileSystem, path, dirEntry, factsFeature, cancellationToken),
-                    ex =>
-                    {
-                        _logger?.LogError(ex, ex.Message);
-                        return new FtpResponse(425, T("Can't open data connection."));
-                    })
+            return await Connection.SendDataAsync(
+                    (dataConnection, ct) => ExecuteSendAsync(dataConnection, authInfoFeature.User, fsFeature.FileSystem, path, dirEntry, factsFeature, ct),
+                    cancellationToken)
                 .ConfigureAwait(false);
         }
 
         private async Task<IFtpResponse> ExecuteSendAsync(
-            TcpClient responseSocket,
+            IFtpDataConnection dataConnection,
             IFtpUser user,
             IUnixFileSystem fileSystem,
             Stack<IUnixDirectoryEntry> path,
@@ -186,32 +161,25 @@ namespace FubarDev.FtpServer.CommandHandlers
             CancellationToken cancellationToken)
         {
             var encoding = Connection.Features.Get<IEncodingFeature>().Encoding;
-            using (var stream = await Connection.CreateEncryptedStream(responseSocket.GetStream()).ConfigureAwait(false))
+            var stream = dataConnection.Stream;
+            using (var writer = new StreamWriter(stream, encoding, 4096, true)
             {
-                using (var writer = new StreamWriter(stream, encoding, 4096, true)
+                NewLine = "\r\n",
+            })
+            {
+                var entries = await fileSystem.GetEntriesAsync(dirEntry, cancellationToken).ConfigureAwait(false);
+                var enumerator = new DirectoryListingEnumerator(entries, fileSystem, path, true);
+                var formatter = new FactsListFormatter(user, enumerator, factsFeature.ActiveMlstFacts, false);
+                while (enumerator.MoveNext())
                 {
-                    NewLine = "\r\n",
-                })
-                {
-                    var entries = await fileSystem.GetEntriesAsync(dirEntry, cancellationToken).ConfigureAwait(false);
-                    var enumerator = new DirectoryListingEnumerator(entries, fileSystem, path, true);
-                    var formatter = new FactsListFormatter(user, enumerator, factsFeature.ActiveMlstFacts, false);
-                    while (enumerator.MoveNext())
-                    {
-                        var name = enumerator.Name;
-                        var entry = enumerator.Entry;
-                        var line = formatter.Format(entry, name);
-                        Connection.Log?.LogTrace(line);
-                        await writer.WriteLineAsync(line).ConfigureAwait(false);
-                    }
-
-                    await writer.FlushAsync().ConfigureAwait(false);
+                    var name = enumerator.Name;
+                    var entry = enumerator.Entry;
+                    var line = formatter.Format(entry, name);
+                    Connection.Log?.LogTrace(line);
+                    await writer.WriteLineAsync(line).ConfigureAwait(false);
                 }
 
-                await stream.FlushAsync(cancellationToken).ConfigureAwait(false);
-
-                await _sslStreamWrapperFactory.CloseStreamAsync(stream, cancellationToken)
-                   .ConfigureAwait(false);
+                await writer.FlushAsync().ConfigureAwait(false);
             }
 
             // Use 250 when the connection stays open.

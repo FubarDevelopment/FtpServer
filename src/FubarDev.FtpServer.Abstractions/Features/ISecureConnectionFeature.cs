@@ -31,12 +31,6 @@ namespace FubarDev.FtpServer.Features
         bool IsSecure { get; }
 
         /// <summary>
-        /// Gets or sets the data connection for a passive data transfer.
-        /// </summary>
-        [CanBeNull]
-        TcpClient PassiveSocketClient { get; set; }
-
-        /// <summary>
         /// Gets or sets a delegate that allows the creation of an encrypted stream.
         /// </summary>
         [CanBeNull]

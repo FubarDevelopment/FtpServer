@@ -54,7 +54,7 @@ namespace FubarDev.FtpServer.CommandExtensions
 
         /// <inheritdoc />
         [Obsolete("Use the FtpCommandHandlerExtension attribute instead.")]
-        public virtual bool? IsLoginRequired { get; set; }
+        public virtual bool? IsLoginRequired { get; } = null;
 
         /// <inheritdoc />
         public string ExtensionFor => _extensionFor ?? throw new InvalidOperationException("Obsolete property \"ExtensionFor\" called for a command handler extension.");
@@ -87,6 +87,7 @@ namespace FubarDev.FtpServer.CommandExtensions
         /// Gets the connection data.
         /// </summary>
         [NotNull]
+        [Obsolete("Query the information using the Features property instead.")]
         protected FtpConnectionData Data => Connection.Data;
 
         /// <inheritdoc />

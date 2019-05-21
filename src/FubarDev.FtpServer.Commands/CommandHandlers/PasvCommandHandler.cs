@@ -6,18 +6,15 @@
 //-----------------------------------------------------------------------
 
 using System;
-using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
 
 using FubarDev.FtpServer.Commands;
+using FubarDev.FtpServer.DataConnection;
 using FubarDev.FtpServer.Features;
 using FubarDev.FtpServer.ServerCommands;
 using JetBrains.Annotations;
-
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 
 namespace FubarDev.FtpServer.CommandHandlers
 {
@@ -30,45 +27,21 @@ namespace FubarDev.FtpServer.CommandHandlers
     public class PasvCommandHandler : FtpCommandHandler
     {
         [NotNull]
-        private readonly IPasvListenerFactory _pasvListenerFactory;
-
-        private readonly bool _promiscuousPasv;
+        private readonly PassiveDataConnectionFeatureFactory _dataConnectionFeatureFactory;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PasvCommandHandler"/> class.
         /// </summary>
-        /// <param name="pasvListenerFactory">The provider for passive ports.</param>
-        /// <param name="options">The options for the PASV/EPSV commands.</param>
+        /// <param name="dataConnectionFeatureFactory">The data connection feature factory.</param>
         public PasvCommandHandler(
-            [NotNull] IPasvListenerFactory pasvListenerFactory,
-            [NotNull] IOptions<PasvCommandOptions> options)
+            [NotNull] PassiveDataConnectionFeatureFactory dataConnectionFeatureFactory)
         {
-            _pasvListenerFactory = pasvListenerFactory;
-            _promiscuousPasv = options.Value.PromiscuousPasv;
+            _dataConnectionFeatureFactory = dataConnectionFeatureFactory;
         }
 
         /// <inheritdoc/>
         public override async Task<IFtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
         {
-            var transferFeature = Connection.Features.Get<ITransferConfigurationFeature>();
-            var secureConnectionFeature = Connection.Features.Get<ISecureConnectionFeature>();
-
-            if (secureConnectionFeature.PassiveSocketClient != null)
-            {
-                secureConnectionFeature.PassiveSocketClient.Dispose();
-                secureConnectionFeature.PassiveSocketClient = null;
-            }
-
-            if (transferFeature.TransferTypeCommandUsed != null && !string.Equals(
-                    command.Name,
-                    transferFeature.TransferTypeCommandUsed,
-                    StringComparison.OrdinalIgnoreCase))
-            {
-                return new FtpResponse(
-                    500,
-                    $"Cannot use {command.Name} when {transferFeature.TransferTypeCommandUsed} was used before.");
-            }
-
             var desiredPort = 0;
             var isEpsv = string.Equals(command.Name, "EPSV", StringComparison.OrdinalIgnoreCase);
             if (isEpsv)
@@ -86,88 +59,40 @@ namespace FubarDev.FtpServer.CommandHandlers
                 }
             }
 
-            transferFeature.TransferTypeCommandUsed = command.Name;
-
-            var timeout = TimeSpan.FromSeconds(5);
+            var feature = await _dataConnectionFeatureFactory.CreateFeatureAsync(command, desiredPort, cancellationToken)
+               .ConfigureAwait(false);
+            var oldFeature = Connection.Features.Get<IFtpDataConnectionFeature>();
             try
             {
-                using (var listener = await _pasvListenerFactory.CreateTcpListenerAsync(
-                        Connection,
-                        desiredPort,
-                        cancellationToken)
-                   .ConfigureAwait(false))
-                {
-                    var address = listener.PasvEndPoint.Address;
-                    var localPort = listener.PasvEndPoint.Port;
-                    if (isEpsv || address.AddressFamily == AddressFamily.InterNetworkV6)
-                    {
-                        var listenerAddress = new Address(localPort);
-                        await FtpContext.ServerCommandWriter.WriteAsync(
-                            new SendResponseServerCommand(
-                                new FtpResponse(229, T("Entering Extended Passive Mode ({0}).", listenerAddress))),
-                            cancellationToken).ConfigureAwait(false);
-                    }
-                    else
-                    {
-                        var listenerAddress = new Address(address.ToString(), localPort);
-                        await FtpContext.ServerCommandWriter.WriteAsync(
-                            new SendResponseServerCommand(
-                                new FtpResponse(227, T("Entering Passive Mode ({0}).", listenerAddress))),
-                            cancellationToken).ConfigureAwait(false);
-                    }
-
-                    var acceptTask = listener.AcceptPasvClientAsync();
-                    if (acceptTask.Wait(timeout))
-                    {
-                        var passiveClient = acceptTask.Result;
-
-                        if (!IsConnectionAllowed(passiveClient))
-                        {
-                            return new FtpResponse(
-                                425,
-                                T("Data connection must be opened from same IP address as control connection"));
-                        }
-
-                        if (Connection.Log?.IsEnabled(LogLevel.Debug) ?? false)
-                        {
-                            var pasvRemoteAddress = ((IPEndPoint)passiveClient.Client.RemoteEndPoint).Address;
-                            Connection.Log?.LogDebug($"Data connection accepted from {pasvRemoteAddress}");
-                        }
-
-                        secureConnectionFeature.PassiveSocketClient = passiveClient;
-                    }
-                }
+                oldFeature.Dispose();
             }
-            catch (Exception ex)
+            catch
             {
-                Connection.Log?.LogError(ex, ex.Message);
-                return new FtpResponse(425, T("Could not open data connection"));
+                // Ignore dispose errors!
+            }
+
+            Connection.Features.Set(feature);
+
+            var address = feature.LocalEndPoint.Address;
+            var localPort = feature.LocalEndPoint.Port;
+            if (isEpsv || address.AddressFamily == AddressFamily.InterNetworkV6)
+            {
+                var listenerAddress = new Address(localPort);
+                await FtpContext.ServerCommandWriter.WriteAsync(
+                    new SendResponseServerCommand(
+                        new FtpResponse(229, T("Entering Extended Passive Mode ({0}).", listenerAddress))),
+                    cancellationToken).ConfigureAwait(false);
+            }
+            else
+            {
+                var listenerAddress = new Address(address.ToString(), localPort);
+                await FtpContext.ServerCommandWriter.WriteAsync(
+                    new SendResponseServerCommand(
+                        new FtpResponse(227, T("Entering Passive Mode ({0}).", listenerAddress))),
+                    cancellationToken).ConfigureAwait(false);
             }
 
             return null;
-        }
-
-        /// <summary>
-        /// Validates that the passive connection can be used.
-        /// </summary>
-        /// <param name="client">The TCP client to validate.</param>
-        /// <returns><see langword="true"/> when the passive connection can be used.</returns>
-        private bool IsConnectionAllowed(TcpClient client)
-        {
-            if (_promiscuousPasv)
-            {
-                return true;
-            }
-
-            var pasvRemoteAddress = ((IPEndPoint)client.Client.RemoteEndPoint).Address;
-            if (Equals(pasvRemoteAddress, Connection.RemoteAddress.IPAddress))
-            {
-                return true;
-            }
-
-            Connection.Log?.LogWarning(
-                $"Data connection attempt from {pasvRemoteAddress} for control connection from {Connection.RemoteAddress.IPAddress}, data connection rejected");
-            return false;
         }
     }
 }

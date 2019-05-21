@@ -5,12 +5,10 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-using FubarDev.FtpServer.Authentication;
 using FubarDev.FtpServer.BackgroundTransfer;
 using FubarDev.FtpServer.Features;
 using FubarDev.FtpServer.ServerCommands;
@@ -31,31 +29,19 @@ namespace FubarDev.FtpServer.CommandExtensions
         [NotNull]
         private readonly IBackgroundTransferWorker _backgroundTransferWorker;
 
-        [NotNull]
-        private readonly ISslStreamWrapperFactory _sslStreamWrapperFactory;
-
-        [CanBeNull]
-        private readonly ILogger<SiteBlstCommandExtension> _logger;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="SiteBlstCommandExtension"/> class.
         /// </summary>
         /// <param name="backgroundTransferWorker">The background transfer worker service.</param>
-        /// <param name="sslStreamWrapperFactory">An object to handle SSL streams.</param>
-        /// <param name="logger">The logger.</param>
         public SiteBlstCommandExtension(
-            [NotNull] IBackgroundTransferWorker backgroundTransferWorker,
-            [NotNull] ISslStreamWrapperFactory sslStreamWrapperFactory,
-            [CanBeNull] ILogger<SiteBlstCommandExtension> logger = null)
+            [NotNull] IBackgroundTransferWorker backgroundTransferWorker)
         {
             _backgroundTransferWorker = backgroundTransferWorker;
-            _sslStreamWrapperFactory = sslStreamWrapperFactory;
-            _logger = logger;
         }
 
         /// <inheritdoc/>
         [Obsolete("Use the FtpCommandHandlerExtension attribute instead.")]
-        public override bool? IsLoginRequired { get; set; } = true;
+        public override bool? IsLoginRequired { get; } = true;
 
         /// <inheritdoc />
         public override void InitializeConnectionData()
@@ -102,35 +88,26 @@ namespace FubarDev.FtpServer.CommandExtensions
                     cancellationToken)
                .ConfigureAwait(false);
 
-            return await Connection.SendResponseAsync(
-                ExecuteSend,
-                ex =>
-                {
-                    _logger?.LogError(ex, ex.Message);
-                    return new FtpResponse(425, T("Can't open data connection."));
-                }).ConfigureAwait(false);
+            return await Connection.SendDataAsync(
+                    ExecuteSend,
+                    cancellationToken)
+               .ConfigureAwait(false);
         }
 
-        private async Task<IFtpResponse> ExecuteSend(TcpClient responseSocket)
+        private async Task<IFtpResponse> ExecuteSend(IFtpDataConnection dataConnection, CancellationToken cancellationToken)
         {
             var encoding = Connection.Features.Get<IEncodingFeature>().Encoding;
-            var responseStream = responseSocket.GetStream();
-            using (var stream = await Connection.CreateEncryptedStream(responseStream).ConfigureAwait(false))
+            var stream = dataConnection.Stream;
+            using (var writer = new StreamWriter(stream, encoding, 4096, true)
             {
-                using (var writer = new StreamWriter(stream, encoding, 4096, true)
+                NewLine = "\r\n",
+            })
+            {
+                foreach (var line in GetLines(_backgroundTransferWorker.GetStates()))
                 {
-                    NewLine = "\r\n",
-                })
-                {
-                    foreach (var line in GetLines(_backgroundTransferWorker.GetStates()))
-                    {
-                        Connection.Log?.LogDebug(line);
-                        await writer.WriteLineAsync(line).ConfigureAwait(false);
-                    }
+                    Connection.Log?.LogDebug(line);
+                    await writer.WriteLineAsync(line).ConfigureAwait(false);
                 }
-
-                await _sslStreamWrapperFactory.CloseStreamAsync(stream, CancellationToken.None)
-                   .ConfigureAwait(false);
             }
 
             return new FtpResponse(250, T("Closing data connection."));

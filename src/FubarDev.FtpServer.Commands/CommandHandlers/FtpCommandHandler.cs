@@ -91,6 +91,7 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// Gets the connection data.
         /// </summary>
         [NotNull]
+        [Obsolete("Query the information using the Features property instead.")]
         protected FtpConnectionData Data => Connection.Data;
 
         /// <inheritdoc />

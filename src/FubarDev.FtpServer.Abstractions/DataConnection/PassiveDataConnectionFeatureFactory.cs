@@ -16,6 +16,8 @@ using FubarDev.FtpServer.Features;
 
 using JetBrains.Annotations;
 
+using Microsoft.Extensions.Logging;
+
 namespace FubarDev.FtpServer.DataConnection
 {
     /// <summary>
@@ -68,7 +70,7 @@ namespace FubarDev.FtpServer.DataConnection
                 connection,
                 desiredPort,
                 cancellationToken);
-            return new PassiveDataConnectionFeature(listener, _validators, ftpCommand, connection);
+            return new PassiveDataConnectionFeature(listener, _validators, ftpCommand, connection, listener.PasvEndPoint);
         }
 
         private class PassiveDataConnectionFeature : IFtpDataConnectionFeature
@@ -87,16 +89,21 @@ namespace FubarDev.FtpServer.DataConnection
                 [NotNull] IPasvListener listener,
                 [NotNull] [ItemNotNull] List<IFtpDataConnectionValidator> validators,
                 [NotNull] FtpCommand command,
-                [NotNull] IFtpConnection ftpConnection)
+                [NotNull] IFtpConnection ftpConnection,
+                [NotNull] IPEndPoint localEndPoint)
             {
                 _listener = listener;
                 _validators = validators;
                 _ftpConnection = ftpConnection;
+                LocalEndPoint = localEndPoint;
                 Command = command;
             }
 
             /// <inheritdoc />
             public FtpCommand Command { get; }
+
+            /// <inheritdoc />
+            public IPEndPoint LocalEndPoint { get; }
 
             /// <inheritdoc />
             public async Task<IFtpDataConnection> GetDataConnectionAsync(TimeSpan timeout, CancellationToken cancellationToken)
@@ -131,6 +138,8 @@ namespace FubarDev.FtpServer.DataConnection
                             throw new ValidationException(validationResult.ErrorMessage);
                         }
                     }
+
+                    _ftpConnection.Log?.LogDebug($"Data connection accepted from {dataConnection.RemoteAddress}");
 
                     return dataConnection;
                 }
@@ -172,16 +181,17 @@ namespace FubarDev.FtpServer.DataConnection
                 public Stream Stream { get; }
 
                 /// <inheritdoc />
-                public Task CloseAsync(CancellationToken cancellationToken)
+                public async Task CloseAsync(CancellationToken cancellationToken)
                 {
                     if (_closed)
                     {
-                        return Task.CompletedTask;
+                        return;
                     }
 
                     _closed = true;
+
+                    await Stream.FlushAsync(cancellationToken).ConfigureAwait(false);
                     _client.Dispose();
-                    return Task.CompletedTask;
                 }
             }
         }
