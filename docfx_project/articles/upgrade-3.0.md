@@ -286,6 +286,7 @@ and [`FtpCommandCollector`](xref:FubarDev.FtpServer.FtpCommandCollector).
 - `SITE BLST` works again
 - Fixed deadlock in [`MultiBindingTcpListener`](xref:FubarDev.FtpServer.MultiBindingTcpListener)
 - Thread safe increment/decrement for connection counter (fixes [#68](https://github.com/FubarDevelopment/FtpServer/issues/68))
+- The `.` directory will be returned again (fixes [#56](https://github.com/FubarDevelopment/FtpServer/issues/56))
 
 # A look into the future
 

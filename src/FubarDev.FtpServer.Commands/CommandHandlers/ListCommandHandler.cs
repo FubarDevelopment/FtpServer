@@ -165,10 +165,6 @@ namespace FubarDev.FtpServer.CommandHandlers
                                 continue;
                             }
                         }
-                        else if (!showHidden)
-                        {
-                            continue;
-                        }
 
                         var entry = enumerator.Entry;
 
