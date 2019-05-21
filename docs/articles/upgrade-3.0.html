@@ -91,6 +91,7 @@
 <li><a href="#connection">Connection</a>
 <ul>
 <li><a href="#connection-data-changes">Connection data changes</a></li>
+<li><a href="#data-connections">Data connections</a></li>
 </ul>
 </li>
 <li><a href="#ftp-middleware">FTP middleware</a>
@@ -286,11 +287,11 @@ feature.</p>
 </tr>
 <tr>
 <td>PortAddress</td>
-<td><a class="xref" href="../api/FubarDev.FtpServer.Features.ITransferConfigurationFeature.html"><code>ITransferConfigurationFeature</code></a></td>
+<td>Removed</td>
 </tr>
 <tr>
 <td>TransferTypeCommandUsed</td>
-<td><a class="xref" href="../api/FubarDev.FtpServer.Features.ITransferConfigurationFeature.html"><code>ITransferConfigurationFeature</code></a></td>
+<td>Removed</td>
 </tr>
 <tr>
 <td>RestartPosition</td>
@@ -306,7 +307,7 @@ feature.</p>
 </tr>
 <tr>
 <td>PassiveSocketClient</td>
-<td><a class="xref" href="../api/FubarDev.FtpServer.Features.ISecureConnectionFeature.html"><code>ISecureConnectionFeature</code></a></td>
+<td>Removed</td>
 </tr>
 <tr>
 <td>BackgroundCommandHandler</td>
@@ -319,6 +320,15 @@ feature.</p>
 </tbody>
 </table>
 <p>There's no direct replacement for the <code>UserData</code> property, but you can use the feature collection too.</p>
+<h2 id="data-connections">Data connections</h2>
+<p>We're now using two factories to create data connections:</p>
+<ul>
+<li><a class="xref" href="../api/FubarDev.FtpServer.DataConnection.ActiveDataConnectionFeatureFactory.html"><code>ActiveDataConnectionFeatureFactory</code></a> for active data connections (<code>PORT</code>/<code>EPRT</code> commands)</li>
+<li><a class="xref" href="../api/FubarDev.FtpServer.DataConnection.PassiveDataConnectionFeatureFactory.html"><code>PassiveDataConnectionFeatureFactory</code></a> for passive data connections (<code>PASV</code>/<code>EPSV</code> commands)</li>
+</ul>
+<p>This factories create a <a class="xref" href="../api/FubarDev.FtpServer.Features.IFtpDataConnectionFeature.html"><code>IFtpDataConnectionFeature</code></a> which is used to create <a class="xref" href="../api/FubarDev.FtpServer.IFtpDataConnection.html"><code>IFtpDataConnection</code></a> implementations. This allows us to abstract away the differences between active and passive data connections.</p>
+<p>The function <code>IFtpConnection.CreateResponseSocket</code> was replaced by <a href="xref:FubarDev.FtpServer.IFtpConnection.OpenDataConnectionAsync"><code>IFtpConnection.OpenDataConnectionAsync</code></a> and returns a <a class="xref" href="../api/FubarDev.FtpServer.IFtpDataConnection.html"><code>IFtpDataConnection</code></a> implementation. This function also takes care of SSL/TLS encryption as it wraps the <a class="xref" href="../api/FubarDev.FtpServer.IFtpDataConnection.html"><code>IFtpDataConnection</code></a> implementation returned by the <a class="xref" href="../api/FubarDev.FtpServer.Features.IFtpDataConnectionFeature.html"><code>IFtpDataConnectionFeature</code></a> into a new <a class="xref" href="../api/FubarDev.FtpServer.IFtpDataConnection.html"><code>IFtpDataConnection</code></a> implementation with the help of the <a class="xref" href="../api/FubarDev.FtpServer.DataConnection.SecureDataConnectionWrapper.html"><code>SecureDataConnectionWrapper</code></a>.</p>
+<p>The extension method <code>SendResponseAsync</code> on the <code>IFtpConnection</code> was replaced by <a href="xref:FubarDev.FtpServer.ConnectionExtensions.SendDataAsync"><code>SendDataAsync</code></a> and takes care of closing the <a class="xref" href="../api/FubarDev.FtpServer.IFtpDataConnection.html"><code>IFtpDataConnection</code></a>.</p>
 <h1 id="ftp-middleware">FTP middleware</h1>
 <p>There are two types of middlewares:</p>
 <ul>
@@ -432,14 +442,13 @@ and <a class="xref" href="../api/FubarDev.FtpServer.FtpCommandCollector.html"><c
 <h2 id="whats-changed">What's changed?</h2>
 <ul>
 <li>Google drive upload without background uploader</li>
+<li>The <code>IFtpCommandHandler.GetExtensions()</code> is now deprecated as all extensions that were previously returned here have their own implementation now</li>
 <li>BREAKING: Usage of <code>ReadOnlySpan</code> in the FTP command collector</li>
-<li>BREAKING: <a class="xref" href="../api/FubarDev.FtpServer.FileSystem.IFileSystemClassFactory.html#FubarDev_FtpServer_FileSystem_IFileSystemClassFactory_Create_FubarDev_FtpServer_IAccountInformation_"><code>IFileSystemClassFactory.Create</code></a>
-takes an <a class="xref" href="../api/FubarDev.FtpServer.IAccountInformation.html"><code>IAccountInformation</code></a></li>
+<li>BREAKING: <a class="xref" href="../api/FubarDev.FtpServer.FileSystem.IFileSystemClassFactory.html#FubarDev_FtpServer_FileSystem_IFileSystemClassFactory_Create_FubarDev_FtpServer_IAccountInformation_"><code>IFileSystemClassFactory.Create</code></a> takes an <a class="xref" href="../api/FubarDev.FtpServer.IAccountInformation.html"><code>IAccountInformation</code></a></li>
 <li>BREAKING: The <a class="xref" href="../api/FubarDev.FtpServer.AccountManagement.IMembershipProvider.html"><code>IMembershipProvider</code></a> is now asynchronous</li>
 <li>BREAKING: <code>FtpConnectionData.IsAnonymous</code> is obsolete, the anonymous user is now of type <a class="xref" href="../api/FubarDev.FtpServer.AccountManagement.IAnonymousFtpUser.html"><code>IAnonymousFtpUser</code></a></li>
-<li>The <code>IFtpCommandHandler.GetExtensions()</code> is now deprecated as all extensions that were previously returned here have
-their own implementation now</li>
 <li>BREAKING: Moved <a class="xref" href="../api/FubarDev.FtpServer.PasvCommandOptions.html#FubarDev_FtpServer_PasvCommandOptions_PromiscuousPasv"><code>PromiscuousPasv</code></a> into <a class="xref" href="../api/FubarDev.FtpServer.PasvCommandOptions.html"><code>PasvCommandOptions</code></a></li>
+<li>BREAKING: Removed property <code>PortAddress</code>, <code>TransferTypeCommandUsed</code>, and <code>PassiveSocketClient</code> from <code>FtpConnectionData</code>, because we're using a new <a class="xref" href="../api/FubarDev.FtpServer.IFtpDataConnection.html"><code>IFtpDataConnection</code></a> abstraction</li>
 </ul>
 <h2 id="whats-fixed">What's fixed?</h2>
 <ul>
