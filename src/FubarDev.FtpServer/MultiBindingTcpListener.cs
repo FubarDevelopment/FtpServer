@@ -42,7 +42,7 @@ namespace FubarDev.FtpServer
             }
 
             _address = address;
-            _port = port;
+            Port = _port = port;
             _logger = logger;
         }
 

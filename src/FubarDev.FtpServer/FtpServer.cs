@@ -91,7 +91,7 @@ namespace FubarDev.FtpServer
         public string ServerAddress { get; }
 
         /// <inheritdoc />
-        public int Port { get; }
+        public int Port { get; private set; }
 
         /// <inheritdoc />
         public int MaxActiveConnections { get; }
@@ -210,6 +210,7 @@ namespace FubarDev.FtpServer
                     await listener.StartAsync().ConfigureAwait(false);
                     listener.StartAccepting();
 
+                    Port = listener.Port ?? 0;
                     Ready = true;
                     semaphore.Release();
 
