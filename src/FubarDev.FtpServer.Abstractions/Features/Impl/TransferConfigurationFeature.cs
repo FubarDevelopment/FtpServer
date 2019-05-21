@@ -11,8 +11,5 @@ namespace FubarDev.FtpServer.Features.Impl
     {
         /// <inheritdoc />
         public FtpTransferMode TransferMode { get; set; } = new FtpTransferMode(FtpFileType.Ascii);
-
-        /// <inheritdoc />
-        public string TransferTypeCommandUsed { get; set; }
     }
 }
