@@ -10,6 +10,7 @@ title: Upgrade from 2.x to 3.0
   - [Membership provider changes](#membership-provider-changes)
 - [Connection](#connection)
   - [Connection data changes](#connection-data-changes)
+  - [Data connections](#data-connections)
 - [FTP middleware](#ftp-middleware)
   - [FTP request middleware](#ftp-request-middleware)
   - [FTP command execution middleware](#ftp-command-execution-middleware)
@@ -127,17 +128,30 @@ CurrentDirectory        | [`IFileSystemFeature`](xref:FubarDev.FtpServer.Feature
 Language                | [`ILocalizationFeature`](xref:FubarDev.FtpServer.Features.ILocalizationFeature)
 Catalog                 | [`ILocalizationFeature`](xref:FubarDev.FtpServer.Features.ILocalizationFeature)
 TransferMode            | [`ITransferConfigurationFeature`](xref:FubarDev.FtpServer.Features.ITransferConfigurationFeature)
-PortAddress             | [`ITransferConfigurationFeature`](xref:FubarDev.FtpServer.Features.ITransferConfigurationFeature)
-TransferTypeCommandUsed | [`ITransferConfigurationFeature`](xref:FubarDev.FtpServer.Features.ITransferConfigurationFeature)
+PortAddress             | Removed
+TransferTypeCommandUsed | Removed
 RestartPosition         | [`IRestCommandFeature`](xref:FubarDev.FtpServer.Features.IRestCommandFeature)
 RenameFrom              | [`IRenameCommandFeature`](xref:FubarDev.FtpServer.Features.IRenameCommandFeature)
 ActiveMlstFacts         | [`IMlstFactsFeature`](xref:FubarDev.FtpServer.Features.IMlstFactsFeature)
-PassiveSocketClient     | [`ISecureConnectionFeature`](xref:FubarDev.FtpServer.Features.ISecureConnectionFeature)
+PassiveSocketClient     | Removed
 BackgroundCommandHandler| [`IBackgroundTaskLifetimeFeature`](xref:FubarDev.FtpServer.Features.IBackgroundTaskLifetimeFeature)
 CreateEncryptedStream   | [`ISecureConnectionFeature`](xref:FubarDev.FtpServer.Features.ISecureConnectionFeature)
 
 
 There's no direct replacement for the `UserData` property, but you can use the feature collection too.
+
+## Data connections
+
+We're now using two factories to create data connections:
+
+- [`ActiveDataConnectionFeatureFactory`](xref:FubarDev.FtpServer.DataConnection.ActiveDataConnectionFeatureFactory) for active data connections (`PORT`/`EPRT` commands)
+- [`PassiveDataConnectionFeatureFactory`](xref:FubarDev.FtpServer.DataConnection.PassiveDataConnectionFeatureFactory) for passive data connections (`PASV`/`EPSV` commands)
+
+This factories create a [`IFtpDataConnectionFeature`](xref:FubarDev.FtpServer.Features.IFtpDataConnectionFeature) which is used to create [`IFtpDataConnection`](xref:FubarDev.FtpServer.IFtpDataConnection) implementations. This allows us to abstract away the differences between active and passive data connections.
+
+The function `IFtpConnection.CreateResponseSocket` was replaced by [`IFtpConnection.OpenDataConnectionAsync`](xref:FubarDev.FtpServer.IFtpConnection.OpenDataConnectionAsync) and returns a [`IFtpDataConnection`](xref:FubarDev.FtpServer.IFtpDataConnection) implementation. This function also takes care of SSL/TLS encryption as it wraps the [`IFtpDataConnection`](xref:FubarDev.FtpServer.IFtpDataConnection) implementation returned by the [`IFtpDataConnectionFeature`](xref:FubarDev.FtpServer.Features.IFtpDataConnectionFeature) into a new [`IFtpDataConnection`](xref:FubarDev.FtpServer.IFtpDataConnection) implementation with the help of the [`SecureDataConnectionWrapper`](xref:FubarDev.FtpServer.DataConnection.SecureDataConnectionWrapper).
+
+The extension method `SendResponseAsync` on the `IFtpConnection` was replaced by [`SendDataAsync`](xref:FubarDev.FtpServer.ConnectionExtensions.SendDataAsync) and takes care of closing the [`IFtpDataConnection`](xref:FubarDev.FtpServer.IFtpDataConnection).
 
 # FTP middleware
 
@@ -258,14 +272,13 @@ and [`FtpCommandCollector`](xref:FubarDev.FtpServer.FtpCommandCollector).
 ## What's changed?
 
 - Google drive upload without background uploader
+- The `IFtpCommandHandler.GetExtensions()` is now deprecated as all extensions that were previously returned here have their own implementation now
 - BREAKING: Usage of `ReadOnlySpan` in the FTP command collector
-- BREAKING: [`IFileSystemClassFactory.Create`](xref:FubarDev.FtpServer.FileSystem.IFileSystemClassFactory.Create(FubarDev.FtpServer.IAccountInformation))
-  takes an [`IAccountInformation`](xref:FubarDev.FtpServer.IAccountInformation)
+- BREAKING: [`IFileSystemClassFactory.Create`](xref:FubarDev.FtpServer.FileSystem.IFileSystemClassFactory.Create(FubarDev.FtpServer.IAccountInformation)) takes an [`IAccountInformation`](xref:FubarDev.FtpServer.IAccountInformation)
 - BREAKING: The [`IMembershipProvider`](xref:FubarDev.FtpServer.AccountManagement.IMembershipProvider) is now asynchronous
 - BREAKING: `FtpConnectionData.IsAnonymous` is obsolete, the anonymous user is now of type [`IAnonymousFtpUser`](xref:FubarDev.FtpServer.AccountManagement.IAnonymousFtpUser)
-- The `IFtpCommandHandler.GetExtensions()` is now deprecated as all extensions that were previously returned here have
-  their own implementation now
 - BREAKING: Moved [`PromiscuousPasv`](xref:FubarDev.FtpServer.PasvCommandOptions.PromiscuousPasv) into [`PasvCommandOptions`](xref:FubarDev.FtpServer.PasvCommandOptions)
+- BREAKING: Removed property `PortAddress`, `TransferTypeCommandUsed`, and `PassiveSocketClient` from `FtpConnectionData`, because we're using a new [`IFtpDataConnection`](xref:FubarDev.FtpServer.IFtpDataConnection) abstraction
 
 ## What's fixed?
 
