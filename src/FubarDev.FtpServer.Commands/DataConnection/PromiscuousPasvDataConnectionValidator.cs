@@ -15,6 +15,17 @@ namespace FubarDev.FtpServer.DataConnection
 {
     public class PromiscuousPasvDataConnectionValidator : IFtpDataConnectionValidator
     {
+        private readonly bool _allowPromiscuousPasv;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PromiscuousPasvDataConnectionValidator"/> class.
+        /// </summary>
+        /// <param name="options">The PASV command handler options.</param>
+        public PromiscuousPasvDataConnectionValidator(IOptions<PasvCommandOptions> options)
+        {
+            _allowPromiscuousPasv = options.Value.PromiscuousPasv;
+        }
+
         /// <inheritdoc />
         public Task<ValidationResult> ValidateAsync(
             IFtpConnection connection,
@@ -22,6 +33,11 @@ namespace FubarDev.FtpServer.DataConnection
             IFtpDataConnection dataConnection,
             CancellationToken cancellationToken)
         {
+            if (_allowPromiscuousPasv)
+            {
+                return Task.FromResult(ValidationResult.Success);
+            }
+
             if (dataConnectionFeature.Command == null)
             {
                 return Task.FromResult(ValidationResult.Success);
