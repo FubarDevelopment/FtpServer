@@ -131,7 +131,7 @@ namespace FubarDev.FtpServer.DataConnection
                     var dataConnection = new PassiveDataConnection(client);
                     foreach (var validator in _validators)
                     {
-                        var validationResult = await validator.IsValidAsync(_ftpConnection, this, dataConnection, cancellationToken)
+                        var validationResult = await validator.ValidateAsync(_ftpConnection, this, dataConnection, cancellationToken)
                            .ConfigureAwait(false);
                         if (validationResult != ValidationResult.Success && validationResult != null)
                         {

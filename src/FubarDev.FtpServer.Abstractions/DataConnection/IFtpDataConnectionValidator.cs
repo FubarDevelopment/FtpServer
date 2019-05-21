@@ -16,7 +16,7 @@ namespace FubarDev.FtpServer.DataConnection
     {
         [NotNull]
         [ItemCanBeNull]
-        Task<ValidationResult> IsValidAsync(
+        Task<ValidationResult> ValidateAsync(
             [NotNull] IFtpConnection connection,
             [NotNull] IFtpDataConnectionFeature dataConnectionFeature,
             [NotNull] IFtpDataConnection dataConnection,

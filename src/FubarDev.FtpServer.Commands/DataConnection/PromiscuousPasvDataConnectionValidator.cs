@@ -16,7 +16,7 @@ namespace FubarDev.FtpServer.DataConnection
     public class PromiscuousPasvDataConnectionValidator : IFtpDataConnectionValidator
     {
         /// <inheritdoc />
-        public Task<ValidationResult> IsValidAsync(
+        public Task<ValidationResult> ValidateAsync(
             IFtpConnection connection,
             IFtpDataConnectionFeature dataConnectionFeature,
             IFtpDataConnection dataConnection,
