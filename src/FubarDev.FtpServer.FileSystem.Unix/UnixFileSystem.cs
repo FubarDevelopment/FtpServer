@@ -18,6 +18,9 @@ using Mono.Unix.Native;
 
 namespace FubarDev.FtpServer.FileSystem.Unix
 {
+    /// <summary>
+    /// A backend that uses Posix(?) API calls to access the file system.
+    /// </summary>
     public class UnixFileSystem : IUnixFileSystem
     {
         [NotNull]

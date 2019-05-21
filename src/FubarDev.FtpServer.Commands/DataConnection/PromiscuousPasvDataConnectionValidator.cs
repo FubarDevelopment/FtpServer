@@ -10,9 +10,13 @@ using System.Threading.Tasks;
 using FubarDev.FtpServer.Features;
 
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace FubarDev.FtpServer.DataConnection
 {
+    /// <summary>
+    /// Validates that we don't have a promiscuous passive data connection.
+    /// </summary>
     public class PromiscuousPasvDataConnectionValidator : IFtpDataConnectionValidator
     {
         private readonly bool _allowPromiscuousPasv;

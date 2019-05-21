@@ -8,6 +8,9 @@ using JetBrains.Annotations;
 
 namespace FubarDev.FtpServer.Commands
 {
+    /// <summary>
+    /// A specialized context for the <see cref="IFtpCommandMiddleware"/>.
+    /// </summary>
     public class FtpExecutionContext : FtpContext
     {
         /// <summary>
@@ -26,9 +29,15 @@ namespace FubarDev.FtpServer.Commands
             CommandAborted = commandAborted;
         }
 
+        /// <summary>
+        /// Gets the selected command handler.
+        /// </summary>
         [NotNull]
         public IFtpCommandBase CommandHandler { get; }
 
+        /// <summary>
+        /// Gets the cancellation token for an aborted command.
+        /// </summary>
         public CancellationToken CommandAborted { get; }
     }
 }

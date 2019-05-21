@@ -14,6 +14,9 @@ using JetBrains.Annotations;
 
 namespace FubarDev.FtpServer.DataConnection
 {
+    /// <summary>
+    /// Wrapper that wraps a data connection into a secure data connection if needed.
+    /// </summary>
     public class SecureDataConnectionWrapper
     {
         [NotNull]
@@ -22,6 +25,11 @@ namespace FubarDev.FtpServer.DataConnection
         [NotNull]
         private readonly ISslStreamWrapperFactory _sslStreamWrapperFactory;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SecureDataConnectionWrapper"/> class.
+        /// </summary>
+        /// <param name="connectionAccessor">Accessor for the FTP connection.</param>
+        /// <param name="sslStreamWrapperFactory">The SSL stream wrapper factory.</param>
         public SecureDataConnectionWrapper(
             [NotNull] IFtpConnectionAccessor connectionAccessor,
             [NotNull] ISslStreamWrapperFactory sslStreamWrapperFactory)
@@ -30,6 +38,11 @@ namespace FubarDev.FtpServer.DataConnection
             _sslStreamWrapperFactory = sslStreamWrapperFactory;
         }
 
+        /// <summary>
+        /// Wraps the data connection into a secure data connection if needed.
+        /// </summary>
+        /// <param name="dataConnection">The data connection that should - if needed - be wrapped into a secure data connection.</param>
+        /// <returns>The task returning the same or a secure data connection.</returns>
         [NotNull]
         [ItemNotNull]
         public async Task<IFtpDataConnection> WrapAsync([NotNull] IFtpDataConnection dataConnection)
