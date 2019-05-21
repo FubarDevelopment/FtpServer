@@ -178,7 +178,7 @@ namespace FubarDev.FtpServer.Tests
             Assert.True(collector.IsEmpty);
         }
 
-        private static IEnumerable<ReadOnlyMemory<byte>> EscapeIAC(byte[] data)
+        private static IEnumerable<ReadOnlyMemory<byte>> EscapeTelnetCodes(byte[] data)
         {
             var startIndex = 0;
             for (var i = 0; i != data.Length; ++i)
@@ -187,6 +187,13 @@ namespace FubarDev.FtpServer.Tests
                 {
                     var length = i - startIndex + 1;
                     yield return new ReadOnlyMemory<byte>(data, startIndex, length);
+                    startIndex = i;
+                }
+                else if (data[i] == 0xF2)
+                {
+                    var length = i - startIndex;
+                    yield return new ReadOnlyMemory<byte>(data, startIndex, length);
+                    yield return new ReadOnlyMemory<byte>(new byte[] { 0xFF });
                     startIndex = i;
                 }
             }
@@ -201,7 +208,7 @@ namespace FubarDev.FtpServer.Tests
         private static IEnumerable<FtpCommand> Collect(FtpCommandCollector collector, string data)
         {
             var temp = collector.Encoding.GetBytes(data);
-            foreach (var escapedDataMemory in EscapeIAC(temp))
+            foreach (var escapedDataMemory in EscapeTelnetCodes(temp))
             {
                 var collected = collector.Collect(escapedDataMemory.Span);
                 foreach (var command in collected)
