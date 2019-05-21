@@ -13,6 +13,7 @@ using FubarDev.FtpServer.BackgroundTransfer;
 using FubarDev.FtpServer.CommandExtensions;
 using FubarDev.FtpServer.CommandHandlers;
 using FubarDev.FtpServer.Commands;
+using FubarDev.FtpServer.DataConnection;
 using FubarDev.FtpServer.FileSystem;
 using FubarDev.FtpServer.Localization;
 using FubarDev.FtpServer.ServerCommandHandlers;
@@ -123,6 +124,14 @@ namespace Microsoft.Extensions.DependencyInjection
                .AddScoped<IServerCommandHandler<TlsEnableServerCommand>, TlsEnableServerCommandHandler>()
                .AddScoped<IServerCommandHandler<PauseConnectionServerCommand>, PauseConnectionServerCommandHandler>()
                .AddScoped<IServerCommandHandler<ResumeConnectionServerCommand>, ResumeConnectionServerCommandHandler>();
+
+            services
+               .AddSingleton<ActiveDataConnectionFeatureFactory>()
+               .AddSingleton<PassiveDataConnectionFeatureFactory>()
+               .AddSingleton<SecureDataConnectionWrapper>();
+
+            services
+               .AddSingleton<IFtpDataConnectionValidator, PromiscuousPasvDataConnectionValidator>();
 
             configure(new FtpServerBuilder(services));
 

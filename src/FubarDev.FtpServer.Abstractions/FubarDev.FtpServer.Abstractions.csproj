@@ -21,6 +21,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="NGettext" Version="0.6.3" />
+    <PackageReference Include="System.ComponentModel.Annotations" Version="4.1.0" />
     <PackageReference Include="System.Threading.Channels" Version="4.5.0" />
   </ItemGroup>
   <Import Project="../../PackageLibrary.props" />
