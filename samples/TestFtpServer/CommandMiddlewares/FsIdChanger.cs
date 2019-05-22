@@ -63,7 +63,7 @@ namespace TestFtpServer.CommandMiddlewares
             IUnixUser unixUser,
             FtpCommandExecutionDelegate next)
         {
-            var contextThread = new Nito.AsyncEx.AsyncContextThread();
+            var contextThread = new AsyncContextThread();
             await contextThread.Factory.Run(async () =>
             {
                 using var _ = new UnixFileSystemIdChanger(_logger, unixUser.UserId, unixUser.GroupId, _serverUser.UserId, _serverUser.GroupId);

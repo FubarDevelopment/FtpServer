@@ -23,7 +23,9 @@ namespace FubarDev.FtpServer
         /// </summary>
         /// <param name="code">The response code.</param>
         /// <param name="message">The response message.</param>
-        public FtpResponse(int code, [CanBeNull] string message)
+        public FtpResponse(
+            int code,
+            [CanBeNull] string message)
         {
             Code = code;
             Message = message;
