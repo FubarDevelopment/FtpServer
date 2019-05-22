@@ -14,6 +14,10 @@ using FubarDev.FtpServer.FileSystem.Unix;
 
 using Microsoft.Extensions.Logging;
 
+using Mono.Unix;
+
+using Nito.AsyncEx;
+
 namespace TestFtpServer.CommandMiddlewares
 {
     /// <summary>
@@ -22,27 +26,30 @@ namespace TestFtpServer.CommandMiddlewares
     public class FsIdChanger : IFtpCommandMiddleware
     {
         private readonly ILogger<FsIdChanger>? _logger;
+        private readonly UnixUserInfo _serverUser;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FsIdChanger"/> class.
         /// </summary>
-        /// <param name="logger"></param>
+        /// <param name="logger">The logger.</param>
         public FsIdChanger(
             ILogger<FsIdChanger>? logger = null)
         {
+            _serverUser = UnixUserInfo.GetRealUser();
             _logger = logger;
         }
 
         /// <inheritdoc />
         public Task InvokeAsync(FtpExecutionContext context, FtpCommandExecutionDelegate next)
         {
-            var authInfo = context.Connection.Features.Get<IAuthorizationInformationFeature>();
+            var connection = context.Connection;
+            var authInfo = connection.Features.Get<IAuthorizationInformationFeature>();
             if (!(authInfo.User is IUnixUser unixUser))
             {
                 return next(context);
             }
 
-            var fsInfo = context.Connection.Features.Get<IFileSystemFeature>();
+            var fsInfo = connection.Features.Get<IFileSystemFeature>();
             if (!(fsInfo.FileSystem is UnixFileSystem))
             {
                 return next(context);
@@ -56,8 +63,13 @@ namespace TestFtpServer.CommandMiddlewares
             IUnixUser unixUser,
             FtpCommandExecutionDelegate next)
         {
-            using var _ = new UnixFileSystemIdChanger(_logger, unixUser.UserId, unixUser.GroupId);
-            await next(context).ConfigureAwait(true);
+            var contextThread = new Nito.AsyncEx.AsyncContextThread();
+            await contextThread.Factory.Run(async () =>
+            {
+                using var _ = new UnixFileSystemIdChanger(_logger, unixUser.UserId, unixUser.GroupId, _serverUser.UserId, _serverUser.GroupId);
+                await next(context).ConfigureAwait(true);
+            });
+            await contextThread.JoinAsync();
         }
 
         /// <summary>
@@ -66,8 +78,11 @@ namespace TestFtpServer.CommandMiddlewares
         private class UnixFileSystemIdChanger : IDisposable
         {
             private readonly bool _hasUserInfo;
-            private readonly uint _oldUserId;
-            private readonly uint _oldGroupId;
+            private readonly uint _setUserId;
+            private readonly uint _setGroupId;
+            private readonly ILogger? _logger;
+            private readonly uint _defaultUserId;
+            private readonly uint _defaultGroupId;
 
             /// <summary>
             /// Initializes a new instance of the <see cref="UnixFileSystemIdChanger"/> class.
@@ -75,24 +90,37 @@ namespace TestFtpServer.CommandMiddlewares
             /// <param name="logger">The logger.</param>
             /// <param name="userId">The user identifier.</param>
             /// <param name="groupId">The group identifier.</param>
+            /// <param name="defaultUserId">The user ID to restore.</param>
+            /// <param name="defaultGroupId">The group ID to restore.</param>
             public UnixFileSystemIdChanger(
                 ILogger? logger,
                 long userId,
-                long groupId)
+                long groupId,
+                long defaultUserId,
+                long defaultGroupId)
             {
+                _logger = logger;
+                _setUserId = (uint)userId;
+                _setGroupId = (uint)groupId;
+                _defaultUserId = (uint)defaultUserId;
+                _defaultGroupId = (uint)defaultGroupId;
                 _hasUserInfo = true;
-                _oldGroupId = ChangeGroupId((uint)groupId);
+                var oldGroupId = ChangeGroupId((uint)groupId);
+                uint oldUserId;
                 try
                 {
-                    _oldUserId = ChangeUserId((uint)userId);
+                    oldUserId = ChangeUserId((uint)userId);
                 }
                 catch
                 {
-                    UnixInterop.setfsgid(_oldGroupId);
+                    UnixInterop.setfsgid(oldGroupId);
                     throw;
                 }
 
-                logger?.LogTrace("Switched to user id={userId} (was: {oldUserId}) and group id={groupId} (was: {oldGroupId})", userId, _oldUserId, groupId, _oldGroupId);
+                if (oldUserId != defaultUserId || oldGroupId != defaultGroupId)
+                {
+                    logger?.LogWarning("Switched to user id={userId} (was: {oldUserId}) and group id={groupId} (was: {oldGroupId})", userId, oldUserId, groupId, oldGroupId);
+                }
             }
 
             /// <inheritdoc />
@@ -100,8 +128,19 @@ namespace TestFtpServer.CommandMiddlewares
             {
                 if (_hasUserInfo)
                 {
-                    UnixInterop.setfsgid(_oldGroupId);
-                    UnixInterop.setfsuid(_oldUserId);
+                    var restoreUid = _defaultUserId;
+                    var restoreGid = _defaultGroupId;
+                    var prevGid = UnixInterop.setfsgid(restoreGid);
+                    var prevUid = UnixInterop.setfsuid(restoreUid);
+                    if (prevUid != _setUserId || prevGid != _setGroupId)
+                    {
+                        _logger?.LogWarning(
+                            "Reverted to user id={oldUserId} (was set to: {prevUserId}) and group id={oldGroupId} (was set to: {prevGroupId})",
+                            restoreUid,
+                            prevUid,
+                            restoreGid,
+                            prevGid);
+                    }
                 }
             }
 
@@ -167,6 +206,8 @@ namespace TestFtpServer.CommandMiddlewares
         /// </summary>
         // ReSharper disable IdentifierTypo
         // ReSharper disable StringLiteralTypo
+        [SuppressMessage("ReSharper", "SA1300", Justification = "It's a C function.")]
+#pragma warning disable IDE1006 // Benennungsstile
         private static class UnixInterop
         {
             /// <summary>
@@ -175,10 +216,7 @@ namespace TestFtpServer.CommandMiddlewares
             /// <param name="fsuid">The user identifier.</param>
             /// <returns>Previous user identifier.</returns>
             [DllImport("libc.so.6", SetLastError = true)]
-            [SuppressMessage("ReSharper", "SA1300", Justification = "It's a C function.")]
-#pragma warning disable IDE1006 // Benennungsstile
             public static extern uint setfsuid(uint fsuid);
-#pragma warning restore IDE1006 // Benennungsstile
 
             /// <summary>
             /// Set group identity used for filesystem checks.
@@ -186,11 +224,9 @@ namespace TestFtpServer.CommandMiddlewares
             /// <param name="fsgid">The group identifier.</param>
             /// <returns>Previous group identifier.</returns>
             [DllImport("libc.so.6", SetLastError = true)]
-            [SuppressMessage("ReSharper", "SA1300", Justification = "It's a C function.")]
-#pragma warning disable IDE1006 // Benennungsstile
             public static extern uint setfsgid(uint fsgid);
-#pragma warning restore IDE1006 // Benennungsstile
         }
+#pragma warning restore IDE1006 // Benennungsstile
         // ReSharper restore StringLiteralTypo
         // ReSharper restore IdentifierTypo
     }
