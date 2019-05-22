@@ -6,6 +6,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
+using FubarDev.FtpServer.AccountManagement;
+
 using Mono.Unix;
 
 namespace FubarDev.FtpServer.MembershipProvider.Pam

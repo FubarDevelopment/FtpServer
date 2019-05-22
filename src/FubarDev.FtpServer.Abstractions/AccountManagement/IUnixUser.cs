@@ -2,9 +2,7 @@
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
-using FubarDev.FtpServer.AccountManagement;
-
-namespace FubarDev.FtpServer.MembershipProvider.Pam
+namespace FubarDev.FtpServer.AccountManagement
 {
     /// <summary>
     /// Interface for unix user specific information.

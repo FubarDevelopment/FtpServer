@@ -7,10 +7,10 @@ using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 
+using FubarDev.FtpServer.AccountManagement;
 using FubarDev.FtpServer.Commands;
 using FubarDev.FtpServer.Features;
 using FubarDev.FtpServer.FileSystem.Unix;
-using FubarDev.FtpServer.MembershipProvider.Pam;
 
 using Microsoft.Extensions.Logging;
 
