@@ -365,6 +365,9 @@ namespace TestFtpServer
                         {
                             switch (command.Trim().ToLowerInvariant())
                             {
+                                case "":
+                                    Console.WriteLine("Use \"help\" for more information.");
+                                    break;
                                 case "quit":
                                     finished = true;
                                     break;
