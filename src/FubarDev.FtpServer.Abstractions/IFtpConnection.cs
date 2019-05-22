@@ -8,11 +8,12 @@
 using System;
 using System.ComponentModel;
 using System.IO;
-using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+
 using FubarDev.FtpServer.Features;
+
 using JetBrains.Annotations;
 
 using Microsoft.AspNetCore.Http.Features;

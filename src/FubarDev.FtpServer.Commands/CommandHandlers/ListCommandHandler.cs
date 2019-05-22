@@ -22,8 +22,6 @@ using FubarDev.FtpServer.ListFormatters;
 using FubarDev.FtpServer.ServerCommands;
 using FubarDev.FtpServer.Utilities;
 
-using JetBrains.Annotations;
-
 using Microsoft.Extensions.Logging;
 
 namespace FubarDev.FtpServer.CommandHandlers

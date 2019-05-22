@@ -3,7 +3,7 @@
 // </copyright>
 
 using System.IO;
-using System.Net.Sockets;
+
 using JetBrains.Annotations;
 
 namespace FubarDev.FtpServer.Features
