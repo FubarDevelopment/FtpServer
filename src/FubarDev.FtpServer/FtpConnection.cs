@@ -358,10 +358,7 @@ namespace FubarDev.FtpServer
             _closed = true;
             _cancellationTokenSource.Cancel(true);
 
-            var dataConnectionFeature = Features.Get<IFtpDataConnectionFeature>();
-            dataConnectionFeature.Dispose();
-            Features.Set<IFtpDataConnectionFeature>(null);
-
+            // Close SSL stream (if not closed yet)
             var secureConnectionFeature = Features.Get<ISecureConnectionFeature>();
             var socketStream = secureConnectionFeature.SocketStream;
             var originalStream = secureConnectionFeature.OriginalStream;
@@ -369,6 +366,12 @@ namespace FubarDev.FtpServer
             {
                 socketStream.Dispose();
                 secureConnectionFeature.SocketStream = originalStream;
+            }
+
+            // Dispose all features (if disposable)
+            foreach (var feature in Features.Select(x => x.Value).OfType<IDisposable>())
+            {
+                feature.Dispose();
             }
         }
 

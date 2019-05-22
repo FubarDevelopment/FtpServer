@@ -244,7 +244,6 @@ namespace FubarDev.FtpServer
         /// <inheritdoc/>
         public void Dispose()
         {
-            (_featureCollection.Get<IFileSystemFeature>() as IDisposable)?.Dispose();
         }
 
         /// <summary>
