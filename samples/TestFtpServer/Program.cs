@@ -109,6 +109,7 @@ namespace TestFtpServer
                 "Server",
                 { "a|address=", "Sets the IP address or host name", v => options.Server.Address = v },
                 { "p|port=", "Sets the listen port", v => options.Server.Port = Convert.ToInt32(v) },
+                { "d|data-port", "Bind to the data port", v => options.Server.UseFtpDataPort = v != null },
                 { "s|pasv=", "Sets the range for PASV ports, specify as FIRST:LAST", v => options.Server.Pasv.Range = v },
                 { "promiscuous", "Allows promiscuous PASV", v => options.Server.Pasv.Promiscuous = v != null },
                 "FTPS",
