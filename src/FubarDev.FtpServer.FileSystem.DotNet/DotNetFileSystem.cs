@@ -153,7 +153,7 @@ namespace FubarDev.FtpServer.FileSystem.DotNet
         public Task<Stream> OpenReadAsync(IUnixFileEntry fileEntry, long startPosition, CancellationToken cancellationToken)
         {
             var fileInfo = ((DotNetFileEntry)fileEntry).FileInfo;
-            var input = fileInfo.OpenRead();
+            var input = new FileStream(fileInfo.FullName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
             if (startPosition != 0)
             {
                 input.Seek(startPosition, SeekOrigin.Begin);
