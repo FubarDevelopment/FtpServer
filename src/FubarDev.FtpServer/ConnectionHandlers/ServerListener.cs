@@ -15,6 +15,12 @@ using Microsoft.Extensions.Options;
 
 namespace FubarDev.FtpServer.ConnectionHandlers
 {
+    /// <summary>
+    /// Listener for the server.
+    /// </summary>
+    /// <remarks>
+    /// Accepting connections can be paused.
+    /// </remarks>
     public class ServerListener : ICommunicationService
     {
         [NotNull]
