@@ -5,6 +5,7 @@
 using System;
 
 using FubarDev.FtpServer.AccountManagement;
+using FubarDev.FtpServer.Authorization;
 using FubarDev.FtpServer.FileSystem;
 using FubarDev.FtpServer.MembershipProvider.Pam;
 using FubarDev.FtpServer.MembershipProvider.Pam.Directories;
@@ -29,7 +30,8 @@ namespace FubarDev.FtpServer
         {
             builder.Services
                .AddSingleton<IMembershipProvider, PamMembershipProvider>()
-               .AddSingleton<IPamService, PamService>();
+               .AddSingleton<IPamService, PamService>()
+               .AddSingleton<IAuthorizationAction, PamSessionAuthorizationAction>();
             return builder;
         }
 
