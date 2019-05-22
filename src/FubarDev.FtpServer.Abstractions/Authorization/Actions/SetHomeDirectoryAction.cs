@@ -64,11 +64,13 @@ namespace FubarDev.FtpServer.Authorization.Actions
             Stack<IUnixDirectoryEntry> path = null;
             if (!string.IsNullOrEmpty(directories.HomePath))
             {
+                _logger?.LogDebug("Requested home path is {homePath}", directories.HomePath);
                 var selectResult = await fileSystem.SelectAsync(directories.HomePath, cancellationToken)
                    .ConfigureAwait(false);
                 if (selectResult.ResultType == PathSelectionResultType.FoundDirectory)
                 {
                     path = selectResult.GetPath();
+                    _logger?.LogInformation("PWD set to {pwd}", path.ToDisplayString());
                 }
                 else
                 {
