@@ -66,7 +66,7 @@ namespace TestFtpServer
                 "usage: ftpserver [OPTIONS] <COMMAND> [COMMAND-OPTIONS]",
                 { "?|help", "Show help", v => { /* Handled internally by the Options class. */ } },
                 "Authentication",
-                { "authentication=", "Sets the authentication (custom, anonymous)", v =>
+                { "authentication=", "Sets the authentication (custom, pam, anonymous)", v =>
                     {
                         switch (v)
                         {
@@ -87,7 +87,7 @@ namespace TestFtpServer
                 "PAM authentication workarounds",
                 { "no-pam-account-management", "Disable the PAM account management", v => options.Pam.NoAccountManagement = v != null },
                 "Directory layout (system-io, unix))",
-                { "l|layout=", "Directory layout", v =>                     {
+                { "l|layout=", "Directory layout (single-root (default), root-per-user, pam-home, pam-home-chroot)", v => {
                         switch (v)
                         {
                             case "default":
