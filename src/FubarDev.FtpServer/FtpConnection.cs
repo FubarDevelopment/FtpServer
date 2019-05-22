@@ -651,7 +651,7 @@ namespace FubarDev.FtpServer
             public SecureConnectionFeature([NotNull] TcpClient tcpClient)
             {
                 OriginalStream = SocketStream = tcpClient.GetStream();
-                CloseEncryptedControlStream = (_, __) => Task.FromResult(OriginalStream);
+                CloseEncryptedControlStream = (stream, ct) => Task.FromResult(OriginalStream);
             }
 
             /// <inheritdoc />
