@@ -168,7 +168,8 @@ namespace FubarDev.FtpServer.ServerCommandHandlers
                     await sslStreamWrapperFactory.CloseStreamAsync(encryptedStream, cancellationToken)
                        .ConfigureAwait(false);
 
-                    secureConnectionFeature.CloseEncryptedControlStream = (_, __) => Task.FromResult(originalStream);
+                    secureConnectionFeature.CreateEncryptedStream = null;
+                    secureConnectionFeature.CloseEncryptedControlStream = (stream, ct) => Task.FromResult(originalStream);
                     secureConnectionFeature.SocketStream = originalStream;
                     networkStreamFeature.StreamReaderService.Stream = originalStream;
                     networkStreamFeature.StreamWriterService.Stream = originalStream;
