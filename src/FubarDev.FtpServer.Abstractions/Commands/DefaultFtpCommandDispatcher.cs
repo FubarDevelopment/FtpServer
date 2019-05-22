@@ -219,7 +219,7 @@ namespace FubarDev.FtpServer.Commands
             {
                 try
                 {
-                    await SendResponseAsync(response, context.CommandAborted)
+                    await SendResponseAsync(response, context.Connection.CancellationToken)
                        .ConfigureAwait(false);
                 }
                 catch (Exception ex) when (ex.Is<OperationCanceledException>())
