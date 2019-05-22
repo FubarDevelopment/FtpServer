@@ -6,7 +6,7 @@ using System;
 
 namespace TestFtpServer.FtpServerShell
 {
-    class FtpShellCommandAutoCompletion : IAutoCompleteHandler
+    internal class FtpShellCommandAutoCompletion : IAutoCompleteHandler
     {
         /// <inheritdoc />
         public string[] GetSuggestions(string text, int index)
