@@ -21,11 +21,20 @@ namespace FubarDev.FtpServer
     /// </summary>
     public class MultiBindingTcpListener
     {
+        [NotNull]
         private readonly string _address;
+
         private readonly int _port;
+
         [CanBeNull]
         private readonly ILogger _logger;
+
+        [NotNull]
+        [ItemNotNull]
         private readonly IList<TcpListener> _listeners = new List<TcpListener>();
+
+        [NotNull]
+        [ItemNotNull]
         private readonly IList<Task<TcpClient>> _acceptors = new List<Task<TcpClient>>();
 
         /// <summary>
@@ -34,7 +43,10 @@ namespace FubarDev.FtpServer
         /// <param name="address">The address/host name to bind to.</param>
         /// <param name="port">The listener port.</param>
         /// <param name="logger">The logger.</param>
-        public MultiBindingTcpListener(string address, int port, [CanBeNull] ILogger logger)
+        public MultiBindingTcpListener(
+            [NotNull] string address,
+            int port,
+            [CanBeNull] ILogger logger)
         {
             if (port < 0 || port > 65535)
             {
@@ -49,7 +61,7 @@ namespace FubarDev.FtpServer
         /// <summary>
         /// Gets the port this listener is bound to.
         /// </summary>
-        public int? Port { get; private set; }
+        public int Port { get; private set; }
 
         /// <summary>
         /// Start all listeners.
@@ -105,27 +117,8 @@ namespace FubarDev.FtpServer
             }
 
             _listeners.Clear();
+            _acceptors.Clear();
             Port = 0;
-        }
-
-        /// <summary>
-        /// Tries to get a listener that has pending client connections.
-        /// </summary>
-        /// <param name="listener">The listener that has pending client connections.</param>
-        /// <returns><c>true</c> when a listener with pending client connections could be found.</returns>
-        public bool TryGetPending(out TcpListener listener)
-        {
-            foreach (var tcpListener in _listeners)
-            {
-                if (tcpListener.Pending())
-                {
-                    listener = tcpListener;
-                    return true;
-                }
-            }
-
-            listener = null;
-            return false;
         }
 
         /// <summary>
