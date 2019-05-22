@@ -232,7 +232,7 @@ namespace FubarDev.FtpServer.FileSystem
         [ItemNotNull]
         public Stack<IUnixDirectoryEntry> GetPath()
         {
-            return new Stack<IUnixDirectoryEntry>(_foundPathSegments.Reverse());
+            return new Stack<IUnixDirectoryEntry>(_foundPathSegments.Reverse().SkipWhile(x => x.IsRoot));
         }
     }
 }
