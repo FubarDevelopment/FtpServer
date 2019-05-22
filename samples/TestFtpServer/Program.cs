@@ -468,7 +468,7 @@ namespace TestFtpServer
                     sp.GetService<ILogger<AssemblyFtpCommandHandlerExtensionScanner>>(),
                     typeof(SiteHelloFtpCommandHandlerExtension).Assembly));
 
-            if (options.SetFileSystemId)
+            if (options.SetFileSystemId && RuntimeEnvironment.OperatingSystemPlatform != Platform.Windows)
             {
                 services.AddScoped<IFtpCommandMiddleware, FsIdChanger>();
             }
