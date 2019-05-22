@@ -54,7 +54,7 @@ namespace FubarDev.FtpServer
 
         [NotNull]
         private readonly SecureDataConnectionWrapper _secureDataConnectionWrapper;
-
+        private readonly IFtpServerMessages _serverMessages;
         [CanBeNull]
         private readonly IDisposable _loggerScope;
 
@@ -98,6 +98,7 @@ namespace FubarDev.FtpServer
         /// <param name="serverCommandExecutor">The executor for server commands.</param>
         /// <param name="serviceProvider">The service provider for the connection.</param>
         /// <param name="secureDataConnectionWrapper">Wraps a data connection into an SSL stream.</param>
+        /// <param name="serverMessages">The server messages.</param>
         /// <param name="logger">The logger for the FTP connection.</param>
         public FtpConnection(
             [NotNull] TcpClient socket,
@@ -108,6 +109,7 @@ namespace FubarDev.FtpServer
             [NotNull] IServerCommandExecutor serverCommandExecutor,
             [NotNull] IServiceProvider serviceProvider,
             [NotNull] SecureDataConnectionWrapper secureDataConnectionWrapper,
+            [NotNull] IFtpServerMessages serverMessages,
             [CanBeNull] ILogger<IFtpConnection> logger = null)
         {
             ConnectionServices = serviceProvider;
@@ -132,6 +134,7 @@ namespace FubarDev.FtpServer
             _connectionAccessor = connectionAccessor;
             _serverCommandExecutor = serverCommandExecutor;
             _secureDataConnectionWrapper = secureDataConnectionWrapper;
+            _serverMessages = serverMessages;
             _serverCommandChannel = Channel.CreateBounded<IServerCommand>(new BoundedChannelOptions(3));
 
             Log = logger;
@@ -546,7 +549,7 @@ namespace FubarDev.FtpServer
         {
             // Send initial response
             await _serverCommandChannel.Writer.WriteAsync(
-                    new SendResponseServerCommand(new FtpResponse(220, T("FTP Server Ready"))),
+                    new SendResponseServerCommand(new FtpResponseTextBlock(220, _serverMessages.GetBannerMessage())),
                     _cancellationTokenSource.Token)
                .ConfigureAwait(false);
 

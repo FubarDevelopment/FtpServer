@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using FubarDev.FtpServer.AccountManagement;
 using FubarDev.FtpServer.Authentication;
 using FubarDev.FtpServer.Features;
+using FubarDev.FtpServer.Localization;
 
 using JetBrains.Annotations;
 
@@ -21,6 +22,9 @@ namespace FubarDev.FtpServer.Authorization
     /// </summary>
     public class PasswordAuthorization : AuthorizationMechanism
     {
+        [NotNull]
+        private readonly IFtpServerMessages _serverMessages;
+
         [NotNull]
         [ItemNotNull]
         private readonly IReadOnlyCollection<IAuthorizationAction> _authorizationActions;
@@ -38,12 +42,15 @@ namespace FubarDev.FtpServer.Authorization
         /// <param name="connection">The required FTP connection.</param>
         /// <param name="membershipProviders">The membership providers for password authorization.</param>
         /// <param name="authorizationActions">Actions to be executed upon authorization.</param>
+        /// <param name="serverMessages">The FTP server messages.</param>
         public PasswordAuthorization(
             [NotNull] IFtpConnection connection,
             [NotNull, ItemNotNull] IEnumerable<IMembershipProvider> membershipProviders,
-            [NotNull, ItemNotNull] IEnumerable<IAuthorizationAction> authorizationActions)
+            [NotNull, ItemNotNull] IEnumerable<IAuthorizationAction> authorizationActions,
+            [NotNull] IFtpServerMessages serverMessages)
             : base(connection)
         {
+            _serverMessages = serverMessages;
             _authorizationActions = authorizationActions.OrderByDescending(x => x.Level).ToList();
             _membershipProviders = membershipProviders.ToList();
         }
@@ -79,7 +86,9 @@ namespace FubarDev.FtpServer.Authorization
                            .ConfigureAwait(false);
                     }
 
-                    return new FtpResponse(230, T("Password ok, FTP server ready"));
+                    return new FtpResponseTextBlock(
+                        230,
+                        _serverMessages.GetPasswordAuthorizationSuccessfulMessage(accountInformation));
                 }
             }
 

@@ -50,7 +50,8 @@ namespace FubarDev.FtpServer.CommandHandlers
 
                 fsFeature.Path = tempPath;
             }
-            return new FtpResponse(250, T("Successful ({0})", fsFeature.Path.GetFullPath()));
+
+            return new FtpResponseTextBlock(250, ServerMessages.GetDirectoryChangedMessage(fsFeature.Path));
         }
     }
 }

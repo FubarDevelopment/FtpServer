@@ -13,8 +13,11 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using FubarDev.FtpServer.Features;
+using FubarDev.FtpServer.Localization;
 
 using JetBrains.Annotations;
+
+using Microsoft.Extensions.DependencyInjection;
 
 namespace FubarDev.FtpServer.CommandHandlers
 {
@@ -23,7 +26,12 @@ namespace FubarDev.FtpServer.CommandHandlers
     /// </summary>
     public abstract class FtpCommandHandler : IFtpCommandHandler
     {
+        [NotNull]
+        [ItemNotNull]
         private readonly IReadOnlyCollection<string> _names;
+
+        [CanBeNull]
+        private IFtpServerMessages _serverMessages;
 
         [CanBeNull]
         private FtpCommandHandlerContext _commandHandlerContext;
@@ -93,6 +101,12 @@ namespace FubarDev.FtpServer.CommandHandlers
         [NotNull]
         [Obsolete("Query the information using the Features property instead.")]
         protected FtpConnectionData Data => Connection.Data;
+
+        /// <summary>
+        /// Gets the server messages to be returned.
+        /// </summary>
+        protected IFtpServerMessages ServerMessages
+            => _serverMessages ?? (_serverMessages = Connection.ConnectionServices.GetRequiredService<IFtpServerMessages>());
 
         /// <inheritdoc />
         [Obsolete("FTP command handlers (and other types) are now annotated with attributes implementing IFeatureInfo.")]

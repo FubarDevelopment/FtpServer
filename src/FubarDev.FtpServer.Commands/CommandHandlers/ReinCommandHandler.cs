@@ -11,10 +11,12 @@ using FubarDev.FtpServer.Commands;
 using FubarDev.FtpServer.DataConnection;
 using FubarDev.FtpServer.Features;
 using FubarDev.FtpServer.FileSystem;
+using FubarDev.FtpServer.Localization;
 
 using JetBrains.Annotations;
 
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
 namespace FubarDev.FtpServer.CommandHandlers
@@ -26,14 +28,19 @@ namespace FubarDev.FtpServer.CommandHandlers
     public class ReinCommandHandler : FtpCommandHandler
     {
         private readonly int? _dataPort;
+        private readonly IFtpServerMessages _serverMessages;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ReinCommandHandler"/> class.
         /// </summary>
         /// <param name="portOptions">The PORT command options.</param>
-        public ReinCommandHandler([NotNull] IOptions<PortCommandOptions> portOptions)
+        /// <param name="serverMessages">The FTP server messages.</param>
+        public ReinCommandHandler(
+            [NotNull] IOptions<PortCommandOptions> portOptions,
+            [NotNull] IFtpServerMessages serverMessages)
         {
             _dataPort = portOptions.Value.DataPort;
+            _serverMessages = serverMessages;
         }
 
         /// <inheritdoc />
@@ -76,7 +83,11 @@ namespace FubarDev.FtpServer.CommandHandlers
                 catch (Exception ex)
                 {
                     // Ignore exceptions
-                    Connection.Log?.LogWarning(ex, "Feailed to feature of type {featureType}: {errorMessage}", featureItem.Key, ex.Message);
+                    Connection.Log?.LogWarning(
+                        ex,
+                        "Failed to feature of type {featureType}: {errorMessage}",
+                        featureItem.Key,
+                        ex.Message);
                 }
 
                 // Remove from features collection
@@ -90,7 +101,7 @@ namespace FubarDev.FtpServer.CommandHandlers
                .ConfigureAwait(false);
             Connection.Features.Set(dataConnectionFeature);
 
-            return new FtpResponse(220, T("FTP Server Ready"));
+            return new FtpResponseTextBlock(220, _serverMessages.GetBannerMessage());
         }
     }
 }

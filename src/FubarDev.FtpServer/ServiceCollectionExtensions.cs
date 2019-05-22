@@ -91,6 +91,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddScoped(sp => sp.GetRequiredService<IFtpHostSelector>().SelectedHost);
 
             services.AddSingleton<IFtpCatalogLoader, DefaultFtpCatalogLoader>();
+            services.TryAddSingleton<IFtpServerMessages, DefaultFtpServerMessages>();
 
             services.AddSingleton<IBackgroundTransferWorker, BackgroundTransferWorker>();
 
