@@ -91,28 +91,37 @@ namespace FubarDev.FtpServer.CommandHandlers
             // Use braces to avoid the definition of mask and path in the following parts
             // of this function.
             {
-                var mask = "*";
-                var path = fsFeature.Path.Clone();
-
-                foreach (var searchPath in argument.Paths)
+                if (argument.Paths.Count != 0)
                 {
-                    var foundEntry = await fsFeature.FileSystem.SearchEntryAsync(path, searchPath, cancellationToken).ConfigureAwait(false);
-                    if (foundEntry?.Directory == null)
+                    foreach (var searchPath in argument.Paths)
                     {
-                        return new FtpResponse(550, T("File system entry not found."));
-                    }
+                        var mask = "*";
+                        var path = fsFeature.Path.Clone();
 
-                    if (!(foundEntry.Entry is IUnixDirectoryEntry dirEntry))
-                    {
-                        mask = foundEntry.FileName;
-                    }
-                    else if (!dirEntry.IsRoot)
-                    {
-                        path.Push(dirEntry);
+                        var foundEntry = await fsFeature.FileSystem.SearchEntryAsync(path, searchPath, cancellationToken).ConfigureAwait(false);
+                        if (foundEntry?.Directory == null)
+                        {
+                            return new FtpResponse(550, T("File system entry not found."));
+                        }
+
+                        if (!(foundEntry.Entry is IUnixDirectoryEntry dirEntry))
+                        {
+                            mask = foundEntry.FileName;
+                        }
+                        else if (!dirEntry.IsRoot)
+                        {
+                            path.Push(dirEntry);
+                        }
+
+                        directoriesToProcess.Enqueue(new DirectoryQueueItem(path, mask));
                     }
                 }
-
-                directoriesToProcess.Enqueue(new DirectoryQueueItem(path, mask));
+                else
+                {
+                    var mask = "*";
+                    var path = fsFeature.Path.Clone();
+                    directoriesToProcess.Enqueue(new DirectoryQueueItem(path, mask));
+                }
             }
 
             var stream = dataConnection.Stream;
@@ -162,6 +171,11 @@ namespace FubarDev.FtpServer.CommandHandlers
                             {
                                 continue;
                             }
+                        }
+                        else if (mask != "*" && !glob.IsMatch(name))
+                        {
+                            // Ignore "." and ".." when the mask doesn't match.
+                            continue;
                         }
 
                         var entry = enumerator.Entry;
