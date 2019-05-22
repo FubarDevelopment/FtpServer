@@ -436,6 +436,8 @@ namespace FubarDev.FtpServer
                     case OperationCanceledException _:
                         // Cancelled
                         break;
+                    default:
+                        throw;
                 }
             }
             finally
