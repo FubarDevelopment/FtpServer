@@ -355,6 +355,11 @@ namespace FubarDev.FtpServer
 
         private void Abort()
         {
+            if (_closed)
+            {
+                return;
+            }
+
             _closed = true;
             _cancellationTokenSource.Cancel(true);
 
