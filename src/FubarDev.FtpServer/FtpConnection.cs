@@ -369,9 +369,17 @@ namespace FubarDev.FtpServer
             }
 
             // Dispose all features (if disposable)
-            foreach (var feature in Features.Select(x => x.Value).OfType<IDisposable>())
+            foreach (var featureItem in Features)
             {
-                feature.Dispose();
+                try
+                {
+                    (featureItem.Value as IDisposable)?.Dispose();
+                }
+                catch (Exception ex)
+                {
+                    // Ignore exceptions
+                    Log?.LogWarning(ex, "Feailed to feature of type {featureType}: {errorMessage}", featureItem.Key, ex.Message);
+                }
             }
         }
 
