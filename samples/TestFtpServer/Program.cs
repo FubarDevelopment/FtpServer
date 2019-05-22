@@ -17,6 +17,7 @@ using FubarDev.FtpServer.AccountManagement.Directories.SingleRootWithoutHome;
 using FubarDev.FtpServer.Authentication;
 using FubarDev.FtpServer.CommandExtensions;
 using FubarDev.FtpServer.Commands;
+using FubarDev.FtpServer.ConnectionHandlers;
 using FubarDev.FtpServer.FileSystem;
 using FubarDev.FtpServer.FileSystem.DotNet;
 using FubarDev.FtpServer.FileSystem.GoogleDrive;
@@ -44,6 +45,7 @@ using TestFtpServer.CommandMiddlewares;
 using TestFtpServer.Commands;
 using TestFtpServer.Configuration;
 using TestFtpServer.Extensions;
+using TestFtpServer.FtpServerShell;
 using TestFtpServer.Utilities;
 
 namespace TestFtpServer
@@ -168,6 +170,7 @@ namespace TestFtpServer
             if (args.Length == 0)
             {
                 await RunFromOptions(options).ConfigureAwait(false);
+                return 0;
             }
 
             return optionSet.Run(args);
@@ -340,14 +343,57 @@ namespace TestFtpServer
                 loggerFactory.AddNLog(new NLogProviderOptions { CaptureMessageTemplates = true, CaptureMessageProperties = true });
                 NLog.LogManager.LoadConfiguration("NLog.config");
 
+                var logger = serviceProvider.GetRequiredService<ILogger<FtpServer>>();
                 try
                 {
                     // Start the FTP server
+                    var ftpServer = serviceProvider.GetRequiredService<IFtpServer>();
                     var ftpServerHost = serviceProvider.GetRequiredService<IFtpServerHost>();
                     await ftpServerHost.StartAsync(CancellationToken.None).ConfigureAwait(false);
 
-                    Console.WriteLine("Press ENTER/RETURN to close the test application.");
-                    Console.ReadLine();
+                    Console.WriteLine("Enter \"exit\" to close the test application.");
+                    Console.WriteLine("Use \"help\" for more information.");
+
+                    ReadLine.AutoCompletionHandler = new FtpShellCommandAutoCompletion();
+                    ReadLine.HistoryEnabled = true;
+
+                    var finished = false;
+                    while (!finished)
+                    {
+                        var command = ReadLine.Read("> ");
+                        try
+                        {
+                            switch (command.Trim().ToLowerInvariant())
+                            {
+                                case "quit":
+                                    finished = true;
+                                    break;
+                                case "help":
+                                    Console.WriteLine("help     - Show help");
+                                    Console.WriteLine("quit     - Close server");
+                                    Console.WriteLine("pause    - Pause accepting clients");
+                                    Console.WriteLine("continue - Continue accepting clients");
+                                    Console.WriteLine("status   - Show server status");
+                                    break;
+                                case "pause":
+                                    await ((ICommunicationService)ftpServer).PauseAsync(CancellationToken.None)
+                                       .ConfigureAwait(false);
+                                    break;
+                                case "continue":
+                                    await ((ICommunicationService)ftpServer).ContinueAsync(CancellationToken.None)
+                                       .ConfigureAwait(false);
+                                    break;
+                                case "status":
+                                    Console.WriteLine("Active connections = {0}", ftpServer.Statistics.ActiveConnections);
+                                    Console.WriteLine("Total connections  = {0}", ftpServer.Statistics.TotalConnections);
+                                    break;
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            logger.LogError(ex, ex.Message);
+                        }
+                    }
 
                     // Stop the FTP server
                     await ftpServerHost.StopAsync(CancellationToken.None).ConfigureAwait(false);

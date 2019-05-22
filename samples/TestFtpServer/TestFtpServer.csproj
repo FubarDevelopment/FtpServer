@@ -17,6 +17,7 @@
     <PackageReference Include="Microsoft.Extensions.Options" Version="2.2.0" />
     <PackageReference Include="NLog" Version="4.6.3" />
     <PackageReference Include="NLog.Extensions.Logging" Version="1.5.0" />
+    <PackageReference Include="ReadLine" Version="2.0.1" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\FubarDev.FtpServer.FileSystem.DotNet\FubarDev.FtpServer.FileSystem.DotNet.csproj" />
