@@ -147,7 +147,7 @@ namespace FubarDev.FtpServer.FileSystem
                 if (ResultType == PathSelectionResultType.FoundFile)
                 {
                     Debug.Assert(File != null, "File != null");
-                    return File;
+                    return File ?? throw new InvalidOperationException("File is null even though a file was found?");
                 }
 
                 return Directory;

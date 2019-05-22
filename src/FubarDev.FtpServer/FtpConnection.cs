@@ -386,19 +386,9 @@ namespace FubarDev.FtpServer
                 catch (Exception ex)
                 {
                     // Ignore exceptions
-                    Log?.LogWarning(ex, "Feailed to feature of type {featureType}: {errorMessage}", featureItem.Key, ex.Message);
+                    Log?.LogWarning(ex, "Failed to feature of type {featureType}: {errorMessage}", featureItem.Key, ex.Message);
                 }
             }
-        }
-
-        /// <summary>
-        /// Translates a message using the current catalog of the active connection.
-        /// </summary>
-        /// <param name="message">The message to translate.</param>
-        /// <returns>The translated message.</returns>
-        private string T(string message)
-        {
-            return Features.Get<ILocalizationFeature>().Catalog.GetString(message);
         }
 
         /// <summary>

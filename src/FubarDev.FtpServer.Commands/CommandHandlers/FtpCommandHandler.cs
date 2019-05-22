@@ -26,7 +26,7 @@ namespace FubarDev.FtpServer.CommandHandlers
     /// </summary>
     public abstract class FtpCommandHandler : IFtpCommandHandler
     {
-        [NotNull]
+        [CanBeNull]
         [ItemNotNull]
         private readonly IReadOnlyCollection<string> _names;
 
