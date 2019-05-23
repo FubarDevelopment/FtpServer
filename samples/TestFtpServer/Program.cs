@@ -5,7 +5,6 @@
 using System;
 using System.IO;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -116,6 +115,7 @@ namespace TestFtpServer
                 { "promiscuous", "Allows promiscuous PASV", v => options.Server.Pasv.Promiscuous = v != null },
                 "FTPS",
                 { "c|certificate=", "Set the SSL certificate", v => options.Ftps.Certificate = v },
+                { "k|private-key=", "Set the private key file for the SSL certificate", v => options.Ftps.PrivateKey = v },
                 { "P|password=", "Password for the SSL certificate", v => options.Ftps.Password = v },
                 { "i|implicit", "Use implicit FTPS", v => options.Ftps.Implicit = XmlConvert.ToBoolean(v.ToLowerInvariant()) },
                 "Backends",
@@ -369,6 +369,7 @@ namespace TestFtpServer
                                     Console.WriteLine("Use \"help\" for more information.");
                                     break;
                                 case "quit":
+                                case "exit":
                                     finished = true;
                                     break;
                                 case "help":
@@ -416,15 +417,7 @@ namespace TestFtpServer
                .AddLogging(cfg => cfg.SetMinimumLevel(LogLevel.Trace))
                .AddOptions()
                .Configure<AuthTlsOptions>(
-                    opt =>
-                    {
-                        if (!string.IsNullOrEmpty(options.Ftps.Certificate))
-                        {
-                            opt.ServerCertificate = new X509Certificate2(
-                                options.Ftps.Certificate,
-                                options.Ftps.Password);
-                        }
-                    })
+                    opt => opt.ServerCertificate = options.GetCertificate())
                .Configure<FtpConnectionOptions>(opt => opt.DefaultEncoding = Encoding.ASCII)
                .Configure<FubarDev.FtpServer.FtpServerOptions>(
                     opt =>
@@ -507,17 +500,20 @@ namespace TestFtpServer
                     if (options.Ftps.Implicit)
                     {
                         var authTlsOptions = serviceProvider.GetRequiredService<IOptions<AuthTlsOptions>>();
-                        var sslStreamWrapperFactory = serviceProvider.GetRequiredService<ISslStreamWrapperFactory>();
-
-                        // Use an implicit SSL connection (without the AUTH TLS command)
-                        ftpServer.ConfigureConnection += (s, e) =>
+                        if (authTlsOptions.Value.ServerCertificate != null)
                         {
-                            TlsEnableServerCommandHandler.EnableTlsAsync(
-                                e.Connection,
-                                authTlsOptions.Value.ServerCertificate,
-                                sslStreamWrapperFactory,
-                                CancellationToken.None).Wait();
-                        };
+                            var sslStreamWrapperFactory = serviceProvider.GetRequiredService<ISslStreamWrapperFactory>();
+
+                            // Use an implicit SSL connection (without the AUTH TLS command)
+                            ftpServer.ConfigureConnection += (s, e) =>
+                            {
+                                TlsEnableServerCommandHandler.EnableTlsAsync(
+                                    e.Connection,
+                                    authTlsOptions.Value.ServerCertificate,
+                                    sslStreamWrapperFactory,
+                                    CancellationToken.None).Wait();
+                            };
+                        }
                     }
 
                     /* Setting the umask is only valid for non-Windows platforms. */

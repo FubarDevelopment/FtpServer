@@ -3,7 +3,16 @@
 // </copyright>
 
 using System;
+using System.IO;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
+
+using Org.BouncyCastle.Crypto;
+using Org.BouncyCastle.Crypto.Parameters;
+using Org.BouncyCastle.OpenSsl;
+using Org.BouncyCastle.Pkcs;
+using Org.BouncyCastle.Security;
+using Org.BouncyCastle.Utilities.IO.Pem;
 
 using TestFtpServer.Configuration;
 
@@ -23,6 +32,15 @@ namespace TestFtpServer
             if (options.Ftps.Implicit && !string.IsNullOrEmpty(options.Ftps.Certificate))
             {
                 throw new Exception("Implicit FTPS requires a server certificate.");
+            }
+
+            if (!string.IsNullOrEmpty(options.Ftps.Certificate))
+            {
+                var cert = new X509Certificate2(options.Ftps.Certificate, options.Ftps.Password);
+                if (!cert.HasPrivateKey && string.IsNullOrEmpty(options.Ftps.PrivateKey))
+                {
+                    throw new Exception("Certificate requires private key.");
+                }
             }
         }
 
@@ -63,6 +81,75 @@ namespace TestFtpServer
             }
 
             return (iPorts[0], iPorts[1]);
+        }
+
+        /// <summary>
+        /// Loads the X.509 certificate with private key.
+        /// </summary>
+        /// <param name="options">The options used to load the certificate.</param>
+        /// <returns>The certificate.</returns>
+        public static X509Certificate2? GetCertificate(this FtpOptions options)
+        {
+            if (string.IsNullOrEmpty(options.Ftps.Certificate))
+            {
+                return null;
+            }
+
+            var cert = new X509Certificate2(options.Ftps.Certificate);
+            if (cert.HasPrivateKey)
+            {
+                return cert;
+            }
+
+            var certCollection = new X509Certificate2Collection();
+            certCollection.Import(options.Ftps.Certificate, options.Ftps.Password, X509KeyStorageFlags.Exportable);
+
+            var passwordFinder = string.IsNullOrEmpty(options.Ftps.Password)
+                ? (IPasswordFinder?)null
+                : new BcStaticPassword(options.Ftps.Password);
+
+            AsymmetricKeyParameter keyParameter;
+            using (var pkReader = File.OpenText(options.Ftps.PrivateKey))
+            {
+                keyParameter = (AsymmetricKeyParameter)new Org.BouncyCastle.OpenSsl.PemReader(pkReader, passwordFinder).ReadObject();
+            }
+
+            var store = new Pkcs12StoreBuilder()
+               .SetUseDerEncoding(true)
+               .Build();
+
+            var chain = certCollection.Cast<X509Certificate2>()
+               .Select(DotNetUtilities.FromX509Certificate)
+               .Select(x => new X509CertificateEntry(x))
+               .ToArray();
+
+            store.SetKeyEntry("0", new AsymmetricKeyEntry(keyParameter), chain);
+
+            byte[] data;
+            using (var output = new MemoryStream())
+            {
+                store.Save(output, Array.Empty<char>(), new SecureRandom());
+                data = output.ToArray();
+            }
+
+            var result = Pkcs12Utilities.ConvertToDefiniteLength(data);
+            return new X509Certificate2(result);
+        }
+
+        private class BcStaticPassword : IPasswordFinder
+        {
+            private readonly string _password;
+
+            public BcStaticPassword(string password)
+            {
+                _password = password;
+            }
+
+            /// <inheritdoc />
+            public char[] GetPassword()
+            {
+                return _password.ToCharArray();
+            }
         }
     }
 }
