@@ -46,7 +46,7 @@ namespace FubarDev.FtpServer
         public MultiBindingTcpListener(
             [NotNull] string address,
             int port,
-            [CanBeNull] ILogger logger)
+            [CanBeNull] ILogger logger = null)
         {
             if (port < 0 || port > 65535)
             {
