@@ -45,7 +45,7 @@ namespace FubarDev.FtpServer.CommandExtensions
         private static IEnumerable<IFtpCommandHandlerExtensionInstanceInformation> CreateInformation(
             [NotNull] IFtpCommandHandlerProvider commandHandlerProvider,
             [NotNull, ItemNotNull] IEnumerable<IFtpCommandHandlerExtension> commandHandlerExtensions,
-            [CanBeNull] ILogger<ServiceFtpCommandHandlerScanner> logger)
+            [CanBeNull] ILogger<ServiceFtpCommandHandlerScanner> logger = null)
         {
             var cmdHandlers = commandHandlerProvider.CommandHandlers.ToList();
             var commandHandlers = cmdHandlers.ToDictionary(x => x.Name, StringComparer.OrdinalIgnoreCase);

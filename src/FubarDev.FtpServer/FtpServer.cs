@@ -65,7 +65,7 @@ namespace FubarDev.FtpServer
             MaxActiveConnections = serverOptions.Value.MaxActiveConnections;
 
             var tcpClientChannel = Channel.CreateBounded<TcpClient>(5);
-            _serverListener = new ServerListener(tcpClientChannel, serverOptions, logger, _cancellationTokenSource);
+            _serverListener = new ServerListener(tcpClientChannel, serverOptions, _cancellationTokenSource, logger);
             _clientReader = ReadClientsAsync(tcpClientChannel, _cancellationTokenSource.Token);
         }
 

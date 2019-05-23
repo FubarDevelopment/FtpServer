@@ -53,8 +53,8 @@ namespace FubarDev.FtpServer.ConnectionHandlers
         public ServerListener(
             [NotNull] ChannelWriter<TcpClient> newClientWriter,
             [NotNull] IOptions<FtpServerOptions> serverOptions,
-            [CanBeNull] ILogger logger,
-            CancellationTokenSource connectionClosedCts)
+            CancellationTokenSource connectionClosedCts,
+            [CanBeNull] ILogger logger = null)
         {
             _newClientWriter = newClientWriter;
             _logger = logger;
@@ -115,6 +115,12 @@ namespace FubarDev.FtpServer.ConnectionHandlers
         /// <inheritdoc />
         public Task ContinueAsync(CancellationToken cancellationToken)
         {
+            if (Status == ConnectionStatus.Stopped)
+            {
+                // Stay stopped!
+                return Task.CompletedTask;
+            }
+
             if (Status != ConnectionStatus.Paused)
             {
                 throw new InvalidOperationException($"Status must be {ConnectionStatus.Paused}, but was {Status}.");

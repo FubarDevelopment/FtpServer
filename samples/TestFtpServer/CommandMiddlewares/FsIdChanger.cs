@@ -64,12 +64,14 @@ namespace TestFtpServer.CommandMiddlewares
             FtpCommandExecutionDelegate next)
         {
             var contextThread = new AsyncContextThread();
-            await contextThread.Factory.Run(async () =>
-            {
-                using var _ = new UnixFileSystemIdChanger(_logger, unixUser.UserId, unixUser.GroupId, _serverUser.UserId, _serverUser.GroupId);
-                await next(context).ConfigureAwait(true);
-            });
-            await contextThread.JoinAsync();
+            await contextThread.Factory.Run(
+                    async () =>
+                    {
+                        using var _ = new UnixFileSystemIdChanger(_logger, unixUser.UserId, unixUser.GroupId, _serverUser.UserId, _serverUser.GroupId);
+                        await next(context).ConfigureAwait(true);
+                    })
+               .ConfigureAwait(true);
+            await contextThread.JoinAsync().ConfigureAwait(false);
         }
 
         /// <summary>

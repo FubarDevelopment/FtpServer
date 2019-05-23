@@ -11,6 +11,8 @@ using System.Threading.Tasks;
 
 using JetBrains.Annotations;
 
+using Microsoft.Extensions.Logging;
+
 namespace FubarDev.FtpServer.ConnectionHandlers
 {
     /// <summary>
@@ -26,6 +28,9 @@ namespace FubarDev.FtpServer.ConnectionHandlers
 
         private readonly CancellationToken _connectionClosed;
 
+        [CanBeNull]
+        private readonly ILogger<NetworkStreamWriter> _logger;
+
         [NotNull]
         private CancellationTokenSource _jobPaused = new CancellationTokenSource();
 
@@ -38,14 +43,17 @@ namespace FubarDev.FtpServer.ConnectionHandlers
         /// <param name="stream">The stream to write to.</param>
         /// <param name="pipeReader">The pipe to read from.</param>
         /// <param name="connectionClosed">Cancellation token for a closed connection.</param>
+        /// <param name="logger">The logger.</param>
         public NetworkStreamWriter(
             [NotNull] Stream stream,
             [NotNull] PipeReader pipeReader,
-            CancellationToken connectionClosed)
+            CancellationToken connectionClosed,
+            [CanBeNull] ILogger<NetworkStreamWriter> logger = null)
         {
             Stream = stream;
             _pipeReader = pipeReader;
             _connectionClosed = connectionClosed;
+            _logger = logger;
         }
 
         /// <inheritdoc />
@@ -68,7 +76,8 @@ namespace FubarDev.FtpServer.ConnectionHandlers
                 _connectionClosed,
                 _jobStopped.Token,
                 _jobPaused.Token,
-                new Progress<ConnectionStatus>(status => Status = status));
+                new Progress<ConnectionStatus>(status => Status = status),
+                _logger);
 
             return Task.CompletedTask;
         }
@@ -81,6 +90,7 @@ namespace FubarDev.FtpServer.ConnectionHandlers
                 throw new InvalidOperationException($"Status must be {ConnectionStatus.Running}, {ConnectionStatus.Stopped}, or {ConnectionStatus.Paused}, but was {Status}.");
             }
 
+            _logger?.LogTrace("Signalling STOP");
             _jobStopped.Cancel();
 
             return _task;
@@ -94,15 +104,37 @@ namespace FubarDev.FtpServer.ConnectionHandlers
                 throw new InvalidOperationException($"Status must be {ConnectionStatus.Running}, but was {Status}.");
             }
 
+            _logger?.LogTrace("Signalling PAUSE");
             _jobPaused.Cancel();
 
             await _task.ConfigureAwait(false);
-            await FlushAsync(Stream, _pipeReader, cancellationToken).ConfigureAwait(false);
+
+            try
+            {
+                if (!cancellationToken.IsCancellationRequested)
+                {
+                    await FlushAsync(Stream, _pipeReader, cancellationToken, _logger).ConfigureAwait(false);
+                }
+            }
+            catch (Exception ex) when (ex.IsIOException())
+            {
+                // Ignored. Connection closed by client?
+            }
+            catch (Exception ex)
+            {
+                _logger?.LogWarning(0, ex, "Flush failed with: {message}", ex.Message);
+            }
         }
 
         /// <inheritdoc />
         public Task ContinueAsync(CancellationToken cancellationToken)
         {
+            if (Status == ConnectionStatus.Stopped)
+            {
+                // Stay stopped!
+                return Task.CompletedTask;
+            }
+
             if (Status != ConnectionStatus.Paused)
             {
                 throw new InvalidOperationException($"Status must be {ConnectionStatus.Paused}, but was {Status}.");
@@ -116,7 +148,8 @@ namespace FubarDev.FtpServer.ConnectionHandlers
                 _connectionClosed,
                 _jobStopped.Token,
                 _jobPaused.Token,
-                new Progress<ConnectionStatus>(status => Status = status));
+                new Progress<ConnectionStatus>(status => Status = status),
+                _logger);
 
             return Task.CompletedTask;
         }
@@ -125,14 +158,18 @@ namespace FubarDev.FtpServer.ConnectionHandlers
         private static async Task FlushAsync(
             [NotNull] Stream stream,
             [NotNull] PipeReader reader,
-            CancellationToken cancellationToken)
+            CancellationToken cancellationToken,
+            [CanBeNull] ILogger logger)
         {
+            logger?.LogTrace("Flushing");
             while (reader.TryRead(out var readResult))
             {
-                await SendDataToStream(readResult.Buffer, stream, cancellationToken)
+                await SendDataToStream(readResult.Buffer, stream, cancellationToken, logger)
                    .ConfigureAwait(false);
                 reader.AdvanceTo(readResult.Buffer.End);
             }
+
+            logger?.LogTrace("Flushed");
         }
 
         private static async Task SendPipelineAsync(
@@ -141,11 +178,14 @@ namespace FubarDev.FtpServer.ConnectionHandlers
             CancellationToken connectionClosed,
             CancellationToken jobStopped,
             CancellationToken jobPaused,
-            [NotNull] IProgress<ConnectionStatus> statusProgress)
+            [NotNull] IProgress<ConnectionStatus> statusProgress,
+            [CanBeNull] ILogger logger)
         {
             var globalCts = CancellationTokenSource.CreateLinkedTokenSource(connectionClosed, jobStopped, jobPaused);
 
             statusProgress.Report(ConnectionStatus.Running);
+
+            logger?.LogTrace("Starting reading pipeline");
 
             Exception exception = null;
             while (true)
@@ -153,29 +193,32 @@ namespace FubarDev.FtpServer.ConnectionHandlers
                 // Allocate at least 512 bytes from the PipeWriter
                 try
                 {
+                    logger?.LogTrace("Start reading response");
                     var readResult = await reader.ReadAsync(globalCts.Token)
                        .ConfigureAwait(false);
 
                     // Don't use the cancellation token source from above. Otherwise
                     // data might be lost.
-                    await SendDataToStream(readResult.Buffer, stream, CancellationToken.None)
+                    await SendDataToStream(readResult.Buffer, stream, CancellationToken.None, logger)
                        .ConfigureAwait(false);
 
                     reader.AdvanceTo(readResult.Buffer.End);
 
                     if (readResult.IsCanceled || readResult.IsCompleted)
                     {
+                        logger?.LogTrace("Was cancelled or completed.");
                         break;
                     }
                 }
                 catch (Exception ex) when (ex.IsOperationCancelledException())
                 {
                     // The job was aborted by one of the three cancellation tokens.
+                    logger?.LogTrace("Operation cancelled");
                     break;
                 }
                 catch (Exception ex)
                 {
-                    // Log?.LogError(ex, ex.Message);
+                    logger?.LogTrace(0, ex, ex.Message);
                     exception = ex;
                     break;
                 }
@@ -184,6 +227,7 @@ namespace FubarDev.FtpServer.ConnectionHandlers
             // Don't call Complete() when the job was just paused.
             if (jobPaused.IsCancellationRequested)
             {
+                logger?.LogTrace("Paused writer");
                 statusProgress.Report(ConnectionStatus.Paused);
                 return;
             }
@@ -192,14 +236,18 @@ namespace FubarDev.FtpServer.ConnectionHandlers
             reader.Complete(exception);
 
             statusProgress.Report(ConnectionStatus.Stopped);
+
+            logger?.LogTrace("Stopped writer");
         }
 
         [NotNull]
         private static async Task SendDataToStream(
             ReadOnlySequence<byte> buffer,
             [NotNull] Stream stream,
-            CancellationToken cancellationToken)
+            CancellationToken cancellationToken,
+            [CanBeNull] ILogger logger)
         {
+            logger?.LogTrace("Start sending");
             var position = buffer.Start;
 
             while (buffer.TryGet(ref position, out var memory))
@@ -209,6 +257,7 @@ namespace FubarDev.FtpServer.ConnectionHandlers
                    .ConfigureAwait(false);
             }
 
+            logger?.LogTrace("Flushing stream");
             await stream.FlushAsync(cancellationToken).ConfigureAwait(false);
         }
     }

@@ -2,11 +2,17 @@
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
+using System;
 using System.IO;
 using System.Net.Security;
+using System.Security.Authentication;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading;
 using System.Threading.Tasks;
+
+using JetBrains.Annotations;
+
+using Microsoft.Extensions.Logging;
 
 namespace FubarDev.FtpServer.Authentication
 {
@@ -15,6 +21,15 @@ namespace FubarDev.FtpServer.Authentication
     /// </summary>
     public class DefaultSslStreamWrapperFactory : ISslStreamWrapperFactory
     {
+        [CanBeNull]
+        private readonly ILogger<ISslStreamWrapperFactory> _logger;
+
+        public DefaultSslStreamWrapperFactory(
+            [CanBeNull] ILogger<ISslStreamWrapperFactory> logger = null)
+        {
+            _logger = logger;
+        }
+
         /// <inheritdoc />
         public async Task<Stream> WrapStreamAsync(
             Stream unencryptedStream,
@@ -22,19 +37,31 @@ namespace FubarDev.FtpServer.Authentication
             X509Certificate certificate,
             CancellationToken cancellationToken)
         {
-            var sslStream = CreateSslStream(unencryptedStream, keepOpen);
             try
             {
-                await sslStream.AuthenticateAsServerAsync(certificate)
-                   .ConfigureAwait(false);
+                _logger?.LogTrace("Create SSL stream");
+                var sslStream = CreateSslStream(unencryptedStream, keepOpen);
+                try
+                {
+                    var certCopy = new X509Certificate2(certificate.Export(X509ContentType.Pkcs12));
+                    _logger?.LogTrace("Authenticate as server");
+                    await sslStream.AuthenticateAsServerAsync(certCopy)
+                       .ConfigureAwait(false);
+                }
+                catch (Exception ex)
+                {
+                    _logger?.LogError(0, ex, ex.Message);
+                    sslStream.Dispose();
+                    throw;
+                }
+
+                return sslStream;
             }
-            catch
+            catch (Exception ex)
             {
-                sslStream.Dispose();
+                _logger?.LogError(0, ex, ex.Message);
                 throw;
             }
-
-            return sslStream;
         }
 
 #if NETCOREAPP || NET47

@@ -74,11 +74,13 @@ namespace FubarDev.FtpServer.ServerCommandHandlers
 
             try
             {
+                connection.Log?.LogTrace("Closing old encrypted control stream.");
                 await secureConnectionFeature.CloseEncryptedControlStream(
                         secureConnectionFeature.SocketStream,
                         cancellationToken)
                    .ConfigureAwait(false);
 
+                connection.Log?.LogTrace("Wrap into new SslStream.");
                 var sslStream = await sslStreamWrapperFactory.WrapStreamAsync(
                         secureConnectionFeature.OriginalStream,
                         true,
@@ -86,6 +88,7 @@ namespace FubarDev.FtpServer.ServerCommandHandlers
                         cancellationToken)
                    .ConfigureAwait(false);
 
+                connection.Log?.LogTrace("Set close function.");
                 secureConnectionFeature.CloseEncryptedControlStream =
                     (encryptedStream, ct) => CloseEncryptedControlConnectionAsync(
                         networkStreamFeature,

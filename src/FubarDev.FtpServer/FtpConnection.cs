@@ -148,11 +148,13 @@ namespace FubarDev.FtpServer
                 new NetworkStreamReader(
                     secureConnectionFeature.OriginalStream,
                     _commandPipe.Writer,
-                    _cancellationTokenSource),
+                    _cancellationTokenSource,
+                    serviceProvider.GetService<ILogger<NetworkStreamReader>>()),
                 new NetworkStreamWriter(
                     secureConnectionFeature.OriginalStream,
                     _responsePipe.Reader,
-                    _cancellationTokenSource.Token),
+                    _cancellationTokenSource.Token,
+                    serviceProvider.GetService<ILogger<NetworkStreamWriter>>()),
                 _responsePipe.Writer);
 
             parentFeatures.Set<IConnectionFeature>(connectionFeature);
