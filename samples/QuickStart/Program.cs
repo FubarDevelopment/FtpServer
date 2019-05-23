@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -7,6 +8,10 @@ using FubarDev.FtpServer;
 using FubarDev.FtpServer.FileSystem.DotNet;
 
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+
+using Serilog;
+using Serilog.Events;
 
 namespace QuickStart
 {
@@ -14,8 +19,21 @@ namespace QuickStart
     {
         static async Task Main()
         {
+            Log.Logger = new LoggerConfiguration()
+               .Enrich.FromLogContext()
+               .MinimumLevel.Verbose()
+               .WriteTo.Console()
+               .CreateLogger();
+
             // Setup dependency injection
             var services = new ServiceCollection();
+
+            services
+               .AddLogging(lb =>
+                {
+                    lb.AddSerilog(dispose: true);
+                    lb.SetMinimumLevel(LogLevel.Trace);
+                });
 
             // use %TEMP%/TestFtpServer as root folder
             services.Configure<DotNetFileSystemOptions>(opt => opt
@@ -29,7 +47,9 @@ namespace QuickStart
                .EnableAnonymousAuthentication()); // allow anonymous logins
 
             // Configure the FTP server
-            services.Configure<FtpServerOptions>(opt => opt.ServerAddress = "127.0.0.1");
+            services.Configure<FtpServerOptions>(opt => opt.ServerAddress = "*");
+
+            services.Configure<AuthTlsOptions>(opt => opt.ServerCertificate = new X509Certificate2("localhost.pfx", (string)null, X509KeyStorageFlags.Exportable));
 
             // Build the service provider
             using (var serviceProvider = services.BuildServiceProvider())
