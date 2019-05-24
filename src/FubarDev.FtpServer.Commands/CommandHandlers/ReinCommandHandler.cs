@@ -16,7 +16,9 @@ using FubarDev.FtpServer.Localization;
 using JetBrains.Annotations;
 
 using Microsoft.Extensions.DependencyInjection;
+#if !NETSTANDARD1_3
 using Microsoft.Extensions.Logging;
+#endif
 using Microsoft.Extensions.Options;
 
 namespace FubarDev.FtpServer.CommandHandlers

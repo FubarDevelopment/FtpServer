@@ -5,7 +5,6 @@
 using System;
 using System.IO;
 using System.Net.Security;
-using System.Security.Authentication;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading;
 using System.Threading.Tasks;
@@ -24,6 +23,10 @@ namespace FubarDev.FtpServer.Authentication
         [CanBeNull]
         private readonly ILogger<ISslStreamWrapperFactory> _logger;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DefaultSslStreamWrapperFactory"/> class.
+        /// </summary>
+        /// <param name="logger">The logger.</param>
         public DefaultSslStreamWrapperFactory(
             [CanBeNull] ILogger<ISslStreamWrapperFactory> logger = null)
         {

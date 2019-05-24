@@ -8,11 +8,9 @@ using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 
 using Org.BouncyCastle.Crypto;
-using Org.BouncyCastle.Crypto.Parameters;
 using Org.BouncyCastle.OpenSsl;
 using Org.BouncyCastle.Pkcs;
 using Org.BouncyCastle.Security;
-using Org.BouncyCastle.Utilities.IO.Pem;
 
 using TestFtpServer.Configuration;
 
@@ -111,7 +109,7 @@ namespace TestFtpServer
             AsymmetricKeyParameter keyParameter;
             using (var pkReader = File.OpenText(options.Ftps.PrivateKey))
             {
-                keyParameter = (AsymmetricKeyParameter)new Org.BouncyCastle.OpenSsl.PemReader(pkReader, passwordFinder).ReadObject();
+                keyParameter = (AsymmetricKeyParameter)new PemReader(pkReader, passwordFinder).ReadObject();
             }
 
             var store = new Pkcs12StoreBuilder()
