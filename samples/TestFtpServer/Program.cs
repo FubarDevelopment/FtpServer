@@ -510,7 +510,6 @@ namespace TestFtpServer
                                 TlsEnableServerCommandHandler.EnableTlsAsync(
                                     e.Connection,
                                     authTlsOptions.Value.ServerCertificate,
-                                    sslStreamWrapperFactory,
                                     CancellationToken.None).Wait();
                             };
                         }

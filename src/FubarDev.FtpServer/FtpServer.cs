@@ -224,7 +224,7 @@ namespace FubarDev.FtpServer
                     var response = new FtpResponse(10068, "Too many users, server is full.");
                     var responseBuffer = Encoding.UTF8.GetBytes($"{response}\r\n");
                     var secureConnectionFeature = connection.Features.Get<ISecureConnectionFeature>();
-                    secureConnectionFeature.SocketStream.Write(responseBuffer, 0, responseBuffer.Length);
+                    secureConnectionFeature.OriginalStream.Write(responseBuffer, 0, responseBuffer.Length);
                     client.Dispose();
                     scope.Dispose();
                     return;

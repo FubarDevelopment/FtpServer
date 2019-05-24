@@ -243,8 +243,6 @@ namespace FubarDev.FtpServer.Commands
                .ConfigureAwait(false);
             if (response.Code == 421)
             {
-                var socketStream = _connection.Features.Get<ISecureConnectionFeature>().SocketStream;
-                socketStream.Flush();
                 await _connection.StopAsync().ConfigureAwait(false);
             }
         }

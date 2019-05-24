@@ -2,13 +2,12 @@
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
-using System;
-using System.IO;
+using System.Net.Sockets;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading;
 using System.Threading.Tasks;
 
-using FubarDev.FtpServer.Authentication;
+using FubarDev.FtpServer.ConnectionHandlers;
 using FubarDev.FtpServer.Features;
 using FubarDev.FtpServer.ServerCommands;
 using FubarDev.FtpServer.Utilities;
@@ -28,9 +27,6 @@ namespace FubarDev.FtpServer.ServerCommandHandlers
         [NotNull]
         private readonly IFtpConnectionAccessor _connectionAccessor;
 
-        [NotNull]
-        private readonly ISslStreamWrapperFactory _sslStreamWrapperFactory;
-
         [CanBeNull]
         private readonly X509Certificate2 _serverCertificate;
 
@@ -42,11 +38,9 @@ namespace FubarDev.FtpServer.ServerCommandHandlers
         /// <param name="options">Options for the AUTH TLS command.</param>
         public TlsEnableServerCommandHandler(
             [NotNull] IFtpConnectionAccessor connectionAccessor,
-            [NotNull] ISslStreamWrapperFactory sslStreamWrapperFactory,
             [NotNull] IOptions<AuthTlsOptions> options)
         {
             _connectionAccessor = connectionAccessor;
-            _sslStreamWrapperFactory = sslStreamWrapperFactory;
             _serverCertificate = options.Value.ServerCertificate;
         }
 
@@ -55,60 +49,28 @@ namespace FubarDev.FtpServer.ServerCommandHandlers
         /// </summary>
         /// <param name="connection">The FTP connection to activate TLS for.</param>
         /// <param name="certificate">The X.509 certificate to use (with private key).</param>
-        /// <param name="sslStreamWrapperFactory">The SSL stream wrapper factory.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public static async Task EnableTlsAsync(
+        public static Task EnableTlsAsync(
             [NotNull] IFtpConnection connection,
             [NotNull] X509Certificate2 certificate,
-            [NotNull] ISslStreamWrapperFactory sslStreamWrapperFactory,
             CancellationToken cancellationToken)
         {
-            var localizationFeature = connection.Features.Get<ILocalizationFeature>();
-            var serverCommandsFeature = connection.Features.Get<IServerCommandFeature>();
-
             var networkStreamFeature = connection.Features.Get<INetworkStreamFeature>();
+            var service = (TlsStreamService)networkStreamFeature.TlsStreamService;
 
             var secureConnectionFeature = connection.Features.Get<ISecureConnectionFeature>();
-            await secureConnectionFeature.SocketStream.FlushAsync(cancellationToken).ConfigureAwait(false);
+            connection.Log?.LogTrace("Enable SslStream");
+            service.EnableSslStream = true;
 
-            try
-            {
-                connection.Log?.LogTrace("Closing old encrypted control stream.");
-                await secureConnectionFeature.CloseEncryptedControlStream(
-                        secureConnectionFeature.SocketStream,
-                        cancellationToken)
-                   .ConfigureAwait(false);
+            connection.Log?.LogTrace("Set close function");
+            secureConnectionFeature.CloseEncryptedControlStream =
+                ct => CloseEncryptedControlConnectionAsync(
+                    networkStreamFeature,
+                    secureConnectionFeature,
+                    ct);
 
-                connection.Log?.LogTrace("Wrap into new SslStream.");
-                var sslStream = await sslStreamWrapperFactory.WrapStreamAsync(
-                        secureConnectionFeature.OriginalStream,
-                        true,
-                        certificate,
-                        cancellationToken)
-                   .ConfigureAwait(false);
-
-                connection.Log?.LogTrace("Set close function.");
-                secureConnectionFeature.CloseEncryptedControlStream =
-                    (encryptedStream, ct) => CloseEncryptedControlConnectionAsync(
-                        networkStreamFeature,
-                        secureConnectionFeature,
-                        sslStreamWrapperFactory,
-                        ct);
-
-                secureConnectionFeature.SocketStream = sslStream;
-                networkStreamFeature.StreamReaderService.Stream = sslStream;
-                networkStreamFeature.StreamWriterService.Stream = sslStream;
-            }
-            catch (Exception ex)
-            {
-                connection.Log?.LogWarning(0, ex, "SSL stream authentication failed: {0}", ex.Message);
-                var errorMessage = localizationFeature.Catalog.GetString("TLS authentication failed");
-                await serverCommandsFeature.ServerCommandWriter.WriteAsync(
-                        new SendResponseServerCommand(new FtpResponse(421, errorMessage)),
-                        cancellationToken)
-                   .ConfigureAwait(false);
-            }
+            return Task.CompletedTask;
         }
 
         /// <inheritdoc />
@@ -135,7 +97,7 @@ namespace FubarDev.FtpServer.ServerCommandHandlers
 
             try
             {
-                await EnableTlsAsync(connection, _serverCertificate, _sslStreamWrapperFactory, cancellationToken)
+                await EnableTlsAsync(connection, _serverCertificate, cancellationToken)
                    .ConfigureAwait(false);
             }
             finally
@@ -145,50 +107,26 @@ namespace FubarDev.FtpServer.ServerCommandHandlers
             }
         }
 
-        private static async Task<Stream> CloseEncryptedControlConnectionAsync(
+        private static async Task CloseEncryptedControlConnectionAsync(
             [NotNull] INetworkStreamFeature networkStreamFeature,
             [NotNull] ISecureConnectionFeature secureConnectionFeature,
-            [NotNull] ISslStreamWrapperFactory sslStreamWrapperFactory,
             CancellationToken cancellationToken)
         {
             var originalStream = secureConnectionFeature.OriginalStream;
-
-            if (!secureConnectionFeature.IsSecure)
-            {
-                return originalStream;
-            }
-
-            var encryptedStream = secureConnectionFeature.SocketStream;
-
-            var readerDisposeFunc = await networkStreamFeature.StreamReaderService.WrapPauseAsync(cancellationToken)
+            var readerDisposeFunc = await networkStreamFeature.TlsStreamService.WrapPauseAsync(cancellationToken)
                .ConfigureAwait(false);
             try
             {
-                var writerDisposeFunc = await networkStreamFeature.StreamWriterService.WrapPauseAsync(cancellationToken)
-                   .ConfigureAwait(false);
-                try
-                {
-                    await sslStreamWrapperFactory.CloseStreamAsync(encryptedStream, cancellationToken)
-                       .ConfigureAwait(false);
+                var service = (TlsStreamService)networkStreamFeature.TlsStreamService;
+                service.EnableSslStream = false;
 
-                    secureConnectionFeature.CreateEncryptedStream = null;
-                    secureConnectionFeature.CloseEncryptedControlStream = (stream, ct) => Task.FromResult(originalStream);
-                    secureConnectionFeature.SocketStream = originalStream;
-                    networkStreamFeature.StreamReaderService.Stream = originalStream;
-                    networkStreamFeature.StreamWriterService.Stream = originalStream;
-                }
-                finally
-                {
-                    await writerDisposeFunc()
-                       .ConfigureAwait(false);
-                }
+                secureConnectionFeature.CreateEncryptedStream = null;
+                secureConnectionFeature.CloseEncryptedControlStream = ct => Task.CompletedTask;
             }
             finally
             {
                 await readerDisposeFunc().ConfigureAwait(false);
             }
-
-            return secureConnectionFeature.OriginalStream;
         }
     }
 }

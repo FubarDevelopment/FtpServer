@@ -62,11 +62,7 @@ namespace FubarDev.FtpServer.CommandHandlers
             fileSystemFeature.Path.Clear();
 
             // Remove the control connection encryption
-            await secureConnectionFeature.SocketStream.FlushAsync(cancellationToken)
-               .ConfigureAwait(false);
-            await secureConnectionFeature.CloseEncryptedControlStream(
-                    secureConnectionFeature.SocketStream,
-                    cancellationToken)
+            await secureConnectionFeature.CloseEncryptedControlStream(cancellationToken)
                .ConfigureAwait(false);
 
             // Dispose and remove all features (if disposable)

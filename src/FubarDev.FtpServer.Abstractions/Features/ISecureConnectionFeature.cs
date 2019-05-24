@@ -21,17 +21,6 @@ namespace FubarDev.FtpServer.Features
         NetworkStream OriginalStream { get; }
 
         /// <summary>
-        /// Gets or sets the control connection stream.
-        /// </summary>
-        [NotNull]
-        Stream SocketStream { get; set; }
-
-        /// <summary>
-        /// Gets a value indicating whether this is a secure connection.
-        /// </summary>
-        bool IsSecure { get; }
-
-        /// <summary>
         /// Gets or sets a delegate that allows the creation of an encrypted stream.
         /// </summary>
         [CanBeNull]

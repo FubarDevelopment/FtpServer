@@ -14,6 +14,9 @@ using FubarDev.FtpServer.Authentication;
 
 using JetBrains.Annotations;
 
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+
 namespace FubarDev.FtpServer.ConnectionHandlers
 {
     public class TlsStreamService : ICommunicationService
@@ -27,8 +30,14 @@ namespace FubarDev.FtpServer.ConnectionHandlers
         [NotNull]
         private readonly ISslStreamWrapperFactory _sslStreamWrapperFactory;
 
-        [NotNull]
+        [CanBeNull]
         private readonly X509Certificate2 _certificate;
+
+        [NotNull]
+        private readonly IServiceProvider _serviceProvider;
+
+        [CanBeNull]
+        private readonly ILogger _logger;
 
         private readonly CancellationTokenSource _connectionClosedCts;
 
@@ -41,17 +50,22 @@ namespace FubarDev.FtpServer.ConnectionHandlers
         [NotNull]
         private Task _task = Task.CompletedTask;
 
+        private bool _enableSslStream;
+
         public TlsStreamService(
             [NotNull] IDuplexPipe socketPipe,
             [NotNull] IDuplexPipe connectionPipe,
             [NotNull] ISslStreamWrapperFactory sslStreamWrapperFactory,
-            [NotNull] X509Certificate2 certificate,
+            [CanBeNull] X509Certificate2 certificate,
+            [NotNull] IServiceProvider serviceProvider,
             CancellationTokenSource connectionClosedCts)
         {
             _socketPipe = socketPipe;
             _connectionPipe = connectionPipe;
             _sslStreamWrapperFactory = sslStreamWrapperFactory;
             _certificate = certificate;
+            _serviceProvider = serviceProvider;
+            _logger = serviceProvider.GetService<ILogger<TlsStreamService>>();
             _connectionClosedCts = connectionClosedCts;
         }
 
@@ -61,7 +75,19 @@ namespace FubarDev.FtpServer.ConnectionHandlers
         /// <summary>
         /// Gets or sets a value indicating whether the SSL stream should be used.
         /// </summary>
-        public bool EnableSslStream { get; set; }
+        public bool EnableSslStream
+        {
+            get => _enableSslStream;
+            set
+            {
+                if (_certificate == null && value)
+                {
+                    throw new InvalidOperationException("No certificate configured.");
+                }
+
+                _enableSslStream = value;
+            }
+        }
 
         /// <inheritdoc />
         public Task StartAsync(CancellationToken cancellationToken)
@@ -84,22 +110,24 @@ namespace FubarDev.FtpServer.ConnectionHandlers
                 throw new InvalidOperationException($"Status must be {ConnectionStatus.Running}, {ConnectionStatus.Stopped}, or {ConnectionStatus.Paused}, but was {Status}.");
             }
 
+            _socketPipe.Input.CancelPendingRead();
             _jobStopped.Cancel();
 
             return _task;
         }
 
         /// <inheritdoc />
-        public async Task PauseAsync(CancellationToken cancellationToken)
+        public Task PauseAsync(CancellationToken cancellationToken)
         {
             if (Status != ConnectionStatus.Running)
             {
                 throw new InvalidOperationException($"Status must be {ConnectionStatus.Running}, but was {Status}.");
             }
 
+            _socketPipe.Input.CancelPendingRead();
             _jobPaused.Cancel();
 
-            await _task.ConfigureAwait(false);
+            return _task;
         }
 
         /// <inheritdoc />
@@ -123,68 +151,18 @@ namespace FubarDev.FtpServer.ConnectionHandlers
             return Task.CompletedTask;
         }
 
-        private async Task RunAsync([NotNull] IProgress<ConnectionStatus> statusProgress)
-        {
-            statusProgress.Report(ConnectionStatus.Running);
-
-            try
-            {
-                using (var globalCts = CancellationTokenSource.CreateLinkedTokenSource(
-                    _connectionClosedCts.Token,
-                    _jobStopped.Token,
-                    _jobPaused.Token))
-                {
-                    Task task;
-                    if (EnableSslStream)
-                    {
-                        task = EncryptAsync(
-                            _socketPipe,
-                            _connectionPipe,
-                            _sslStreamWrapperFactory,
-                            _certificate,
-                            globalCts.Token);
-                    }
-                    else
-                    {
-                        task = PassThroughAsync(
-                            _socketPipe,
-                            _connectionPipe,
-                            globalCts.Token);
-                    }
-
-                    await Task.WhenAny(task, Task.Delay(-1, globalCts.Token))
-                       .ConfigureAwait(false);
-                }
-
-                // Don't call Complete() when the job was just paused.
-                if (_jobPaused.IsCancellationRequested)
-                {
-                    statusProgress.Report(ConnectionStatus.Paused);
-                    return;
-                }
-            }
-            catch
-            {
-                // TODO: Logging!
-                _connectionClosedCts.Cancel();
-            }
-
-            _socketPipe.Input.Complete();
-            _socketPipe.Output.Complete();
-            _connectionPipe.Input.Complete();
-            _connectionPipe.Output.Complete();
-
-            statusProgress.Report(ConnectionStatus.Stopped);
-        }
-
         private static async Task EncryptAsync(
             [NotNull] IDuplexPipe socketPipe,
             [NotNull] IDuplexPipe connectionPipe,
             [NotNull] ISslStreamWrapperFactory sslStreamWrapperFactory,
             [NotNull] X509Certificate2 certificate,
+            [NotNull] IServiceProvider serviceProvider,
             CancellationToken cancellationToken)
         {
-            var rawStream = new RawStream(socketPipe.Input, socketPipe.Output);
+            var rawStream = new RawStream(
+                socketPipe.Input,
+                socketPipe.Output,
+                serviceProvider.GetService<ILogger<RawStream>>());
             var sslStream = await sslStreamWrapperFactory.WrapStreamAsync(rawStream, false, certificate, cancellationToken)
                .ConfigureAwait(false);
             try
@@ -209,15 +187,20 @@ namespace FubarDev.FtpServer.ConnectionHandlers
         private static async Task PassThroughAsync(
             [NotNull] IDuplexPipe socketPipe,
             [NotNull] IDuplexPipe connectionPipe,
+            [NotNull] IServiceProvider serviceProvider,
             CancellationToken cancellationToken)
         {
+            var loggerFactory = serviceProvider.GetService<ILoggerFactory>();
+
             var connectionToSocket = PassThroughAsync(
                 connectionPipe.Input,
                 socketPipe.Output,
+                loggerFactory?.CreateLogger(typeof(TlsStreamService).FullName + "+PassThrough.Transmit"),
                 cancellationToken);
             var socketToConnection = PassThroughAsync(
                 socketPipe.Input,
                 connectionPipe.Output,
+                loggerFactory?.CreateLogger(typeof(TlsStreamService).FullName + "+PassThrough.Receive"),
                 cancellationToken);
 
             await Task.WhenAny(connectionToSocket, socketToConnection, Task.Delay(-1, cancellationToken))
@@ -232,21 +215,27 @@ namespace FubarDev.FtpServer.ConnectionHandlers
         private static async Task PassThroughAsync(
             [NotNull] PipeReader reader,
             [NotNull] PipeWriter writer,
+            [CanBeNull] ILogger logger,
             CancellationToken cancellationToken)
         {
+            logger?.LogTrace("Starting");
             while (true)
             {
-                // Allocate at least 512 bytes from the PipeWriter
                 try
                 {
+                    logger?.LogTrace("Reading");
                     var readResult = await reader.ReadAsync(cancellationToken)
                        .ConfigureAwait(false);
+
+                    logger?.LogTrace("Read result: IsCanceled={isCanceled}, IsCompleted={isCompleted}", readResult.IsCanceled, readResult.IsCompleted);
 
                     var buffer = readResult.Buffer;
                     var position = buffer.Start;
 
                     while (buffer.TryGet(ref position, out var memory))
                     {
+                        logger?.LogTrace("Received {numBytes} bytes", memory.Length);
+
                         // Don't use the cancellation token source from above. Otherwise
                         // data might be lost.
                         await writer.WriteAsync(memory, CancellationToken.None)
@@ -263,9 +252,12 @@ namespace FubarDev.FtpServer.ConnectionHandlers
                 catch (Exception ex) when (ex.IsOperationCancelledException())
                 {
                     // The job was aborted by one of the three cancellation tokens.
-                    break;
+                    logger?.LogTrace("Cancelled");
+                    return;
                 }
             }
+
+            logger?.LogTrace("Stopped");
         }
 
         [NotNull]
@@ -406,6 +398,74 @@ namespace FubarDev.FtpServer.ConnectionHandlers
             }
 
             await stream.FlushAsync(cancellationToken).ConfigureAwait(false);
+        }
+
+        private async Task RunAsync([NotNull] IProgress<ConnectionStatus> statusProgress)
+        {
+            _logger?.LogTrace("Starting");
+            statusProgress.Report(ConnectionStatus.Running);
+
+            try
+            {
+                using (var globalCts = CancellationTokenSource.CreateLinkedTokenSource(
+                    _connectionClosedCts.Token,
+                    _jobStopped.Token,
+                    _jobPaused.Token))
+                {
+                    Task task;
+                    if (EnableSslStream)
+                    {
+                        if (_certificate == null)
+                        {
+                            throw new InvalidOperationException("No certificate configured.");
+                        }
+
+                        _logger?.LogTrace("Use encrypted control connection");
+
+                        task = EncryptAsync(
+                            _socketPipe,
+                            _connectionPipe,
+                            _sslStreamWrapperFactory,
+                            _certificate,
+                            _serviceProvider,
+                            globalCts.Token);
+                    }
+                    else
+                    {
+                        _logger?.LogTrace("Use unencrypted control connection");
+
+                        task = PassThroughAsync(
+                            _socketPipe,
+                            _connectionPipe,
+                            _serviceProvider,
+                            globalCts.Token);
+                    }
+
+                    await task
+                       .ConfigureAwait(false);
+                }
+
+                // Don't call Complete() when the job was just paused.
+                if (_jobPaused.IsCancellationRequested)
+                {
+                    _logger?.LogTrace("Paused");
+                    statusProgress.Report(ConnectionStatus.Paused);
+                    return;
+                }
+            }
+            catch
+            {
+                // TODO: Logging!
+                _connectionClosedCts.Cancel();
+            }
+
+            _socketPipe.Input.Complete();
+            _socketPipe.Output.Complete();
+            _connectionPipe.Input.Complete();
+            _connectionPipe.Output.Complete();
+
+            statusProgress.Report(ConnectionStatus.Stopped);
+            _logger?.LogTrace("Stopped");
         }
     }
 }

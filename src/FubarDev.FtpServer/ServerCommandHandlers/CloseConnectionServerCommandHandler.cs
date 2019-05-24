@@ -35,23 +35,9 @@ namespace FubarDev.FtpServer.ServerCommandHandlers
         {
             var connection = _connectionAccessor.FtpConnection;
 
-            // Pause the sender (which also flushes the remaining data)
-            var networkStreamFeature = connection.Features.Get<INetworkStreamFeature>();
-            await networkStreamFeature.StreamWriterService.PauseAsync(cancellationToken)
-               .ConfigureAwait(false);
-
-            // Flush the stream
-            var secureConnectionFeature = connection.Features.Get<ISecureConnectionFeature>();
-            var socketStream = secureConnectionFeature.SocketStream;
-            await socketStream.FlushAsync(cancellationToken)
-               .ConfigureAwait(false);
-
-            // Close the SSL stream.
-            await secureConnectionFeature.CloseEncryptedControlStream(
-                    secureConnectionFeature.SocketStream,
-                    cancellationToken)
-               .ConfigureAwait(false);
-
+            // - Flush the remaining data
+            // - Close the SslStream (if active)
+            // - Stop all connection tasks
             await Task.WhenAny(connection.StopAsync(), Task.Delay(-1, cancellationToken))
                .ConfigureAwait(false);
         }

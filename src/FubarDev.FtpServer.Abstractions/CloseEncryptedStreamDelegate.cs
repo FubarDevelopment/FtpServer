@@ -14,10 +14,9 @@ namespace FubarDev.FtpServer
     /// <summary>
     /// Closes an encrypted stream.
     /// </summary>
-    /// <param name="encryptedStream">The encrypted stream to close.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
-    /// <returns>The task returning the original stream.</returns>
+    /// <returns>The task.</returns>
     [NotNull]
     [ItemNotNull]
-    public delegate Task<NetworkStream> CloseEncryptedStreamDelegate([NotNull] Stream encryptedStream, CancellationToken cancellationToken);
+    public delegate Task CloseEncryptedStreamDelegate(CancellationToken cancellationToken);
 }

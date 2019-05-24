@@ -9,18 +9,31 @@ using System.IO.Pipelines;
 using System.Threading;
 using System.Threading.Tasks;
 
+using JetBrains.Annotations;
+
+using Microsoft.Extensions.Logging;
+
 namespace FubarDev.FtpServer.ConnectionHandlers
 {
     internal class RawStream : Stream
     {
+        [NotNull]
         private readonly PipeReader _input;
 
+        [NotNull]
         private readonly PipeWriter _output;
 
-        public RawStream(PipeReader input, PipeWriter output)
+        [CanBeNull]
+        private readonly ILogger<RawStream> _logger;
+
+        public RawStream(
+            [NotNull] PipeReader input,
+            [NotNull] PipeWriter output,
+            [CanBeNull] ILogger<RawStream> logger)
         {
             _input = input;
             _output = output;
+            _logger = logger;
         }
 
         public override bool CanRead => true;
@@ -43,6 +56,7 @@ namespace FubarDev.FtpServer.ConnectionHandlers
 
         public override int Read(byte[] buffer, int offset, int count)
         {
+            _logger?.LogTrace("Try to read {count} bytes", count);
             // ValueTask uses .GetAwaiter().GetResult() if necessary
             // https://github.com/dotnet/corefx/blob/f9da3b4af08214764a51b2331f3595ffaf162abe/src/System.Threading.Tasks.Extensions/src/System/Threading/Tasks/ValueTask.cs#L156
             return ReadAsyncInternal(new Memory<byte>(buffer, offset, count), CancellationToken.None).Result;
@@ -50,16 +64,20 @@ namespace FubarDev.FtpServer.ConnectionHandlers
 
         public override Task<int> ReadAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken)
         {
+            _logger?.LogTrace("Try to read {count} bytes asynchronously", count);
             return ReadAsyncInternal(new Memory<byte>(buffer, offset, count), cancellationToken).AsTask();
         }
 
         public override void Write(byte[] buffer, int offset, int count)
         {
+            _logger?.LogTrace("Try to write {count} bytes", count);
             WriteAsync(buffer, offset, count).GetAwaiter().GetResult();
         }
 
         public override async Task WriteAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken)
         {
+            _logger?.LogTrace("Try to write {count} bytes asynchronously", count);
+
             if (buffer != null)
             {
                 _output.Write(new ReadOnlySpan<byte>(buffer, offset, count));
@@ -84,26 +102,25 @@ namespace FubarDev.FtpServer.ConnectionHandlers
             {
                 var result = await _input.ReadAsync(cancellationToken)
                    .ConfigureAwait(false);
-                var readableBuffer = result.Buffer;
-                try
-                {
-                    if (!readableBuffer.IsEmpty)
-                    {
-                        // buffer.Count is int
-                        var count = (int)Math.Min(readableBuffer.Length, destination.Length);
-                        readableBuffer = readableBuffer.Slice(0, count);
-                        readableBuffer.CopyTo(destination.Span);
-                        return count;
-                    }
 
-                    if (result.IsCompleted)
-                    {
-                        return 0;
-                    }
-                }
-                finally
+                var readableBuffer = result.Buffer;
+                if (!readableBuffer.IsEmpty)
                 {
-                    _input.AdvanceTo(readableBuffer.End, readableBuffer.End);
+                    _logger?.LogTrace("Received {byteCount} bytes", readableBuffer.Length);
+
+                    var count = (int)Math.Min(readableBuffer.Length, destination.Length);
+                    readableBuffer = readableBuffer.Slice(0, count);
+                    readableBuffer.CopyTo(destination.Span);
+                    _input.AdvanceTo(readableBuffer.GetPosition(count));
+
+                    return count;
+                }
+
+                _input.AdvanceTo(readableBuffer.End);
+
+                if (result.IsCompleted)
+                {
+                    return 0;
                 }
             }
         }

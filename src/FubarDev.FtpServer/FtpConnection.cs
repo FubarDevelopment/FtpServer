@@ -18,6 +18,7 @@ using System.Threading;
 using System.Threading.Channels;
 using System.Threading.Tasks;
 
+using FubarDev.FtpServer.Authentication;
 using FubarDev.FtpServer.CommandHandlers;
 using FubarDev.FtpServer.Commands;
 using FubarDev.FtpServer.ConnectionHandlers;
@@ -54,7 +55,10 @@ namespace FubarDev.FtpServer
 
         [NotNull]
         private readonly SecureDataConnectionWrapper _secureDataConnectionWrapper;
+
+        [NotNull]
         private readonly IFtpServerMessages _serverMessages;
+
         [CanBeNull]
         private readonly IDisposable _loggerScope;
 
@@ -62,10 +66,10 @@ namespace FubarDev.FtpServer
         private readonly Channel<IServerCommand> _serverCommandChannel;
 
         [NotNull]
-        private readonly Pipe _commandPipe = new Pipe();
+        private readonly Pipe _socketCommandPipe = new Pipe();
 
         [NotNull]
-        private readonly Pipe _responsePipe = new Pipe();
+        private readonly Pipe _socketResponsePipe = new Pipe();
 
         [NotNull]
         private readonly INetworkStreamFeature _networkStreamFeature;
@@ -83,8 +87,10 @@ namespace FubarDev.FtpServer
 
         private bool _closed;
 
+        [CanBeNull]
         private Task _commandChannelReader;
 
+        [CanBeNull]
         private Task _serverCommandHandler;
 
         /// <summary>
@@ -99,6 +105,8 @@ namespace FubarDev.FtpServer
         /// <param name="serviceProvider">The service provider for the connection.</param>
         /// <param name="secureDataConnectionWrapper">Wraps a data connection into an SSL stream.</param>
         /// <param name="serverMessages">The server messages.</param>
+        /// <param name="sslStreamWrapperFactory">The SSL stream wrapper factory.</param>
+        /// <param name="authTlsOptions">The AUTH TLS options.</param>
         /// <param name="logger">The logger for the FTP connection.</param>
         public FtpConnection(
             [NotNull] TcpClient socket,
@@ -110,6 +118,8 @@ namespace FubarDev.FtpServer
             [NotNull] IServiceProvider serviceProvider,
             [NotNull] SecureDataConnectionWrapper secureDataConnectionWrapper,
             [NotNull] IFtpServerMessages serverMessages,
+            [NotNull] ISslStreamWrapperFactory sslStreamWrapperFactory,
+            [NotNull] IOptions<AuthTlsOptions> authTlsOptions,
             [CanBeNull] ILogger<IFtpConnection> logger = null)
         {
             ConnectionServices = serviceProvider;
@@ -145,21 +155,30 @@ namespace FubarDev.FtpServer
                 remoteAddress);
             var secureConnectionFeature = new SecureConnectionFeature(socket);
 
-            var socketPipe = new DuplexPipe(_commandPipe.Reader, _responsePipe.Writer);
-            //var connectionPipe
+            var applicationInputPipe = new Pipe();
+            var applicationOutputPipe = new Pipe();
+            var socketPipe = new DuplexPipe(_socketCommandPipe.Reader, _socketResponsePipe.Writer);
+            var connectionPipe = new DuplexPipe(applicationOutputPipe.Reader, applicationInputPipe.Writer);
+
             _networkStreamFeature = new NetworkStreamFeature(
-                new TlsStreamService(),
+                new TlsStreamService(
+                    socketPipe,
+                    connectionPipe,
+                    sslStreamWrapperFactory,
+                    authTlsOptions.Value.ServerCertificate,
+                    serviceProvider,
+                    _cancellationTokenSource),
                 new NetworkStreamReader(
                     secureConnectionFeature.OriginalStream,
-                    _commandPipe.Writer,
+                    _socketCommandPipe.Writer,
                     _cancellationTokenSource,
                     serviceProvider.GetService<ILogger<NetworkStreamReader>>()),
                 new NetworkStreamWriter(
                     secureConnectionFeature.OriginalStream,
-                    _responsePipe.Reader,
+                    _socketResponsePipe.Reader,
                     _cancellationTokenSource.Token,
                     serviceProvider.GetService<ILogger<NetworkStreamWriter>>()),
-                _responsePipe.Writer);
+                applicationOutputPipe.Writer);
 
             parentFeatures.Set<IConnectionFeature>(connectionFeature);
             parentFeatures.Set<ISecureConnectionFeature>(secureConnectionFeature);
@@ -177,7 +196,7 @@ namespace FubarDev.FtpServer
             Features = features;
 
             _commandReader = ReadCommandsFromPipeline(
-                _commandPipe.Reader,
+                applicationInputPipe.Reader,
                 _ftpCommandChannel.Writer,
                 _cancellationTokenSource.Token);
         }
@@ -226,16 +245,16 @@ namespace FubarDev.FtpServer
         public Stream OriginalStream => Features.Get<ISecureConnectionFeature>().OriginalStream;
 
         /// <inheritdoc />
-        [Obsolete("Query the information using the ISecureConnectionFeature instead.")]
+        [Obsolete("Not needed anymore.")]
         public Stream SocketStream
         {
-            get => Features.Get<ISecureConnectionFeature>().SocketStream;
-            set => Features.Get<ISecureConnectionFeature>().SocketStream = value;
+            get => OriginalStream;
+            set => throw new NotSupportedException("Setting the socket stream isn't supported.");
         }
 
         /// <inheritdoc />
-        [Obsolete("Query the information using the ISecureConnectionFeature instead.")]
-        public bool IsSecure => Features.Get<ISecureConnectionFeature>().IsSecure;
+        [Obsolete("Not needed anymore.")]
+        public bool IsSecure => throw new NotSupportedException("Access to irrelevant leaking abstraction.");
 
         /// <summary>
         /// Gets the cancellation token to use to signal a task cancellation.
@@ -262,6 +281,8 @@ namespace FubarDev.FtpServer
                .ConfigureAwait(false);
             await _networkStreamFeature.StreamReaderService.StartAsync(CancellationToken.None)
                .ConfigureAwait(false);
+            await _networkStreamFeature.TlsStreamService.StartAsync(CancellationToken.None)
+               .ConfigureAwait(false);
 
             _commandChannelReader = CommandChannelDispatcherAsync(
                 _ftpCommandChannel.Reader,
@@ -276,11 +297,22 @@ namespace FubarDev.FtpServer
             Abort();
 
             await _commandReader.ConfigureAwait(false);
-            await _commandChannelReader.ConfigureAwait(false);
-            await _serverCommandHandler.ConfigureAwait(false);
+
+            if (_commandChannelReader != null)
+            {
+                await _commandChannelReader.ConfigureAwait(false);
+            }
+
+            if (_serverCommandHandler != null)
+            {
+                await _serverCommandHandler.ConfigureAwait(false);
+            }
+
+            await _networkStreamFeature.StreamReaderService.StopAsync(CancellationToken.None)
+               .ConfigureAwait(false);
             await _networkStreamFeature.StreamWriterService.StopAsync(CancellationToken.None)
                .ConfigureAwait(false);
-            await _networkStreamFeature.StreamReaderService.StopAsync(CancellationToken.None)
+            await _networkStreamFeature.TlsStreamService.StopAsync(CancellationToken.None)
                .ConfigureAwait(false);
         }
 
@@ -308,14 +340,8 @@ namespace FubarDev.FtpServer
         [Obsolete("Use the IConnectionFeature.ServerCommandWriter instead.")]
         public async Task WriteAsync(string response, CancellationToken cancellationToken)
         {
-            if (!_closed)
-            {
-                Log?.LogDebug(response);
-                var socketStream = Features.Get<ISecureConnectionFeature>().SocketStream;
-                var encoding = Features.Get<IEncodingFeature>().Encoding;
-                var data = encoding.GetBytes($"{response}\r\n");
-                await socketStream.WriteAsync(data, 0, data.Length, cancellationToken).ConfigureAwait(false);
-            }
+            await _serverCommandChannel.Writer.WriteAsync(new SendResponseServerCommand(new DirectFtpResponse(response)), cancellationToken)
+               .ConfigureAwait(false);
         }
 
         /// <inheritdoc/>
@@ -371,16 +397,6 @@ namespace FubarDev.FtpServer
 
             _closed = true;
             _cancellationTokenSource.Cancel(true);
-
-            // Close SSL stream (if not closed yet)
-            var secureConnectionFeature = Features.Get<ISecureConnectionFeature>();
-            var socketStream = secureConnectionFeature.SocketStream;
-            var originalStream = secureConnectionFeature.OriginalStream;
-            if (!ReferenceEquals(socketStream, originalStream))
-            {
-                socketStream.Dispose();
-                secureConnectionFeature.SocketStream = originalStream;
-            }
 
             // Dispose all features (if disposable)
             foreach (var featureItem in Features)
@@ -649,18 +665,12 @@ namespace FubarDev.FtpServer
         {
             public SecureConnectionFeature([NotNull] TcpClient tcpClient)
             {
-                SocketStream = OriginalStream = tcpClient.GetStream();
-                CloseEncryptedControlStream = (stream, ct) => Task.FromResult(OriginalStream);
+                OriginalStream = tcpClient.GetStream();
+                CloseEncryptedControlStream = ct => Task.CompletedTask;
             }
 
             /// <inheritdoc />
             public NetworkStream OriginalStream { get; }
-
-            /// <inheritdoc />
-            public Stream SocketStream { get; set; }
-
-            /// <inheritdoc />
-            public bool IsSecure => !ReferenceEquals(SocketStream, OriginalStream);
 
             /// <inheritdoc />
             public CreateEncryptedStreamDelegate CreateEncryptedStream { get; set; }
@@ -677,17 +687,39 @@ namespace FubarDev.FtpServer
                 Output = output;
             }
 
-            public DuplexPipe(Pipe pipe)
-            {
-                Input = pipe.Reader;
-                Output = pipe.Writer;
-            }
-
             /// <inheritdoc />
             public PipeReader Input { get; }
 
             /// <inheritdoc />
             public PipeWriter Output { get; }
+        }
+
+        private class DirectFtpResponse : IFtpResponse
+        {
+            private readonly string _text;
+
+            public DirectFtpResponse(string text)
+            {
+                _text = text;
+            }
+
+            /// <inheritdoc />
+            public int Code { get; } = -1;
+
+            /// <inheritdoc />
+            public FtpResponseAfterWriteAsyncDelegate AfterWriteAction { get; } = null;
+
+            /// <inheritdoc />
+            public Task<FtpResponseLine> GetNextLineAsync(object token, CancellationToken cancellationToken)
+            {
+                return Task.FromResult(new FtpResponseLine(_text, null));
+            }
+
+            /// <inheritdoc />
+            public override string ToString()
+            {
+                return _text;
+            }
         }
     }
 }
