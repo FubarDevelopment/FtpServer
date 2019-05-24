@@ -18,8 +18,11 @@ namespace FubarDev.FtpServer.ConnectionHandlers
     /// <summary>
     /// Reads from a stream and writes into a pipeline.
     /// </summary>
-    public class NetworkStreamReader : INetworkStreamService
+    public class NetworkStreamReader : ICommunicationService
     {
+        [NotNull]
+        private readonly NetworkStream _stream;
+
         [NotNull]
         private readonly PipeWriter _pipeWriter;
 
@@ -45,19 +48,16 @@ namespace FubarDev.FtpServer.ConnectionHandlers
         /// <param name="connectionClosedCts">Cancellation token source for a closed connection.</param>
         /// <param name="logger">The logger.</param>
         public NetworkStreamReader(
-            [NotNull] Stream stream,
+            [NotNull] NetworkStream stream,
             [NotNull] PipeWriter pipeWriter,
             CancellationTokenSource connectionClosedCts,
             [CanBeNull] ILogger<NetworkStreamReader> logger = null)
         {
-            Stream = stream;
+            _stream = stream;
             _pipeWriter = pipeWriter;
             _connectionClosedCts = connectionClosedCts;
             _logger = logger;
         }
-
-        /// <inheritdoc />
-        public Stream Stream { get; set; }
 
         /// <inheritdoc />
         public ConnectionStatus Status { get; private set; } = ConnectionStatus.ReadyToRun;
@@ -71,7 +71,7 @@ namespace FubarDev.FtpServer.ConnectionHandlers
             }
 
             _task = FillPipelineAsync(
-                Stream,
+                _stream,
                 _pipeWriter,
                 _connectionClosedCts,
                 _jobStopped.Token,
@@ -127,7 +127,7 @@ namespace FubarDev.FtpServer.ConnectionHandlers
             _jobPaused = new CancellationTokenSource();
 
             _task = FillPipelineAsync(
-                Stream,
+                _stream,
                 _pipeWriter,
                 _connectionClosedCts,
                 _jobStopped.Token,
@@ -149,7 +149,6 @@ namespace FubarDev.FtpServer.ConnectionHandlers
             [CanBeNull] ILogger logger)
         {
             var globalCts = CancellationTokenSource.CreateLinkedTokenSource(connectionClosedCts.Token, jobStopped, jobPaused);
-            var buffer = new byte[1024];
 
             statusProgress.Report(ConnectionStatus.Running);
 
@@ -157,6 +156,7 @@ namespace FubarDev.FtpServer.ConnectionHandlers
 
             var networkStream = stream as NetworkStream;
 
+            var buffer = new byte[1024];
             Exception exception = null;
             while (true)
             {

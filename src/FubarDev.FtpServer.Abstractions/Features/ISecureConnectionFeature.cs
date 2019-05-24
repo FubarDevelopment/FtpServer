@@ -3,6 +3,7 @@
 // </copyright>
 
 using System.IO;
+using System.Net.Sockets;
 
 using JetBrains.Annotations;
 
@@ -17,7 +18,7 @@ namespace FubarDev.FtpServer.Features
         /// Gets the control connection stream.
         /// </summary>
         [NotNull]
-        Stream OriginalStream { get; }
+        NetworkStream OriginalStream { get; }
 
         /// <summary>
         /// Gets or sets the control connection stream.

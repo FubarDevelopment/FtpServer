@@ -144,7 +144,11 @@ namespace FubarDev.FtpServer
                 (IPEndPoint)socket.Client.LocalEndPoint,
                 remoteAddress);
             var secureConnectionFeature = new SecureConnectionFeature(socket);
+
+            var socketPipe = new DuplexPipe(_commandPipe.Reader, _responsePipe.Writer);
+            //var connectionPipe
             _networkStreamFeature = new NetworkStreamFeature(
+                new TlsStreamService(),
                 new NetworkStreamReader(
                     secureConnectionFeature.OriginalStream,
                     _commandPipe.Writer,
@@ -645,12 +649,12 @@ namespace FubarDev.FtpServer
         {
             public SecureConnectionFeature([NotNull] TcpClient tcpClient)
             {
-                OriginalStream = SocketStream = tcpClient.GetStream();
+                SocketStream = OriginalStream = tcpClient.GetStream();
                 CloseEncryptedControlStream = (stream, ct) => Task.FromResult(OriginalStream);
             }
 
             /// <inheritdoc />
-            public Stream OriginalStream { get; }
+            public NetworkStream OriginalStream { get; }
 
             /// <inheritdoc />
             public Stream SocketStream { get; set; }
@@ -663,6 +667,27 @@ namespace FubarDev.FtpServer
 
             /// <inheritdoc />
             public CloseEncryptedStreamDelegate CloseEncryptedControlStream { get; set; }
+        }
+
+        private class DuplexPipe : IDuplexPipe
+        {
+            public DuplexPipe(PipeReader input, PipeWriter output)
+            {
+                Input = input;
+                Output = output;
+            }
+
+            public DuplexPipe(Pipe pipe)
+            {
+                Input = pipe.Reader;
+                Output = pipe.Writer;
+            }
+
+            /// <inheritdoc />
+            public PipeReader Input { get; }
+
+            /// <inheritdoc />
+            public PipeWriter Output { get; }
         }
     }
 }

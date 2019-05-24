@@ -45,12 +45,12 @@ namespace FubarDev.FtpServer.ConnectionHandlers
         {
             // ValueTask uses .GetAwaiter().GetResult() if necessary
             // https://github.com/dotnet/corefx/blob/f9da3b4af08214764a51b2331f3595ffaf162abe/src/System.Threading.Tasks.Extensions/src/System/Threading/Tasks/ValueTask.cs#L156
-            return ReadAsyncInternal(new Memory<byte>(buffer, offset, count)).Result;
+            return ReadAsyncInternal(new Memory<byte>(buffer, offset, count), CancellationToken.None).Result;
         }
 
         public override Task<int> ReadAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken)
         {
-            return ReadAsyncInternal(new Memory<byte>(buffer, offset, count)).AsTask();
+            return ReadAsyncInternal(new Memory<byte>(buffer, offset, count), cancellationToken).AsTask();
         }
 
         public override void Write(byte[] buffer, int offset, int count)
@@ -78,11 +78,12 @@ namespace FubarDev.FtpServer.ConnectionHandlers
             return WriteAsync(null, 0, 0, cancellationToken);
         }
 
-        private async ValueTask<int> ReadAsyncInternal(Memory<byte> destination)
+        private async ValueTask<int> ReadAsyncInternal(Memory<byte> destination, CancellationToken cancellationToken)
         {
             while (true)
             {
-                var result = await _input.ReadAsync();
+                var result = await _input.ReadAsync(cancellationToken)
+                   .ConfigureAwait(false);
                 var readableBuffer = result.Buffer;
                 try
                 {

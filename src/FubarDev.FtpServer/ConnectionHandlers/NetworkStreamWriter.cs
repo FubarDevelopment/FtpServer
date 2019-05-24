@@ -6,6 +6,7 @@ using System;
 using System.Buffers;
 using System.IO;
 using System.IO.Pipelines;
+using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -18,8 +19,11 @@ namespace FubarDev.FtpServer.ConnectionHandlers
     /// <summary>
     /// Reads from a pipe and writes to a stream.
     /// </summary>
-    public class NetworkStreamWriter : INetworkStreamService
+    public class NetworkStreamWriter : ICommunicationService
     {
+        [NotNull]
+        private readonly NetworkStream _stream;
+
         [NotNull]
         private readonly PipeReader _pipeReader;
 
@@ -45,19 +49,16 @@ namespace FubarDev.FtpServer.ConnectionHandlers
         /// <param name="connectionClosed">Cancellation token for a closed connection.</param>
         /// <param name="logger">The logger.</param>
         public NetworkStreamWriter(
-            [NotNull] Stream stream,
+            [NotNull] NetworkStream stream,
             [NotNull] PipeReader pipeReader,
             CancellationToken connectionClosed,
             [CanBeNull] ILogger<NetworkStreamWriter> logger = null)
         {
-            Stream = stream;
+            _stream = stream;
             _pipeReader = pipeReader;
             _connectionClosed = connectionClosed;
             _logger = logger;
         }
-
-        /// <inheritdoc />
-        public Stream Stream { get; set; }
 
         /// <inheritdoc />
         public ConnectionStatus Status { get; private set; } = ConnectionStatus.ReadyToRun;
@@ -71,7 +72,7 @@ namespace FubarDev.FtpServer.ConnectionHandlers
             }
 
             _task = SendPipelineAsync(
-                Stream,
+                _stream,
                 _pipeReader,
                 _connectionClosed,
                 _jobStopped.Token,
@@ -113,7 +114,7 @@ namespace FubarDev.FtpServer.ConnectionHandlers
             {
                 if (!cancellationToken.IsCancellationRequested)
                 {
-                    await FlushAsync(Stream, _pipeReader, cancellationToken, _logger).ConfigureAwait(false);
+                    await FlushAsync(_stream, _pipeReader, cancellationToken, _logger).ConfigureAwait(false);
                 }
             }
             catch (Exception ex) when (ex.IsIOException())
@@ -143,7 +144,7 @@ namespace FubarDev.FtpServer.ConnectionHandlers
             _jobPaused = new CancellationTokenSource();
 
             _task = SendPipelineAsync(
-                Stream,
+                _stream,
                 _pipeReader,
                 _connectionClosed,
                 _jobStopped.Token,

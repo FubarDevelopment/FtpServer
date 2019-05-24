@@ -3,6 +3,7 @@
 // </copyright>
 
 using System.IO;
+using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -18,5 +19,5 @@ namespace FubarDev.FtpServer
     /// <returns>The task returning the original stream.</returns>
     [NotNull]
     [ItemNotNull]
-    public delegate Task<Stream> CloseEncryptedStreamDelegate([NotNull] Stream encryptedStream, CancellationToken cancellationToken);
+    public delegate Task<NetworkStream> CloseEncryptedStreamDelegate([NotNull] Stream encryptedStream, CancellationToken cancellationToken);
 }

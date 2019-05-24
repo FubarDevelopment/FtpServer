@@ -13,20 +13,25 @@ namespace FubarDev.FtpServer.Features.Impl
     internal class NetworkStreamFeature : INetworkStreamFeature
     {
         public NetworkStreamFeature(
-            [NotNull] INetworkStreamService streamReaderService,
-            [NotNull] INetworkStreamService streamWriterService,
+            [NotNull] ICommunicationService tlsStreamService,
+            [NotNull] ICommunicationService streamReaderService,
+            [NotNull] ICommunicationService streamWriterService,
             [NotNull] PipeWriter output)
         {
             StreamReaderService = streamReaderService;
             StreamWriterService = streamWriterService;
             Output = output;
+            TlsStreamService = tlsStreamService;
         }
 
         /// <inheritdoc />
-        public INetworkStreamService StreamReaderService { get; }
+        public ICommunicationService TlsStreamService { get; }
 
         /// <inheritdoc />
-        public INetworkStreamService StreamWriterService { get; }
+        public ICommunicationService StreamReaderService { get; }
+
+        /// <inheritdoc />
+        public ICommunicationService StreamWriterService { get; }
 
         /// <inheritdoc />
         public PipeWriter Output { get; }
