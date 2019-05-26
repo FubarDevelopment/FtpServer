@@ -48,7 +48,10 @@ namespace FubarDev.FtpServer.ConnectionHandlers
         private CancellationTokenSource _jobPaused = new CancellationTokenSource();
 
         [NotNull]
-        private Task _task = Task.CompletedTask;
+        private Task _receiveTask = Task.CompletedTask;
+
+        [NotNull]
+        private Task _transmitTask = Task.CompletedTask;
 
         private bool _enableSslStream;
 
@@ -422,13 +425,29 @@ namespace FubarDev.FtpServer.ConnectionHandlers
 
                         _logger?.LogTrace("Use encrypted control connection");
 
-                        task = EncryptAsync(
-                            _socketPipe,
-                            _connectionPipe,
-                            _sslStreamWrapperFactory,
-                            _certificate,
-                            _serviceProvider,
-                            globalCts.Token);
+                        var rawStream = new RawStream(
+                            _socketPipe.Input,
+                            _socketPipe.Output,
+                            _serviceProvider.GetService<ILogger<RawStream>>());
+                        var sslStream = await _sslStreamWrapperFactory.WrapStreamAsync(rawStream, false, _certificate, globalCts.Token)
+                           .ConfigureAwait(false);
+                        try
+                        {
+                            var copyToStream = CopyPipelineToStreamAsync(sslStream, _connectionPipe.Input, globalCts.Token);
+                            var copyToPipeline = CopyStreamToPipelineAsync(sslStream, _connectionPipe.Output, globalCts.Token);
+
+                            await Task.WhenAny(copyToStream, copyToPipeline, Task.Delay(-1, globalCts.Token))
+                               .ConfigureAwait(false);
+                            _socketPipe.Input.CancelPendingRead();
+
+                            await Task.WhenAll(copyToStream, copyToPipeline)
+                               .ConfigureAwait(false);
+                        }
+                        finally
+                        {
+                            await _sslStreamWrapperFactory.CloseStreamAsync(sslStream, globalCts.Token)
+                               .ConfigureAwait(false);
+                        }
                     }
                     else
                     {
