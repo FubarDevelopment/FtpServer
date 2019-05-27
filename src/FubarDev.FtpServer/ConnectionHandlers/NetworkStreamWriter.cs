@@ -6,7 +6,6 @@ using System;
 using System.Buffers;
 using System.IO;
 using System.IO.Pipelines;
-using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -19,27 +18,16 @@ namespace FubarDev.FtpServer.ConnectionHandlers
     /// <summary>
     /// Reads from a pipe and writes to a stream.
     /// </summary>
-    public class NetworkStreamWriter : ICommunicationService
+    public class NetworkStreamWriter : CommunicationServiceBase
     {
         [NotNull]
-        private readonly NetworkStream _stream;
+        private readonly Stream _stream;
 
         [NotNull]
         private readonly PipeReader _pipeReader;
 
-        [NotNull]
-        private readonly CancellationTokenSource _jobStopped = new CancellationTokenSource();
-
-        private readonly CancellationToken _connectionClosed;
-
         [CanBeNull]
-        private readonly ILogger<NetworkStreamWriter> _logger;
-
-        [NotNull]
-        private CancellationTokenSource _jobPaused = new CancellationTokenSource();
-
-        [NotNull]
-        private Task _task = Task.CompletedTask;
+        private Exception _exception;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NetworkStreamWriter"/> class.
@@ -49,108 +37,78 @@ namespace FubarDev.FtpServer.ConnectionHandlers
         /// <param name="connectionClosed">Cancellation token for a closed connection.</param>
         /// <param name="logger">The logger.</param>
         public NetworkStreamWriter(
-            [NotNull] NetworkStream stream,
+            [NotNull] Stream stream,
             [NotNull] PipeReader pipeReader,
             CancellationToken connectionClosed,
-            [CanBeNull] ILogger<NetworkStreamWriter> logger = null)
+            [CanBeNull] ILogger logger = null)
+            : base(connectionClosed, logger)
         {
             _stream = stream;
             _pipeReader = pipeReader;
-            _connectionClosed = connectionClosed;
-            _logger = logger;
         }
 
         /// <inheritdoc />
-        public ConnectionStatus Status { get; private set; } = ConnectionStatus.ReadyToRun;
-
-        /// <inheritdoc />
-        public Task StartAsync(CancellationToken cancellationToken)
+        protected override async Task ExecuteAsync(CancellationToken cancellationToken)
         {
-            if (Status != ConnectionStatus.ReadyToRun)
+            while (true)
             {
-                throw new InvalidOperationException($"Status must be {ConnectionStatus.ReadyToRun}, but was {Status}.");
-            }
+                Logger?.LogTrace("Start reading response");
+                var readResult = await _pipeReader.ReadAsync(cancellationToken)
+                   .ConfigureAwait(false);
 
-            _task = SendPipelineAsync(
-                _stream,
-                _pipeReader,
-                _connectionClosed,
-                _jobStopped.Token,
-                _jobPaused.Token,
-                new Progress<ConnectionStatus>(status => Status = status),
-                _logger);
+                // Don't use the cancellation token source from above. Otherwise
+                // data might be lost.
+                await SendDataToStream(readResult.Buffer, _stream, CancellationToken.None, Logger)
+                   .ConfigureAwait(false);
 
-            return Task.CompletedTask;
-        }
+                _pipeReader.AdvanceTo(readResult.Buffer.End);
 
-        /// <inheritdoc />
-        public Task StopAsync(CancellationToken cancellationToken)
-        {
-            if (Status != ConnectionStatus.Running && Status != ConnectionStatus.Stopped && Status != ConnectionStatus.Paused)
-            {
-                throw new InvalidOperationException($"Status must be {ConnectionStatus.Running}, {ConnectionStatus.Stopped}, or {ConnectionStatus.Paused}, but was {Status}.");
-            }
-
-            _logger?.LogTrace("Signalling STOP");
-            _jobStopped.Cancel();
-
-            return _task;
-        }
-
-        /// <inheritdoc />
-        public async Task PauseAsync(CancellationToken cancellationToken)
-        {
-            if (Status != ConnectionStatus.Running)
-            {
-                throw new InvalidOperationException($"Status must be {ConnectionStatus.Running}, but was {Status}.");
-            }
-
-            _logger?.LogTrace("Signalling PAUSE");
-            _jobPaused.Cancel();
-
-            await _task.ConfigureAwait(false);
-
-            try
-            {
-                if (!cancellationToken.IsCancellationRequested)
+                if (readResult.IsCanceled || readResult.IsCompleted)
                 {
-                    await FlushAsync(_stream, _pipeReader, cancellationToken, _logger).ConfigureAwait(false);
+                    Logger?.LogTrace("Was cancelled or completed.");
+                    break;
                 }
             }
-            catch (Exception ex) when (ex.IsIOException())
-            {
-                // Ignored. Connection closed by client?
-            }
-            catch (Exception ex)
-            {
-                _logger?.LogWarning(0, ex, "Flush failed with: {message}", ex.Message);
-            }
         }
 
         /// <inheritdoc />
-        public Task ContinueAsync(CancellationToken cancellationToken)
+        protected override Task OnPausedAsync(CancellationToken cancellationToken)
         {
-            if (Status == ConnectionStatus.Stopped)
+            return SafeFlushAsync(cancellationToken);
+        }
+
+        /// <inheritdoc />
+        protected override async Task OnStoppedAsync(CancellationToken cancellationToken)
+        {
+            await SafeFlushAsync(cancellationToken)
+               .ConfigureAwait(false);
+            await OnCloseAsync(_exception, cancellationToken)
+               .ConfigureAwait(false);
+        }
+
+        /// <inheritdoc />
+        protected override async Task<bool> OnFailedAsync(Exception exception, CancellationToken cancellationToken)
+        {
+            // Error, but paused? Don't close the pipe!
+            if (IsPauseRequested)
             {
-                // Stay stopped!
-                return Task.CompletedTask;
+                return false;
             }
 
-            if (Status != ConnectionStatus.Paused)
-            {
-                throw new InvalidOperationException($"Status must be {ConnectionStatus.Paused}, but was {Status}.");
-            }
+            // Do whatever the base class wants to do.
+            await base.OnFailedAsync(exception, cancellationToken)
+               .ConfigureAwait(false);
 
-            _jobPaused = new CancellationTokenSource();
+            // Remember exception
+            _exception = exception;
 
-            _task = SendPipelineAsync(
-                _stream,
-                _pipeReader,
-                _connectionClosed,
-                _jobStopped.Token,
-                _jobPaused.Token,
-                new Progress<ConnectionStatus>(status => Status = status),
-                _logger);
+            return true;
+        }
+
+        protected virtual Task OnCloseAsync(Exception exception, CancellationToken cancellationToken)
+        {
+            // Tell the PipeReader that there's no more data coming
+            _pipeReader.Complete(_exception);
 
             return Task.CompletedTask;
         }
@@ -173,74 +131,6 @@ namespace FubarDev.FtpServer.ConnectionHandlers
             logger?.LogTrace("Flushed");
         }
 
-        private static async Task SendPipelineAsync(
-            [NotNull] Stream stream,
-            [NotNull] PipeReader reader,
-            CancellationToken connectionClosed,
-            CancellationToken jobStopped,
-            CancellationToken jobPaused,
-            [NotNull] IProgress<ConnectionStatus> statusProgress,
-            [CanBeNull] ILogger logger)
-        {
-            var globalCts = CancellationTokenSource.CreateLinkedTokenSource(connectionClosed, jobStopped, jobPaused);
-
-            statusProgress.Report(ConnectionStatus.Running);
-
-            logger?.LogTrace("Starting reading pipeline");
-
-            Exception exception = null;
-            while (true)
-            {
-                // Allocate at least 512 bytes from the PipeWriter
-                try
-                {
-                    logger?.LogTrace("Start reading response");
-                    var readResult = await reader.ReadAsync(globalCts.Token)
-                       .ConfigureAwait(false);
-
-                    // Don't use the cancellation token source from above. Otherwise
-                    // data might be lost.
-                    await SendDataToStream(readResult.Buffer, stream, CancellationToken.None, logger)
-                       .ConfigureAwait(false);
-
-                    reader.AdvanceTo(readResult.Buffer.End);
-
-                    if (readResult.IsCanceled || readResult.IsCompleted)
-                    {
-                        logger?.LogTrace("Was cancelled or completed.");
-                        break;
-                    }
-                }
-                catch (Exception ex) when (ex.IsOperationCancelledException())
-                {
-                    // The job was aborted by one of the three cancellation tokens.
-                    logger?.LogTrace("Operation cancelled");
-                    break;
-                }
-                catch (Exception ex)
-                {
-                    logger?.LogTrace(0, ex, ex.Message);
-                    exception = ex;
-                    break;
-                }
-            }
-
-            // Don't call Complete() when the job was just paused.
-            if (jobPaused.IsCancellationRequested)
-            {
-                logger?.LogTrace("Paused writer");
-                statusProgress.Report(ConnectionStatus.Paused);
-                return;
-            }
-
-            // Tell the PipeReader that there's no more data coming
-            reader.Complete(exception);
-
-            statusProgress.Report(ConnectionStatus.Stopped);
-
-            logger?.LogTrace("Stopped writer");
-        }
-
         [NotNull]
         private static async Task SendDataToStream(
             ReadOnlySequence<byte> buffer,
@@ -260,6 +150,29 @@ namespace FubarDev.FtpServer.ConnectionHandlers
 
             logger?.LogTrace("Flushing stream");
             await stream.FlushAsync(cancellationToken).ConfigureAwait(false);
+        }
+
+        private async Task SafeFlushAsync(CancellationToken cancellationToken)
+        {
+            try
+            {
+                if (!cancellationToken.IsCancellationRequested)
+                {
+                    await FlushAsync(_stream, _pipeReader, cancellationToken, Logger).ConfigureAwait(false);
+                }
+            }
+            catch (Exception ex) when (ex.IsIOException())
+            {
+                // Ignored. Connection closed by client?
+            }
+            catch (Exception ex) when (ex.IsOperationCancelledException())
+            {
+                // Ignored. Connection closed by server?
+            }
+            catch (Exception ex)
+            {
+                Logger?.LogWarning(0, ex, "Flush failed with: {message}", ex.Message);
+            }
         }
     }
 }

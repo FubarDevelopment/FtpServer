@@ -5,7 +5,7 @@
 namespace FubarDev.FtpServer.ConnectionHandlers
 {
     /// <summary>
-    /// The current status of the <see cref="ICommunicationService"/>.
+    /// The current status of the <see cref="IPausableCommunicationService"/>.
     /// </summary>
     public enum ConnectionStatus
     {
@@ -13,11 +13,6 @@ namespace FubarDev.FtpServer.ConnectionHandlers
         /// The service is ready to run.
         /// </summary>
         ReadyToRun,
-
-        /// <summary>
-        /// The service was started.
-        /// </summary>
-        Started,
 
         /// <summary>
         /// The service was stopped.

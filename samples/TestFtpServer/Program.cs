@@ -380,11 +380,11 @@ namespace TestFtpServer
                                     Console.WriteLine("status   - Show server status");
                                     break;
                                 case "pause":
-                                    await ((ICommunicationService)ftpServer).PauseAsync(CancellationToken.None)
+                                    await ((IPausableCommunicationService)ftpServer).PauseAsync(CancellationToken.None)
                                        .ConfigureAwait(false);
                                     break;
                                 case "continue":
-                                    await ((ICommunicationService)ftpServer).ContinueAsync(CancellationToken.None)
+                                    await ((IPausableCommunicationService)ftpServer).ContinueAsync(CancellationToken.None)
                                        .ConfigureAwait(false);
                                     break;
                                 case "status":

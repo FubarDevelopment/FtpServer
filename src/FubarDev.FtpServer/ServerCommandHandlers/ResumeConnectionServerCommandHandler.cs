@@ -36,7 +36,7 @@ namespace FubarDev.FtpServer.ServerCommandHandlers
             var connection = _connectionAccessor.FtpConnection;
             var networkStreamFeature = connection.Features.Get<INetworkStreamFeature>();
 
-            await networkStreamFeature.TlsStreamService.ContinueAsync(cancellationToken)
+            await networkStreamFeature.SafeStreamService.StartAsync(cancellationToken)
                .ConfigureAwait(false);
         }
     }

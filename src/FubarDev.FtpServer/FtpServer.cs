@@ -27,7 +27,7 @@ namespace FubarDev.FtpServer
     /// <summary>
     /// The portable FTP server.
     /// </summary>
-    public sealed class FtpServer : IFtpServer, IFtpService, ICommunicationService, IDisposable
+    public sealed class FtpServer : IFtpServer, IFtpService, IPausableCommunicationService, IDisposable
     {
         [NotNull]
         private readonly FtpServerStatistics _statistics = new FtpServerStatistics();
@@ -120,25 +120,25 @@ namespace FubarDev.FtpServer
         }
 
         /// <inheritdoc />
-        Task ICommunicationService.StopAsync(CancellationToken cancellationToken)
+        Task IBasicCommunicationService.StopAsync(CancellationToken cancellationToken)
         {
             return ((IFtpService)this).StopAsync(cancellationToken);
         }
 
         /// <inheritdoc />
-        Task ICommunicationService.PauseAsync(CancellationToken cancellationToken)
+        Task IPausableCommunicationService.PauseAsync(CancellationToken cancellationToken)
         {
             return _serverListener.PauseAsync(cancellationToken);
         }
 
         /// <inheritdoc />
-        Task ICommunicationService.ContinueAsync(CancellationToken cancellationToken)
+        Task IPausableCommunicationService.ContinueAsync(CancellationToken cancellationToken)
         {
             return _serverListener.ContinueAsync(cancellationToken);
         }
 
         /// <inheritdoc />
-        Task ICommunicationService.StartAsync(CancellationToken cancellationToken)
+        Task IBasicCommunicationService.StartAsync(CancellationToken cancellationToken)
         {
             return ((IFtpService)this).StartAsync(cancellationToken);
         }

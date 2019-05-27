@@ -2,10 +2,13 @@
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
+using JetBrains.Annotations;
+
 namespace FubarDev.FtpServer.ConnectionHandlers
 {
     public interface ISenderService
     {
-        ICommunicationService Sender { get; }
+        [NotNull]
+        IPausableCommunicationService Sender { get; }
     }
 }

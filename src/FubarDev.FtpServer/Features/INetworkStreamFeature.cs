@@ -23,19 +23,7 @@ namespace FubarDev.FtpServer.Features
         /// Gets the service for TLS encryption.
         /// </summary>
         [NotNull]
-        ICommunicationService TlsStreamService { get; }
-
-        /// <summary>
-        /// Gets the service that reads from the network stream.
-        /// </summary>
-        [NotNull]
-        ICommunicationService StreamReaderService { get; }
-
-        /// <summary>
-        /// Gets the service that writes to the network stream.
-        /// </summary>
-        [NotNull]
-        ICommunicationService StreamWriterService { get; }
+        ISafeCommunicationService SafeStreamService { get; }
 
         /// <summary>
         /// Gets the pipe writer for sending the responses.

@@ -21,27 +21,18 @@ namespace FubarDev.FtpServer.ConnectionHandlers
     /// <remarks>
     /// Accepting connections can be paused.
     /// </remarks>
-    public class ServerListener : ICommunicationService
+    public class ServerListener : CommunicationServiceBase
     {
         [NotNull]
         private readonly ChannelWriter<TcpClient> _newClientWriter;
 
-        [CanBeNull]
-        private readonly ILogger _logger;
-
         [NotNull]
         private readonly MultiBindingTcpListener _multiBindingTcpListener;
 
-        [NotNull]
-        private readonly CancellationTokenSource _jobStopped = new CancellationTokenSource();
-
         private readonly CancellationTokenSource _connectionClosedCts;
 
-        [NotNull]
-        private CancellationTokenSource _jobPaused = new CancellationTokenSource();
-
-        [NotNull]
-        private Task _task = Task.CompletedTask;
+        [CanBeNull]
+        private Exception _exception;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ServerListener"/> class.
@@ -55,151 +46,61 @@ namespace FubarDev.FtpServer.ConnectionHandlers
             [NotNull] IOptions<FtpServerOptions> serverOptions,
             CancellationTokenSource connectionClosedCts,
             [CanBeNull] ILogger logger = null)
+            : base(connectionClosedCts.Token, logger)
         {
             _newClientWriter = newClientWriter;
-            _logger = logger;
             _connectionClosedCts = connectionClosedCts;
             var options = serverOptions.Value;
             _multiBindingTcpListener = new MultiBindingTcpListener(options.ServerAddress, options.Port, logger);
         }
 
         /// <inheritdoc />
-        public ConnectionStatus Status { get; private set; } = ConnectionStatus.ReadyToRun;
-
-        /// <inheritdoc />
-        public Task StartAsync(CancellationToken cancellationToken)
+        protected override async Task ExecuteAsync(CancellationToken cancellationToken)
         {
-            if (Status != ConnectionStatus.ReadyToRun)
-            {
-                throw new InvalidOperationException($"Status must be {ConnectionStatus.ReadyToRun}, but was {Status}.");
-            }
+            await _multiBindingTcpListener.StartAsync().ConfigureAwait(false);
+            _multiBindingTcpListener.StartAccepting();
 
-            _task = StartListeningAsync(
-                _newClientWriter,
-                _multiBindingTcpListener,
-                _logger,
-                _connectionClosedCts,
-                _jobStopped.Token,
-                _jobPaused.Token,
-                new Progress<ConnectionStatus>(status => Status = status));
-
-            return Task.CompletedTask;
-        }
-
-        /// <inheritdoc />
-        public Task StopAsync(CancellationToken cancellationToken)
-        {
-            if (Status != ConnectionStatus.Running && Status != ConnectionStatus.Stopped && Status != ConnectionStatus.Paused)
-            {
-                throw new InvalidOperationException($"Status must be {ConnectionStatus.Running}, {ConnectionStatus.Stopped}, or {ConnectionStatus.Paused}, but was {Status}.");
-            }
-
-            _jobStopped.Cancel();
-
-            return _task;
-        }
-
-        /// <inheritdoc />
-        public Task PauseAsync(CancellationToken cancellationToken)
-        {
-            if (Status != ConnectionStatus.Running)
-            {
-                throw new InvalidOperationException($"Status must be {ConnectionStatus.Running}, but was {Status}.");
-            }
-
-            _jobPaused.Cancel();
-
-            return _task;
-        }
-
-        /// <inheritdoc />
-        public Task ContinueAsync(CancellationToken cancellationToken)
-        {
-            if (Status == ConnectionStatus.Stopped)
-            {
-                // Stay stopped!
-                return Task.CompletedTask;
-            }
-
-            if (Status != ConnectionStatus.Paused)
-            {
-                throw new InvalidOperationException($"Status must be {ConnectionStatus.Paused}, but was {Status}.");
-            }
-
-            _jobPaused = new CancellationTokenSource();
-
-            _task = StartListeningAsync(
-                _newClientWriter,
-                _multiBindingTcpListener,
-                _logger,
-                _connectionClosedCts,
-                _jobStopped.Token,
-                _jobPaused.Token,
-                new Progress<ConnectionStatus>(status => Status = status));
-
-            return Task.CompletedTask;
-        }
-
-        [NotNull]
-        private static async Task StartListeningAsync(
-            [NotNull] ChannelWriter<TcpClient> newClientWriter,
-            MultiBindingTcpListener listener,
-            ILogger logger,
-            CancellationTokenSource connectionClosedCts,
-            CancellationToken jobStopped,
-            CancellationToken jobPaused,
-            IProgress<ConnectionStatus> statusProgress)
-        {
-            var globalCts = CancellationTokenSource.CreateLinkedTokenSource(connectionClosedCts.Token, jobStopped, jobPaused);
-
-            Exception exception = null;
             try
             {
-                await listener.StartAsync().ConfigureAwait(false);
-                listener.StartAccepting();
-
-                statusProgress.Report(ConnectionStatus.Running);
-
-                try
+                while (true)
                 {
-                    while (true)
-                    {
-                        var client = await listener.WaitAnyTcpClientAsync(globalCts.Token)
-                           .ConfigureAwait(false);
-                        await newClientWriter.WriteAsync(client, connectionClosedCts.Token)
-                           .ConfigureAwait(false);
-                    }
-                }
-                catch (Exception ex) when (ex.IsOperationCancelledException())
-                {
-                    // Ignore - everything is fine
-                }
-                finally
-                {
-                    listener.Stop();
+                    var client = await _multiBindingTcpListener.WaitAnyTcpClientAsync(cancellationToken)
+                       .ConfigureAwait(false);
+                    await _newClientWriter.WriteAsync(client, cancellationToken)
+                       .ConfigureAwait(false);
                 }
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsOperationCancelledException())
             {
-                logger?.LogCritical(ex, "{0}", ex.Message);
-                exception = ex;
+                // Ignore - everything is fine
             }
-
-            // Don't call Complete() when the job was just paused.
-            if (jobPaused.IsCancellationRequested)
+            finally
             {
-                statusProgress.Report(ConnectionStatus.Paused);
-                return;
+                _multiBindingTcpListener.Stop();
             }
+        }
 
+        /// <inheritdoc />
+        protected override async Task<bool> OnFailedAsync(Exception exception, CancellationToken cancellationToken)
+        {
+            await base.OnFailedAsync(exception, cancellationToken)
+               .ConfigureAwait(false);
+
+            _exception = exception;
+
+            return true;
+        }
+
+        /// <inheritdoc />
+        protected override Task OnStoppedAsync(CancellationToken cancellationToken)
+        {
             // Tell the channel that there's no more data coming
-            newClientWriter.Complete(exception);
+            _newClientWriter.Complete(_exception);
 
             // Signal a closed connection.
-            connectionClosedCts.Cancel();
+            _connectionClosedCts.Cancel();
 
-            // Change the status
-            statusProgress.Report(ConnectionStatus.Stopped);
+            return Task.CompletedTask;
         }
     }
 }

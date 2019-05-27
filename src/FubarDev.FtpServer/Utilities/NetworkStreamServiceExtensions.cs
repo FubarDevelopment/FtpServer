@@ -12,7 +12,7 @@ namespace FubarDev.FtpServer.Utilities
 {
     internal static class NetworkStreamServiceExtensions
     {
-        internal static async Task<Func<Task>> WrapPauseAsync(this ICommunicationService service, CancellationToken cancellationToken)
+        internal static async Task<Func<Task>> WrapPauseAsync(this IPausableCommunicationService service, CancellationToken cancellationToken)
         {
             if (service.Status == ConnectionHandlers.ConnectionStatus.Paused)
             {
