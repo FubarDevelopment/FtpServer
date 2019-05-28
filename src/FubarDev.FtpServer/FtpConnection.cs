@@ -87,6 +87,8 @@ namespace FubarDev.FtpServer
 
         private bool _connectionClosing;
 
+        private bool _connectionClosed;
+
         [CanBeNull]
         private Task _commandChannelReader;
 
@@ -292,6 +294,13 @@ namespace FubarDev.FtpServer
         /// <inheritdoc />
         public async Task StopAsync()
         {
+            if (_connectionClosed)
+            {
+                return;
+            }
+
+            _connectionClosed = true;
+
             Abort();
 
             await _commandReader.ConfigureAwait(false);
