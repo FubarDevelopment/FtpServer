@@ -484,6 +484,9 @@ namespace FubarDev.FtpServer
                     case OperationCanceledException _:
                         // Cancelled
                         break;
+                    case null:
+                        // Should never happen
+                        break;
                     default:
                         Log?.LogError(0, exception, exception.Message);
                         throw;
