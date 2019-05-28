@@ -85,7 +85,7 @@ namespace FubarDev.FtpServer
 
         private readonly int? _dataPort;
 
-        private bool _closed;
+        private bool _connectionClosing;
 
         [CanBeNull]
         private Task _commandChannelReader;
@@ -373,7 +373,7 @@ namespace FubarDev.FtpServer
         /// <inheritdoc/>
         public void Dispose()
         {
-            if (!_closed)
+            if (!_connectionClosing)
             {
                 Abort();
             }
@@ -388,12 +388,12 @@ namespace FubarDev.FtpServer
 
         private void Abort()
         {
-            if (_closed)
+            if (_connectionClosing)
             {
                 return;
             }
 
-            _closed = true;
+            _connectionClosing = true;
             _cancellationTokenSource.Cancel(true);
 
             // Dispose all features (if disposable)
