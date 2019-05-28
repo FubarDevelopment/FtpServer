@@ -62,6 +62,11 @@ namespace FubarDev.FtpServer.ConnectionHandlers
                     // data might be lost.
                     await _writer.WriteAsync(memory, CancellationToken.None)
                        .ConfigureAwait(false);
+
+                    if (readResult.IsCanceled || readResult.IsCompleted)
+                    {
+                        break;
+                    }
                 }
 
                 _reader.AdvanceTo(buffer.End);
@@ -140,6 +145,11 @@ namespace FubarDev.FtpServer.ConnectionHandlers
                     }
 
                     _reader.AdvanceTo(buffer.End);
+
+                    if (readResult.IsCanceled || readResult.IsCompleted)
+                    {
+                        break;
+                    }
                 }
             }
             catch (Exception ex) when (ex.IsIOException())

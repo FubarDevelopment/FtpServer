@@ -126,6 +126,11 @@ namespace FubarDev.FtpServer.ConnectionHandlers
                 await SendDataToStream(readResult.Buffer, stream, cancellationToken, logger)
                    .ConfigureAwait(false);
                 reader.AdvanceTo(readResult.Buffer.End);
+
+                if (readResult.IsCanceled || readResult.IsCompleted)
+                {
+                    break;
+                }
             }
 
             logger?.LogTrace("Flushed");
