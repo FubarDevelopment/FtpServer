@@ -118,7 +118,7 @@ namespace FubarDev.FtpServer
             [NotNull] SecureDataConnectionWrapper secureDataConnectionWrapper,
             [NotNull] IFtpServerMessages serverMessages,
             [NotNull] ISslStreamWrapperFactory sslStreamWrapperFactory,
-            [CanBeNull] ILogger<IFtpConnection> logger = null)
+            [CanBeNull] ILogger<FtpConnection> logger = null)
         {
             ConnectionServices = serviceProvider;
 
@@ -158,6 +158,7 @@ namespace FubarDev.FtpServer
             var socketPipe = new DuplexPipe(_socketCommandPipe.Reader, _socketResponsePipe.Writer);
             var connectionPipe = new DuplexPipe(applicationOutputPipe.Reader, applicationInputPipe.Writer);
 
+            var loggerFactory = serviceProvider.GetService<ILoggerFactory>();
             _networkStreamFeature = new NetworkStreamFeature(
                 new SafeCommunicationChannelService(
                     socketPipe,
@@ -169,12 +170,12 @@ namespace FubarDev.FtpServer
                     secureConnectionFeature.OriginalStream,
                     _socketCommandPipe.Writer,
                     _cancellationTokenSource,
-                    serviceProvider.GetService<ILogger<NetworkStreamReader>>()),
+                    loggerFactory?.CreateLogger(typeof(FtpConnection).FullName + ":StreamReader")),
                 new NetworkStreamWriter(
                     secureConnectionFeature.OriginalStream,
                     _socketResponsePipe.Reader,
                     _cancellationTokenSource.Token,
-                    serviceProvider.GetService<ILogger<NetworkStreamWriter>>()),
+                    loggerFactory?.CreateLogger(typeof(FtpConnection).FullName + ":StreamWriter")),
                 applicationOutputPipe.Writer);
 
             parentFeatures.Set<IConnectionFeature>(connectionFeature);

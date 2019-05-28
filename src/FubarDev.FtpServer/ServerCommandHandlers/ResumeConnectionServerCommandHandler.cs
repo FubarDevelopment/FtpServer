@@ -10,6 +10,8 @@ using FubarDev.FtpServer.ServerCommands;
 
 using JetBrains.Annotations;
 
+using Microsoft.Extensions.Logging;
+
 namespace FubarDev.FtpServer.ServerCommandHandlers
 {
     /// <summary>
@@ -36,8 +38,9 @@ namespace FubarDev.FtpServer.ServerCommandHandlers
             var connection = _connectionAccessor.FtpConnection;
             var networkStreamFeature = connection.Features.Get<INetworkStreamFeature>();
 
-            await networkStreamFeature.SafeStreamService.StartAsync(cancellationToken)
+            await networkStreamFeature.SafeStreamService.Receiver.ContinueAsync(cancellationToken)
                .ConfigureAwait(false);
+            connection.Log?.LogDebug("Receiver resumed");
         }
     }
 }

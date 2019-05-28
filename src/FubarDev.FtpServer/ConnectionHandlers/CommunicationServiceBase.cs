@@ -112,6 +112,12 @@ namespace FubarDev.FtpServer.ConnectionHandlers
                 return;
             }
 
+            if (Status == ConnectionStatus.Running)
+            {
+                // Already running!
+                return;
+            }
+
             if (Status != ConnectionStatus.Paused)
             {
                 throw new InvalidOperationException($"Status must be {ConnectionStatus.Paused}, but was {Status}.");
@@ -205,13 +211,16 @@ namespace FubarDev.FtpServer.ConnectionHandlers
                 catch (Exception ex) when (ex.IsOperationCancelledException())
                 {
                     // Ignore - everything is fine
+                    Logger?.LogTrace("Operation cancelled");
                 }
                 catch (Exception ex) when (ex.IsIOException())
                 {
                     // Ignore - everything is fine
+                    Logger?.LogTrace(0, ex, "I/O exception: {message}", ex.Message);
                 }
                 catch (Exception ex)
                 {
+                    Logger?.LogTrace(0, ex, "Failed: {message}", ex.Message);
                     var isHandled = await OnFailedAsync(ex, _connectionClosed)
                        .ConfigureAwait(false);
 

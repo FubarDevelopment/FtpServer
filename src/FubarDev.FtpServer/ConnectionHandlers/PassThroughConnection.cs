@@ -24,10 +24,19 @@ namespace FubarDev.FtpServer.ConnectionHandlers
         public PassThroughConnection(
             [NotNull] IDuplexPipe socketPipe,
             [NotNull] IDuplexPipe connectionPipe,
-            CancellationToken connectionClosed)
+            CancellationToken connectionClosed,
+            [CanBeNull] ILoggerFactory loggerFactory)
         {
-            _receiverService = new NonClosingNetworkPassThrough(socketPipe.Input, connectionPipe.Output, connectionClosed);
-            _transmitService = new NonClosingNetworkPassThrough(connectionPipe.Input, socketPipe.Output, connectionClosed);
+            _receiverService = new NonClosingNetworkPassThrough(
+                socketPipe.Input,
+                connectionPipe.Output,
+                connectionClosed,
+                loggerFactory?.CreateLogger(typeof(PassThroughConnection).FullName + ":Receiver"));
+            _transmitService = new NonClosingNetworkPassThrough(
+                connectionPipe.Input,
+                socketPipe.Output,
+                connectionClosed,
+                loggerFactory?.CreateLogger(typeof(PassThroughConnection).FullName + ":Transmitter"));
         }
 
         /// <inheritdoc />

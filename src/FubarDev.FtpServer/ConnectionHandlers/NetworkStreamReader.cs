@@ -49,11 +49,13 @@ namespace FubarDev.FtpServer.ConnectionHandlers
         /// <inheritdoc />
         protected override async Task ExecuteAsync(CancellationToken cancellationToken)
         {
-            var buffer = new byte[1024];
+            var buffer = new byte[32];
             while (true)
             {
                 // Allocate at least 512 bytes from the PipeWriter
                 var memory = _pipeWriter.GetMemory(buffer.Length);
+
+                Logger?.LogTrace("Start reading from stream");
                 var readTask = _stream
                    .ReadAsync(buffer, 0, buffer.Length, cancellationToken);
 
@@ -69,9 +71,11 @@ namespace FubarDev.FtpServer.ConnectionHandlers
 
                 if (bytesRead == 0)
                 {
+                    Logger?.LogTrace("Stream closed");
                     break;
                 }
 
+                Logger?.LogTrace("Copied {numBytes} bytes into pipe", memory.Length);
                 buffer.AsSpan(0, bytesRead).CopyTo(memory.Span);
 
                 // Tell the PipeWriter how much was read from the Socket
@@ -83,6 +87,7 @@ namespace FubarDev.FtpServer.ConnectionHandlers
                 var result = await _pipeWriter.FlushAsync(CancellationToken.None);
                 if (result.IsCompleted || result.IsCanceled)
                 {
+                    Logger?.LogTrace("Writer completed or cancelled");
                     break;
                 }
             }

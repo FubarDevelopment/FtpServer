@@ -12,6 +12,9 @@ using FubarDev.FtpServer.Authentication;
 
 using JetBrains.Annotations;
 
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+
 namespace FubarDev.FtpServer.ConnectionHandlers
 {
     public class SafeCommunicationChannelService : ISafeCommunicationService
@@ -30,6 +33,9 @@ namespace FubarDev.FtpServer.ConnectionHandlers
 
         private readonly CancellationToken _connectionClosed;
 
+        [CanBeNull]
+        private readonly ILoggerFactory _loggerFactory;
+
         [NotNull]
         private ICommunicationService _activeCommunicationService;
 
@@ -45,7 +51,12 @@ namespace FubarDev.FtpServer.ConnectionHandlers
             _sslStreamWrapperFactory = sslStreamWrapperFactory;
             _serviceProvider = serviceProvider;
             _connectionClosed = connectionClosed;
-            _activeCommunicationService = new PassThroughConnection(socketPipe, connectionPipe, connectionClosed);
+            _loggerFactory = serviceProvider.GetService<ILoggerFactory>();
+            _activeCommunicationService = new PassThroughConnection(
+                socketPipe,
+                connectionPipe,
+                connectionClosed,
+                _loggerFactory);
         }
 
         /// <inheritdoc />
@@ -55,23 +66,49 @@ namespace FubarDev.FtpServer.ConnectionHandlers
         public IPausableCommunicationService Receiver => _activeCommunicationService.Receiver;
 
         /// <inheritdoc />
-        public Task ResetAsync(CancellationToken cancellationToken)
+        public async Task ResetAsync(CancellationToken cancellationToken)
         {
-            _activeCommunicationService = new PassThroughConnection(_socketPipe, _connectionPipe, _connectionClosed);
-            return Task.CompletedTask;
+            await StopAsync(cancellationToken)
+               .ConfigureAwait(false);
+            _activeCommunicationService = new PassThroughConnection(
+                _socketPipe,
+                _connectionPipe,
+                _connectionClosed,
+                _loggerFactory);
+            await StartAsync(cancellationToken)
+               .ConfigureAwait(false);
         }
 
         /// <inheritdoc />
-        public Task EnableSslStreamAsync(X509Certificate2 certificate, CancellationToken cancellationToken)
+        public async Task EnableSslStreamAsync(X509Certificate2 certificate, CancellationToken cancellationToken)
         {
-            _activeCommunicationService = new SslStreamConnection(
-                _socketPipe,
-                _connectionPipe,
-                _serviceProvider,
-                _sslStreamWrapperFactory,
-                certificate,
-                _connectionClosed);
-            return Task.CompletedTask;
+            await StopAsync(cancellationToken)
+               .ConfigureAwait(false);
+            try
+            {
+                _activeCommunicationService = new SslStreamConnection(
+                    _socketPipe,
+                    _connectionPipe,
+                    _serviceProvider,
+                    _sslStreamWrapperFactory,
+                    certificate,
+                    _connectionClosed,
+                    _loggerFactory);
+            }
+            catch
+            {
+                _activeCommunicationService = new PassThroughConnection(
+                    _socketPipe,
+                    _connectionPipe,
+                    _connectionClosed,
+                    _loggerFactory);
+                throw;
+            }
+            finally
+            {
+                await StartAsync(cancellationToken)
+                   .ConfigureAwait(false);
+            }
         }
 
         /// <inheritdoc />

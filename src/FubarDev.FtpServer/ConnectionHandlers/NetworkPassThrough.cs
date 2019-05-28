@@ -47,6 +47,7 @@ namespace FubarDev.FtpServer.ConnectionHandlers
         {
             while (true)
             {
+                Logger?.LogTrace("Start reading from pipe");
                 var readResult = await _reader.ReadAsync(cancellationToken)
                    .ConfigureAwait(false);
 
@@ -55,6 +56,8 @@ namespace FubarDev.FtpServer.ConnectionHandlers
 
                 while (buffer.TryGet(ref position, out var memory))
                 {
+                    Logger?.LogTrace("Pass through of {numBytes} bytes", memory.Length);
+
                     // Don't use the cancellation token source from above. Otherwise
                     // data might be lost.
                     await _writer.WriteAsync(memory, CancellationToken.None)
@@ -65,6 +68,7 @@ namespace FubarDev.FtpServer.ConnectionHandlers
 
                 if (readResult.IsCanceled || readResult.IsCompleted)
                 {
+                    Logger?.LogTrace("Cancelled={cancelled} or completed={completed}", readResult.IsCanceled, readResult.IsCompleted);
                     break;
                 }
             }
@@ -73,14 +77,16 @@ namespace FubarDev.FtpServer.ConnectionHandlers
         /// <inheritdoc />
         protected override Task OnStopRequestedAsync(CancellationToken cancellationToken)
         {
-            _reader.CancelPendingRead();
+            Logger?.LogTrace("STOP requested");
+            // _reader.CancelPendingRead();
             return Task.CompletedTask;
         }
 
         /// <inheritdoc />
         protected override Task OnPauseRequestedAsync(CancellationToken cancellationToken)
         {
-            _reader.CancelPendingRead();
+            Logger?.LogTrace("PAUSE requested");
+            // _reader.CancelPendingRead();
             return Task.CompletedTask;
         }
 
@@ -96,12 +102,14 @@ namespace FubarDev.FtpServer.ConnectionHandlers
         /// <inheritdoc />
         protected override Task OnPausedAsync(CancellationToken cancellationToken)
         {
+            Logger?.LogTrace("PAUSED");
             return SafeFlushAsync(cancellationToken);
         }
 
         /// <inheritdoc />
         protected override async Task OnStoppedAsync(CancellationToken cancellationToken)
         {
+            Logger?.LogTrace("STOPPED");
             await SafeFlushAsync(cancellationToken)
                .ConfigureAwait(false);
             await OnCloseAsync(_exception, cancellationToken)

@@ -38,6 +38,9 @@ namespace FubarDev.FtpServer.ConnectionHandlers
         private readonly CancellationToken _connectionClosed;
 
         [CanBeNull]
+        private readonly ILoggerFactory _loggerFactory;
+
+        [CanBeNull]
         private SslCommunicationInfo _info;
 
         public SslStreamConnection(
@@ -46,7 +49,8 @@ namespace FubarDev.FtpServer.ConnectionHandlers
             [NotNull] IServiceProvider serviceProvider,
             [NotNull] ISslStreamWrapperFactory sslStreamWrapperFactory,
             [NotNull] X509Certificate2 certificate,
-            CancellationToken connectionClosed)
+            CancellationToken connectionClosed,
+            [CanBeNull] ILoggerFactory loggerFactory)
         {
             _serviceProvider = serviceProvider;
             _socketPipe = socketPipe;
@@ -54,6 +58,7 @@ namespace FubarDev.FtpServer.ConnectionHandlers
             _sslStreamWrapperFactory = sslStreamWrapperFactory;
             _certificate = certificate;
             _connectionClosed = connectionClosed;
+            _loggerFactory = loggerFactory;
         }
 
         /// <inheritdoc />
@@ -75,8 +80,16 @@ namespace FubarDev.FtpServer.ConnectionHandlers
                 _serviceProvider.GetService<ILogger<RawStream>>());
             var sslStream = await _sslStreamWrapperFactory.WrapStreamAsync(rawStream, false, _certificate, cancellationToken)
                .ConfigureAwait(false);
-            var transmitterService = new NonClosingNetworkStreamWriter(sslStream, _connectionPipe.Input, _connectionClosed);
-            var receiverService = new NonClosingNetworkStreamReader(sslStream, _connectionPipe.Output, _connectionClosed);
+            var transmitterService = new NonClosingNetworkStreamWriter(
+                sslStream,
+                _connectionPipe.Input,
+                _connectionClosed,
+                _loggerFactory?.CreateLogger(typeof(SslStreamConnection).FullName + ":Transmitter"));
+            var receiverService = new NonClosingNetworkStreamReader(
+                sslStream,
+                _connectionPipe.Output,
+                _connectionClosed,
+                _loggerFactory?.CreateLogger(typeof(SslStreamConnection).FullName + ":Receiver"));
             var info = new SslCommunicationInfo(transmitterService, receiverService, sslStream);
             _info = info;
 
@@ -100,8 +113,8 @@ namespace FubarDev.FtpServer.ConnectionHandlers
             var receiverStopTask = info.ReceiverService.StopAsync(cancellationToken);
             var transmitterStopTask = info.TransmitterService.StopAsync(cancellationToken);
 
-            _socketPipe.Input.CancelPendingRead();
-            _connectionPipe.Input.CancelPendingRead();
+            // _socketPipe.Input.CancelPendingRead();
+            // _connectionPipe.Input.CancelPendingRead();
 
             await Task.WhenAll(receiverStopTask, transmitterStopTask)
                .ConfigureAwait(false);

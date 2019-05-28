@@ -110,19 +110,10 @@ namespace FubarDev.FtpServer.ServerCommandHandlers
             CancellationToken cancellationToken)
         {
             var service = networkStreamFeature.SafeStreamService;
-            var readerDisposeFunc = await service.Receiver.WrapPauseAsync(cancellationToken)
-               .ConfigureAwait(false);
-            try
-            {
-                await service.ResetAsync(cancellationToken).ConfigureAwait(false);
+            await service.ResetAsync(cancellationToken).ConfigureAwait(false);
 
-                secureConnectionFeature.CreateEncryptedStream = null;
-                secureConnectionFeature.CloseEncryptedControlStream = ct => Task.CompletedTask;
-            }
-            finally
-            {
-                await readerDisposeFunc().ConfigureAwait(false);
-            }
+            secureConnectionFeature.CreateEncryptedStream = null;
+            secureConnectionFeature.CloseEncryptedControlStream = ct => Task.CompletedTask;
         }
     }
 }

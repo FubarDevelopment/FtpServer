@@ -21,14 +21,14 @@ namespace FubarDev.FtpServer.Authentication
     public class DefaultSslStreamWrapperFactory : ISslStreamWrapperFactory
     {
         [CanBeNull]
-        private readonly ILogger<ISslStreamWrapperFactory> _logger;
+        private readonly ILogger<DefaultSslStreamWrapperFactory> _logger;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DefaultSslStreamWrapperFactory"/> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
         public DefaultSslStreamWrapperFactory(
-            [CanBeNull] ILogger<ISslStreamWrapperFactory> logger = null)
+            [CanBeNull] ILogger<DefaultSslStreamWrapperFactory> logger = null)
         {
             _logger = logger;
         }
@@ -46,9 +46,8 @@ namespace FubarDev.FtpServer.Authentication
                 var sslStream = CreateSslStream(unencryptedStream, keepOpen);
                 try
                 {
-                    var certCopy = new X509Certificate2(certificate.Export(X509ContentType.Pkcs12));
                     _logger?.LogTrace("Authenticate as server");
-                    await sslStream.AuthenticateAsServerAsync(certCopy)
+                    await sslStream.AuthenticateAsServerAsync(certificate)
                        .ConfigureAwait(false);
                 }
                 catch (Exception ex)
