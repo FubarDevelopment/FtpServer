@@ -303,6 +303,7 @@ namespace FubarDev.FtpServer
 
             Abort();
 
+            _serverCommandChannel.Writer.Complete();
             await _commandReader.ConfigureAwait(false);
 
             if (_commandChannelReader != null)
@@ -321,6 +322,8 @@ namespace FubarDev.FtpServer
                .ConfigureAwait(false);
             await _networkStreamFeature.SafeStreamService.StopAsync(CancellationToken.None)
                .ConfigureAwait(false);
+
+            OnClosed();
         }
 
         /// <summary>
@@ -648,8 +651,10 @@ namespace FubarDev.FtpServer
             }
             finally
             {
+                // We must set this to null to avoid a deadlock.
+                _commandChannelReader = null;
+                await StopAsync().ConfigureAwait(false);
                 _socket.Dispose();
-                OnClosed();
             }
         }
 
