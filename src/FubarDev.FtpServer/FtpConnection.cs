@@ -294,6 +294,8 @@ namespace FubarDev.FtpServer
         /// <inheritdoc />
         public async Task StopAsync()
         {
+            Log?.LogTrace("StopAsync called");
+
             if (_connectionClosed)
             {
                 return;
@@ -322,6 +324,8 @@ namespace FubarDev.FtpServer
                .ConfigureAwait(false);
             await _networkStreamFeature.SafeStreamService.StopAsync(CancellationToken.None)
                .ConfigureAwait(false);
+
+            Log?.LogInformation("Connection closed");
 
             OnClosed();
         }
@@ -438,15 +442,18 @@ namespace FubarDev.FtpServer
             {
                 while (!cancellationToken.IsCancellationRequested)
                 {
+                    Log?.LogTrace("Wait to read server commands");
                     var hasResponse = await serverCommandReader.WaitToReadAsync(cancellationToken)
                        .ConfigureAwait(false);
                     if (!hasResponse)
                     {
+                        Log?.LogTrace("Server command channel completed");
                         return;
                     }
 
                     while (serverCommandReader.TryRead(out var response))
                     {
+                        Log?.LogTrace("Executing response {response}", response);
                         await _serverCommandExecutor.ExecuteAsync(response, cancellationToken)
                            .ConfigureAwait(false);
                     }
@@ -465,11 +472,11 @@ namespace FubarDev.FtpServer
                     case IOException _:
                         if (cancellationToken.IsCancellationRequested)
                         {
-                            Log?.LogWarning("Last response probably incomplete.");
+                            Log?.LogWarning("Last response probably incomplete");
                         }
                         else
                         {
-                            Log?.LogWarning("Connection lost or closed by client. Remaining output discarded.");
+                            Log?.LogWarning("Connection lost or closed by client. Remaining output discarded");
                         }
 
                         break;
@@ -484,7 +491,7 @@ namespace FubarDev.FtpServer
             }
             finally
             {
-                Log?.LogDebug("Stopped sending responses.");
+                Log?.LogDebug("Stopped sending responses");
                 _cancellationTokenSource.Cancel();
             }
         }
@@ -544,28 +551,32 @@ namespace FubarDev.FtpServer
             }
             catch (Exception ex) when (ex.IsIOException() && !cancellationToken.IsCancellationRequested)
             {
-                Log?.LogWarning("Connection lost or closed by client.");
+                Log?.LogWarning("Connection lost or closed by client");
                 Abort();
             }
             catch (Exception ex) when (ex.IsIOException())
             {
                 // Most likely closed by server.
+                Log?.LogWarning("Connection lost or closed by server");
                 Abort();
             }
             catch (Exception ex) when (ex.IsOperationCancelledException())
             {
-                // Connection most likely closed due to QUIT command.
+                // We're getting here because someone called StopAsync on the connection.
+                // Reasons might be:
+                // - Server detected a closed connection in another part of the communication stack
+                // - QUIT command
             }
             catch (Exception ex)
             {
-                Log?.LogError(ex, "Closing connection due to error {0}.", ex.Message);
+                Log?.LogError(ex, "Closing connection due to error {0}", ex.Message);
                 Abort();
             }
             finally
             {
                 reader.Complete();
 
-                Log?.LogDebug("Stopped reading commands.");
+                Log?.LogDebug("Stopped reading commands");
             }
         }
 
