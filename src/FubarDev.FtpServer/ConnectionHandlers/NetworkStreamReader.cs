@@ -75,7 +75,7 @@ namespace FubarDev.FtpServer.ConnectionHandlers
                     break;
                 }
 
-                Logger?.LogTrace("Copied {numBytes} bytes into pipe", memory.Length);
+                Logger?.LogTrace("Copied {numBytes} bytes into pipe", bytesRead);
                 buffer.AsSpan(0, bytesRead).CopyTo(memory.Span);
 
                 // Tell the PipeWriter how much was read from the Socket
