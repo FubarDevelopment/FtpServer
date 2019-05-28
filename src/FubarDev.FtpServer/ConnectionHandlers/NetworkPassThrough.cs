@@ -13,7 +13,7 @@ using Microsoft.Extensions.Logging;
 
 namespace FubarDev.FtpServer.ConnectionHandlers
 {
-    public class NetworkPassThrough : CommunicationServiceBase
+    internal class NetworkPassThrough : CommunicationServiceBase
     {
         [NotNull]
         private readonly PipeReader _reader;
@@ -78,7 +78,6 @@ namespace FubarDev.FtpServer.ConnectionHandlers
         protected override Task OnStopRequestedAsync(CancellationToken cancellationToken)
         {
             Logger?.LogTrace("STOP requested");
-            // _reader.CancelPendingRead();
             return Task.CompletedTask;
         }
 
@@ -86,7 +85,6 @@ namespace FubarDev.FtpServer.ConnectionHandlers
         protected override Task OnPauseRequestedAsync(CancellationToken cancellationToken)
         {
             Logger?.LogTrace("PAUSE requested");
-            // _reader.CancelPendingRead();
             return Task.CompletedTask;
         }
 

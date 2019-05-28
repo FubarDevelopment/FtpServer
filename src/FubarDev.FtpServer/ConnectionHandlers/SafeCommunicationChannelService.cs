@@ -17,7 +17,10 @@ using Microsoft.Extensions.Logging;
 
 namespace FubarDev.FtpServer.ConnectionHandlers
 {
-    public class SafeCommunicationChannelService : ISafeCommunicationService
+    /// <summary>
+    /// A communication channel service that allows enabling and resetting of an SSL/TLS connection.
+    /// </summary>
+    internal class SafeCommunicationChannelService : ISafeCommunicationService
     {
         [NotNull]
         private readonly IDuplexPipe _socketPipe;
@@ -39,6 +42,14 @@ namespace FubarDev.FtpServer.ConnectionHandlers
         [NotNull]
         private ICommunicationService _activeCommunicationService;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SafeCommunicationChannelService"/> class.
+        /// </summary>
+        /// <param name="socketPipe">The pipe from the socket.</param>
+        /// <param name="connectionPipe">The pipe to the connection object.</param>
+        /// <param name="sslStreamWrapperFactory">The SSL stream wrapper factory.</param>
+        /// <param name="serviceProvider">The service provider.</param>
+        /// <param name="connectionClosed">The cancellation token for a closed connection.</param>
         public SafeCommunicationChannelService(
             [NotNull] IDuplexPipe socketPipe,
             [NotNull] IDuplexPipe connectionPipe,

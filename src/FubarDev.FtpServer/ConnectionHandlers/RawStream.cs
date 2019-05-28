@@ -15,6 +15,9 @@ using Microsoft.Extensions.Logging;
 
 namespace FubarDev.FtpServer.ConnectionHandlers
 {
+    /// <summary>
+    /// A stream that uses a pipe.
+    /// </summary>
     internal class RawStream : Stream
     {
         [NotNull]
@@ -57,6 +60,7 @@ namespace FubarDev.FtpServer.ConnectionHandlers
         public override int Read(byte[] buffer, int offset, int count)
         {
             _logger?.LogTrace("Try to read {count} bytes", count);
+
             // ValueTask uses .GetAwaiter().GetResult() if necessary
             // https://github.com/dotnet/corefx/blob/f9da3b4af08214764a51b2331f3595ffaf162abe/src/System.Threading.Tasks.Extensions/src/System/Threading/Tasks/ValueTask.cs#L156
             return ReadAsyncInternal(new Memory<byte>(buffer, offset, count), CancellationToken.None).Result;

@@ -17,7 +17,7 @@ namespace FubarDev.FtpServer.ConnectionHandlers
     /// <summary>
     /// Reads from a stream and writes into a pipeline.
     /// </summary>
-    public class NetworkStreamReader : CommunicationServiceBase
+    internal class NetworkStreamReader : CommunicationServiceBase
     {
         [NotNull]
         private readonly Stream _stream;

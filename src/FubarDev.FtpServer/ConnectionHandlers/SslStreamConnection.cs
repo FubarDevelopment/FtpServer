@@ -18,7 +18,10 @@ using Microsoft.Extensions.Logging;
 
 namespace FubarDev.FtpServer.ConnectionHandlers
 {
-    public class SslStreamConnection : ICommunicationService
+    /// <summary>
+    /// A communication service that injects an SSL stream between the socket and the connection pipe.
+    /// </summary>
+    internal class SslStreamConnection : ICommunicationService
     {
         [NotNull]
         private readonly IServiceProvider _serviceProvider;
@@ -112,9 +115,6 @@ namespace FubarDev.FtpServer.ConnectionHandlers
 
             var receiverStopTask = info.ReceiverService.StopAsync(cancellationToken);
             var transmitterStopTask = info.TransmitterService.StopAsync(cancellationToken);
-
-            // _socketPipe.Input.CancelPendingRead();
-            // _connectionPipe.Input.CancelPendingRead();
 
             await Task.WhenAll(receiverStopTask, transmitterStopTask)
                .ConfigureAwait(false);

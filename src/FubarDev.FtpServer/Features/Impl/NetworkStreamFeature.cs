@@ -27,10 +27,20 @@ namespace FubarDev.FtpServer.Features.Impl
         /// <inheritdoc />
         public ISafeCommunicationService SafeStreamService { get; }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Gets the stream reader service.
+        /// </summary>
+        /// <remarks>
+        /// It writes data from the network stream into a pipe.
+        /// </remarks>
         public IPausableCommunicationService StreamReaderService { get; }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Gets the stream writer service.
+        /// </summary>
+        /// <remarks>
+        /// It reads data from the pipe and writes it to the network stream.
+        /// </remarks>
         public IPausableCommunicationService StreamWriterService { get; }
 
         /// <inheritdoc />

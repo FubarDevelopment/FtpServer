@@ -13,7 +13,10 @@ using Microsoft.Extensions.Logging;
 
 namespace FubarDev.FtpServer.ConnectionHandlers
 {
-    public class PassThroughConnection : ICommunicationService
+    /// <summary>
+    /// Communication service that passes data from one pipe to another.
+    /// </summary>
+    internal class PassThroughConnection : ICommunicationService
     {
         [NotNull]
         private readonly IPausableCommunicationService _transmitService;

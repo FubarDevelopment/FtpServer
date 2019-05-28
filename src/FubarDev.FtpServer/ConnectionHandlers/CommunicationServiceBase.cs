@@ -12,7 +12,10 @@ using Microsoft.Extensions.Logging;
 
 namespace FubarDev.FtpServer.ConnectionHandlers
 {
-    public abstract class CommunicationServiceBase : IPausableCommunicationService
+    /// <summary>
+    /// Base class for communication services.
+    /// </summary>
+    internal abstract class CommunicationServiceBase : IPausableCommunicationService
     {
         [NotNull]
         private readonly CancellationTokenSource _jobStopped = new CancellationTokenSource();

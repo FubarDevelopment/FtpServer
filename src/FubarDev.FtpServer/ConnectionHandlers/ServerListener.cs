@@ -21,7 +21,7 @@ namespace FubarDev.FtpServer.ConnectionHandlers
     /// <remarks>
     /// Accepting connections can be paused.
     /// </remarks>
-    public class ServerListener : CommunicationServiceBase
+    internal class ServerListener : CommunicationServiceBase
     {
         [NotNull]
         private readonly ChannelWriter<TcpClient> _newClientWriter;

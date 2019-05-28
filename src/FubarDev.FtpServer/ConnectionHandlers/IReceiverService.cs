@@ -6,7 +6,7 @@ using JetBrains.Annotations;
 
 namespace FubarDev.FtpServer.ConnectionHandlers
 {
-    public interface IReceiverService
+    internal interface IReceiverService
     {
         [NotNull]
         IPausableCommunicationService Receiver { get; }
