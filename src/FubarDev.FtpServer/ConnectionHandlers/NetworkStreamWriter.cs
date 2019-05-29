@@ -58,7 +58,7 @@ namespace FubarDev.FtpServer.ConnectionHandlers
 
                 // Don't use the cancellation token source from above. Otherwise
                 // data might be lost.
-                await SendDataToStream(readResult.Buffer, _stream, CancellationToken.None, Logger)
+                await SendDataToStream(readResult.Buffer, _stream, CancellationToken.None)
                    .ConfigureAwait(false);
 
                 _pipeReader.AdvanceTo(readResult.Buffer.End);
@@ -105,6 +105,12 @@ namespace FubarDev.FtpServer.ConnectionHandlers
             return true;
         }
 
+        /// <summary>
+        /// Called when the stream is closed.
+        /// </summary>
+        /// <param name="exception">The exception that occurred during the operation.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <returns>The task.</returns>
         protected virtual Task OnCloseAsync(Exception exception, CancellationToken cancellationToken)
         {
             // Tell the PipeReader that there's no more data coming
@@ -113,17 +119,29 @@ namespace FubarDev.FtpServer.ConnectionHandlers
             return Task.CompletedTask;
         }
 
+        /// <summary>
+        /// Writes data to the stream.
+        /// </summary>
+        /// <param name="buffer">The buffer containing the data.</param>
+        /// <param name="offset">The offset into the buffer.</param>
+        /// <param name="length">The length of the data to send.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <returns>The task.</returns>
+        protected virtual Task WriteToStreamAsync(byte[] buffer, int offset, int length, CancellationToken cancellationToken)
+        {
+            return _stream.WriteAsync(buffer, 0, buffer.Length, cancellationToken);
+        }
+
         [NotNull]
-        private static async Task FlushAsync(
+        private async Task FlushAsync(
             [NotNull] Stream stream,
             [NotNull] PipeReader reader,
-            CancellationToken cancellationToken,
-            [CanBeNull] ILogger logger)
+            CancellationToken cancellationToken)
         {
-            logger?.LogTrace("Flushing");
+            Logger?.LogTrace("Flushing");
             while (reader.TryRead(out var readResult))
             {
-                await SendDataToStream(readResult.Buffer, stream, cancellationToken, logger)
+                await SendDataToStream(readResult.Buffer, stream, cancellationToken)
                    .ConfigureAwait(false);
                 reader.AdvanceTo(readResult.Buffer.End);
 
@@ -133,27 +151,26 @@ namespace FubarDev.FtpServer.ConnectionHandlers
                 }
             }
 
-            logger?.LogTrace("Flushed");
+            Logger?.LogTrace("Flushed");
         }
 
         [NotNull]
-        private static async Task SendDataToStream(
+        private async Task SendDataToStream(
             ReadOnlySequence<byte> buffer,
             [NotNull] Stream stream,
-            CancellationToken cancellationToken,
-            [CanBeNull] ILogger logger)
+            CancellationToken cancellationToken)
         {
-            logger?.LogTrace("Start sending");
+            Logger?.LogTrace("Start sending");
             var position = buffer.Start;
 
             while (buffer.TryGet(ref position, out var memory))
             {
                 var streamBuffer = memory.ToArray();
-                await stream.WriteAsync(streamBuffer, 0, streamBuffer.Length, cancellationToken)
+                await WriteToStreamAsync(streamBuffer, 0, streamBuffer.Length, cancellationToken)
                    .ConfigureAwait(false);
             }
 
-            logger?.LogTrace("Flushing stream");
+            Logger?.LogTrace("Flushing stream");
             await stream.FlushAsync(cancellationToken).ConfigureAwait(false);
         }
 
@@ -163,7 +180,7 @@ namespace FubarDev.FtpServer.ConnectionHandlers
             {
                 if (!cancellationToken.IsCancellationRequested)
                 {
-                    await FlushAsync(_stream, _pipeReader, cancellationToken, Logger).ConfigureAwait(false);
+                    await FlushAsync(_stream, _pipeReader, cancellationToken).ConfigureAwait(false);
                 }
             }
             catch (Exception ex) when (ex.IsIOException())

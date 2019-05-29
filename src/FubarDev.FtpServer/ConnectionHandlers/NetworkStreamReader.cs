@@ -46,28 +46,34 @@ namespace FubarDev.FtpServer.ConnectionHandlers
             _pipeWriter = pipeWriter;
         }
 
+        protected virtual async Task<int> ReadFromStreamAsync(byte[] buffer, int offset, int length, CancellationToken cancellationToken)
+        {
+            var readTask = _stream
+               .ReadAsync(buffer, 0, buffer.Length, cancellationToken);
+
+            var resultTask = await Task.WhenAny(readTask, Task.Delay(-1, cancellationToken))
+               .ConfigureAwait(false);
+            if (resultTask != readTask || cancellationToken.IsCancellationRequested)
+            {
+                Logger?.LogTrace("Cancelled through Task.Delay");
+                return 0;
+            }
+
+            return readTask.Result;
+        }
+
         /// <inheritdoc />
         protected override async Task ExecuteAsync(CancellationToken cancellationToken)
         {
             var buffer = new byte[32];
-            while (true)
+            while (!cancellationToken.IsCancellationRequested)
             {
                 // Allocate at least 512 bytes from the PipeWriter
                 var memory = _pipeWriter.GetMemory(buffer.Length);
 
                 Logger?.LogTrace("Start reading from stream");
-                var readTask = _stream
-                   .ReadAsync(buffer, 0, buffer.Length, cancellationToken);
-
-                var resultTask = await Task.WhenAny(readTask, Task.Delay(-1, cancellationToken))
+                var bytesRead = await ReadFromStreamAsync(buffer, 0, buffer.Length, cancellationToken)
                    .ConfigureAwait(false);
-                if (resultTask != readTask)
-                {
-                    Logger?.LogTrace("Cancelled through Task.Delay");
-                    break;
-                }
-
-                var bytesRead = readTask.Result;
 
                 if (bytesRead == 0)
                 {

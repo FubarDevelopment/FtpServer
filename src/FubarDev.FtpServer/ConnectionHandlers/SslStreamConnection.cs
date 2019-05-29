@@ -10,6 +10,7 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using FubarDev.FtpServer.Authentication;
+using FubarDev.FtpServer.Utilities;
 
 using JetBrains.Annotations;
 
@@ -83,16 +84,20 @@ namespace FubarDev.FtpServer.ConnectionHandlers
                 _serviceProvider.GetService<ILogger<RawStream>>());
             var sslStream = await _sslStreamWrapperFactory.WrapStreamAsync(rawStream, false, _certificate, cancellationToken)
                .ConfigureAwait(false);
-            var transmitterService = new NonClosingNetworkStreamWriter(
-                sslStream,
-                _connectionPipe.Input,
-                _connectionClosed,
-                _loggerFactory?.CreateLogger(typeof(SslStreamConnection).FullName + ":Transmitter"));
             var receiverService = new NonClosingNetworkStreamReader(
                 sslStream,
                 _connectionPipe.Output,
+                _socketPipe.Input,
                 _connectionClosed,
                 _loggerFactory?.CreateLogger(typeof(SslStreamConnection).FullName + ":Receiver"));
+            var transmitterService = new NonClosingNetworkStreamWriter(
+                sslStream,
+                _connectionPipe.Input,
+#if NETFRAMEWORK
+                receiverService,
+#endif
+                _connectionClosed,
+                _loggerFactory?.CreateLogger(typeof(SslStreamConnection).FullName + ":Transmitter"));
             var info = new SslCommunicationInfo(transmitterService, receiverService, sslStream);
             _info = info;
 
@@ -149,13 +154,35 @@ namespace FubarDev.FtpServer.ConnectionHandlers
 
         private class NonClosingNetworkStreamReader : NetworkStreamReader
         {
+            [NotNull]
+            private readonly Stream _stream;
+
+            [NotNull]
+            private readonly PipeReader _socketPipeReader;
+
             public NonClosingNetworkStreamReader(
                 [NotNull] Stream stream,
                 [NotNull] PipeWriter pipeWriter,
+                [NotNull] PipeReader socketPipeReader,
                 CancellationToken connectionClosed,
                 [CanBeNull] ILogger logger = null)
                 : base(stream, pipeWriter, connectionClosed, logger)
             {
+                _stream = stream;
+                _socketPipeReader = socketPipeReader;
+            }
+
+            /// <inheritdoc />
+            protected override Task<int> ReadFromStreamAsync(byte[] buffer, int offset, int length, CancellationToken cancellationToken)
+            {
+                return _stream.ReadAsync(buffer, 0, buffer.Length, cancellationToken);
+            }
+
+            /// <inheritdoc />
+            protected override Task OnPauseRequestedAsync(CancellationToken cancellationToken)
+            {
+                _socketPipeReader.CancelPendingRead();
+                return base.OnPauseRequestedAsync(cancellationToken);
             }
 
             /// <inheritdoc />
@@ -168,13 +195,24 @@ namespace FubarDev.FtpServer.ConnectionHandlers
 
         private class NonClosingNetworkStreamWriter : NetworkStreamWriter
         {
+#if NETFRAMEWORK
+            [NotNull]
+            private readonly IPausableCommunicationService _reader;
+#endif
+
             public NonClosingNetworkStreamWriter(
                 [NotNull] Stream stream,
                 [NotNull] PipeReader pipeReader,
+#if NETFRAMEWORK
+                [NotNull] IPausableCommunicationService reader,
+#endif
                 CancellationToken connectionClosed,
                 [CanBeNull] ILogger logger = null)
                 : base(stream, pipeReader, connectionClosed, logger)
             {
+#if NETFRAMEWORK
+                _reader = reader;
+#endif
             }
 
             /// <inheritdoc />
@@ -183,6 +221,32 @@ namespace FubarDev.FtpServer.ConnectionHandlers
                 // Do nothing
                 return Task.CompletedTask;
             }
+
+#if NETFRAMEWORK
+            /// <inheritdoc />
+            protected override async Task WriteToStreamAsync(byte[] buffer, int offset, int length, CancellationToken cancellationToken)
+            {
+                // This is insanity!
+                //
+                // We have to cancel the "Read" on the SslStream to be able
+                // to write. It seems that parallel reads and writes aren't
+                // allowed by the SslStream from .NET Framework.
+                //
+                // The SslStream from .NET Core works fine.
+                var disposeFunc = await _reader.WrapPauseAsync(cancellationToken)
+                   .ConfigureAwait(false);
+                try
+                {
+                    await base.WriteToStreamAsync(buffer, offset, length, cancellationToken)
+                       .ConfigureAwait(false);
+                }
+                finally
+                {
+                    await disposeFunc()
+                       .ConfigureAwait(false);
+                }
+            }
+#endif
         }
     }
 }
