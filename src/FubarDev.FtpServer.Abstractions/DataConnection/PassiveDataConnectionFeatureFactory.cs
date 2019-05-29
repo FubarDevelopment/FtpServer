@@ -69,7 +69,7 @@ namespace FubarDev.FtpServer.DataConnection
             var listener = await _pasvListenerFactory.CreateTcpListenerAsync(
                 connection,
                 desiredPort,
-                cancellationToken);
+                cancellationToken).ConfigureAwait(false);
             return new PassiveDataConnectionFeature(listener, _validators, ftpCommand, connection, listener.PasvEndPoint);
         }
 

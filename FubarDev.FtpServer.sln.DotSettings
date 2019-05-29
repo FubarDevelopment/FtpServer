@@ -6,6 +6,7 @@
 	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/GeneratedFilesAndFolders/=7E3F81E2_002D764E_002D4075_002D992F_002DE53BF50F9623_002Fdl_003ADotNet_002EGlob_003A_002E_002E_003F_002E_002E_003Fthird_002Dparty_003FDotNet_002EGlob/@EntryIndexedValue">7E3F81E2-764E-4075-992F-E53BF50F9623/dl:DotNet.Glob:..?..?third-party?DotNet.Glob</s:String>
 	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/GeneratedFilesAndFolders/=A45290B4_002D20F7_002D48E9_002D8543_002DC69240BFB9F8/@EntryIndexedValue">A45290B4-20F7-48E9-8543-C69240BFB9F8</s:String>
 	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/GeneratedFilesAndFolders/=A5C36C6D_002DBE99_002D44C5_002D870A_002D23FD6B76E839_002Fd_003AUtilities/@EntryIndexedValue">A5C36C6D-BE99-44C5-870A-23FD6B76E839/d:Utilities</s:String>
+	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/GeneratedFilesAndFolders/=FD524518_002DE097_002D4AC0_002DAAC8_002DD5EA24F31545/@EntryIndexedValue">FD524518-E097-4AC0-AAC8-D5EA24F31545</s:String>
 	<s:String x:Key="/Default/CodeInspection/Highlighting/InspectionSeverities/=ArrangeRedundantParentheses/@EntryIndexedValue">DO_NOT_SHOW</s:String>
 	<s:String x:Key="/Default/CodeInspection/CSharpLanguageProject/LanguageLevel/@EntryValue">Experimental</s:String>
 	<s:String x:Key="/Default/CodeInspection/Highlighting/InspectionSeverities/=AssignNullToNotNullAttribute/@EntryIndexedValue">WARNING</s:String>
@@ -93,6 +94,9 @@ Copyright (c) Fubar Development Junker. All rights reserved.&#xD;
 	<s:String x:Key="/Default/CodeStyle/Naming/XamlNaming/UserRules/=NAMESPACE_005FALIAS/@EntryIndexedValue">&lt;Policy Inspect="True" Prefix="" Suffix="" Style="aaBb" /&gt;</s:String>
 	<s:String x:Key="/Default/CodeStyle/Naming/XamlNaming/UserRules/=XAML_005FFIELD/@EntryIndexedValue">&lt;Policy Inspect="True" Prefix="" Suffix="" Style="AaBb" /&gt;</s:String>
 	<s:String x:Key="/Default/CodeStyle/Naming/XamlNaming/UserRules/=XAML_005FRESOURCE/@EntryIndexedValue">&lt;Policy Inspect="True" Prefix="" Suffix="" Style="AaBb" /&gt;</s:String>
+	<s:Boolean x:Key="/Default/Environment/ExcludedFiles/FilesAndFoldersToSkip/=7E3F81E2_002D764E_002D4075_002D992F_002DE53BF50F9623_002Fdl_003A8802071d2b97846050cd449f4359da73_003A_002E_002E_003F_002E_002E_003Fthird_002Dparty_003FDotNet_002EGlob/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/Environment/ExcludedFiles/FilesAndFoldersToSkip/=A45290B4_002D20F7_002D48E9_002D8543_002DC69240BFB9F8/@EntryIndexedValue">True</s:Boolean>
+	<s:Boolean x:Key="/Default/Environment/ExcludedFiles/FilesAndFoldersToSkip/=FD524518_002DE097_002D4AC0_002DAAC8_002DD5EA24F31545/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/Environment/SettingsMigration/IsMigratorApplied/=JetBrains_002EReSharper_002EPsi_002ECSharp_002ECodeStyle_002ECSharpAttributeForSingleLineMethodUpgrade/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/Environment/SettingsMigration/IsMigratorApplied/=JetBrains_002EReSharper_002EPsi_002ECSharp_002ECodeStyle_002ECSharpKeepExistingMigration/@EntryIndexedValue">True</s:Boolean>
 	<s:Boolean x:Key="/Default/Environment/SettingsMigration/IsMigratorApplied/=JetBrains_002EReSharper_002EPsi_002ECSharp_002ECodeStyle_002ECSharpPlaceEmbeddedOnSameLineMigration/@EntryIndexedValue">True</s:Boolean>
