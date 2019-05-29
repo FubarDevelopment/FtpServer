@@ -2,7 +2,6 @@
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
-using System.IO;
 using System.Net.Sockets;
 
 using JetBrains.Annotations;

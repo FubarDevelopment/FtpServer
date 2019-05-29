@@ -5,7 +5,6 @@
 using System.Threading;
 using System.Threading.Tasks;
 
-using FubarDev.FtpServer.Features;
 using FubarDev.FtpServer.ServerCommands;
 
 using JetBrains.Annotations;
