@@ -1,4 +1,4 @@
-// <copyright file="SslStreamConnection.cs" company="Fubar Development Junker">
+// <copyright file="SslStreamConnectionAdapter.cs" company="Fubar Development Junker">
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
@@ -10,7 +10,10 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using FubarDev.FtpServer.Authentication;
+using FubarDev.FtpServer.Networking;
+#if NETFRAMEWORK
 using FubarDev.FtpServer.Utilities;
+#endif
 
 using JetBrains.Annotations;
 
@@ -20,9 +23,9 @@ using Microsoft.Extensions.Logging;
 namespace FubarDev.FtpServer.ConnectionHandlers
 {
     /// <summary>
-    /// A communication service that injects an SSL stream between the socket and the connection pipe.
+    /// A connection adapter that injects an SSL stream between the socket and the connection pipe.
     /// </summary>
-    internal class SslStreamConnection : ICommunicationService
+    internal class SslStreamConnectionAdapter : IFtpConnectionAdapter
     {
         [NotNull]
         private readonly IServiceProvider _serviceProvider;
@@ -47,7 +50,7 @@ namespace FubarDev.FtpServer.ConnectionHandlers
         [CanBeNull]
         private SslCommunicationInfo _info;
 
-        public SslStreamConnection(
+        public SslStreamConnectionAdapter(
             [NotNull] IDuplexPipe socketPipe,
             [NotNull] IDuplexPipe connectionPipe,
             [NotNull] IServiceProvider serviceProvider,
@@ -66,7 +69,7 @@ namespace FubarDev.FtpServer.ConnectionHandlers
         }
 
         /// <inheritdoc />
-        public IPausableFtpService Sender
+        public IFtpService Sender
             => _info?.TransmitterService
                 ?? throw new InvalidOperationException("Sender can only be accessed when the connection service was started.");
 
@@ -78,10 +81,10 @@ namespace FubarDev.FtpServer.ConnectionHandlers
         /// <inheritdoc />
         public async Task StartAsync(CancellationToken cancellationToken)
         {
-            var rawStream = new RawStream(
+            var rawStream = new SimplePipeStream(
                 _socketPipe.Input,
                 _socketPipe.Output,
-                _serviceProvider.GetService<ILogger<RawStream>>());
+                _serviceProvider.GetService<ILogger<SimplePipeStream>>());
             var sslStream = await _sslStreamWrapperFactory.WrapStreamAsync(rawStream, false, _certificate, cancellationToken)
                .ConfigureAwait(false);
             var receiverService = new NonClosingNetworkStreamReader(
@@ -89,7 +92,7 @@ namespace FubarDev.FtpServer.ConnectionHandlers
                 _connectionPipe.Output,
                 _socketPipe.Input,
                 _connectionClosed,
-                _loggerFactory?.CreateLogger(typeof(SslStreamConnection).FullName + ":Receiver"));
+                _loggerFactory?.CreateLogger(typeof(SslStreamConnectionAdapter).FullName + ":Receiver"));
             var transmitterService = new NonClosingNetworkStreamWriter(
                 sslStream,
                 _connectionPipe.Input,
@@ -97,7 +100,7 @@ namespace FubarDev.FtpServer.ConnectionHandlers
                 receiverService,
 #endif
                 _connectionClosed,
-                _loggerFactory?.CreateLogger(typeof(SslStreamConnection).FullName + ":Transmitter"));
+                _loggerFactory?.CreateLogger(typeof(SslStreamConnectionAdapter).FullName + ":Transmitter"));
             var info = new SslCommunicationInfo(transmitterService, receiverService, sslStream);
             _info = info;
 
@@ -133,7 +136,7 @@ namespace FubarDev.FtpServer.ConnectionHandlers
         private class SslCommunicationInfo
         {
             public SslCommunicationInfo(
-                [NotNull] IPausableFtpService transmitterService,
+                [NotNull] IFtpService transmitterService,
                 [NotNull] IPausableFtpService receiverService,
                 [NotNull] Stream sslStream)
             {
@@ -143,7 +146,7 @@ namespace FubarDev.FtpServer.ConnectionHandlers
             }
 
             [NotNull]
-            public IPausableFtpService TransmitterService { get; }
+            public IFtpService TransmitterService { get; }
 
             [NotNull]
             public IPausableFtpService ReceiverService { get; }
@@ -152,11 +155,8 @@ namespace FubarDev.FtpServer.ConnectionHandlers
             public Stream SslStream { get; }
         }
 
-        private class NonClosingNetworkStreamReader : NetworkStreamReader
+        private class NonClosingNetworkStreamReader : StreamPipeReaderService
         {
-            [NotNull]
-            private readonly Stream _stream;
-
             [NotNull]
             private readonly PipeReader _socketPipeReader;
 
@@ -168,14 +168,7 @@ namespace FubarDev.FtpServer.ConnectionHandlers
                 [CanBeNull] ILogger logger = null)
                 : base(stream, pipeWriter, connectionClosed, logger)
             {
-                _stream = stream;
                 _socketPipeReader = socketPipeReader;
-            }
-
-            /// <inheritdoc />
-            protected override Task<int> ReadFromStreamAsync(byte[] buffer, int offset, int length, CancellationToken cancellationToken)
-            {
-                return _stream.ReadAsync(buffer, 0, buffer.Length, cancellationToken);
             }
 
             /// <inheritdoc />
@@ -193,7 +186,7 @@ namespace FubarDev.FtpServer.ConnectionHandlers
             }
         }
 
-        private class NonClosingNetworkStreamWriter : NetworkStreamWriter
+        private class NonClosingNetworkStreamWriter : StreamPipeWriterService
         {
 #if NETFRAMEWORK
             [NotNull]

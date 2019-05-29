@@ -1,4 +1,4 @@
-// <copyright file="NetworkStreamReader.cs" company="Fubar Development Junker">
+// <copyright file="StreamPipeReaderService.cs" company="Fubar Development Junker">
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
@@ -12,16 +12,13 @@ using JetBrains.Annotations;
 
 using Microsoft.Extensions.Logging;
 
-namespace FubarDev.FtpServer.ConnectionHandlers
+namespace FubarDev.FtpServer.Networking
 {
     /// <summary>
     /// Reads from a stream and writes into a pipeline.
     /// </summary>
-    internal class NetworkStreamReader : CommunicationServiceBase
+    internal class StreamPipeReaderService : PausableFtpService
     {
-        [NotNull]
-        private readonly Stream _stream;
-
         [NotNull]
         private readonly PipeWriter _pipeWriter;
 
@@ -29,37 +26,29 @@ namespace FubarDev.FtpServer.ConnectionHandlers
         private Exception _exception;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="NetworkStreamReader"/> class.
+        /// Initializes a new instance of the <see cref="StreamPipeReaderService"/> class.
         /// </summary>
         /// <param name="stream">The stream to read from.</param>
         /// <param name="pipeWriter">The pipeline to write to.</param>
         /// <param name="connectionClosed">Cancellation token for a closed connection.</param>
         /// <param name="logger">The logger.</param>
-        public NetworkStreamReader(
+        public StreamPipeReaderService(
             [NotNull] Stream stream,
             [NotNull] PipeWriter pipeWriter,
             CancellationToken connectionClosed,
             [CanBeNull] ILogger logger = null)
             : base(connectionClosed, logger)
         {
-            _stream = stream;
+            Stream = stream;
             _pipeWriter = pipeWriter;
         }
 
-        protected virtual async Task<int> ReadFromStreamAsync(byte[] buffer, int offset, int length, CancellationToken cancellationToken)
+        [NotNull]
+        protected Stream Stream { get; }
+
+        protected virtual Task<int> ReadFromStreamAsync(byte[] buffer, int offset, int length, CancellationToken cancellationToken)
         {
-            var readTask = _stream
-               .ReadAsync(buffer, 0, buffer.Length, cancellationToken);
-
-            var resultTask = await Task.WhenAny(readTask, Task.Delay(-1, cancellationToken))
-               .ConfigureAwait(false);
-            if (resultTask != readTask || cancellationToken.IsCancellationRequested)
-            {
-                Logger?.LogTrace("Cancelled through Task.Delay");
-                return 0;
-            }
-
-            return readTask.Result;
+            return Stream.ReadAsync(buffer, 0, buffer.Length, cancellationToken);
         }
 
         /// <inheritdoc />

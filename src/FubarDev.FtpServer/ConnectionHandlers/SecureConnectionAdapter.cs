@@ -1,4 +1,4 @@
-// <copyright file="SafeCommunicationChannelService.cs" company="Fubar Development Junker">
+// <copyright file="SecureConnectionAdapter.cs" company="Fubar Development Junker">
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
@@ -18,9 +18,9 @@ using Microsoft.Extensions.Logging;
 namespace FubarDev.FtpServer.ConnectionHandlers
 {
     /// <summary>
-    /// A communication channel service that allows enabling and resetting of an SSL/TLS connection.
+    /// A connection adapter that allows enabling and resetting of an SSL/TLS connection.
     /// </summary>
-    internal class SafeCommunicationChannelService : ISafeCommunicationService
+    internal class SecureConnectionAdapter : IFtpSecureConnectionAdapter
     {
         [NotNull]
         private readonly IDuplexPipe _socketPipe;
@@ -40,17 +40,17 @@ namespace FubarDev.FtpServer.ConnectionHandlers
         private readonly ILoggerFactory _loggerFactory;
 
         [NotNull]
-        private ICommunicationService _activeCommunicationService;
+        private IFtpConnectionAdapter _activeCommunicationService;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SafeCommunicationChannelService"/> class.
+        /// Initializes a new instance of the <see cref="SecureConnectionAdapter"/> class.
         /// </summary>
         /// <param name="socketPipe">The pipe from the socket.</param>
         /// <param name="connectionPipe">The pipe to the connection object.</param>
         /// <param name="sslStreamWrapperFactory">The SSL stream wrapper factory.</param>
         /// <param name="serviceProvider">The service provider.</param>
         /// <param name="connectionClosed">The cancellation token for a closed connection.</param>
-        public SafeCommunicationChannelService(
+        public SecureConnectionAdapter(
             [NotNull] IDuplexPipe socketPipe,
             [NotNull] IDuplexPipe connectionPipe,
             [NotNull] ISslStreamWrapperFactory sslStreamWrapperFactory,
@@ -63,7 +63,7 @@ namespace FubarDev.FtpServer.ConnectionHandlers
             _serviceProvider = serviceProvider;
             _connectionClosed = connectionClosed;
             _loggerFactory = serviceProvider.GetService<ILoggerFactory>();
-            _activeCommunicationService = new PassThroughConnection(
+            _activeCommunicationService = new PassThroughConnectionAdapter(
                 socketPipe,
                 connectionPipe,
                 connectionClosed,
@@ -71,7 +71,7 @@ namespace FubarDev.FtpServer.ConnectionHandlers
         }
 
         /// <inheritdoc />
-        public IPausableFtpService Sender => _activeCommunicationService.Sender;
+        public IFtpService Sender => _activeCommunicationService.Sender;
 
         /// <inheritdoc />
         public IPausableFtpService Receiver => _activeCommunicationService.Receiver;
@@ -81,7 +81,7 @@ namespace FubarDev.FtpServer.ConnectionHandlers
         {
             await StopAsync(cancellationToken)
                .ConfigureAwait(false);
-            _activeCommunicationService = new PassThroughConnection(
+            _activeCommunicationService = new PassThroughConnectionAdapter(
                 _socketPipe,
                 _connectionPipe,
                 _connectionClosed,
@@ -97,7 +97,7 @@ namespace FubarDev.FtpServer.ConnectionHandlers
                .ConfigureAwait(false);
             try
             {
-                _activeCommunicationService = new SslStreamConnection(
+                _activeCommunicationService = new SslStreamConnectionAdapter(
                     _socketPipe,
                     _connectionPipe,
                     _serviceProvider,
@@ -108,7 +108,7 @@ namespace FubarDev.FtpServer.ConnectionHandlers
             }
             catch
             {
-                _activeCommunicationService = new PassThroughConnection(
+                _activeCommunicationService = new PassThroughConnectionAdapter(
                     _socketPipe,
                     _connectionPipe,
                     _connectionClosed,

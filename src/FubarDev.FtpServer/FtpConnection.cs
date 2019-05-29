@@ -26,6 +26,7 @@ using FubarDev.FtpServer.DataConnection;
 using FubarDev.FtpServer.Features;
 using FubarDev.FtpServer.Features.Impl;
 using FubarDev.FtpServer.Localization;
+using FubarDev.FtpServer.Networking;
 using FubarDev.FtpServer.ServerCommands;
 
 using JetBrains.Annotations;
@@ -162,7 +163,7 @@ namespace FubarDev.FtpServer
 
             var loggerFactory = serviceProvider.GetService<ILoggerFactory>();
             _networkStreamFeature = new NetworkStreamFeature(
-                new SafeCommunicationChannelService(
+                new SecureConnectionAdapter(
                     socketPipe,
                     connectionPipe,
                     sslStreamWrapperFactory,
@@ -173,7 +174,7 @@ namespace FubarDev.FtpServer
                     _socketCommandPipe.Writer,
                     _cancellationTokenSource,
                     loggerFactory?.CreateLogger(typeof(FtpConnection).FullName + ":StreamReader")),
-                new NetworkStreamWriter(
+                new StreamPipeWriterService(
                     secureConnectionFeature.OriginalStream,
                     _socketResponsePipe.Reader,
                     _cancellationTokenSource.Token,
@@ -281,7 +282,7 @@ namespace FubarDev.FtpServer
                .ConfigureAwait(false);
             await _networkStreamFeature.StreamReaderService.StartAsync(CancellationToken.None)
                .ConfigureAwait(false);
-            await _networkStreamFeature.SafeStreamService.StartAsync(CancellationToken.None)
+            await _networkStreamFeature.SecureConnectionAdapter.StartAsync(CancellationToken.None)
                .ConfigureAwait(false);
 
             _commandChannelReader = CommandChannelDispatcherAsync(
@@ -322,7 +323,7 @@ namespace FubarDev.FtpServer
                .ConfigureAwait(false);
             await _networkStreamFeature.StreamWriterService.StopAsync(CancellationToken.None)
                .ConfigureAwait(false);
-            await _networkStreamFeature.SafeStreamService.StopAsync(CancellationToken.None)
+            await _networkStreamFeature.SecureConnectionAdapter.StopAsync(CancellationToken.None)
                .ConfigureAwait(false);
 
             Log?.LogInformation("Connection closed");
@@ -671,7 +672,7 @@ namespace FubarDev.FtpServer
             }
         }
 
-        private class ConnectionClosingNetworkStreamReader : NetworkStreamReader
+        private class ConnectionClosingNetworkStreamReader : StreamPipeReaderService
         {
             [NotNull]
             private readonly CancellationTokenSource _connectionClosedCts;
@@ -684,6 +685,25 @@ namespace FubarDev.FtpServer
                 : base(stream, pipeWriter, connectionClosedCts.Token, logger)
             {
                 _connectionClosedCts = connectionClosedCts;
+            }
+
+            /// <inheritdoc />
+            protected override async Task<int> ReadFromStreamAsync(byte[] buffer, int offset, int length, CancellationToken cancellationToken)
+            {
+                var readTask = Stream
+                   .ReadAsync(buffer, offset, length, cancellationToken);
+
+                // We ensure that this service can be closed ASAP with the help
+                // of a Task.Delay.
+                var resultTask = await Task.WhenAny(readTask, Task.Delay(-1, cancellationToken))
+                   .ConfigureAwait(false);
+                if (resultTask != readTask || cancellationToken.IsCancellationRequested)
+                {
+                    Logger?.LogTrace("Cancelled through Task.Delay");
+                    return 0;
+                }
+
+                return readTask.Result;
             }
 
             /// <inheritdoc />

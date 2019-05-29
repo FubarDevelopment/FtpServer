@@ -1,4 +1,4 @@
-// <copyright file="RawStream.cs" company="Fubar Development Junker">
+// <copyright file="SimplePipeStream.cs" company="Fubar Development Junker">
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
@@ -13,12 +13,12 @@ using JetBrains.Annotations;
 
 using Microsoft.Extensions.Logging;
 
-namespace FubarDev.FtpServer.ConnectionHandlers
+namespace FubarDev.FtpServer.Networking
 {
     /// <summary>
     /// A stream that uses a pipe.
     /// </summary>
-    internal class RawStream : Stream
+    internal class SimplePipeStream : Stream
     {
         [NotNull]
         private readonly PipeReader _input;
@@ -27,36 +27,50 @@ namespace FubarDev.FtpServer.ConnectionHandlers
         private readonly PipeWriter _output;
 
         [CanBeNull]
-        private readonly ILogger<RawStream> _logger;
+        private readonly ILogger<SimplePipeStream> _logger;
 
-        public RawStream(
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SimplePipeStream"/> class.
+        /// </summary>
+        /// <param name="input">The pipe reader to be used to read from.</param>
+        /// <param name="output">The pipe writer to be used to write to.</param>
+        /// <param name="logger">The logger.</param>
+        public SimplePipeStream(
             [NotNull] PipeReader input,
             [NotNull] PipeWriter output,
-            [CanBeNull] ILogger<RawStream> logger)
+            [CanBeNull] ILogger<SimplePipeStream> logger)
         {
             _input = input;
             _output = output;
             _logger = logger;
         }
 
+        /// <inheritdoc />
         public override bool CanRead => true;
 
+        /// <inheritdoc />
         public override bool CanSeek => false;
 
+        /// <inheritdoc />
         public override bool CanWrite => true;
 
+        /// <inheritdoc />
         public override long Length => throw new NotSupportedException();
 
+        /// <inheritdoc />
         public override long Position
         {
             get => throw new NotSupportedException();
             set => throw new NotSupportedException();
         }
 
+        /// <inheritdoc />
         public override long Seek(long offset, SeekOrigin origin) => throw new NotSupportedException();
 
+        /// <inheritdoc />
         public override void SetLength(long value) => throw new NotSupportedException();
 
+        /// <inheritdoc />
         public override int Read(byte[] buffer, int offset, int count)
         {
             _logger?.LogTrace("Try to read {count} bytes", count);
@@ -66,18 +80,21 @@ namespace FubarDev.FtpServer.ConnectionHandlers
             return ReadAsyncInternal(new Memory<byte>(buffer, offset, count), CancellationToken.None).Result;
         }
 
+        /// <inheritdoc />
         public override Task<int> ReadAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken)
         {
             _logger?.LogTrace("Try to read {count} bytes asynchronously", count);
             return ReadAsyncInternal(new Memory<byte>(buffer, offset, count), cancellationToken).AsTask();
         }
 
+        /// <inheritdoc />
         public override void Write(byte[] buffer, int offset, int count)
         {
             _logger?.LogTrace("Try to write {count} bytes", count);
             WriteAsync(buffer, offset, count).GetAwaiter().GetResult();
         }
 
+        /// <inheritdoc />
         public override async Task WriteAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken)
         {
             _logger?.LogTrace("Try to write {count} bytes asynchronously", count);
@@ -90,11 +107,13 @@ namespace FubarDev.FtpServer.ConnectionHandlers
             await _output.FlushAsync(cancellationToken);
         }
 
+        /// <inheritdoc />
         public override void Flush()
         {
             FlushAsync(CancellationToken.None).GetAwaiter().GetResult();
         }
 
+        /// <inheritdoc />
         public override Task FlushAsync(CancellationToken cancellationToken)
         {
             return WriteAsync(null, 0, 0, cancellationToken);

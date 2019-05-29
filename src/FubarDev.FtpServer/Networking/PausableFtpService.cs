@@ -1,4 +1,4 @@
-// <copyright file="CommunicationServiceBase.cs" company="Fubar Development Junker">
+// <copyright file="PausableFtpService.cs" company="Fubar Development Junker">
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
@@ -10,12 +10,12 @@ using JetBrains.Annotations;
 
 using Microsoft.Extensions.Logging;
 
-namespace FubarDev.FtpServer.ConnectionHandlers
+namespace FubarDev.FtpServer.Networking
 {
     /// <summary>
     /// Base class for communication services.
     /// </summary>
-    internal abstract class CommunicationServiceBase : IPausableFtpService
+    internal abstract class PausableFtpService : IPausableFtpService
     {
         [NotNull]
         private readonly CancellationTokenSource _jobStopped = new CancellationTokenSource();
@@ -29,11 +29,11 @@ namespace FubarDev.FtpServer.ConnectionHandlers
         private Task _task = Task.CompletedTask;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="CommunicationServiceBase"/> class.
+        /// Initializes a new instance of the <see cref="PausableFtpService"/> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
         /// <param name="connectionClosed">Cancellation token source for a closed connection.</param>
-        protected CommunicationServiceBase(
+        protected PausableFtpService(
             CancellationToken connectionClosed,
             [CanBeNull] ILogger logger = null)
         {

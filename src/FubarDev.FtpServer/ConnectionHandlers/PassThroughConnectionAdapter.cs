@@ -1,4 +1,4 @@
-// <copyright file="PassThroughConnection.cs" company="Fubar Development Junker">
+// <copyright file="PassThroughConnectionAdapter.cs" company="Fubar Development Junker">
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
@@ -7,6 +7,8 @@ using System.IO.Pipelines;
 using System.Threading;
 using System.Threading.Tasks;
 
+using FubarDev.FtpServer.Networking;
+
 using JetBrains.Annotations;
 
 using Microsoft.Extensions.Logging;
@@ -14,17 +16,24 @@ using Microsoft.Extensions.Logging;
 namespace FubarDev.FtpServer.ConnectionHandlers
 {
     /// <summary>
-    /// Communication service that passes data from one pipe to another.
+    /// Connection adapter that passes data from one pipe to another.
     /// </summary>
-    internal class PassThroughConnection : ICommunicationService
+    internal class PassThroughConnectionAdapter : IFtpConnectionAdapter
     {
         [NotNull]
-        private readonly IPausableFtpService _transmitService;
+        private readonly IFtpService _transmitService;
 
         [NotNull]
         private readonly IPausableFtpService _receiverService;
 
-        public PassThroughConnection(
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PassThroughConnectionAdapter"/> class.
+        /// </summary>
+        /// <param name="socketPipe">The pipe for the socket.</param>
+        /// <param name="connectionPipe">The pipe for the <see cref="IFtpConnection"/>.</param>
+        /// <param name="connectionClosed">A cancellation token for a closed connection.</param>
+        /// <param name="loggerFactory">The logger factory.</param>
+        public PassThroughConnectionAdapter(
             [NotNull] IDuplexPipe socketPipe,
             [NotNull] IDuplexPipe connectionPipe,
             CancellationToken connectionClosed,
@@ -34,16 +43,16 @@ namespace FubarDev.FtpServer.ConnectionHandlers
                 socketPipe.Input,
                 connectionPipe.Output,
                 connectionClosed,
-                loggerFactory?.CreateLogger(typeof(PassThroughConnection).FullName + ":Receiver"));
+                loggerFactory?.CreateLogger(typeof(PassThroughConnectionAdapter).FullName + ":Receiver"));
             _transmitService = new NonClosingNetworkPassThrough(
                 connectionPipe.Input,
                 socketPipe.Output,
                 connectionClosed,
-                loggerFactory?.CreateLogger(typeof(PassThroughConnection).FullName + ":Transmitter"));
+                loggerFactory?.CreateLogger(typeof(PassThroughConnectionAdapter).FullName + ":Transmitter"));
         }
 
         /// <inheritdoc />
-        public IPausableFtpService Sender => _transmitService;
+        public IFtpService Sender => _transmitService;
 
         /// <inheritdoc />
         public IPausableFtpService Receiver => _receiverService;
@@ -64,7 +73,7 @@ namespace FubarDev.FtpServer.ConnectionHandlers
                 _receiverService.StopAsync(cancellationToken));
         }
 
-        private class NonClosingNetworkPassThrough : NetworkPassThrough
+        private class NonClosingNetworkPassThrough : PassThroughService
         {
             public NonClosingNetworkPassThrough(
                 [NotNull] PipeReader reader,

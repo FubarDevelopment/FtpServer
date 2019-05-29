@@ -1,4 +1,4 @@
-// <copyright file="NetworkStreamWriter.cs" company="Fubar Development Junker">
+// <copyright file="StreamPipeWriterService.cs" company="Fubar Development Junker">
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
@@ -13,12 +13,12 @@ using JetBrains.Annotations;
 
 using Microsoft.Extensions.Logging;
 
-namespace FubarDev.FtpServer.ConnectionHandlers
+namespace FubarDev.FtpServer.Networking
 {
     /// <summary>
     /// Reads from a pipe and writes to a stream.
     /// </summary>
-    internal class NetworkStreamWriter : CommunicationServiceBase
+    internal class StreamPipeWriterService : PausableFtpService
     {
         [NotNull]
         private readonly Stream _stream;
@@ -30,13 +30,13 @@ namespace FubarDev.FtpServer.ConnectionHandlers
         private Exception _exception;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="NetworkStreamWriter"/> class.
+        /// Initializes a new instance of the <see cref="StreamPipeWriterService"/> class.
         /// </summary>
         /// <param name="stream">The stream to write to.</param>
         /// <param name="pipeReader">The pipe to read from.</param>
         /// <param name="connectionClosed">Cancellation token for a closed connection.</param>
         /// <param name="logger">The logger.</param>
-        public NetworkStreamWriter(
+        public StreamPipeWriterService(
             [NotNull] Stream stream,
             [NotNull] PipeReader pipeReader,
             CancellationToken connectionClosed,
@@ -114,7 +114,7 @@ namespace FubarDev.FtpServer.ConnectionHandlers
         protected virtual Task OnCloseAsync(Exception exception, CancellationToken cancellationToken)
         {
             // Tell the PipeReader that there's no more data coming
-            _pipeReader.Complete(_exception);
+            _pipeReader.Complete(exception);
 
             return Task.CompletedTask;
         }
@@ -129,7 +129,7 @@ namespace FubarDev.FtpServer.ConnectionHandlers
         /// <returns>The task.</returns>
         protected virtual Task WriteToStreamAsync(byte[] buffer, int offset, int length, CancellationToken cancellationToken)
         {
-            return _stream.WriteAsync(buffer, 0, buffer.Length, cancellationToken);
+            return _stream.WriteAsync(buffer, offset, length, cancellationToken);
         }
 
         [NotNull]

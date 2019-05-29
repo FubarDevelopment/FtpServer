@@ -6,8 +6,6 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-using FubarDev.FtpServer.ConnectionHandlers;
-
 namespace FubarDev.FtpServer.Utilities
 {
     internal static class NetworkStreamServiceExtensions

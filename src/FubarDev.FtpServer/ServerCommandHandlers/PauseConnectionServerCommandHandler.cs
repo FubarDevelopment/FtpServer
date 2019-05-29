@@ -38,7 +38,7 @@ namespace FubarDev.FtpServer.ServerCommandHandlers
             var connection = _connectionAccessor.FtpConnection;
             var networkStreamFeature = connection.Features.Get<INetworkStreamFeature>();
 
-            await networkStreamFeature.SafeStreamService.Receiver.PauseAsync(cancellationToken)
+            await networkStreamFeature.SecureConnectionAdapter.Receiver.PauseAsync(cancellationToken)
                .ConfigureAwait(false);
             connection.Log?.LogDebug("Receiver paused");
         }

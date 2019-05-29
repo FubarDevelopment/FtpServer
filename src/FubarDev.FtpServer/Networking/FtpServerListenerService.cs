@@ -1,4 +1,4 @@
-// <copyright file="ServerListener.cs" company="Fubar Development Junker">
+// <copyright file="FtpServerListenerService.cs" company="Fubar Development Junker">
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
@@ -13,7 +13,7 @@ using JetBrains.Annotations;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
-namespace FubarDev.FtpServer.ConnectionHandlers
+namespace FubarDev.FtpServer.Networking
 {
     /// <summary>
     /// Listener for the server.
@@ -21,7 +21,7 @@ namespace FubarDev.FtpServer.ConnectionHandlers
     /// <remarks>
     /// Accepting connections can be paused.
     /// </remarks>
-    internal class ServerListener : CommunicationServiceBase
+    internal class FtpServerListenerService : PausableFtpService
     {
         [NotNull]
         private readonly ChannelWriter<TcpClient> _newClientWriter;
@@ -35,13 +35,13 @@ namespace FubarDev.FtpServer.ConnectionHandlers
         private Exception _exception;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ServerListener"/> class.
+        /// Initializes a new instance of the <see cref="FtpServerListenerService"/> class.
         /// </summary>
         /// <param name="newClientWriter">Channel that receives all accepted clients.</param>
         /// <param name="serverOptions">The server options.</param>
         /// <param name="logger">The logger.</param>
         /// <param name="connectionClosedCts">Cancellation token source for a closed connection.</param>
-        public ServerListener(
+        public FtpServerListenerService(
             [NotNull] ChannelWriter<TcpClient> newClientWriter,
             [NotNull] IOptions<FtpServerOptions> serverOptions,
             CancellationTokenSource connectionClosedCts,

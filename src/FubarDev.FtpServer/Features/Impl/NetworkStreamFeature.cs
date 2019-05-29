@@ -13,19 +13,19 @@ namespace FubarDev.FtpServer.Features.Impl
     internal class NetworkStreamFeature : INetworkStreamFeature
     {
         public NetworkStreamFeature(
-            [NotNull] ISafeCommunicationService safeStreamService,
-            [NotNull] IPausableFtpService streamReaderService,
-            [NotNull] IPausableFtpService streamWriterService,
+            [NotNull] IFtpSecureConnectionAdapter secureConnectionAdapter,
+            [NotNull] IFtpService streamReaderService,
+            [NotNull] IFtpService streamWriterService,
             [NotNull] PipeWriter output)
         {
             StreamReaderService = streamReaderService;
             StreamWriterService = streamWriterService;
             Output = output;
-            SafeStreamService = safeStreamService;
+            SecureConnectionAdapter = secureConnectionAdapter;
         }
 
         /// <inheritdoc />
-        public ISafeCommunicationService SafeStreamService { get; }
+        public IFtpSecureConnectionAdapter SecureConnectionAdapter { get; }
 
         /// <summary>
         /// Gets the stream reader service.
@@ -33,7 +33,7 @@ namespace FubarDev.FtpServer.Features.Impl
         /// <remarks>
         /// It writes data from the network stream into a pipe.
         /// </remarks>
-        public IPausableFtpService StreamReaderService { get; }
+        public IFtpService StreamReaderService { get; }
 
         /// <summary>
         /// Gets the stream writer service.
@@ -41,7 +41,7 @@ namespace FubarDev.FtpServer.Features.Impl
         /// <remarks>
         /// It reads data from the pipe and writes it to the network stream.
         /// </remarks>
-        public IPausableFtpService StreamWriterService { get; }
+        public IFtpService StreamWriterService { get; }
 
         /// <inheritdoc />
         public PipeWriter Output { get; }

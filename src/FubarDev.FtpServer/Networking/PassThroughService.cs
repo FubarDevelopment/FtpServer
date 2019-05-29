@@ -1,4 +1,4 @@
-// <copyright file="NetworkPassThrough.cs" company="Fubar Development Junker">
+// <copyright file="PassThroughService.cs" company="Fubar Development Junker">
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
@@ -11,9 +11,9 @@ using JetBrains.Annotations;
 
 using Microsoft.Extensions.Logging;
 
-namespace FubarDev.FtpServer.ConnectionHandlers
+namespace FubarDev.FtpServer.Networking
 {
-    internal class NetworkPassThrough : CommunicationServiceBase
+    internal class PassThroughService : PausableFtpService
     {
         [NotNull]
         private readonly PipeReader _reader;
@@ -25,13 +25,13 @@ namespace FubarDev.FtpServer.ConnectionHandlers
         private Exception _exception;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="NetworkPassThrough"/> class.
+        /// Initializes a new instance of the <see cref="PassThroughService"/> class.
         /// </summary>
         /// <param name="reader">The reader to read from.</param>
         /// <param name="writer">The writer to write to.</param>
         /// <param name="connectionClosed">Cancellation token for a closed connection.</param>
         /// <param name="logger">The logger.</param>
-        public NetworkPassThrough(
+        public PassThroughService(
             [NotNull] PipeReader reader,
             [NotNull] PipeWriter writer,
             CancellationToken connectionClosed,

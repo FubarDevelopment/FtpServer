@@ -20,10 +20,10 @@ namespace FubarDev.FtpServer.Features
     internal interface INetworkStreamFeature
     {
         /// <summary>
-        /// Gets the service for TLS encryption.
+        /// Gets the connection adapter that encrypts the network stream with an <c>SslStream</c> or something similar.
         /// </summary>
         [NotNull]
-        ISafeCommunicationService SafeStreamService { get; }
+        IFtpSecureConnectionAdapter SecureConnectionAdapter { get; }
 
         /// <summary>
         /// Gets the pipe writer for sending the responses.

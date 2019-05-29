@@ -13,8 +13,8 @@ using System.Threading;
 using System.Threading.Channels;
 using System.Threading.Tasks;
 
-using FubarDev.FtpServer.ConnectionHandlers;
 using FubarDev.FtpServer.Features;
+using FubarDev.FtpServer.Networking;
 
 using JetBrains.Annotations;
 
@@ -39,7 +39,7 @@ namespace FubarDev.FtpServer
 
         private readonly ConcurrentDictionary<IFtpConnection, FtpConnectionInfo> _connections = new ConcurrentDictionary<IFtpConnection, FtpConnectionInfo>();
 
-        private readonly ServerListener _serverListener;
+        private readonly FtpServerListenerService _serverListener;
 
         [CanBeNull]
         private readonly ILogger<FtpServer> _log;
@@ -65,7 +65,7 @@ namespace FubarDev.FtpServer
             MaxActiveConnections = serverOptions.Value.MaxActiveConnections;
 
             var tcpClientChannel = Channel.CreateBounded<TcpClient>(5);
-            _serverListener = new ServerListener(tcpClientChannel, serverOptions, _cancellationTokenSource, logger);
+            _serverListener = new FtpServerListenerService(tcpClientChannel, serverOptions, _cancellationTokenSource, logger);
             _clientReader = ReadClientsAsync(tcpClientChannel, _cancellationTokenSource.Token);
         }
 
