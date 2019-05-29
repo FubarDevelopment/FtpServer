@@ -48,11 +48,14 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "membership-providers", "mem
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FubarDev.FtpServer.MembershipProvider.Pam", "src\FubarDev.FtpServer.MembershipProvider.Pam\FubarDev.FtpServer.MembershipProvider.Pam.csproj", "{6346A449-A391-458A-B6A3-68F6893DD7DB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QuickStart", "samples\QuickStart\QuickStart.csproj", "{60775D4D-A625-44FA-A9D2-D23FC29BB132}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QuickStart", "samples\QuickStart\QuickStart.csproj", "{60775D4D-A625-44FA-A9D2-D23FC29BB132}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "GnuSslStream", "third-party\GnuSslStream\GnuSslStream.shproj", "{FD524518-E097-4AC0-AAC8-D5EA24F31545}"
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		third-party\DotNet.Glob\DotNet.Glob.projitems*{a45290b4-20f7-48e9-8543-c69240bfb9f8}*SharedItemsImports = 13
+		third-party\GnuSslStream\GnuSslStream.projitems*{fd524518-e097-4ac0-aac8-d5ea24f31545}*SharedItemsImports = 13
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -122,6 +125,7 @@ Global
 		{AB0B8CA2-250E-4045-B94B-096F19B9C06E} = {118460ED-4F14-4FF3-BFBF-11497DFB80B6}
 		{6346A449-A391-458A-B6A3-68F6893DD7DB} = {AB0B8CA2-250E-4045-B94B-096F19B9C06E}
 		{60775D4D-A625-44FA-A9D2-D23FC29BB132} = {7004709E-5C0D-4D3E-AF27-89968FA47C19}
+		{FD524518-E097-4AC0-AAC8-D5EA24F31545} = {441F13FB-D457-402E-8DAC-4B6485AFCE30}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {DAA7D00E-C61D-4640-A54E-D307E4682263}

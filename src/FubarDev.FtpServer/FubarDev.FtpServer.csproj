@@ -22,5 +22,6 @@
   <ItemGroup>
     <ProjectReference Include="..\FubarDev.FtpServer.Commands\FubarDev.FtpServer.Commands.csproj" />
   </ItemGroup>
+  <Import Project="..\..\third-party\GnuSslStream\GnuSslStream.projitems" Label="Shared" Condition=" '$(TargetFramework)' == 'net461' " />
   <Import Project="../../PackageLibrary.props" />
 </Project>
