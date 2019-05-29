@@ -214,12 +214,12 @@ namespace FubarDev.FtpServer.ConnectionHandlers
                 catch (Exception ex) when (ex.IsOperationCancelledException())
                 {
                     // Ignore - everything is fine
-                    Logger?.LogTrace("Operation cancelled");
+                    // Logger?.LogTrace("Operation cancelled");
                 }
                 catch (Exception ex) when (ex.IsIOException())
                 {
                     // Ignore - everything is fine
-                    Logger?.LogTrace(0, ex, "I/O exception: {message}", ex.Message);
+                    // Logger?.LogTrace(0, ex, "I/O exception: {message}", ex.Message);
                 }
                 catch (Exception ex)
                 {
