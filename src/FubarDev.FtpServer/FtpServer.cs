@@ -27,7 +27,7 @@ namespace FubarDev.FtpServer
     /// <summary>
     /// The portable FTP server.
     /// </summary>
-    public sealed class FtpServer : IFtpServer, IFtpService, IPausableCommunicationService, IDisposable
+    public sealed class FtpServer : IFtpServer, IPausableFtpService, IDisposable
     {
         [NotNull]
         private readonly FtpServerStatistics _statistics = new FtpServerStatistics();
@@ -85,15 +85,15 @@ namespace FubarDev.FtpServer
         public int MaxActiveConnections { get; }
 
         /// <inheritdoc />
-        public ConnectionHandlers.ConnectionStatus Status => _serverListener.Status;
+        public FtpServiceStatus Status => _serverListener.Status;
 
         /// <inheritdoc />
-        public bool Ready => Status != ConnectionHandlers.ConnectionStatus.ReadyToRun;
+        public bool Ready => Status != FtpServiceStatus.ReadyToRun;
 
         /// <inheritdoc/>
         public void Dispose()
         {
-            if (Status != ConnectionHandlers.ConnectionStatus.Stopped)
+            if (Status != FtpServiceStatus.Stopped)
             {
                 ((IFtpService)this).StopAsync(CancellationToken.None).Wait();
             }
@@ -120,27 +120,15 @@ namespace FubarDev.FtpServer
         }
 
         /// <inheritdoc />
-        Task IBasicCommunicationService.StopAsync(CancellationToken cancellationToken)
-        {
-            return ((IFtpService)this).StopAsync(cancellationToken);
-        }
-
-        /// <inheritdoc />
-        Task IPausableCommunicationService.PauseAsync(CancellationToken cancellationToken)
+        Task IPausableFtpService.PauseAsync(CancellationToken cancellationToken)
         {
             return _serverListener.PauseAsync(cancellationToken);
         }
 
         /// <inheritdoc />
-        Task IPausableCommunicationService.ContinueAsync(CancellationToken cancellationToken)
+        Task IPausableFtpService.ContinueAsync(CancellationToken cancellationToken)
         {
             return _serverListener.ContinueAsync(cancellationToken);
-        }
-
-        /// <inheritdoc />
-        Task IBasicCommunicationService.StartAsync(CancellationToken cancellationToken)
-        {
-            return ((IFtpService)this).StartAsync(cancellationToken);
         }
 
         /// <inheritdoc />
@@ -251,7 +239,7 @@ namespace FubarDev.FtpServer
 
         private void ConnectionOnClosed(object sender, EventArgs eventArgs)
         {
-            if (Status == ConnectionHandlers.ConnectionStatus.Stopped)
+            if (Status == FtpServiceStatus.Stopped)
             {
                 return;
             }

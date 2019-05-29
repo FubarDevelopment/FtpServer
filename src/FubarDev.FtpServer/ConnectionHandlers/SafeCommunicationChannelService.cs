@@ -71,10 +71,10 @@ namespace FubarDev.FtpServer.ConnectionHandlers
         }
 
         /// <inheritdoc />
-        public IPausableCommunicationService Sender => _activeCommunicationService.Sender;
+        public IPausableFtpService Sender => _activeCommunicationService.Sender;
 
         /// <inheritdoc />
-        public IPausableCommunicationService Receiver => _activeCommunicationService.Receiver;
+        public IPausableFtpService Receiver => _activeCommunicationService.Receiver;
 
         /// <inheritdoc />
         public async Task ResetAsync(CancellationToken cancellationToken)

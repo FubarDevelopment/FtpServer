@@ -1,4 +1,4 @@
-// <copyright file="IPausableCommunicationService.cs" company="Fubar Development Junker">
+// <copyright file="IPausableFtpService.cs" company="Fubar Development Junker">
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
@@ -7,20 +7,20 @@ using System.Threading.Tasks;
 
 using JetBrains.Annotations;
 
-namespace FubarDev.FtpServer.ConnectionHandlers
+namespace FubarDev.FtpServer
 {
     /// <summary>
-    /// Basic API for a communication service.
+    /// Interface for an FTP service that can be paused.
     /// </summary>
-    public interface IPausableCommunicationService : IBasicCommunicationService
+    public interface IPausableFtpService : IFtpService
     {
         /// <summary>
         /// Gets the current status.
         /// </summary>
-        ConnectionStatus Status { get; }
+        FtpServiceStatus Status { get; }
 
         /// <summary>
-        /// Pauses the communication service.
+        /// Pauses the FTP service.
         /// </summary>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>The task.</returns>
@@ -28,7 +28,7 @@ namespace FubarDev.FtpServer.ConnectionHandlers
         Task PauseAsync(CancellationToken cancellationToken);
 
         /// <summary>
-        /// Continues the communication service.
+        /// Continues the FTP service.
         /// </summary>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>The task.</returns>

@@ -14,8 +14,8 @@ namespace FubarDev.FtpServer.Features.Impl
     {
         public NetworkStreamFeature(
             [NotNull] ISafeCommunicationService safeStreamService,
-            [NotNull] IPausableCommunicationService streamReaderService,
-            [NotNull] IPausableCommunicationService streamWriterService,
+            [NotNull] IPausableFtpService streamReaderService,
+            [NotNull] IPausableFtpService streamWriterService,
             [NotNull] PipeWriter output)
         {
             StreamReaderService = streamReaderService;
@@ -33,7 +33,7 @@ namespace FubarDev.FtpServer.Features.Impl
         /// <remarks>
         /// It writes data from the network stream into a pipe.
         /// </remarks>
-        public IPausableCommunicationService StreamReaderService { get; }
+        public IPausableFtpService StreamReaderService { get; }
 
         /// <summary>
         /// Gets the stream writer service.
@@ -41,7 +41,7 @@ namespace FubarDev.FtpServer.Features.Impl
         /// <remarks>
         /// It reads data from the pipe and writes it to the network stream.
         /// </remarks>
-        public IPausableCommunicationService StreamWriterService { get; }
+        public IPausableFtpService StreamWriterService { get; }
 
         /// <inheritdoc />
         public PipeWriter Output { get; }

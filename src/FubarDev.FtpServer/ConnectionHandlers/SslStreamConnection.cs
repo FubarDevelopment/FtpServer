@@ -66,12 +66,12 @@ namespace FubarDev.FtpServer.ConnectionHandlers
         }
 
         /// <inheritdoc />
-        public IPausableCommunicationService Sender
+        public IPausableFtpService Sender
             => _info?.TransmitterService
                 ?? throw new InvalidOperationException("Sender can only be accessed when the connection service was started.");
 
         /// <inheritdoc />
-        public IPausableCommunicationService Receiver
+        public IPausableFtpService Receiver
             => _info?.ReceiverService
                 ?? throw new InvalidOperationException("Receiver can only be accessed when the connection service was started.");
 
@@ -133,8 +133,8 @@ namespace FubarDev.FtpServer.ConnectionHandlers
         private class SslCommunicationInfo
         {
             public SslCommunicationInfo(
-                [NotNull] IPausableCommunicationService transmitterService,
-                [NotNull] IPausableCommunicationService receiverService,
+                [NotNull] IPausableFtpService transmitterService,
+                [NotNull] IPausableFtpService receiverService,
                 [NotNull] Stream sslStream)
             {
                 TransmitterService = transmitterService;
@@ -143,10 +143,10 @@ namespace FubarDev.FtpServer.ConnectionHandlers
             }
 
             [NotNull]
-            public IPausableCommunicationService TransmitterService { get; }
+            public IPausableFtpService TransmitterService { get; }
 
             [NotNull]
-            public IPausableCommunicationService ReceiverService { get; }
+            public IPausableFtpService ReceiverService { get; }
 
             [NotNull]
             public Stream SslStream { get; }
@@ -197,14 +197,14 @@ namespace FubarDev.FtpServer.ConnectionHandlers
         {
 #if NETFRAMEWORK
             [NotNull]
-            private readonly IPausableCommunicationService _reader;
+            private readonly IPausableFtpService _reader;
 #endif
 
             public NonClosingNetworkStreamWriter(
                 [NotNull] Stream stream,
                 [NotNull] PipeReader pipeReader,
 #if NETFRAMEWORK
-                [NotNull] IPausableCommunicationService reader,
+                [NotNull] IPausableFtpService reader,
 #endif
                 CancellationToken connectionClosed,
                 [CanBeNull] ILogger logger = null)

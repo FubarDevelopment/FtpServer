@@ -15,7 +15,7 @@ namespace FubarDev.FtpServer.ConnectionHandlers
     /// <summary>
     /// Base class for communication services.
     /// </summary>
-    internal abstract class CommunicationServiceBase : IPausableCommunicationService
+    internal abstract class CommunicationServiceBase : IPausableFtpService
     {
         [NotNull]
         private readonly CancellationTokenSource _jobStopped = new CancellationTokenSource();
@@ -42,7 +42,7 @@ namespace FubarDev.FtpServer.ConnectionHandlers
         }
 
         /// <inheritdoc />
-        public ConnectionStatus Status { get; private set; } = ConnectionStatus.ReadyToRun;
+        public FtpServiceStatus Status { get; private set; } = FtpServiceStatus.ReadyToRun;
 
         [CanBeNull]
         protected ILogger Logger { get; }
@@ -56,12 +56,12 @@ namespace FubarDev.FtpServer.ConnectionHandlers
         /// <inheritdoc />
         public Task StartAsync(CancellationToken cancellationToken)
         {
-            if (Status != ConnectionStatus.ReadyToRun)
+            if (Status != FtpServiceStatus.ReadyToRun)
             {
-                throw new InvalidOperationException($"Status must be {ConnectionStatus.ReadyToRun}, but was {Status}.");
+                throw new InvalidOperationException($"Status must be {FtpServiceStatus.ReadyToRun}, but was {Status}.");
             }
 
-            _task = RunAsync(new Progress<ConnectionStatus>(status => Status = status));
+            _task = RunAsync(new Progress<FtpServiceStatus>(status => Status = status));
 
             return Task.CompletedTask;
         }
@@ -69,9 +69,9 @@ namespace FubarDev.FtpServer.ConnectionHandlers
         /// <inheritdoc />
         public async Task StopAsync(CancellationToken cancellationToken)
         {
-            if (Status != ConnectionStatus.Running && Status != ConnectionStatus.Stopped && Status != ConnectionStatus.Paused)
+            if (Status != FtpServiceStatus.Running && Status != FtpServiceStatus.Stopped && Status != FtpServiceStatus.Paused)
             {
-                throw new InvalidOperationException($"Status must be {ConnectionStatus.Running}, {ConnectionStatus.Stopped}, or {ConnectionStatus.Paused}, but was {Status}.");
+                throw new InvalidOperationException($"Status must be {FtpServiceStatus.Running}, {FtpServiceStatus.Stopped}, or {FtpServiceStatus.Paused}, but was {Status}.");
             }
 
             await OnStopRequestingAsync(cancellationToken)
@@ -89,9 +89,9 @@ namespace FubarDev.FtpServer.ConnectionHandlers
         /// <inheritdoc />
         public async Task PauseAsync(CancellationToken cancellationToken)
         {
-            if (Status != ConnectionStatus.Running)
+            if (Status != FtpServiceStatus.Running)
             {
-                throw new InvalidOperationException($"Status must be {ConnectionStatus.Running}, but was {Status}.");
+                throw new InvalidOperationException($"Status must be {FtpServiceStatus.Running}, but was {Status}.");
             }
 
             await OnPauseRequestingAsync(cancellationToken)
@@ -109,21 +109,21 @@ namespace FubarDev.FtpServer.ConnectionHandlers
         /// <inheritdoc />
         public async Task ContinueAsync(CancellationToken cancellationToken)
         {
-            if (Status == ConnectionStatus.Stopped)
+            if (Status == FtpServiceStatus.Stopped)
             {
                 // Stay stopped!
                 return;
             }
 
-            if (Status == ConnectionStatus.Running)
+            if (Status == FtpServiceStatus.Running)
             {
                 // Already running!
                 return;
             }
 
-            if (Status != ConnectionStatus.Paused)
+            if (Status != FtpServiceStatus.Paused)
             {
-                throw new InvalidOperationException($"Status must be {ConnectionStatus.Paused}, but was {Status}.");
+                throw new InvalidOperationException($"Status must be {FtpServiceStatus.Paused}, but was {Status}.");
             }
 
             _jobPaused = new CancellationTokenSource();
@@ -131,7 +131,7 @@ namespace FubarDev.FtpServer.ConnectionHandlers
             await OnContinueRequestingAsync(cancellationToken)
                .ConfigureAwait(false);
 
-            _task = RunAsync(new Progress<ConnectionStatus>(status => Status = status));
+            _task = RunAsync(new Progress<FtpServiceStatus>(status => Status = status));
         }
 
         [NotNull]
@@ -197,14 +197,14 @@ namespace FubarDev.FtpServer.ConnectionHandlers
         }
 
         private async Task RunAsync(
-            [NotNull] IProgress<ConnectionStatus> statusProgress)
+            [NotNull] IProgress<FtpServiceStatus> statusProgress)
         {
             using (var globalCts = CancellationTokenSource.CreateLinkedTokenSource(
                 _connectionClosed,
                 _jobStopped.Token,
                 _jobPaused.Token))
             {
-                statusProgress.Report(ConnectionStatus.Running);
+                statusProgress.Report(FtpServiceStatus.Running);
 
                 try
                 {
@@ -237,14 +237,14 @@ namespace FubarDev.FtpServer.ConnectionHandlers
             // Don't call Complete() when the job was just paused.
             if (IsPauseRequested)
             {
-                statusProgress.Report(ConnectionStatus.Paused);
+                statusProgress.Report(FtpServiceStatus.Paused);
                 await OnPausedAsync(_connectionClosed)
                    .ConfigureAwait(false);
                 return;
             }
 
             // Change the status
-            statusProgress.Report(ConnectionStatus.Stopped);
+            statusProgress.Report(FtpServiceStatus.Stopped);
             await OnStoppedAsync(_connectionClosed)
                .ConfigureAwait(false);
         }

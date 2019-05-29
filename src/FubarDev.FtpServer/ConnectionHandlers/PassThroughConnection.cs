@@ -19,10 +19,10 @@ namespace FubarDev.FtpServer.ConnectionHandlers
     internal class PassThroughConnection : ICommunicationService
     {
         [NotNull]
-        private readonly IPausableCommunicationService _transmitService;
+        private readonly IPausableFtpService _transmitService;
 
         [NotNull]
-        private readonly IPausableCommunicationService _receiverService;
+        private readonly IPausableFtpService _receiverService;
 
         public PassThroughConnection(
             [NotNull] IDuplexPipe socketPipe,
@@ -43,10 +43,10 @@ namespace FubarDev.FtpServer.ConnectionHandlers
         }
 
         /// <inheritdoc />
-        public IPausableCommunicationService Sender => _transmitService;
+        public IPausableFtpService Sender => _transmitService;
 
         /// <inheritdoc />
-        public IPausableCommunicationService Receiver => _receiverService;
+        public IPausableFtpService Receiver => _receiverService;
 
         /// <inheritdoc />
         public Task StartAsync(CancellationToken cancellationToken)

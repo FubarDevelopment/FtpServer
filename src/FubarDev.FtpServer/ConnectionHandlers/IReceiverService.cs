@@ -9,6 +9,6 @@ namespace FubarDev.FtpServer.ConnectionHandlers
     internal interface IReceiverService
     {
         [NotNull]
-        IPausableCommunicationService Receiver { get; }
+        IPausableFtpService Receiver { get; }
     }
 }

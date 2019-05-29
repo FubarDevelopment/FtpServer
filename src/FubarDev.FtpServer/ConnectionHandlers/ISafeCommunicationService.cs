@@ -10,7 +10,7 @@ using JetBrains.Annotations;
 
 namespace FubarDev.FtpServer.ConnectionHandlers
 {
-    internal interface ISafeCommunicationService : IBasicCommunicationService, ICommunicationChannelService
+    internal interface ISafeCommunicationService : IFtpService, ICommunicationChannelService
     {
         [NotNull]
         Task ResetAsync(CancellationToken cancellationToken);

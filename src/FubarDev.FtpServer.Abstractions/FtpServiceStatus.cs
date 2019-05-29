@@ -1,13 +1,13 @@
-// <copyright file="ConnectionStatus.cs" company="Fubar Development Junker">
+// <copyright file="FtpServiceStatus.cs" company="Fubar Development Junker">
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
-namespace FubarDev.FtpServer.ConnectionHandlers
+namespace FubarDev.FtpServer
 {
     /// <summary>
-    /// The current status of the <see cref="IPausableCommunicationService"/>.
+    /// The current status of the <see cref="IPausableFtpService"/>.
     /// </summary>
-    public enum ConnectionStatus
+    public enum FtpServiceStatus
     {
         /// <summary>
         /// The service is ready to run.

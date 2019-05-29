@@ -4,7 +4,7 @@
 
 namespace FubarDev.FtpServer.ConnectionHandlers
 {
-    internal interface ICommunicationService : IBasicCommunicationService, ICommunicationChannelService
+    internal interface ICommunicationService : IFtpService, ICommunicationChannelService
     {
     }
 }
