@@ -11,9 +11,6 @@ using System.Threading.Tasks;
 
 using FubarDev.FtpServer.Authentication;
 using FubarDev.FtpServer.Networking;
-#if NETFRAMEWORK
-using FubarDev.FtpServer.Utilities;
-#endif
 
 using JetBrains.Annotations;
 
@@ -97,7 +94,6 @@ namespace FubarDev.FtpServer.ConnectionHandlers
                 sslStream,
                 _connectionPipe.Input,
 #if NETFRAMEWORK
-                receiverService,
 #endif
                 _connectionClosed,
                 _loggerFactory?.CreateLogger(typeof(SslStreamConnectionAdapter).FullName + ":Transmitter"));
@@ -188,24 +184,13 @@ namespace FubarDev.FtpServer.ConnectionHandlers
 
         private class NonClosingNetworkStreamWriter : StreamPipeWriterService
         {
-#if NETFRAMEWORK
-            [NotNull]
-            private readonly IPausableFtpService _reader;
-#endif
-
             public NonClosingNetworkStreamWriter(
                 [NotNull] Stream stream,
                 [NotNull] PipeReader pipeReader,
-#if NETFRAMEWORK
-                [NotNull] IPausableFtpService reader,
-#endif
                 CancellationToken connectionClosed,
                 [CanBeNull] ILogger logger = null)
                 : base(stream, pipeReader, connectionClosed, logger)
             {
-#if NETFRAMEWORK
-                _reader = reader;
-#endif
             }
 
             /// <inheritdoc />
@@ -215,29 +200,22 @@ namespace FubarDev.FtpServer.ConnectionHandlers
                 return Task.CompletedTask;
             }
 
-#if NETFRAMEWORK
+#if USE_SYNC_SSL_STREAM
             /// <inheritdoc />
-            protected override async Task WriteToStreamAsync(byte[] buffer, int offset, int length, CancellationToken cancellationToken)
+            protected override Task WriteToStreamAsync(
+                byte[] buffer,
+                int offset,
+                int length,
+                CancellationToken cancellationToken)
             {
-                // This is insanity!
+                // We have to use Write instead of WriteAsync, because
+                // otherwise we might run into a deadlock.
                 //
-                // We have to cancel the "Read" on the SslStream to be able
-                // to write. It seems that parallel reads and writes aren't
-                // allowed by the SslStream from .NET Framework.
-                //
-                // The SslStream from .NET Core works fine.
-                var disposeFunc = await _reader.WrapPauseAsync(cancellationToken)
-                   .ConfigureAwait(false);
-                try
-                {
-                    await base.WriteToStreamAsync(buffer, offset, length, cancellationToken)
-                       .ConfigureAwait(false);
-                }
-                finally
-                {
-                    await disposeFunc()
-                       .ConfigureAwait(false);
-                }
+                // It **might** be related to the following issues:
+                // https://github.com/dotnet/corefx/issues/5077
+                // https://github.com/dotnet/corefx/issues/14698
+                Stream.Write(buffer, offset, length);
+                return Task.CompletedTask;
             }
 #endif
         }
