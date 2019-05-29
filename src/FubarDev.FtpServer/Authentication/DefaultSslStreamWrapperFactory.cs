@@ -52,7 +52,6 @@ namespace FubarDev.FtpServer.Authentication
                 }
                 catch (Exception ex)
                 {
-                    _logger?.LogError(0, ex, ex.Message);
                     sslStream.Dispose();
                     throw;
                 }
