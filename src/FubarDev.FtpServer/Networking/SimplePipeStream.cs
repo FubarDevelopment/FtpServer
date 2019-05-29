@@ -38,7 +38,7 @@ namespace FubarDev.FtpServer.Networking
         public SimplePipeStream(
             [NotNull] PipeReader input,
             [NotNull] PipeWriter output,
-            [CanBeNull] ILogger<SimplePipeStream> logger)
+            [CanBeNull] ILogger<SimplePipeStream> logger = null)
         {
             _input = input;
             _output = output;

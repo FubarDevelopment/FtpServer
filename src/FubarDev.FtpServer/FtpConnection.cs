@@ -161,24 +161,20 @@ namespace FubarDev.FtpServer
             var socketPipe = new DuplexPipe(_socketCommandPipe.Reader, _socketResponsePipe.Writer);
             var connectionPipe = new DuplexPipe(applicationOutputPipe.Reader, applicationInputPipe.Writer);
 
-            var loggerFactory = serviceProvider.GetService<ILoggerFactory>();
             _networkStreamFeature = new NetworkStreamFeature(
                 new SecureConnectionAdapter(
                     socketPipe,
                     connectionPipe,
                     sslStreamWrapperFactory,
-                    serviceProvider,
                     _cancellationTokenSource.Token),
                 new ConnectionClosingNetworkStreamReader(
                     secureConnectionFeature.OriginalStream,
                     _socketCommandPipe.Writer,
-                    _cancellationTokenSource,
-                    loggerFactory?.CreateLogger(typeof(FtpConnection).FullName + ":StreamReader")),
+                    _cancellationTokenSource),
                 new StreamPipeWriterService(
                     secureConnectionFeature.OriginalStream,
                     _socketResponsePipe.Reader,
-                    _cancellationTokenSource.Token,
-                    loggerFactory?.CreateLogger(typeof(FtpConnection).FullName + ":StreamWriter")),
+                    _cancellationTokenSource.Token),
                 applicationOutputPipe.Writer);
 
             parentFeatures.Set<IConnectionFeature>(connectionFeature);

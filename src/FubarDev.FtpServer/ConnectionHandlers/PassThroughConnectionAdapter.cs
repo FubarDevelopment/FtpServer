@@ -37,7 +37,7 @@ namespace FubarDev.FtpServer.ConnectionHandlers
             [NotNull] IDuplexPipe socketPipe,
             [NotNull] IDuplexPipe connectionPipe,
             CancellationToken connectionClosed,
-            [CanBeNull] ILoggerFactory loggerFactory)
+            [CanBeNull] ILoggerFactory loggerFactory = null)
         {
             _receiverService = new NonClosingNetworkPassThrough(
                 socketPipe.Input,

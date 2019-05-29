@@ -21,9 +21,6 @@ namespace FubarDev.FtpServer.Networking
     internal class StreamPipeWriterService : PausableFtpService
     {
         [NotNull]
-        private readonly Stream _stream;
-
-        [NotNull]
         private readonly PipeReader _pipeReader;
 
         [CanBeNull]
@@ -43,9 +40,12 @@ namespace FubarDev.FtpServer.Networking
             [CanBeNull] ILogger logger = null)
             : base(connectionClosed, logger)
         {
-            _stream = stream;
+            Stream = stream;
             _pipeReader = pipeReader;
         }
+
+        [NotNull]
+        protected Stream Stream { get; }
 
         /// <inheritdoc />
         protected override async Task ExecuteAsync(CancellationToken cancellationToken)
@@ -58,7 +58,7 @@ namespace FubarDev.FtpServer.Networking
 
                 // Don't use the cancellation token source from above. Otherwise
                 // data might be lost.
-                await SendDataToStream(readResult.Buffer, _stream, CancellationToken.None)
+                await SendDataToStream(readResult.Buffer, Stream, CancellationToken.None)
                    .ConfigureAwait(false);
 
                 _pipeReader.AdvanceTo(readResult.Buffer.End);
@@ -129,7 +129,7 @@ namespace FubarDev.FtpServer.Networking
         /// <returns>The task.</returns>
         protected virtual Task WriteToStreamAsync(byte[] buffer, int offset, int length, CancellationToken cancellationToken)
         {
-            return _stream.WriteAsync(buffer, offset, length, cancellationToken);
+            return Stream.WriteAsync(buffer, offset, length, cancellationToken);
         }
 
         [NotNull]
@@ -180,7 +180,7 @@ namespace FubarDev.FtpServer.Networking
             {
                 if (!cancellationToken.IsCancellationRequested)
                 {
-                    await FlushAsync(_stream, _pipeReader, cancellationToken).ConfigureAwait(false);
+                    await FlushAsync(Stream, _pipeReader, cancellationToken).ConfigureAwait(false);
                 }
             }
             catch (Exception ex) when (ex.IsIOException())

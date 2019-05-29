@@ -14,7 +14,6 @@ using FubarDev.FtpServer.Networking;
 
 using JetBrains.Annotations;
 
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
 namespace FubarDev.FtpServer.ConnectionHandlers
@@ -24,9 +23,6 @@ namespace FubarDev.FtpServer.ConnectionHandlers
     /// </summary>
     internal class SslStreamConnectionAdapter : IFtpConnectionAdapter
     {
-        [NotNull]
-        private readonly IServiceProvider _serviceProvider;
-
         [NotNull]
         private readonly IDuplexPipe _socketPipe;
 
@@ -42,27 +38,20 @@ namespace FubarDev.FtpServer.ConnectionHandlers
         private readonly CancellationToken _connectionClosed;
 
         [CanBeNull]
-        private readonly ILoggerFactory _loggerFactory;
-
-        [CanBeNull]
         private SslCommunicationInfo _info;
 
         public SslStreamConnectionAdapter(
             [NotNull] IDuplexPipe socketPipe,
             [NotNull] IDuplexPipe connectionPipe,
-            [NotNull] IServiceProvider serviceProvider,
             [NotNull] ISslStreamWrapperFactory sslStreamWrapperFactory,
             [NotNull] X509Certificate2 certificate,
-            CancellationToken connectionClosed,
-            [CanBeNull] ILoggerFactory loggerFactory)
+            CancellationToken connectionClosed)
         {
-            _serviceProvider = serviceProvider;
             _socketPipe = socketPipe;
             _connectionPipe = connectionPipe;
             _sslStreamWrapperFactory = sslStreamWrapperFactory;
             _certificate = certificate;
             _connectionClosed = connectionClosed;
-            _loggerFactory = loggerFactory;
         }
 
         /// <inheritdoc />
@@ -80,23 +69,18 @@ namespace FubarDev.FtpServer.ConnectionHandlers
         {
             var rawStream = new SimplePipeStream(
                 _socketPipe.Input,
-                _socketPipe.Output,
-                _serviceProvider.GetService<ILogger<SimplePipeStream>>());
+                _socketPipe.Output);
             var sslStream = await _sslStreamWrapperFactory.WrapStreamAsync(rawStream, false, _certificate, cancellationToken)
                .ConfigureAwait(false);
             var receiverService = new NonClosingNetworkStreamReader(
                 sslStream,
                 _connectionPipe.Output,
                 _socketPipe.Input,
-                _connectionClosed,
-                _loggerFactory?.CreateLogger(typeof(SslStreamConnectionAdapter).FullName + ":Receiver"));
+                _connectionClosed);
             var transmitterService = new NonClosingNetworkStreamWriter(
                 sslStream,
                 _connectionPipe.Input,
-#if NETFRAMEWORK
-#endif
-                _connectionClosed,
-                _loggerFactory?.CreateLogger(typeof(SslStreamConnectionAdapter).FullName + ":Transmitter"));
+                _connectionClosed);
             var info = new SslCommunicationInfo(transmitterService, receiverService, sslStream);
             _info = info;
 
