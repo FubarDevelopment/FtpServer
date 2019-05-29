@@ -50,7 +50,7 @@ namespace FubarDev.FtpServer.Authentication
                     await sslStream.AuthenticateAsServerAsync(certificate)
                        .ConfigureAwait(false);
                 }
-                catch (Exception ex)
+                catch
                 {
                     sslStream.Dispose();
                     throw;
