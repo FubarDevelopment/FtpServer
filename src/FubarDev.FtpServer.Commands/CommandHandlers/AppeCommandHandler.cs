@@ -120,7 +120,8 @@ namespace FubarDev.FtpServer.CommandHandlers
 
             if (backgroundTransfer != null)
             {
-                _backgroundTransferWorker.Enqueue(backgroundTransfer);
+                await _backgroundTransferWorker.EnqueueAsync(backgroundTransfer, cancellationToken)
+                   .ConfigureAwait(false);
             }
 
             return new FtpResponse(226, T("Uploaded file successfully."));

@@ -3,6 +3,8 @@
 // </copyright>
 
 using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 
 using JetBrains.Annotations;
 
@@ -17,10 +19,13 @@ namespace FubarDev.FtpServer.BackgroundTransfer
         /// Enqueue an entry for a background transfer (e.g. upload).
         /// </summary>
         /// <param name="backgroundTransfer">The background transfer to enqueue.</param>
-        void Enqueue([NotNull] IBackgroundTransfer backgroundTransfer);
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <returns>The task.</returns>
+        [NotNull]
+        Task EnqueueAsync([NotNull] IBackgroundTransfer backgroundTransfer, CancellationToken cancellationToken);
 
         /// <summary>
-        /// Get the status of all enqueued and active background transfers.
+        /// Get the status of all pending and active background transfers.
         /// </summary>
         /// <returns>The status of all background transfers.</returns>
         [NotNull]
