@@ -122,7 +122,7 @@ namespace FubarDev.FtpServer.ConnectionHandlers
 
                 _input.AdvanceTo(readableBuffer.End);
 
-                if (result.IsCompleted)
+                if (result.IsCompleted || result.IsCanceled)
                 {
                     return 0;
                 }
