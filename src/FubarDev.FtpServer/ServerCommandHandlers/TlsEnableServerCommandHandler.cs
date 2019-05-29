@@ -3,15 +3,12 @@
 // </copyright>
 
 using System;
-using System.Net.Sockets;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading;
 using System.Threading.Tasks;
 
-using FubarDev.FtpServer.ConnectionHandlers;
 using FubarDev.FtpServer.Features;
 using FubarDev.FtpServer.ServerCommands;
-using FubarDev.FtpServer.Utilities;
 
 using JetBrains.Annotations;
 
@@ -44,6 +41,34 @@ namespace FubarDev.FtpServer.ServerCommandHandlers
             _serverCertificate = options.Value.ServerCertificate;
         }
 
+        /// <summary>
+        /// Enables TLS on a connection that isn't reading or writing (read: that's not started yet or is paused).
+        /// </summary>
+        /// <param name="connection">The FTP connection to activate TLS for.</param>
+        /// <param name="certificate">The X.509 certificate to use (with private key).</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        public static async Task EnableTlsAsync(
+            [NotNull] IFtpConnection connection,
+            [NotNull] X509Certificate2 certificate,
+            CancellationToken cancellationToken)
+        {
+            var networkStreamFeature = connection.Features.Get<INetworkStreamFeature>();
+            var service = networkStreamFeature.SecureConnectionAdapter;
+
+            var secureConnectionFeature = connection.Features.Get<ISecureConnectionFeature>();
+            connection.Log?.LogTrace("Enable SslStream");
+            await service.EnableSslStreamAsync(certificate, cancellationToken)
+               .ConfigureAwait(false);
+
+            connection.Log?.LogTrace("Set close function");
+            secureConnectionFeature.CloseEncryptedControlStream =
+                ct => CloseEncryptedControlConnectionAsync(
+                    networkStreamFeature,
+                    secureConnectionFeature,
+                    ct);
+        }
+
         /// <inheritdoc />
         public async Task ExecuteAsync(TlsEnableServerCommand command, CancellationToken cancellationToken)
         {
@@ -74,34 +99,6 @@ namespace FubarDev.FtpServer.ServerCommandHandlers
                         cancellationToken)
                    .ConfigureAwait(false);
             }
-        }
-
-        /// <summary>
-        /// Enables TLS on a connection that isn't reading or writing (read: that's not started yet or is paused).
-        /// </summary>
-        /// <param name="connection">The FTP connection to activate TLS for.</param>
-        /// <param name="certificate">The X.509 certificate to use (with private key).</param>
-        /// <param name="cancellationToken">The cancellation token.</param>
-        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        private static async Task EnableTlsAsync(
-            [NotNull] IFtpConnection connection,
-            [NotNull] X509Certificate2 certificate,
-            CancellationToken cancellationToken)
-        {
-            var networkStreamFeature = connection.Features.Get<INetworkStreamFeature>();
-            var service = networkStreamFeature.SecureConnectionAdapter;
-
-            var secureConnectionFeature = connection.Features.Get<ISecureConnectionFeature>();
-            connection.Log?.LogTrace("Enable SslStream");
-            await service.EnableSslStreamAsync(certificate, cancellationToken)
-               .ConfigureAwait(false);
-
-            connection.Log?.LogTrace("Set close function");
-            secureConnectionFeature.CloseEncryptedControlStream =
-                ct => CloseEncryptedControlConnectionAsync(
-                    networkStreamFeature,
-                    secureConnectionFeature,
-                    ct);
         }
 
         private static async Task CloseEncryptedControlConnectionAsync(

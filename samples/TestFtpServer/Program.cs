@@ -13,10 +13,8 @@ using System.Xml;
 using FubarDev.FtpServer;
 using FubarDev.FtpServer.AccountManagement.Directories.RootPerUser;
 using FubarDev.FtpServer.AccountManagement.Directories.SingleRootWithoutHome;
-using FubarDev.FtpServer.Authentication;
 using FubarDev.FtpServer.CommandExtensions;
 using FubarDev.FtpServer.Commands;
-using FubarDev.FtpServer.ConnectionHandlers;
 using FubarDev.FtpServer.FileSystem;
 using FubarDev.FtpServer.FileSystem.DotNet;
 using FubarDev.FtpServer.FileSystem.GoogleDrive;
@@ -502,8 +500,6 @@ namespace TestFtpServer
                         var authTlsOptions = serviceProvider.GetRequiredService<IOptions<AuthTlsOptions>>();
                         if (authTlsOptions.Value.ServerCertificate != null)
                         {
-                            var sslStreamWrapperFactory = serviceProvider.GetRequiredService<ISslStreamWrapperFactory>();
-
                             // Use an implicit SSL connection (without the AUTH TLS command)
                             ftpServer.ConfigureConnection += (s, e) =>
                             {
