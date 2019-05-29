@@ -668,7 +668,6 @@ namespace FubarDev.FtpServer
                 // We must set this to null to avoid a deadlock.
                 _commandChannelReader = null;
                 await StopAsync().ConfigureAwait(false);
-                _socket.Dispose();
             }
         }
 
