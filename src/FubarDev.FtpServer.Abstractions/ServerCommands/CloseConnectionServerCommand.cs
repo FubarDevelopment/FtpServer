@@ -9,5 +9,7 @@ namespace FubarDev.FtpServer.ServerCommands
     /// </summary>
     public class CloseConnectionServerCommand : IServerCommand
     {
+        /// <inheritdoc />
+        public override string ToString() => "CLOSE CONNECTION";
     }
 }

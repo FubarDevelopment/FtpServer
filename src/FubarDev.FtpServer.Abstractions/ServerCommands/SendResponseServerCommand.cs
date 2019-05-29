@@ -2,6 +2,8 @@
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
+using System.Text;
+
 using JetBrains.Annotations;
 
 namespace FubarDev.FtpServer.ServerCommands
@@ -25,5 +27,17 @@ namespace FubarDev.FtpServer.ServerCommands
         /// </summary>
         [NotNull]
         public IFtpResponse Response { get; }
+
+        /// <inheritdoc />
+        public override string ToString()
+        {
+            var result = new StringBuilder("SEND RESPONSE");
+            if (Response.Code != -1)
+            {
+                result.AppendFormat(" ({0})", Response.Code);
+            }
+
+            return result.ToString();
+        }
     }
 }

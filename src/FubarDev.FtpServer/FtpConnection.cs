@@ -450,7 +450,7 @@ namespace FubarDev.FtpServer
 
                     while (serverCommandReader.TryRead(out var response))
                     {
-                        Log?.LogTrace("Executing response {response}", response);
+                        Log?.LogTrace("Executing server command \"{response}\"", response);
                         await _serverCommandExecutor.ExecuteAsync(response, cancellationToken)
                            .ConfigureAwait(false);
                     }
