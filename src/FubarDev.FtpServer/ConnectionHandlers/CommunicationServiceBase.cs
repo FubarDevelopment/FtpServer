@@ -189,7 +189,7 @@ namespace FubarDev.FtpServer.ConnectionHandlers
 
         [NotNull]
         protected virtual Task<bool> OnFailedAsync(
-            [CanBeNull] Exception exception,
+            [NotNull] Exception exception,
             CancellationToken cancellationToken)
         {
             Logger?.LogCritical(exception, exception.Message);
