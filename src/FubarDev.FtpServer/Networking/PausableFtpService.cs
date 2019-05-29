@@ -3,6 +3,7 @@
 // </copyright>
 
 using System;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -211,12 +212,12 @@ namespace FubarDev.FtpServer.Networking
                     await ExecuteAsync(globalCts.Token)
                        .ConfigureAwait(false);
                 }
-                catch (Exception ex) when (ex.IsOperationCancelledException())
+                catch (Exception ex) when (ex.Is<OperationCanceledException>())
                 {
                     // Ignore - everything is fine
                     // Logger?.LogTrace("Operation cancelled");
                 }
-                catch (Exception ex) when (ex.IsIOException())
+                catch (Exception ex) when (ex.Is<IOException>())
                 {
                     // Ignore - everything is fine
                     // Logger?.LogTrace(0, ex, "I/O exception: {message}", ex.Message);

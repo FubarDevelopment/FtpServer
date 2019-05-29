@@ -3,6 +3,7 @@
 // </copyright>
 
 using System;
+using System.IO;
 using System.IO.Pipelines;
 using System.Threading;
 using System.Threading.Tasks;
@@ -152,11 +153,11 @@ namespace FubarDev.FtpServer.Networking
                     }
                 }
             }
-            catch (Exception ex) when (ex.IsIOException())
+            catch (Exception ex) when (ex.Is<IOException>())
             {
                 // Ignored. Connection closed by client?
             }
-            catch (Exception ex) when (ex.IsOperationCancelledException())
+            catch (Exception ex) when (ex.Is<OperationCanceledException>())
             {
                 // Ignored. Connection closed by server?
             }

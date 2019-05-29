@@ -183,11 +183,11 @@ namespace FubarDev.FtpServer.Networking
                     await FlushAsync(Stream, _pipeReader, cancellationToken).ConfigureAwait(false);
                 }
             }
-            catch (Exception ex) when (ex.IsIOException())
+            catch (Exception ex) when (ex.Is<IOException>())
             {
                 // Ignored. Connection closed by client?
             }
-            catch (Exception ex) when (ex.IsOperationCancelledException())
+            catch (Exception ex) when (ex.Is<OperationCanceledException>())
             {
                 // Ignored. Connection closed by server?
             }

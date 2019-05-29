@@ -549,18 +549,18 @@ namespace FubarDev.FtpServer
                     }
                 }
             }
-            catch (Exception ex) when (ex.IsIOException() && !cancellationToken.IsCancellationRequested)
+            catch (Exception ex) when (ex.Is<IOException>() && !cancellationToken.IsCancellationRequested)
             {
                 Log?.LogWarning("Connection lost or closed by client");
                 Abort();
             }
-            catch (Exception ex) when (ex.IsIOException())
+            catch (Exception ex) when (ex.Is<IOException>())
             {
                 // Most likely closed by server.
                 Log?.LogWarning("Connection lost or closed by server");
                 Abort();
             }
-            catch (Exception ex) when (ex.IsOperationCancelledException())
+            catch (Exception ex) when (ex.Is<OperationCanceledException>())
             {
                 // We're getting here because someone called StopAsync on the connection.
                 // Reasons might be:

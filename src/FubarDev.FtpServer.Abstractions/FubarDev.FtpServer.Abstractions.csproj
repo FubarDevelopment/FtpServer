@@ -24,5 +24,6 @@
     <PackageReference Include="System.ComponentModel.Annotations" Version="4.1.0" />
     <PackageReference Include="System.Threading.Channels" Version="4.5.0" />
   </ItemGroup>
+  <Import Project="..\FubarDev.FtpServer.Shared\FubarDev.FtpServer.Shared.projitems" Label="Shared" />
   <Import Project="../../PackageLibrary.props" />
 </Project>

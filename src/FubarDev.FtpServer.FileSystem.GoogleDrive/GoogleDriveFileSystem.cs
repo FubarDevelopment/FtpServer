@@ -380,14 +380,22 @@ namespace FubarDev.FtpServer.FileSystem.GoogleDrive
                 return;
             }
 
-            _uploadsLock.Wait();
             try
             {
+                _uploadsLock.Wait();
+                try
+                {
                 _uploads.Remove(fileId);
             }
             finally
             {
-                _uploadsLock.Release();
+                    _uploadsLock.Release();
+                }
+            }
+            catch (Exception ex) when (ex.Is<ObjectDisposedException>())
+            {
+                // Ignore. This may happen when the connection
+                // was closed while a background upate was active.
             }
         }
 

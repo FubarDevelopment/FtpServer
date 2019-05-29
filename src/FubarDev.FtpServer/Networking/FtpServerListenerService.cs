@@ -70,7 +70,7 @@ namespace FubarDev.FtpServer.Networking
                        .ConfigureAwait(false);
                 }
             }
-            catch (Exception ex) when (ex.IsOperationCancelledException())
+            catch (Exception ex) when (ex.Is<OperationCanceledException>())
             {
                 // Ignore - everything is fine
             }
