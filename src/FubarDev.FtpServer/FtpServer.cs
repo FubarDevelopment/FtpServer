@@ -88,7 +88,7 @@ namespace FubarDev.FtpServer
         public FtpServiceStatus Status => _serverListener.Status;
 
         /// <inheritdoc />
-        public bool Ready => Status != FtpServiceStatus.ReadyToRun;
+        public bool Ready => Status == FtpServiceStatus.Running;
 
         /// <inheritdoc/>
         public void Dispose()
@@ -106,6 +106,7 @@ namespace FubarDev.FtpServer
         }
 
         /// <inheritdoc />
+        [Obsolete("User IFtpServerHost.StartAsync instead.")]
         void IFtpServer.Start()
         {
             var host = _serviceProvider.GetRequiredService<IFtpServerHost>();
@@ -113,6 +114,7 @@ namespace FubarDev.FtpServer
         }
 
         /// <inheritdoc />
+        [Obsolete("User IFtpServerHost.StopAsync instead.")]
         void IFtpServer.Stop()
         {
             var host = _serviceProvider.GetRequiredService<IFtpServerHost>();
