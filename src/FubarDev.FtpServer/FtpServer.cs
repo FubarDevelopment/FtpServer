@@ -27,7 +27,7 @@ namespace FubarDev.FtpServer
     /// <summary>
     /// The portable FTP server.
     /// </summary>
-    public sealed class FtpServer : IFtpServer, IPausableFtpService, IDisposable
+    public sealed class FtpServer : IFtpServer, IDisposable
     {
         [NotNull]
         private readonly FtpServerStatistics _statistics = new FtpServerStatistics();
@@ -104,7 +104,7 @@ namespace FubarDev.FtpServer
         {
             if (Status != FtpServiceStatus.Stopped)
             {
-                ((IFtpService)this).StopAsync(CancellationToken.None).Wait();
+                StopAsync(CancellationToken.None).Wait();
             }
 
             _cancellationTokenSource.Dispose();
@@ -131,25 +131,25 @@ namespace FubarDev.FtpServer
         }
 
         /// <inheritdoc />
-        Task IPausableFtpService.PauseAsync(CancellationToken cancellationToken)
+        public Task PauseAsync(CancellationToken cancellationToken)
         {
             return _serverListener.PauseAsync(cancellationToken);
         }
 
         /// <inheritdoc />
-        Task IPausableFtpService.ContinueAsync(CancellationToken cancellationToken)
+        public Task ContinueAsync(CancellationToken cancellationToken)
         {
             return _serverListener.ContinueAsync(cancellationToken);
         }
 
         /// <inheritdoc />
-        async Task IFtpService.StartAsync(CancellationToken cancellationToken)
+        public async Task StartAsync(CancellationToken cancellationToken)
         {
             await _serverListener.StartAsync(cancellationToken).ConfigureAwait(false);
         }
 
         /// <inheritdoc />
-        async Task IFtpService.StopAsync(CancellationToken cancellationToken)
+        public async Task StopAsync(CancellationToken cancellationToken)
         {
             _cancellationTokenSource.Cancel(true);
             await _serverListener.StopAsync(cancellationToken).ConfigureAwait(false);
