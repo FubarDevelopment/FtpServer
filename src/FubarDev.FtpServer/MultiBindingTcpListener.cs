@@ -119,6 +119,7 @@ namespace FubarDev.FtpServer
             _listeners.Clear();
             _acceptors.Clear();
             Port = 0;
+            _logger?.LogInformation("Listener stopped");
         }
 
         /// <summary>
