@@ -90,6 +90,11 @@ namespace FubarDev.FtpServer.Networking
         /// <inheritdoc />
         public async Task PauseAsync(CancellationToken cancellationToken)
         {
+            if (Status == FtpServiceStatus.Paused)
+            {
+                return;
+            }
+
             if (Status != FtpServiceStatus.Running)
             {
                 throw new InvalidOperationException($"Status must be {FtpServiceStatus.Running}, but was {Status}.");
