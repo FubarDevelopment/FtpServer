@@ -115,7 +115,7 @@ namespace FubarDev.FtpServer
         }
 
         /// <inheritdoc />
-        [Obsolete("User IFtpServerHost.StartAsync instead.")]
+        [Obsolete("Use IFtpServerHost.StartAsync instead.")]
         void IFtpServer.Start()
         {
             var host = _serviceProvider.GetRequiredService<IFtpServerHost>();
@@ -123,7 +123,7 @@ namespace FubarDev.FtpServer
         }
 
         /// <inheritdoc />
-        [Obsolete("User IFtpServerHost.StopAsync instead.")]
+        [Obsolete("Use IFtpServerHost.StopAsync instead.")]
         void IFtpServer.Stop()
         {
             var host = _serviceProvider.GetRequiredService<IFtpServerHost>();
