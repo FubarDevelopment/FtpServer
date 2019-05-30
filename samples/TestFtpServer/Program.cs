@@ -344,8 +344,10 @@ namespace TestFtpServer
                 var logger = serviceProvider.GetRequiredService<ILogger<FtpServer>>();
                 try
                 {
-                    // Start the FTP server
+                    // Query FTP server for status information
                     var ftpServer = serviceProvider.GetRequiredService<IFtpServer>();
+
+                    // Start the FTP server
                     var ftpServerHost = serviceProvider.GetRequiredService<IFtpServerHost>();
                     await ftpServerHost.StartAsync(CancellationToken.None).ConfigureAwait(false);
 
@@ -386,6 +388,7 @@ namespace TestFtpServer
                                        .ConfigureAwait(false);
                                     break;
                                 case "status":
+                                    Console.WriteLine("Port               = {0}", ftpServer.Port);
                                     Console.WriteLine("Active connections = {0}", ftpServer.Statistics.ActiveConnections);
                                     Console.WriteLine("Total connections  = {0}", ftpServer.Statistics.TotalConnections);
                                     break;

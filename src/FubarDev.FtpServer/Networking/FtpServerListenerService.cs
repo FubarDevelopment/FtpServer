@@ -21,7 +21,7 @@ namespace FubarDev.FtpServer.Networking
     /// <remarks>
     /// Accepting connections can be paused.
     /// </remarks>
-    internal class FtpServerListenerService : PausableFtpService
+    internal sealed class FtpServerListenerService : PausableFtpService
     {
         [NotNull]
         private readonly ChannelWriter<TcpClient> _newClientWriter;
@@ -54,10 +54,19 @@ namespace FubarDev.FtpServer.Networking
             _multiBindingTcpListener = new MultiBindingTcpListener(options.ServerAddress, options.Port, logger);
         }
 
+        /// <summary>
+        /// Event for a started listener.
+        /// </summary>
+        public event EventHandler<ListenerStartedEventArgs> ListenerStarted;
+
         /// <inheritdoc />
         protected override async Task ExecuteAsync(CancellationToken cancellationToken)
         {
             await _multiBindingTcpListener.StartAsync().ConfigureAwait(false);
+
+            // Notify of the port that's used by the listener.
+            OnListenerStarted(new ListenerStartedEventArgs(_multiBindingTcpListener.Port));
+
             _multiBindingTcpListener.StartAccepting();
 
             try
@@ -101,6 +110,11 @@ namespace FubarDev.FtpServer.Networking
             _connectionClosedCts.Cancel();
 
             return Task.CompletedTask;
+        }
+
+        private void OnListenerStarted(ListenerStartedEventArgs e)
+        {
+            ListenerStarted?.Invoke(this, e);
         }
     }
 }

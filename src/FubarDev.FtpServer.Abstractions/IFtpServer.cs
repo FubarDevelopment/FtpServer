@@ -19,6 +19,11 @@ namespace FubarDev.FtpServer
         event EventHandler<ConnectionEventArgs> ConfigureConnection;
 
         /// <summary>
+        /// This event is raised when the listener was started.
+        /// </summary>
+        event EventHandler<ListenerStartedEventArgs> ListenerStarted;
+
+        /// <summary>
         /// Gets the public IP address (required for <c>PASV</c> and <c>EPSV</c>).
         /// </summary>
         [NotNull]
@@ -27,6 +32,9 @@ namespace FubarDev.FtpServer
         /// <summary>
         /// Gets the port on which the FTP server is listening for incoming connections.
         /// </summary>
+        /// <remarks>
+        /// This value is only final after the <see cref="ListenerStarted"/> event was raised.
+        /// </remarks>
         int Port { get; }
 
         /// <summary>

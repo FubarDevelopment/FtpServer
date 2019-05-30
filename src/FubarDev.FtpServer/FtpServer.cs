@@ -66,11 +66,20 @@ namespace FubarDev.FtpServer
 
             var tcpClientChannel = Channel.CreateBounded<TcpClient>(5);
             _serverListener = new FtpServerListenerService(tcpClientChannel, serverOptions, _cancellationTokenSource, logger);
+            _serverListener.ListenerStarted += (s, e) =>
+            {
+                Port = e.Port;
+                OnListenerStarted(e);
+            };
+
             _clientReader = ReadClientsAsync(tcpClientChannel, _cancellationTokenSource.Token);
         }
 
         /// <inheritdoc />
         public event EventHandler<ConnectionEventArgs> ConfigureConnection;
+
+        /// <inheritdoc />
+        public event EventHandler<ListenerStartedEventArgs> ListenerStarted;
 
         /// <inheritdoc />
         public IFtpServerStatistics Statistics => _statistics;
@@ -265,6 +274,11 @@ namespace FubarDev.FtpServer
             }
 
             public IServiceScope Scope { get; }
+        }
+
+        private void OnListenerStarted(ListenerStartedEventArgs e)
+        {
+            ListenerStarted?.Invoke(this, e);
         }
     }
 }
