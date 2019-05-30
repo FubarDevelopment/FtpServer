@@ -13,7 +13,6 @@ using System.Xml;
 using FubarDev.FtpServer;
 using FubarDev.FtpServer.AccountManagement.Directories.RootPerUser;
 using FubarDev.FtpServer.AccountManagement.Directories.SingleRootWithoutHome;
-using FubarDev.FtpServer.BackgroundTransfer;
 using FubarDev.FtpServer.CommandExtensions;
 using FubarDev.FtpServer.Commands;
 using FubarDev.FtpServer.FileSystem;
@@ -346,8 +345,7 @@ namespace TestFtpServer
                 try
                 {
                     // Query services for status information
-                    var ftpServer = serviceProvider.GetRequiredService<IFtpServer>();
-                    var backgroundTransferWorker = serviceProvider.GetRequiredService<IBackgroundTransferWorker>();
+                    var status = serviceProvider.GetRequiredService<IShellStatus>();
 
                     // Start the FTP server
                     var ftpServerHost = serviceProvider.GetRequiredService<IFtpServerHost>();
@@ -356,63 +354,36 @@ namespace TestFtpServer
                     Console.WriteLine("Enter \"exit\" to close the test application.");
                     Console.WriteLine("Use \"help\" for more information.");
 
-                    ReadLine.AutoCompletionHandler = new FtpShellCommandAutoCompletion();
+                    var autoCompletionHandler = serviceProvider.GetRequiredService<FtpShellCommandAutoCompletion>();
+                    ReadLine.AutoCompletionHandler = autoCompletionHandler;
                     ReadLine.HistoryEnabled = true;
 
-                    var finished = false;
-                    while (!finished)
+                    while (!status.Closed)
                     {
                         var command = ReadLine.Read("> ");
-                        try
+                        var handler = autoCompletionHandler.GetCommand(command);
+                        if (handler == null)
                         {
-                            switch (command.Trim().ToLowerInvariant())
+                            if (string.IsNullOrEmpty(command))
                             {
-                                case "":
-                                    Console.WriteLine("Use \"help\" for more information.");
-                                    break;
-                                case "quit":
-                                case "exit":
-                                    finished = true;
-                                    break;
-                                case "help":
-                                    Console.WriteLine("help                     - Show help");
-                                    Console.WriteLine("quit                     - Close server");
-                                    Console.WriteLine("pause                    - Pause accepting clients");
-                                    Console.WriteLine("continue                 - Continue accepting clients");
-                                    Console.WriteLine("status                   - Show server status");
-                                    Console.WriteLine("show background-uploads  - Show server status");
-                                    break;
-                                case "pause":
-                                    await ftpServer.PauseAsync(CancellationToken.None)
-                                       .ConfigureAwait(false);
-                                    break;
-                                case "continue":
-                                    await ftpServer.ContinueAsync(CancellationToken.None)
-                                       .ConfigureAwait(false);
-                                    break;
-                                case "status":
-                                    Console.WriteLine("Port               = {0}", ftpServer.Port);
-                                    Console.WriteLine("Active connections = {0}", ftpServer.Statistics.ActiveConnections);
-                                    Console.WriteLine("Total connections  = {0}", ftpServer.Statistics.TotalConnections);
-                                    Console.WriteLine("Background uploads = {0}", backgroundTransferWorker.GetStates().Count);
-                                    break;
-                                case "show background-uploads":
-                                    foreach (var info in backgroundTransferWorker.GetStates())
-                                    {
-                                        Console.WriteLine("File {0}", info.FileName);
-                                        Console.WriteLine("\tStatus={0}", info.Status);
-                                        if (info.Transferred != null)
-                                        {
-                                            Console.WriteLine("\tTransferred={0}", info.Transferred.Value);
-                                        }
-                                    }
-
-                                    break;
+                                Console.WriteLine("Use \"help\" for more information.");
+                            }
+                            else
+                            {
+                                Console.Error.WriteLine("Cannot execute the command. Handler not found.");
                             }
                         }
-                        catch (Exception ex)
+                        else
                         {
-                            logger.LogError(ex, ex.Message);
+                            try
+                            {
+                                await handler.ExecuteAsync(CancellationToken.None)
+                                   .ConfigureAwait(false);
+                            }
+                            catch (Exception ex)
+                            {
+                                logger.LogError(ex, ex.Message);
+                            }
                         }
                     }
 
@@ -511,6 +482,19 @@ namespace TestFtpServer
                     break;
             }
 
+            services.Scan(
+                ts => ts
+                   .FromAssemblyOf<FtpShellCommandAutoCompletion>()
+                   .AddClasses(itf => itf.AssignableTo<ICommandInfo>(), true).As<ICommandInfo>().WithSingletonLifetime());
+
+            services.Scan(
+                ts => ts
+                   .FromAssemblyOf<FtpShellCommandAutoCompletion>()
+                   .AddClasses(itf => itf.AssignableTo<IModuleInfo>(), true).As<IModuleInfo>().WithSingletonLifetime());
+
+            services.AddSingleton<FtpShellCommandAutoCompletion>();
+            services.AddSingleton<IShellStatus, ShellStatus>();
+
             services.Decorate<IFtpServer>(
                 (ftpServer, serviceProvider) =>
                 {
@@ -545,6 +529,12 @@ namespace TestFtpServer
                 });
 
             return services;
+        }
+
+        private class ShellStatus : IShellStatus
+        {
+            /// <inheritdoc />
+            public bool Closed { get; set; }
         }
     }
 }
