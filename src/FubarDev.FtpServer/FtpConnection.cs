@@ -609,7 +609,7 @@ namespace FubarDev.FtpServer
                         readTask = commandReader.WaitToReadAsync(cancellationToken).AsTask();
                     }
 
-                    var tasks = new List<Task>() { readTask, Task.Delay(-1, _cancellationTokenSource.Token) };
+                    var tasks = new List<Task>() { readTask };
                     var backgroundTaskLifetimeService = Features.Get<IBackgroundTaskLifetimeFeature>();
                     if (backgroundTaskLifetimeService != null)
                     {
@@ -631,10 +631,6 @@ namespace FubarDev.FtpServer
                         await completedTask.ConfigureAwait(false);
                         Features.Set<IBackgroundTaskLifetimeFeature>(null);
                     }
-                    else if (completedTask != readTask)
-                    {
-                        break;
-                    }
                     else
                     {
                         var hasCommand = await readTask.ConfigureAwait(false);
@@ -655,10 +651,13 @@ namespace FubarDev.FtpServer
                     }
                 }
             }
+            catch (Exception ex) when (ex.Is<OperationCanceledException>())
+            {
+                // Was expected, ignore!
+            }
             catch (Exception ex)
             {
                 Log?.LogError(ex, ex.Message);
-                throw;
             }
             finally
             {
