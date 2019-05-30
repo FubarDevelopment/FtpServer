@@ -13,6 +13,7 @@ using System.Xml;
 using FubarDev.FtpServer;
 using FubarDev.FtpServer.AccountManagement.Directories.RootPerUser;
 using FubarDev.FtpServer.AccountManagement.Directories.SingleRootWithoutHome;
+using FubarDev.FtpServer.BackgroundTransfer;
 using FubarDev.FtpServer.CommandExtensions;
 using FubarDev.FtpServer.Commands;
 using FubarDev.FtpServer.FileSystem;
@@ -344,8 +345,9 @@ namespace TestFtpServer
                 var logger = serviceProvider.GetRequiredService<ILogger<FtpServer>>();
                 try
                 {
-                    // Query FTP server for status information
+                    // Query services for status information
                     var ftpServer = serviceProvider.GetRequiredService<IFtpServer>();
+                    var backgroundTransferWorker = serviceProvider.GetRequiredService<IBackgroundTransferWorker>();
 
                     // Start the FTP server
                     var ftpServerHost = serviceProvider.GetRequiredService<IFtpServerHost>();
@@ -373,11 +375,12 @@ namespace TestFtpServer
                                     finished = true;
                                     break;
                                 case "help":
-                                    Console.WriteLine("help     - Show help");
-                                    Console.WriteLine("quit     - Close server");
-                                    Console.WriteLine("pause    - Pause accepting clients");
-                                    Console.WriteLine("continue - Continue accepting clients");
-                                    Console.WriteLine("status   - Show server status");
+                                    Console.WriteLine("help                     - Show help");
+                                    Console.WriteLine("quit                     - Close server");
+                                    Console.WriteLine("pause                    - Pause accepting clients");
+                                    Console.WriteLine("continue                 - Continue accepting clients");
+                                    Console.WriteLine("status                   - Show server status");
+                                    Console.WriteLine("show background-uploads  - Show server status");
                                     break;
                                 case "pause":
                                     await ftpServer.PauseAsync(CancellationToken.None)
@@ -391,6 +394,19 @@ namespace TestFtpServer
                                     Console.WriteLine("Port               = {0}", ftpServer.Port);
                                     Console.WriteLine("Active connections = {0}", ftpServer.Statistics.ActiveConnections);
                                     Console.WriteLine("Total connections  = {0}", ftpServer.Statistics.TotalConnections);
+                                    Console.WriteLine("Background uploads = {0}", backgroundTransferWorker.GetStates().Count);
+                                    break;
+                                case "show background-uploads":
+                                    foreach (var info in backgroundTransferWorker.GetStates())
+                                    {
+                                        Console.WriteLine("File {0}", info.FileName);
+                                        Console.WriteLine("\tStatus={0}", info.Status);
+                                        if (info.Transferred != null)
+                                        {
+                                            Console.WriteLine("\tTransferred={0}", info.Transferred.Value);
+                                        }
+                                    }
+
                                     break;
                             }
                         }

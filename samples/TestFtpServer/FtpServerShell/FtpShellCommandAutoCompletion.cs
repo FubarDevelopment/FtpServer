@@ -22,7 +22,8 @@ namespace TestFtpServer.FtpServerShell
                 "help",
                 "pause",
                 "resume",
-                "status"
+                "status",
+                "show background-uploads"
             };
         }
 

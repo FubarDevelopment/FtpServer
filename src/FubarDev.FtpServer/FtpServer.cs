@@ -266,6 +266,11 @@ namespace FubarDev.FtpServer
             _statistics.CloseConnection();
         }
 
+        private void OnListenerStarted(ListenerStartedEventArgs e)
+        {
+            ListenerStarted?.Invoke(this, e);
+        }
+
         private class FtpConnectionInfo
         {
             public FtpConnectionInfo(IServiceScope scope)
@@ -274,11 +279,6 @@ namespace FubarDev.FtpServer
             }
 
             public IServiceScope Scope { get; }
-        }
-
-        private void OnListenerStarted(ListenerStartedEventArgs e)
-        {
-            ListenerStarted?.Invoke(this, e);
         }
     }
 }
