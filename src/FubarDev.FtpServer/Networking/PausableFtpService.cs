@@ -62,6 +62,7 @@ namespace FubarDev.FtpServer.Networking
                 throw new InvalidOperationException($"Status must be {FtpServiceStatus.ReadyToRun}, but was {Status}.");
             }
 
+            _jobPaused = new CancellationTokenSource();
             _task = RunAsync(new Progress<FtpServiceStatus>(status => Status = status));
 
             return Task.CompletedTask;
@@ -85,6 +86,8 @@ namespace FubarDev.FtpServer.Networking
 
             await _task
                .ConfigureAwait(false);
+
+            Status = FtpServiceStatus.Stopped;
         }
 
         /// <inheritdoc />
