@@ -88,7 +88,7 @@ namespace FubarDev.FtpServer
 
         private bool _connectionClosing;
 
-        private bool _connectionClosed;
+        private int _connectionClosed;
 
         [CanBeNull]
         private Task _commandChannelReader;
@@ -293,12 +293,10 @@ namespace FubarDev.FtpServer
         {
             Log?.LogTrace("StopAsync called");
 
-            if (_connectionClosed)
+            if (Interlocked.CompareExchange(ref _connectionClosed, 1, 0) != 0)
             {
                 return;
             }
-
-            _connectionClosed = true;
 
             Abort();
 
