@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 using FubarDev.FtpServer;
 using FubarDev.FtpServer.CommandExtensions;
 
+using JetBrains.Annotations;
+
 using TestFtpServer.Utilities;
 
 namespace TestFtpServer.Extensions
@@ -16,13 +18,14 @@ namespace TestFtpServer.Extensions
     [FtpFeatureText("SITE HELLO")]
     public class SiteHelloFtpCommandHandlerExtension : FtpCommandHandlerExtension
     {
+        [NotNull]
         private readonly Hello _hello;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SiteHelloFtpCommandHandlerExtension"/> class.
         /// </summary>
         /// <param name="hello">The greeter.</param>
-        public SiteHelloFtpCommandHandlerExtension(Hello hello)
+        public SiteHelloFtpCommandHandlerExtension([NotNull] Hello hello)
         {
             _hello = hello;
         }

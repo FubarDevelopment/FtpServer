@@ -6,6 +6,8 @@ using System.Collections.Generic;
 
 using FubarDev.FtpServer.BackgroundTransfer;
 
+using JetBrains.Annotations;
+
 namespace TestFtpServer.FtpServerShell.ModuleInfo
 {
     /// <summary>
@@ -13,6 +15,7 @@ namespace TestFtpServer.FtpServerShell.ModuleInfo
     /// </summary>
     public class BackgroundUploadsInfo : IExtendedModuleInfo, ISimpleModuleInfo
     {
+        [NotNull]
         private readonly IBackgroundTransferWorker _backgroundTransferWorker;
 
         /// <summary>
@@ -20,7 +23,7 @@ namespace TestFtpServer.FtpServerShell.ModuleInfo
         /// </summary>
         /// <param name="backgroundTransferWorker">The background transfer worker to get the information from.</param>
         public BackgroundUploadsInfo(
-            IBackgroundTransferWorker backgroundTransferWorker)
+            [NotNull] IBackgroundTransferWorker backgroundTransferWorker)
         {
             _backgroundTransferWorker = backgroundTransferWorker;
         }

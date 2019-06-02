@@ -6,6 +6,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
+using JetBrains.Annotations;
+
 namespace TestFtpServer.FtpServerShell
 {
     /// <summary>
@@ -13,13 +15,16 @@ namespace TestFtpServer.FtpServerShell
     /// </summary>
     internal class FtpShellCommandAutoCompletion : IAutoCompleteHandler
     {
+        [NotNull]
+        [ItemNotNull]
         private readonly IReadOnlyCollection<ICommandInfo> _commands;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FtpShellCommandAutoCompletion"/> class.
         /// </summary>
         /// <param name="commandInfos">The registered command handlers.</param>
-        public FtpShellCommandAutoCompletion(IEnumerable<ICommandInfo> commandInfos)
+        public FtpShellCommandAutoCompletion(
+            [NotNull, ItemNotNull] IEnumerable<ICommandInfo> commandInfos)
         {
             _commands = commandInfos.OfType<IRootCommandInfo>().ToList();
         }
@@ -29,7 +34,8 @@ namespace TestFtpServer.FtpServerShell
         /// </summary>
         /// <param name="text"></param>
         /// <returns></returns>
-        public IExecutableCommandInfo? GetCommand(string text)
+        [CanBeNull]
+        public IExecutableCommandInfo GetCommand([NotNull] string text)
         {
             var words = text.Trim().Split(
                 Separators,
@@ -52,7 +58,9 @@ namespace TestFtpServer.FtpServerShell
         }
 
         /// <inheritdoc />
-        public string[] GetSuggestions(string text, int index)
+        [NotNull]
+        [ItemNotNull]
+        public string[] GetSuggestions([CanBeNull] string text, int index)
         {
             if (string.IsNullOrWhiteSpace(text))
             {
@@ -86,6 +94,7 @@ namespace TestFtpServer.FtpServerShell
         }
 
         /// <inheritdoc />
+        [NotNull]
         public char[] Separators { get; set; } = { ' ', '\t' };
     }
 }

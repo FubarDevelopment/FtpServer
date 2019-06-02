@@ -9,6 +9,8 @@ using FubarDev.FtpServer.AccountManagement;
 using FubarDev.FtpServer.AccountManagement.Directories;
 using FubarDev.FtpServer.FileSystem;
 
+using JetBrains.Annotations;
+
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
@@ -19,11 +21,13 @@ namespace FubarDev.FtpServer.MembershipProvider.Pam.Directories
     /// </summary>
     public class PamAccountDirectoryQuery : IAccountDirectoryQuery
     {
-        private readonly ILogger<PamAccountDirectoryQuery>? _logger;
+        [CanBeNull]
+        private readonly ILogger<PamAccountDirectoryQuery> _logger;
 
         private readonly bool _userHomeIsRoot;
 
-        private readonly string? _anonymousRootDirectory;
+        [CanBeNull]
+        private readonly string _anonymousRootDirectory;
 
         private readonly bool _anonymousRootPerEmail;
 
@@ -33,8 +37,8 @@ namespace FubarDev.FtpServer.MembershipProvider.Pam.Directories
         /// <param name="options">The options.</param>
         /// <param name="logger">The logger.</param>
         public PamAccountDirectoryQuery(
-            IOptions<PamAccountDirectoryQueryOptions> options,
-            ILogger<PamAccountDirectoryQuery>? logger)
+            [NotNull] IOptions<PamAccountDirectoryQueryOptions> options,
+            [CanBeNull] ILogger<PamAccountDirectoryQuery> logger = null)
         {
             _logger = logger;
             _userHomeIsRoot = options.Value.UserHomeIsRoot;
@@ -59,7 +63,8 @@ namespace FubarDev.FtpServer.MembershipProvider.Pam.Directories
             return new GenericAccountDirectories(null, userHome);
         }
 
-        private string GetUserHome(IFtpUser ftpUser)
+        [NotNull]
+        private string GetUserHome([NotNull] IFtpUser ftpUser)
         {
             if (ftpUser is PamFtpUser pamFtpUser)
             {
@@ -69,7 +74,8 @@ namespace FubarDev.FtpServer.MembershipProvider.Pam.Directories
             return $"/home/{ftpUser.Name}";
         }
 
-        private IAccountDirectories GetAnonymousDirectories(IAnonymousFtpUser ftpUser)
+        [NotNull]
+        private IAccountDirectories GetAnonymousDirectories([NotNull] IAnonymousFtpUser ftpUser)
         {
             var rootPath = _anonymousRootDirectory;
             if (string.IsNullOrEmpty(rootPath))

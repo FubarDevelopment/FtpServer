@@ -2,6 +2,8 @@
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
+using JetBrains.Annotations;
+
 namespace FubarDev.FtpServer.MembershipProvider.Pam.Directories
 {
     /// <summary>
@@ -21,7 +23,8 @@ namespace FubarDev.FtpServer.MembershipProvider.Pam.Directories
         /// This property must be set to allow anonymous users.
         /// This path is relative to the file systems root path.
         /// </remarks>
-        public string? AnonymousRootDirectory { get; set; }
+        [CanBeNull]
+        public string AnonymousRootDirectory { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether anonymous users should have their own (per-email) root directory.

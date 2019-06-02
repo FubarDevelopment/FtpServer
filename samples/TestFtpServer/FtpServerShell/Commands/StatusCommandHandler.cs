@@ -8,6 +8,8 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
+using JetBrains.Annotations;
+
 namespace TestFtpServer.FtpServerShell.Commands
 {
     /// <summary>
@@ -15,6 +17,8 @@ namespace TestFtpServer.FtpServerShell.Commands
     /// </summary>
     public class StatusCommandHandler : IRootCommandInfo, IExecutableCommandInfo
     {
+        [NotNull]
+        [ItemNotNull]
         private readonly IReadOnlyCollection<ISimpleModuleInfo> _moduleInfoItems;
 
         /// <summary>
@@ -22,7 +26,7 @@ namespace TestFtpServer.FtpServerShell.Commands
         /// </summary>
         /// <param name="moduleInfoItems">The registered modules.</param>
         public StatusCommandHandler(
-            IEnumerable<IModuleInfo> moduleInfoItems)
+            [NotNull, ItemNotNull] IEnumerable<IModuleInfo> moduleInfoItems)
         {
             _moduleInfoItems = moduleInfoItems.OfType<ISimpleModuleInfo>().ToList();
         }

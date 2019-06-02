@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 
 using FubarDev.FtpServer;
 
+using JetBrains.Annotations;
+
 namespace TestFtpServer.FtpServerShell.Commands
 {
     /// <summary>
@@ -15,13 +17,14 @@ namespace TestFtpServer.FtpServerShell.Commands
     /// </summary>
     public class ContinueCommandHandler : IRootCommandInfo, IExecutableCommandInfo
     {
+        [NotNull]
         private readonly IFtpServer _ftpServer;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ContinueCommandHandler"/> class.
         /// </summary>
         /// <param name="ftpServer">The FTP server.</param>
-        public ContinueCommandHandler(IFtpServer ftpServer)
+        public ContinueCommandHandler([NotNull] IFtpServer ftpServer)
         {
             _ftpServer = ftpServer;
         }

@@ -2,6 +2,8 @@
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
+using JetBrains.Annotations;
+
 namespace TestFtpServer.Configuration
 {
     /// <summary>
@@ -12,7 +14,8 @@ namespace TestFtpServer.Configuration
         /// <summary>
         /// Gets or sets the port range.
         /// </summary>
-        public string? Range { get; set; }
+        [CanBeNull]
+        public string Range { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether promiscuous PASV is allowed.

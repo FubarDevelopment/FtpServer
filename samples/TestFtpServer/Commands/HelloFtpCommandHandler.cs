@@ -9,6 +9,8 @@ using FubarDev.FtpServer;
 using FubarDev.FtpServer.CommandHandlers;
 using FubarDev.FtpServer.Commands;
 
+using JetBrains.Annotations;
+
 using TestFtpServer.Utilities;
 
 namespace TestFtpServer.Commands
@@ -20,13 +22,14 @@ namespace TestFtpServer.Commands
     [FtpFeatureText("HELLO")]
     public class HelloFtpCommandHandler : FtpCommandHandler
     {
+        [NotNull]
         private readonly Hello _hello;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="HelloFtpCommandHandler"/> class.
         /// </summary>
         /// <param name="hello">The greeter.</param>
-        public HelloFtpCommandHandler(Hello hello)
+        public HelloFtpCommandHandler([NotNull] Hello hello)
         {
             _hello = hello;
         }

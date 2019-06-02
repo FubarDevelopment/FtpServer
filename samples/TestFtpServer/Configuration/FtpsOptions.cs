@@ -2,6 +2,8 @@
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
+using JetBrains.Annotations;
+
 namespace TestFtpServer.Configuration
 {
     /// <summary>
@@ -15,17 +17,20 @@ namespace TestFtpServer.Configuration
         /// <remarks>
         /// A private key must be specified if this file isn't a PKCS#12 file with a private key.
         /// </remarks>
-        public string? Certificate { get; set; }
+        [CanBeNull]
+        public string Certificate { get; set; }
 
         /// <summary>
         /// Gets or sets the path to the private key of the X.509 certificate.
         /// </summary>
-        public string? PrivateKey { get; set; }
+        [CanBeNull]
+        public string PrivateKey { get; set; }
 
         /// <summary>
         /// Gets or sets the password for the <see cref="PrivateKey"/> or PKCS#12-formatted <see cref="Certificate"/> which contains the private key.
         /// </summary>
-        public string? Password { get; set; }
+        [CanBeNull]
+        public string Password { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether to use implicit AUTO TLS.

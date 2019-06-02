@@ -5,6 +5,8 @@
 using System.Threading;
 using System.Threading.Tasks;
 
+using JetBrains.Annotations;
+
 namespace FubarDev.FtpServer.Authorization
 {
     /// <summary>
@@ -28,6 +30,7 @@ namespace FubarDev.FtpServer.Authorization
         /// <param name="accountInformation">The account information that led to successful authorization.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>The task.</returns>
-        Task AuthorizedAsync(IAccountInformation accountInformation, CancellationToken cancellationToken);
+        [NotNull]
+        Task AuthorizedAsync([NotNull] IAccountInformation accountInformation, CancellationToken cancellationToken);
     }
 }

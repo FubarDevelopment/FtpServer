@@ -8,6 +8,8 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
+using JetBrains.Annotations;
+
 namespace TestFtpServer.FtpServerShell.Commands
 {
     /// <summary>
@@ -19,7 +21,7 @@ namespace TestFtpServer.FtpServerShell.Commands
         /// Initializes a new instance of the <see cref="ShowCommandHandler"/> class.
         /// </summary>
         /// <param name="moduleInfoItems">The registered modules.</param>
-        public ShowCommandHandler(IEnumerable<IModuleInfo> moduleInfoItems)
+        public ShowCommandHandler([NotNull, ItemNotNull] IEnumerable<IModuleInfo> moduleInfoItems)
         {
             SubCommands = moduleInfoItems
                .OfType<IExtendedModuleInfo>()

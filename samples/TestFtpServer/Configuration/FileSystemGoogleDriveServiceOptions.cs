@@ -2,6 +2,8 @@
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
+using JetBrains.Annotations;
+
 namespace TestFtpServer.Configuration
 {
     /// <summary>
@@ -12,6 +14,7 @@ namespace TestFtpServer.Configuration
         /// <summary>
         /// Gets or sets the path to the credential file.
         /// </summary>
-        public string? CredentialFile { get; set; }
+        [CanBeNull]
+        public string CredentialFile { get; set; }
     }
 }

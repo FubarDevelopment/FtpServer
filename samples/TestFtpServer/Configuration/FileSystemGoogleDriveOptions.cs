@@ -2,6 +2,8 @@
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
+using JetBrains.Annotations;
+
 namespace TestFtpServer.Configuration
 {
     /// <summary>
@@ -17,11 +19,13 @@ namespace TestFtpServer.Configuration
         /// <summary>
         /// Gets or sets options for a Google Drive from a user.
         /// </summary>
+        [NotNull]
         public FileSystemGoogleDriveUserOptions User { get; set; } = new FileSystemGoogleDriveUserOptions();
 
         /// <summary>
         /// Gets or sets options for a Google Drive for a service.
         /// </summary>
+        [NotNull]
         public FileSystemGoogleDriveServiceOptions Service { get; set; } = new FileSystemGoogleDriveServiceOptions();
     }
 }

@@ -27,6 +27,8 @@ using FubarDev.FtpServer.ServerCommandHandlers;
 using Google.Apis.Auth.OAuth2;
 using Google.Apis.Drive.v3;
 
+using JetBrains.Annotations;
+
 using Microsoft.DotNet.PlatformAbstractions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -233,7 +235,8 @@ namespace TestFtpServer
             await RunAsync(services).ConfigureAwait(false);
         }
 
-        private static Task RunWithInMemoryFileSystemAsync(FtpOptions options)
+        [NotNull]
+        private static Task RunWithInMemoryFileSystemAsync([NotNull] FtpOptions options)
         {
             options.Validate();
             var services = CreateServices(
@@ -244,7 +247,10 @@ namespace TestFtpServer
             return RunAsync(services);
         }
 
-        private static Task RunWithFileSystemAsync(string[] args, FtpOptions options)
+        [NotNull]
+        private static Task RunWithFileSystemAsync(
+            [NotNull, ItemNotNull] string[] args,
+            [NotNull] FtpOptions options)
         {
             options.Validate();
             var rootDir =
@@ -256,7 +262,8 @@ namespace TestFtpServer
             return RunAsync(services);
         }
 
-        private static Task RunWithUnixFileSystemAsync(FtpOptions options)
+        [NotNull]
+        private static Task RunWithUnixFileSystemAsync([NotNull] FtpOptions options)
         {
             options.Validate();
             var services = CreateServices(
@@ -265,7 +272,10 @@ namespace TestFtpServer
             return RunAsync(services);
         }
 
-        private static async Task RunWithGoogleDriveUserAsync(string[] args, FtpOptions options)
+        [NotNull]
+        private static async Task RunWithGoogleDriveUserAsync(
+            [NotNull, ItemNotNull] string[] args,
+            [NotNull] FtpOptions options)
         {
             options.Validate();
             if (args.Length != 2)
@@ -289,12 +299,12 @@ namespace TestFtpServer
         }
 
         private static async Task<UserCredential> GetUserCredential(
-            string clientSecretsFile,
-            string userName,
+            [NotNull] string clientSecretsFile,
+            [NotNull] string userName,
             bool refreshToken)
         {
             UserCredential credential;
-            await using (var secretsSource = new FileStream(clientSecretsFile, FileMode.Open))
+            using (var secretsSource = new FileStream(clientSecretsFile, FileMode.Open))
             {
                 var secrets = GoogleClientSecrets.Load(secretsSource);
                 credential = await GoogleWebAuthorizationBroker.AuthorizeAsync(
@@ -314,7 +324,10 @@ namespace TestFtpServer
             return credential;
         }
 
-        private static Task RunWithGoogleDriveServiceAsync(string[] args, FtpOptions options)
+        [NotNull]
+        private static Task RunWithGoogleDriveServiceAsync(
+            [NotNull, ItemNotNull] string[] args,
+            [NotNull] FtpOptions options)
         {
             options.Validate();
             if (args.Length != 1)
@@ -333,7 +346,8 @@ namespace TestFtpServer
             return RunAsync(services);
         }
 
-        private static async Task RunAsync(IServiceCollection services)
+        [NotNull]
+        private static async Task RunAsync([NotNull] IServiceCollection services)
         {
             using (var serviceProvider = services.BuildServiceProvider())
             {
@@ -397,9 +411,10 @@ namespace TestFtpServer
             }
         }
 
+        [NotNull]
         private static IServiceCollection CreateServices(
-            FtpOptions options,
-            Action<IServiceCollection> configureFtpServerAction)
+            [NotNull] FtpOptions options,
+            [NotNull] Action<IServiceCollection> configureFtpServerAction)
         {
             var services = new ServiceCollection()
                .AddLogging(cfg => cfg.SetMinimumLevel(LogLevel.Trace))
@@ -449,7 +464,7 @@ namespace TestFtpServer
                     sp.GetService<ILogger<AssemblyFtpCommandHandlerExtensionScanner>>(),
                     typeof(SiteHelloFtpCommandHandlerExtension).Assembly));
 
-            if (options.SetFileSystemId && RuntimeEnvironment.OperatingSystemPlatform != Platform.Windows)
+            if (options.SetFileSystemId && RuntimeEnvironment.OperatingSystemPlatform != Microsoft.DotNet.PlatformAbstractions.Platform.Windows)
             {
                 services.AddScoped<IFtpCommandMiddleware, FsIdChanger>();
             }
@@ -516,7 +531,7 @@ namespace TestFtpServer
 
                     /* Setting the umask is only valid for non-Windows platforms. */
                     if (!string.IsNullOrEmpty(options.Umask)
-                        && RuntimeEnvironment.OperatingSystemPlatform != Platform.Windows)
+                        && RuntimeEnvironment.OperatingSystemPlatform != Microsoft.DotNet.PlatformAbstractions.Platform.Windows)
                     {
                         var umask = options.Umask.StartsWith("0")
                             ? Convert.ToInt32(options.Umask, 8)

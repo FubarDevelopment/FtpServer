@@ -4,6 +4,8 @@
 
 using System.IO;
 
+using JetBrains.Annotations;
+
 namespace TestFtpServer.Configuration
 {
     /// <summary>
@@ -14,6 +16,7 @@ namespace TestFtpServer.Configuration
         /// <summary>
         /// Gets or sets the root path.
         /// </summary>
+        [NotNull]
         public string Root { get; set; } = Path.GetTempPath();
     }
 }

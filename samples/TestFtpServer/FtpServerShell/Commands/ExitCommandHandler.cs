@@ -6,6 +6,8 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
+using JetBrains.Annotations;
+
 namespace TestFtpServer.FtpServerShell.Commands
 {
     /// <summary>
@@ -13,13 +15,14 @@ namespace TestFtpServer.FtpServerShell.Commands
     /// </summary>
     public class ExitCommandHandler : IRootCommandInfo, IExecutableCommandInfo
     {
+        [NotNull]
         private readonly IShellStatus _status;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="IExecutableCommandInfo"/> class.
         /// </summary>
         /// <param name="status">The shell status.</param>
-        public ExitCommandHandler(IShellStatus status)
+        public ExitCommandHandler([NotNull] IShellStatus status)
         {
             _status = status;
         }

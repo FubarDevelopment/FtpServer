@@ -7,6 +7,8 @@ using System.IO;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 
+using JetBrains.Annotations;
+
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.OpenSsl;
 using Org.BouncyCastle.Pkcs;
@@ -25,7 +27,7 @@ namespace TestFtpServer
         /// Validates the current configuration.
         /// </summary>
         /// <param name="options">The FTP options.</param>
-        public static void Validate(this FtpOptions options)
+        public static void Validate([NotNull] this FtpOptions options)
         {
             if (options.Ftps.Implicit && !string.IsNullOrEmpty(options.Ftps.Certificate))
             {
@@ -47,7 +49,7 @@ namespace TestFtpServer
         /// </summary>
         /// <param name="options">The FTP options.</param>
         /// <returns>The FTP server port.</returns>
-        public static int GetServerPort(this FtpOptions options)
+        public static int GetServerPort([NotNull] this FtpOptions options)
         {
             return options.Server.Port ?? (options.Ftps.Implicit ? 990 : 21);
         }
@@ -57,7 +59,7 @@ namespace TestFtpServer
         /// </summary>
         /// <param name="options">The FTP options.</param>
         /// <returns>The port range.</returns>
-        public static (int from, int to)? GetPasvPortRange(this FtpOptions options)
+        public static (int from, int to)? GetPasvPortRange([NotNull] this FtpOptions options)
         {
             if (string.IsNullOrWhiteSpace(options.Server.Pasv.Range))
             {
@@ -86,7 +88,8 @@ namespace TestFtpServer
         /// </summary>
         /// <param name="options">The options used to load the certificate.</param>
         /// <returns>The certificate.</returns>
-        public static X509Certificate2? GetCertificate(this FtpOptions options)
+        [CanBeNull]
+        public static X509Certificate2 GetCertificate([NotNull] this FtpOptions options)
         {
             if (string.IsNullOrEmpty(options.Ftps.Certificate))
             {
@@ -103,7 +106,7 @@ namespace TestFtpServer
             certCollection.Import(options.Ftps.Certificate, options.Ftps.Password, X509KeyStorageFlags.Exportable);
 
             var passwordFinder = string.IsNullOrEmpty(options.Ftps.Password)
-                ? (IPasswordFinder?)null
+                ? (IPasswordFinder)null
                 : new BcStaticPassword(options.Ftps.Password);
 
             AsymmetricKeyParameter keyParameter;
@@ -136,11 +139,12 @@ namespace TestFtpServer
 
         private class BcStaticPassword : IPasswordFinder
         {
+            [NotNull]
             private readonly string _password;
 
-            public BcStaticPassword(string password)
+            public BcStaticPassword([CanBeNull] string password)
             {
-                _password = password;
+                _password = password ?? string.Empty;
             }
 
             /// <inheritdoc />

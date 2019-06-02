@@ -6,14 +6,18 @@ using System;
 
 using FubarDev.PamSharp;
 
+using JetBrains.Annotations;
+
 namespace FubarDev.FtpServer.MembershipProvider.Pam
 {
     internal class PamSessionFeature : IDisposable
     {
+        [NotNull]
         private readonly IPamTransaction _transaction;
+
         private bool _sessionOpened;
 
-        public PamSessionFeature(IPamTransaction transaction)
+        public PamSessionFeature([NotNull] IPamTransaction transaction)
         {
             _transaction = transaction;
         }

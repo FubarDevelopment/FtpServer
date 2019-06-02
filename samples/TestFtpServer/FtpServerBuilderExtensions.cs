@@ -5,6 +5,8 @@
 using FubarDev.FtpServer;
 using FubarDev.FtpServer.AccountManagement;
 
+using JetBrains.Annotations;
+
 using Microsoft.Extensions.DependencyInjection;
 
 using TestFtpServer.Configuration;
@@ -22,7 +24,10 @@ namespace TestFtpServer
         /// <param name="builder">The FTP server builder.</param>
         /// <param name="options">The options.</param>
         /// <returns>The FTP server builder.</returns>
-        public static IFtpServerBuilder ConfigureAuthentication(this IFtpServerBuilder builder, FtpOptions options)
+        [NotNull]
+        public static IFtpServerBuilder ConfigureAuthentication(
+            [NotNull] this IFtpServerBuilder builder,
+            [NotNull] FtpOptions options)
         {
             if (options.Authentication == MembershipProviderType.Default)
             {

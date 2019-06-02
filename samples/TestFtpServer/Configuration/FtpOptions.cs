@@ -4,7 +4,7 @@
 
 using System;
 
-using Newtonsoft.Json;
+using JetBrains.Annotations;
 
 namespace TestFtpServer.Configuration
 {
@@ -14,7 +14,6 @@ namespace TestFtpServer.Configuration
     public class FtpOptions
     {
         private FileSystemLayoutType? _layout;
-        private FileSystemType _backend = FileSystemType.InMemory;
 
         /// <summary>
         /// Gets or sets authentication providers to use.
@@ -29,21 +28,25 @@ namespace TestFtpServer.Configuration
         /// <summary>
         /// Gets or sets the bits to be removed from the default file system entry permissions.
         /// </summary>
-        public string? Umask { get; set; }
+        [CanBeNull]
+        public string Umask { get; set; }
 
         /// <summary>
         /// Gets or sets the PAM authorization options.
         /// </summary>
+        [NotNull]
         public PamAuthOptions Pam { get; set; } = new PamAuthOptions();
 
         /// <summary>
         /// Gets or sets the FTP server options.
         /// </summary>
+        [NotNull]
         public FtpServerOptions Server { get; set; } = new FtpServerOptions();
 
         /// <summary>
         /// Gets or sets the FTPS options.
         /// </summary>
+        [NotNull]
         public FtpsOptions Ftps { get; set; } = new FtpsOptions();
 
         /// <summary>
@@ -51,23 +54,42 @@ namespace TestFtpServer.Configuration
         /// </summary>
         public string Backend
         {
-            get => _backend switch {
-                FileSystemType.InMemory => "in-memory",
-                FileSystemType.SystemIO => "system-io",
-                FileSystemType.Unix => "unix",
-                FileSystemType.GoogleDriveUser => "google-drive:user",
-                FileSystemType.GoogleDriveService => "google-drive:service",
-                _ => "in-memory",
-                };
-            set => _backend = value switch {
-                "in-memory" => FileSystemType.InMemory,
-                "system-io" => FileSystemType.SystemIO,
-                "unix" => FileSystemType.Unix,
-                "google-drive:user" => FileSystemType.GoogleDriveUser,
-                "google-drive:service" => FileSystemType.GoogleDriveService,
-                _ => throw new ArgumentOutOfRangeException(
-                    $"Value must be one of \"in-memory\", \"system-io\", \"unix\", \"google-drive:user\", \"google-drive:service\", but was , \"{value}\"")
-                };
+            get
+            {
+                switch (BackendType)
+                {
+                    case FileSystemType.InMemory: return "in-memory";
+                    case FileSystemType.SystemIO: return "system-io";
+                    case FileSystemType.Unix: return "unix";
+                    case FileSystemType.GoogleDriveUser: return "google-drive:user";
+                    case FileSystemType.GoogleDriveService: return "google-drive:service";
+                    default: return "in-memory";
+                }
+            }
+            set
+            {
+                switch (value)
+                {
+                    case "in-memory":
+                        BackendType = FileSystemType.InMemory;
+                        break;
+                    case "system-io":
+                        BackendType = FileSystemType.SystemIO;
+                        break;
+                    case "unix":
+                        BackendType = FileSystemType.Unix;
+                        break;
+                    case "google-drive:user":
+                        BackendType = FileSystemType.GoogleDriveUser;
+                        break;
+                    case "google-drive:service":
+                        BackendType = FileSystemType.GoogleDriveService;
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException(
+                            $"Value must be one of \"in-memory\", \"system-io\", \"unix\", \"google-drive:user\", \"google-drive:service\", but was , \"{value}\"");
+                }
+            }
         }
 
         /// <summary>
@@ -75,45 +97,65 @@ namespace TestFtpServer.Configuration
         /// </summary>
         public string Layout
         {
-            get => _layout switch {
-                FileSystemLayoutType.SingleRoot => "single-root",
-                FileSystemLayoutType.RootPerUser => "root-per-user",
-                FileSystemLayoutType.PamHome => "pam-home",
-                FileSystemLayoutType.PamHomeChroot => "pam-home-chroot",
-                _ => "single-root"
-                };
-            set => _layout = value switch {
-                "default" => (FileSystemLayoutType?)null,
-                "single-root" => FileSystemLayoutType.SingleRoot,
-                "root-per-user" => FileSystemLayoutType.RootPerUser,
-                "pam-home" => FileSystemLayoutType.PamHome,
-                "pam-home-chroot" => FileSystemLayoutType.PamHomeChroot,
-                _ => throw new ArgumentOutOfRangeException(
-                    $"Value must be one of \"single-root\", \"root-per-user\", \"pam-home\", \"pam-home-chroot\", but was , \"{value}\"")
-                };
+            get
+            {
+                switch (_layout)
+                {
+                    case FileSystemLayoutType.SingleRoot: return "single-root";
+                    case FileSystemLayoutType.RootPerUser: return "root-per-user";
+                    case FileSystemLayoutType.PamHome: return "pam-home";
+                    case FileSystemLayoutType.PamHomeChroot: return "pam-home-chroot";
+                    default: return "single-root";
+                }
+            }
+            set
+            {
+                switch (value)
+                {
+                    case "default":
+                        _layout = null;
+                        break;
+                    case "single-root":
+                        _layout = FileSystemLayoutType.SingleRoot;
+                        break;
+                    case "root-per-user":
+                        _layout = FileSystemLayoutType.RootPerUser;
+                        break;
+                    case "pam-home":
+                        _layout = FileSystemLayoutType.PamHome;
+                        break;
+                    case "pam-home-chroot":
+                        _layout = FileSystemLayoutType.PamHomeChroot;
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException(
+                            $"Value must be one of \"single-root\", \"root-per-user\", \"pam-home\", \"pam-home-chroot\", but was , \"{value}\"");
+                }
+            }
         }
 
         /// <summary>
         /// Gets or sets System.IO-based file system options.
         /// </summary>
-        [JsonProperty("system-io")]
+        [NotNull]
         public FileSystemSystemIoOptions SystemIo { get; set; } = new FileSystemSystemIoOptions();
 
         /// <summary>
         /// Gets or sets Linux API-based file system options.
         /// </summary>
+        [NotNull]
         public FileSystemUnixOptions Unix { get; set; } = new FileSystemUnixOptions();
 
         /// <summary>
         /// Gets or sets in-memory file system options.
         /// </summary>
-        [JsonProperty("in-memory")]
+        [NotNull]
         public FileSystemInMemoryOptions InMemory { get; set; } = new FileSystemInMemoryOptions();
 
         /// <summary>
         /// Gets or sets Google Drive file system options.
         /// </summary>
-        [JsonProperty("google-drive")]
+        [NotNull]
         public FileSystemGoogleDriveOptions GoogleDrive { get; set; } = new FileSystemGoogleDriveOptions();
 
         internal FileSystemLayoutType LayoutType
@@ -122,10 +164,6 @@ namespace TestFtpServer.Configuration
             set => _layout = value;
         }
 
-        internal FileSystemType BackendType
-        {
-            get => _backend;
-            set => _backend = value;
-        }
+        internal FileSystemType BackendType { get; set; } = FileSystemType.InMemory;
     }
 }

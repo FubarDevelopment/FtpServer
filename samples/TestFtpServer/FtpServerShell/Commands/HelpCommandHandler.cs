@@ -4,8 +4,11 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+
+using JetBrains.Annotations;
 
 namespace TestFtpServer.FtpServerShell.Commands
 {
@@ -14,6 +17,15 @@ namespace TestFtpServer.FtpServerShell.Commands
     /// </summary>
     public class HelpCommandHandler : IRootCommandInfo, IExecutableCommandInfo
     {
+        [NotNull]
+        [ItemNotNull]
+        private readonly IReadOnlyCollection<IModuleInfo> _moduleInfoItems;
+
+        public HelpCommandHandler([NotNull, ItemNotNull] IEnumerable<IModuleInfo> moduleInfoItems)
+        {
+            _moduleInfoItems = moduleInfoItems.ToList();
+        }
+
         /// <inheritdoc />
         public string Name { get; } = "help";
 
@@ -32,6 +44,18 @@ namespace TestFtpServer.FtpServerShell.Commands
             Console.WriteLine("continue      - Continue accepting clients");
             Console.WriteLine("status        - Show server status");
             Console.WriteLine("show <module> - Show module information");
+
+            var extendedModules = _moduleInfoItems.OfType<IExtendedModuleInfo>().ToList();
+            if (extendedModules.Count != 0)
+            {
+                Console.WriteLine();
+                Console.WriteLine("Modules:");
+                foreach (var moduleName in extendedModules.Select(x => x.Name).Distinct())
+                {
+                    Console.WriteLine("\t{0}", moduleName);
+                }
+            }
+
             return Task.CompletedTask;
         }
     }
