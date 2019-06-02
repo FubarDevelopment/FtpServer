@@ -3,6 +3,7 @@
 // </copyright>
 
 using System;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -21,6 +22,10 @@ namespace TestFtpServer
     {
         private static async Task<int> Main(string[] args)
         {
+            var configPath = Path.Combine(
+                Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData),
+                "SharpFtpServer");
+
             var hostBuilder = new HostBuilder()
                .UseConsoleLifetime()
                .ConfigureHostConfiguration(
@@ -30,8 +35,12 @@ namespace TestFtpServer
                     {
                         configApp
                            .AddJsonFile("appsettings.json")
+                           .AddJsonFile(Path.Combine(configPath, "appsettings.json"), true)
                            .AddJsonFile(
                                 $"appsettings.{hostContext.HostingEnvironment.EnvironmentName}.json",
+                                optional: true)
+                           .AddJsonFile(
+                                Path.Combine(configPath, $"appsettings.{hostContext.HostingEnvironment.EnvironmentName}.json"),
                                 optional: true)
                            .AddEnvironmentVariables("FTPSERVER_")
                            .Add(new OptionsConfigSource(args));
@@ -65,23 +74,31 @@ namespace TestFtpServer
             {
                 using (var host = hostBuilder.Build())
                 {
-                    // Handler for auto-completion
-                    var shell = host.Services.GetRequiredService<ServerShell>();
-
-                    // Catch request to stop the application
-                    var appStopCts = new CancellationTokenSource();
-                    var appLifetime = host.Services.GetRequiredService<IApplicationLifetime>();
-                    using (appLifetime.ApplicationStopping.Register(() => appStopCts.Cancel()))
+                    if (CanUseShell)
                     {
-                        // Start the host
-                        await host.StartAsync(appStopCts.Token).ConfigureAwait(false);
-
-                        // Run the shell
-                        await shell.RunAsync(appStopCts.Token)
+                        await host.RunAsync(CancellationToken.None)
                            .ConfigureAwait(false);
+                    }
+                    else
+                    {
+                        // Handler for auto-completion
+                        var shell = host.Services.GetRequiredService<ServerShell>();
 
-                        // Stop the host
-                        await host.StopAsync(CancellationToken.None).ConfigureAwait(false);
+                        // Catch request to stop the application
+                        var appStopCts = new CancellationTokenSource();
+                        var appLifetime = host.Services.GetRequiredService<IApplicationLifetime>();
+                        using (appLifetime.ApplicationStopping.Register(() => appStopCts.Cancel()))
+                        {
+                            // Start the host
+                            await host.StartAsync(appStopCts.Token).ConfigureAwait(false);
+
+                            // Run the shell
+                            await shell.RunAsync(appStopCts.Token)
+                               .ConfigureAwait(false);
+
+                            // Stop the host
+                            await host.StopAsync(CancellationToken.None).ConfigureAwait(false);
+                        }
                     }
                 }
             }
@@ -92,6 +109,22 @@ namespace TestFtpServer
             }
 
             return 0;
+        }
+
+        private static bool CanUseShell
+        {
+            get
+            {
+                try
+                {
+                    Console.In.Peek();
+                    return true;
+                }
+                catch
+                {
+                    return false;
+                }
+            }
         }
     }
 }
