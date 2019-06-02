@@ -35,8 +35,6 @@ namespace FubarDev.FtpServer
         [NotNull]
         private readonly IServiceProvider _serviceProvider;
 
-        private readonly CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
-
         private readonly ConcurrentDictionary<IFtpConnection, FtpConnectionInfo> _connections = new ConcurrentDictionary<IFtpConnection, FtpConnectionInfo>();
 
         private readonly FtpServerListenerService _serverListener;
@@ -46,6 +44,9 @@ namespace FubarDev.FtpServer
 
         [NotNull]
         private readonly Task _clientReader;
+
+        [NotNull]
+        private readonly CancellationTokenSource _serverShutdown = new CancellationTokenSource();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FtpServer"/> class.
@@ -65,14 +66,14 @@ namespace FubarDev.FtpServer
             MaxActiveConnections = serverOptions.Value.MaxActiveConnections;
 
             var tcpClientChannel = Channel.CreateBounded<TcpClient>(5);
-            _serverListener = new FtpServerListenerService(tcpClientChannel, serverOptions, _cancellationTokenSource, logger);
+            _serverListener = new FtpServerListenerService(tcpClientChannel, serverOptions, _serverShutdown, logger);
             _serverListener.ListenerStarted += (s, e) =>
             {
                 Port = e.Port;
                 OnListenerStarted(e);
             };
 
-            _clientReader = ReadClientsAsync(tcpClientChannel, _cancellationTokenSource.Token);
+            _clientReader = ReadClientsAsync(tcpClientChannel, _serverShutdown.Token);
         }
 
         /// <inheritdoc />
@@ -107,7 +108,7 @@ namespace FubarDev.FtpServer
                 StopAsync(CancellationToken.None).Wait();
             }
 
-            _cancellationTokenSource.Dispose();
+            _serverShutdown.Dispose();
             foreach (var connectionInfo in _connections.Values)
             {
                 connectionInfo.Scope.Dispose();
@@ -151,7 +152,11 @@ namespace FubarDev.FtpServer
         /// <inheritdoc />
         public async Task StopAsync(CancellationToken cancellationToken)
         {
-            _cancellationTokenSource.Cancel(true);
+            if (!_serverShutdown.IsCancellationRequested)
+            {
+                _serverShutdown.Cancel(true);
+            }
+
             await _serverListener.StopAsync(cancellationToken).ConfigureAwait(false);
             await _clientReader.ConfigureAwait(false);
         }
@@ -202,7 +207,7 @@ namespace FubarDev.FtpServer
             }
             finally
             {
-                _log?.LogDebug("Stopped accepting connections.");
+                _log?.LogDebug("Stopped accepting connections");
             }
         }
 

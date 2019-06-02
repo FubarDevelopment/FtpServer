@@ -34,11 +34,6 @@ namespace TestFtpServer
                 return builder.EnableAnonymousAuthentication();
             }
 
-            if ((options.Authentication & MembershipProviderType.Anonymous) != 0)
-            {
-                builder = builder.EnableAnonymousAuthentication();
-            }
-
             if ((options.Authentication & MembershipProviderType.Custom) != 0)
             {
                 builder.Services.AddSingleton<IMembershipProvider, CustomMembershipProvider>();
@@ -47,6 +42,11 @@ namespace TestFtpServer
             if ((options.Authentication & MembershipProviderType.PAM) != 0)
             {
                 builder = builder.EnablePamAuthentication();
+            }
+
+            if ((options.Authentication & MembershipProviderType.Anonymous) != 0)
+            {
+                builder = builder.EnableAnonymousAuthentication();
             }
 
             return builder;

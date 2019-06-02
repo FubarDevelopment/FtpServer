@@ -1,7 +1,10 @@
 {
   "profiles": {
     "TestFtpServer": {
-      "commandName": "Project"
+      "commandName": "Project",
+      "environmentVariables": {
+        "FTPSERVER_ENVIRONMENT": "Development"
+      }
     }
   }
 }

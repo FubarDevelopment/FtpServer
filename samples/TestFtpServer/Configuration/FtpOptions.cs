@@ -70,18 +70,22 @@ namespace TestFtpServer.Configuration
             {
                 switch (value)
                 {
+                    case "inMemory":
                     case "in-memory":
                         BackendType = FileSystemType.InMemory;
                         break;
+                    case "systemIo":
                     case "system-io":
                         BackendType = FileSystemType.SystemIO;
                         break;
                     case "unix":
                         BackendType = FileSystemType.Unix;
                         break;
+                    case "googleDrive:user":
                     case "google-drive:user":
                         BackendType = FileSystemType.GoogleDriveUser;
                         break;
+                    case "googleDrive:service":
                     case "google-drive:service":
                         BackendType = FileSystemType.GoogleDriveService;
                         break;
