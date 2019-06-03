@@ -43,7 +43,8 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// <inheritdoc/>
         public override async Task<IFtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
         {
-            var desiredPort = 0;
+            AddressFamily? addressFamily;
+
             var isEpsv = string.Equals(command.Name, "EPSV", StringComparison.OrdinalIgnoreCase);
             if (isEpsv)
             {
@@ -52,15 +53,32 @@ namespace FubarDev.FtpServer.CommandHandlers
                         "ALL",
                         StringComparison.OrdinalIgnoreCase))
                 {
-                    desiredPort = 0;
+                    addressFamily = null;
                 }
                 else
                 {
-                    desiredPort = Convert.ToInt32(command.Argument, 10);
+                    var addressFamilyNumber = Convert.ToInt32(command.Argument, 10);
+                    switch (addressFamilyNumber)
+                    {
+                        case 1:
+                            // IPv4
+                            addressFamily = AddressFamily.InterNetwork;
+                            break;
+                        case 2:
+                            addressFamily = AddressFamily.InterNetworkV6;
+                            break;
+                        default:
+                            return new FtpResponse(501, T("Unsupported address family number ({0}).", addressFamilyNumber));
+                    }
                 }
             }
+            else
+            {
+                // Always use IPv4
+                addressFamily = AddressFamily.InterNetwork;
+            }
 
-            var feature = await _dataConnectionFeatureFactory.CreateFeatureAsync(command, desiredPort, cancellationToken)
+            var feature = await _dataConnectionFeatureFactory.CreateFeatureAsync(command, addressFamily, cancellationToken)
                .ConfigureAwait(false);
             var oldFeature = Connection.Features.Get<IFtpDataConnectionFeature>();
             try

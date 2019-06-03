@@ -55,20 +55,21 @@ namespace FubarDev.FtpServer.DataConnection
         /// Creates a new <see cref="IFtpDataConnectionFeature"/> instance.
         /// </summary>
         /// <param name="ftpCommand">The FTP command that initiated the creation of the feature.</param>
-        /// <param name="desiredPort">The desired port that the server should listen on.</param>
+        /// <param name="addressFamily">The address family for the address to be selected.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>The task returning the <see cref="IFtpDataConnectionFeature"/> instance.</returns>
         [NotNull]
         [ItemNotNull]
         public async Task<IFtpDataConnectionFeature> CreateFeatureAsync(
             [NotNull] FtpCommand ftpCommand,
-            int desiredPort,
+            AddressFamily? addressFamily,
             CancellationToken cancellationToken)
         {
             var connection = _connectionAccessor.FtpConnection;
             var listener = await _pasvListenerFactory.CreateTcpListenerAsync(
                 connection,
-                desiredPort,
+                addressFamily,
+                0,
                 cancellationToken).ConfigureAwait(false);
             return new PassiveDataConnectionFeature(listener, _validators, ftpCommand, connection, listener.PasvEndPoint);
         }

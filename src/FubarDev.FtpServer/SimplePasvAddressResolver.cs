@@ -3,6 +3,7 @@
 // </copyright>
 
 using System;
+using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -13,6 +14,10 @@ namespace FubarDev.FtpServer
     /// <summary>
     /// The default implementation of the <see cref="SimplePasvAddressResolver"/>.
     /// </summary>
+    /// <remarks>
+    /// The address family number gets ignored by this resolver. We always use the same
+    /// address family as the local end point.
+    /// </remarks>
     public class SimplePasvAddressResolver : IPasvAddressResolver
     {
         private readonly SimplePasvOptions _options;
@@ -27,7 +32,10 @@ namespace FubarDev.FtpServer
         }
 
         /// <inheritdoc />
-        public Task<PasvListenerOptions> GetOptionsAsync(IFtpConnection connection, CancellationToken cancellationToken)
+        public Task<PasvListenerOptions> GetOptionsAsync(
+            IFtpConnection connection,
+            AddressFamily? addressFamily,
+            CancellationToken cancellationToken)
         {
             var minPort = _options.PasvMinPort ?? 0;
             if (minPort > 0 && minPort < 1024)
