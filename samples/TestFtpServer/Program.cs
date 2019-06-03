@@ -92,9 +92,17 @@ namespace TestFtpServer
                             // Start the host
                             await host.StartAsync(appStopCts.Token).ConfigureAwait(false);
 
-                            // Run the shell
-                            await shell.RunAsync(appStopCts.Token)
-                               .ConfigureAwait(false);
+                            try
+                            {
+                                // Run the shell
+                                await shell.RunAsync(appStopCts.Token)
+                                   .ConfigureAwait(false);
+                            }
+                            catch (InvalidOperationException)
+                            {
+                                // Ignore. Shell not available?
+                                await host.WaitForShutdownAsync(CancellationToken.None).ConfigureAwait(false);
+                            }
 
                             // Stop the host
                             await host.StopAsync(CancellationToken.None).ConfigureAwait(false);
@@ -118,8 +126,8 @@ namespace TestFtpServer
                 try
                 {
                     // Don't let the optimizer do its work...
-                    typeof(Console).GetProperty(nameof(Console.KeyAvailable)).GetValue(null);
-                    return true;
+                    var result = typeof(Console).GetProperty(nameof(Console.KeyAvailable)).GetValue(null);
+                    return result != null;
                 }
                 catch
                 {
