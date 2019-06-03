@@ -5,9 +5,6 @@
       "environmentVariables": {
         "FTPSERVER_ENVIRONMENT": "Development"
       }
-    },
-    "Docker": {
-      "commandName": "Docker"
     }
   }
 }
