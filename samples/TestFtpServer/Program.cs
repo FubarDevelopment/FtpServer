@@ -117,7 +117,8 @@ namespace TestFtpServer
             {
                 try
                 {
-                    Console.In.Peek();
+                    // Don't let the optimizer do its work...
+                    typeof(Console).GetProperty(nameof(Console.KeyAvailable)).GetValue(null);
                     return true;
                 }
                 catch
