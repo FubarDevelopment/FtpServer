@@ -3,6 +3,7 @@
 // </copyright>
 
 using System;
+using System.Globalization;
 
 using JetBrains.Annotations;
 
@@ -20,6 +21,8 @@ namespace FubarDev.FtpServer.FileSystem.Unix
         {
             GenericInfo = _info = info;
             Permissions = new UnixPermissions(info);
+            Owner = GetNameOrId(() => info.OwnerUser.UserName, () => info.OwnerUserId);
+            Group = GetNameOrId(() => info.OwnerGroup.GroupName, () => info.OwnerGroupId);
         }
 
         /// <summary>
@@ -29,10 +32,10 @@ namespace FubarDev.FtpServer.FileSystem.Unix
         public UnixFileSystemInfo GenericInfo { get; }
 
         /// <inheritdoc />
-        public string Owner => _info.OwnerUser.UserName;
+        public string Owner { get; }
 
         /// <inheritdoc />
-        public string Group => _info.OwnerGroup.GroupName;
+        public string Group { get; }
 
         /// <inheritdoc />
         public string Name => _info.Name;
@@ -48,5 +51,17 @@ namespace FubarDev.FtpServer.FileSystem.Unix
 
         /// <inheritdoc />
         public long NumberOfLinks => _info.LinkCount;
+
+        private static string GetNameOrId(Func<string> getName, Func<long> getId)
+        {
+            try
+            {
+                return getName();
+            }
+            catch
+            {
+                return getId().ToString(CultureInfo.InvariantCulture);
+            }
+        }
     }
 }
