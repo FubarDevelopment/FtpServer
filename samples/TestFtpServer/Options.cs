@@ -1588,7 +1588,7 @@ namespace Mono.Options
 			return this;
 		}
 
-		void AddCommand (Command value)
+		internal void AddCommand (Command value)
 		{
 			if (value.CommandSet != null && value.CommandSet != this) {
 				throw new ArgumentException ("Command instances can only be added to a single CommandSet.", nameof (value));

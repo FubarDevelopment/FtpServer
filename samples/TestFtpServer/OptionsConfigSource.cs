@@ -137,7 +137,7 @@ namespace TestFtpServer
 
             if (_args.Length != 0)
             {
-                var exitCode = optionSet.Run(_args);
+                var exitCode = Execute(optionSet);
 
                 if (exitCode != 0 || optionSet.showHelp)
                 {
@@ -156,6 +156,59 @@ namespace TestFtpServer
             };
 
             return new MemoryConfigurationProvider(source);
+        }
+
+        private int Execute(CommandSet optionSet)
+        {
+            optionSet.showHelp = false;
+            if (optionSet.help == null)
+            {
+                optionSet.help = new HelpCommand();
+                optionSet.AddCommand(optionSet.help);
+            }
+
+            void SetHelp(string v) => optionSet.showHelp = v != null;
+            if (!optionSet.Options.Contains("help"))
+            {
+                optionSet.Options.Add("help", "", SetHelp, hidden: true);
+            }
+
+            if (!optionSet.Options.Contains("?"))
+            {
+                optionSet.Options.Add("?", "", SetHelp, hidden: true);
+            }
+
+            var extra = optionSet.Options.Parse(_args);
+            if (extra.Count == 0)
+            {
+                if (optionSet.showHelp)
+                {
+                    return optionSet.help.Invoke(extra);
+                }
+
+                return 0;
+            }
+
+            var command = optionSet.GetCommand(extra);
+            if (command == null)
+            {
+                optionSet.help.WriteUnknownCommand(extra[0]);
+                return 1;
+            }
+
+            if (optionSet.showHelp)
+            {
+                if (command.Options?.Contains("help") ?? true)
+                {
+                    extra.Add("--help");
+                    return command.Invoke(extra);
+                }
+
+                command.Options.WriteOptionDescriptions(Console.Out);
+                return 0;
+            }
+
+            return command.Invoke(extra);
         }
 
         private void ConfigureInMemory(
