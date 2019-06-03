@@ -74,7 +74,7 @@ namespace TestFtpServer
             {
                 using (var host = hostBuilder.Build())
                 {
-                    if (CanUseShell)
+                    if (!CanUseShell)
                     {
                         await host.RunAsync(CancellationToken.None)
                            .ConfigureAwait(false);
