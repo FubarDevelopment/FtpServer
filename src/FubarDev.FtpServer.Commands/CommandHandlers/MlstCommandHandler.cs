@@ -37,6 +37,19 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// </summary>
         internal static readonly ISet<string> KnownFacts = new HashSet<string> { "type", "size", "perm", "modify", "create" };
 
+        [CanBeNull]
+        private readonly ILogger<MlstCommandHandler> _logger;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MlstCommandHandler"/> class.
+        /// </summary>
+        /// <param name="logger">The logger.</param>
+        public MlstCommandHandler(
+            [CanBeNull] ILogger<MlstCommandHandler> logger = null)
+        {
+            _logger = logger;
+        }
+
         /// <summary>
         /// Gets the feature string for the <c>MFF</c> command.
         /// </summary>
@@ -147,6 +160,7 @@ namespace FubarDev.FtpServer.CommandHandlers
             var factsFeature = Connection.Features.Get<IMlstFactsFeature>() ?? CreateMlstFactsFeature();
             return await Connection.SendDataAsync(
                     (dataConnection, ct) => ExecuteSendAsync(dataConnection, authInfoFeature.User, fsFeature.FileSystem, path, dirEntry, factsFeature, ct),
+                    _logger,
                     cancellationToken)
                 .ConfigureAwait(false);
         }
@@ -175,7 +189,7 @@ namespace FubarDev.FtpServer.CommandHandlers
                     var name = enumerator.Name;
                     var entry = enumerator.Entry;
                     var line = formatter.Format(entry, name);
-                    Connection.Log?.LogTrace(line);
+                    _logger?.LogTrace(line);
                     await writer.WriteLineAsync(line).ConfigureAwait(false);
                 }
 

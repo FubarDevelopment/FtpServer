@@ -16,9 +16,7 @@ using FubarDev.FtpServer.Localization;
 using JetBrains.Annotations;
 
 using Microsoft.Extensions.DependencyInjection;
-#if !NETSTANDARD1_3
 using Microsoft.Extensions.Logging;
-#endif
 using Microsoft.Extensions.Options;
 
 namespace FubarDev.FtpServer.CommandHandlers
@@ -30,19 +28,27 @@ namespace FubarDev.FtpServer.CommandHandlers
     public class ReinCommandHandler : FtpCommandHandler
     {
         private readonly int? _dataPort;
+
+        [NotNull]
         private readonly IFtpServerMessages _serverMessages;
+
+        [CanBeNull]
+        private readonly ILogger<ReinCommandHandler> _logger;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ReinCommandHandler"/> class.
         /// </summary>
         /// <param name="portOptions">The PORT command options.</param>
         /// <param name="serverMessages">The FTP server messages.</param>
+        /// <param name="logger">The logger.</param>
         public ReinCommandHandler(
             [NotNull] IOptions<PortCommandOptions> portOptions,
-            [NotNull] IFtpServerMessages serverMessages)
+            [NotNull] IFtpServerMessages serverMessages,
+            [CanBeNull] ILogger<ReinCommandHandler> logger = null)
         {
             _dataPort = portOptions.Value.DataPort;
             _serverMessages = serverMessages;
+            _logger = logger;
         }
 
         /// <inheritdoc />
@@ -81,7 +87,7 @@ namespace FubarDev.FtpServer.CommandHandlers
                 catch (Exception ex)
                 {
                     // Ignore exceptions
-                    Connection.Log?.LogWarning(
+                    _logger?.LogWarning(
                         ex,
                         "Failed to feature of type {featureType}: {errorMessage}",
                         featureItem.Key,

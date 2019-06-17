@@ -24,6 +24,7 @@ namespace FubarDev.FtpServer
         /// </summary>
         /// <param name="connection">The connection to get the response socket from.</param>
         /// <param name="asyncSendAction">The action to perform with a working response socket.</param>
+        /// <param name="logger">The logger.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>The task with the FTP response.</returns>
         [NotNull]
@@ -31,6 +32,7 @@ namespace FubarDev.FtpServer
         public static async Task<IFtpResponse> SendDataAsync(
             [NotNull] this IFtpConnection connection,
             [NotNull] Func<IFtpDataConnection, CancellationToken, Task<IFtpResponse>> asyncSendAction,
+            [CanBeNull] ILogger logger,
             CancellationToken cancellationToken)
         {
             IFtpDataConnection dataConnection;
@@ -41,7 +43,7 @@ namespace FubarDev.FtpServer
             }
             catch (Exception ex)
             {
-                connection.Log?.LogWarning(0, ex, "Could not open data connection: {error}", ex.Message);
+                logger?.LogWarning(0, ex, "Could not open data connection: {error}", ex.Message);
                 var localizationFeature = connection.Features.Get<ILocalizationFeature>();
                 return new FtpResponse(425, localizationFeature.Catalog.GetString("Could not open data connection"));
             }

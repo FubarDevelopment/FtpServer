@@ -61,6 +61,7 @@ namespace FubarDev.FtpServer
         /// Gets the FTP connection logger.
         /// </summary>
         [CanBeNull]
+        [Obsolete("Use your own logger instead of the one from the connection.")]
         ILogger Log { get; }
 
         /// <summary>

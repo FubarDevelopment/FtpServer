@@ -22,6 +22,8 @@ using FubarDev.FtpServer.ListFormatters;
 using FubarDev.FtpServer.ServerCommands;
 using FubarDev.FtpServer.Utilities;
 
+using JetBrains.Annotations;
+
 using Microsoft.Extensions.Logging;
 
 namespace FubarDev.FtpServer.CommandHandlers
@@ -34,6 +36,19 @@ namespace FubarDev.FtpServer.CommandHandlers
     [FtpCommandHandler("LS")]
     public class ListCommandHandler : FtpCommandHandler
     {
+        [CanBeNull]
+        private readonly ILogger<ListCommandHandler> _logger;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ListCommandHandler"/> class.
+        /// </summary>
+        /// <param name="logger">The logger.</param>
+        public ListCommandHandler(
+            [CanBeNull] ILogger<ListCommandHandler> logger = null)
+        {
+            _logger = logger;
+        }
+
         /// <inheritdoc/>
         public override async Task<IFtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
         {
@@ -45,6 +60,7 @@ namespace FubarDev.FtpServer.CommandHandlers
 
             return await Connection.SendDataAsync(
                     (dataConnection, ct) => ExecuteSend(dataConnection, command, ct),
+                    _logger,
                     cancellationToken)
                 .ConfigureAwait(false);
         }
@@ -141,7 +157,7 @@ namespace FubarDev.FtpServer.CommandHandlers
                     if (argument.Recursive)
                     {
                         var line = currentPath.ToDisplayString() + ":";
-                        Connection.Log?.LogTrace(line);
+                        _logger?.LogTrace(line);
                         await writer.WriteLineAsync(line).ConfigureAwait(false);
                     }
 
@@ -191,7 +207,7 @@ namespace FubarDev.FtpServer.CommandHandlers
                         }
 
                         var line = formatter.Format(entry, name);
-                        Connection.Log?.LogTrace(line);
+                        _logger?.LogTrace(line);
                         await writer.WriteLineAsync(line).ConfigureAwait(false);
                     }
                 }

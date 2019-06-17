@@ -199,6 +199,7 @@ namespace TestFtpServer
                                 TlsEnableServerCommandHandler.EnableTlsAsync(
                                     e.Connection,
                                     authTlsOptions.Value.ServerCertificate,
+                                    serviceProvider.GetService<ILogger<TlsEnableServerCommandHandler>>(),
                                     CancellationToken.None).Wait();
                             };
                         }

@@ -17,6 +17,8 @@ using FubarDev.FtpServer.ServerCommands;
 
 using JetBrains.Annotations;
 
+using Microsoft.Extensions.Logging;
+
 namespace FubarDev.FtpServer.CommandHandlers
 {
     /// <summary>
@@ -28,14 +30,20 @@ namespace FubarDev.FtpServer.CommandHandlers
         [NotNull]
         private readonly IBackgroundTransferWorker _backgroundTransferWorker;
 
+        [CanBeNull]
+        private readonly ILogger<AppeCommandHandler> _logger;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="AppeCommandHandler"/> class.
         /// </summary>
         /// <param name="backgroundTransferWorker">The background transfer worker service.</param>
+        /// <param name="logger">The logger.</param>
         public AppeCommandHandler(
-            [NotNull] IBackgroundTransferWorker backgroundTransferWorker)
+            [NotNull] IBackgroundTransferWorker backgroundTransferWorker,
+            [CanBeNull] ILogger<AppeCommandHandler> logger = null)
         {
             _backgroundTransferWorker = backgroundTransferWorker;
+            _logger = logger;
         }
 
         /// <inheritdoc/>
@@ -78,6 +86,7 @@ namespace FubarDev.FtpServer.CommandHandlers
             return await Connection
                .SendDataAsync(
                     (dataConnection, ct) => ExecuteSend(dataConnection, fileInfo, restartPosition, ct),
+                    _logger,
                     cancellationToken)
                .ConfigureAwait(false);
         }

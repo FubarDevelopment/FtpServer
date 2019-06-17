@@ -15,6 +15,10 @@ using FubarDev.FtpServer.Features;
 using FubarDev.FtpServer.FileSystem;
 using FubarDev.FtpServer.ServerCommands;
 
+using JetBrains.Annotations;
+
+using Microsoft.Extensions.Logging;
+
 namespace FubarDev.FtpServer.CommandHandlers
 {
     /// <summary>
@@ -24,6 +28,19 @@ namespace FubarDev.FtpServer.CommandHandlers
     public class RetrCommandHandler : FtpCommandHandler
     {
         private const int BufferSize = 4096;
+
+        [CanBeNull]
+        private readonly ILogger<RetrCommandHandler> _logger;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RetrCommandHandler"/> class.
+        /// </summary>
+        /// <param name="logger">The logger.</param>
+        public RetrCommandHandler(
+            [CanBeNull] ILogger<RetrCommandHandler> logger = null)
+        {
+            _logger = logger;
+        }
 
         /// <inheritdoc/>
         public override async Task<IFtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
@@ -58,6 +75,7 @@ namespace FubarDev.FtpServer.CommandHandlers
                 // ReSharper disable once AccessToDisposedClosure
                 return await Connection.SendDataAsync(
                         (dataConnection, ct) => ExecuteSendAsync(dataConnection, input, ct),
+                        _logger,
                         cancellationToken)
                     .ConfigureAwait(false);
             }

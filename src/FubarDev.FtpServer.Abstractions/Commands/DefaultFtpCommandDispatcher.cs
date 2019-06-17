@@ -33,6 +33,9 @@ namespace FubarDev.FtpServer.Commands
         [NotNull]
         private readonly IFtpCommandActivator _commandActivator;
 
+        [CanBeNull]
+        private readonly ILogger<DefaultFtpCommandDispatcher> _logger;
+
         [NotNull]
         private readonly FtpCommandExecutionDelegate _executionDelegate;
 
@@ -43,15 +46,18 @@ namespace FubarDev.FtpServer.Commands
         /// <param name="loginStateMachine">The login state machine.</param>
         /// <param name="commandActivator">The command activator.</param>
         /// <param name="middlewareObjects">The list of middleware objects.</param>
+        /// <param name="logger">The logger.</param>
         public DefaultFtpCommandDispatcher(
             [NotNull] IFtpConnection connection,
             [NotNull] IFtpLoginStateMachine loginStateMachine,
             [NotNull] IFtpCommandActivator commandActivator,
-            [NotNull, ItemNotNull] IEnumerable<IFtpCommandMiddleware> middlewareObjects)
+            [NotNull, ItemNotNull] IEnumerable<IFtpCommandMiddleware> middlewareObjects,
+            [CanBeNull] ILogger<DefaultFtpCommandDispatcher> logger = null)
         {
             _connection = connection;
             _loginStateMachine = loginStateMachine;
             _commandActivator = commandActivator;
+            _logger = logger;
             var nextStep = new FtpCommandExecutionDelegate(ExecuteCommandAsync);
             foreach (var middleware in middlewareObjects.Reverse())
             {
@@ -61,9 +67,6 @@ namespace FubarDev.FtpServer.Commands
 
             _executionDelegate = nextStep;
         }
-
-        [CanBeNull]
-        private ILogger Log => _connection.Log;
 
         /// <inheritdoc />
         public async Task DispatchAsync(FtpContext context, CancellationToken cancellationToken)
@@ -184,7 +187,7 @@ namespace FubarDev.FtpServer.Commands
                         response = new FtpResponse(
                             425,
                             validationException.Message);
-                        Log?.LogWarning(validationException.Message);
+                        _logger?.LogWarning(validationException.Message);
                         break;
 
                     case OperationCanceledException _:
@@ -195,7 +198,7 @@ namespace FubarDev.FtpServer.Commands
                     case FileSystemException fse:
                     {
                         var message = fse.Message != null ? $"{fse.FtpErrorName}: {fse.Message}" : fse.FtpErrorName;
-                        Log?.LogInformation($"Rejected command ({command}) with error {fse.FtpErrorCode} {message}");
+                        _logger?.LogInformation($"Rejected command ({command}) with error {fse.FtpErrorCode} {message}");
                         response = new FtpResponse(fse.FtpErrorCode, message);
                         break;
                     }
@@ -203,13 +206,13 @@ namespace FubarDev.FtpServer.Commands
                     case NotSupportedException nse:
                     {
                         var message = nse.Message ?? T("Command {0} not supported", command);
-                        Log?.LogInformation(message);
+                        _logger?.LogInformation(message);
                         response = new FtpResponse(502, message);
                         break;
                     }
 
                     default:
-                        Log?.LogError(0, ex, "Failed to process message ({0})", command);
+                        _logger?.LogError(0, ex, "Failed to process message ({0})", command);
                         response = new FtpResponse(501, T("Syntax error in parameters or arguments."));
                         break;
                 }
@@ -224,7 +227,7 @@ namespace FubarDev.FtpServer.Commands
                 }
                 catch (Exception ex) when (ex.Is<OperationCanceledException>())
                 {
-                    Log?.LogWarning("Sending the response cancelled: {response}", response);
+                    _logger?.LogWarning("Sending the response cancelled: {response}", response);
                 }
             }
         }

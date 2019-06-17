@@ -29,14 +29,20 @@ namespace FubarDev.FtpServer.CommandExtensions
         [NotNull]
         private readonly IBackgroundTransferWorker _backgroundTransferWorker;
 
+        [CanBeNull]
+        private readonly ILogger<SiteBlstCommandExtension> _logger;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="SiteBlstCommandExtension"/> class.
         /// </summary>
         /// <param name="backgroundTransferWorker">The background transfer worker service.</param>
+        /// <param name="logger">The logger.</param>
         public SiteBlstCommandExtension(
-            [NotNull] IBackgroundTransferWorker backgroundTransferWorker)
+            [NotNull] IBackgroundTransferWorker backgroundTransferWorker,
+            [CanBeNull] ILogger<SiteBlstCommandExtension> logger = null)
         {
             _backgroundTransferWorker = backgroundTransferWorker;
+            _logger = logger;
         }
 
         /// <inheritdoc/>
@@ -90,6 +96,7 @@ namespace FubarDev.FtpServer.CommandExtensions
 
             return await Connection.SendDataAsync(
                     ExecuteSend,
+                    _logger,
                     cancellationToken)
                .ConfigureAwait(false);
         }
@@ -105,7 +112,7 @@ namespace FubarDev.FtpServer.CommandExtensions
             {
                 foreach (var line in GetLines(_backgroundTransferWorker.GetStates()))
                 {
-                    Connection.Log?.LogDebug(line);
+                    _logger?.LogDebug(line);
                     await writer.WriteLineAsync(line).ConfigureAwait(false);
                 }
             }

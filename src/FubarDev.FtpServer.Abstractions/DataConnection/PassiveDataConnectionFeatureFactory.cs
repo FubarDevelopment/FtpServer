@@ -31,6 +31,9 @@ namespace FubarDev.FtpServer.DataConnection
         [NotNull]
         private readonly IFtpConnectionAccessor _connectionAccessor;
 
+        [CanBeNull]
+        private readonly ILogger<PassiveDataConnectionFeatureFactory> _logger;
+
         [NotNull]
         [ItemNotNull]
         private readonly List<IFtpDataConnectionValidator> _validators;
@@ -41,13 +44,16 @@ namespace FubarDev.FtpServer.DataConnection
         /// <param name="pasvListenerFactory">The PASV listener factory.</param>
         /// <param name="connectionAccessor">The FTP connection accessor.</param>
         /// <param name="validators">An enumeration of FTP connection validators.</param>
+        /// <param name="logger">The logger.</param>
         public PassiveDataConnectionFeatureFactory(
             [NotNull] IPasvListenerFactory pasvListenerFactory,
             [NotNull] IFtpConnectionAccessor connectionAccessor,
-            [NotNull] [ItemNotNull] IEnumerable<IFtpDataConnectionValidator> validators)
+            [NotNull] [ItemNotNull] IEnumerable<IFtpDataConnectionValidator> validators,
+            [CanBeNull] ILogger<PassiveDataConnectionFeatureFactory> logger = null)
         {
             _pasvListenerFactory = pasvListenerFactory;
             _connectionAccessor = connectionAccessor;
+            _logger = logger;
             _validators = validators.ToList();
         }
 
@@ -71,7 +77,13 @@ namespace FubarDev.FtpServer.DataConnection
                 addressFamily,
                 0,
                 cancellationToken).ConfigureAwait(false);
-            return new PassiveDataConnectionFeature(listener, _validators, ftpCommand, connection, listener.PasvEndPoint);
+            return new PassiveDataConnectionFeature(
+                listener,
+                _validators,
+                ftpCommand,
+                connection,
+                listener.PasvEndPoint,
+                _logger);
         }
 
         private class PassiveDataConnectionFeature : IFtpDataConnectionFeature
@@ -86,16 +98,21 @@ namespace FubarDev.FtpServer.DataConnection
             [NotNull]
             private readonly IFtpConnection _ftpConnection;
 
+            [CanBeNull]
+            private readonly ILogger _logger;
+
             public PassiveDataConnectionFeature(
                 [NotNull] IPasvListener listener,
                 [NotNull] [ItemNotNull] List<IFtpDataConnectionValidator> validators,
                 [NotNull] FtpCommand command,
                 [NotNull] IFtpConnection ftpConnection,
-                [NotNull] IPEndPoint localEndPoint)
+                [NotNull] IPEndPoint localEndPoint,
+                [CanBeNull] ILogger logger)
             {
                 _listener = listener;
                 _validators = validators;
                 _ftpConnection = ftpConnection;
+                _logger = logger;
                 LocalEndPoint = localEndPoint;
                 Command = command;
             }
@@ -140,7 +157,7 @@ namespace FubarDev.FtpServer.DataConnection
                         }
                     }
 
-                    _ftpConnection.Log?.LogDebug($"Data connection accepted from {dataConnection.RemoteAddress}");
+                    _logger?.LogDebug($"Data connection accepted from {dataConnection.RemoteAddress}");
 
                     return dataConnection;
                 }

@@ -23,14 +23,20 @@ namespace FubarDev.FtpServer.ServerCommandHandlers
         [NotNull]
         private readonly IFtpConnectionAccessor _connectionAccessor;
 
+        [CanBeNull]
+        private readonly ILogger<SendResponseServerCommandHandler> _logger;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="SendResponseServerCommandHandler"/> class.
         /// </summary>
         /// <param name="connectionAccessor">The FTP connection accessor.</param>
+        /// <param name="logger">The logger.</param>
         public SendResponseServerCommandHandler(
-            [NotNull] IFtpConnectionAccessor connectionAccessor)
+            [NotNull] IFtpConnectionAccessor connectionAccessor,
+            [CanBeNull] ILogger<SendResponseServerCommandHandler> logger = null)
         {
             _connectionAccessor = connectionAccessor;
+            _logger = logger;
         }
 
         /// <inheritdoc />
@@ -56,7 +62,7 @@ namespace FubarDev.FtpServer.ServerCommandHandlers
                    .ConfigureAwait(false);
                 if (line.HasText)
                 {
-                    connection.Log?.LogDebug(line.Text);
+                    _logger?.LogDebug(line.Text);
                     var data = encoding.GetBytes($"{line.Text}\r\n");
                     var memory = writer.GetMemory(data.Length);
                     data.AsSpan().CopyTo(memory.Span);

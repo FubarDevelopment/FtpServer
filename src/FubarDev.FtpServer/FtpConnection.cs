@@ -86,6 +86,9 @@ namespace FubarDev.FtpServer
 
         private readonly int? _dataPort;
 
+        [CanBeNull]
+        private readonly ILogger<FtpConnection> _logger;
+
         private bool _connectionClosing;
 
         private int _connectionClosed;
@@ -148,7 +151,7 @@ namespace FubarDev.FtpServer
             _serverMessages = serverMessages;
             _serverCommandChannel = Channel.CreateBounded<IServerCommand>(new BoundedChannelOptions(3));
 
-            Log = logger;
+            _logger = logger;
 
             var parentFeatures = new FeatureCollection();
             var connectionFeature = new ConnectionFeature(
@@ -225,7 +228,8 @@ namespace FubarDev.FtpServer
         public FtpConnectionData Data { get; }
 
         /// <inheritdoc />
-        public ILogger Log { get; }
+        [Obsolete("Use your own logger instead of the one from the connection.")]
+        public ILogger Log => _logger;
 
         /// <inheritdoc />
         [Obsolete("Query the information using the IConnectionFeature instead.")]
@@ -272,7 +276,7 @@ namespace FubarDev.FtpServer
 
             // Connection information
             var connectionFeature = Features.Get<IConnectionFeature>();
-            Log?.LogInformation($"Connected from {connectionFeature.RemoteAddress.ToString(true)}");
+            _logger?.LogInformation($"Connected from {connectionFeature.RemoteAddress.ToString(true)}");
 
             await _networkStreamFeature.StreamWriterService.StartAsync(CancellationToken.None)
                .ConfigureAwait(false);
@@ -291,7 +295,7 @@ namespace FubarDev.FtpServer
         /// <inheritdoc />
         public async Task StopAsync()
         {
-            Log?.LogTrace("StopAsync called");
+            _logger?.LogTrace("StopAsync called");
 
             if (Interlocked.CompareExchange(ref _connectionClosed, 1, 0) != 0)
             {
@@ -320,7 +324,7 @@ namespace FubarDev.FtpServer
             await _networkStreamFeature.SecureConnectionAdapter.StopAsync(CancellationToken.None)
                .ConfigureAwait(false);
 
-            Log?.LogInformation("Connection closed");
+            _logger?.LogInformation("Connection closed");
 
             OnClosed();
         }
@@ -417,7 +421,7 @@ namespace FubarDev.FtpServer
                 catch (Exception ex)
                 {
                     // Ignore exceptions
-                    Log?.LogWarning(ex, "Failed to feature of type {featureType}: {errorMessage}", featureItem.Key, ex.Message);
+                    _logger?.LogWarning(ex, "Failed to feature of type {featureType}: {errorMessage}", featureItem.Key, ex.Message);
                 }
             }
         }
@@ -437,18 +441,18 @@ namespace FubarDev.FtpServer
             {
                 while (!cancellationToken.IsCancellationRequested)
                 {
-                    Log?.LogTrace("Wait to read server commands");
+                    _logger?.LogTrace("Wait to read server commands");
                     var hasResponse = await serverCommandReader.WaitToReadAsync(cancellationToken)
                        .ConfigureAwait(false);
                     if (!hasResponse)
                     {
-                        Log?.LogTrace("Server command channel completed");
+                        _logger?.LogTrace("Server command channel completed");
                         return;
                     }
 
                     while (serverCommandReader.TryRead(out var response))
                     {
-                        Log?.LogTrace("Executing server command \"{response}\"", response);
+                        _logger?.LogTrace("Executing server command \"{response}\"", response);
                         await _serverCommandExecutor.ExecuteAsync(response, cancellationToken)
                            .ConfigureAwait(false);
                     }
@@ -467,11 +471,11 @@ namespace FubarDev.FtpServer
                     case IOException _:
                         if (cancellationToken.IsCancellationRequested)
                         {
-                            Log?.LogWarning("Last response probably incomplete");
+                            _logger?.LogWarning("Last response probably incomplete");
                         }
                         else
                         {
-                            Log?.LogWarning("Connection lost or closed by client. Remaining output discarded");
+                            _logger?.LogWarning("Connection lost or closed by client. Remaining output discarded");
                         }
 
                         break;
@@ -483,13 +487,14 @@ namespace FubarDev.FtpServer
                         // Should never happen
                         break;
                     default:
-                        Log?.LogError(0, exception, exception.Message);
-                        throw;
+                        // Don't throw, connection gets closed anyway.
+                        _logger?.LogError(0, exception, exception.Message);
+                        break;
                 }
             }
             finally
             {
-                Log?.LogDebug("Stopped sending responses");
+                _logger?.LogDebug("Stopped sending responses");
                 _cancellationTokenSource.Cancel();
             }
         }
@@ -549,13 +554,13 @@ namespace FubarDev.FtpServer
             }
             catch (Exception ex) when (ex.Is<IOException>() && !cancellationToken.IsCancellationRequested)
             {
-                Log?.LogWarning("Connection lost or closed by client");
+                _logger?.LogWarning("Connection lost or closed by client");
                 Abort();
             }
             catch (Exception ex) when (ex.Is<IOException>())
             {
                 // Most likely closed by server.
-                Log?.LogWarning("Connection lost or closed by server");
+                _logger?.LogWarning("Connection lost or closed by server");
                 Abort();
             }
             catch (Exception ex) when (ex.Is<OperationCanceledException>())
@@ -567,14 +572,14 @@ namespace FubarDev.FtpServer
             }
             catch (Exception ex)
             {
-                Log?.LogError(ex, "Closing connection due to error {0}", ex.Message);
+                _logger?.LogError(ex, "Closing connection due to error {0}", ex.Message);
                 Abort();
             }
             finally
             {
                 reader.Complete();
 
-                Log?.LogDebug("Stopped reading commands");
+                _logger?.LogDebug("Stopped reading commands");
             }
         }
 
@@ -641,7 +646,7 @@ namespace FubarDev.FtpServer
 
                         while (commandReader.TryRead(out var command))
                         {
-                            Log?.Command(command);
+                            _logger?.Command(command);
                             var context = new FtpContext(command, _serverCommandChannel, this);
                             await requestDelegate(context)
                                .ConfigureAwait(false);
@@ -655,7 +660,7 @@ namespace FubarDev.FtpServer
             }
             catch (Exception ex)
             {
-                Log?.LogError(ex, ex.Message);
+                _logger?.LogError(ex, ex.Message);
             }
             finally
             {

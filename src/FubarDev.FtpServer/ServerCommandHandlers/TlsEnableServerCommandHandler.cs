@@ -26,6 +26,9 @@ namespace FubarDev.FtpServer.ServerCommandHandlers
         private readonly IFtpConnectionAccessor _connectionAccessor;
 
         [CanBeNull]
+        private readonly ILogger<TlsEnableServerCommandHandler> _logger;
+
+        [CanBeNull]
         private readonly X509Certificate2 _serverCertificate;
 
         /// <summary>
@@ -33,11 +36,14 @@ namespace FubarDev.FtpServer.ServerCommandHandlers
         /// </summary>
         /// <param name="connectionAccessor">The FTP connection accessor.</param>
         /// <param name="options">Options for the AUTH TLS command.</param>
+        /// <param name="logger">The logger.</param>
         public TlsEnableServerCommandHandler(
             [NotNull] IFtpConnectionAccessor connectionAccessor,
-            [NotNull] IOptions<AuthTlsOptions> options)
+            [NotNull] IOptions<AuthTlsOptions> options,
+            [CanBeNull] ILogger<TlsEnableServerCommandHandler> logger = null)
         {
             _connectionAccessor = connectionAccessor;
+            _logger = logger;
             _serverCertificate = options.Value.ServerCertificate;
         }
 
@@ -46,22 +52,24 @@ namespace FubarDev.FtpServer.ServerCommandHandlers
         /// </summary>
         /// <param name="connection">The FTP connection to activate TLS for.</param>
         /// <param name="certificate">The X.509 certificate to use (with private key).</param>
+        /// <param name="logger">The logger.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public static async Task EnableTlsAsync(
             [NotNull] IFtpConnection connection,
             [NotNull] X509Certificate2 certificate,
+            [CanBeNull] ILogger logger,
             CancellationToken cancellationToken)
         {
             var networkStreamFeature = connection.Features.Get<INetworkStreamFeature>();
             var service = networkStreamFeature.SecureConnectionAdapter;
 
             var secureConnectionFeature = connection.Features.Get<ISecureConnectionFeature>();
-            connection.Log?.LogTrace("Enable SslStream");
+            logger?.LogTrace("Enable SslStream");
             await service.EnableSslStreamAsync(certificate, cancellationToken)
                .ConfigureAwait(false);
 
-            connection.Log?.LogTrace("Set close function");
+            logger?.LogTrace("Set close function");
             secureConnectionFeature.CloseEncryptedControlStream =
                 ct => CloseEncryptedControlConnectionAsync(
                     networkStreamFeature,
@@ -88,7 +96,7 @@ namespace FubarDev.FtpServer.ServerCommandHandlers
 
             try
             {
-                await EnableTlsAsync(connection, _serverCertificate, cancellationToken)
+                await EnableTlsAsync(connection, _serverCertificate, _logger, cancellationToken)
                    .ConfigureAwait(false);
             }
             catch (Exception ex)

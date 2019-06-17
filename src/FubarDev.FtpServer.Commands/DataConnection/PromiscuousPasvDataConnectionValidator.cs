@@ -9,6 +9,8 @@ using System.Threading.Tasks;
 
 using FubarDev.FtpServer.Features;
 
+using JetBrains.Annotations;
+
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
@@ -19,14 +21,20 @@ namespace FubarDev.FtpServer.DataConnection
     /// </summary>
     public class PromiscuousPasvDataConnectionValidator : IFtpDataConnectionValidator
     {
+        [CanBeNull]
+        private readonly ILogger<PromiscuousPasvDataConnectionValidator> _logger;
         private readonly bool _allowPromiscuousPasv;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PromiscuousPasvDataConnectionValidator"/> class.
         /// </summary>
         /// <param name="options">The PASV command handler options.</param>
-        public PromiscuousPasvDataConnectionValidator(IOptions<PasvCommandOptions> options)
+        /// <param name="logger">The logger.</param>
+        public PromiscuousPasvDataConnectionValidator(
+            [NotNull] IOptions<PasvCommandOptions> options,
+            [CanBeNull] ILogger<PromiscuousPasvDataConnectionValidator> logger = null)
         {
+            _logger = logger;
             _allowPromiscuousPasv = options.Value.PromiscuousPasv;
         }
 
@@ -64,7 +72,7 @@ namespace FubarDev.FtpServer.DataConnection
                 localizationFeature.Catalog.GetString("Data connection attempt from {0} for control connection from {1}, data connection rejected"),
                 pasvRemoteAddress,
                 connection.RemoteAddress.IPAddress);
-            connection.Log?.LogWarning(errorMessage);
+            _logger?.LogWarning(errorMessage);
             return Task.FromResult(new ValidationResult(errorMessage));
         }
     }
