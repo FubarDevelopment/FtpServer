@@ -12,7 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
-using NLog.Extensions.Logging;
+using NLog.Web;
 
 using TestFtpServer.Configuration;
 
@@ -25,6 +25,8 @@ namespace TestFtpServer
             var configPath = Path.Combine(
                 Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData),
                 "SharpFtpServer");
+
+            NLog.LogManager.LoadConfiguration("NLog.config");
 
             var hostBuilder = new HostBuilder()
                .UseConsoleLifetime()
@@ -40,7 +42,9 @@ namespace TestFtpServer
                                 $"appsettings.{hostContext.HostingEnvironment.EnvironmentName}.json",
                                 optional: true)
                            .AddJsonFile(
-                                Path.Combine(configPath, $"appsettings.{hostContext.HostingEnvironment.EnvironmentName}.json"),
+                                Path.Combine(
+                                    configPath,
+                                    $"appsettings.{hostContext.HostingEnvironment.EnvironmentName}.json"),
                                 optional: true)
                            .AddEnvironmentVariables("FTPSERVER_")
                            .Add(new OptionsConfigSource(args));
@@ -48,13 +52,7 @@ namespace TestFtpServer
                .ConfigureLogging(
                     (hostContext, loggingBuilder) =>
                     {
-                        loggingBuilder.AddNLog(
-                            new NLogProviderOptions
-                            {
-                                CaptureMessageTemplates = true,
-                                CaptureMessageProperties = true,
-                            });
-                        NLog.LogManager.LoadConfiguration("NLog.config");
+                        loggingBuilder.ClearProviders();
                     })
                .ConfigureServices(
                     (hostContext, services) =>
@@ -68,6 +66,12 @@ namespace TestFtpServer
                            .AddFtpServices(options)
                            .AddHostedService<HostedFtpService>()
                            .AddSingleton<ServerShell>();
+                    })
+               .UseNLog(
+                    new NLogAspNetCoreOptions()
+                    {
+                        CaptureMessageTemplates = true,
+                        CaptureMessageProperties = true,
                     });
 
             try
