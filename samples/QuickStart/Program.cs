@@ -32,7 +32,7 @@ namespace QuickStart
             services.Configure<FtpServerOptions>(opt => opt.ServerAddress = "*");
 
             // Build the service provider
-            using (var serviceProvider = services.BuildServiceProvider())
+            using (var serviceProvider = services.BuildServiceProvider(true))
             {
                 // Initialize the FTP server
                 var ftpServerHost = serviceProvider.GetRequiredService<IFtpServerHost>();
