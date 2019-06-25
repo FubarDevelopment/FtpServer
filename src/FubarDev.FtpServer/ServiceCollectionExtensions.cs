@@ -61,7 +61,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services.TryAddScoped<IFtpCommandHandlerProvider, DefaultFtpCommandHandlerProvider>();
 
             // Command handler extensions
-            services.AddSingleton<IFtpCommandHandlerExtensionScanner>(
+            services.AddScoped<IFtpCommandHandlerExtensionScanner>(
                 sp => new AssemblyFtpCommandHandlerExtensionScanner(
                     sp.GetRequiredService<IFtpCommandHandlerProvider>(),
                     sp.GetService<ILogger<AssemblyFtpCommandHandlerExtensionScanner>>(),
