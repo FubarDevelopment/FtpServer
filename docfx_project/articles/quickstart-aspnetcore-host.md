@@ -1,0 +1,42 @@
+---
+uid: quickstart-aspnetcore-host
+title: Your first FTP server
+---
+
+# Creating a project
+
+```bash
+mkdir TestAspNetCoreHost
+cd TestAspNetCoreHost
+dotnet new web --no-https
+```
+
+# Adding the NuGet packages
+
+```bash
+# For the main FTP server
+dotnet add package FubarDev.FtpServer
+
+# For the System.IO-based file system access
+dotnet add package FubarDev.FtpServer.FileSystem.DotNet
+```
+
+# Create an `IHostedService` implementation
+
+Create a new file named `HostedFtpService.cs`, which contains the following code:
+
+[!code-cs[Program.cs](../code-snippets/quickstart-aspnetcore-host/HostedFtpService.cs "The wrapper for the hosted FTP server")]
+
+# Using the FTP server
+
+Change your `Program.cs` to the following code:
+
+[!code-cs[Program.cs](../code-snippets/quickstart-aspnetcore-host/Program.cs "The FTP server")]
+
+# Starting the FTP server
+
+```bash
+dotnet run
+```
+
+Now your FTP server should be accessible at `127.0.0.1:21`.
