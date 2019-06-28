@@ -8,8 +8,6 @@ using System.Threading.Tasks;
 
 using JetBrains.Annotations;
 
-using Microsoft.Extensions.Logging;
-
 namespace TestFtpServer.Shell
 {
     internal class ServerShell
@@ -20,17 +18,12 @@ namespace TestFtpServer.Shell
         [NotNull]
         private readonly FtpShellCommandAutoCompletion _autoCompletionHandler;
 
-        [NotNull]
-        private readonly ILogger<ServerShell> _logger;
-
         public ServerShell(
             [NotNull] IShellStatus status,
-            [NotNull] FtpShellCommandAutoCompletion autoCompletionHandler,
-            [NotNull] ILogger<ServerShell> logger)
+            [NotNull] FtpShellCommandAutoCompletion autoCompletionHandler)
         {
             _status = status;
             _autoCompletionHandler = autoCompletionHandler;
-            _logger = logger;
         }
 
         public async Task RunAsync(CancellationToken cancellationToken)
@@ -84,7 +77,7 @@ namespace TestFtpServer.Shell
                     }
                     catch (Exception ex)
                     {
-                        _logger.LogError(ex, ex.Message);
+                        Console.Error.WriteLine(ex);
                     }
                 }
             }

@@ -37,28 +37,11 @@ namespace QuickStart
                 // Initialize the FTP server
                 var ftpServerHost = serviceProvider.GetRequiredService<IFtpServerHost>();
 
-                var ftpServer = serviceProvider.GetRequiredService<IFtpServer>();
-
                 // Start the FTP server
                 await ftpServerHost.StartAsync(CancellationToken.None).ConfigureAwait(false);
 
                 Console.WriteLine("Press ENTER/RETURN to close the test application.");
-
-                var activeConnections = -1L;
-                while (!Console.KeyAvailable)
-                {
-                    if (ftpServer.Statistics.ActiveConnections != activeConnections)
-                    {
-                        Console.WriteLine("Active: {0}", ftpServer.Statistics.ActiveConnections);
-                        Console.WriteLine("Total : {0}", ftpServer.Statistics.TotalConnections);
-                        activeConnections = ftpServer.Statistics.ActiveConnections;
-                    }
-                    else
-                    {
-                        await Task.Delay(TimeSpan.FromMilliseconds(20))
-                           .ConfigureAwait(false);
-                    }
-                }
+                Console.ReadLine();
 
                 // Stop the FTP server
                 await ftpServerHost.StopAsync(CancellationToken.None).ConfigureAwait(false);
