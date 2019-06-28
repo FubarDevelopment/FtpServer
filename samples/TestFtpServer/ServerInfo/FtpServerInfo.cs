@@ -8,7 +8,7 @@ using FubarDev.FtpServer;
 
 using JetBrains.Annotations;
 
-namespace TestFtpServer.FtpServerShell.ModuleInfo
+namespace TestFtpServer.ServerInfo
 {
     /// <summary>
     /// Information about the FTP server.

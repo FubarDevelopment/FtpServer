@@ -8,7 +8,7 @@ using FubarDev.FtpServer.BackgroundTransfer;
 
 using JetBrains.Annotations;
 
-namespace TestFtpServer.FtpServerShell.ModuleInfo
+namespace TestFtpServer.ServerInfo
 {
     /// <summary>
     /// Information about the background transfer worker.

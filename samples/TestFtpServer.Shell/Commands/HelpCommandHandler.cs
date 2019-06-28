@@ -4,13 +4,12 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
 using JetBrains.Annotations;
 
-namespace TestFtpServer.FtpServerShell.Commands
+namespace TestFtpServer.Shell.Commands
 {
     /// <summary>
     /// The <c>HELP</c> command.
@@ -18,22 +17,22 @@ namespace TestFtpServer.FtpServerShell.Commands
     public class HelpCommandHandler : IRootCommandInfo, IExecutableCommandInfo
     {
         [NotNull]
-        [ItemNotNull]
-        private readonly IReadOnlyCollection<IModuleInfo> _moduleInfoItems;
+        private readonly IShellStatus _status;
 
-        public HelpCommandHandler([NotNull, ItemNotNull] IEnumerable<IModuleInfo> moduleInfoItems)
+        public HelpCommandHandler(
+            [NotNull] IShellStatus status)
         {
-            _moduleInfoItems = moduleInfoItems.ToList();
+            _status = status;
         }
 
         /// <inheritdoc />
         public string Name { get; } = "help";
 
         /// <inheritdoc />
-        public IReadOnlyCollection<string> AlternativeNames { get; } = new string[0];
+        public IReadOnlyCollection<string> AlternativeNames { get; } = Array.Empty<string>();
 
         /// <inheritdoc />
-        public IReadOnlyCollection<ICommandInfo> SubCommands { get; } = new ICommandInfo[0];
+        public IReadOnlyCollection<ICommandInfo> SubCommands { get; } = Array.Empty<ICommandInfo>();
 
         /// <inheritdoc />
         public Task ExecuteAsync(CancellationToken cancellationToken)
@@ -42,15 +41,15 @@ namespace TestFtpServer.FtpServerShell.Commands
             Console.WriteLine("exit          - Close server");
             Console.WriteLine("pause         - Pause accepting clients");
             Console.WriteLine("continue      - Continue accepting clients");
+            Console.WriteLine("stop          - Stop the server");
             Console.WriteLine("status        - Show server status");
             Console.WriteLine("show <module> - Show module information");
 
-            var extendedModules = _moduleInfoItems.OfType<IExtendedModuleInfo>().ToList();
-            if (extendedModules.Count != 0)
+            if (_status.ExtendedModuleInfoName.Count != 0)
             {
                 Console.WriteLine();
                 Console.WriteLine("Modules:");
-                foreach (var moduleName in extendedModules.Select(x => x.Name).Distinct())
+                foreach (var moduleName in _status.ExtendedModuleInfoName)
                 {
                     Console.WriteLine("\t{0}", moduleName);
                 }

@@ -2,13 +2,14 @@
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
 using JetBrains.Annotations;
 
-namespace TestFtpServer.FtpServerShell.Commands
+namespace TestFtpServer.Shell.Commands
 {
     /// <summary>
     /// The <c>EXIT</c> command.
@@ -34,7 +35,7 @@ namespace TestFtpServer.FtpServerShell.Commands
         public IReadOnlyCollection<string> AlternativeNames { get; } = new[] { "quit" };
 
         /// <inheritdoc />
-        public IReadOnlyCollection<ICommandInfo> SubCommands { get; } = new ICommandInfo[0];
+        public IReadOnlyCollection<ICommandInfo> SubCommands { get; } = Array.Empty<ICommandInfo>();
 
         /// <inheritdoc />
         public Task ExecuteAsync(CancellationToken cancellationToken)

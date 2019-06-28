@@ -2,7 +2,7 @@
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
-namespace TestFtpServer.FtpServerShell
+namespace TestFtpServer.Shell
 {
     /// <summary>
     /// Root command information.

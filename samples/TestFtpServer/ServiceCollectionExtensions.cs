@@ -37,7 +37,7 @@ using TestFtpServer.CommandMiddlewares;
 using TestFtpServer.Commands;
 using TestFtpServer.Configuration;
 using TestFtpServer.Extensions;
-using TestFtpServer.FtpServerShell;
+using TestFtpServer.ServerInfo;
 using TestFtpServer.Utilities;
 
 namespace TestFtpServer
@@ -171,20 +171,6 @@ namespace TestFtpServer
                     break;
             }
 
-            services.Scan(
-                ts => ts
-                   .FromAssemblyOf<FtpShellCommandAutoCompletion>()
-                   .AddClasses(itf => itf.AssignableTo<ICommandInfo>(), true).As<ICommandInfo>()
-                   .WithSingletonLifetime());
-
-            services.Scan(
-                ts => ts
-                   .FromAssemblyOf<FtpShellCommandAutoCompletion>()
-                   .AddClasses(itf => itf.AssignableTo<IModuleInfo>(), true).As<IModuleInfo>().WithSingletonLifetime());
-
-            services.AddSingleton<FtpShellCommandAutoCompletion>();
-            services.AddSingleton<IShellStatus, ShellStatus>();
-
             services.Decorate<IFtpServer>(
                 (ftpServer, serviceProvider) =>
                 {
@@ -225,6 +211,12 @@ namespace TestFtpServer
 
                     return ftpServer;
                 });
+
+            services.Scan(
+                ts => ts
+                   .FromAssemblyOf<HostedFtpService>()
+                   .AddClasses(itf => itf.AssignableTo<IModuleInfo>(), true).As<IModuleInfo>()
+                   .WithSingletonLifetime());
 
             return services;
         }

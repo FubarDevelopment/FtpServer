@@ -4,7 +4,7 @@
 
 using JetBrains.Annotations;
 
-namespace TestFtpServer.FtpServerShell
+namespace TestFtpServer.ServerInfo
 {
     /// <summary>
     /// Module information.

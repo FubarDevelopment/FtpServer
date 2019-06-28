@@ -2,15 +2,16 @@
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-using FubarDev.FtpServer;
-
 using JetBrains.Annotations;
 
-namespace TestFtpServer.FtpServerShell.Commands
+using JKang.IpcServiceFramework;
+
+namespace TestFtpServer.Shell.Commands
 {
     /// <summary>
     /// The <c>CONTINUE</c> command.
@@ -18,15 +19,15 @@ namespace TestFtpServer.FtpServerShell.Commands
     public class ContinueCommandHandler : IRootCommandInfo, IExecutableCommandInfo
     {
         [NotNull]
-        private readonly IFtpServer _ftpServer;
+        private readonly IpcServiceClient<Api.IFtpServerHost> _client;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ContinueCommandHandler"/> class.
         /// </summary>
-        /// <param name="ftpServer">The FTP server.</param>
-        public ContinueCommandHandler([NotNull] IFtpServer ftpServer)
+        /// <param name="client">The client to be used to communicate with the FTP server.</param>
+        public ContinueCommandHandler([NotNull] IpcServiceClient<Api.IFtpServerHost> client)
         {
-            _ftpServer = ftpServer;
+            _client = client;
         }
 
         /// <inheritdoc />
@@ -36,12 +37,12 @@ namespace TestFtpServer.FtpServerShell.Commands
         public IReadOnlyCollection<string> AlternativeNames { get; } = new[] { "resume" };
 
         /// <inheritdoc />
-        public IReadOnlyCollection<ICommandInfo> SubCommands { get; } = new ICommandInfo[0];
+        public IReadOnlyCollection<ICommandInfo> SubCommands { get; } = Array.Empty<ICommandInfo>();
 
         /// <inheritdoc />
         public Task ExecuteAsync(CancellationToken cancellationToken)
         {
-            return _ftpServer.ContinueAsync(cancellationToken);
+            return _client.InvokeAsync(host => host.ContinueAsync(), cancellationToken);
         }
     }
 }

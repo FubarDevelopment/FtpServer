@@ -2,7 +2,6 @@
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
-using System;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -12,30 +11,23 @@ using JetBrains.Annotations;
 
 using Microsoft.Extensions.Hosting;
 
-using TestFtpServer.FtpServerShell;
-
 namespace TestFtpServer
 {
     /// <summary>
     /// Generic host for the FTP server.
     /// </summary>
-    public class HostedFtpService : IHostedService, IDisposable
+    public class HostedFtpService : IHostedService
     {
         [NotNull]
         private readonly IFtpServerHost _ftpServerHost;
 
-        [NotNull]
-        private readonly IDisposable _serverShutdown;
-
+        /// <summary>
+        /// Initializes a new instance of the <see cref="HostedFtpService"/> class.
+        /// </summary>
+        /// <param name="ftpServerHost">The FTP server host that gets wrapped as a hosted service.</param>
         public HostedFtpService(
-            [NotNull] IFtpServerHost ftpServerHost,
-            [NotNull] IApplicationLifetime applicationLifetime,
-            [NotNull] IShellStatus shellStatus)
+            [NotNull] IFtpServerHost ftpServerHost)
         {
-            _serverShutdown = applicationLifetime.ApplicationStopping.Register(() =>
-            {
-                shellStatus.Closed = true;
-            });
             _ftpServerHost = ftpServerHost;
         }
 
@@ -49,12 +41,6 @@ namespace TestFtpServer
         public Task StopAsync(CancellationToken cancellationToken)
         {
             return _ftpServerHost.StopAsync(cancellationToken);
-        }
-
-        /// <inheritdoc />
-        public void Dispose()
-        {
-            _serverShutdown.Dispose();
         }
     }
 }

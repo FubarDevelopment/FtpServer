@@ -8,7 +8,7 @@ using System.Linq;
 
 using JetBrains.Annotations;
 
-namespace TestFtpServer.FtpServerShell
+namespace TestFtpServer.Shell
 {
     /// <summary>
     /// Extension methods for FTP server shell commands.

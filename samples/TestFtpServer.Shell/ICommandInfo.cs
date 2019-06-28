@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 using JetBrains.Annotations;
 
-namespace TestFtpServer.FtpServerShell
+namespace TestFtpServer.Shell
 {
     /// <summary>
     /// Interface for the command information.

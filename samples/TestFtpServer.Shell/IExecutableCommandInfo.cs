@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 using JetBrains.Annotations;
 
-namespace TestFtpServer.FtpServerShell
+namespace TestFtpServer.Shell
 {
     /// <summary>
     /// Interface for an executable command.

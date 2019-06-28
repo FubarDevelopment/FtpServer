@@ -7,6 +7,8 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 
+using JKang.IpcServiceFramework;
+
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -65,7 +67,13 @@ namespace TestFtpServer
                            .AddOptions()
                            .AddFtpServices(options)
                            .AddHostedService<HostedFtpService>()
-                           .AddSingleton<ServerShell>();
+                           .AddIpc(
+                                builder =>
+                                {
+                                    builder
+                                       .AddNamedPipe(opt => opt.ThreadCount = 1)
+                                       .AddService<Api.IFtpServerHost, FtpServerHostApi>();
+                                });
                     })
                .UseNLog(
                     new NLogAspNetCoreOptions()
@@ -78,39 +86,25 @@ namespace TestFtpServer
             {
                 using (var host = hostBuilder.Build())
                 {
-                    if (!CanUseShell)
+                    var appLifetime = host.Services.GetRequiredService<IApplicationLifetime>();
+
+                    var ipcServiceHost = new IpcServiceHostBuilder(host.Services)
+                        .AddNamedPipeEndpoint<Api.IFtpServerHost>("ftpserver", "ftpserver")
+                        .Build();
+
+                    // Catch request to stop the application
+                    var appStopCts = new CancellationTokenSource();
+                    using (appLifetime.ApplicationStopping.Register(() => appStopCts.Cancel()))
                     {
-                        await host.RunAsync(CancellationToken.None)
-                           .ConfigureAwait(false);
-                    }
-                    else
-                    {
-                        // Handler for auto-completion
-                        var shell = host.Services.GetRequiredService<ServerShell>();
+                        // Start the host
+                        await host.StartAsync(appStopCts.Token).ConfigureAwait(false);
 
-                        // Catch request to stop the application
-                        var appStopCts = new CancellationTokenSource();
-                        var appLifetime = host.Services.GetRequiredService<IApplicationLifetime>();
-                        using (appLifetime.ApplicationStopping.Register(() => appStopCts.Cancel()))
-                        {
-                            // Start the host
-                            await host.StartAsync(appStopCts.Token).ConfigureAwait(false);
+                        // Run the shell
+                        await ipcServiceHost.RunAsync(appStopCts.Token)
+                            .ConfigureAwait(false);
 
-                            try
-                            {
-                                // Run the shell
-                                await shell.RunAsync(appStopCts.Token)
-                                   .ConfigureAwait(false);
-                            }
-                            catch (InvalidOperationException)
-                            {
-                                // Ignore. Shell not available?
-                                await host.WaitForShutdownAsync(CancellationToken.None).ConfigureAwait(false);
-                            }
-
-                            // Stop the host
-                            await host.StopAsync(CancellationToken.None).ConfigureAwait(false);
-                        }
+                        // Ignore. Shell not available?
+                        await host.WaitForShutdownAsync(CancellationToken.None).ConfigureAwait(false);
                     }
                 }
             }
@@ -121,23 +115,6 @@ namespace TestFtpServer
             }
 
             return 0;
-        }
-
-        private static bool CanUseShell
-        {
-            get
-            {
-                try
-                {
-                    // Don't let the optimizer do its work...
-                    var result = typeof(Console).GetProperty(nameof(Console.KeyAvailable)).GetValue(null);
-                    return result != null;
-                }
-                catch
-                {
-                    return false;
-                }
-            }
         }
     }
 }

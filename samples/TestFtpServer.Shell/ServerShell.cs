@@ -6,15 +6,11 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-using FubarDev.FtpServer;
-
 using JetBrains.Annotations;
 
 using Microsoft.Extensions.Logging;
 
-using TestFtpServer.FtpServerShell;
-
-namespace TestFtpServer
+namespace TestFtpServer.Shell
 {
     internal class ServerShell
     {
@@ -25,12 +21,12 @@ namespace TestFtpServer
         private readonly FtpShellCommandAutoCompletion _autoCompletionHandler;
 
         [NotNull]
-        private readonly ILogger<FtpServer> _logger;
+        private readonly ILogger<ServerShell> _logger;
 
         public ServerShell(
             [NotNull] IShellStatus status,
             [NotNull] FtpShellCommandAutoCompletion autoCompletionHandler,
-            [NotNull] ILogger<FtpServer> logger)
+            [NotNull] ILogger<ServerShell> logger)
         {
             _status = status;
             _autoCompletionHandler = autoCompletionHandler;
