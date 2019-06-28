@@ -57,7 +57,11 @@ Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "FubarDev.FtpServer.Shared",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestFtpServer.Shell", "samples\TestFtpServer.Shell\TestFtpServer.Shell.csproj", "{4BDA38CA-A19D-4BA9-AC7E-E0B091B3770D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestFtpServer.Api", "samples\TestFtpServer.Api\TestFtpServer.Api.csproj", "{02D103B2-B9CA-4A7F-AB79-6FEC68C62B47}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestFtpServer.Api", "samples\TestFtpServer.Api\TestFtpServer.Api.csproj", "{02D103B2-B9CA-4A7F-AB79-6FEC68C62B47}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QuickStart.GenericHost", "samples\QuickStart.GenericHost\QuickStart.GenericHost.csproj", "{23752176-0F1A-4352-B677-CD7878B7E8FC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QuickStart.AspNetCoreHost", "samples\QuickStart.AspNetCoreHost\QuickStart.AspNetCoreHost.csproj", "{D03594D1-84CC-4B55-A56D-20ED446CFDB1}"
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
@@ -122,6 +126,14 @@ Global
 		{02D103B2-B9CA-4A7F-AB79-6FEC68C62B47}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{02D103B2-B9CA-4A7F-AB79-6FEC68C62B47}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{02D103B2-B9CA-4A7F-AB79-6FEC68C62B47}.Release|Any CPU.Build.0 = Release|Any CPU
+		{23752176-0F1A-4352-B677-CD7878B7E8FC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{23752176-0F1A-4352-B677-CD7878B7E8FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{23752176-0F1A-4352-B677-CD7878B7E8FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{23752176-0F1A-4352-B677-CD7878B7E8FC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D03594D1-84CC-4B55-A56D-20ED446CFDB1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D03594D1-84CC-4B55-A56D-20ED446CFDB1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D03594D1-84CC-4B55-A56D-20ED446CFDB1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D03594D1-84CC-4B55-A56D-20ED446CFDB1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -145,6 +157,8 @@ Global
 		{52126B62-DE83-4597-A832-D144F9A5A870} = {118460ED-4F14-4FF3-BFBF-11497DFB80B6}
 		{4BDA38CA-A19D-4BA9-AC7E-E0B091B3770D} = {7004709E-5C0D-4D3E-AF27-89968FA47C19}
 		{02D103B2-B9CA-4A7F-AB79-6FEC68C62B47} = {7004709E-5C0D-4D3E-AF27-89968FA47C19}
+		{23752176-0F1A-4352-B677-CD7878B7E8FC} = {7004709E-5C0D-4D3E-AF27-89968FA47C19}
+		{D03594D1-84CC-4B55-A56D-20ED446CFDB1} = {7004709E-5C0D-4D3E-AF27-89968FA47C19}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {DAA7D00E-C61D-4640-A54E-D307E4682263}
