@@ -2,6 +2,7 @@
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -17,6 +18,7 @@ namespace FubarDev.FtpServer
     /// <returns>The task.</returns>
     [NotNull]
     [ItemCanBeNull]
+    [Obsolete("Use a custom server command.")]
     public delegate Task<IFtpResponse> FtpResponseAfterWriteAsyncDelegate(
         [NotNull] IFtpConnection connection,
         CancellationToken cancellationToken);

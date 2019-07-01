@@ -778,6 +778,7 @@ namespace FubarDev.FtpServer
             public int Code { get; } = -1;
 
             /// <inheritdoc />
+            [Obsolete("Use a custom server command.")]
             public FtpResponseAfterWriteAsyncDelegate AfterWriteAction { get; } = null;
 
             /// <inheritdoc />
