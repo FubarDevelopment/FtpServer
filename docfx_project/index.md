@@ -11,7 +11,7 @@ This FTP Server is a pure .NET implementation with the following goals:
 
 There is a [quickstart tutorial](xref:quickstart) available.
 
-## What does it look like? (2.x)
+## What does it look like?
 
 [!code-cs[Program.cs](code-snippets/quickstart/Program.cs#L17-L48 "Main program code")]
 

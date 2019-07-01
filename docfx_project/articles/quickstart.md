@@ -28,15 +28,7 @@ dotnet add package FubarDev.FtpServer.FileSystem.DotNet
 
 Change your `Program.cs` to the following code:
 
-## [3.0](#tab/tabid-30)
-
 [!code-cs[Program.cs](../code-snippets/quickstart/Program.cs "The FTP server")]
-
-## [2.x](#tab/tabid-2x)
-
-[!code-cs[Program.cs](../code-snippets/quickstart-2.x/Program.cs "The FTP server")]
-
-***
 
 # Starting the FTP server
 
