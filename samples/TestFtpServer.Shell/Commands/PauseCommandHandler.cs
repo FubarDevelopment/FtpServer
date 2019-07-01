@@ -27,7 +27,7 @@ namespace TestFtpServer.Shell.Commands
         /// Initializes a new instance of the <see cref="PauseCommandHandler"/> class.
         /// </summary>
         /// <param name="client">The client to be used to communicate with the FTP server.</param>
-        public PauseCommandHandler([NotNull] IpcServiceClient<Api.IFtpServerHost> client)
+        public PauseCommandHandler([NotNull] IpcServiceClient<IFtpServerHost> client)
         {
             _client = client;
         }
