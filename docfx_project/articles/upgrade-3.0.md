@@ -3,39 +3,39 @@ uid: upgrade-to-3.0
 title: Upgrade from 2.x to 3.0
 ---
 
-- [Overview](#Overview)
-- [File system changes](#File-system-changes)
-- [Authorization/authentication as per RFC 2228](#Authorizationauthentication-as-per-RFC-2228)
-  - [Account directories queryable](#Account-directories-queryable)
-  - [Membership provider changes](#Membership-provider-changes)
-- [Connection](#Connection)
-  - [Connection data changes](#Connection-data-changes)
-  - [Data connections](#Data-connections)
-- [FTP middleware](#FTP-middleware)
-  - [FTP request middleware](#FTP-request-middleware)
-  - [FTP command execution middleware](#FTP-command-execution-middleware)
-- [Server commands](#Server-commands)
-  - [`CloseConnectionServerCommand`](#CloseConnectionServerCommand)
-  - [`SendResponseServerCommand`](#SendResponseServerCommand)
-- [FTP command execution](#FTP-command-execution)
-  - [`FtpContext`](#FtpContext)
-  - [Command handlers (and attributes)](#Command-handlers-and-attributes)
-  - [Command extensions (and attributes)](#Command-extensions-and-attributes)
-  - [`FEAT` support](#FEAT-support)
-- [Internals](#Internals)
-  - [FTP command collection changes](#FTP-command-collection-changes)
-- [Changelog](#Changelog)
-  - [What's new?](#Whats-new)
-  - [What's changed?](#Whats-changed)
-  - [What's fixed?](#Whats-fixed)
-- [A look into the future](#A-look-into-the-future)
+- [Overview](#overview)
+- [File system changes](#file-system-changes)
+- [Authorization/authentication as per RFC 2228](#authorizationauthentication-as-per-rfc-2228)
+  - [Account directories queryable](#account-directories-queryable)
+  - [Membership provider changes](#membership-provider-changes)
+- [Connection](#connection)
+  - [Connection data changes](#connection-data-changes)
+  - [Data connections](#data-connections)
+- [FTP middleware](#ftp-middleware)
+  - [FTP request middleware](#ftp-request-middleware)
+  - [FTP command execution middleware](#ftp-command-execution-middleware)
+- [Server commands](#server-commands)
+  - [`CloseConnectionServerCommand`](#closeconnectionservercommand)
+  - [`SendResponseServerCommand`](#sendresponseservercommand)
+- [FTP command execution](#ftp-command-execution)
+  - [`FtpContext`](#ftpcontext)
+  - [Command handlers (and attributes)](#command-handlers-and-attributes)
+  - [Command extensions (and attributes)](#command-extensions-and-attributes)
+  - [`FEAT` support](#feat-support)
+- [Internals](#internals)
+  - [FTP command collection changes](#ftp-command-collection-changes)
+- [Changelog](#changelog)
+  - [What's new?](#whats-new)
+  - [What's changed?](#whats-changed)
+  - [What's fixed?](#whats-fixed)
+- [A look into the future](#a-look-into-the-future)
 
 # Overview
 
 After the upgrade 3.0, you'll see that the `IFtpServer.Start` and `IFtpServer.Stop` functions are
 deprecated. Please query the [`IFtpServerHost`](xref:FubarDev.FtpServer.IFtpServerHost) instead and
-use the [`StartAsync`](xref:FubarDev.FtpServer.IFtpServerHost.StartAsync(System.Threading.CancellationToken))
-and [`StopAsync`](xref:FubarDev.FtpServer.IFtpServerHost.StopAsync(System.Threading.CancellationToken)) functions instead.
+use the [`StartAsync`](xref:FubarDev.FtpServer.IFtpServerHost.StartAsync(CancellationToken))
+and [`StopAsync`](xref:FubarDev.FtpServer.IFtpServerHost.StopAsync(CancellationToken)) functions instead.
 
 You will notice breaking changes in the following areas:
 
@@ -149,9 +149,9 @@ We're now using two factories to create data connections:
 
 This factories create a [`IFtpDataConnectionFeature`](xref:FubarDev.FtpServer.Features.IFtpDataConnectionFeature) which is used to create [`IFtpDataConnection`](xref:FubarDev.FtpServer.IFtpDataConnection) implementations. This allows us to abstract away the differences between active and passive data connections.
 
-The function `IFtpConnection.CreateResponseSocket` was replaced by [`IFtpConnection.OpenDataConnectionAsync`](xref:FubarDev.FtpServer.IFtpConnection.OpenDataConnectionAsync) and returns a [`IFtpDataConnection`](xref:FubarDev.FtpServer.IFtpDataConnection) implementation. This function also takes care of SSL/TLS encryption as it wraps the [`IFtpDataConnection`](xref:FubarDev.FtpServer.IFtpDataConnection) implementation returned by the [`IFtpDataConnectionFeature`](xref:FubarDev.FtpServer.Features.IFtpDataConnectionFeature) into a new [`IFtpDataConnection`](xref:FubarDev.FtpServer.IFtpDataConnection) implementation with the help of the [`SecureDataConnectionWrapper`](xref:FubarDev.FtpServer.DataConnection.SecureDataConnectionWrapper).
+The function `IFtpConnection.CreateResponseSocket` was replaced by [`IFtpConnection.OpenDataConnectionAsync`](xref:FubarDev.FtpServer.IFtpConnection.OpenDataConnectionAsync(System.Nullable{TimeSpan},CancellationToken)) and returns a [`IFtpDataConnection`](xref:FubarDev.FtpServer.IFtpDataConnection) implementation. This function also takes care of SSL/TLS encryption as it wraps the [`IFtpDataConnection`](xref:FubarDev.FtpServer.IFtpDataConnection) implementation returned by the [`IFtpDataConnectionFeature`](xref:FubarDev.FtpServer.Features.IFtpDataConnectionFeature) into a new [`IFtpDataConnection`](xref:FubarDev.FtpServer.IFtpDataConnection) implementation with the help of the [`SecureDataConnectionWrapper`](xref:FubarDev.FtpServer.DataConnection.SecureDataConnectionWrapper).
 
-The extension method `SendResponseAsync` on the `IFtpConnection` was replaced by [`SendDataAsync`](xref:FubarDev.FtpServer.ConnectionExtensions.SendDataAsync) and takes care of closing the [`IFtpDataConnection`](xref:FubarDev.FtpServer.IFtpDataConnection).
+The extension method `SendResponseAsync` on the `IFtpConnection` was replaced by [`SendDataAsync`](xref:FubarDev.FtpServer.ConnectionExtensions.SendDataAsync(FubarDev.FtpServer.IFtpConnection,Func{FubarDev.FtpServer.IFtpDataConnection,CancellationToken,Task{FubarDev.FtpServer.IFtpResponse}},ILogger,CancellationToken)) and takes care of closing the [`IFtpDataConnection`](xref:FubarDev.FtpServer.IFtpDataConnection).
 
 # FTP middleware
 

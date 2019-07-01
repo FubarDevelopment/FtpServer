@@ -26,6 +26,10 @@ dotnet add package FubarDev.FtpServer.FileSystem.DotNet
 
 # Create an `IHostedService` implementation
 
+> [!IMPORTANT]
+> This is only required for version 3.0, because the FTP server will
+> provide a much tighter ASP.NET Core integration in a future release.
+
 Create a new file named `HostedFtpService.cs`, which contains the following code:
 
 [!code-cs[Program.cs](../code-snippets/quickstart-generic-host/HostedFtpService.cs "The wrapper for the hosted FTP server")]

@@ -2,6 +2,12 @@
   href: intro.md
 - name: Quickstart
   href: xref:quickstart
+- name: Integration
+  items:
+  - name: ASP.NET Core
+    href: xref:quickstart-aspnetcore-host
+  - name: Generic Host
+    href: xref:quickstart-generic-host
 - name: Basics
   items:
   - name: Configuration
