@@ -5,6 +5,8 @@
 // <author>Mark Junker</author>
 //-----------------------------------------------------------------------
 
+using System;
+
 using JetBrains.Annotations;
 
 namespace FubarDev.FtpServer.BackgroundTransfer
@@ -14,16 +16,23 @@ namespace FubarDev.FtpServer.BackgroundTransfer
         private readonly object _sync = new object();
         private long? _transferred;
 
-        public BackgroundTransferEntry([NotNull] IBackgroundTransfer backgroundTransfer)
+        public BackgroundTransferEntry(
+            [NotNull] IBackgroundTransfer backgroundTransfer,
+            long sequenceNumber)
         {
             BackgroundTransfer = backgroundTransfer;
+            SequenceNumber = sequenceNumber;
             Status = BackgroundTransferStatus.Enqueued;
         }
+
+        public Guid Id { get; } = Guid.NewGuid();
 
         [NotNull]
         public IBackgroundTransfer BackgroundTransfer { get; }
 
         public BackgroundTransferStatus Status { get; set; }
+
+        public long SequenceNumber { get; }
 
         public long? Transferred
         {

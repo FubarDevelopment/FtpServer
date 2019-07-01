@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.0</TargetFrameworks>
+    <Description>Unix file system for portable FTP server</Description>
+    <PackageTags>unix;file;system;portable;FTP;server</PackageTags>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Mono.Posix.NETStandard" Version="1.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Options" Version="2.0.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\FubarDev.FtpServer.Abstractions\FubarDev.FtpServer.Abstractions.csproj" />
+  </ItemGroup>
+  <Import Project="../../PackageLibrary.props" />
+</Project>

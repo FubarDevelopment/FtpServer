@@ -8,33 +8,30 @@
 using System.Threading;
 using System.Threading.Tasks;
 
+using FubarDev.FtpServer.Commands;
+using FubarDev.FtpServer.ServerCommands;
+
 namespace FubarDev.FtpServer.CommandHandlers
 {
     /// <summary>
     /// Implements the <c>QUIT</c> command.
     /// </summary>
+    [FtpCommandHandler("QUIT", isLoginRequired: false)]
+    [FtpCommandHandler("LOGOUT", isLoginRequired: false)]
     public class QuitCommandHandler : FtpCommandHandler
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="QuitCommandHandler"/> class.
-        /// </summary>
-        /// <param name="connectionAccessor">The accessor to get the connection that is active during the <see cref="Process"/> method execution.</param>
-        public QuitCommandHandler(IFtpConnectionAccessor connectionAccessor)
-            : base(connectionAccessor, "QUIT", "LOGOUT")
-        {
-        }
-
         /// <inheritdoc/>
-        public override Task<FtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
+        public override async Task<IFtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
         {
-            return Task.FromResult(new FtpResponse(221, "Service closing control connection.")
-            {
-                AfterWriteAction = () =>
-                {
-                    Connection.SocketStream.Flush();
-                    Connection.Close();
-                },
-            });
+            await FtpContext.ServerCommandWriter.WriteAsync(
+                    new SendResponseServerCommand(new FtpResponse(221, T("Service closing control connection."))),
+                    cancellationToken)
+               .ConfigureAwait(false);
+            await FtpContext.ServerCommandWriter.WriteAsync(
+                    new CloseConnectionServerCommand(),
+                    cancellationToken)
+               .ConfigureAwait(false);
+            return null;
         }
     }
 }

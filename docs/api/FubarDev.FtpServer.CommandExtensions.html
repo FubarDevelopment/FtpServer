@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Namespace FubarDev.FtpServer.CommandExtensions
    | FTP Server documentation ">
-    <meta name="generator" content="docfx 2.42.0.0">
+    <meta name="generator" content="docfx 2.43.2.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -87,8 +87,17 @@
   <div class="markdown level0 remarks"></div>
     <h3 id="classes">Classes
   </h3>
+      <h4><a class="xref" href="FubarDev.FtpServer.CommandExtensions.AssemblyFtpCommandHandlerExtensionScanner.html">AssemblyFtpCommandHandlerExtensionScanner</a></h4>
+      <section><p>Scans the given assemblies for FTP command handlers.</p>
+</section>
+      <h4><a class="xref" href="FubarDev.FtpServer.CommandExtensions.DefaultFtpCommandHandlerExtensionProvider.html">DefaultFtpCommandHandlerExtensionProvider</a></h4>
+      <section><p>Default implementation of <see cref="!:IFtpCommandHandlerExtensionProvider"></see>.</p>
+</section>
       <h4><a class="xref" href="FubarDev.FtpServer.CommandExtensions.FtpCommandHandlerExtension.html">FtpCommandHandlerExtension</a></h4>
       <section><p>The base class for FTP command extensions.</p>
+</section>
+      <h4><a class="xref" href="FubarDev.FtpServer.CommandExtensions.FtpCommandHandlerExtensionAttribute.html">FtpCommandHandlerExtensionAttribute</a></h4>
+      <section><p>Marks a class as being an FTP command handler extension.</p>
 </section>
       <h4><a class="xref" href="FubarDev.FtpServer.CommandExtensions.OptsMlstCommandExtension.html">OptsMlstCommandExtension</a></h4>
       <section><p><code>MLST</code> extension for the <code>OPTS</code> command.</p>
@@ -96,11 +105,28 @@
       <h4><a class="xref" href="FubarDev.FtpServer.CommandExtensions.OptsUtf8CommandExtension.html">OptsUtf8CommandExtension</a></h4>
       <section><p>The implementation of the <code>OPTS UTF8</code> command.</p>
 </section>
+      <h4><a class="xref" href="FubarDev.FtpServer.CommandExtensions.ServiceFtpCommandHandlerExtensionScanner.html">ServiceFtpCommandHandlerExtensionScanner</a></h4>
+      <section><p>Uses DI to get the FTP command handlers.</p>
+</section>
       <h4><a class="xref" href="FubarDev.FtpServer.CommandExtensions.SiteBlstCommandExtension.html">SiteBlstCommandExtension</a></h4>
       <section><p>The implementation of the <code>SITE BLST</code> command.</p>
 </section>
       <h4><a class="xref" href="FubarDev.FtpServer.CommandExtensions.SiteUtimeCommandExtension.html">SiteUtimeCommandExtension</a></h4>
       <section><p>The implementation of the <code>SITE UTIME</code> command.</p>
+</section>
+    <h3 id="interfaces">Interfaces
+  </h3>
+      <h4><a class="xref" href="FubarDev.FtpServer.CommandExtensions.IFtpCommandHandlerExtensionInformation.html">IFtpCommandHandlerExtensionInformation</a></h4>
+      <section><p>Interface for an FTP command handler extension.</p>
+</section>
+      <h4><a class="xref" href="FubarDev.FtpServer.CommandExtensions.IFtpCommandHandlerExtensionInstanceInformation.html">IFtpCommandHandlerExtensionInstanceInformation</a></h4>
+      <section><p>Interface to get the instance for a command handler extension created through dependency injection.</p>
+</section>
+      <h4><a class="xref" href="FubarDev.FtpServer.CommandExtensions.IFtpCommandHandlerExtensionProvider.html">IFtpCommandHandlerExtensionProvider</a></h4>
+      <section><p>Provides information about all found FTP command handler extensions.</p>
+</section>
+      <h4><a class="xref" href="FubarDev.FtpServer.CommandExtensions.IFtpCommandHandlerExtensionScanner.html">IFtpCommandHandlerExtensionScanner</a></h4>
+      <section><p>Searches for FTP command handler extensions and returns information about it.</p>
 </section>
 </article>
           </div>

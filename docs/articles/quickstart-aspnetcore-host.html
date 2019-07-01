@@ -1,0 +1,220 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Your first FTP server | FTP Server documentation </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Your first FTP server | FTP Server documentation ">
+    <meta name="generator" content="docfx 2.43.2.0">
+    
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    <meta property="docfx:rel" content="../">
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div class="container body-content">
+        
+        <div id="search-results">
+          <div class="search-list"></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination"></ul>
+        </div>
+      </div>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="quickstart-aspnetcore-host">
+<h1 id="creating-a-project">Creating a project</h1>
+
+<pre><code class="lang-bash">mkdir TestAspNetCoreHost
+cd TestAspNetCoreHost
+dotnet new web --no-https
+</code></pre>
+<h1 id="adding-the-nuget-packages">Adding the NuGet packages</h1>
+<pre><code class="lang-bash"># For the main FTP server
+dotnet add package FubarDev.FtpServer
+
+# For the System.IO-based file system access
+dotnet add package FubarDev.FtpServer.FileSystem.DotNet
+</code></pre>
+<h1 id="create-an-ihostedservice-implementation">Create an <code>IHostedService</code> implementation</h1>
+<p>Create a new file named <code>HostedFtpService.cs</code>, which contains the following code:</p>
+<pre><code class="lang-cs" name="Program.cs" title="The wrapper for the hosted FTP server">using System.Threading;
+using System.Threading.Tasks;
+using FubarDev.FtpServer;
+using Microsoft.Extensions.Hosting;
+
+namespace TestAspNetCoreHost
+{
+    internal class HostedFtpService : IHostedService
+    {
+        private readonly IFtpServerHost _ftpServerHost;
+
+        /// &lt;summary&gt;
+        /// Initializes a new instance of the &lt;see cref=&quot;HostedFtpService&quot;/&gt; class.
+        /// &lt;/summary&gt;
+        /// &lt;param name=&quot;ftpServerHost&quot;&gt;The FTP server host that gets wrapped as a hosted service.&lt;/param&gt;
+        public HostedFtpService(
+            IFtpServerHost ftpServerHost)
+        {
+            _ftpServerHost = ftpServerHost;
+        }
+
+        /// &lt;inheritdoc /&gt;
+        public Task StartAsync(CancellationToken cancellationToken)
+        {
+            return _ftpServerHost.StartAsync(cancellationToken);
+        }
+
+        /// &lt;inheritdoc /&gt;
+        public Task StopAsync(CancellationToken cancellationToken)
+        {
+            return _ftpServerHost.StopAsync(cancellationToken);
+        }
+    }
+}
+</code></pre><h1 id="using-the-ftp-server">Using the FTP server</h1>
+<p>Change your <code>Program.cs</code> to the following code:</p>
+<pre><code class="lang-cs" name="Program.cs" title="The FTP server">using System.IO;
+using FubarDev.FtpServer;
+using FubarDev.FtpServer.FileSystem.DotNet;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+
+namespace TestAspNetCoreHost
+{
+    public class Program
+    {
+        public static void Main(string[] args)
+        {
+            CreateHostBuilder(args).Build().Run();
+        }
+
+        public static IHostBuilder CreateHostBuilder(string[] args) =&gt;
+            Host.CreateDefaultBuilder(args)
+               .ConfigureServices(
+                    services =&gt;
+                    {
+                        // Add FTP server services
+                        // DotNetFileSystemProvider = Use the .NET file system functionality
+                        // AnonymousMembershipProvider = allow only anonymous logins
+                        services
+                           .AddFtpServer(
+                                builder =&gt; builder
+                                   .UseDotNetFileSystem()
+                                   .EnableAnonymousAuthentication());
+
+                        // Configure the FTP server
+                        services.Configure&lt;FtpServerOptions&gt;(opt =&gt; opt.ServerAddress = &quot;*&quot;);
+
+                        // use %TEMP%/TestFtpServer as root folder
+                        services.Configure&lt;DotNetFileSystemOptions&gt;(opt =&gt; opt
+                            .RootPath = Path.Combine(Path.GetTempPath(), &quot;TestFtpServer&quot;));
+
+                        // Add the FTP server as hosted service
+                        services
+                           .AddHostedService&lt;HostedFtpService&gt;();
+                    })
+                .ConfigureWebHostDefaults(webBuilder =&gt;
+                {
+                    webBuilder.UseStartup&lt;Startup&gt;();
+                });
+    }
+}
+</code></pre><h1 id="starting-the-ftp-server">Starting the FTP server</h1>
+<pre><code class="lang-bash">dotnet run
+</code></pre>
+<p>Now your FTP server should be accessible at <code>127.0.0.1:21</code>.</p>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/FubarDevelopment/FtpServer/blob/master/docfx_project/articles/quickstart-aspnetcore-host.md/#L1" class="contribution-link">Improve this Doc</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            <table border='0'><tr><td><span>Copyright © 2018 Fubar Development Junker<br>Generated by <strong>DocFX</strong></span></td><td><a rel='license' href='http://creativecommons.org/licenses/by-sa/4.0/'><img alt='Creative Commons License' style='border-width:0' src='https://i.creativecommons.org/l/by-sa/4.0/88x31.png'></a><br><span xmlns:dct='http://purl.org/dc/terms/' property='dct:title'>FluentMigrator Documentation</span> by <a xmlns:cc='http://creativecommons.org/ns#' href='https://fluentmigrator.github.io' property='cc:attributionName' rel='cc:attributionURL'>FluentMigrator Project</a> is licensed under a <a rel='license' href='http://creativecommons.org/licenses/by-sa/4.0/'>Creative Commons Attribution-ShareAlike 4.0 International License</a>.</td></tr></table>
+            
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>

@@ -1,0 +1,238 @@
+// <copyright file="PathSelectionResult.cs" company="Fubar Development Junker">
+// Copyright (c) Fubar Development Junker. All rights reserved.
+// </copyright>
+
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using System.Text;
+
+using JetBrains.Annotations;
+
+namespace FubarDev.FtpServer.FileSystem
+{
+    /// <summary>
+    /// The result of a <see cref="PathSelector.SelectAsync(IUnixFileSystem,string,System.Threading.CancellationToken)"/> operation.
+    /// </summary>
+    public class PathSelectionResult
+    {
+        [CanBeNull]
+        private readonly IUnixFileEntry _document;
+
+        [NotNull]
+        [ItemNotNull]
+        private readonly Stack<IUnixDirectoryEntry> _foundPathSegments;
+
+        [NotNull]
+        [ItemNotNull]
+        private readonly IReadOnlyCollection<string> _missingPathSegments;
+
+        internal PathSelectionResult(
+            PathSelectionResultType resultType,
+            [CanBeNull] IUnixFileEntry document,
+            [NotNull][ItemNotNull] Stack<IUnixDirectoryEntry> foundPathSegments,
+            [CanBeNull][ItemNotNull] IReadOnlyCollection<string> missingPathSegments)
+        {
+            ResultType = resultType;
+            _document = document;
+            _foundPathSegments = foundPathSegments;
+            _missingPathSegments = missingPathSegments ?? Array.Empty<string>();
+        }
+
+        /// <summary>
+        /// Gets the type of the result.
+        /// </summary>
+        public PathSelectionResultType ResultType { get; }
+
+        /// <summary>
+        /// Gets a value indicating whether there was a missing path part.
+        /// </summary>
+        public bool IsMissing =>
+            ResultType == PathSelectionResultType.MissingDirectory ||
+            ResultType == PathSelectionResultType.MissingFileOrDirectory;
+
+        /// <summary>
+        /// Gets the directory of the search result.
+        /// </summary>
+        /// <remarks>
+        /// When <see cref="ResultType"/> is <see cref="PathSelectionResultType.FoundDirectory"/>, this is the found directory.
+        /// When <see cref="ResultType"/> is <see cref="PathSelectionResultType.FoundFile"/>, this is the parent directory.
+        /// Otherwise, this is the last found directory.
+        /// </remarks>
+        [NotNull]
+        public IUnixDirectoryEntry Directory => _foundPathSegments.Peek();
+
+        /// <summary>
+        /// Gets the found document.
+        /// </summary>
+        /// <remarks>
+        /// This property is only valid when <see cref="ResultType"/> is <see cref="PathSelectionResultType.FoundFile"/>.
+        /// </remarks>
+        [CanBeNull]
+        public IUnixFileEntry File
+        {
+            get
+            {
+                if (ResultType != PathSelectionResultType.FoundFile)
+                {
+                    throw new InvalidOperationException();
+                }
+
+                return _document;
+            }
+        }
+
+        /// <summary>
+        /// Gets the directory of missing child elements.
+        /// </summary>
+        /// <remarks>
+        /// This is only valid, when <see cref="IsMissing"/> is <see langword="true"/>.
+        /// </remarks>
+        [NotNull]
+        [ItemNotNull]
+        public IReadOnlyCollection<string> MissingNames
+        {
+            get
+            {
+                if (ResultType != PathSelectionResultType.MissingDirectory && ResultType != PathSelectionResultType.MissingFileOrDirectory)
+                {
+                    throw new InvalidOperationException();
+                }
+
+                return _missingPathSegments;
+            }
+        }
+
+        /// <summary>
+        /// Gets the full root-relative path of the element that was searched.
+        /// </summary>
+        [NotNull]
+        public string FullPath
+        {
+            get
+            {
+                var result = new StringBuilder();
+
+                foreach (var foundPathSegment in _foundPathSegments.Reverse())
+                {
+                    result.Append(foundPathSegment.GetPathSegment());
+                }
+
+                foreach (var missingPathSegment in _missingPathSegments)
+                {
+                    result.Append(missingPathSegment);
+                }
+
+                return result.ToString();
+            }
+        }
+
+        /// <summary>
+        /// Gets the found target entry.
+        /// </summary>
+        /// <remarks>
+        /// This is only valid when <see cref="IsMissing"/> is <see langword="false"/>.
+        /// </remarks>
+        [NotNull]
+        public IUnixFileSystemEntry TargetEntry
+        {
+            get
+            {
+                if (IsMissing)
+                {
+                    throw new InvalidOperationException();
+                }
+
+                if (ResultType == PathSelectionResultType.FoundFile)
+                {
+                    Debug.Assert(File != null, "File != null");
+                    return File ?? throw new InvalidOperationException("File is null even though a file was found?");
+                }
+
+                return Directory;
+            }
+        }
+
+        /// <summary>
+        /// Creates a selection result for a found file.
+        /// </summary>
+        /// <param name="foundPathSegments">The found path segments.</param>
+        /// <param name="document">The found file.</param>
+        /// <returns>The created selection result.</returns>
+        [NotNull]
+        public static PathSelectionResult Create(
+            [NotNull, ItemNotNull] Stack<IUnixDirectoryEntry> foundPathSegments,
+            [NotNull] IUnixFileEntry document)
+        {
+            return new PathSelectionResult(
+                PathSelectionResultType.FoundFile,
+                document ?? throw new ArgumentNullException(nameof(document)),
+                foundPathSegments ?? throw new ArgumentNullException(nameof(foundPathSegments)),
+                null);
+        }
+
+        /// <summary>
+        /// Creates a selection result for a found directory.
+        /// </summary>
+        /// <param name="foundPathSegments">The found path segments.</param>
+        /// <returns>The created selection result.</returns>
+        [NotNull]
+        public static PathSelectionResult Create(
+            [NotNull, ItemNotNull] Stack<IUnixDirectoryEntry> foundPathSegments)
+        {
+            return new PathSelectionResult(
+                PathSelectionResultType.FoundDirectory,
+                null,
+                foundPathSegments ?? throw new ArgumentNullException(nameof(foundPathSegments)),
+                null);
+        }
+
+        /// <summary>
+        /// Creates a selection for a missing file or directory.
+        /// </summary>
+        /// <param name="foundPathSegments">The found path segments.</param>
+        /// <param name="missingPathSegments">The missing path elements.</param>
+        /// <returns>The created selection result.</returns>
+        [NotNull]
+        public static PathSelectionResult CreateMissingFileOrDirectory(
+            [NotNull, ItemNotNull] Stack<IUnixDirectoryEntry> foundPathSegments,
+            [NotNull] [ItemNotNull] IReadOnlyCollection<string> missingPathSegments)
+        {
+            return new PathSelectionResult(
+                PathSelectionResultType.MissingFileOrDirectory,
+                null,
+                foundPathSegments ?? throw new ArgumentNullException(nameof(foundPathSegments)),
+                missingPathSegments ?? throw new ArgumentNullException(nameof(missingPathSegments)));
+        }
+
+        /// <summary>
+        /// Creates a selection for a missing directory.
+        /// </summary>
+        /// <param name="foundPathSegments">The found path segments.</param>
+        /// <param name="missingPathSegments">The missing path elements.</param>
+        /// <returns>The created selection result.</returns>
+        [NotNull]
+        public static PathSelectionResult CreateMissingDirectory(
+            [NotNull, ItemNotNull] Stack<IUnixDirectoryEntry> foundPathSegments,
+            [NotNull] [ItemNotNull] IReadOnlyCollection<string> missingPathSegments)
+        {
+            return new PathSelectionResult(
+                PathSelectionResultType.MissingDirectory,
+                null,
+                foundPathSegments ?? throw new ArgumentNullException(nameof(foundPathSegments)),
+                missingPathSegments ?? throw new ArgumentNullException(nameof(missingPathSegments)));
+        }
+
+        /// <summary>
+        /// Get the full path as directory entries.
+        /// </summary>
+        /// <returns>The full path as directory entries.</returns>
+        [NotNull]
+        [ItemNotNull]
+        public Stack<IUnixDirectoryEntry> GetPath()
+        {
+            return new Stack<IUnixDirectoryEntry>(_foundPathSegments.Reverse().SkipWhile(x => x.IsRoot));
+        }
+    }
+}

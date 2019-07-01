@@ -9,19 +9,30 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.IO.Pipelines;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
+using System.Threading.Channels;
 using System.Threading.Tasks;
 
-using FubarDev.FtpServer.BackgroundTransfer;
+using FubarDev.FtpServer.Authentication;
 using FubarDev.FtpServer.CommandHandlers;
-using FubarDev.FtpServer.FileSystem.Error;
+using FubarDev.FtpServer.Commands;
+using FubarDev.FtpServer.ConnectionHandlers;
+using FubarDev.FtpServer.DataConnection;
+using FubarDev.FtpServer.Features;
+using FubarDev.FtpServer.Features.Impl;
+using FubarDev.FtpServer.Localization;
+using FubarDev.FtpServer.Networking;
+using FubarDev.FtpServer.ServerCommands;
 
 using JetBrains.Annotations;
 
+using Microsoft.AspNetCore.Http.Features;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
@@ -30,125 +41,292 @@ namespace FubarDev.FtpServer
     /// <summary>
     /// This class represents a FTP connection.
     /// </summary>
-    public sealed class FtpConnection : IFtpConnection
+    public sealed class FtpConnection : FtpConnectionContext, IFtpConnection
     {
         private readonly CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
 
+        [NotNull]
         private readonly TcpClient _socket;
 
         [NotNull]
         private readonly IFtpConnectionAccessor _connectionAccessor;
 
+        [NotNull]
+        private readonly IServerCommandExecutor _serverCommandExecutor;
+
+        [NotNull]
+        private readonly SecureDataConnectionWrapper _secureDataConnectionWrapper;
+
+        [NotNull]
+        private readonly IFtpServerMessages _serverMessages;
+
+        [CanBeNull]
         private readonly IDisposable _loggerScope;
 
         [NotNull]
-        [ItemNotNull]
-        private readonly IReadOnlyCollection<IFtpCommandHandlerExtension> _extensions;
+        private readonly Channel<IServerCommand> _serverCommandChannel;
 
-        private bool _closed;
+        [NotNull]
+        private readonly Pipe _socketCommandPipe = new Pipe();
 
-        private Task<FtpResponse> _activeBackgroundTask;
+        [NotNull]
+        private readonly Pipe _socketResponsePipe = new Pipe();
+
+        [NotNull]
+        private readonly NetworkStreamFeature _networkStreamFeature;
+
+        [NotNull]
+        private readonly Task _commandReader;
+
+        [NotNull]
+        private readonly Channel<FtpCommand> _ftpCommandChannel = Channel.CreateBounded<FtpCommand>(5);
+
+        [NotNull]
+        private readonly Address _remoteAddress;
+
+        private readonly int? _dataPort;
+
+        [CanBeNull]
+        private readonly ILogger<FtpConnection> _logger;
+
+        private bool _connectionClosing;
+
+        private int _connectionClosed;
+
+        [CanBeNull]
+        private Task _commandChannelReader;
+
+        [CanBeNull]
+        private Task _serverCommandHandler;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FtpConnection"/> class.
         /// </summary>
         /// <param name="socket">The socket to use to communicate with the client.</param>
-        /// <param name="connectionAccessor">The accessor to get the connection that is active during the <see cref="FtpCommandHandler.Process"/> method execution.</param>
-        /// <param name="commandHandlerExtensions">The registered command handler extensions.</param>
-        /// <param name="logger">The logger for the FTP connection.</param>
         /// <param name="options">The options for the FTP connection.</param>
-        /// <param name="commandHandlers">The registered command handlers.</param>
+        /// <param name="portOptions">The <c>PORT</c> command options.</param>
+        /// <param name="connectionAccessor">The accessor to get the connection that is active during the <see cref="FtpCommandHandler.Process"/> method execution.</param>
+        /// <param name="catalogLoader">The catalog loader for the FTP server.</param>
+        /// <param name="serverCommandExecutor">The executor for server commands.</param>
+        /// <param name="serviceProvider">The service provider for the connection.</param>
+        /// <param name="secureDataConnectionWrapper">Wraps a data connection into an SSL stream.</param>
+        /// <param name="serverMessages">The server messages.</param>
+        /// <param name="sslStreamWrapperFactory">The SSL stream wrapper factory.</param>
+        /// <param name="logger">The logger for the FTP connection.</param>
         public FtpConnection(
             [NotNull] TcpClient socket,
             [NotNull] IOptions<FtpConnectionOptions> options,
+            [NotNull] IOptions<PortCommandOptions> portOptions,
             [NotNull] IFtpConnectionAccessor connectionAccessor,
-            [NotNull, ItemNotNull] IEnumerable<IFtpCommandHandler> commandHandlers,
-            [NotNull, ItemNotNull] IEnumerable<IFtpCommandHandlerExtension> commandHandlerExtensions,
-            [CanBeNull] ILogger<IFtpConnection> logger = null)
+            [NotNull] IFtpCatalogLoader catalogLoader,
+            [NotNull] IServerCommandExecutor serverCommandExecutor,
+            [NotNull] IServiceProvider serviceProvider,
+            [NotNull] SecureDataConnectionWrapper secureDataConnectionWrapper,
+            [NotNull] IFtpServerMessages serverMessages,
+            [NotNull] ISslStreamWrapperFactory sslStreamWrapperFactory,
+            [CanBeNull] ILogger<FtpConnection> logger = null)
         {
+            ConnectionServices = serviceProvider;
+
+            ConnectionId = "FTP-" + Guid.NewGuid().ToString("N");
+
+            _dataPort = portOptions.Value.DataPort;
             var endpoint = (IPEndPoint)socket.Client.RemoteEndPoint;
-            RemoteAddress = new Address(endpoint.Address.ToString(), endpoint.Port);
+            var remoteAddress = _remoteAddress = new Address(endpoint.Address.ToString(), endpoint.Port);
 
             var properties = new Dictionary<string, object>
             {
-                ["RemoteAddress"] = RemoteAddress.ToString(true),
-                ["RemoteIp"] = RemoteAddress.IPAddress?.ToString(),
-                ["RemotePort"] = RemoteAddress.Port,
+                ["RemoteAddress"] = remoteAddress.ToString(true),
+                ["RemoteIp"] = remoteAddress.IPAddress?.ToString(),
+                ["RemotePort"] = remoteAddress.Port,
+                ["ConnectionId"] = ConnectionId,
             };
+
             _loggerScope = logger?.BeginScope(properties);
 
             _socket = socket;
             _connectionAccessor = connectionAccessor;
-            Log = logger;
-            SocketStream = OriginalStream = socket.GetStream();
-            Encoding = options.Value.DefaultEncoding ?? Encoding.ASCII;
-            PromiscuousPasv = options.Value.PromiscuousPasv;
-            Data = new FtpConnectionData(new BackgroundCommandHandler(this));
+            _serverCommandExecutor = serverCommandExecutor;
+            _secureDataConnectionWrapper = secureDataConnectionWrapper;
+            _serverMessages = serverMessages;
+            _serverCommandChannel = Channel.CreateBounded<IServerCommand>(new BoundedChannelOptions(3));
 
-            var commandHandlersList = commandHandlers.ToList();
-            var dict = commandHandlersList
-                .SelectMany(x => x.Names, (item, name) => new { Name = name, Item = item })
-                .ToLookup(x => x.Name, x => x.Item, StringComparer.OrdinalIgnoreCase)
-                .ToDictionary(x => x.Key, x => x.Last());
+            _logger = logger;
 
-            _extensions = commandHandlerExtensions.ToList();
+            var parentFeatures = new FeatureCollection();
+            var connectionFeature = new ConnectionFeature(
+                (IPEndPoint)socket.Client.LocalEndPoint,
+                remoteAddress);
+            var secureConnectionFeature = new SecureConnectionFeature(socket);
 
-            CommandHandlers = dict;
+            var applicationInputPipe = new Pipe();
+            var applicationOutputPipe = new Pipe();
+            var socketPipe = new DuplexPipe(_socketCommandPipe.Reader, _socketResponsePipe.Writer);
+            var connectionPipe = new DuplexPipe(applicationOutputPipe.Reader, applicationInputPipe.Writer);
+
+            _networkStreamFeature = new NetworkStreamFeature(
+                new SecureConnectionAdapter(
+                    socketPipe,
+                    connectionPipe,
+                    sslStreamWrapperFactory,
+                    _cancellationTokenSource.Token),
+                new ConnectionClosingNetworkStreamReader(
+                    secureConnectionFeature.OriginalStream,
+                    _socketCommandPipe.Writer,
+                    _cancellationTokenSource),
+                new StreamPipeWriterService(
+                    secureConnectionFeature.OriginalStream,
+                    _socketResponsePipe.Reader,
+                    _cancellationTokenSource.Token),
+                applicationOutputPipe.Writer);
+
+            parentFeatures.Set<IConnectionFeature>(connectionFeature);
+            parentFeatures.Set<ISecureConnectionFeature>(secureConnectionFeature);
+            parentFeatures.Set<IServerCommandFeature>(new ServerCommandFeature(_serverCommandChannel));
+            parentFeatures.Set<INetworkStreamFeature>(_networkStreamFeature);
+
+            var features = new FeatureCollection(parentFeatures);
+#pragma warning disable 618
+            Data = new FtpConnectionData(
+                options.Value.DefaultEncoding ?? Encoding.ASCII,
+                features,
+                catalogLoader);
+#pragma warning restore 618
+
+            Features = features;
+
+            _commandReader = ReadCommandsFromPipeline(
+                applicationInputPipe.Reader,
+                _ftpCommandChannel.Writer,
+                _cancellationTokenSource.Token);
         }
 
         /// <inheritdoc />
         public event EventHandler Closed;
 
         /// <inheritdoc />
-        public IReadOnlyDictionary<string, IFtpCommandHandler> CommandHandlers { get; }
+        public IServiceProvider ConnectionServices { get; }
 
         /// <inheritdoc />
-        public Encoding Encoding { get; set; }
+        public override string ConnectionId { get; set; }
+
+        /// <summary>
+        /// Gets the feature collection.
+        /// </summary>
+        public override IFeatureCollection Features { get; }
 
         /// <inheritdoc />
-        public bool PromiscuousPasv { get; }
+        [Obsolete("Query the information using the IEncodingFeature instead.")]
+        public Encoding Encoding
+        {
+            get => Features.Get<IEncodingFeature>().Encoding;
+            set => Features.Get<IEncodingFeature>().Encoding = value;
+        }
 
         /// <inheritdoc />
+        [Obsolete("Query the information using the Features property instead.")]
         public FtpConnectionData Data { get; }
 
         /// <inheritdoc />
-        public ILogger Log { get; }
+        [Obsolete("Use your own logger instead of the one from the connection.")]
+        public ILogger Log => _logger;
 
         /// <inheritdoc />
-        public IPEndPoint LocalEndPoint => (IPEndPoint)_socket.Client.LocalEndPoint;
+        [Obsolete("Query the information using the IConnectionFeature instead.")]
+        public IPEndPoint LocalEndPoint
+            => Features.Get<IConnectionFeature>().LocalEndPoint;
 
         /// <inheritdoc />
-        public Stream OriginalStream { get; }
+        [Obsolete("Query the information using the IConnectionFeature instead.")]
+        public Address RemoteAddress
+            => Features.Get<IConnectionFeature>().RemoteAddress;
 
         /// <inheritdoc />
-        public Stream SocketStream { get; set; }
+        [Obsolete("Query the information using the ISecureConnectionFeature instead.")]
+        public Stream OriginalStream => Features.Get<ISecureConnectionFeature>().OriginalStream;
 
         /// <inheritdoc />
-        public bool IsSecure => !ReferenceEquals(SocketStream, OriginalStream);
+        [Obsolete("Not needed anymore.")]
+        public Stream SocketStream
+        {
+            get => OriginalStream;
+            set => throw new NotSupportedException("Setting the socket stream isn't supported.");
+        }
 
         /// <inheritdoc />
-        public Address RemoteAddress { get; }
+        [Obsolete("Not needed anymore.")]
+        public bool IsSecure => throw new NotSupportedException("Access to irrelevant leaking abstraction.");
 
         /// <summary>
         /// Gets the cancellation token to use to signal a task cancellation.
         /// </summary>
         CancellationToken IFtpConnection.CancellationToken => _cancellationTokenSource.Token;
 
-        /// <summary>
-        /// Starts processing of messages for this connection.
-        /// </summary>
-        public void Start()
+        /// <inheritdoc />
+        public async Task StartAsync()
         {
-            Task.Run(ProcessMessages, _cancellationTokenSource.Token);
+            // Initialize the FTP connection accessor
+            _connectionAccessor.FtpConnection = this;
+
+            // Set the default FTP data connection feature
+            var activeDataConnectionFeatureFactory = ConnectionServices.GetRequiredService<ActiveDataConnectionFeatureFactory>();
+            var dataConnectionFeature = await activeDataConnectionFeatureFactory.CreateFeatureAsync(null, _remoteAddress, _dataPort)
+               .ConfigureAwait(false);
+            Features.Set(dataConnectionFeature);
+
+            // Connection information
+            var connectionFeature = Features.Get<IConnectionFeature>();
+            _logger?.LogInformation($"Connected from {connectionFeature.RemoteAddress.ToString(true)}");
+
+            await _networkStreamFeature.StreamWriterService.StartAsync(CancellationToken.None)
+               .ConfigureAwait(false);
+            await _networkStreamFeature.StreamReaderService.StartAsync(CancellationToken.None)
+               .ConfigureAwait(false);
+            await _networkStreamFeature.SecureConnectionAdapter.StartAsync(CancellationToken.None)
+               .ConfigureAwait(false);
+
+            _commandChannelReader = CommandChannelDispatcherAsync(
+                _ftpCommandChannel.Reader,
+                _cancellationTokenSource.Token);
+
+            _serverCommandHandler = SendResponsesAsync(_serverCommandChannel, _cancellationTokenSource.Token);
         }
 
-        /// <summary>
-        /// Closes the connection.
-        /// </summary>
-        public void Close()
+        /// <inheritdoc />
+        public async Task StopAsync()
         {
-            _cancellationTokenSource.Cancel(true);
-            _closed = true;
+            _logger?.LogTrace("StopAsync called");
+
+            if (Interlocked.CompareExchange(ref _connectionClosed, 1, 0) != 0)
+            {
+                return;
+            }
+
+            Abort();
+
+            _serverCommandChannel.Writer.Complete();
+            await _commandReader.ConfigureAwait(false);
+
+            if (_commandChannelReader != null)
+            {
+                await _commandChannelReader.ConfigureAwait(false);
+            }
+
+            if (_serverCommandHandler != null)
+            {
+                await _serverCommandHandler.ConfigureAwait(false);
+            }
+
+            await _networkStreamFeature.StreamReaderService.StopAsync(CancellationToken.None)
+               .ConfigureAwait(false);
+            await _networkStreamFeature.StreamWriterService.StopAsync(CancellationToken.None)
+               .ConfigureAwait(false);
+            await _networkStreamFeature.SecureConnectionAdapter.StopAsync(CancellationToken.None)
+               .ConfigureAwait(false);
+
+            _logger?.LogInformation("Connection closed");
+
+            OnClosed();
         }
 
         /// <summary>
@@ -157,15 +335,13 @@ namespace FubarDev.FtpServer
         /// <param name="response">The response to write to the client.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>The task.</returns>
-        public async Task WriteAsync(FtpResponse response, CancellationToken cancellationToken)
+        [Obsolete("Use the IConnectionFeature.ServerCommandWriter instead.")]
+        public async Task WriteAsync(IFtpResponse response, CancellationToken cancellationToken)
         {
-            if (!_closed)
-            {
-                Log?.Log(response);
-                var data = Encoding.GetBytes($"{response}\r\n");
-                await SocketStream.WriteAsync(data, 0, data.Length, cancellationToken).ConfigureAwait(false);
-                response.AfterWriteAction?.Invoke();
-            }
+            await _serverCommandChannel.Writer.WriteAsync(
+                    new SendResponseServerCommand(response),
+                    cancellationToken)
+               .ConfigureAwait(false);
         }
 
         /// <summary>
@@ -174,38 +350,21 @@ namespace FubarDev.FtpServer
         /// <param name="response">The response to write to the client.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>The task.</returns>
+        [Obsolete("Use the IConnectionFeature.ServerCommandWriter instead.")]
         public async Task WriteAsync(string response, CancellationToken cancellationToken)
         {
-            if (!_closed)
-            {
-                Log?.LogDebug(response);
-                var data = Encoding.GetBytes($"{response}\r\n");
-                await SocketStream.WriteAsync(data, 0, data.Length, cancellationToken).ConfigureAwait(false);
-            }
+            await _serverCommandChannel.Writer.WriteAsync(new SendResponseServerCommand(new DirectFtpResponse(response)), cancellationToken)
+               .ConfigureAwait(false);
         }
 
-        /// <summary>
-        /// Creates a response socket for e.g. LIST/NLST.
-        /// </summary>
-        /// <returns>The data connection.</returns>
-        [NotNull]
-        [ItemNotNull]
-        public async Task<TcpClient> CreateResponseSocket()
+        /// <inheritdoc/>
+        public async Task<IFtpDataConnection> OpenDataConnectionAsync(TimeSpan? timeout, CancellationToken cancellationToken)
         {
-            var portAddress = Data.PortAddress;
-            if (portAddress != null)
-            {
-                var result = new TcpClient(portAddress.AddressFamily ?? AddressFamily.InterNetwork);
-                await result.ConnectAsync(portAddress.IPAddress, portAddress.Port).ConfigureAwait(false);
-                return result;
-            }
-
-            if (Data.PassiveSocketClient == null)
-            {
-                throw new InvalidOperationException("Passive connection expected, but none found");
-            }
-
-            return Data.PassiveSocketClient;
+            var dataConnectionFeature = Features.Get<IFtpDataConnectionFeature>();
+            var dataConnection = await dataConnectionFeature.GetDataConnectionAsync(timeout ?? TimeSpan.FromSeconds(10), cancellationToken)
+               .ConfigureAwait(false);
+            return await _secureDataConnectionWrapper.WrapAsync(dataConnection)
+               .ConfigureAwait(false);
         }
 
         /// <summary>
@@ -213,227 +372,426 @@ namespace FubarDev.FtpServer
         /// </summary>
         /// <param name="unencryptedStream">The stream to encrypt.</param>
         /// <returns>The encrypted stream.</returns>
+        [Obsolete("The data connection returned by OpenDataConnection is already encrypted.")]
         public Task<Stream> CreateEncryptedStream(Stream unencryptedStream)
         {
-            if (Data.CreateEncryptedStream == null)
+            var createEncryptedStream = Features.Get<ISecureConnectionFeature>().CreateEncryptedStream;
+
+            if (createEncryptedStream == null)
             {
                 return Task.FromResult(unencryptedStream);
             }
 
-            return Data.CreateEncryptedStream(unencryptedStream);
+            return createEncryptedStream(unencryptedStream);
         }
 
         /// <inheritdoc/>
         public void Dispose()
         {
-            if (!_closed)
+            if (!_connectionClosing)
             {
-                Close();
-            }
-
-            if (!ReferenceEquals(SocketStream, OriginalStream))
-            {
-                SocketStream.Dispose();
-                SocketStream = OriginalStream;
+                Abort();
             }
 
             _socket.Dispose();
             _cancellationTokenSource.Dispose();
+#pragma warning disable 618
             Data.Dispose();
+#pragma warning restore 618
             _loggerScope?.Dispose();
         }
 
-        /// <summary>
-        /// Writes a FTP response to a client.
-        /// </summary>
-        /// <param name="response">The response to write to the client.</param>
-        private void Write([NotNull] FtpResponse response)
+        private void Abort()
         {
-            if (!_closed)
+            if (_connectionClosing)
             {
-                Log?.Log(response);
-                var data = Encoding.GetBytes($"{response}\r\n");
-                SocketStream.Write(data, 0, data.Length);
-                response.AfterWriteAction?.Invoke();
+                return;
+            }
+
+            _connectionClosing = true;
+            _cancellationTokenSource.Cancel(true);
+
+            // Dispose all features (if disposable)
+            foreach (var featureItem in Features)
+            {
+                try
+                {
+                    (featureItem.Value as IDisposable)?.Dispose();
+                }
+                catch (Exception ex)
+                {
+                    // Ignore exceptions
+                    _logger?.LogWarning(ex, "Failed to feature of type {featureType}: {errorMessage}", featureItem.Key, ex.Message);
+                }
             }
         }
 
-        private async Task ProcessMessages()
+        /// <summary>
+        /// Send responses to the client.
+        /// </summary>
+        /// <param name="serverCommandReader">Reader for the responses.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <returns>The task.</returns>
+        [NotNull]
+        private async Task SendResponsesAsync(
+            [NotNull] ChannelReader<IServerCommand> serverCommandReader,
+            CancellationToken cancellationToken)
         {
-            // Initialize the FTP connection accessor
-            _connectionAccessor.FtpConnection = this;
-
-            // Initialize the connection data
-            foreach (var extension in _extensions)
-            {
-                extension.InitializeConnectionData();
-            }
-
-            Log?.LogInformation($"Connected from {RemoteAddress.ToString(true)}");
-            var collector = new FtpCommandCollector(() => Encoding);
-            await WriteAsync(new FtpResponse(220, "FTP Server Ready"), _cancellationTokenSource.Token).ConfigureAwait(false);
-
-            var buffer = new byte[1024];
             try
             {
-                Task<int> readTask = null;
-                for (; ;)
+                while (!cancellationToken.IsCancellationRequested)
                 {
-                    if (readTask == null)
+                    _logger?.LogTrace("Wait to read server commands");
+                    var hasResponse = await serverCommandReader.WaitToReadAsync(cancellationToken)
+                       .ConfigureAwait(false);
+                    if (!hasResponse)
                     {
-                        readTask = SocketStream.ReadAsync(buffer, 0, buffer.Length, _cancellationTokenSource.Token);
+                        _logger?.LogTrace("Server command channel completed");
+                        return;
                     }
 
-                    var tasks = new List<Task>() { readTask };
-                    if (_activeBackgroundTask != null)
+                    while (serverCommandReader.TryRead(out var response))
                     {
-                        tasks.Add(_activeBackgroundTask);
-                    }
-
-                    Debug.WriteLine($"Waiting for {tasks.Count} tasks");
-                    var completedTask = Task.WaitAny(tasks.ToArray(), _cancellationTokenSource.Token);
-                    Debug.WriteLine($"Task {completedTask} completed");
-                    if (completedTask == 1)
-                    {
-                        var response = _activeBackgroundTask?.Result;
-                        if (response != null)
-                        {
-                            Write(response);
-                        }
-
-                        _activeBackgroundTask = null;
-                    }
-                    else
-                    {
-                        var bytesRead = readTask.Result;
-                        readTask = null;
-                        if (bytesRead == 0)
-                        {
-                            break;
-                        }
-
-                        var commands = collector.Collect(buffer.AsSpan(0, bytesRead));
-                        foreach (var command in commands)
-                        {
-                            await ProcessMessage(command).ConfigureAwait(false);
-                        }
+                        _logger?.LogTrace("Executing server command \"{response}\"", response);
+                        await _serverCommandExecutor.ExecuteAsync(response, cancellationToken)
+                           .ConfigureAwait(false);
                     }
                 }
-            }
-            catch (OperationCanceledException)
-            {
-                // Ignore the OperationCanceledException
-                // This is normal during disconnects
             }
             catch (Exception ex)
             {
-                Log?.LogError(ex, "Failed to process connection");
-            }
-            finally
-            {
-                Log?.LogInformation($"Disconnection from {RemoteAddress.ToString(true)}");
-                _closed = true;
-                Data.BackgroundCommandHandler.Cancel();
-                if (!ReferenceEquals(SocketStream, OriginalStream))
+                var exception = ex;
+                while (exception is AggregateException aggregateException)
                 {
-                    SocketStream.Dispose();
-                    SocketStream = OriginalStream;
+                    exception = aggregateException.InnerException;
                 }
-                _socket.Dispose();
-                OnClosed();
-            }
-        }
 
-        private async Task ProcessMessage(FtpCommand command)
-        {
-            FtpResponse response;
-            Log?.Trace(command);
-            var result = FindCommandHandler(command);
-            if (result != null)
-            {
-                var handler = result.Item2;
-                var handlerCommand = result.Item1;
-                var isLoginRequired = result.Item3;
-                if (isLoginRequired && !Data.IsLoggedIn)
+                switch (exception)
                 {
-                    response = new FtpResponse(530, "Not logged in.");
-                }
-                else
-                {
-                    try
-                    {
-                        var cmdHandler = handler as FtpCommandHandler;
-                        var isAbortable = cmdHandler?.IsAbortable ?? false;
-                        if (isAbortable)
+                    case IOException _:
+                        if (cancellationToken.IsCancellationRequested)
                         {
-                            var newBackgroundTask = Data.BackgroundCommandHandler.Execute(handler, handlerCommand);
-                            if (newBackgroundTask != null)
-                            {
-                                _activeBackgroundTask = newBackgroundTask;
-                                response = null;
-                            }
-                            else
-                            {
-                                response = new FtpResponse(503, "Parallel commands aren't allowed.");
-                            }
+                            _logger?.LogWarning("Last response probably incomplete");
                         }
                         else
                         {
-                            response = await handler.Process(handlerCommand, _cancellationTokenSource.Token)
-                                .ConfigureAwait(false);
+                            _logger?.LogWarning("Connection lost or closed by client. Remaining output discarded");
                         }
-                    }
-                    catch (FileSystemException fse)
-                    {
-                        var message = fse.Message != null ? $"{fse.FtpErrorName}: {fse.Message}" : fse.FtpErrorName;
-                        Log?.LogInformation($"Rejected command ({command}) with error {fse.FtpErrorCode} {message}");
-                        response = new FtpResponse(fse.FtpErrorCode, message);
-                    }
-                    catch (NotSupportedException nse)
-                    {
-                        var message = nse.Message ?? $"Command {command} not supported";
-                        Log?.LogInformation(message);
-                        response = new FtpResponse(502, message);
-                    }
-                    catch (Exception ex)
-                    {
-                        Log?.LogError(ex, "Failed to process message ({0})", command);
-                        response = new FtpResponse(501, "Syntax error in parameters or arguments.");
-                    }
+
+                        break;
+
+                    case OperationCanceledException _:
+                        // Cancelled
+                        break;
+                    case null:
+                        // Should never happen
+                        break;
+                    default:
+                        // Don't throw, connection gets closed anyway.
+                        _logger?.LogError(0, exception, exception.Message);
+                        break;
                 }
             }
-            else
+            finally
             {
-                response = new FtpResponse(500, "Syntax error, command unrecognized.");
-            }
-            if (response != null)
-            {
-                await WriteAsync(response, _cancellationTokenSource.Token).ConfigureAwait(false);
+                _logger?.LogDebug("Stopped sending responses");
+                _cancellationTokenSource.Cancel();
             }
         }
 
-        private Tuple<FtpCommand, IFtpCommandBase, bool> FindCommandHandler(FtpCommand command)
+        /// <summary>
+        /// Final (default) dispatch from FTP commands to the handlers.
+        /// </summary>
+        /// <param name="context">The context for the FTP command execution.</param>
+        /// <returns>The task.</returns>
+        [NotNull]
+        private Task DispatchCommandAsync([NotNull] FtpContext context)
         {
-            if (!CommandHandlers.TryGetValue(command.Name, out var handler))
-            {
-                return null;
-            }
-
-            if (!string.IsNullOrWhiteSpace(command.Argument) && handler is IFtpCommandHandlerExtensionHost extensionHost)
-            {
-                var extensionCommand = FtpCommand.Parse(command.Argument);
-                if (extensionHost.Extensions.TryGetValue(extensionCommand.Name, out var extension))
-                {
-                    return Tuple.Create(extensionCommand, (IFtpCommandBase)extension, extension.IsLoginRequired ?? handler.IsLoginRequired);
-                }
-            }
-
-            return Tuple.Create(command, (IFtpCommandBase)handler, handler.IsLoginRequired);
+            var dispatcher = ConnectionServices.GetRequiredService<IFtpCommandDispatcher>();
+            return dispatcher.DispatchAsync(context, _cancellationTokenSource.Token);
         }
 
         private void OnClosed()
         {
             Closed?.Invoke(this, new EventArgs());
+        }
+
+        private async Task ReadCommandsFromPipeline(
+            [NotNull] PipeReader reader,
+            [NotNull] ChannelWriter<FtpCommand> commandWriter,
+            CancellationToken cancellationToken)
+        {
+            var collector = new FtpCommandCollector(() => Features.Get<IEncodingFeature>().Encoding);
+
+            try
+            {
+                while (!cancellationToken.IsCancellationRequested)
+                {
+                    var result = await reader.ReadAsync(cancellationToken)
+                       .ConfigureAwait(false);
+
+                    var buffer = result.Buffer;
+                    var position = buffer.Start;
+                    while (buffer.TryGet(ref position, out var memory))
+                    {
+                        var commands = collector.Collect(memory.Span);
+                        foreach (var command in commands)
+                        {
+                            await commandWriter.WriteAsync(command, cancellationToken)
+                               .ConfigureAwait(false);
+                        }
+                    }
+
+                    // Required to signal an end of the read operation.
+                    reader.AdvanceTo(buffer.End);
+
+                    // Stop reading if there's no more data coming.
+                    if (result.IsCompleted)
+                    {
+                        break;
+                    }
+                }
+            }
+            catch (Exception ex) when (ex.Is<IOException>() && !cancellationToken.IsCancellationRequested)
+            {
+                _logger?.LogWarning("Connection lost or closed by client");
+                Abort();
+            }
+            catch (Exception ex) when (ex.Is<IOException>())
+            {
+                // Most likely closed by server.
+                _logger?.LogWarning("Connection lost or closed by server");
+                Abort();
+            }
+            catch (Exception ex) when (ex.Is<OperationCanceledException>())
+            {
+                // We're getting here because someone called StopAsync on the connection.
+                // Reasons might be:
+                // - Server detected a closed connection in another part of the communication stack
+                // - QUIT command
+            }
+            catch (Exception ex)
+            {
+                _logger?.LogError(ex, "Closing connection due to error {0}", ex.Message);
+                Abort();
+            }
+            finally
+            {
+                reader.Complete();
+
+                _logger?.LogDebug("Stopped reading commands");
+            }
+        }
+
+        private async Task CommandChannelDispatcherAsync(ChannelReader<FtpCommand> commandReader, CancellationToken cancellationToken)
+        {
+            // Send initial response
+            await _serverCommandChannel.Writer.WriteAsync(
+                    new SendResponseServerCommand(new FtpResponseTextBlock(220, _serverMessages.GetBannerMessage())),
+                    _cancellationTokenSource.Token)
+               .ConfigureAwait(false);
+
+            // Initialize middleware objects
+            var middlewareObjects = ConnectionServices.GetRequiredService<IEnumerable<IFtpMiddleware>>();
+            var nextStep = new FtpRequestDelegate(DispatchCommandAsync);
+            foreach (var middleware in middlewareObjects.Reverse())
+            {
+                var tempStep = nextStep;
+                nextStep = (context) => middleware.InvokeAsync(context, tempStep);
+            }
+
+            var requestDelegate = nextStep;
+
+            try
+            {
+                Task<bool> readTask = null;
+                while (!cancellationToken.IsCancellationRequested)
+                {
+                    if (readTask == null)
+                    {
+                        readTask = commandReader.WaitToReadAsync(cancellationToken).AsTask();
+                    }
+
+                    var tasks = new List<Task>() { readTask };
+                    var backgroundTaskLifetimeService = Features.Get<IBackgroundTaskLifetimeFeature>();
+                    if (backgroundTaskLifetimeService != null)
+                    {
+                        tasks.Add(backgroundTaskLifetimeService.Task);
+                    }
+
+                    Debug.WriteLine($"Waiting for {tasks.Count} tasks");
+                    var completedTask = await Task.WhenAny(tasks.ToArray()).ConfigureAwait(false);
+                    if (completedTask == null)
+                    {
+                        break;
+                    }
+
+                    Debug.WriteLine($"Task {completedTask} completed");
+
+                    // ReSharper disable once PatternAlwaysOfType
+                    if (backgroundTaskLifetimeService?.Task == completedTask)
+                    {
+                        await completedTask.ConfigureAwait(false);
+                        Features.Set<IBackgroundTaskLifetimeFeature>(null);
+                    }
+                    else
+                    {
+                        var hasCommand = await readTask.ConfigureAwait(false);
+                        readTask = null;
+
+                        if (!hasCommand)
+                        {
+                            break;
+                        }
+
+                        while (commandReader.TryRead(out var command))
+                        {
+                            _logger?.Command(command);
+                            var context = new FtpContext(command, _serverCommandChannel, this);
+                            await requestDelegate(context)
+                               .ConfigureAwait(false);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex) when (ex.Is<OperationCanceledException>())
+            {
+                // Was expected, ignore!
+            }
+            catch (Exception ex)
+            {
+                _logger?.LogError(ex, ex.Message);
+            }
+            finally
+            {
+                // We must set this to null to avoid a deadlock.
+                _commandChannelReader = null;
+                await StopAsync().ConfigureAwait(false);
+            }
+        }
+
+        private class ConnectionClosingNetworkStreamReader : StreamPipeReaderService
+        {
+            [NotNull]
+            private readonly CancellationTokenSource _connectionClosedCts;
+
+            public ConnectionClosingNetworkStreamReader(
+                [NotNull] Stream stream,
+                [NotNull] PipeWriter pipeWriter,
+                [NotNull] CancellationTokenSource connectionClosedCts,
+                [CanBeNull] ILogger logger = null)
+                : base(stream, pipeWriter, connectionClosedCts.Token, logger)
+            {
+                _connectionClosedCts = connectionClosedCts;
+            }
+
+            /// <inheritdoc />
+            protected override async Task<int> ReadFromStreamAsync(byte[] buffer, int offset, int length, CancellationToken cancellationToken)
+            {
+                var readTask = Stream
+                   .ReadAsync(buffer, offset, length, cancellationToken);
+
+                // We ensure that this service can be closed ASAP with the help
+                // of a Task.Delay.
+                var resultTask = await Task.WhenAny(readTask, Task.Delay(-1, cancellationToken))
+                   .ConfigureAwait(false);
+                if (resultTask != readTask || cancellationToken.IsCancellationRequested)
+                {
+                    Logger?.LogTrace("Cancelled through Task.Delay");
+                    return 0;
+                }
+
+                return readTask.Result;
+            }
+
+            /// <inheritdoc />
+            protected override async Task OnCloseAsync(Exception exception, CancellationToken cancellationToken)
+            {
+                await base.OnCloseAsync(exception, cancellationToken)
+                   .ConfigureAwait(false);
+
+                // Signal a closed connection.
+                _connectionClosedCts.Cancel();
+            }
+        }
+
+        private class ConnectionFeature : IConnectionFeature
+        {
+            public ConnectionFeature(
+                [NotNull] IPEndPoint localEndPoint,
+                [NotNull] Address remoteAddress)
+            {
+                LocalEndPoint = localEndPoint;
+                RemoteAddress = remoteAddress;
+            }
+
+            /// <inheritdoc />
+            public IPEndPoint LocalEndPoint { get; }
+
+            /// <inheritdoc />
+            public Address RemoteAddress { get; }
+        }
+
+        private class SecureConnectionFeature : ISecureConnectionFeature
+        {
+            public SecureConnectionFeature([NotNull] TcpClient tcpClient)
+            {
+                OriginalStream = tcpClient.GetStream();
+                CloseEncryptedControlStream = ct => Task.CompletedTask;
+            }
+
+            /// <inheritdoc />
+            public NetworkStream OriginalStream { get; }
+
+            /// <inheritdoc />
+            public CreateEncryptedStreamDelegate CreateEncryptedStream { get; set; }
+
+            /// <inheritdoc />
+            public CloseEncryptedStreamDelegate CloseEncryptedControlStream { get; set; }
+        }
+
+        private class DuplexPipe : IDuplexPipe
+        {
+            public DuplexPipe(PipeReader input, PipeWriter output)
+            {
+                Input = input;
+                Output = output;
+            }
+
+            /// <inheritdoc />
+            public PipeReader Input { get; }
+
+            /// <inheritdoc />
+            public PipeWriter Output { get; }
+        }
+
+        private class DirectFtpResponse : IFtpResponse
+        {
+            private readonly string _text;
+
+            public DirectFtpResponse(string text)
+            {
+                _text = text;
+            }
+
+            /// <inheritdoc />
+            public int Code { get; } = -1;
+
+            /// <inheritdoc />
+            [Obsolete("Use a custom server command.")]
+            public FtpResponseAfterWriteAsyncDelegate AfterWriteAction { get; } = null;
+
+            /// <inheritdoc />
+            public Task<FtpResponseLine> GetNextLineAsync(object token, CancellationToken cancellationToken)
+            {
+                return Task.FromResult(new FtpResponseLine(_text, null));
+            }
+
+            /// <inheritdoc />
+            public override string ToString()
+            {
+                return _text;
+            }
         }
     }
 }

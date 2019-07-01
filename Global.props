@@ -17,6 +17,7 @@
     <MinClientVersion>3.5</MinClientVersion>
     <CodeAnalysisRuleSet>$(MSBuildThisFileDirectory)FubarDev.FtpServer.ruleset</CodeAnalysisRuleSet>
     <NoWarn>SA1636;SA1641;$(NoWarn)</NoWarn>
+    <SuppressNETCoreSdkPreviewMessage>true</SuppressNETCoreSdkPreviewMessage>
   </PropertyGroup>
 
   <ItemGroup>
@@ -24,14 +25,14 @@
   </ItemGroup>
 
   <ItemGroup>
-    <AdditionalFiles Include="$(MSBuildThisFileDirectory)stylecop.json" Link="stylecop.json" />
+    <AdditionalFiles Include="$(MSBuildThisFileDirectory)stylecop.json" Link="stylecop.json" Visible="false" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="JetBrains.Annotations" Version="2018.3.0" PrivateAssets="All" />
+    <PackageReference Include="JetBrains.Annotations" Version="2019.1.1" PrivateAssets="All" />
   </ItemGroup>
 
-  <PropertyGroup Condition="'$(TargetFramework)'=='net461'">
+  <PropertyGroup Condition="'$(TargetFramework)'=='net461' or '$(TargetFramework)'=='net47'">
     <DefineConstants>$(DefineConstants);NETFRAMEWORK</DefineConstants>
   </PropertyGroup>
 

@@ -8,31 +8,28 @@
 using System.Threading;
 using System.Threading.Tasks;
 
+using FubarDev.FtpServer.Commands;
+using FubarDev.FtpServer.Features;
+
 namespace FubarDev.FtpServer.CommandHandlers
 {
     /// <summary>
     /// Implements the <c>ABOR</c> command.
     /// </summary>
+    [FtpCommandHandler("ABOR")]
     public class AborCommandHandler : FtpCommandHandler
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="AborCommandHandler"/> class.
-        /// </summary>
-        /// <param name="connectionAccessor">The accessor to get the connection that is active during the <see cref="Process"/> method execution.</param>
-        public AborCommandHandler(IFtpConnectionAccessor connectionAccessor)
-            : base(connectionAccessor, "ABOR")
-        {
-        }
-
         /// <inheritdoc/>
-        public override Task<FtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
+        public override Task<IFtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
         {
-            if (Data.BackgroundCommandHandler.Cancel())
+            var backgroundTaskLifetimeFeature = Connection.Features.Get<IBackgroundTaskLifetimeFeature>();
+            if (backgroundTaskLifetimeFeature != null)
             {
-                return Task.FromResult(new FtpResponse(226, "File transfer aborting."));
+                backgroundTaskLifetimeFeature.Abort();
+                return Task.FromResult<IFtpResponse>(new FtpResponse(226, T("File transfer aborting.")));
             }
 
-            return Task.FromResult(new FtpResponse(226, "Cannot abort - no active transfer."));
+            return Task.FromResult<IFtpResponse>(new FtpResponse(226, T("Cannot abort - no active transfer.")));
         }
     }
 }

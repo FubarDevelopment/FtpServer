@@ -8,29 +8,20 @@
 using System.Threading;
 using System.Threading.Tasks;
 
+using FubarDev.FtpServer.Commands;
+
 namespace FubarDev.FtpServer.CommandHandlers
 {
     /// <summary>
     /// Implements the <c>ALLO</c> command.
     /// </summary>
+    [FtpCommandHandler("ALLO", isLoginRequired: false)]
     public class AlloCommandHandler : FtpCommandHandler
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="AlloCommandHandler"/> class.
-        /// </summary>
-        /// <param name="connectionAccessor">The accessor to get the connection that is active during the <see cref="Process"/> method execution.</param>
-        public AlloCommandHandler(IFtpConnectionAccessor connectionAccessor)
-            : base(connectionAccessor, "ALLO")
-        {
-        }
-
         /// <inheritdoc/>
-        public override bool IsLoginRequired => false;
-
-        /// <inheritdoc/>
-        public override Task<FtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
+        public override Task<IFtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
         {
-            return Task.FromResult(new FtpResponse(202, "Allo processed successfully (deprecated)."));
+            return Task.FromResult<IFtpResponse>(new FtpResponse(202, T("Allo processed successfully (deprecated).")));
         }
     }
 }

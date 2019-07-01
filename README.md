@@ -17,22 +17,25 @@ The library is released under the [![MIT license](https://img.shields.io/github/
 
 ## Compilation
 
-* Visual Studio 2017 / C# 7.3
+* Visual Studio 2019 / C# 8.0
 
 ## Using
 
-* Visual Studio 2017
-* .NET Standard 2.0
+* Visual Studio 2019
+* .NET Standard 2.0 (everything **except** sample application, PAM authentication)
+* .NET Core 3.0 (sample application, PAM authentication)
 
 ## NuGet packages
 
-| Description				| Badge |
-|---------------------------|-------|
-| `FubarDev.FtpServer`: Core library				| [![FubarDev.FtpServer](https://img.shields.io/nuget/vpre/FubarDev.FtpServer.svg)](https://www.nuget.org/packages/FubarDev.FtpServer) |
-| `FD.FS.Abstractions`: Basic types				| [![FubarDev.FtpServer.Abstractions](https://img.shields.io/nuget/vpre/FubarDev.FtpServer.Abstractions.svg)](https://www.nuget.org/packages/FubarDev.FtpServer.Abstractions) |
-| `FD.FS.FileSystem.DotNet`: `System.IO`-based file system	| [![FubarDev.FtpServer.FileSystem.DotNet](https://img.shields.io/nuget/vpre/FubarDev.FtpServer.FileSystem.DotNet.svg)](https://www.nuget.org/packages/FubarDev.FtpServer.FileSystem.DotNet) |
-| `FD.FS.FileSystem.GoogleDrive`: Google Drive as file system	| [![FubarDev.FtpServer.FileSystem.GoogleDrive](https://img.shields.io/nuget/vpre/FubarDev.FtpServer.FileSystem.GoogleDrive.svg)](https://www.nuget.org/packages/FubarDev.FtpServer.FileSystem.GoogleDrive) |
-| `FD.FS.FileSystem.InMemory`: In-memory file system	| [![FubarDev.FtpServer.FileSystem.InMemory](https://img.shields.io/nuget/vpre/FubarDev.FtpServer.FileSystem.InMemory.svg)](https://www.nuget.org/packages/FubarDev.FtpServer.FileSystem.InMemory) |
+| Package name                      | Description				    | Badge |
+|-----------------------------------|-------------------------------|-------|
+| `FubarDev.FtpServer`              | Core library				    | [![FubarDev.FtpServer](https://img.shields.io/nuget/vpre/FubarDev.FtpServer.svg)](https://www.nuget.org/packages/FubarDev.FtpServer) |
+| `FD.FS.Abstractions`              | Basic types				    | [![FubarDev.FtpServer.Abstractions](https://img.shields.io/nuget/vpre/FubarDev.FtpServer.Abstractions.svg)](https://www.nuget.org/packages/FubarDev.FtpServer.Abstractions) |
+| `FD.FS.FileSystem.DotNet`         | `System.IO`-based file system	| [![FubarDev.FtpServer.FileSystem.DotNet](https://img.shields.io/nuget/vpre/FubarDev.FtpServer.FileSystem.DotNet.svg)](https://www.nuget.org/packages/FubarDev.FtpServer.FileSystem.DotNet) |
+| `FD.FS.FileSystem.GoogleDrive`    | Google Drive as file system	| [![FubarDev.FtpServer.FileSystem.GoogleDrive](https://img.shields.io/nuget/vpre/FubarDev.FtpServer.FileSystem.GoogleDrive.svg)](https://www.nuget.org/packages/FubarDev.FtpServer.FileSystem.GoogleDrive) |
+| `FD.FS.FileSystem.InMemory`       | In-memory file system	        | [![FubarDev.FtpServer.FileSystem.InMemory](https://img.shields.io/nuget/vpre/FubarDev.FtpServer.FileSystem.InMemory.svg)](https://www.nuget.org/packages/FubarDev.FtpServer.FileSystem.InMemory) |
+| `FD.FS.FileSystem.Unix`           | Unix file system              | [![FubarDev.FtpServer.FileSystem.Unix](https://img.shields.io/nuget/vpre/FubarDev.FtpServer.FileSystem.Unix.svg)](https://www.nuget.org/packages/FubarDev.FtpServer.FileSystem.Unix) |
+| `FD.FS.MembershipProvider.Pam`    | PAM membership provider       | [![FubarDev.FtpServer.MembershipProvider.Pam](https://img.shields.io/nuget/vpre/FubarDev.FtpServer.MembershipProvider.Pam.svg)](https://www.nuget.org/packages/FubarDev.FtpServer.MembershipProvider.Pam) |
 
 # Example FTP server
 
@@ -72,12 +75,12 @@ using (var serviceProvider = services.BuildServiceProvider())
     var ftpServerHost = serviceProvider.GetRequiredService<IFtpServerHost>();
 
     // Start the FTP server
-    ftpServerHost.StartAsync().Wait();
+    ftpServerHost.StartAsync(CancellationToken.None).Wait();
     
     Console.WriteLine("Press ENTER/RETURN to close the test application.");
     Console.ReadLine();
     
     // Stop the FTP server
-    ftpServerHost.StopAsync().Wait();
+    ftpServerHost.StopAsync(CancellationToken.None).Wait();
 }
 ```

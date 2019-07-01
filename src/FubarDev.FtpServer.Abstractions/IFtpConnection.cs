@@ -6,17 +6,17 @@
 //-----------------------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
-using System.Net;
-using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
+using FubarDev.FtpServer.Features;
+
 using JetBrains.Annotations;
 
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.Extensions.Logging;
 
 namespace FubarDev.FtpServer
@@ -24,7 +24,7 @@ namespace FubarDev.FtpServer
     /// <summary>
     /// The interface for an FTP connection.
     /// </summary>
-    public interface IFtpConnection : IDisposable
+    public interface IFtpConnection : IConnectionFeature, IDisposable
     {
         /// <summary>
         /// Gets or sets the event handler that is triggered when the connection is closed.
@@ -32,64 +32,57 @@ namespace FubarDev.FtpServer
         event EventHandler Closed;
 
         /// <summary>
-        /// Gets the dictionary of all known command handlers.
+        /// Gets the connection services.
         /// </summary>
         [NotNull]
-        IReadOnlyDictionary<string, IFtpCommandHandler> CommandHandlers { get; }
+        IServiceProvider ConnectionServices { get; }
+
+        /// <summary>
+        /// Gets the feature collection.
+        /// </summary>
+        [NotNull]
+        IFeatureCollection Features { get; }
 
         /// <summary>
         /// Gets or sets the encoding for the LIST/NLST commands.
         /// </summary>
+        [Obsolete("Query the information using the IEncodingFeature instead.")]
         [NotNull]
         Encoding Encoding { get; set; }
-
-        /// <summary>
-        /// Gets a value indicating whether to accept PASV connections from any source.
-        /// If false (default), connections to a PASV port will only be accepted from the same IP that issued
-        /// the respective PASV command.
-        /// </summary>
-        bool PromiscuousPasv { get; }
 
         /// <summary>
         /// Gets the FTP connection data.
         /// </summary>
         [NotNull]
+        [Obsolete("Query the information using the Features property instead.")]
         FtpConnectionData Data { get; }
 
         /// <summary>
         /// Gets the FTP connection logger.
         /// </summary>
         [CanBeNull]
+        [Obsolete("Use your own logger instead of the one from the connection.")]
         ILogger Log { get; }
-
-        /// <summary>
-        /// Gets the local end point.
-        /// </summary>
-        [NotNull]
-        IPEndPoint LocalEndPoint { get; }
 
         /// <summary>
         /// Gets the control connection stream.
         /// </summary>
         [NotNull]
+        [Obsolete("Query the information using the ISecureConnectionFeature instead.")]
         Stream OriginalStream { get; }
 
         /// <summary>
         /// Gets or sets the control connection stream.
         /// </summary>
         [NotNull]
+        [Obsolete("Query the information using the ISecureConnectionFeature instead.")]
         Stream SocketStream { get; set; }
 
         /// <summary>
         /// Gets a value indicating whether this is a secure connection.
         /// </summary>
+        [Obsolete("Query the information using the ISecureConnectionFeature instead.")]
         bool IsSecure { get; }
-
-        /// <summary>
-        /// Gets the remote address of the client.
-        /// </summary>
-        [NotNull]
-        Address RemoteAddress { get; }
 
         /// <summary>
         /// Gets the cancellation token to use to signal a task cancellation.
@@ -100,12 +93,16 @@ namespace FubarDev.FtpServer
         /// <summary>
         /// Starts processing of messages for this connection.
         /// </summary>
-        void Start();
+        /// <returns>The task.</returns>
+        [NotNull]
+        Task StartAsync();
 
         /// <summary>
         /// Closes the connection.
         /// </summary>
-        void Close();
+        /// <returns>The task.</returns>
+        [NotNull]
+        Task StopAsync();
 
         /// <summary>
         /// Writes a FTP response to a client.
@@ -113,7 +110,9 @@ namespace FubarDev.FtpServer
         /// <param name="response">The response to write to the client.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>The task.</returns>
-        Task WriteAsync([NotNull] FtpResponse response, CancellationToken cancellationToken);
+        [Obsolete("Use the FtpCommandHandler.CommandContext.ServerCommandWriter or FtpCommandHandlerExtension.CommandContext.ServerCommandWriter instead.")]
+        [NotNull]
+        Task WriteAsync([NotNull] IFtpResponse response, CancellationToken cancellationToken);
 
         /// <summary>
         /// Writes response to a client.
@@ -121,13 +120,19 @@ namespace FubarDev.FtpServer
         /// <param name="response">The response to write to the client.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>The task.</returns>
+        [Obsolete("Use the FtpCommandHandler.CommandContext.ServerCommandWriter or FtpCommandHandlerExtension.CommandContext.ServerCommandWriter instead.")]
+        [NotNull]
         Task WriteAsync([NotNull] string response, CancellationToken cancellationToken);
 
         /// <summary>
         /// Creates a response socket for e.g. LIST/NLST.
         /// </summary>
+        /// <param name="timeout">The timeout for establishing a data connection.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>The data connection.</returns>
-        Task<TcpClient> CreateResponseSocket();
+        [NotNull]
+        [ItemNotNull]
+        Task<IFtpDataConnection> OpenDataConnectionAsync(TimeSpan? timeout = null, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Create an encrypted stream.
@@ -136,6 +141,7 @@ namespace FubarDev.FtpServer
         /// <returns>The encrypted stream.</returns>
         [NotNull]
         [ItemNotNull]
+        [Obsolete("The data connection returned by OpenDataConnection is already encrypted.")]
         Task<Stream> CreateEncryptedStream([NotNull] Stream unencryptedStream);
     }
 }

@@ -5,27 +5,18 @@
 using System.Threading;
 using System.Threading.Tasks;
 
+using FubarDev.FtpServer.Commands;
+
 namespace FubarDev.FtpServer.CommandHandlers
 {
     /// <summary>
     /// The <c>HELP</c> command handler.
     /// </summary>
+    [FtpCommandHandler("HELP", isLoginRequired: false)]
     public class HelpCommandHandler : FtpCommandHandler
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="HelpCommandHandler"/> class.
-        /// </summary>
-        /// <param name="connectionAccessor">The accessor to get the connection that is active during the <see cref="Process"/> method execution.</param>
-        public HelpCommandHandler(IFtpConnectionAccessor connectionAccessor)
-            : base(connectionAccessor, "HELP")
-        {
-        }
-
         /// <inheritdoc/>
-        public override bool IsLoginRequired => false;
-
-        /// <inheritdoc/>
-        public override Task<FtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
+        public override Task<IFtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
         {
             var helpArg = command.Argument;
             if (string.IsNullOrEmpty(helpArg))
@@ -36,19 +27,25 @@ namespace FubarDev.FtpServer.CommandHandlers
             switch (helpArg)
             {
                 case "SITE":
-                    return ShowHelpSite(cancellationToken);
+                    return ShowHelpSiteAsync();
                 default:
-                    return Task.FromResult(new FtpResponse(501, "Syntax error in parameters or arguments."));
+                    return Task.FromResult<IFtpResponse>(new FtpResponse(501, T("Syntax error in parameters or arguments.")));
             }
         }
 
-        private async Task<FtpResponse> ShowHelpSite(CancellationToken cancellationToken)
+        private Task<IFtpResponse> ShowHelpSiteAsync()
         {
-            await Connection.WriteAsync("211-HELP", cancellationToken).ConfigureAwait(false);
+            var helpText = new[]
+            {
+                "SITE BLST [DIRECT]",
+            };
 
-            await Connection.WriteAsync(" SITE BLST [DIRECT]", cancellationToken).ConfigureAwait(false);
-
-            return new FtpResponse(211, "HELP");
+            return Task.FromResult<IFtpResponse>(
+                new FtpResponseList(
+                    211,
+                    "HELP",
+                    "HELP",
+                    helpText));
         }
     }
 }

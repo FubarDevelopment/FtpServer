@@ -1,5 +1,11 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <RootNamespace>QuickStart</RootNamespace>
+  </PropertyGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\..\..\src\FubarDev.FtpServer\FubarDev.FtpServer.csproj" />
     <ProjectReference Include="..\..\..\src\FubarDev.FtpServer.FileSystem.DotNet\FubarDev.FtpServer.FileSystem.DotNet.csproj" />
@@ -8,11 +14,5 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="2.1.0" />
   </ItemGroup>
-
-  <PropertyGroup>
-    <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp2.1</TargetFramework>
-    <RootNamespace>QuickStart</RootNamespace>
-  </PropertyGroup>
 
 </Project>

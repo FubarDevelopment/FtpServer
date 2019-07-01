@@ -8,6 +8,8 @@
 using System.Threading;
 using System.Threading.Tasks;
 
+using FubarDev.FtpServer.Commands;
+using FubarDev.FtpServer.Features;
 using FubarDev.FtpServer.FileSystem;
 
 namespace FubarDev.FtpServer.CommandHandlers
@@ -15,20 +17,13 @@ namespace FubarDev.FtpServer.CommandHandlers
     /// <summary>
     /// Implements the <c>CWD</c> command.
     /// </summary>
+    [FtpCommandHandler("CWD")]
     public class CwdCommandHandler : FtpCommandHandler
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="CwdCommandHandler"/> class.
-        /// </summary>
-        /// <param name="connectionAccessor">The accessor to get the connection that is active during the <see cref="Process"/> method execution.</param>
-        public CwdCommandHandler(IFtpConnectionAccessor connectionAccessor)
-            : base(connectionAccessor, "CWD")
-        {
-        }
-
         /// <inheritdoc/>
-        public override async Task<FtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
+        public override async Task<IFtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
         {
+            var fsFeature = Connection.Features.Get<IFileSystemFeature>();
             var path = command.Argument;
             if (path == ".")
             {
@@ -37,25 +32,26 @@ namespace FubarDev.FtpServer.CommandHandlers
             else if (path == "..")
             {
                 // CDUP
-                if (Data.CurrentDirectory.IsRoot)
+                if (fsFeature.CurrentDirectory.IsRoot)
                 {
-                    return new FtpResponse(550, "Not a valid directory.");
+                    return new FtpResponse(550, T("Not a valid directory."));
                 }
 
-                Data.Path.Pop();
+                fsFeature.Path.Pop();
             }
             else
             {
-                var tempPath = Data.Path.Clone();
-                var newTargetDir = await Data.FileSystem.GetDirectoryAsync(tempPath, path, cancellationToken).ConfigureAwait(false);
+                var tempPath = fsFeature.Path.Clone();
+                var newTargetDir = await fsFeature.FileSystem.GetDirectoryAsync(tempPath, path, cancellationToken).ConfigureAwait(false);
                 if (newTargetDir == null)
                 {
-                    return new FtpResponse(550, "Not a valid directory.");
+                    return new FtpResponse(550, T("Not a valid directory."));
                 }
 
-                Data.Path = tempPath;
+                fsFeature.Path = tempPath;
             }
-            return new FtpResponse(250, $"Successful ({Data.Path.GetFullPath()})");
+
+            return new FtpResponseTextBlock(250, ServerMessages.GetDirectoryChangedMessage(fsFeature.Path));
         }
     }
 }

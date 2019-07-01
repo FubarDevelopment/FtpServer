@@ -1,0 +1,185 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>FTP Server Project Structure | FTP Server documentation </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="FTP Server Project Structure | FTP Server documentation ">
+    <meta name="generator" content="docfx 2.43.2.0">
+    
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    <meta property="docfx:rel" content="../">
+    
+  </head>
+  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../logo.svg" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div class="container body-content">
+        
+        <div id="search-results">
+          <div class="search-list"></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination"></ul>
+        </div>
+      </div>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="project-structure">
+<h1 id="introduction">Introduction</h1>
+
+<p>The FTP server consists of the following parts:</p>
+<ul>
+<li>Account management
+<ul>
+<li>Membership providers (e.g. for anonymous users, PAM, etc...)</li>
+<li>Member information (e.g. home directories, etc...)</li>
+</ul>
+</li>
+<li>Authentication
+<ul>
+<li>Authentication mechanisms (e.g. <code>AUTH TLS</code>)</li>
+</ul>
+</li>
+<li>Authorization
+<ul>
+<li>Authorization mechanisms (e.g. password)</li>
+<li>Authorization actions (e.g. for setting the home directory)</li>
+</ul>
+</li>
+<li>Commands (e.g. <code>LIST</code>)</li>
+<li>File systems
+<ul>
+<li>.NET I/O</li>
+<li>Google Drive</li>
+<li>Unix</li>
+<li>In-memory</li>
+</ul>
+</li>
+</ul>
+<h1 id="account-management">Account management</h1>
+<p>The account management is centered around the following interfaces:</p>
+<ul>
+<li><code>IMembershipProvider</code> for username/password authentication</li>
+<li><code>IAccountDirectoryQuery</code> to get the users root and home directories</li>
+</ul>
+<p>The <code>IMembershipProvider</code> is only useful for password-based authorization
+mechanisms.</p>
+<h1 id="authentication">Authentication</h1>
+<p>There is currently only one authentication mechanism implemented: <code>TLS</code>.</p>
+<h1 id="authorization">Authorization</h1>
+<p>Only one authorization mechanism is implemented: <code>PasswordAuthorization</code>.</p>
+<p>Every authorization mechanism is centered around three commands:</p>
+<ul>
+<li><code>USER</code>: Provides the user name</li>
+<li><code>PASS</code>: Provides the password</li>
+<li><code>ACCT</code>: Provides additional information</li>
+</ul>
+<p>The full state machine for an authentication/authorization can
+be found in RFC 2228.</p>
+<h1 id="commands">Commands</h1>
+<p>All commands are implemented as thread-safe singletons. This is
+a requirement due to the fact that commands can provide extensions
+that will show up during a <code>FEAT</code> request.</p>
+<p>There are two kinds of extensions:</p>
+<ul>
+<li><code>FEAT</code>-Extensions (provided by a FTP command handler)</li>
+<li>Extensions hosted by an FTP command, like <code>OPTS</code> or <code>SITE</code></li>
+</ul>
+<p>The <code>FEAT</code> extensions are only there to tell the client
+that some commands support special features.</p>
+<p>Extensions can also be attached to a command that is also an
+extension host, like <code>OPTS</code> or <code>SITE</code>. Those extensions are
+reported to the <code>FEAT</code> command through the extension hosts.</p>
+<h1 id="file-systems">File systems</h1>
+<p>File systems are discussed <a class="xref" href="file-systems.html">here</a></p>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/FubarDevelopment/FtpServer/blob/master/docfx_project/articles/project-structure.md/#L1" class="contribution-link">Improve this Doc</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            <table border='0'><tr><td><span>Copyright © 2018 Fubar Development Junker<br>Generated by <strong>DocFX</strong></span></td><td><a rel='license' href='http://creativecommons.org/licenses/by-sa/4.0/'><img alt='Creative Commons License' style='border-width:0' src='https://i.creativecommons.org/l/by-sa/4.0/88x31.png'></a><br><span xmlns:dct='http://purl.org/dc/terms/' property='dct:title'>FluentMigrator Documentation</span> by <a xmlns:cc='http://creativecommons.org/ns#' href='https://fluentmigrator.github.io' property='cc:attributionName' rel='cc:attributionURL'>FluentMigrator Project</a> is licensed under a <a rel='license' href='http://creativecommons.org/licenses/by-sa/4.0/'>Creative Commons Attribution-ShareAlike 4.0 International License</a>.</td></tr></table>
+            
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>

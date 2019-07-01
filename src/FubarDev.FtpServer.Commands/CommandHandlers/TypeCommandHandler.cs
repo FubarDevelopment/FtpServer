@@ -8,47 +8,43 @@
 using System.Threading;
 using System.Threading.Tasks;
 
+using FubarDev.FtpServer.Commands;
+using FubarDev.FtpServer.Features;
+
 namespace FubarDev.FtpServer.CommandHandlers
 {
     /// <summary>
     /// Implements the <c>TYPE</c> command.
     /// </summary>
+    [FtpCommandHandler("TYPE")]
     public class TypeCommandHandler : FtpCommandHandler
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="TypeCommandHandler"/> class.
-        /// </summary>
-        /// <param name="connectionAccessor">The accessor to get the connection that is active during the <see cref="Process"/> method execution.</param>
-        public TypeCommandHandler(IFtpConnectionAccessor connectionAccessor)
-            : base(connectionAccessor, "TYPE")
-        {
-        }
-
         /// <inheritdoc/>
-        public override Task<FtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
+        public override Task<IFtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
         {
             var transferMode = FtpTransferMode.Parse(command.Argument);
 
             FtpResponse response;
             if (transferMode.FileType == FtpFileType.Ascii)
             {
-                response = new FtpResponse(200, "ASCII transfer mode active.");
+                response = new FtpResponse(200, T("ASCII transfer mode active."));
             }
             else if (transferMode.IsBinary)
             {
-                response = new FtpResponse(200, "Binary transfer mode active.");
+                response = new FtpResponse(200, T("Binary transfer mode active."));
             }
             else
             {
-                response = new FtpResponse(504, $"Mode {command.Argument} not supported.");
+                response = new FtpResponse(504, T("Mode {0} not supported.", command.Argument));
             }
 
             if (response.Code == 200)
             {
-                Connection.Data.TransferMode = transferMode;
+                var transferModeFeature = Connection.Features.Get<ITransferConfigurationFeature>();
+                transferModeFeature.TransferMode = transferMode;
             }
 
-            return Task.FromResult(response);
+            return Task.FromResult<IFtpResponse>(response);
         }
     }
 }

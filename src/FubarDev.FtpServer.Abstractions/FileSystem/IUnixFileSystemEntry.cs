@@ -42,11 +42,5 @@ namespace FubarDev.FtpServer.FileSystem
         /// Gets the number of links.
         /// </summary>
         long NumberOfLinks { get; }
-
-        /// <summary>
-        /// Gets the file system this entry belongs to.
-        /// </summary>
-        [NotNull]
-        IUnixFileSystem FileSystem { get; }
     }
 }

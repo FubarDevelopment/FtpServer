@@ -6,37 +6,33 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
+using FubarDev.FtpServer.Features;
 using FubarDev.FtpServer.FileSystem;
-
-using JetBrains.Annotations;
 
 namespace FubarDev.FtpServer.CommandExtensions
 {
     /// <summary>
     /// The implementation of the <c>SITE UTIME</c> command.
     /// </summary>
+    /// <remarks>
+    /// This doesn't exist as RFC. Instead, it's only documented
+    /// on the <a href="http://www.proftpd.org/docs/contrib/mod_site_misc.html">ProFTPd site</a>.
+    /// This extension is hidden, according to https://ghisler.ch/board/viewtopic.php?t=24952.
+    /// </remarks>
+    [FtpCommandHandlerExtension("UTIME", "SITE")]
     public class SiteUtimeCommandExtension : FtpCommandHandlerExtension
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="SiteUtimeCommandExtension"/> class.
-        /// </summary>
-        /// <param name="connectionAccessor">The accessor to get the connection that is active during the <see cref="Process"/> method execution.</param>
-        public SiteUtimeCommandExtension([NotNull] IFtpConnectionAccessor connectionAccessor)
-            : base(connectionAccessor, "SITE", "UTIME")
-        {
-        }
-
         /// <inheritdoc />
         public override void InitializeConnectionData()
         {
         }
 
         /// <inheritdoc/>
-        public override async Task<FtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
+        public override async Task<IFtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
         {
             if (string.IsNullOrEmpty(command.Argument))
             {
-                return new FtpResponse(501, "No file name.");
+                return new FtpResponse(501, T("No file name."));
             }
 
             var parts = new List<string>();
@@ -74,17 +70,17 @@ namespace FubarDev.FtpServer.CommandExtensions
         {
             if (!parts[1].TryParseTimestamp(parts[4], out var accessTime))
             {
-                return new FtpResponse(501, "Syntax error in parameters or arguments.");
+                return new FtpResponse(501, T("Syntax error in parameters or arguments."));
             }
 
             if (!parts[2].TryParseTimestamp(parts[4], out var modificationTime))
             {
-                return new FtpResponse(501, "Syntax error in parameters or arguments.");
+                return new FtpResponse(501, T("Syntax error in parameters or arguments."));
             }
 
             if (!parts[3].TryParseTimestamp(parts[4], out var creationTime))
             {
-                return new FtpResponse(501, "Syntax error in parameters or arguments.");
+                return new FtpResponse(501, T("Syntax error in parameters or arguments."));
             }
 
             var path = parts[0];
@@ -95,26 +91,27 @@ namespace FubarDev.FtpServer.CommandExtensions
 
             if (string.IsNullOrEmpty(path))
             {
-                return new FtpResponse(501, "No file name.");
+                return new FtpResponse(501, T("No file name."));
             }
 
-            var currentPath = Data.Path.Clone();
-            var foundEntry = await Data.FileSystem.SearchEntryAsync(currentPath, path, cancellationToken).ConfigureAwait(false);
+            var fsFeature = Connection.Features.Get<IFileSystemFeature>();
+            var currentPath = fsFeature.Path.Clone();
+            var foundEntry = await fsFeature.FileSystem.SearchEntryAsync(currentPath, path, cancellationToken).ConfigureAwait(false);
             if (foundEntry?.Entry == null)
             {
-                return new FtpResponse(550, "File system entry not found.");
+                return new FtpResponse(550, T("File system entry not found."));
             }
 
-            await Data.FileSystem.SetMacTimeAsync(foundEntry.Entry, modificationTime, accessTime, creationTime, cancellationToken).ConfigureAwait(false);
+            await fsFeature.FileSystem.SetMacTimeAsync(foundEntry.Entry, modificationTime, accessTime, creationTime, cancellationToken).ConfigureAwait(false);
 
-            return new FtpResponse(220, "Timestamps set.");
+            return new FtpResponse(220, T("Timestamps set."));
         }
 
         private async Task<FtpResponse> SetTimestamp2(IReadOnlyList<string> parts, CancellationToken cancellationToken)
         {
             if (!parts[0].TryParseTimestamp("UTC", out var modificationTime))
             {
-                return new FtpResponse(501, "Syntax error in parameters or arguments.");
+                return new FtpResponse(501, T("Syntax error in parameters or arguments."));
             }
 
             var path = parts[1];
@@ -125,19 +122,20 @@ namespace FubarDev.FtpServer.CommandExtensions
 
             if (string.IsNullOrEmpty(path))
             {
-                return new FtpResponse(501, "No file name.");
+                return new FtpResponse(501, T("No file name."));
             }
 
-            var currentPath = Data.Path.Clone();
-            var foundEntry = await Data.FileSystem.SearchEntryAsync(currentPath, path, cancellationToken).ConfigureAwait(false);
+            var fsFeature = Connection.Features.Get<IFileSystemFeature>();
+            var currentPath = fsFeature.Path.Clone();
+            var foundEntry = await fsFeature.FileSystem.SearchEntryAsync(currentPath, path, cancellationToken).ConfigureAwait(false);
             if (foundEntry?.Entry == null)
             {
-                return new FtpResponse(550, "File system entry not found.");
+                return new FtpResponse(550, T("File system entry not found."));
             }
 
-            await Data.FileSystem.SetMacTimeAsync(foundEntry.Entry, modificationTime, null, null, cancellationToken).ConfigureAwait(false);
+            await fsFeature.FileSystem.SetMacTimeAsync(foundEntry.Entry, modificationTime, null, null, cancellationToken).ConfigureAwait(false);
 
-            return new FtpResponse(220, "Modification time set.");
+            return new FtpResponse(220, T("Modification time set."));
         }
     }
 }

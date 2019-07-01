@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <MSBuildAllProjects>$(MSBuildAllProjects);$(MSBuildThisFileFullPath)</MSBuildAllProjects>
+    <HasSharedItems>true</HasSharedItems>
+    <SharedGUID>fd524518-e097-4ac0-aac8-d5ea24f31545</SharedGUID>
+  </PropertyGroup>
+  <PropertyGroup Label="Configuration">
+    <Import_RootNamespace>System.Net.Security</Import_RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)GnuSslStream.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)NativeApi.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ReflectUtil.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)SslDirectCall.cs" />
+  </ItemGroup>
+</Project>

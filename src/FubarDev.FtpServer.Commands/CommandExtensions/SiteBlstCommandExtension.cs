@@ -2,14 +2,16 @@
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
+using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
 using FubarDev.FtpServer.BackgroundTransfer;
+using FubarDev.FtpServer.Features;
+using FubarDev.FtpServer.ServerCommands;
 
 using JetBrains.Annotations;
 
@@ -20,6 +22,8 @@ namespace FubarDev.FtpServer.CommandExtensions
     /// <summary>
     /// The implementation of the <c>SITE BLST</c> command.
     /// </summary>
+    [FtpCommandHandlerExtension("BLST", "SITE", true)]
+    [FtpFeatureText("SITE BLST")]
     public class SiteBlstCommandExtension : FtpCommandHandlerExtension
     {
         [NotNull]
@@ -31,21 +35,19 @@ namespace FubarDev.FtpServer.CommandExtensions
         /// <summary>
         /// Initializes a new instance of the <see cref="SiteBlstCommandExtension"/> class.
         /// </summary>
-        /// <param name="connectionAccessor">The accessor to get the connection that is active during the <see cref="Process"/> method execution.</param>
         /// <param name="backgroundTransferWorker">The background transfer worker service.</param>
         /// <param name="logger">The logger.</param>
         public SiteBlstCommandExtension(
-            [NotNull] IFtpConnectionAccessor connectionAccessor,
             [NotNull] IBackgroundTransferWorker backgroundTransferWorker,
             [CanBeNull] ILogger<SiteBlstCommandExtension> logger = null)
-            : base(connectionAccessor, "SITE", "BLST")
         {
             _backgroundTransferWorker = backgroundTransferWorker;
             _logger = logger;
         }
 
         /// <inheritdoc/>
-        public override bool? IsLoginRequired { get; set; } = true;
+        [Obsolete("Use the FtpCommandHandlerExtension attribute instead.")]
+        public override bool? IsLoginRequired { get; } = true;
 
         /// <inheritdoc />
         public override void InitializeConnectionData()
@@ -53,7 +55,7 @@ namespace FubarDev.FtpServer.CommandExtensions
         }
 
         /// <inheritdoc/>
-        public override async Task<FtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
+        public override async Task<IFtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
         {
             var mode = (string.IsNullOrEmpty(command.Argument) ? "data" : command.Argument).ToLowerInvariant();
 
@@ -63,62 +65,59 @@ namespace FubarDev.FtpServer.CommandExtensions
                     return await SendBlstWithDataConnection(cancellationToken).ConfigureAwait(false);
                 case "control":
                 case "direct":
-                    return await SendBlstDirectly(cancellationToken).ConfigureAwait(false);
+                    return await SendBlstDirectly().ConfigureAwait(false);
+                default:
+                    return new FtpResponse(501, T("Mode {0} not supported.", mode));
             }
-
-            return new FtpResponse(501, $"Mode {mode} not supported.");
         }
 
-        private async Task<FtpResponse> SendBlstDirectly(CancellationToken cancellationToken)
+        private Task<IFtpResponse> SendBlstDirectly()
         {
             var taskStates = _backgroundTransferWorker.GetStates();
             if (taskStates.Count == 0)
             {
-                return new FtpResponse(211, "No background tasks");
+                return Task.FromResult<IFtpResponse>(new FtpResponse(211, T("No background tasks")));
             }
 
-            await Connection.WriteAsync("211-Active background tasks:", cancellationToken).ConfigureAwait(false);
-            foreach (var line in GetLines(taskStates))
-            {
-                await Connection.WriteAsync($" {line}", cancellationToken).ConfigureAwait(false);
-            }
-
-            return new FtpResponse(211, "END");
+            return Task.FromResult<IFtpResponse>(
+                new FtpResponseList(
+                    211,
+                    T("Active background tasks:"),
+                    T("END"),
+                    GetLines(taskStates)));
         }
 
-        private async Task<FtpResponse> SendBlstWithDataConnection(CancellationToken cancellationToken)
+        private async Task<IFtpResponse> SendBlstWithDataConnection(CancellationToken cancellationToken)
         {
-            await Connection.WriteAsync(new FtpResponse(150, "Opening data connection."), cancellationToken).ConfigureAwait(false);
+            await FtpContext.ServerCommandWriter.WriteAsync(
+                    new SendResponseServerCommand(new FtpResponse(150, T("Opening data connection."))),
+                    cancellationToken)
+               .ConfigureAwait(false);
 
-            return await Connection.SendResponseAsync(
-                ExecuteSend,
-                ex =>
-                {
-                    _logger?.LogError(ex, ex.Message);
-                    return new FtpResponse(425, "Can't open data connection.");
-                }).ConfigureAwait(false);
+            return await Connection.SendDataAsync(
+                    ExecuteSend,
+                    _logger,
+                    cancellationToken)
+               .ConfigureAwait(false);
         }
 
-        private async Task<FtpResponse> ExecuteSend(TcpClient responseSocket)
+        private async Task<IFtpResponse> ExecuteSend(IFtpDataConnection dataConnection, CancellationToken cancellationToken)
         {
-            var encoding = Data.NlstEncoding ?? Connection.Encoding;
-            var responseStream = responseSocket.GetStream();
-            using (var stream = await Connection.CreateEncryptedStream(responseStream).ConfigureAwait(false))
+            var encoding = Connection.Features.Get<IEncodingFeature>().Encoding;
+            var stream = dataConnection.Stream;
+            using (var writer = new StreamWriter(stream, encoding, 4096, true)
             {
-                using (var writer = new StreamWriter(stream, encoding, 4096, true)
+                NewLine = "\r\n",
+            })
+            {
+                foreach (var line in GetLines(_backgroundTransferWorker.GetStates()))
                 {
-                    NewLine = "\r\n",
-                })
-                {
-                    foreach (var line in GetLines(_backgroundTransferWorker.GetStates()))
-                    {
-                        Connection.Log?.LogDebug(line);
-                        await writer.WriteLineAsync(line).ConfigureAwait(false);
-                    }
+                    _logger?.LogDebug(line);
+                    await writer.WriteLineAsync(line).ConfigureAwait(false);
                 }
             }
 
-            return new FtpResponse(250, "Closing data connection.");
+            return new FtpResponse(250, T("Closing data connection."));
         }
 
         private IEnumerable<string> GetLines(IEnumerable<BackgroundTransferInfo> entries)

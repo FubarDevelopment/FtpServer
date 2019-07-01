@@ -7,10 +7,14 @@
 
 using System;
 using System.Collections.Concurrent;
-using System.Linq;
 using System.Net.Sockets;
+using System.Text;
 using System.Threading;
+using System.Threading.Channels;
 using System.Threading.Tasks;
+
+using FubarDev.FtpServer.Features;
+using FubarDev.FtpServer.Networking;
 
 using JetBrains.Annotations;
 
@@ -23,42 +27,26 @@ namespace FubarDev.FtpServer
     /// <summary>
     /// The portable FTP server.
     /// </summary>
-    public sealed class FtpServer : IFtpServer, IFtpService, IDisposable
+    public sealed class FtpServer : IFtpServer, IDisposable
     {
-        /// <summary>
-        /// Mutex for Ready field.
-        /// </summary>
-        private readonly object _startedLock = new object();
-
-        /// <summary>
-        /// Mutex for Stopped field.
-        /// </summary>
-        private readonly object _stopLocker = new object();
-
-        /// <summary>
-        /// Semaphore that gets released when the listener stopped.
-        /// </summary>
-        private readonly SemaphoreSlim _stoppedSemaphore = new SemaphoreSlim(0, 1);
-
         [NotNull]
         private readonly FtpServerStatistics _statistics = new FtpServerStatistics();
 
         [NotNull]
         private readonly IServiceProvider _serviceProvider;
 
-        private readonly CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
-
         private readonly ConcurrentDictionary<IFtpConnection, FtpConnectionInfo> _connections = new ConcurrentDictionary<IFtpConnection, FtpConnectionInfo>();
+
+        private readonly FtpServerListenerService _serverListener;
 
         [CanBeNull]
         private readonly ILogger<FtpServer> _log;
 
-        /// <summary>
-        /// Don't use this directly, use the Stopped property instead. It is protected by a mutex.
-        /// </summary>
-        private volatile bool _stopped;
+        [NotNull]
+        private readonly Task _clientReader;
 
-        private volatile bool _isReady;
+        [NotNull]
+        private readonly CancellationTokenSource _serverShutdown = new CancellationTokenSource();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FtpServer"/> class.
@@ -76,10 +64,23 @@ namespace FubarDev.FtpServer
             ServerAddress = serverOptions.Value.ServerAddress;
             Port = serverOptions.Value.Port;
             MaxActiveConnections = serverOptions.Value.MaxActiveConnections;
+
+            var tcpClientChannel = Channel.CreateBounded<TcpClient>(5);
+            _serverListener = new FtpServerListenerService(tcpClientChannel, serverOptions, _serverShutdown, logger);
+            _serverListener.ListenerStarted += (s, e) =>
+            {
+                Port = e.Port;
+                OnListenerStarted(e);
+            };
+
+            _clientReader = ReadClientsAsync(tcpClientChannel, _serverShutdown.Token);
         }
 
         /// <inheritdoc />
         public event EventHandler<ConnectionEventArgs> ConfigureConnection;
+
+        /// <inheritdoc />
+        public event EventHandler<ListenerStartedEventArgs> ListenerStarted;
 
         /// <inheritdoc />
         public IFtpServerStatistics Statistics => _statistics;
@@ -88,73 +89,34 @@ namespace FubarDev.FtpServer
         public string ServerAddress { get; }
 
         /// <inheritdoc />
-        public int Port { get; }
+        public int Port { get; private set; }
 
         /// <inheritdoc />
         public int MaxActiveConnections { get; }
 
         /// <inheritdoc />
-        public bool Ready
-        {
-            get
-            {
-                lock (_startedLock)
-                {
-                    return _isReady;
-                }
-            }
+        public FtpServiceStatus Status => _serverListener.Status;
 
-            private set
-            {
-                lock (_startedLock)
-                {
-                    _isReady = value;
-                }
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether the server is stopped.
-        /// </summary>
-        /// <remarks>
-        /// Mutexed so it can be accessed concurrently by different threads.
-        /// </remarks>
-        private bool Stopped
-        {
-            get
-            {
-                lock (_stopLocker)
-                {
-                    return _stopped;
-                }
-            }
-            set
-            {
-                lock (_stopLocker)
-                {
-                    _stopped = value;
-                }
-            }
-        }
+        /// <inheritdoc />
+        public bool Ready => Status == FtpServiceStatus.Running;
 
         /// <inheritdoc/>
         public void Dispose()
         {
-            if (!Stopped)
+            if (Status != FtpServiceStatus.Stopped)
             {
-                ((IFtpService)this).StopAsync(CancellationToken.None).Wait();
+                StopAsync(CancellationToken.None).Wait();
             }
 
-            _cancellationTokenSource.Dispose();
+            _serverShutdown.Dispose();
             foreach (var connectionInfo in _connections.Values)
             {
                 connectionInfo.Scope.Dispose();
             }
-
-            _stoppedSemaphore.Dispose();
         }
 
         /// <inheritdoc />
+        [Obsolete("Use IFtpServerHost.StartAsync instead.")]
         void IFtpServer.Start()
         {
             var host = _serviceProvider.GetRequiredService<IFtpServerHost>();
@@ -162,6 +124,7 @@ namespace FubarDev.FtpServer
         }
 
         /// <inheritdoc />
+        [Obsolete("Use IFtpServerHost.StopAsync instead.")]
         void IFtpServer.Stop()
         {
             var host = _serviceProvider.GetRequiredService<IFtpServerHost>();
@@ -169,27 +132,33 @@ namespace FubarDev.FtpServer
         }
 
         /// <inheritdoc />
-        async Task IFtpService.StartAsync(CancellationToken cancellationToken)
+        public Task PauseAsync(CancellationToken cancellationToken)
         {
-            if (Stopped)
-            {
-                throw new InvalidOperationException("Cannot start a previously stopped FTP server");
-            }
-
-            using (var semaphore = new SemaphoreSlim(0, 1))
-            {
-                ExecuteServerListener(semaphore);
-                await semaphore.WaitAsync(cancellationToken).ConfigureAwait(false);
-                semaphore.Release();
-            }
+            return _serverListener.PauseAsync(cancellationToken);
         }
 
         /// <inheritdoc />
-        Task IFtpService.StopAsync(CancellationToken cancellationToken)
+        public Task ContinueAsync(CancellationToken cancellationToken)
         {
-            _cancellationTokenSource.Cancel(true);
-            Stopped = true;
-            return _stoppedSemaphore.WaitAsync(cancellationToken);
+            return _serverListener.ContinueAsync(cancellationToken);
+        }
+
+        /// <inheritdoc />
+        public async Task StartAsync(CancellationToken cancellationToken)
+        {
+            await _serverListener.StartAsync(cancellationToken).ConfigureAwait(false);
+        }
+
+        /// <inheritdoc />
+        public async Task StopAsync(CancellationToken cancellationToken)
+        {
+            if (!_serverShutdown.IsCancellationRequested)
+            {
+                _serverShutdown.Cancel(true);
+            }
+
+            await _serverListener.StopAsync(cancellationToken).ConfigureAwait(false);
+            await _clientReader.ConfigureAwait(false);
         }
 
         private void OnConfigureConnection(IFtpConnection connection)
@@ -197,58 +166,56 @@ namespace FubarDev.FtpServer
             ConfigureConnection?.Invoke(this, new ConnectionEventArgs(connection));
         }
 
-        private void ExecuteServerListener(SemaphoreSlim semaphore)
-        {
-            Task.Run(async () =>
-            {
-                var listener = new MultiBindingTcpListener(ServerAddress, Port, _log);
-                try
-                {
-                    await listener.StartAsync().ConfigureAwait(false);
-                    listener.StartAccepting();
-
-                    Ready = true;
-                    semaphore.Release();
-
-                    try
-                    {
-                        while (!Stopped && !_cancellationTokenSource.IsCancellationRequested)
-                        {
-                            var acceptTask = listener.WaitAnyTcpClientAsync(_cancellationTokenSource.Token);
-                            var client = acceptTask.Result;
-                            AddClient(client);
-                        }
-                    }
-                    catch (OperationCanceledException)
-                    {
-                        // Ignore - everything is fine
-                    }
-                    finally
-                    {
-                        listener.Stop();
-
-                        foreach (var connection in _connections.Keys.ToList())
-                        {
-                            connection.Close();
-                        }
-                    }
-                }
-                catch (Exception ex)
-                {
-                    _log?.LogCritical(ex, "{0}", ex.Message);
-                }
-                finally
-                {
-                    _stoppedSemaphore.Release();
-                }
-            });
-        }
-
-        private void AddClient(TcpClient client)
+        private async Task ReadClientsAsync(
+            [NotNull] ChannelReader<TcpClient> tcpClientReader,
+            CancellationToken cancellationToken)
         {
             try
             {
-                var scope = _serviceProvider.CreateScope();
+                while (!cancellationToken.IsCancellationRequested)
+                {
+                    var hasClient = await tcpClientReader.WaitToReadAsync(cancellationToken)
+                       .ConfigureAwait(false);
+                    if (!hasClient)
+                    {
+                        return;
+                    }
+
+                    while (tcpClientReader.TryRead(out var client))
+                    {
+                        await AddClientAsync(client)
+                           .ConfigureAwait(false);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                var exception = ex;
+                while (exception is AggregateException aggregateException)
+                {
+                    exception = aggregateException.InnerException;
+                }
+
+                switch (exception)
+                {
+                    case OperationCanceledException _:
+                        // Cancelled
+                        break;
+                    default:
+                        throw;
+                }
+            }
+            finally
+            {
+                _log?.LogDebug("Stopped accepting connections");
+            }
+        }
+
+        private async Task AddClientAsync(TcpClient client)
+        {
+            var scope = _serviceProvider.CreateScope();
+            try
+            {
                 var socketAccessor = scope.ServiceProvider.GetRequiredService<TcpSocketClientAccessor>();
                 socketAccessor.TcpSocketClient = client;
 
@@ -259,7 +226,9 @@ namespace FubarDev.FtpServer
                 if (MaxActiveConnections != 0 && _statistics.ActiveConnections >= MaxActiveConnections)
                 {
                     var response = new FtpResponse(10068, "Too many users, server is full.");
-                    connection.WriteAsync(response, CancellationToken.None).Wait();
+                    var responseBuffer = Encoding.UTF8.GetBytes($"{response}\r\n");
+                    var secureConnectionFeature = connection.Features.Get<ISecureConnectionFeature>();
+                    secureConnectionFeature.OriginalStream.Write(responseBuffer, 0, responseBuffer.Length);
                     client.Dispose();
                     scope.Dispose();
                     return;
@@ -271,21 +240,22 @@ namespace FubarDev.FtpServer
                     return;
                 }
 
-                _statistics.ActiveConnections += 1;
-                _statistics.TotalConnections += 1;
+                _statistics.AddConnection();
                 connection.Closed += ConnectionOnClosed;
                 OnConfigureConnection(connection);
-                connection.Start();
+                await connection.StartAsync()
+                   .ConfigureAwait(false);
             }
             catch (Exception ex)
             {
+                scope.Dispose();
                 _log?.LogError(ex, ex.Message);
             }
         }
 
         private void ConnectionOnClosed(object sender, EventArgs eventArgs)
         {
-            if (Stopped)
+            if (Status == FtpServiceStatus.Stopped)
             {
                 return;
             }
@@ -297,7 +267,13 @@ namespace FubarDev.FtpServer
             }
 
             info.Scope.Dispose();
-            _statistics.ActiveConnections -= 1;
+
+            _statistics.CloseConnection();
+        }
+
+        private void OnListenerStarted(ListenerStartedEventArgs e)
+        {
+            ListenerStarted?.Invoke(this, e);
         }
 
         private class FtpConnectionInfo

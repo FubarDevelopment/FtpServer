@@ -5,7 +5,7 @@
 
   <PropertyGroup>
     <NoWarn Condition=" '$(Configuration)' != 'Release' ">$(NoWarn);1591</NoWarn>
-    <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
+    <NoWarn>$(NoWarn);NU5105</NoWarn>
     <DebugType Condition=" '$(Configuration)' == 'Release' ">portable</DebugType> <!-- Required for EmbedSources -->
     <DebugType Condition=" '$(Configuration)' == 'Debug' ">full</DebugType> <!-- Required for EmbedSources -->
     <IsPackable>true</IsPackable>
@@ -22,12 +22,19 @@
     <EmbedAllSources>true</EmbedAllSources>
   </PropertyGroup>
 
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+  </PropertyGroup>
+
   <ItemGroup Condition=" '$(Configuration)' == 'Release' ">
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0-beta2-18618-05" PrivateAssets="All"/>
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="StyleCop.Analyzers" Version="1.1.1-beta.61" PrivateAssets="All" />
+    <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
   </ItemGroup>
 
 </Project>

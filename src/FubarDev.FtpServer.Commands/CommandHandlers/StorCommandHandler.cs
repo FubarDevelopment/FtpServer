@@ -6,48 +6,53 @@
 //-----------------------------------------------------------------------
 
 using System;
-using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
 
 using FubarDev.FtpServer.BackgroundTransfer;
+using FubarDev.FtpServer.Commands;
+using FubarDev.FtpServer.Features;
 using FubarDev.FtpServer.FileSystem;
-
+using FubarDev.FtpServer.ServerCommands;
 using JetBrains.Annotations;
+
+using Microsoft.Extensions.Logging;
 
 namespace FubarDev.FtpServer.CommandHandlers
 {
     /// <summary>
     /// This class implements the STOR command (4.1.3.).
     /// </summary>
+    [FtpCommandHandler("STOR", true)]
     public class StorCommandHandler : FtpCommandHandler
     {
         [NotNull]
         private readonly IBackgroundTransferWorker _backgroundTransferWorker;
 
+        [CanBeNull]
+        private readonly ILogger<StorCommandHandler> _logger;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="StorCommandHandler"/> class.
         /// </summary>
-        /// <param name="connectionAccessor">The accessor to get the connection that is active during the <see cref="Process"/> method execution.</param>
         /// <param name="backgroundTransferWorker">The background transfer worker service.</param>
+        /// <param name="logger">The logger.</param>
         public StorCommandHandler(
-            [NotNull] IFtpConnectionAccessor connectionAccessor,
-            [NotNull] IBackgroundTransferWorker backgroundTransferWorker)
-            : base(connectionAccessor, "STOR")
+            [NotNull] IBackgroundTransferWorker backgroundTransferWorker,
+            [CanBeNull] ILogger<StorCommandHandler> logger = null)
         {
             _backgroundTransferWorker = backgroundTransferWorker;
+            _logger = logger;
         }
 
         /// <inheritdoc/>
-        public override bool IsAbortable => true;
-
-        /// <inheritdoc/>
-        public override async Task<FtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
+        public override async Task<IFtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
         {
-            var restartPosition = Data.RestartPosition;
-            Data.RestartPosition = null;
+            var restartPosition = Connection.Features.Get<IRestCommandFeature>()?.RestartPosition;
+            Connection.Features.Set<IRestCommandFeature>(null);
 
-            if (!Data.TransferMode.IsBinary && Data.TransferMode.FileType != FtpFileType.Ascii)
+            var transferMode = Connection.Features.Get<ITransferConfigurationFeature>().TransferMode;
+            if (!transferMode.IsBinary && transferMode.FileType != FtpFileType.Ascii)
             {
                 throw new NotSupportedException();
             }
@@ -55,70 +60,80 @@ namespace FubarDev.FtpServer.CommandHandlers
             var fileName = command.Argument;
             if (string.IsNullOrEmpty(fileName))
             {
-                return new FtpResponse(501, "No file name specified");
+                return new FtpResponse(501, T("No file name specified"));
             }
 
-            var currentPath = Data.Path.Clone();
-            var fileInfo = await Data.FileSystem.SearchFileAsync(currentPath, fileName, cancellationToken).ConfigureAwait(false);
+            var fsFeature = Connection.Features.Get<IFileSystemFeature>();
+
+            var currentPath = fsFeature.Path.Clone();
+            var fileInfo = await fsFeature.FileSystem.SearchFileAsync(currentPath, fileName, cancellationToken).ConfigureAwait(false);
             if (fileInfo == null)
             {
-                return new FtpResponse(550, "Not a valid directory.");
+                return new FtpResponse(550, T("Not a valid directory."));
             }
 
             if (fileInfo.FileName == null)
             {
-                return new FtpResponse(553, "File name not allowed.");
+                return new FtpResponse(553, T("File name not allowed."));
             }
 
             var doReplace = restartPosition.GetValueOrDefault() == 0 && fileInfo.Entry != null;
 
-            await Connection.WriteAsync(new FtpResponse(150, "Opening connection for data transfer."), cancellationToken).ConfigureAwait(false);
+            await FtpContext.ServerCommandWriter
+               .WriteAsync(
+                    new SendResponseServerCommand(new FtpResponse(150, T("Opening connection for data transfer."))),
+                    cancellationToken)
+               .ConfigureAwait(false);
 
             return await Connection
-                .SendResponseAsync(
-                    client => ExecuteSendAsync(client, doReplace, fileInfo, restartPosition, cancellationToken))
-                .ConfigureAwait(false);
+               .SendDataAsync(
+                    (dataConnection, ct) => ExecuteSendAsync(dataConnection, doReplace, fileInfo, restartPosition, ct),
+                    _logger,
+                    cancellationToken)
+               .ConfigureAwait(false);
         }
 
-        private async Task<FtpResponse> ExecuteSendAsync(
-            TcpClient responseSocket,
+        private async Task<IFtpResponse> ExecuteSendAsync(
+            IFtpDataConnection dataConnection,
             bool doReplace,
             SearchResult<IUnixFileEntry> fileInfo,
             long? restartPosition,
             CancellationToken cancellationToken)
         {
-            var readStream = responseSocket.GetStream();
-            readStream.ReadTimeout = 10000;
+            var fsFeature = Connection.Features.Get<IFileSystemFeature>();
+            var stream = dataConnection.Stream;
+            stream.ReadTimeout = 10000;
 
-            using (var stream = await Connection.CreateEncryptedStream(readStream).ConfigureAwait(false))
+            IBackgroundTransfer backgroundTransfer;
+            if (doReplace && fileInfo.Entry != null)
             {
-                IBackgroundTransfer backgroundTransfer;
-                if (doReplace && fileInfo.Entry != null)
-                {
-                    backgroundTransfer = await Data.FileSystem
-                        .ReplaceAsync(fileInfo.Entry, stream, cancellationToken).ConfigureAwait(false);
-                }
-                else if (restartPosition.GetValueOrDefault() == 0 || fileInfo.Entry == null)
-                {
-                    var fileName = fileInfo.FileName ?? throw new InvalidOperationException();
-                    backgroundTransfer = await Data.FileSystem
-                        .CreateAsync(fileInfo.Directory, fileName, stream, cancellationToken)
-                        .ConfigureAwait(false);
-                }
-                else
-                {
-                    backgroundTransfer = await Data.FileSystem
-                        .AppendAsync(fileInfo.Entry, restartPosition ?? 0, stream, cancellationToken)
-                        .ConfigureAwait(false);
-                }
-
-                if (backgroundTransfer != null)
-                {
-                    _backgroundTransferWorker.Enqueue(backgroundTransfer);
-                }
+                backgroundTransfer = await fsFeature.FileSystem
+                   .ReplaceAsync(fileInfo.Entry, stream, cancellationToken).ConfigureAwait(false);
+            }
+            else if (restartPosition.GetValueOrDefault() == 0 || fileInfo.Entry == null)
+            {
+                backgroundTransfer = await fsFeature.FileSystem
+                   .CreateAsync(
+                        fileInfo.Directory,
+                        fileInfo.FileName ?? throw new InvalidOperationException(),
+                        stream,
+                        cancellationToken)
+                   .ConfigureAwait(false);
+            }
+            else
+            {
+                backgroundTransfer = await fsFeature.FileSystem
+                   .AppendAsync(fileInfo.Entry, restartPosition ?? 0, stream, cancellationToken)
+                   .ConfigureAwait(false);
             }
 
-            return new FtpResponse(226, "Uploaded file successfully.");
+            if (backgroundTransfer != null)
+            {
+                await _backgroundTransferWorker.EnqueueAsync(backgroundTransfer, cancellationToken)
+                   .ConfigureAwait(false);
+            }
+
+            return new FtpResponse(226, T("Uploaded file successfully."));
         }
     }
 }

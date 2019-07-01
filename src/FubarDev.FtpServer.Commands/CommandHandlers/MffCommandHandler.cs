@@ -11,14 +11,20 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
+using FubarDev.FtpServer.Commands;
+using FubarDev.FtpServer.Features;
 using FubarDev.FtpServer.FileSystem;
 using FubarDev.FtpServer.ListFormatters.Facts;
+
+using JetBrains.Annotations;
 
 namespace FubarDev.FtpServer.CommandHandlers
 {
     /// <summary>
     /// Implements the <c>MFF</c> command.
     /// </summary>
+    [FtpCommandHandler("MFF")]
+    [FtpFeatureFunction(nameof(FeatureStatus))]
     public class MffCommandHandler : FtpCommandHandler
     {
         private static readonly Dictionary<string, CreateFactDelegate> _knownFacts = new Dictionary<string, CreateFactDelegate>(StringComparer.OrdinalIgnoreCase)
@@ -43,30 +49,31 @@ namespace FubarDev.FtpServer.CommandHandlers
             },
         };
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="MffCommandHandler"/> class.
-        /// </summary>
-        /// <param name="connectionAccessor">The accessor to get the connection that is active during the <see cref="Process"/> method execution.</param>
-        public MffCommandHandler(IFtpConnectionAccessor connectionAccessor)
-            : base(connectionAccessor, "MFF")
-        {
-        }
-
         private delegate IFact CreateFactDelegate(string value);
 
-        /// <inheritdoc/>
-        public override IEnumerable<IFeatureInfo> GetSupportedFeatures()
+        /// <summary>
+        /// Gets the feature string for the <c>MFF</c> command.
+        /// </summary>
+        /// <param name="connection">The connection.</param>
+        /// <returns>The feature string.</returns>
+        public static string FeatureStatus([NotNull] IFtpConnection connection)
         {
-            yield return new GenericFeatureInfo("MFF", FeatureStatus, IsLoginRequired);
+            var result = new StringBuilder();
+            result.Append("MFF ");
+            foreach (var fact in _knownFacts)
+            {
+                result.AppendFormat("{0};", fact.Key);
+            }
+            return result.ToString();
         }
 
         /// <inheritdoc/>
-        public override async Task<FtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
+        public override async Task<IFtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
         {
             var parts = command.Argument.Split(new[] { ' ' }, 2);
             if (parts.Length != 2)
             {
-                return new FtpResponse(551, "Facts or file name missing.");
+                return new FtpResponse(551, T("Facts or file name missing."));
             }
 
             var factInfos = new Dictionary<string, string>();
@@ -75,18 +82,20 @@ namespace FubarDev.FtpServer.CommandHandlers
                 var keyValue = factEntry.Split(new[] { '=' }, 2);
                 if (keyValue.Length != 2)
                 {
-                    return new FtpResponse(551, $"Invalid format for fact {factEntry}.");
+                    return new FtpResponse(551, T("Invalid format for fact {0}.", factEntry));
                 }
 
                 factInfos.Add(keyValue[0], keyValue[1]);
             }
 
+            var fsFeature = Connection.Features.Get<IFileSystemFeature>();
+
             var path = parts[1];
-            var currentPath = Data.Path.Clone();
-            var fileInfo = await Data.FileSystem.SearchFileAsync(currentPath, path, cancellationToken).ConfigureAwait(false);
+            var currentPath = fsFeature.Path.Clone();
+            var fileInfo = await fsFeature.FileSystem.SearchFileAsync(currentPath, path, cancellationToken).ConfigureAwait(false);
             if (fileInfo?.Entry == null)
             {
-                return new FtpResponse(550, "File not found.");
+                return new FtpResponse(550, T("File not found."));
             }
 
             var facts = new List<IFact>();
@@ -94,7 +103,7 @@ namespace FubarDev.FtpServer.CommandHandlers
             {
                 if (!_knownFacts.TryGetValue(factInfo.Key, out var createFact))
                 {
-                    return new FtpResponse(551, $"Unsupported fact {factInfo.Key}.");
+                    return new FtpResponse(551, T("Unsupported fact {0}.", factInfo.Key));
                 }
 
                 var fact = createFact(factInfo.Value);
@@ -113,13 +122,13 @@ namespace FubarDev.FtpServer.CommandHandlers
                         creationTime = ((CreateFact)fact).Timestamp;
                         break;
                     default:
-                        return new FtpResponse(551, $"Unsupported fact {fact.Name}.");
+                        return new FtpResponse(551, T("Unsupported fact {0}.", fact.Name));
                 }
             }
 
             if (creationTime != null || modificationTime != null)
             {
-                await Data.FileSystem.SetMacTimeAsync(fileInfo.Entry, modificationTime, null, creationTime, cancellationToken).ConfigureAwait(false);
+                await fsFeature.FileSystem.SetMacTimeAsync(fileInfo.Entry, modificationTime, null, creationTime, cancellationToken).ConfigureAwait(false);
             }
 
             var fullName = currentPath.GetFullPath() + fileInfo.FileName;
@@ -132,17 +141,6 @@ namespace FubarDev.FtpServer.CommandHandlers
             responseText.AppendFormat(" {0}", fullName);
 
             return new FtpResponse(213, responseText.ToString());
-        }
-
-        private static string FeatureStatus(IFtpConnection connection)
-        {
-            var result = new StringBuilder();
-            result.Append("MFF ");
-            foreach (var fact in _knownFacts)
-            {
-                result.AppendFormat("{0};", fact.Key);
-            }
-            return result.ToString();
         }
     }
 }

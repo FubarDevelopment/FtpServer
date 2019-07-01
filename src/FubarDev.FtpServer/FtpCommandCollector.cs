@@ -7,7 +7,9 @@
 
 using System;
 using System.Collections.Generic;
+#if DEBUG
 using System.Diagnostics;
+#endif
 using System.Linq;
 using System.Text;
 
@@ -167,6 +169,15 @@ namespace FubarDev.FtpServer
             protected override IEnumerable<FtpCommand> DataReceived(ReadOnlySpan<byte> data)
             {
                 return _collector.InternalCollect(data);
+            }
+
+            /// <inheritdoc />
+            protected override IEnumerable<FtpCommand> InterruptProcess()
+            {
+                return new[]
+                {
+                    new FtpCommand("ABOR", null),
+                };
             }
         }
     }

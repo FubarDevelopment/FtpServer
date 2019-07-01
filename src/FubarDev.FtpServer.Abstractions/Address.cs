@@ -164,7 +164,9 @@ namespace FubarDev.FtpServer
                 return null;
             }
 
-            var port = (Convert.ToInt32(addressParts[4], 10) * 256) + Convert.ToInt32(addressParts[5], 10);
+            var portHi = Convert.ToInt32(addressParts[4], 10);
+            var portLo = Convert.ToInt32(addressParts[5], 10);
+            var port = (portHi * 256) + portLo;
             var ipAddress = string.Join(".", addressParts, 0, 4);
             return new Address(ipAddress, port);
         }

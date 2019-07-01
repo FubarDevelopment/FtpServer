@@ -7,13 +7,23 @@
     <PackageTags>portable;FTP;server</PackageTags>
   </PropertyGroup>
   <ItemGroup Condition=" '$(TargetFramework)' != 'netstandard1.3' ">
-    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="2.0.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="2.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="2.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Options" Version="2.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Http.Features" Version="2.0.0" />
   </ItemGroup>
   <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard1.3' ">
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="1.1.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="1.0.0" />
     <PackageReference Include="System.Dynamic.Runtime" Version="4.0.11" />
+    <PackageReference Include="Microsoft.Extensions.Options" Version="1.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Http.Features" Version="1.0.0" />
   </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="NGettext" Version="0.6.3" />
+    <PackageReference Include="System.ComponentModel.Annotations" Version="4.1.0" />
+    <PackageReference Include="System.Threading.Channels" Version="4.5.0" />
+  </ItemGroup>
+  <Import Project="..\FubarDev.FtpServer.Shared\FubarDev.FtpServer.Shared.projitems" Label="Shared" />
   <Import Project="../../PackageLibrary.props" />
 </Project>

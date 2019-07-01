@@ -306,8 +306,19 @@ namespace FubarDev.FtpServer.FileSystem
         [NotNull]
         public static string GetFullPath([NotNull, ItemNotNull] this Stack<IUnixDirectoryEntry> path)
         {
+            return path.Reverse().GetFullPath();
+        }
+
+        /// <summary>
+        /// Returns the <paramref name="path"/> as string.
+        /// </summary>
+        /// <param name="path">The path to convert to string.</param>
+        /// <returns>The <paramref name="path"/> as string.</returns>
+        [NotNull]
+        public static string GetFullPath([NotNull, ItemNotNull] this IEnumerable<IUnixDirectoryEntry> path)
+        {
             var result = new StringBuilder("/");
-            foreach (var pathEntry in path.Reverse())
+            foreach (var pathEntry in path)
             {
                 result.Append($"{pathEntry.Name}/");
             }

@@ -21,11 +21,20 @@ namespace FubarDev.FtpServer
     /// </summary>
     public class MultiBindingTcpListener
     {
+        [NotNull]
         private readonly string _address;
+
         private readonly int _port;
+
         [CanBeNull]
         private readonly ILogger _logger;
+
+        [NotNull]
+        [ItemNotNull]
         private readonly IList<TcpListener> _listeners = new List<TcpListener>();
+
+        [NotNull]
+        [ItemNotNull]
         private readonly IList<Task<TcpClient>> _acceptors = new List<Task<TcpClient>>();
 
         /// <summary>
@@ -34,22 +43,25 @@ namespace FubarDev.FtpServer
         /// <param name="address">The address/host name to bind to.</param>
         /// <param name="port">The listener port.</param>
         /// <param name="logger">The logger.</param>
-        public MultiBindingTcpListener(string address, int port, [CanBeNull] ILogger logger)
+        public MultiBindingTcpListener(
+            [NotNull] string address,
+            int port,
+            [CanBeNull] ILogger logger = null)
         {
-            if (port < 1 || port > 65535)
+            if (port < 0 || port > 65535)
             {
                 throw new ArgumentOutOfRangeException(nameof(port), "The port argument is out of range");
             }
 
             _address = address;
-            _port = port;
+            Port = _port = port;
             _logger = logger;
         }
 
         /// <summary>
         /// Gets the port this listener is bound to.
         /// </summary>
-        public int? Port { get; private set; }
+        public int Port { get; private set; }
 
         /// <summary>
         /// Start all listeners.
@@ -105,27 +117,9 @@ namespace FubarDev.FtpServer
             }
 
             _listeners.Clear();
+            _acceptors.Clear();
             Port = 0;
-        }
-
-        /// <summary>
-        /// Tries to get a listener that has pending client connections.
-        /// </summary>
-        /// <param name="listener">The listener that has pending client connections.</param>
-        /// <returns><c>true</c> when a listener with pending client connections could be found.</returns>
-        public bool TryGetPending(out TcpListener listener)
-        {
-            foreach (var tcpListener in _listeners)
-            {
-                if (tcpListener.Pending())
-                {
-                    listener = tcpListener;
-                    return true;
-                }
-            }
-
-            listener = null;
-            return false;
+            _logger?.LogInformation("Listener stopped");
         }
 
         /// <summary>
@@ -133,12 +127,15 @@ namespace FubarDev.FtpServer
         /// </summary>
         /// <param name="token">Cancellation token.</param>
         /// <returns>The new TCP client.</returns>
-        public Task<TcpClient> WaitAnyTcpClientAsync(CancellationToken token)
+        public async Task<TcpClient> WaitAnyTcpClientAsync(CancellationToken token)
         {
-            var index = Task.WaitAny(_acceptors.Cast<Task>().ToArray(), token);
-            var retVal = _acceptors[index];
+            var tasks = _acceptors.Cast<Task>().ToList();
+            tasks.Add(Task.Delay(-1, token));
+            var retVal = await Task.WhenAny(tasks).ConfigureAwait(false);
+            token.ThrowIfCancellationRequested();
+            var index = tasks.IndexOf(retVal);
             _acceptors[index] = _listeners[index].AcceptTcpClientAsync();
-            return retVal;
+            return ((Task<TcpClient>)retVal).Result;
         }
 
         /// <summary>

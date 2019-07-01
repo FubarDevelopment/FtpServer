@@ -89,7 +89,7 @@ namespace FubarDev.FtpServer.FileSystem.GoogleDrive
         /// <inheritdoc/>
         public override async Task<int> ReadAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken)
         {
-            var readCount = await _responseStream.ReadAsync(buffer, offset, count, cancellationToken);
+            var readCount = await _responseStream.ReadAsync(buffer, offset, count, cancellationToken).ConfigureAwait(false);
             _position += readCount;
             return readCount;
         }

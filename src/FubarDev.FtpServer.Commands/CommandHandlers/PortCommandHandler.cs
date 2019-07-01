@@ -6,58 +6,77 @@
 //-----------------------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+
+using FubarDev.FtpServer.Commands;
+using FubarDev.FtpServer.DataConnection;
+using FubarDev.FtpServer.Features;
+
+using JetBrains.Annotations;
+
+using Microsoft.Extensions.Options;
 
 namespace FubarDev.FtpServer.CommandHandlers
 {
     /// <summary>
     /// Implements the <c>PORT</c> and <c>EPRT</c> commands.
     /// </summary>
+    [FtpCommandHandler("PORT")]
+    [FtpCommandHandler("EPRT")]
+    [FtpFeatureText("EPRT")]
     public class PortCommandHandler : FtpCommandHandler
     {
+        [NotNull]
+        private readonly ActiveDataConnectionFeatureFactory _dataConnectionFeatureFactory;
+
+        [NotNull]
+        private readonly PortCommandOptions _options;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="PortCommandHandler"/> class.
         /// </summary>
-        /// <param name="connectionAccessor">The accessor to get the connection that is active during the <see cref="Process"/> method execution.</param>
-        public PortCommandHandler(IFtpConnectionAccessor connectionAccessor)
-            : base(connectionAccessor, "PORT", "EPRT")
+        /// <param name="dataConnectionFeatureFactory">The factory to create a data connection feature for active connections.</param>
+        /// <param name="options">The options for this command.</param>
+        public PortCommandHandler(
+            [NotNull] ActiveDataConnectionFeatureFactory dataConnectionFeatureFactory,
+            [NotNull] IOptions<PortCommandOptions> options)
         {
+            _dataConnectionFeatureFactory = dataConnectionFeatureFactory;
+            _options = options.Value;
         }
 
         /// <inheritdoc/>
-        public override IEnumerable<IFeatureInfo> GetSupportedFeatures()
+        public override async Task<IFtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
         {
-            yield return new GenericFeatureInfo("EPRT", IsLoginRequired);
-        }
-
-        /// <inheritdoc/>
-        public override Task<FtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
-        {
-            if (Data.TransferTypeCommandUsed != null && !string.Equals(command.Name, Data.TransferTypeCommandUsed, StringComparison.OrdinalIgnoreCase))
-            {
-                return Task.FromResult(new FtpResponse(500, $"Cannot use {command.Name} when {Data.TransferTypeCommandUsed} was used before."));
-            }
-
             try
             {
                 var address = Address.Parse(command.Argument);
                 if (address == null)
                 {
-                    return Task.FromResult(new FtpResponse(501, "Syntax error in parameters or arguments."));
+                    return new FtpResponse(501, T("Syntax error in parameters or arguments."));
                 }
 
-                Data.PortAddress = address;
+                var feature = await _dataConnectionFeatureFactory.CreateFeatureAsync(command, address, _options.DataPort)
+                   .ConfigureAwait(false);
+                var oldFeature = Connection.Features.Get<IFtpDataConnectionFeature>();
+                try
+                {
+                    oldFeature.Dispose();
+                }
+                catch
+                {
+                    // Ignore dispose errors!
+                }
+
+                Connection.Features.Set(feature);
             }
             catch (NotSupportedException ex)
             {
-                return Task.FromResult(new FtpResponse(522, $"Extended port failure - {ex.Message}."));
+                return new FtpResponse(522, T("Extended port failure - {0}.", ex.Message));
             }
 
-            Data.TransferTypeCommandUsed = command.Name;
-
-            return Task.FromResult(new FtpResponse(200, "Command okay."));
+            return new FtpResponse(200, T("Command okay."));
         }
     }
 }

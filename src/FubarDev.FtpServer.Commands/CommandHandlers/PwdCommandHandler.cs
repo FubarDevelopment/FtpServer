@@ -8,6 +8,8 @@
 using System.Threading;
 using System.Threading.Tasks;
 
+using FubarDev.FtpServer.Commands;
+using FubarDev.FtpServer.Features;
 using FubarDev.FtpServer.FileSystem;
 
 namespace FubarDev.FtpServer.CommandHandlers
@@ -15,27 +17,21 @@ namespace FubarDev.FtpServer.CommandHandlers
     /// <summary>
     /// Implements the <c>PWD</c> command.
     /// </summary>
+    [FtpCommandHandler("PWD")]
+    [FtpCommandHandler("XPWD")]
     public class PwdCommandHandler : FtpCommandHandler
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="PwdCommandHandler"/> class.
-        /// </summary>
-        /// <param name="connectionAccessor">The accessor to get the connection that is active during the <see cref="Process"/> method execution.</param>
-        public PwdCommandHandler(IFtpConnectionAccessor connectionAccessor)
-            : base(connectionAccessor, "PWD", "XPWD")
-        {
-        }
-
         /// <inheritdoc/>
-        public override Task<FtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
+        public override Task<IFtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
         {
-            var path = Connection.Data.Path.GetFullPath();
+            var fsFeature = Connection.Features.Get<IFileSystemFeature>();
+            var path = fsFeature.Path.GetFullPath();
             if (path.EndsWith("/") && path.Length > 1)
             {
                 path = path.Substring(0, path.Length - 1);
             }
 
-            return Task.FromResult(new FtpResponse(257, $"\"{path}\""));
+            return Task.FromResult<IFtpResponse>(new FtpResponse(257, $"\"{path}\""));
         }
     }
 }

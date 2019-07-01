@@ -2,6 +2,7 @@
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
+using System;
 using System.Threading.Tasks;
 
 using JetBrains.Annotations;
@@ -14,6 +15,7 @@ namespace FubarDev.FtpServer
     /// <remarks>
     /// This allows the implementation of the <c>ABOR</c> command.
     /// </remarks>
+    [Obsolete("Not needed any more. Command execution was streamlined.")]
     public interface IBackgroundCommandHandler
     {
         /// <summary>
@@ -22,8 +24,9 @@ namespace FubarDev.FtpServer
         /// <param name="handler">The command handler that processes the given <paramref name="command"/>.</param>
         /// <param name="command">The command to process by the <paramref name="handler"/>.</param>
         /// <returns><code>null</code> when the command could not be processed.</returns>
-        [CanBeNull]
-        Task<FtpResponse> Execute([NotNull] IFtpCommandBase handler, [NotNull] FtpCommand command);
+        [NotNull]
+        [ItemCanBeNull]
+        Task<IFtpResponse> Execute([NotNull] IFtpCommandBase handler, [NotNull] FtpCommand command);
 
         /// <summary>
         /// Cancels the processing of the current command.

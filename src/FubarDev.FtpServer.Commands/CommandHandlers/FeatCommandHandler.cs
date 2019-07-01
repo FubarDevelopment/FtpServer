@@ -5,58 +5,123 @@
 // <author>Mark Junker</author>
 //-----------------------------------------------------------------------
 
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+
+using FubarDev.FtpServer.Commands;
+
+using JetBrains.Annotations;
+
+using Microsoft.Extensions.DependencyInjection;
 
 namespace FubarDev.FtpServer.CommandHandlers
 {
     /// <summary>
     /// Implements the <c>FEAT</c> command.
     /// </summary>
+    [FtpCommandHandler("FEAT", isLoginRequired: false)]
     public class FeatCommandHandler : FtpCommandHandler
     {
+        [NotNull]
+        private readonly IFeatureInfoProvider _featureInfoProvider;
+
+        [NotNull]
+        private readonly IFtpCommandHandlerProvider _commandHandlerProvider;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="FeatCommandHandler"/> class.
         /// </summary>
-        /// <param name="connectionAccessor">The accessor to get the connection that is active during the <see cref="Process"/> method execution.</param>
-        public FeatCommandHandler(IFtpConnectionAccessor connectionAccessor)
-            : base(connectionAccessor, "FEAT")
+        /// <param name="featureInfoProvider">Provider for feature information.</param>
+        /// <param name="commandHandlerProvider">The FTP command handler provider.</param>
+        public FeatCommandHandler(
+            [NotNull] IFeatureInfoProvider featureInfoProvider,
+            [NotNull] IFtpCommandHandlerProvider commandHandlerProvider)
         {
+            _featureInfoProvider = featureInfoProvider;
+            _commandHandlerProvider = commandHandlerProvider;
         }
 
         /// <inheritdoc/>
-        public override bool IsLoginRequired => false;
-
-        /// <inheritdoc/>
-        public override async Task<FtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
+        public override Task<IFtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
         {
-            var supportedFeatures = Connection
-                .CommandHandlers.Values
-                .SelectMany(x => x.GetSupportedFeatures());
-
-            if (!Data.IsLoggedIn)
-            {
-                supportedFeatures = supportedFeatures
-                    .Where(f => !f.RequiresAuthentication);
-            }
-
-            var features = supportedFeatures
-                .Select(x => x.BuildInfo(Connection))
-                .Distinct()
-                .ToList();
+            var loginStateMachine = Connection.ConnectionServices.GetRequiredService<IFtpLoginStateMachine>();
+            var isAuthorized = loginStateMachine.Status == SecurityStatus.Authorized;
+            var features = _featureInfoProvider.GetFeatureInfoItems()
+#pragma warning disable CS0612 // Typ oder Element ist veraltet
+               .Concat(GetLegacyFeatureInfoItems(_commandHandlerProvider.CommandHandlers))
+#pragma warning restore CS0612 // Typ oder Element ist veraltet
+               .Where(x => IsFeatureAllowed(x, isAuthorized))
+               .SelectMany(BuildInfo)
+               .Distinct(StringComparer.OrdinalIgnoreCase)
+               .OrderBy(x => x, StringComparer.OrdinalIgnoreCase)
+               .ToList();
 
             if (features.Count == 0)
             {
-                return new FtpResponse(211, "No extensions supported");
+                return Task.FromResult<IFtpResponse>(new FtpResponse(211, T("No extensions supported")));
             }
 
-            await Connection.WriteAsync("211-Extensions supported:", cancellationToken).ConfigureAwait(false);
-            foreach (var supportedFeature in features)
+            return Task.FromResult<IFtpResponse>(
+                new FtpResponseList(
+                    211,
+                    T("Extensions supported:"),
+                    T("END"),
+                    features.Distinct(StringComparer.OrdinalIgnoreCase)));
+        }
+
+        [Obsolete]
+        private IEnumerable<FoundFeatureInfo> GetLegacyFeatureInfoItems(IEnumerable<IFtpCommandHandlerInformation> commandHandlers)
+        {
+            foreach (var handlerInfo in commandHandlers.OfType<IFtpCommandHandlerInstanceInformation>())
             {
-                await Connection.WriteAsync($" {supportedFeature}", cancellationToken).ConfigureAwait(false);
+                foreach (var supportedFeature in handlerInfo.Instance.GetSupportedFeatures(Connection))
+                {
+                    yield return new FoundFeatureInfo(handlerInfo, supportedFeature);
+                }
             }
-            return new FtpResponse(211, "END");
+        }
+
+        private IEnumerable<string> BuildInfo(FoundFeatureInfo foundFeatureInfo)
+        {
+            if (foundFeatureInfo.IsCommandHandler)
+            {
+                return foundFeatureInfo.FeatureInfo.BuildInfo(foundFeatureInfo.CommandHandlerInfo.Type, Connection);
+            }
+
+            if (foundFeatureInfo.IsExtension)
+            {
+                return foundFeatureInfo.FeatureInfo.BuildInfo(foundFeatureInfo.ExtensionInfo.Type, Connection);
+            }
+
+            if (foundFeatureInfo.IsAuthenticationMechanism)
+            {
+                return foundFeatureInfo.FeatureInfo.BuildInfo(foundFeatureInfo.AuthenticationMechanism.GetType(), Connection);
+            }
+
+            throw new NotSupportedException("Unknown feature source.");
+        }
+
+        private bool IsFeatureAllowed(FoundFeatureInfo foundFeatureInfo, bool isAuthorized)
+        {
+            if (foundFeatureInfo.IsCommandHandler)
+            {
+                return isAuthorized || !foundFeatureInfo.CommandHandlerInfo.IsLoginRequired;
+            }
+
+            if (foundFeatureInfo.IsExtension)
+            {
+                return isAuthorized || !foundFeatureInfo.ExtensionInfo.IsLoginRequired;
+            }
+
+            if (foundFeatureInfo.IsAuthenticationMechanism)
+            {
+                return true;
+            }
+
+            throw new NotSupportedException("Unknown feature source.");
         }
     }
 }

@@ -1,6 +1,6 @@
 ---
-uid: custom-authentication
-title: Custom Authentication Development
+uid: custom-account-management
+title: Custom Account Management Development
 ---
 
 > [!WARNING]
@@ -8,7 +8,7 @@ title: Custom Authentication Development
 
 # Overview
 
-This article will show you how to develop your own authentication.
+This article will show you how to develop your own account management.
 
 > [!WARNING]
 > This is a very advanced topic requiring solid knowledge of .NET.
@@ -17,4 +17,4 @@ This article will show you how to develop your own authentication.
 
 The following interface must be implemented:
 
-- `IMembershipProvider` is used to authenticate the user
+- `IMembershipProvider` is used to authorize the user

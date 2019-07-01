@@ -2,6 +2,7 @@
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
+using System;
 using System.Collections.Generic;
 
 using JetBrains.Annotations;
@@ -21,11 +22,13 @@ namespace FubarDev.FtpServer
         /// </remarks>
         [NotNull]
         [ItemNotNull]
+        [Obsolete("Features don't have names. Use an attribute that implements IFeatureInfo, like - for example - FtpFeatureTextAttribute.")]
         ISet<string> Names { get; }
 
         /// <summary>
         /// Gets a value indicating whether this extension requires authentication.
         /// </summary>
+        [Obsolete("This requirement is automatically determined through the FTP command handler.")]
         bool RequiresAuthentication { get; }
 
         /// <summary>
@@ -34,6 +37,17 @@ namespace FubarDev.FtpServer
         /// <param name="connection">The configured connection.</param>
         /// <returns>the informational string to be sent by the <c>FEAT</c> command.</returns>
         [NotNull]
+        [Obsolete("Use BuildInfo(object, IFtpConnection) instead.")]
         string BuildInfo([NotNull] IFtpConnection connection);
+
+        /// <summary>
+        /// Build an informational string to be sent by the <c>FEAT</c> command.
+        /// </summary>
+        /// <param name="reference">The reference object type (e.g. an FTP command handler).</param>
+        /// <param name="connection">The configured connection.</param>
+        /// <returns>the informational strings to be sent by the <c>FEAT</c> command.</returns>
+        [NotNull]
+        [ItemNotNull]
+        IEnumerable<string> BuildInfo([NotNull] Type reference, [NotNull] IFtpConnection connection);
     }
 }

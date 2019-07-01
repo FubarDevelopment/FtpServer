@@ -12,6 +12,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
+using FubarDev.FtpServer.Features;
 #if !NETSTANDARD1_3
 using Microsoft.Extensions.Logging;
 #endif
@@ -24,6 +25,7 @@ namespace FubarDev.FtpServer.BackgroundTransfer
     /// <remarks>
     /// This allows the implementation of the <c>ABOR</c> command.
     /// </remarks>
+    [Obsolete("Not needed any more. Command execution was streamlined.")]
     public sealed class BackgroundCommandHandler : IBackgroundCommandHandler, IDisposable
     {
         private readonly IFtpConnection _connection;
@@ -34,7 +36,7 @@ namespace FubarDev.FtpServer.BackgroundTransfer
 
         private CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
 
-        private Task<FtpResponse> _handlerTask;
+        private Task<IFtpResponse> _handlerTask;
 
         internal BackgroundCommandHandler(IFtpConnection connection)
         {
@@ -43,24 +45,26 @@ namespace FubarDev.FtpServer.BackgroundTransfer
         }
 
         /// <inheritdoc />
-        public Task<FtpResponse> Execute(IFtpCommandBase handler, FtpCommand command)
+        public Task<IFtpResponse> Execute(IFtpCommandBase handler, FtpCommand command)
         {
             lock (_syncRoot)
             {
                 if (_handlerTask != null)
                 {
-                    return null;
+                    throw new InvalidOperationException($"Only one task can be executed in the background.");
                 }
 
                 _cancellationTokenSource = new CancellationTokenSource();
                 _handlerTask = handler.Process(command, _cancellationTokenSource.Token);
             }
 
+            var localizationFeature = _connection.Features.Get<ILocalizationFeature>();
+
             var taskCanceled = _handlerTask
-                .ContinueWith(
+                .ContinueWith<IFtpResponse>(
                     t =>
                     {
-                        var response = new FtpResponse(426, "Connection closed; transfer aborted.");
+                        var response = new FtpResponse(426, localizationFeature.Catalog.GetString("Connection closed; transfer aborted."));
                         Debug.WriteLine($"Background task cancelled with response {response}");
                         return response;
                     },
@@ -77,12 +81,12 @@ namespace FubarDev.FtpServer.BackgroundTransfer
                     TaskContinuationOptions.OnlyOnRanToCompletion);
 
             var taskFaulted = _handlerTask
-                .ContinueWith(
+                .ContinueWith<IFtpResponse>(
                     t =>
                     {
                         var ex = t.Exception;
                         _connection.Log?.LogError(ex, "Error while processing background command {0}", command);
-                        var response = new FtpResponse(501, "Syntax error in parameters or arguments.");
+                        var response = new FtpResponse(501, localizationFeature.Catalog.GetString("Syntax error in parameters or arguments."));
                         Debug.WriteLine($"Background task failed with response {response}");
                         return response;
                     },
@@ -95,7 +99,7 @@ namespace FubarDev.FtpServer.BackgroundTransfer
             return Task.Run(
                 () =>
                 {
-                    var tasks = new List<Task<FtpResponse>> { taskCompleted, taskCanceled, taskFaulted };
+                    var tasks = new List<Task<IFtpResponse>> { taskCompleted, taskCanceled, taskFaulted };
 
                     do
                     {

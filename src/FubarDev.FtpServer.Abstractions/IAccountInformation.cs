@@ -18,11 +18,5 @@ namespace FubarDev.FtpServer
         /// </summary>
         [NotNull]
         IFtpUser User { get; }
-
-        /// <summary>
-        /// Gets the membership provider that was used to authenticate the user.
-        /// </summary>
-        [NotNull]
-        IMembershipProvider AuthenticatedBy { get; }
     }
 }

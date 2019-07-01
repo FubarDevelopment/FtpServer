@@ -21,29 +21,12 @@ namespace FubarDev.FtpServer
         public int Port { get; set; } = 21;
 
         /// <summary>
-        /// Gets or sets minimum port number to use for passive ftp.
-        /// Only active if PasvMaxPort is set, too).
-        /// If set, needs to be larger than 1023.
-        /// </summary>
-        public int PasvMinPort { get; set; }
-
-        /// <summary>
-        /// Gets or sets maximum port number to use for passive ftp.
-        /// If set, needs to be larger than PasvMinPort.
-        /// </summary>
-        public int PasvMaxPort { get; set; }
-
-        /// <summary>
-        /// Gets or sets the address published to clients for PASV connections.
-        /// This may be necessary if you are behind a forwarding firewall, for example.
-        /// </summary>
-        public string PasvAddress { get; set; }
-
-        /// <summary>
         /// Gets or sets the max allows active connections.
+        /// </summary>
+        /// <remarks>
         /// This will cause connections to be refused if count is exceeded.
         /// 0 (default) means no control over connection count.
-        /// </summary>
+        /// </remarks>
         public int MaxActiveConnections { get; set; }
     }
 }

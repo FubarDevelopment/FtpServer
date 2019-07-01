@@ -5,10 +5,11 @@
 // <author>Mark Junker</author>
 //-----------------------------------------------------------------------
 
-using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
+using FubarDev.FtpServer.Commands;
+using FubarDev.FtpServer.Features;
 using FubarDev.FtpServer.FileSystem;
 
 namespace FubarDev.FtpServer.CommandHandlers
@@ -16,55 +17,43 @@ namespace FubarDev.FtpServer.CommandHandlers
     /// <summary>
     /// Implements the <c>MDTM</c> command.
     /// </summary>
+    [FtpCommandHandler("MDTM")]
+    [FtpFeatureText("MDTM")]
     public class MdtmCommandHandler : FtpCommandHandler
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="MdtmCommandHandler"/> class.
-        /// </summary>
-        /// <param name="connectionAccessor">The accessor to get the connection that is active during the <see cref="Process"/> method execution.</param>
-        public MdtmCommandHandler(IFtpConnectionAccessor connectionAccessor)
-            : base(connectionAccessor, "MDTM")
-        {
-        }
-
         /// <inheritdoc/>
-        public override IEnumerable<IFeatureInfo> GetSupportedFeatures()
-        {
-            yield return new GenericFeatureInfo("MDTM", IsLoginRequired);
-        }
-
-        /// <inheritdoc/>
-        public override async Task<FtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
+        public override async Task<IFtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
         {
             var path = command.Argument;
-            var currentPath = Data.Path.Clone();
-            var fileInfo = await Data.FileSystem.SearchFileAsync(currentPath, path, cancellationToken).ConfigureAwait(false);
+            var fsFeature = Connection.Features.Get<IFileSystemFeature>();
+            var currentPath = fsFeature.Path.Clone();
+            var fileInfo = await fsFeature.FileSystem.SearchFileAsync(currentPath, path, cancellationToken).ConfigureAwait(false);
             IUnixFileSystemEntry foundEntry = fileInfo?.Entry;
             if (foundEntry == null)
             {
                 var parts = path.Split(new[] { ' ' }, 2);
                 if (parts.Length != 2)
                 {
-                    return new FtpResponse(550, "File not found.");
+                    return new FtpResponse(550, T("File not found."));
                 }
 
                 if (!parts[0].TryParseTimestamp("UTC", out var modificationTime))
                 {
-                    return new FtpResponse(550, "File not found.");
+                    return new FtpResponse(550, T("File not found."));
                 }
 
                 path = parts[1];
-                currentPath = Data.Path.Clone();
-                fileInfo = await Data.FileSystem.SearchFileAsync(currentPath, path, cancellationToken).ConfigureAwait(false);
+                currentPath = fsFeature.Path.Clone();
+                fileInfo = await fsFeature.FileSystem.SearchFileAsync(currentPath, path, cancellationToken).ConfigureAwait(false);
                 if (fileInfo?.Entry == null)
                 {
-                    return new FtpResponse(550, "File not found.");
+                    return new FtpResponse(550, T("File not found."));
                 }
 
-                foundEntry = await Data.FileSystem.SetMacTimeAsync(fileInfo.Entry, modificationTime, null, null, cancellationToken).ConfigureAwait(false);
+                foundEntry = await fsFeature.FileSystem.SetMacTimeAsync(fileInfo.Entry, modificationTime, null, null, cancellationToken).ConfigureAwait(false);
             }
 
-            return new FtpResponse(213, $"{foundEntry.LastWriteTime?.ToUniversalTime():yyyyMMddHHmmss.fff}");
+            return new FtpResponse(213, T("{0:yyyyMMddHHmmss.fff}", foundEntry.LastWriteTime?.ToUniversalTime()));
         }
     }
 }

@@ -2,17 +2,33 @@
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
+using System.Threading;
+
 namespace FubarDev.FtpServer
 {
     /// <summary>
     /// Statistics about the FTP server.
     /// </summary>
-    public class FtpServerStatistics : IFtpServerStatistics
+    internal class FtpServerStatistics : IFtpServerStatistics
     {
-        /// <inheritdoc />
-        public long TotalConnections { get; internal set; }
+        private long _totalConnections;
+        private long _activeConnections;
 
         /// <inheritdoc />
-        public long ActiveConnections { get; internal set; }
+        public long TotalConnections => _totalConnections;
+
+        /// <inheritdoc />
+        public long ActiveConnections => _activeConnections;
+
+        public void AddConnection()
+        {
+            Interlocked.Increment(ref _totalConnections);
+            Interlocked.Increment(ref _activeConnections);
+        }
+
+        public void CloseConnection()
+        {
+            Interlocked.Decrement(ref _activeConnections);
+        }
     }
 }

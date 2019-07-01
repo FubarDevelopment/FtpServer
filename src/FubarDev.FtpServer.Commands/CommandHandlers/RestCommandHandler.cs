@@ -6,37 +6,38 @@
 //-----------------------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+
+using FubarDev.FtpServer.Commands;
+using FubarDev.FtpServer.Features;
 
 namespace FubarDev.FtpServer.CommandHandlers
 {
     /// <summary>
     /// Implements the <c>REST</c> command.
     /// </summary>
+    [FtpCommandHandler("REST")]
+    [FtpFeatureText("REST STREAM")]
     public class RestCommandHandler : FtpCommandHandler
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="RestCommandHandler"/> class.
-        /// </summary>
-        /// <param name="connectionAccessor">The accessor to get the connection that is active during the <see cref="Process"/> method execution.</param>
-        public RestCommandHandler(IFtpConnectionAccessor connectionAccessor)
-            : base(connectionAccessor, "REST")
+        /// <inheritdoc/>
+        public override Task<IFtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
         {
+            var restartPosition = Convert.ToInt64(command.Argument, 10);
+            Connection.Features.Set<IRestCommandFeature>(new RestCommandFeature(restartPosition));
+            return Task.FromResult<IFtpResponse>(new FtpResponse(350, T("Restarting next transfer from position {0}", restartPosition)));
         }
 
-        /// <inheritdoc/>
-        public override IEnumerable<IFeatureInfo> GetSupportedFeatures()
+        private class RestCommandFeature : IRestCommandFeature
         {
-            yield return new GenericFeatureInfo("REST", conn => "REST STREAM", IsLoginRequired);
-        }
+            public RestCommandFeature(long restartPosition)
+            {
+                RestartPosition = restartPosition;
+            }
 
-        /// <inheritdoc/>
-        public override Task<FtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
-        {
-            Data.RestartPosition = Convert.ToInt64(command.Argument, 10);
-            return Task.FromResult(new FtpResponse(350, $"Restarting next transfer from position {Data.RestartPosition}"));
+            /// <inheritdoc />
+            public long RestartPosition { get; set; }
         }
     }
 }

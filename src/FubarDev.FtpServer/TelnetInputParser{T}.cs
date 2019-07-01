@@ -35,15 +35,24 @@ namespace FubarDev.FtpServer
                     _interpretAsCommandReceived = false;
                     switch (v)
                     {
-                        case 0xF2:
-                            result.AddRange(Synch());
-                            break;
                         case 0xF4:
+                            // IP
                             result.AddRange(InterruptProcess());
                             break;
+                        case 0xF2:
                         case 0xFF:
                             // Double-Escape
                             result.AddRange(DataReceived(data.Slice(index, 1)));
+                            break;
+                        case 0xFB:
+                            // WILL
+                        case 0xFC:
+                            // WON'T
+                        case 0xFD:
+                            // DO
+                        case 0xFE:
+                            // DON'T
+                            _interpretAsCommandReceived = true;
                             break;
                         default:
                             Debug.WriteLine("TELNET: Unknown command received - skipping 0xFF");
@@ -53,16 +62,27 @@ namespace FubarDev.FtpServer
 
                     _interpretAsCommandReceived = false;
                 }
-                else if (v == 0xFF)
+                else
                 {
-                    var dataLength = index - dataOffset;
-                    if (dataLength != 0)
+                    switch (v)
                     {
-                        result.AddRange(DataReceived(data.Slice(dataOffset, dataLength)));
-                    }
+                        case 0xF2:
+                            // DATA MARK
+                            result.AddRange(Synch());
+                            dataOffset = index + 1;
+                            break;
+                        case 0xFF:
+                            // IAC
+                            var dataLength = index - dataOffset;
+                            if (dataLength != 0)
+                            {
+                                result.AddRange(DataReceived(data.Slice(dataOffset, dataLength)));
+                            }
 
-                    _interpretAsCommandReceived = true;
-                    dataOffset = index + 2;
+                            _interpretAsCommandReceived = true;
+                            dataOffset = index + 2;
+                            break;
+                    }
                 }
             }
 

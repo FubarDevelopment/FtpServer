@@ -23,7 +23,7 @@ namespace FubarDev.FtpServer
         /// </remarks>
         /// <param name="cancellationToken">Indicates that the start process has been aborted.</param>
         /// <returns>The task.</returns>
-        Task StartAsync(CancellationToken cancellationToken);
+        Task StartAsync(CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Must be called for a graceful shutdown of the FTP server host.
@@ -33,6 +33,6 @@ namespace FubarDev.FtpServer
         /// </remarks>
         /// <param name="cancellationToken">Indicates that the shutdown process should no longer be graceful.</param>
         /// <returns>The task.</returns>
-        Task StopAsync(CancellationToken cancellationToken);
+        Task StopAsync(CancellationToken cancellationToken = default);
     }
 }

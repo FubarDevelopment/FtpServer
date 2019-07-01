@@ -3,10 +3,14 @@
 // </copyright>
 
 using System;
-using System.Net.Sockets;
+using System.Threading;
 using System.Threading.Tasks;
 
+using FubarDev.FtpServer.Features;
+
 using JetBrains.Annotations;
+
+using Microsoft.Extensions.Logging;
 
 namespace FubarDev.FtpServer
 {
@@ -20,33 +24,39 @@ namespace FubarDev.FtpServer
         /// </summary>
         /// <param name="connection">The connection to get the response socket from.</param>
         /// <param name="asyncSendAction">The action to perform with a working response socket.</param>
-        /// <param name="createConnectionErrorFunc">Function to be called when opening the response socket failed.</param>
+        /// <param name="logger">The logger.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>The task with the FTP response.</returns>
         [NotNull]
         [ItemNotNull]
-        public static async Task<FtpResponse> SendResponseAsync(
+        public static async Task<IFtpResponse> SendDataAsync(
             [NotNull] this IFtpConnection connection,
-            [NotNull] Func<TcpClient, Task<FtpResponse>> asyncSendAction,
-            [CanBeNull] Func<Exception, FtpResponse> createConnectionErrorFunc = null)
+            [NotNull] Func<IFtpDataConnection, CancellationToken, Task<IFtpResponse>> asyncSendAction,
+            [CanBeNull] ILogger logger,
+            CancellationToken cancellationToken)
         {
-            TcpClient responseSocket;
+            IFtpDataConnection dataConnection;
             try
             {
-                responseSocket = await connection.CreateResponseSocket().ConfigureAwait(false);
+                dataConnection = await connection.OpenDataConnectionAsync(null, cancellationToken)
+                   .ConfigureAwait(false);
             }
-            catch (Exception ex) when (createConnectionErrorFunc != null)
+            catch (Exception ex)
             {
-                return createConnectionErrorFunc(ex);
+                logger?.LogWarning(0, ex, "Could not open data connection: {error}", ex.Message);
+                var localizationFeature = connection.Features.Get<ILocalizationFeature>();
+                return new FtpResponse(425, localizationFeature.Catalog.GetString("Could not open data connection"));
             }
 
             try
             {
-                return await asyncSendAction(responseSocket).ConfigureAwait(false);
+                return await asyncSendAction(dataConnection, cancellationToken)
+                   .ConfigureAwait(false);
             }
             finally
             {
-                responseSocket.Dispose();
-                connection.Data.PassiveSocketClient = null;
+                await dataConnection.CloseAsync(cancellationToken)
+                   .ConfigureAwait(false);
             }
         }
     }

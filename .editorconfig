@@ -6,8 +6,14 @@ indent_style = space
 insert_final_newline = true
 trim_trailing_whitespace = true
 
+[*.json]
+indent_size = 2
+
 [*.sql]
 insert_final_newline = false
+
+[*.{csproj,proj,targets,props,ruleset}]
+indent_size = 2
 
 [*.cs]
 indent_size = 4
@@ -51,6 +57,3 @@ dotnet_naming_symbols.private_internal_fields.applicable_accessibilities = priva
 
 dotnet_naming_style.camel_case_underscore_style.required_prefix = _
 dotnet_naming_style.camel_case_underscore_style.capitalization = camel_case
-
-[*.{csproj,proj,targets}]
-indent_size = 2

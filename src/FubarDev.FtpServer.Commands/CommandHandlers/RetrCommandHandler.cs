@@ -7,83 +7,97 @@
 
 using System;
 using System.IO;
-using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
 
+using FubarDev.FtpServer.Commands;
+using FubarDev.FtpServer.Features;
 using FubarDev.FtpServer.FileSystem;
+using FubarDev.FtpServer.ServerCommands;
+
+using JetBrains.Annotations;
+
+using Microsoft.Extensions.Logging;
 
 namespace FubarDev.FtpServer.CommandHandlers
 {
     /// <summary>
     /// Implements the <c>RETR</c> command.
     /// </summary>
+    [FtpCommandHandler("RETR", isAbortable: true)]
     public class RetrCommandHandler : FtpCommandHandler
     {
         private const int BufferSize = 4096;
 
+        [CanBeNull]
+        private readonly ILogger<RetrCommandHandler> _logger;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="RetrCommandHandler"/> class.
         /// </summary>
-        /// <param name="connectionAccessor">The accessor to get the connection that is active during the <see cref="Process"/> method execution.</param>
-        public RetrCommandHandler(IFtpConnectionAccessor connectionAccessor)
-            : base(connectionAccessor, "RETR")
+        /// <param name="logger">The logger.</param>
+        public RetrCommandHandler(
+            [CanBeNull] ILogger<RetrCommandHandler> logger = null)
         {
+            _logger = logger;
         }
 
         /// <inheritdoc/>
-        public override bool IsAbortable => true;
-
-        /// <inheritdoc/>
-        public override async Task<FtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
+        public override async Task<IFtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
         {
-            var restartPosition = Data.RestartPosition;
-            Data.RestartPosition = null;
+            var restartPosition = Connection.Features.Get<IRestCommandFeature>()?.RestartPosition;
+            Connection.Features.Set<IRestCommandFeature>(null);
 
-            if (!Data.TransferMode.IsBinary && Data.TransferMode.FileType != FtpFileType.Ascii)
+            var transferMode = Connection.Features.Get<ITransferConfigurationFeature>().TransferMode;
+            if (!transferMode.IsBinary && transferMode.FileType != FtpFileType.Ascii)
             {
                 throw new NotSupportedException();
             }
 
+            var fsFeature = Connection.Features.Get<IFileSystemFeature>();
+
             var fileName = command.Argument;
-            var currentPath = Data.Path.Clone();
-            var fileInfo = await Data.FileSystem.SearchFileAsync(currentPath, fileName, cancellationToken).ConfigureAwait(false);
+            var currentPath = fsFeature.Path.Clone();
+            var fileInfo = await fsFeature.FileSystem.SearchFileAsync(currentPath, fileName, cancellationToken).ConfigureAwait(false);
             if (fileInfo?.Entry == null)
             {
-                return new FtpResponse(550, "File doesn't exist.");
+                return new FtpResponse(550, T("File doesn't exist."));
             }
 
-            using (var input = await Data.FileSystem.OpenReadAsync(fileInfo.Entry, restartPosition ?? 0, cancellationToken).ConfigureAwait(false))
+            using (var input = await fsFeature.FileSystem.OpenReadAsync(fileInfo.Entry, restartPosition ?? 0, cancellationToken).ConfigureAwait(false))
             {
-                await Connection.WriteAsync(new FtpResponse(150, "Opening connection for data transfer."), cancellationToken).ConfigureAwait(false);
+                await FtpContext.ServerCommandWriter
+                   .WriteAsync(
+                        new SendResponseServerCommand(new FtpResponse(150, T("Opening connection for data transfer."))),
+                        cancellationToken)
+                   .ConfigureAwait(false);
 
                 // ReSharper disable once AccessToDisposedClosure
-                return await Connection.SendResponseAsync(
-                        client => ExecuteSendAsync(client, input, cancellationToken))
+                return await Connection.SendDataAsync(
+                        (dataConnection, ct) => ExecuteSendAsync(dataConnection, input, ct),
+                        _logger,
+                        cancellationToken)
                     .ConfigureAwait(false);
             }
         }
 
-        private async Task<FtpResponse> ExecuteSendAsync(
-            TcpClient responseSocket,
+        private async Task<IFtpResponse> ExecuteSendAsync(
+            IFtpDataConnection dataConnection,
             Stream input,
             CancellationToken cancellationToken)
         {
-            var writeStream = responseSocket.GetStream();
-            writeStream.WriteTimeout = 10000;
-            using (var stream = await Connection.CreateEncryptedStream(writeStream).ConfigureAwait(false))
+            var stream = dataConnection.Stream;
+            stream.WriteTimeout = 10000;
+            var buffer = new byte[BufferSize];
+            int receivedBytes;
+            while ((receivedBytes = await input.ReadAsync(buffer, 0, buffer.Length, cancellationToken)
+               .ConfigureAwait(false)) != 0)
             {
-                var buffer = new byte[BufferSize];
-                int receivedBytes;
-                while ((receivedBytes = await input.ReadAsync(buffer, 0, buffer.Length, cancellationToken)
-                           .ConfigureAwait(false)) != 0)
-                {
-                    await stream.WriteAsync(buffer, 0, receivedBytes, cancellationToken)
-                        .ConfigureAwait(false);
-                }
+                await stream.WriteAsync(buffer, 0, receivedBytes, cancellationToken)
+                   .ConfigureAwait(false);
             }
 
-            return new FtpResponse(226, "File download succeeded.");
+            return new FtpResponse(226, T("File download succeeded."));
         }
     }
 }

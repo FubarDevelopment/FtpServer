@@ -79,7 +79,11 @@ namespace FubarDev.FtpServer
                 case FtpFileType.Local:
                     result.Append('L');
                     break;
+                default:
+                    result.Append('?');
+                    break;
             }
+
             switch (FileType)
             {
                 case FtpFileType.Ascii:
@@ -94,6 +98,9 @@ namespace FubarDev.FtpServer
                             case FtpFileTypeInterpreterMode.Telnet:
                                 result.Append('T');
                                 break;
+                            default:
+                                result.Append('?');
+                                break;
                         }
                     }
                     break;
@@ -103,7 +110,11 @@ namespace FubarDev.FtpServer
                         result.Append(Bits);
                     }
                     break;
+                default:
+                    result.Append('?');
+                    break;
             }
+
             return result.ToString();
         }
 
@@ -120,6 +131,7 @@ namespace FubarDev.FtpServer
                 case 'L':
                     return FtpFileType.Local;
             }
+
             throw new NotSupportedException($"Unknown file type \"{fileType}\"");
         }
 

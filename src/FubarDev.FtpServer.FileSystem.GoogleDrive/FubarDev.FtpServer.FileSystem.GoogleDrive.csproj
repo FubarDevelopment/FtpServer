@@ -6,7 +6,7 @@
     <PackageTags>portable;FTP;server;Google;Drive</PackageTags>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Google.Apis.Drive.v3" Version="1.37.0.1470" />
+    <PackageReference Include="Google.Apis.Drive.v3" Version="1.39.0.1566" />
   </ItemGroup>
   <ItemGroup Condition=" '$(TargetFramework)' != 'netstandard1.3' ">
     <PackageReference Include="Microsoft.Extensions.Options" Version="2.0.0" />
@@ -20,5 +20,6 @@
   <ItemGroup>
     <ProjectReference Include="..\FubarDev.FtpServer.Abstractions\FubarDev.FtpServer.Abstractions.csproj" />
   </ItemGroup>
+  <Import Project="..\FubarDev.FtpServer.Shared\FubarDev.FtpServer.Shared.projitems" Label="Shared" />
   <Import Project="../../PackageLibrary.props" />
 </Project>

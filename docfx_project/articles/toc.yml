@@ -2,6 +2,12 @@
   href: intro.md
 - name: Quickstart
   href: xref:quickstart
+- name: Integration
+  items:
+  - name: ASP.NET Core
+    href: xref:quickstart-aspnetcore-host
+  - name: Generic Host
+    href: xref:quickstart-generic-host
 - name: Basics
   items:
   - name: Configuration
@@ -20,10 +26,12 @@
     href: xref:ftps
   - name: Google Drive
     href: xref:google-drive
+  - name: Project structure
+    href: xref:project-structure
   - name: Custom File System
     href: xref:custom-file-system
-  - name: Custom Authentication
-    href: xref:custom-authentication
+  - name: Custom Account Management
+    href: xref:custom-account-management
 - name: Guides
   items:
   - name: Upgrade to 3.0
