@@ -4,12 +4,15 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading;
 using System.Threading.Tasks;
 
 using FubarDev.FtpServer.Authentication;
 using FubarDev.FtpServer.Authorization;
 using FubarDev.FtpServer.Features;
+
+using Microsoft.Extensions.Options;
 
 namespace FubarDev.FtpServer
 {
@@ -26,12 +29,17 @@ namespace FubarDev.FtpServer
         /// <param name="connection">The FTP connection.</param>
         /// <param name="authenticationMechanisms">The registered authentication mechanisms.</param>
         /// <param name="authorizationMechanisms">The registered authorization mechanisms.</param>
+        /// <param name="authTlsOptions">The options for the AUTH TLS command.</param>
         public SingleFtpHostSelector(
             IFtpConnection connection,
             IEnumerable<IAuthenticationMechanism> authenticationMechanisms,
-            IEnumerable<IAuthorizationMechanism> authorizationMechanisms)
+            IEnumerable<IAuthorizationMechanism> authorizationMechanisms,
+            IOptions<AuthTlsOptions> authTlsOptions)
         {
-            SelectedHost = new DefaultFtpHost(authenticationMechanisms.ToList(), authorizationMechanisms.ToList());
+            SelectedHost = new DefaultFtpHost(
+                authenticationMechanisms.ToList(),
+                authorizationMechanisms.ToList(),
+                authTlsOptions);
             _connection = connection;
         }
 
@@ -49,14 +57,19 @@ namespace FubarDev.FtpServer
         {
             public DefaultFtpHost(
                 IReadOnlyCollection<IAuthenticationMechanism> authenticationMechanisms,
-                IReadOnlyCollection<IAuthorizationMechanism> authorizationMechanisms)
+                IReadOnlyCollection<IAuthorizationMechanism> authorizationMechanisms,
+                IOptions<AuthTlsOptions> authTlsOptions)
             {
                 AuthenticationMechanisms = authenticationMechanisms;
                 AuthorizationMechanisms = authorizationMechanisms;
+                Certificate = authTlsOptions.Value.ServerCertificate;
             }
 
             /// <inheritdoc />
             public HostInfo Info { get; } = new HostInfo();
+
+            /// <inheritdoc />
+            public X509Certificate Certificate { get; }
 
             /// <inheritdoc />
             public IEnumerable<IAuthenticationMechanism> AuthenticationMechanisms { get; }

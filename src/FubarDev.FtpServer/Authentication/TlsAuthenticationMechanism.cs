@@ -5,7 +5,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Security.Cryptography.X509Certificates;
 using System.Threading;
 using System.Threading.Tasks;
 using FubarDev.FtpServer.Features;
@@ -14,7 +13,6 @@ using FubarDev.FtpServer.ServerCommands;
 using JetBrains.Annotations;
 
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
 
 namespace FubarDev.FtpServer.Authentication
 {
@@ -29,23 +27,17 @@ namespace FubarDev.FtpServer.Authentication
         [NotNull]
         private readonly ISslStreamWrapperFactory _sslStreamWrapperFactory;
 
-        [CanBeNull]
-        private readonly X509Certificate2 _serverCertificate;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="TlsAuthenticationMechanism"/> class.
         /// </summary>
         /// <param name="connection">The required FTP connection.</param>
         /// <param name="sslStreamWrapperFactory">The SslStream wrapper factory.</param>
-        /// <param name="options">Options for the AUTH TLS command.</param>
         public TlsAuthenticationMechanism(
             [NotNull] IFtpConnection connection,
-            [NotNull] ISslStreamWrapperFactory sslStreamWrapperFactory,
-            [NotNull] IOptions<AuthTlsOptions> options)
+            [NotNull] ISslStreamWrapperFactory sslStreamWrapperFactory)
             : base(connection)
         {
             _sslStreamWrapperFactory = sslStreamWrapperFactory;
-            _serverCertificate = options.Value.ServerCertificate;
         }
 
         /// <summary>
@@ -56,8 +48,8 @@ namespace FubarDev.FtpServer.Authentication
         [NotNull]
         public static IEnumerable<string> CreateAuthTlsFeatureString([NotNull] IFtpConnection connection)
         {
-            var options = connection.ConnectionServices.GetRequiredService<IOptions<AuthTlsOptions>>();
-            if (options.Value.ServerCertificate != null)
+            var hostSelector = connection.ConnectionServices.GetRequiredService<IFtpHostSelector>();
+            if (hostSelector.SelectedHost.Certificate != null)
             {
                 return new[] { "AUTH TLS", "PBSZ", "PROT" };
             }
@@ -81,8 +73,9 @@ namespace FubarDev.FtpServer.Authentication
         public override async Task<IFtpResponse> HandleAuthAsync(string methodIdentifier, CancellationToken cancellationToken)
         {
             var serverCommandWriter = Connection.Features.Get<IServerCommandFeature>().ServerCommandWriter;
+            var hostSelector = Connection.ConnectionServices.GetRequiredService<IFtpHostSelector>();
 
-            if (_serverCertificate == null)
+            if (hostSelector.SelectedHost.Certificate == null)
             {
                 return new FtpResponse(500, T("Syntax error, command unrecognized."));
             }
@@ -122,7 +115,8 @@ namespace FubarDev.FtpServer.Authentication
         {
             IFtpResponse response;
 
-            if (_serverCertificate == null)
+            var hostSelector = Connection.ConnectionServices.GetRequiredService<IFtpHostSelector>();
+            if (hostSelector.SelectedHost.Certificate == null)
             {
                 response = new FtpResponse(500, T("Syntax error, command unrecognized."));
             }
@@ -143,7 +137,8 @@ namespace FubarDev.FtpServer.Authentication
         {
             IFtpResponse response;
 
-            if (_serverCertificate == null)
+            var hostSelector = Connection.ConnectionServices.GetRequiredService<IFtpHostSelector>();
+            if (hostSelector.SelectedHost.Certificate == null)
             {
                 response = new FtpResponse(500, T("Syntax error, command unrecognized."));
             }
@@ -157,7 +152,7 @@ namespace FubarDev.FtpServer.Authentication
                         response = new FtpResponse(200, T("Data channel protection level set to {0}.", protCode));
                         break;
                     case "P":
-                        secureConnectionFeature.CreateEncryptedStream = CreateSslStream;
+                        secureConnectionFeature.CreateEncryptedStream = stream => CreateSslStream(hostSelector.SelectedHost, stream);
                         response = new FtpResponse(200, T("Data channel protection level set to {0}.", protCode));
                         break;
                     default:
@@ -175,7 +170,8 @@ namespace FubarDev.FtpServer.Authentication
         [Obsolete("FTP command handlers (and other types) are now annotated with attributes implementing IFeatureInfo.")]
         public IEnumerable<IFeatureInfo> GetSupportedFeatures(IFtpConnection connection)
         {
-            if (_serverCertificate != null)
+            var hostSelector = connection.ConnectionServices.GetRequiredService<IFtpHostSelector>();
+            if (hostSelector.SelectedHost.Certificate != null)
             {
                 yield return new GenericFeatureInfo("AUTH", conn => "AUTH TLS", false);
                 yield return new GenericFeatureInfo("PBSZ", false);
@@ -183,9 +179,11 @@ namespace FubarDev.FtpServer.Authentication
             }
         }
 
-        private async Task<Stream> CreateSslStream(Stream unencryptedStream)
+        private async Task<Stream> CreateSslStream(
+            IFtpHost host,
+            Stream unencryptedStream)
         {
-            if (_serverCertificate == null)
+            if (host.Certificate == null)
             {
                 throw new InvalidOperationException(T("No server certificate configured."));
             }
@@ -193,7 +191,7 @@ namespace FubarDev.FtpServer.Authentication
             var sslStream = await _sslStreamWrapperFactory.WrapStreamAsync(
                     unencryptedStream,
                     false,
-                    _serverCertificate,
+                    host.Certificate,
                     CancellationToken.None)
                .ConfigureAwait(false);
             return sslStream;

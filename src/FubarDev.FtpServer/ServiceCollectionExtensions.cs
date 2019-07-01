@@ -88,7 +88,6 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddScoped<IFtpCommandDispatcher, DefaultFtpCommandDispatcher>();
 
             services.AddScoped<IFtpHostSelector, SingleFtpHostSelector>();
-            services.AddScoped(sp => sp.GetRequiredService<IFtpHostSelector>().SelectedHost);
 
             services.AddSingleton<IFtpCatalogLoader, DefaultFtpCatalogLoader>();
             services.TryAddSingleton<IFtpServerMessages, DefaultFtpServerMessages>();

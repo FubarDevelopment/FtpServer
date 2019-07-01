@@ -3,6 +3,7 @@
 // </copyright>
 
 using System.Collections.Generic;
+using System.Security.Cryptography.X509Certificates;
 
 using FubarDev.FtpServer.Authentication;
 using FubarDev.FtpServer.Authorization;
@@ -21,6 +22,12 @@ namespace FubarDev.FtpServer
         /// </summary>
         [NotNull]
         HostInfo Info { get; }
+
+        /// <summary>
+        /// Gets the certificate for this host.
+        /// </summary>
+        [CanBeNull]
+        X509Certificate Certificate { get; }
 
         /// <summary>
         /// Gets the authentication mechanisms for this host.
