@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Interface ITemporaryData
    | FTP Server documentation ">
-    <meta name="generator" content="docfx 2.42.3.0">
+    <meta name="generator" content="docfx 2.43.2.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -86,12 +86,6 @@
   <div class="markdown level0 summary"><p>Temporary data holder.</p>
 </div>
   <div class="markdown level0 conceptual"></div>
-  <div class="inheritedMembers">
-    <h5>Inherited Members</h5>
-    <div>
-      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.idisposable.dispose#System_IDisposable_Dispose">IDisposable.Dispose()</a>
-    </div>
-  </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="FubarDev.FtpServer.BackgroundTransfer.html">FubarDev.FtpServer.BackgroundTransfer</a></h6>
   <h6><strong>Assembly</strong>: FubarDev.FtpServer.Abstractions.dll</h6>
   <h5 id="FubarDev_FtpServer_BackgroundTransfer_ITemporaryData_syntax">Syntax</h5>
@@ -150,9 +144,7 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[NotNull]
-[ItemNotNull]
-Task&lt;Stream&gt; OpenAsync()</code></pre>
+    <pre><code class="lang-csharp hljs">Task&lt;Stream&gt; OpenAsync()</code></pre>
   </div>
   <h5 class="returns">Returns</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -164,7 +156,7 @@ Task&lt;Stream&gt; OpenAsync()</code></pre>
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a class="xref" href="https://docs.microsoft.com/dotnet/api/system.io.stream">Stream</a>&gt;</td>
+        <td><span class="xref">Task</span>&lt;<span class="xref">Stream</span>&gt;</td>
         <td><p>The stream containig the temporary data.</p>
 </td>
       </tr>

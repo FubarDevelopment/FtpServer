@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Class PathSelectionResult
    | FTP Server documentation ">
-    <meta name="generator" content="docfx 2.42.3.0">
+    <meta name="generator" content="docfx 2.43.2.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -83,7 +83,7 @@
   
   <h1 id="FubarDev_FtpServer_FileSystem_PathSelectionResult" data-uid="FubarDev.FtpServer.FileSystem.PathSelectionResult" class="text-break">Class PathSelectionResult
   </h1>
-  <div class="markdown level0 summary"><p>The result of a <a class="xref" href="FubarDev.FtpServer.FileSystem.PathSelector.html#FubarDev_FtpServer_FileSystem_PathSelector_SelectAsync_FubarDev_FtpServer_FileSystem_IUnixFileSystem_System_String_System_Threading_CancellationToken_">SelectAsync(IUnixFileSystem, String, CancellationToken)</a> operation.</p>
+  <div class="markdown level0 summary"><p>The result of a <see cref="!:PathSelector.SelectAsync(IUnixFileSystem,string,System.Threading.CancellationToken)"></see> operation.</p>
 </div>
   <div class="markdown level0 conceptual"></div>
   <div class="inheritance">
@@ -91,35 +91,11 @@
     <div class="level0"><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object">Object</a></div>
     <div class="level1"><span class="xref">PathSelectionResult</span></div>
   </div>
-  <div class="inheritedMembers">
-    <h5>Inherited Members</h5>
-    <div>
-      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.equals#System_Object_Equals_System_Object_">Object.Equals(Object)</a>
-    </div>
-    <div>
-      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.equals#System_Object_Equals_System_Object_System_Object_">Object.Equals(Object, Object)</a>
-    </div>
-    <div>
-      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.gethashcode#System_Object_GetHashCode">Object.GetHashCode()</a>
-    </div>
-    <div>
-      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.gettype#System_Object_GetType">Object.GetType()</a>
-    </div>
-    <div>
-      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.memberwiseclone#System_Object_MemberwiseClone">Object.MemberwiseClone()</a>
-    </div>
-    <div>
-      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.referenceequals#System_Object_ReferenceEquals_System_Object_System_Object_">Object.ReferenceEquals(Object, Object)</a>
-    </div>
-    <div>
-      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.tostring#System_Object_ToString">Object.ToString()</a>
-    </div>
-  </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="FubarDev.FtpServer.FileSystem.html">FubarDev.FtpServer.FileSystem</a></h6>
   <h6><strong>Assembly</strong>: FubarDev.FtpServer.Abstractions.dll</h6>
   <h5 id="FubarDev_FtpServer_FileSystem_PathSelectionResult_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class PathSelectionResult</code></pre>
+    <pre><code class="lang-csharp hljs">public class PathSelectionResult : object</code></pre>
   </div>
   <h3 id="properties">Properties
   </h3>
@@ -137,8 +113,7 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[NotNull]
-public IUnixDirectoryEntry Directory { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public IUnixDirectoryEntry Directory { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -174,8 +149,7 @@ Otherwise, this is the last found directory.</p>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[CanBeNull]
-public IUnixFileEntry File { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public IUnixFileEntry File { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -209,8 +183,7 @@ public IUnixFileEntry File { get; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[NotNull]
-public string FullPath { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public string FullPath { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -272,9 +245,7 @@ public string FullPath { get; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[NotNull]
-[ItemNotNull]
-public IReadOnlyCollection&lt;string&gt; MissingNames { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public IReadOnlyCollection&lt;string&gt; MissingNames { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -286,7 +257,7 @@ public IReadOnlyCollection&lt;string&gt; MissingNames { get; }</code></pre>
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.generic.ireadonlycollection-1">IReadOnlyCollection</a>&lt;<a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a>&gt;</td>
+        <td><span class="xref">IReadOnlyCollection</span>&lt;<a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a>&gt;</td>
         <td></td>
       </tr>
     </tbody>
@@ -339,8 +310,7 @@ public IReadOnlyCollection&lt;string&gt; MissingNames { get; }</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[NotNull]
-public IUnixFileSystemEntry TargetEntry { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public IUnixFileSystemEntry TargetEntry { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -364,20 +334,19 @@ public IUnixFileSystemEntry TargetEntry { get; }</code></pre>
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FileSystem_PathSelectionResult_Create_System_Collections_Generic_Stack_FubarDev_FtpServer_FileSystem_IUnixDirectoryEntry__.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FileSystem.PathSelectionResult.Create(System.Collections.Generic.Stack%7BFubarDev.FtpServer.FileSystem.IUnixDirectoryEntry%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FileSystem_PathSelectionResult_Create_Stack_FubarDev_FtpServer_FileSystem_IUnixDirectoryEntry__.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FileSystem.PathSelectionResult.Create(Stack%7BFubarDev.FtpServer.FileSystem.IUnixDirectoryEntry%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
     <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.Abstractions/FileSystem/PathSelectionResult.cs/#L180">View Source</a>
   </span>
   <a id="FubarDev_FtpServer_FileSystem_PathSelectionResult_Create_" data-uid="FubarDev.FtpServer.FileSystem.PathSelectionResult.Create*"></a>
-  <h4 id="FubarDev_FtpServer_FileSystem_PathSelectionResult_Create_System_Collections_Generic_Stack_FubarDev_FtpServer_FileSystem_IUnixDirectoryEntry__" data-uid="FubarDev.FtpServer.FileSystem.PathSelectionResult.Create(System.Collections.Generic.Stack{FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry})">Create(Stack&lt;IUnixDirectoryEntry&gt;)</h4>
+  <h4 id="FubarDev_FtpServer_FileSystem_PathSelectionResult_Create_Stack_FubarDev_FtpServer_FileSystem_IUnixDirectoryEntry__" data-uid="FubarDev.FtpServer.FileSystem.PathSelectionResult.Create(Stack{FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry})">Create(Stack&lt;IUnixDirectoryEntry&gt;)</h4>
   <div class="markdown level1 summary"><p>Creates a selection result for a found directory.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[NotNull]
-public static PathSelectionResult Create([NotNull, ItemNotNull] Stack&lt;IUnixDirectoryEntry&gt; foundPathSegments)</code></pre>
+    <pre><code class="lang-csharp hljs">public static PathSelectionResult Create(Stack&lt;IUnixDirectoryEntry&gt; foundPathSegments)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -390,7 +359,7 @@ public static PathSelectionResult Create([NotNull, ItemNotNull] Stack&lt;IUnixDi
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.generic.stack-1">Stack</a>&lt;<a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry.html">IUnixDirectoryEntry</a>&gt;</td>
+        <td><span class="xref">Stack</span>&lt;<a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry.html">IUnixDirectoryEntry</a>&gt;</td>
         <td><span class="parametername">foundPathSegments</span></td>
         <td><p>The found path segments.</p>
 </td>
@@ -415,20 +384,19 @@ public static PathSelectionResult Create([NotNull, ItemNotNull] Stack&lt;IUnixDi
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FileSystem_PathSelectionResult_Create_System_Collections_Generic_Stack_FubarDev_FtpServer_FileSystem_IUnixDirectoryEntry__FubarDev_FtpServer_FileSystem_IUnixFileEntry_.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FileSystem.PathSelectionResult.Create(System.Collections.Generic.Stack%7BFubarDev.FtpServer.FileSystem.IUnixDirectoryEntry%7D%2CFubarDev.FtpServer.FileSystem.IUnixFileEntry)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FileSystem_PathSelectionResult_Create_Stack_FubarDev_FtpServer_FileSystem_IUnixDirectoryEntry__FubarDev_FtpServer_FileSystem_IUnixFileEntry_.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FileSystem.PathSelectionResult.Create(Stack%7BFubarDev.FtpServer.FileSystem.IUnixDirectoryEntry%7D%2CFubarDev.FtpServer.FileSystem.IUnixFileEntry)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
     <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.Abstractions/FileSystem/PathSelectionResult.cs/#L163">View Source</a>
   </span>
   <a id="FubarDev_FtpServer_FileSystem_PathSelectionResult_Create_" data-uid="FubarDev.FtpServer.FileSystem.PathSelectionResult.Create*"></a>
-  <h4 id="FubarDev_FtpServer_FileSystem_PathSelectionResult_Create_System_Collections_Generic_Stack_FubarDev_FtpServer_FileSystem_IUnixDirectoryEntry__FubarDev_FtpServer_FileSystem_IUnixFileEntry_" data-uid="FubarDev.FtpServer.FileSystem.PathSelectionResult.Create(System.Collections.Generic.Stack{FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry},FubarDev.FtpServer.FileSystem.IUnixFileEntry)">Create(Stack&lt;IUnixDirectoryEntry&gt;, IUnixFileEntry)</h4>
+  <h4 id="FubarDev_FtpServer_FileSystem_PathSelectionResult_Create_Stack_FubarDev_FtpServer_FileSystem_IUnixDirectoryEntry__FubarDev_FtpServer_FileSystem_IUnixFileEntry_" data-uid="FubarDev.FtpServer.FileSystem.PathSelectionResult.Create(Stack{FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry},FubarDev.FtpServer.FileSystem.IUnixFileEntry)">Create(Stack&lt;IUnixDirectoryEntry&gt;, IUnixFileEntry)</h4>
   <div class="markdown level1 summary"><p>Creates a selection result for a found file.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[NotNull]
-public static PathSelectionResult Create([NotNull, ItemNotNull] Stack&lt;IUnixDirectoryEntry&gt; foundPathSegments, [NotNull] IUnixFileEntry document)</code></pre>
+    <pre><code class="lang-csharp hljs">public static PathSelectionResult Create(Stack&lt;IUnixDirectoryEntry&gt; foundPathSegments, IUnixFileEntry document)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -441,7 +409,7 @@ public static PathSelectionResult Create([NotNull, ItemNotNull] Stack&lt;IUnixDi
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.generic.stack-1">Stack</a>&lt;<a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry.html">IUnixDirectoryEntry</a>&gt;</td>
+        <td><span class="xref">Stack</span>&lt;<a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry.html">IUnixDirectoryEntry</a>&gt;</td>
         <td><span class="parametername">foundPathSegments</span></td>
         <td><p>The found path segments.</p>
 </td>
@@ -472,20 +440,19 @@ public static PathSelectionResult Create([NotNull, ItemNotNull] Stack&lt;IUnixDi
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FileSystem_PathSelectionResult_CreateMissingDirectory_System_Collections_Generic_Stack_FubarDev_FtpServer_FileSystem_IUnixDirectoryEntry__System_Collections_Generic_IReadOnlyCollection_System_String__.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FileSystem.PathSelectionResult.CreateMissingDirectory(System.Collections.Generic.Stack%7BFubarDev.FtpServer.FileSystem.IUnixDirectoryEntry%7D%2CSystem.Collections.Generic.IReadOnlyCollection%7BSystem.String%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FileSystem_PathSelectionResult_CreateMissingDirectory_Stack_FubarDev_FtpServer_FileSystem_IUnixDirectoryEntry__IReadOnlyCollection_System_String__.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FileSystem.PathSelectionResult.CreateMissingDirectory(Stack%7BFubarDev.FtpServer.FileSystem.IUnixDirectoryEntry%7D%2CIReadOnlyCollection%7BSystem.String%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
     <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.Abstractions/FileSystem/PathSelectionResult.cs/#L215">View Source</a>
   </span>
   <a id="FubarDev_FtpServer_FileSystem_PathSelectionResult_CreateMissingDirectory_" data-uid="FubarDev.FtpServer.FileSystem.PathSelectionResult.CreateMissingDirectory*"></a>
-  <h4 id="FubarDev_FtpServer_FileSystem_PathSelectionResult_CreateMissingDirectory_System_Collections_Generic_Stack_FubarDev_FtpServer_FileSystem_IUnixDirectoryEntry__System_Collections_Generic_IReadOnlyCollection_System_String__" data-uid="FubarDev.FtpServer.FileSystem.PathSelectionResult.CreateMissingDirectory(System.Collections.Generic.Stack{FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry},System.Collections.Generic.IReadOnlyCollection{System.String})">CreateMissingDirectory(Stack&lt;IUnixDirectoryEntry&gt;, IReadOnlyCollection&lt;String&gt;)</h4>
+  <h4 id="FubarDev_FtpServer_FileSystem_PathSelectionResult_CreateMissingDirectory_Stack_FubarDev_FtpServer_FileSystem_IUnixDirectoryEntry__IReadOnlyCollection_System_String__" data-uid="FubarDev.FtpServer.FileSystem.PathSelectionResult.CreateMissingDirectory(Stack{FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry},IReadOnlyCollection{System.String})">CreateMissingDirectory(Stack&lt;IUnixDirectoryEntry&gt;, IReadOnlyCollection&lt;String&gt;)</h4>
   <div class="markdown level1 summary"><p>Creates a selection for a missing directory.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[NotNull]
-public static PathSelectionResult CreateMissingDirectory([NotNull, ItemNotNull] Stack&lt;IUnixDirectoryEntry&gt; foundPathSegments, [NotNull, ItemNotNull] IReadOnlyCollection&lt;string&gt; missingPathSegments)</code></pre>
+    <pre><code class="lang-csharp hljs">public static PathSelectionResult CreateMissingDirectory(Stack&lt;IUnixDirectoryEntry&gt; foundPathSegments, IReadOnlyCollection&lt;string&gt; missingPathSegments)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -498,13 +465,13 @@ public static PathSelectionResult CreateMissingDirectory([NotNull, ItemNotNull] 
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.generic.stack-1">Stack</a>&lt;<a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry.html">IUnixDirectoryEntry</a>&gt;</td>
+        <td><span class="xref">Stack</span>&lt;<a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry.html">IUnixDirectoryEntry</a>&gt;</td>
         <td><span class="parametername">foundPathSegments</span></td>
         <td><p>The found path segments.</p>
 </td>
       </tr>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.generic.ireadonlycollection-1">IReadOnlyCollection</a>&lt;<a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a>&gt;</td>
+        <td><span class="xref">IReadOnlyCollection</span>&lt;<a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a>&gt;</td>
         <td><span class="parametername">missingPathSegments</span></td>
         <td><p>The missing path elements.</p>
 </td>
@@ -529,20 +496,19 @@ public static PathSelectionResult CreateMissingDirectory([NotNull, ItemNotNull] 
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FileSystem_PathSelectionResult_CreateMissingFileOrDirectory_System_Collections_Generic_Stack_FubarDev_FtpServer_FileSystem_IUnixDirectoryEntry__System_Collections_Generic_IReadOnlyCollection_System_String__.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FileSystem.PathSelectionResult.CreateMissingFileOrDirectory(System.Collections.Generic.Stack%7BFubarDev.FtpServer.FileSystem.IUnixDirectoryEntry%7D%2CSystem.Collections.Generic.IReadOnlyCollection%7BSystem.String%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FileSystem_PathSelectionResult_CreateMissingFileOrDirectory_Stack_FubarDev_FtpServer_FileSystem_IUnixDirectoryEntry__IReadOnlyCollection_System_String__.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FileSystem.PathSelectionResult.CreateMissingFileOrDirectory(Stack%7BFubarDev.FtpServer.FileSystem.IUnixDirectoryEntry%7D%2CIReadOnlyCollection%7BSystem.String%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
     <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.Abstractions/FileSystem/PathSelectionResult.cs/#L197">View Source</a>
   </span>
   <a id="FubarDev_FtpServer_FileSystem_PathSelectionResult_CreateMissingFileOrDirectory_" data-uid="FubarDev.FtpServer.FileSystem.PathSelectionResult.CreateMissingFileOrDirectory*"></a>
-  <h4 id="FubarDev_FtpServer_FileSystem_PathSelectionResult_CreateMissingFileOrDirectory_System_Collections_Generic_Stack_FubarDev_FtpServer_FileSystem_IUnixDirectoryEntry__System_Collections_Generic_IReadOnlyCollection_System_String__" data-uid="FubarDev.FtpServer.FileSystem.PathSelectionResult.CreateMissingFileOrDirectory(System.Collections.Generic.Stack{FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry},System.Collections.Generic.IReadOnlyCollection{System.String})">CreateMissingFileOrDirectory(Stack&lt;IUnixDirectoryEntry&gt;, IReadOnlyCollection&lt;String&gt;)</h4>
+  <h4 id="FubarDev_FtpServer_FileSystem_PathSelectionResult_CreateMissingFileOrDirectory_Stack_FubarDev_FtpServer_FileSystem_IUnixDirectoryEntry__IReadOnlyCollection_System_String__" data-uid="FubarDev.FtpServer.FileSystem.PathSelectionResult.CreateMissingFileOrDirectory(Stack{FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry},IReadOnlyCollection{System.String})">CreateMissingFileOrDirectory(Stack&lt;IUnixDirectoryEntry&gt;, IReadOnlyCollection&lt;String&gt;)</h4>
   <div class="markdown level1 summary"><p>Creates a selection for a missing file or directory.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[NotNull]
-public static PathSelectionResult CreateMissingFileOrDirectory([NotNull, ItemNotNull] Stack&lt;IUnixDirectoryEntry&gt; foundPathSegments, [NotNull, ItemNotNull] IReadOnlyCollection&lt;string&gt; missingPathSegments)</code></pre>
+    <pre><code class="lang-csharp hljs">public static PathSelectionResult CreateMissingFileOrDirectory(Stack&lt;IUnixDirectoryEntry&gt; foundPathSegments, IReadOnlyCollection&lt;string&gt; missingPathSegments)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -555,13 +521,13 @@ public static PathSelectionResult CreateMissingFileOrDirectory([NotNull, ItemNot
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.generic.stack-1">Stack</a>&lt;<a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry.html">IUnixDirectoryEntry</a>&gt;</td>
+        <td><span class="xref">Stack</span>&lt;<a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry.html">IUnixDirectoryEntry</a>&gt;</td>
         <td><span class="parametername">foundPathSegments</span></td>
         <td><p>The found path segments.</p>
 </td>
       </tr>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.generic.ireadonlycollection-1">IReadOnlyCollection</a>&lt;<a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a>&gt;</td>
+        <td><span class="xref">IReadOnlyCollection</span>&lt;<a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a>&gt;</td>
         <td><span class="parametername">missingPathSegments</span></td>
         <td><p>The missing path elements.</p>
 </td>
@@ -598,9 +564,7 @@ public static PathSelectionResult CreateMissingFileOrDirectory([NotNull, ItemNot
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[NotNull]
-[ItemNotNull]
-public Stack&lt;IUnixDirectoryEntry&gt; GetPath()</code></pre>
+    <pre><code class="lang-csharp hljs">public Stack&lt;IUnixDirectoryEntry&gt; GetPath()</code></pre>
   </div>
   <h5 class="returns">Returns</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -612,7 +576,7 @@ public Stack&lt;IUnixDirectoryEntry&gt; GetPath()</code></pre>
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.generic.stack-1">Stack</a>&lt;<a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry.html">IUnixDirectoryEntry</a>&gt;</td>
+        <td><span class="xref">Stack</span>&lt;<a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry.html">IUnixDirectoryEntry</a>&gt;</td>
         <td><p>The full path as directory entries.</p>
 </td>
       </tr>

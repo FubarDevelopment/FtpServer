@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Interface IFeatureHost
    | FTP Server documentation ">
-    <meta name="generator" content="docfx 2.42.3.0">
+    <meta name="generator" content="docfx 2.43.2.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -90,8 +90,7 @@
   <h6><strong>Assembly</strong>: FubarDev.FtpServer.Abstractions.dll</h6>
   <h5 id="FubarDev_FtpServer_IFeatureHost_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[Obsolete(&quot;FTP command handlers (and other types) are now annotated with attributes implementing IFeatureInfo.&quot;)]
-public interface IFeatureHost</code></pre>
+    <pre><code class="lang-csharp hljs">public interface IFeatureHost</code></pre>
   </div>
   <h3 id="methods">Methods
   </h3>
@@ -109,10 +108,7 @@ public interface IFeatureHost</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[NotNull]
-[ItemNotNull]
-[Obsolete(&quot;FTP command handlers (and other types) are now annotated with attributes implementing IFeatureInfo.&quot;)]
-IEnumerable&lt;IFeatureInfo&gt; GetSupportedFeatures([NotNull] IFtpConnection connection)</code></pre>
+    <pre><code class="lang-csharp hljs">IEnumerable&lt;IFeatureInfo&gt; GetSupportedFeatures(IFtpConnection connection)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -142,7 +138,7 @@ IEnumerable&lt;IFeatureInfo&gt; GetSupportedFeatures([NotNull] IFtpConnection co
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable</a>&lt;<a class="xref" href="FubarDev.FtpServer.IFeatureInfo.html">IFeatureInfo</a>&gt;</td>
+        <td><span class="xref">IEnumerable</span>&lt;<a class="xref" href="FubarDev.FtpServer.IFeatureInfo.html">IFeatureInfo</a>&gt;</td>
         <td><p>A list of features supported by this command handler.</p>
 </td>
       </tr>

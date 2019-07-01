@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Delegate CloseEncryptedStreamDelegate
    | FTP Server documentation ">
-    <meta name="generator" content="docfx 2.42.3.0">
+    <meta name="generator" content="docfx 2.43.2.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -90,9 +90,7 @@
   <h6><strong>Assembly</strong>: FubarDev.FtpServer.Abstractions.dll</h6>
   <h5 id="FubarDev_FtpServer_CloseEncryptedStreamDelegate_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[NotNull]
-[ItemNotNull]
-public delegate Task&lt;Stream&gt; CloseEncryptedStreamDelegate([NotNull] Stream encryptedStream, CancellationToken cancellationToken);</code></pre>
+    <pre><code class="lang-csharp hljs">public delegate Task CloseEncryptedStreamDelegate(CancellationToken cancellationToken);</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -105,13 +103,7 @@ public delegate Task&lt;Stream&gt; CloseEncryptedStreamDelegate([NotNull] Stream
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.io.stream">Stream</a></td>
-        <td><span class="parametername">encryptedStream</span></td>
-        <td><p>The encrypted stream to close.</p>
-</td>
-      </tr>
-      <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.threading.cancellationtoken">CancellationToken</a></td>
+        <td><span class="xref">CancellationToken</span></td>
         <td><span class="parametername">cancellationToken</span></td>
         <td><p>The cancellation token.</p>
 </td>
@@ -128,8 +120,8 @@ public delegate Task&lt;Stream&gt; CloseEncryptedStreamDelegate([NotNull] Stream
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a class="xref" href="https://docs.microsoft.com/dotnet/api/system.io.stream">Stream</a>&gt;</td>
-        <td><p>The task returning the original stream.</p>
+        <td><span class="xref">Task</span></td>
+        <td><p>The task.</p>
 </td>
       </tr>
     </tbody>
@@ -145,7 +137,7 @@ public delegate Task&lt;Stream&gt; CloseEncryptedStreamDelegate([NotNull] Stream
                     <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_CloseEncryptedStreamDelegate.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.CloseEncryptedStreamDelegate%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.Abstractions/CloseEncryptedStreamDelegate.cs/#L19" class="contribution-link">View Source</a>
+                    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.Abstractions/CloseEncryptedStreamDelegate.cs/#L17" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

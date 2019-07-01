@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Class UnixFileSystem
    | FTP Server documentation ">
-    <meta name="generator" content="docfx 2.42.3.0">
+    <meta name="generator" content="docfx 2.43.2.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -83,7 +83,8 @@
   
   <h1 id="FubarDev_FtpServer_FileSystem_Unix_UnixFileSystem" data-uid="FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem" class="text-break">Class UnixFileSystem
   </h1>
-  <div class="markdown level0 summary"></div>
+  <div class="markdown level0 summary"><p>A backend that uses Posix(?) API calls to access the file system.</p>
+</div>
   <div class="markdown level0 conceptual"></div>
   <div class="inheritance">
     <h5>Inheritance</h5>
@@ -94,53 +95,29 @@
     <h5>Implements</h5>
     <div><a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixFileSystem.html">IUnixFileSystem</a></div>
   </div>
-  <div class="inheritedMembers">
-    <h5>Inherited Members</h5>
-    <div>
-      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.equals#System_Object_Equals_System_Object_">Object.Equals(Object)</a>
-    </div>
-    <div>
-      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.equals#System_Object_Equals_System_Object_System_Object_">Object.Equals(Object, Object)</a>
-    </div>
-    <div>
-      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.gethashcode#System_Object_GetHashCode">Object.GetHashCode()</a>
-    </div>
-    <div>
-      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.gettype#System_Object_GetType">Object.GetType()</a>
-    </div>
-    <div>
-      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.memberwiseclone#System_Object_MemberwiseClone">Object.MemberwiseClone()</a>
-    </div>
-    <div>
-      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.referenceequals#System_Object_ReferenceEquals_System_Object_System_Object_">Object.ReferenceEquals(Object, Object)</a>
-    </div>
-    <div>
-      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.tostring#System_Object_ToString">Object.ToString()</a>
-    </div>
-  </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="FubarDev.FtpServer.FileSystem.Unix.html">FubarDev.FtpServer.FileSystem.Unix</a></h6>
   <h6><strong>Assembly</strong>: FubarDev.FtpServer.FileSystem.Unix.dll</h6>
   <h5 id="FubarDev_FtpServer_FileSystem_Unix_UnixFileSystem_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class UnixFileSystem : IUnixFileSystem</code></pre>
+    <pre><code class="lang-csharp hljs">public class UnixFileSystem : object, IUnixFileSystem</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FileSystem_Unix_UnixFileSystem__ctor_FubarDev_FtpServer_FileSystem_IUnixDirectoryEntry_FubarDev_FtpServer_AccountManagement_IFtpUser_Mono_Unix_UnixUserInfo_.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.%23ctor(FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry%2CFubarDev.FtpServer.AccountManagement.IFtpUser%2CMono.Unix.UnixUserInfo)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FileSystem_Unix_UnixFileSystem__ctor_FubarDev_FtpServer_FileSystem_IUnixDirectoryEntry_FubarDev_FtpServer_AccountManagement_IFtpUser_UnixUserInfo_.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.%23ctor(FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry%2CFubarDev.FtpServer.AccountManagement.IFtpUser%2CUnixUserInfo)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.FileSystem.Unix/UnixFileSystem.cs/#L35">View Source</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.FileSystem.Unix/UnixFileSystem.cs/#L38">View Source</a>
   </span>
   <a id="FubarDev_FtpServer_FileSystem_Unix_UnixFileSystem__ctor_" data-uid="FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.#ctor*"></a>
-  <h4 id="FubarDev_FtpServer_FileSystem_Unix_UnixFileSystem__ctor_FubarDev_FtpServer_FileSystem_IUnixDirectoryEntry_FubarDev_FtpServer_AccountManagement_IFtpUser_Mono_Unix_UnixUserInfo_" data-uid="FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.#ctor(FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry,FubarDev.FtpServer.AccountManagement.IFtpUser,Mono.Unix.UnixUserInfo)">UnixFileSystem(IUnixDirectoryEntry, IFtpUser, UnixUserInfo)</h4>
+  <h4 id="FubarDev_FtpServer_FileSystem_Unix_UnixFileSystem__ctor_FubarDev_FtpServer_FileSystem_IUnixDirectoryEntry_FubarDev_FtpServer_AccountManagement_IFtpUser_UnixUserInfo_" data-uid="FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.#ctor(FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry,FubarDev.FtpServer.AccountManagement.IFtpUser,UnixUserInfo)">UnixFileSystem(IUnixDirectoryEntry, IFtpUser, UnixUserInfo)</h4>
   <div class="markdown level1 summary"><p>Initializes a new instance of the <a class="xref" href="FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.html">UnixFileSystem</a> class.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public UnixFileSystem([NotNull] IUnixDirectoryEntry root, [NotNull] IFtpUser user, [CanBeNull] UnixUserInfo userInfo)</code></pre>
+    <pre><code class="lang-csharp hljs">public UnixFileSystem(IUnixDirectoryEntry root, IFtpUser user, UnixUserInfo userInfo)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -165,7 +142,7 @@
 </td>
       </tr>
       <tr>
-        <td><span class="xref">Mono.Unix.UnixUserInfo</span></td>
+        <td><span class="xref">UnixUserInfo</span></td>
         <td><span class="parametername">userInfo</span></td>
         <td><p>The user information.</p>
 </td>
@@ -179,12 +156,11 @@
     <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FileSystem_Unix_UnixFileSystem_FileSystemEntryComparer.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.FileSystemEntryComparer%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.FileSystem.Unix/UnixFileSystem.cs/#L52">View Source</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.FileSystem.Unix/UnixFileSystem.cs/#L55">View Source</a>
   </span>
   <a id="FubarDev_FtpServer_FileSystem_Unix_UnixFileSystem_FileSystemEntryComparer_" data-uid="FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.FileSystemEntryComparer*"></a>
   <h4 id="FubarDev_FtpServer_FileSystem_Unix_UnixFileSystem_FileSystemEntryComparer" data-uid="FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.FileSystemEntryComparer">FileSystemEntryComparer</h4>
-  <div class="markdown level1 summary"><p>Gets a string comparer for file system entry names.</p>
-</div>
+  <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -200,20 +176,17 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.stringcomparer">StringComparer</a></td>
+        <td><span class="xref">StringComparer</span></td>
         <td></td>
       </tr>
     </tbody>
   </table>
-  <h5 id="FubarDev_FtpServer_FileSystem_Unix_UnixFileSystem_FileSystemEntryComparer_remarks">Remarks</h5>
-  <div class="markdown level1 remarks"><p>Required to support case insensitive file systems.</p>
-</div>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
     <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FileSystem_Unix_UnixFileSystem_Root.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.Root%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.FileSystem.Unix/UnixFileSystem.cs/#L55">View Source</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.FileSystem.Unix/UnixFileSystem.cs/#L58">View Source</a>
   </span>
   <a id="FubarDev_FtpServer_FileSystem_Unix_UnixFileSystem_Root_" data-uid="FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.Root*"></a>
   <h4 id="FubarDev_FtpServer_FileSystem_Unix_UnixFileSystem_Root" data-uid="FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.Root">Root</h4>
@@ -244,12 +217,11 @@
     <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FileSystem_Unix_UnixFileSystem_SupportsAppend.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.SupportsAppend%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.FileSystem.Unix/UnixFileSystem.cs/#L46">View Source</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.FileSystem.Unix/UnixFileSystem.cs/#L49">View Source</a>
   </span>
   <a id="FubarDev_FtpServer_FileSystem_Unix_UnixFileSystem_SupportsAppend_" data-uid="FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.SupportsAppend*"></a>
   <h4 id="FubarDev_FtpServer_FileSystem_Unix_UnixFileSystem_SupportsAppend" data-uid="FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.SupportsAppend">SupportsAppend</h4>
-  <div class="markdown level1 summary"><p>Gets a value indicating whether this file system supports appending to a file.</p>
-</div>
+  <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -275,12 +247,11 @@
     <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FileSystem_Unix_UnixFileSystem_SupportsNonEmptyDirectoryDelete.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.SupportsNonEmptyDirectoryDelete%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.FileSystem.Unix/UnixFileSystem.cs/#L49">View Source</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.FileSystem.Unix/UnixFileSystem.cs/#L52">View Source</a>
   </span>
   <a id="FubarDev_FtpServer_FileSystem_Unix_UnixFileSystem_SupportsNonEmptyDirectoryDelete_" data-uid="FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.SupportsNonEmptyDirectoryDelete*"></a>
   <h4 id="FubarDev_FtpServer_FileSystem_Unix_UnixFileSystem_SupportsNonEmptyDirectoryDelete" data-uid="FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.SupportsNonEmptyDirectoryDelete">SupportsNonEmptyDirectoryDelete</h4>
-  <div class="markdown level1 summary"><p>Gets a value indicating whether this file system supports deletion of non-empty directories.</p>
-</div>
+  <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -305,15 +276,14 @@
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FileSystem_Unix_UnixFileSystem_AppendAsync_FubarDev_FtpServer_FileSystem_IUnixFileEntry_System_Nullable_System_Int64__System_IO_Stream_System_Threading_CancellationToken_.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.AppendAsync(FubarDev.FtpServer.FileSystem.IUnixFileEntry%2CSystem.Nullable%7BSystem.Int64%7D%2CSystem.IO.Stream%2CSystem.Threading.CancellationToken)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FileSystem_Unix_UnixFileSystem_AppendAsync_FubarDev_FtpServer_FileSystem_IUnixFileEntry_System_Nullable_System_Int64__Stream_CancellationToken_.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.AppendAsync(FubarDev.FtpServer.FileSystem.IUnixFileEntry%2CSystem.Nullable%7BSystem.Int64%7D%2CStream%2CCancellationToken)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.FileSystem.Unix/UnixFileSystem.cs/#L134">View Source</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.FileSystem.Unix/UnixFileSystem.cs/#L137">View Source</a>
   </span>
   <a id="FubarDev_FtpServer_FileSystem_Unix_UnixFileSystem_AppendAsync_" data-uid="FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.AppendAsync*"></a>
-  <h4 id="FubarDev_FtpServer_FileSystem_Unix_UnixFileSystem_AppendAsync_FubarDev_FtpServer_FileSystem_IUnixFileEntry_System_Nullable_System_Int64__System_IO_Stream_System_Threading_CancellationToken_" data-uid="FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.AppendAsync(FubarDev.FtpServer.FileSystem.IUnixFileEntry,System.Nullable{System.Int64},System.IO.Stream,System.Threading.CancellationToken)">AppendAsync(IUnixFileEntry, Nullable&lt;Int64&gt;, Stream, CancellationToken)</h4>
-  <div class="markdown level1 summary"><p>Appends data to a file.</p>
-</div>
+  <h4 id="FubarDev_FtpServer_FileSystem_Unix_UnixFileSystem_AppendAsync_FubarDev_FtpServer_FileSystem_IUnixFileEntry_System_Nullable_System_Int64__Stream_CancellationToken_" data-uid="FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.AppendAsync(FubarDev.FtpServer.FileSystem.IUnixFileEntry,System.Nullable{System.Int64},Stream,CancellationToken)">AppendAsync(IUnixFileEntry, Nullable&lt;Int64&gt;, Stream, CancellationToken)</h4>
+  <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -332,26 +302,22 @@
       <tr>
         <td><a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixFileEntry.html">IUnixFileEntry</a></td>
         <td><span class="parametername">fileEntry</span></td>
-        <td><p>The <a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixFileEntry.html">IUnixFileEntry</a> to append data to.</p>
-</td>
+        <td></td>
       </tr>
       <tr>
         <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.nullable-1">Nullable</a>&lt;<a class="xref" href="https://docs.microsoft.com/dotnet/api/system.int64">Int64</a>&gt;</td>
         <td><span class="parametername">startPosition</span></td>
-        <td><p>The start position - when it is null, the data is appended.</p>
-</td>
+        <td></td>
       </tr>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.io.stream">Stream</a></td>
+        <td><span class="xref">Stream</span></td>
         <td><span class="parametername">data</span></td>
-        <td><p>The data stream to read from.</p>
-</td>
+        <td></td>
       </tr>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.threading.cancellationtoken">CancellationToken</a></td>
+        <td><span class="xref">CancellationToken</span></td>
         <td><span class="parametername">cancellationToken</span></td>
-        <td><p>The cancellation token.</p>
-</td>
+        <td></td>
       </tr>
     </tbody>
   </table>
@@ -365,23 +331,21 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a class="xref" href="FubarDev.FtpServer.BackgroundTransfer.IBackgroundTransfer.html">IBackgroundTransfer</a>&gt;</td>
-        <td><p>an optional <a class="xref" href="FubarDev.FtpServer.BackgroundTransfer.IBackgroundTransfer.html">IBackgroundTransfer</a> when the transfer needs to happen in the background.</p>
-</td>
+        <td><span class="xref">Task</span>&lt;<a class="xref" href="FubarDev.FtpServer.BackgroundTransfer.IBackgroundTransfer.html">IBackgroundTransfer</a>&gt;</td>
+        <td></td>
       </tr>
     </tbody>
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FileSystem_Unix_UnixFileSystem_CreateAsync_FubarDev_FtpServer_FileSystem_IUnixDirectoryEntry_System_String_System_IO_Stream_System_Threading_CancellationToken_.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.CreateAsync(FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry%2CSystem.String%2CSystem.IO.Stream%2CSystem.Threading.CancellationToken)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FileSystem_Unix_UnixFileSystem_CreateAsync_FubarDev_FtpServer_FileSystem_IUnixDirectoryEntry_System_String_Stream_CancellationToken_.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.CreateAsync(FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry%2CSystem.String%2CStream%2CCancellationToken)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.FileSystem.Unix/UnixFileSystem.cs/#L151">View Source</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.FileSystem.Unix/UnixFileSystem.cs/#L154">View Source</a>
   </span>
   <a id="FubarDev_FtpServer_FileSystem_Unix_UnixFileSystem_CreateAsync_" data-uid="FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.CreateAsync*"></a>
-  <h4 id="FubarDev_FtpServer_FileSystem_Unix_UnixFileSystem_CreateAsync_FubarDev_FtpServer_FileSystem_IUnixDirectoryEntry_System_String_System_IO_Stream_System_Threading_CancellationToken_" data-uid="FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.CreateAsync(FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry,System.String,System.IO.Stream,System.Threading.CancellationToken)">CreateAsync(IUnixDirectoryEntry, String, Stream, CancellationToken)</h4>
-  <div class="markdown level1 summary"><p>Creates a file with the given <code data-dev-comment-type="paramref" class="paramref">fileName</code> and <code data-dev-comment-type="paramref" class="paramref">data</code>.</p>
-</div>
+  <h4 id="FubarDev_FtpServer_FileSystem_Unix_UnixFileSystem_CreateAsync_FubarDev_FtpServer_FileSystem_IUnixDirectoryEntry_System_String_Stream_CancellationToken_" data-uid="FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.CreateAsync(FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry,System.String,Stream,CancellationToken)">CreateAsync(IUnixDirectoryEntry, String, Stream, CancellationToken)</h4>
+  <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -400,26 +364,22 @@
       <tr>
         <td><a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry.html">IUnixDirectoryEntry</a></td>
         <td><span class="parametername">targetDirectory</span></td>
-        <td><p>The directory to create the file in.</p>
-</td>
+        <td></td>
       </tr>
       <tr>
         <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
         <td><span class="parametername">fileName</span></td>
-        <td><p>The name of the new file.</p>
-</td>
+        <td></td>
       </tr>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.io.stream">Stream</a></td>
+        <td><span class="xref">Stream</span></td>
         <td><span class="parametername">data</span></td>
-        <td><p>The <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.io.stream">Stream</a> used to read the data for the new file.</p>
-</td>
+        <td></td>
       </tr>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.threading.cancellationtoken">CancellationToken</a></td>
+        <td><span class="xref">CancellationToken</span></td>
         <td><span class="parametername">cancellationToken</span></td>
-        <td><p>The cancellation token.</p>
-</td>
+        <td></td>
       </tr>
     </tbody>
   </table>
@@ -433,23 +393,21 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a class="xref" href="FubarDev.FtpServer.BackgroundTransfer.IBackgroundTransfer.html">IBackgroundTransfer</a>&gt;</td>
-        <td><p>an optional <a class="xref" href="FubarDev.FtpServer.BackgroundTransfer.IBackgroundTransfer.html">IBackgroundTransfer</a> when the transfer needs to happen in the background.</p>
-</td>
+        <td><span class="xref">Task</span>&lt;<a class="xref" href="FubarDev.FtpServer.BackgroundTransfer.IBackgroundTransfer.html">IBackgroundTransfer</a>&gt;</td>
+        <td></td>
       </tr>
     </tbody>
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FileSystem_Unix_UnixFileSystem_CreateDirectoryAsync_FubarDev_FtpServer_FileSystem_IUnixDirectoryEntry_System_String_System_Threading_CancellationToken_.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.CreateDirectoryAsync(FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry%2CSystem.String%2CSystem.Threading.CancellationToken)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FileSystem_Unix_UnixFileSystem_CreateDirectoryAsync_FubarDev_FtpServer_FileSystem_IUnixDirectoryEntry_System_String_CancellationToken_.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.CreateDirectoryAsync(FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry%2CSystem.String%2CCancellationToken)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.FileSystem.Unix/UnixFileSystem.cs/#L108">View Source</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.FileSystem.Unix/UnixFileSystem.cs/#L111">View Source</a>
   </span>
   <a id="FubarDev_FtpServer_FileSystem_Unix_UnixFileSystem_CreateDirectoryAsync_" data-uid="FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.CreateDirectoryAsync*"></a>
-  <h4 id="FubarDev_FtpServer_FileSystem_Unix_UnixFileSystem_CreateDirectoryAsync_FubarDev_FtpServer_FileSystem_IUnixDirectoryEntry_System_String_System_Threading_CancellationToken_" data-uid="FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.CreateDirectoryAsync(FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry,System.String,System.Threading.CancellationToken)">CreateDirectoryAsync(IUnixDirectoryEntry, String, CancellationToken)</h4>
-  <div class="markdown level1 summary"><p>Creates a sub directory with the name <code data-dev-comment-type="paramref" class="paramref">directoryName</code> in <code data-dev-comment-type="paramref" class="paramref">targetDirectory</code>.</p>
-</div>
+  <h4 id="FubarDev_FtpServer_FileSystem_Unix_UnixFileSystem_CreateDirectoryAsync_FubarDev_FtpServer_FileSystem_IUnixDirectoryEntry_System_String_CancellationToken_" data-uid="FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.CreateDirectoryAsync(FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry,System.String,CancellationToken)">CreateDirectoryAsync(IUnixDirectoryEntry, String, CancellationToken)</h4>
+  <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -468,20 +426,17 @@
       <tr>
         <td><a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry.html">IUnixDirectoryEntry</a></td>
         <td><span class="parametername">targetDirectory</span></td>
-        <td><p>The directory to create the sub directory in.</p>
-</td>
+        <td></td>
       </tr>
       <tr>
         <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
         <td><span class="parametername">directoryName</span></td>
-        <td><p>The name of the new sub directory.</p>
-</td>
+        <td></td>
       </tr>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.threading.cancellationtoken">CancellationToken</a></td>
+        <td><span class="xref">CancellationToken</span></td>
         <td><span class="parametername">cancellationToken</span></td>
-        <td><p>The cancellation token.</p>
-</td>
+        <td></td>
       </tr>
     </tbody>
   </table>
@@ -495,23 +450,21 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry.html">IUnixDirectoryEntry</a>&gt;</td>
-        <td><p>The new <a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry.html">IUnixDirectoryEntry</a>.</p>
-</td>
+        <td><span class="xref">Task</span>&lt;<a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry.html">IUnixDirectoryEntry</a>&gt;</td>
+        <td></td>
       </tr>
     </tbody>
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FileSystem_Unix_UnixFileSystem_GetEntriesAsync_FubarDev_FtpServer_FileSystem_IUnixDirectoryEntry_System_Threading_CancellationToken_.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.GetEntriesAsync(FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry%2CSystem.Threading.CancellationToken)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FileSystem_Unix_UnixFileSystem_GetEntriesAsync_FubarDev_FtpServer_FileSystem_IUnixDirectoryEntry_CancellationToken_.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.GetEntriesAsync(FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry%2CCancellationToken)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.FileSystem.Unix/UnixFileSystem.cs/#L58">View Source</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.FileSystem.Unix/UnixFileSystem.cs/#L61">View Source</a>
   </span>
   <a id="FubarDev_FtpServer_FileSystem_Unix_UnixFileSystem_GetEntriesAsync_" data-uid="FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.GetEntriesAsync*"></a>
-  <h4 id="FubarDev_FtpServer_FileSystem_Unix_UnixFileSystem_GetEntriesAsync_FubarDev_FtpServer_FileSystem_IUnixDirectoryEntry_System_Threading_CancellationToken_" data-uid="FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.GetEntriesAsync(FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry,System.Threading.CancellationToken)">GetEntriesAsync(IUnixDirectoryEntry, CancellationToken)</h4>
-  <div class="markdown level1 summary"><p>Gets a list of <a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixFileSystemEntry.html">IUnixFileSystemEntry</a> objects for a given <code data-dev-comment-type="paramref" class="paramref">directoryEntry</code>.</p>
-</div>
+  <h4 id="FubarDev_FtpServer_FileSystem_Unix_UnixFileSystem_GetEntriesAsync_FubarDev_FtpServer_FileSystem_IUnixDirectoryEntry_CancellationToken_" data-uid="FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.GetEntriesAsync(FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry,CancellationToken)">GetEntriesAsync(IUnixDirectoryEntry, CancellationToken)</h4>
+  <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -530,14 +483,12 @@
       <tr>
         <td><a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry.html">IUnixDirectoryEntry</a></td>
         <td><span class="parametername">directoryEntry</span></td>
-        <td><p>The <a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry.html">IUnixDirectoryEntry</a> to get the file system entries for.</p>
-</td>
+        <td></td>
       </tr>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.threading.cancellationtoken">CancellationToken</a></td>
+        <td><span class="xref">CancellationToken</span></td>
         <td><span class="parametername">cancellationToken</span></td>
-        <td><p>The cancellation token.</p>
-</td>
+        <td></td>
       </tr>
     </tbody>
   </table>
@@ -551,23 +502,21 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.generic.ireadonlylist-1">IReadOnlyList</a>&lt;<a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixFileSystemEntry.html">IUnixFileSystemEntry</a>&gt;&gt;</td>
-        <td><p>The list of <a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixFileSystemEntry.html">IUnixFileSystemEntry</a> objects for a given <code data-dev-comment-type="paramref" class="paramref">directoryEntry</code>.</p>
-</td>
+        <td><span class="xref">Task</span>&lt;<span class="xref">IReadOnlyList</span>&lt;<a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixFileSystemEntry.html">IUnixFileSystemEntry</a>&gt;&gt;</td>
+        <td></td>
       </tr>
     </tbody>
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FileSystem_Unix_UnixFileSystem_GetEntryByNameAsync_FubarDev_FtpServer_FileSystem_IUnixDirectoryEntry_System_String_System_Threading_CancellationToken_.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.GetEntryByNameAsync(FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry%2CSystem.String%2CSystem.Threading.CancellationToken)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FileSystem_Unix_UnixFileSystem_GetEntryByNameAsync_FubarDev_FtpServer_FileSystem_IUnixDirectoryEntry_System_String_CancellationToken_.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.GetEntryByNameAsync(FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry%2CSystem.String%2CCancellationToken)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.FileSystem.Unix/UnixFileSystem.cs/#L67">View Source</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.FileSystem.Unix/UnixFileSystem.cs/#L70">View Source</a>
   </span>
   <a id="FubarDev_FtpServer_FileSystem_Unix_UnixFileSystem_GetEntryByNameAsync_" data-uid="FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.GetEntryByNameAsync*"></a>
-  <h4 id="FubarDev_FtpServer_FileSystem_Unix_UnixFileSystem_GetEntryByNameAsync_FubarDev_FtpServer_FileSystem_IUnixDirectoryEntry_System_String_System_Threading_CancellationToken_" data-uid="FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.GetEntryByNameAsync(FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry,System.String,System.Threading.CancellationToken)">GetEntryByNameAsync(IUnixDirectoryEntry, String, CancellationToken)</h4>
-  <div class="markdown level1 summary"><p>Gets a file system entry by name.</p>
-</div>
+  <h4 id="FubarDev_FtpServer_FileSystem_Unix_UnixFileSystem_GetEntryByNameAsync_FubarDev_FtpServer_FileSystem_IUnixDirectoryEntry_System_String_CancellationToken_" data-uid="FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.GetEntryByNameAsync(FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry,System.String,CancellationToken)">GetEntryByNameAsync(IUnixDirectoryEntry, String, CancellationToken)</h4>
+  <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -586,20 +535,17 @@
       <tr>
         <td><a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry.html">IUnixDirectoryEntry</a></td>
         <td><span class="parametername">directoryEntry</span></td>
-        <td><p>The <a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry.html">IUnixDirectoryEntry</a> to get the file system entry for.</p>
-</td>
+        <td></td>
       </tr>
       <tr>
         <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
         <td><span class="parametername">name</span></td>
-        <td><p>The name of the file system entry to search.</p>
-</td>
+        <td></td>
       </tr>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.threading.cancellationtoken">CancellationToken</a></td>
+        <td><span class="xref">CancellationToken</span></td>
         <td><span class="parametername">cancellationToken</span></td>
-        <td><p>The cancellation token.</p>
-</td>
+        <td></td>
       </tr>
     </tbody>
   </table>
@@ -613,23 +559,21 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixFileSystemEntry.html">IUnixFileSystemEntry</a>&gt;</td>
-        <td><p>Returns the found <a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixFileSystemEntry.html">IUnixFileSystemEntry</a>.</p>
-</td>
+        <td><span class="xref">Task</span>&lt;<a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixFileSystemEntry.html">IUnixFileSystemEntry</a>&gt;</td>
+        <td></td>
       </tr>
     </tbody>
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FileSystem_Unix_UnixFileSystem_MoveAsync_FubarDev_FtpServer_FileSystem_IUnixDirectoryEntry_FubarDev_FtpServer_FileSystem_IUnixFileSystemEntry_FubarDev_FtpServer_FileSystem_IUnixDirectoryEntry_System_String_System_Threading_CancellationToken_.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.MoveAsync(FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry%2CFubarDev.FtpServer.FileSystem.IUnixFileSystemEntry%2CFubarDev.FtpServer.FileSystem.IUnixDirectoryEntry%2CSystem.String%2CSystem.Threading.CancellationToken)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FileSystem_Unix_UnixFileSystem_MoveAsync_FubarDev_FtpServer_FileSystem_IUnixDirectoryEntry_FubarDev_FtpServer_FileSystem_IUnixFileSystemEntry_FubarDev_FtpServer_FileSystem_IUnixDirectoryEntry_System_String_CancellationToken_.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.MoveAsync(FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry%2CFubarDev.FtpServer.FileSystem.IUnixFileSystemEntry%2CFubarDev.FtpServer.FileSystem.IUnixDirectoryEntry%2CSystem.String%2CCancellationToken)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.FileSystem.Unix/UnixFileSystem.cs/#L78">View Source</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.FileSystem.Unix/UnixFileSystem.cs/#L81">View Source</a>
   </span>
   <a id="FubarDev_FtpServer_FileSystem_Unix_UnixFileSystem_MoveAsync_" data-uid="FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.MoveAsync*"></a>
-  <h4 id="FubarDev_FtpServer_FileSystem_Unix_UnixFileSystem_MoveAsync_FubarDev_FtpServer_FileSystem_IUnixDirectoryEntry_FubarDev_FtpServer_FileSystem_IUnixFileSystemEntry_FubarDev_FtpServer_FileSystem_IUnixDirectoryEntry_System_String_System_Threading_CancellationToken_" data-uid="FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.MoveAsync(FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry,FubarDev.FtpServer.FileSystem.IUnixFileSystemEntry,FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry,System.String,System.Threading.CancellationToken)">MoveAsync(IUnixDirectoryEntry, IUnixFileSystemEntry, IUnixDirectoryEntry, String, CancellationToken)</h4>
-  <div class="markdown level1 summary"><p>Moves a file system entry from <code data-dev-comment-type="paramref" class="paramref">parent</code> to <code data-dev-comment-type="paramref" class="paramref">target</code>.</p>
-</div>
+  <h4 id="FubarDev_FtpServer_FileSystem_Unix_UnixFileSystem_MoveAsync_FubarDev_FtpServer_FileSystem_IUnixDirectoryEntry_FubarDev_FtpServer_FileSystem_IUnixFileSystemEntry_FubarDev_FtpServer_FileSystem_IUnixDirectoryEntry_System_String_CancellationToken_" data-uid="FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.MoveAsync(FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry,FubarDev.FtpServer.FileSystem.IUnixFileSystemEntry,FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry,System.String,CancellationToken)">MoveAsync(IUnixDirectoryEntry, IUnixFileSystemEntry, IUnixDirectoryEntry, String, CancellationToken)</h4>
+  <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -648,32 +592,27 @@
       <tr>
         <td><a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry.html">IUnixDirectoryEntry</a></td>
         <td><span class="parametername">parent</span></td>
-        <td><p>The <a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry.html">IUnixDirectoryEntry</a> of <code data-dev-comment-type="paramref" class="paramref">source</code>.</p>
-</td>
+        <td></td>
       </tr>
       <tr>
         <td><a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixFileSystemEntry.html">IUnixFileSystemEntry</a></td>
         <td><span class="parametername">source</span></td>
-        <td><p>The <a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixFileSystemEntry.html">IUnixFileSystemEntry</a> to move.</p>
-</td>
+        <td></td>
       </tr>
       <tr>
         <td><a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry.html">IUnixDirectoryEntry</a></td>
         <td><span class="parametername">target</span></td>
-        <td><p>The destination <a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry.html">IUnixDirectoryEntry</a> where <code data-dev-comment-type="paramref" class="paramref">source</code> gets moved to.</p>
-</td>
+        <td></td>
       </tr>
       <tr>
         <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
         <td><span class="parametername">fileName</span></td>
-        <td><p>The new name of <code data-dev-comment-type="paramref" class="paramref">source</code>.</p>
-</td>
+        <td></td>
       </tr>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.threading.cancellationtoken">CancellationToken</a></td>
+        <td><span class="xref">CancellationToken</span></td>
         <td><span class="parametername">cancellationToken</span></td>
-        <td><p>The cancellation token.</p>
-</td>
+        <td></td>
       </tr>
     </tbody>
   </table>
@@ -687,23 +626,21 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixFileSystemEntry.html">IUnixFileSystemEntry</a>&gt;</td>
-        <td><p>Returns the new <a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixFileSystemEntry.html">IUnixFileSystemEntry</a>.</p>
-</td>
+        <td><span class="xref">Task</span>&lt;<a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixFileSystemEntry.html">IUnixFileSystemEntry</a>&gt;</td>
+        <td></td>
       </tr>
     </tbody>
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FileSystem_Unix_UnixFileSystem_OpenReadAsync_FubarDev_FtpServer_FileSystem_IUnixFileEntry_System_Int64_System_Threading_CancellationToken_.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.OpenReadAsync(FubarDev.FtpServer.FileSystem.IUnixFileEntry%2CSystem.Int64%2CSystem.Threading.CancellationToken)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FileSystem_Unix_UnixFileSystem_OpenReadAsync_FubarDev_FtpServer_FileSystem_IUnixFileEntry_System_Int64_CancellationToken_.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.OpenReadAsync(FubarDev.FtpServer.FileSystem.IUnixFileEntry%2CSystem.Int64%2CCancellationToken)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.FileSystem.Unix/UnixFileSystem.cs/#L121">View Source</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.FileSystem.Unix/UnixFileSystem.cs/#L124">View Source</a>
   </span>
   <a id="FubarDev_FtpServer_FileSystem_Unix_UnixFileSystem_OpenReadAsync_" data-uid="FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.OpenReadAsync*"></a>
-  <h4 id="FubarDev_FtpServer_FileSystem_Unix_UnixFileSystem_OpenReadAsync_FubarDev_FtpServer_FileSystem_IUnixFileEntry_System_Int64_System_Threading_CancellationToken_" data-uid="FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.OpenReadAsync(FubarDev.FtpServer.FileSystem.IUnixFileEntry,System.Int64,System.Threading.CancellationToken)">OpenReadAsync(IUnixFileEntry, Int64, CancellationToken)</h4>
-  <div class="markdown level1 summary"><p>Opens a file for reading.</p>
-</div>
+  <h4 id="FubarDev_FtpServer_FileSystem_Unix_UnixFileSystem_OpenReadAsync_FubarDev_FtpServer_FileSystem_IUnixFileEntry_System_Int64_CancellationToken_" data-uid="FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.OpenReadAsync(FubarDev.FtpServer.FileSystem.IUnixFileEntry,System.Int64,CancellationToken)">OpenReadAsync(IUnixFileEntry, Int64, CancellationToken)</h4>
+  <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -722,20 +659,17 @@
       <tr>
         <td><a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixFileEntry.html">IUnixFileEntry</a></td>
         <td><span class="parametername">fileEntry</span></td>
-        <td><p>The <a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixFileEntry.html">IUnixFileEntry</a> to read from.</p>
-</td>
+        <td></td>
       </tr>
       <tr>
         <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.int64">Int64</a></td>
         <td><span class="parametername">startPosition</span></td>
-        <td><p>The start position to read from.</p>
-</td>
+        <td></td>
       </tr>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.threading.cancellationtoken">CancellationToken</a></td>
+        <td><span class="xref">CancellationToken</span></td>
         <td><span class="parametername">cancellationToken</span></td>
-        <td><p>The cancellation token.</p>
-</td>
+        <td></td>
       </tr>
     </tbody>
   </table>
@@ -749,23 +683,21 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a class="xref" href="https://docs.microsoft.com/dotnet/api/system.io.stream">Stream</a>&gt;</td>
-        <td><p>The <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.io.stream">Stream</a> to be used for reading.</p>
-</td>
+        <td><span class="xref">Task</span>&lt;<span class="xref">Stream</span>&gt;</td>
+        <td></td>
       </tr>
     </tbody>
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FileSystem_Unix_UnixFileSystem_ReplaceAsync_FubarDev_FtpServer_FileSystem_IUnixFileEntry_System_IO_Stream_System_Threading_CancellationToken_.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.ReplaceAsync(FubarDev.FtpServer.FileSystem.IUnixFileEntry%2CSystem.IO.Stream%2CSystem.Threading.CancellationToken)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FileSystem_Unix_UnixFileSystem_ReplaceAsync_FubarDev_FtpServer_FileSystem_IUnixFileEntry_Stream_CancellationToken_.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.ReplaceAsync(FubarDev.FtpServer.FileSystem.IUnixFileEntry%2CStream%2CCancellationToken)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.FileSystem.Unix/UnixFileSystem.cs/#L169">View Source</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.FileSystem.Unix/UnixFileSystem.cs/#L172">View Source</a>
   </span>
   <a id="FubarDev_FtpServer_FileSystem_Unix_UnixFileSystem_ReplaceAsync_" data-uid="FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.ReplaceAsync*"></a>
-  <h4 id="FubarDev_FtpServer_FileSystem_Unix_UnixFileSystem_ReplaceAsync_FubarDev_FtpServer_FileSystem_IUnixFileEntry_System_IO_Stream_System_Threading_CancellationToken_" data-uid="FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.ReplaceAsync(FubarDev.FtpServer.FileSystem.IUnixFileEntry,System.IO.Stream,System.Threading.CancellationToken)">ReplaceAsync(IUnixFileEntry, Stream, CancellationToken)</h4>
-  <div class="markdown level1 summary"><p>Replaces the contents of a file.</p>
-</div>
+  <h4 id="FubarDev_FtpServer_FileSystem_Unix_UnixFileSystem_ReplaceAsync_FubarDev_FtpServer_FileSystem_IUnixFileEntry_Stream_CancellationToken_" data-uid="FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.ReplaceAsync(FubarDev.FtpServer.FileSystem.IUnixFileEntry,Stream,CancellationToken)">ReplaceAsync(IUnixFileEntry, Stream, CancellationToken)</h4>
+  <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -784,20 +716,17 @@
       <tr>
         <td><a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixFileEntry.html">IUnixFileEntry</a></td>
         <td><span class="parametername">fileEntry</span></td>
-        <td><p>The <a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixFileEntry.html">IUnixFileEntry</a> to replace the data for.</p>
-</td>
+        <td></td>
       </tr>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.io.stream">Stream</a></td>
+        <td><span class="xref">Stream</span></td>
         <td><span class="parametername">data</span></td>
-        <td><p>The data to be written to the given <code data-dev-comment-type="paramref" class="paramref">fileEntry</code>.</p>
-</td>
+        <td></td>
       </tr>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.threading.cancellationtoken">CancellationToken</a></td>
+        <td><span class="xref">CancellationToken</span></td>
         <td><span class="parametername">cancellationToken</span></td>
-        <td><p>The cancellation token.</p>
-</td>
+        <td></td>
       </tr>
     </tbody>
   </table>
@@ -811,23 +740,21 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a class="xref" href="FubarDev.FtpServer.BackgroundTransfer.IBackgroundTransfer.html">IBackgroundTransfer</a>&gt;</td>
-        <td><p>an optional <a class="xref" href="FubarDev.FtpServer.BackgroundTransfer.IBackgroundTransfer.html">IBackgroundTransfer</a> when the transfer needs to happen in the background.</p>
-</td>
+        <td><span class="xref">Task</span>&lt;<a class="xref" href="FubarDev.FtpServer.BackgroundTransfer.IBackgroundTransfer.html">IBackgroundTransfer</a>&gt;</td>
+        <td></td>
       </tr>
     </tbody>
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FileSystem_Unix_UnixFileSystem_SetMacTimeAsync_FubarDev_FtpServer_FileSystem_IUnixFileSystemEntry_System_Nullable_System_DateTimeOffset__System_Nullable_System_DateTimeOffset__System_Nullable_System_DateTimeOffset__System_Threading_CancellationToken_.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.SetMacTimeAsync(FubarDev.FtpServer.FileSystem.IUnixFileSystemEntry%2CSystem.Nullable%7BSystem.DateTimeOffset%7D%2CSystem.Nullable%7BSystem.DateTimeOffset%7D%2CSystem.Nullable%7BSystem.DateTimeOffset%7D%2CSystem.Threading.CancellationToken)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FileSystem_Unix_UnixFileSystem_SetMacTimeAsync_FubarDev_FtpServer_FileSystem_IUnixFileSystemEntry_System_Nullable_DateTimeOffset__System_Nullable_DateTimeOffset__System_Nullable_DateTimeOffset__CancellationToken_.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.SetMacTimeAsync(FubarDev.FtpServer.FileSystem.IUnixFileSystemEntry%2CSystem.Nullable%7BDateTimeOffset%7D%2CSystem.Nullable%7BDateTimeOffset%7D%2CSystem.Nullable%7BDateTimeOffset%7D%2CCancellationToken)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.FileSystem.Unix/UnixFileSystem.cs/#L182">View Source</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.FileSystem.Unix/UnixFileSystem.cs/#L185">View Source</a>
   </span>
   <a id="FubarDev_FtpServer_FileSystem_Unix_UnixFileSystem_SetMacTimeAsync_" data-uid="FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.SetMacTimeAsync*"></a>
-  <h4 id="FubarDev_FtpServer_FileSystem_Unix_UnixFileSystem_SetMacTimeAsync_FubarDev_FtpServer_FileSystem_IUnixFileSystemEntry_System_Nullable_System_DateTimeOffset__System_Nullable_System_DateTimeOffset__System_Nullable_System_DateTimeOffset__System_Threading_CancellationToken_" data-uid="FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.SetMacTimeAsync(FubarDev.FtpServer.FileSystem.IUnixFileSystemEntry,System.Nullable{System.DateTimeOffset},System.Nullable{System.DateTimeOffset},System.Nullable{System.DateTimeOffset},System.Threading.CancellationToken)">SetMacTimeAsync(IUnixFileSystemEntry, Nullable&lt;DateTimeOffset&gt;, Nullable&lt;DateTimeOffset&gt;, Nullable&lt;DateTimeOffset&gt;, CancellationToken)</h4>
-  <div class="markdown level1 summary"><p>Sets the modify/access/create timestamp of a file system item.</p>
-</div>
+  <h4 id="FubarDev_FtpServer_FileSystem_Unix_UnixFileSystem_SetMacTimeAsync_FubarDev_FtpServer_FileSystem_IUnixFileSystemEntry_System_Nullable_DateTimeOffset__System_Nullable_DateTimeOffset__System_Nullable_DateTimeOffset__CancellationToken_" data-uid="FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.SetMacTimeAsync(FubarDev.FtpServer.FileSystem.IUnixFileSystemEntry,System.Nullable{DateTimeOffset},System.Nullable{DateTimeOffset},System.Nullable{DateTimeOffset},CancellationToken)">SetMacTimeAsync(IUnixFileSystemEntry, Nullable&lt;DateTimeOffset&gt;, Nullable&lt;DateTimeOffset&gt;, Nullable&lt;DateTimeOffset&gt;, CancellationToken)</h4>
+  <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -846,32 +773,27 @@
       <tr>
         <td><a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixFileSystemEntry.html">IUnixFileSystemEntry</a></td>
         <td><span class="parametername">entry</span></td>
-        <td><p>The <a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixFileSystemEntry.html">IUnixFileSystemEntry</a> to change the timestamp for.</p>
-</td>
+        <td></td>
       </tr>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.nullable-1">Nullable</a>&lt;<a class="xref" href="https://docs.microsoft.com/dotnet/api/system.datetimeoffset">DateTimeOffset</a>&gt;</td>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.nullable-1">Nullable</a>&lt;<span class="xref">DateTimeOffset</span>&gt;</td>
         <td><span class="parametername">modify</span></td>
-        <td><p>The modification timestamp.</p>
-</td>
+        <td></td>
       </tr>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.nullable-1">Nullable</a>&lt;<a class="xref" href="https://docs.microsoft.com/dotnet/api/system.datetimeoffset">DateTimeOffset</a>&gt;</td>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.nullable-1">Nullable</a>&lt;<span class="xref">DateTimeOffset</span>&gt;</td>
         <td><span class="parametername">access</span></td>
-        <td><p>The access timestamp.</p>
-</td>
+        <td></td>
       </tr>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.nullable-1">Nullable</a>&lt;<a class="xref" href="https://docs.microsoft.com/dotnet/api/system.datetimeoffset">DateTimeOffset</a>&gt;</td>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.nullable-1">Nullable</a>&lt;<span class="xref">DateTimeOffset</span>&gt;</td>
         <td><span class="parametername">create</span></td>
-        <td><p>The creation timestamp.</p>
-</td>
+        <td></td>
       </tr>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.threading.cancellationtoken">CancellationToken</a></td>
+        <td><span class="xref">CancellationToken</span></td>
         <td><span class="parametername">cancellationToken</span></td>
-        <td><p>The cancellation token.</p>
-</td>
+        <td></td>
       </tr>
     </tbody>
   </table>
@@ -885,23 +807,21 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixFileSystemEntry.html">IUnixFileSystemEntry</a>&gt;</td>
-        <td><p>The modified <a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixFileSystemEntry.html">IUnixFileSystemEntry</a>.</p>
-</td>
+        <td><span class="xref">Task</span>&lt;<a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixFileSystemEntry.html">IUnixFileSystemEntry</a>&gt;</td>
+        <td></td>
       </tr>
     </tbody>
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FileSystem_Unix_UnixFileSystem_UnlinkAsync_FubarDev_FtpServer_FileSystem_IUnixFileSystemEntry_System_Threading_CancellationToken_.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.UnlinkAsync(FubarDev.FtpServer.FileSystem.IUnixFileSystemEntry%2CSystem.Threading.CancellationToken)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FileSystem_Unix_UnixFileSystem_UnlinkAsync_FubarDev_FtpServer_FileSystem_IUnixFileSystemEntry_CancellationToken_.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.UnlinkAsync(FubarDev.FtpServer.FileSystem.IUnixFileSystemEntry%2CCancellationToken)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.FileSystem.Unix/UnixFileSystem.cs/#L100">View Source</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.FileSystem.Unix/UnixFileSystem.cs/#L103">View Source</a>
   </span>
   <a id="FubarDev_FtpServer_FileSystem_Unix_UnixFileSystem_UnlinkAsync_" data-uid="FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.UnlinkAsync*"></a>
-  <h4 id="FubarDev_FtpServer_FileSystem_Unix_UnixFileSystem_UnlinkAsync_FubarDev_FtpServer_FileSystem_IUnixFileSystemEntry_System_Threading_CancellationToken_" data-uid="FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.UnlinkAsync(FubarDev.FtpServer.FileSystem.IUnixFileSystemEntry,System.Threading.CancellationToken)">UnlinkAsync(IUnixFileSystemEntry, CancellationToken)</h4>
-  <div class="markdown level1 summary"><p>Deletes a <a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixFileSystemEntry.html">IUnixFileSystemEntry</a>.</p>
-</div>
+  <h4 id="FubarDev_FtpServer_FileSystem_Unix_UnixFileSystem_UnlinkAsync_FubarDev_FtpServer_FileSystem_IUnixFileSystemEntry_CancellationToken_" data-uid="FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem.UnlinkAsync(FubarDev.FtpServer.FileSystem.IUnixFileSystemEntry,CancellationToken)">UnlinkAsync(IUnixFileSystemEntry, CancellationToken)</h4>
+  <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -920,14 +840,12 @@
       <tr>
         <td><a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixFileSystemEntry.html">IUnixFileSystemEntry</a></td>
         <td><span class="parametername">entry</span></td>
-        <td><p>The <a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixFileSystemEntry.html">IUnixFileSystemEntry</a> to delete.</p>
-</td>
+        <td></td>
       </tr>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.threading.cancellationtoken">CancellationToken</a></td>
+        <td><span class="xref">CancellationToken</span></td>
         <td><span class="parametername">cancellationToken</span></td>
-        <td><p>The cancellation token.</p>
-</td>
+        <td></td>
       </tr>
     </tbody>
   </table>
@@ -941,15 +859,11 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.threading.tasks.task">Task</a></td>
-        <td><p>The task where the underlying action is performed on.</p>
-</td>
+        <td><span class="xref">Task</span></td>
+        <td></td>
       </tr>
     </tbody>
   </table>
-  <h5 id="FubarDev_FtpServer_FileSystem_Unix_UnixFileSystem_UnlinkAsync_FubarDev_FtpServer_FileSystem_IUnixFileSystemEntry_System_Threading_CancellationToken__remarks">Remarks</h5>
-  <div class="markdown level1 remarks"><p>An implementation might decide to move the <code data-dev-comment-type="paramref" class="paramref">entry</code> into the trash instead of deleting it.</p>
-</div>
   <h3 id="implements">Implements</h3>
   <div>
       <a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixFileSystem.html">IUnixFileSystem</a>
@@ -965,7 +879,7 @@
                     <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FileSystem_Unix_UnixFileSystem.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FileSystem.Unix.UnixFileSystem%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.FileSystem.Unix/UnixFileSystem.cs/#L21" class="contribution-link">View Source</a>
+                    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.FileSystem.Unix/UnixFileSystem.cs/#L24" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

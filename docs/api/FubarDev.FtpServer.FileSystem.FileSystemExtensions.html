@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Class FileSystemExtensions
    | FTP Server documentation ">
-    <meta name="generator" content="docfx 2.42.3.0">
+    <meta name="generator" content="docfx 2.43.2.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -91,55 +91,29 @@
     <div class="level0"><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object">Object</a></div>
     <div class="level1"><span class="xref">FileSystemExtensions</span></div>
   </div>
-  <div class="inheritedMembers">
-    <h5>Inherited Members</h5>
-    <div>
-      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.equals#System_Object_Equals_System_Object_">Object.Equals(Object)</a>
-    </div>
-    <div>
-      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.equals#System_Object_Equals_System_Object_System_Object_">Object.Equals(Object, Object)</a>
-    </div>
-    <div>
-      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.gethashcode#System_Object_GetHashCode">Object.GetHashCode()</a>
-    </div>
-    <div>
-      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.gettype#System_Object_GetType">Object.GetType()</a>
-    </div>
-    <div>
-      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.memberwiseclone#System_Object_MemberwiseClone">Object.MemberwiseClone()</a>
-    </div>
-    <div>
-      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.referenceequals#System_Object_ReferenceEquals_System_Object_System_Object_">Object.ReferenceEquals(Object, Object)</a>
-    </div>
-    <div>
-      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.tostring#System_Object_ToString">Object.ToString()</a>
-    </div>
-  </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="FubarDev.FtpServer.FileSystem.html">FubarDev.FtpServer.FileSystem</a></h6>
   <h6><strong>Assembly</strong>: FubarDev.FtpServer.Abstractions.dll</h6>
   <h5 id="FubarDev_FtpServer_FileSystem_FileSystemExtensions_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static class FileSystemExtensions</code></pre>
+    <pre><code class="lang-csharp hljs">public static class FileSystemExtensions : object</code></pre>
   </div>
   <h3 id="methods">Methods
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FileSystem_FileSystemExtensions_Clone_System_Collections_Generic_Stack_FubarDev_FtpServer_FileSystem_IUnixDirectoryEntry__.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FileSystem.FileSystemExtensions.Clone(System.Collections.Generic.Stack%7BFubarDev.FtpServer.FileSystem.IUnixDirectoryEntry%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FileSystem_FileSystemExtensions_Clone_Stack_FubarDev_FtpServer_FileSystem_IUnixDirectoryEntry__.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FileSystem.FileSystemExtensions.Clone(Stack%7BFubarDev.FtpServer.FileSystem.IUnixDirectoryEntry%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
     <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.Abstractions/FileSystem/FileSystemExtensions.cs/#L29">View Source</a>
   </span>
   <a id="FubarDev_FtpServer_FileSystem_FileSystemExtensions_Clone_" data-uid="FubarDev.FtpServer.FileSystem.FileSystemExtensions.Clone*"></a>
-  <h4 id="FubarDev_FtpServer_FileSystem_FileSystemExtensions_Clone_System_Collections_Generic_Stack_FubarDev_FtpServer_FileSystem_IUnixDirectoryEntry__" data-uid="FubarDev.FtpServer.FileSystem.FileSystemExtensions.Clone(System.Collections.Generic.Stack{FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry})">Clone(Stack&lt;IUnixDirectoryEntry&gt;)</h4>
+  <h4 id="FubarDev_FtpServer_FileSystem_FileSystemExtensions_Clone_Stack_FubarDev_FtpServer_FileSystem_IUnixDirectoryEntry__" data-uid="FubarDev.FtpServer.FileSystem.FileSystemExtensions.Clone(Stack{FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry})">Clone(Stack&lt;IUnixDirectoryEntry&gt;)</h4>
   <div class="markdown level1 summary"><p>Clone the stack of directory entries.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[NotNull]
-[ItemNotNull]
-public static Stack&lt;IUnixDirectoryEntry&gt; Clone([NotNull, ItemNotNull] this Stack&lt;IUnixDirectoryEntry&gt; path)</code></pre>
+    <pre><code class="lang-csharp hljs">public static Stack&lt;IUnixDirectoryEntry&gt; Clone(this Stack&lt;IUnixDirectoryEntry&gt; path)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -152,7 +126,7 @@ public static Stack&lt;IUnixDirectoryEntry&gt; Clone([NotNull, ItemNotNull] this
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.generic.stack-1">Stack</a>&lt;<a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry.html">IUnixDirectoryEntry</a>&gt;</td>
+        <td><span class="xref">Stack</span>&lt;<a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry.html">IUnixDirectoryEntry</a>&gt;</td>
         <td><span class="parametername">path</span></td>
         <td><p>The stack of directory entries to clone.</p>
 </td>
@@ -169,7 +143,7 @@ public static Stack&lt;IUnixDirectoryEntry&gt; Clone([NotNull, ItemNotNull] this
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.generic.stack-1">Stack</a>&lt;<a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry.html">IUnixDirectoryEntry</a>&gt;</td>
+        <td><span class="xref">Stack</span>&lt;<a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry.html">IUnixDirectoryEntry</a>&gt;</td>
         <td><p>the cloned <code data-dev-comment-type="paramref" class="paramref">path</code>.</p>
 </td>
       </tr>
@@ -177,20 +151,19 @@ public static Stack&lt;IUnixDirectoryEntry&gt; Clone([NotNull, ItemNotNull] this
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FileSystem_FileSystemExtensions_CombinePath_System_String_System_Collections_Generic_IEnumerable_System_String__.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FileSystem.FileSystemExtensions.CombinePath(System.String%2CSystem.Collections.Generic.IEnumerable%7BSystem.String%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FileSystem_FileSystemExtensions_CombinePath_System_String_IEnumerable_System_String__.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FileSystem.FileSystemExtensions.CombinePath(System.String%2CIEnumerable%7BSystem.String%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
     <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.Abstractions/FileSystem/FileSystemExtensions.cs/#L382">View Source</a>
   </span>
   <a id="FubarDev_FtpServer_FileSystem_FileSystemExtensions_CombinePath_" data-uid="FubarDev.FtpServer.FileSystem.FileSystemExtensions.CombinePath*"></a>
-  <h4 id="FubarDev_FtpServer_FileSystem_FileSystemExtensions_CombinePath_System_String_System_Collections_Generic_IEnumerable_System_String__" data-uid="FubarDev.FtpServer.FileSystem.FileSystemExtensions.CombinePath(System.String,System.Collections.Generic.IEnumerable{System.String})">CombinePath(String, IEnumerable&lt;String&gt;)</h4>
+  <h4 id="FubarDev_FtpServer_FileSystem_FileSystemExtensions_CombinePath_System_String_IEnumerable_System_String__" data-uid="FubarDev.FtpServer.FileSystem.FileSystemExtensions.CombinePath(System.String,IEnumerable{System.String})">CombinePath(String, IEnumerable&lt;String&gt;)</h4>
   <div class="markdown level1 summary"><p>Appends parts to a path.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[NotNull]
-public static string CombinePath([CanBeNull] string path, [NotNull, ItemNotNull] IEnumerable&lt;string&gt; parts)</code></pre>
+    <pre><code class="lang-csharp hljs">public static string CombinePath(string path, IEnumerable&lt;string&gt; parts)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -209,7 +182,7 @@ public static string CombinePath([CanBeNull] string path, [NotNull, ItemNotNull]
 </td>
       </tr>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable</a>&lt;<a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a>&gt;</td>
+        <td><span class="xref">IEnumerable</span>&lt;<a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a>&gt;</td>
         <td><span class="parametername">parts</span></td>
         <td><p>The parts to append.</p>
 </td>
@@ -246,8 +219,7 @@ public static string CombinePath([CanBeNull] string path, [NotNull, ItemNotNull]
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[NotNull]
-public static string CombinePath([CanBeNull] string path, [NotNull, ItemNotNull] params string[] parts)</code></pre>
+    <pre><code class="lang-csharp hljs">public static string CombinePath(string path, params string[] parts)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -291,21 +263,19 @@ public static string CombinePath([CanBeNull] string path, [NotNull, ItemNotNull]
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FileSystem_FileSystemExtensions_GetDirectoryAsync_FubarDev_FtpServer_FileSystem_IUnixFileSystem_System_Collections_Generic_Stack_FubarDev_FtpServer_FileSystem_IUnixDirectoryEntry__System_Collections_Generic_IReadOnlyList_System_String__System_Threading_CancellationToken_.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FileSystem.FileSystemExtensions.GetDirectoryAsync(FubarDev.FtpServer.FileSystem.IUnixFileSystem%2CSystem.Collections.Generic.Stack%7BFubarDev.FtpServer.FileSystem.IUnixDirectoryEntry%7D%2CSystem.Collections.Generic.IReadOnlyList%7BSystem.String%7D%2CSystem.Threading.CancellationToken)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FileSystem_FileSystemExtensions_GetDirectoryAsync_FubarDev_FtpServer_FileSystem_IUnixFileSystem_Stack_FubarDev_FtpServer_FileSystem_IUnixDirectoryEntry__IReadOnlyList_System_String__CancellationToken_.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FileSystem.FileSystemExtensions.GetDirectoryAsync(FubarDev.FtpServer.FileSystem.IUnixFileSystem%2CStack%7BFubarDev.FtpServer.FileSystem.IUnixDirectoryEntry%7D%2CIReadOnlyList%7BSystem.String%7D%2CCancellationToken)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
     <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.Abstractions/FileSystem/FileSystemExtensions.cs/#L75">View Source</a>
   </span>
   <a id="FubarDev_FtpServer_FileSystem_FileSystemExtensions_GetDirectoryAsync_" data-uid="FubarDev.FtpServer.FileSystem.FileSystemExtensions.GetDirectoryAsync*"></a>
-  <h4 id="FubarDev_FtpServer_FileSystem_FileSystemExtensions_GetDirectoryAsync_FubarDev_FtpServer_FileSystem_IUnixFileSystem_System_Collections_Generic_Stack_FubarDev_FtpServer_FileSystem_IUnixDirectoryEntry__System_Collections_Generic_IReadOnlyList_System_String__System_Threading_CancellationToken_" data-uid="FubarDev.FtpServer.FileSystem.FileSystemExtensions.GetDirectoryAsync(FubarDev.FtpServer.FileSystem.IUnixFileSystem,System.Collections.Generic.Stack{FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry},System.Collections.Generic.IReadOnlyList{System.String},System.Threading.CancellationToken)">GetDirectoryAsync(IUnixFileSystem, Stack&lt;IUnixDirectoryEntry&gt;, IReadOnlyList&lt;String&gt;, CancellationToken)</h4>
+  <h4 id="FubarDev_FtpServer_FileSystem_FileSystemExtensions_GetDirectoryAsync_FubarDev_FtpServer_FileSystem_IUnixFileSystem_Stack_FubarDev_FtpServer_FileSystem_IUnixDirectoryEntry__IReadOnlyList_System_String__CancellationToken_" data-uid="FubarDev.FtpServer.FileSystem.FileSystemExtensions.GetDirectoryAsync(FubarDev.FtpServer.FileSystem.IUnixFileSystem,Stack{FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry},IReadOnlyList{System.String},CancellationToken)">GetDirectoryAsync(IUnixFileSystem, Stack&lt;IUnixDirectoryEntry&gt;, IReadOnlyList&lt;String&gt;, CancellationToken)</h4>
   <div class="markdown level1 summary"><p>Get the directory for the given <code data-dev-comment-type="paramref" class="paramref">pathElements</code>.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[NotNull]
-[ItemCanBeNull]
-public static Task&lt;IUnixDirectoryEntry&gt; GetDirectoryAsync([NotNull] this IUnixFileSystem fileSystem, [NotNull, ItemNotNull] Stack&lt;IUnixDirectoryEntry&gt; currentPath, [NotNull, ItemNotNull] IReadOnlyList&lt;string&gt; pathElements, CancellationToken cancellationToken)</code></pre>
+    <pre><code class="lang-csharp hljs">public static Task&lt;IUnixDirectoryEntry&gt; GetDirectoryAsync(this IUnixFileSystem fileSystem, Stack&lt;IUnixDirectoryEntry&gt; currentPath, IReadOnlyList&lt;string&gt; pathElements, CancellationToken cancellationToken)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -324,19 +294,19 @@ public static Task&lt;IUnixDirectoryEntry&gt; GetDirectoryAsync([NotNull] this I
 </td>
       </tr>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.generic.stack-1">Stack</a>&lt;<a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry.html">IUnixDirectoryEntry</a>&gt;</td>
+        <td><span class="xref">Stack</span>&lt;<a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry.html">IUnixDirectoryEntry</a>&gt;</td>
         <td><span class="parametername">currentPath</span></td>
         <td><p>The current path.</p>
 </td>
       </tr>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.generic.ireadonlylist-1">IReadOnlyList</a>&lt;<a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a>&gt;</td>
+        <td><span class="xref">IReadOnlyList</span>&lt;<a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a>&gt;</td>
         <td><span class="parametername">pathElements</span></td>
         <td><p>The (absolute or relative) path to get the directory for.</p>
 </td>
       </tr>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.threading.cancellationtoken">CancellationToken</a></td>
+        <td><span class="xref">CancellationToken</span></td>
         <td><span class="parametername">cancellationToken</span></td>
         <td><p>The cancellation token.</p>
 </td>
@@ -353,7 +323,7 @@ public static Task&lt;IUnixDirectoryEntry&gt; GetDirectoryAsync([NotNull] this I
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry.html">IUnixDirectoryEntry</a>&gt;</td>
+        <td><span class="xref">Task</span>&lt;<a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry.html">IUnixDirectoryEntry</a>&gt;</td>
         <td><p>The found <a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry.html">IUnixDirectoryEntry</a> or <code>null</code>.</p>
 </td>
       </tr>
@@ -361,21 +331,19 @@ public static Task&lt;IUnixDirectoryEntry&gt; GetDirectoryAsync([NotNull] this I
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FileSystem_FileSystemExtensions_GetDirectoryAsync_FubarDev_FtpServer_FileSystem_IUnixFileSystem_System_Collections_Generic_Stack_FubarDev_FtpServer_FileSystem_IUnixDirectoryEntry__System_String_System_Threading_CancellationToken_.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FileSystem.FileSystemExtensions.GetDirectoryAsync(FubarDev.FtpServer.FileSystem.IUnixFileSystem%2CSystem.Collections.Generic.Stack%7BFubarDev.FtpServer.FileSystem.IUnixDirectoryEntry%7D%2CSystem.String%2CSystem.Threading.CancellationToken)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FileSystem_FileSystemExtensions_GetDirectoryAsync_FubarDev_FtpServer_FileSystem_IUnixFileSystem_Stack_FubarDev_FtpServer_FileSystem_IUnixDirectoryEntry__System_String_CancellationToken_.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FileSystem.FileSystemExtensions.GetDirectoryAsync(FubarDev.FtpServer.FileSystem.IUnixFileSystem%2CStack%7BFubarDev.FtpServer.FileSystem.IUnixDirectoryEntry%7D%2CSystem.String%2CCancellationToken)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
     <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.Abstractions/FileSystem/FileSystemExtensions.cs/#L59">View Source</a>
   </span>
   <a id="FubarDev_FtpServer_FileSystem_FileSystemExtensions_GetDirectoryAsync_" data-uid="FubarDev.FtpServer.FileSystem.FileSystemExtensions.GetDirectoryAsync*"></a>
-  <h4 id="FubarDev_FtpServer_FileSystem_FileSystemExtensions_GetDirectoryAsync_FubarDev_FtpServer_FileSystem_IUnixFileSystem_System_Collections_Generic_Stack_FubarDev_FtpServer_FileSystem_IUnixDirectoryEntry__System_String_System_Threading_CancellationToken_" data-uid="FubarDev.FtpServer.FileSystem.FileSystemExtensions.GetDirectoryAsync(FubarDev.FtpServer.FileSystem.IUnixFileSystem,System.Collections.Generic.Stack{FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry},System.String,System.Threading.CancellationToken)">GetDirectoryAsync(IUnixFileSystem, Stack&lt;IUnixDirectoryEntry&gt;, String, CancellationToken)</h4>
+  <h4 id="FubarDev_FtpServer_FileSystem_FileSystemExtensions_GetDirectoryAsync_FubarDev_FtpServer_FileSystem_IUnixFileSystem_Stack_FubarDev_FtpServer_FileSystem_IUnixDirectoryEntry__System_String_CancellationToken_" data-uid="FubarDev.FtpServer.FileSystem.FileSystemExtensions.GetDirectoryAsync(FubarDev.FtpServer.FileSystem.IUnixFileSystem,Stack{FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry},System.String,CancellationToken)">GetDirectoryAsync(IUnixFileSystem, Stack&lt;IUnixDirectoryEntry&gt;, String, CancellationToken)</h4>
   <div class="markdown level1 summary"><p>Get the directory for the given <code data-dev-comment-type="paramref" class="paramref">path</code>.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[NotNull]
-[ItemCanBeNull]
-public static Task&lt;IUnixDirectoryEntry&gt; GetDirectoryAsync([NotNull] this IUnixFileSystem fileSystem, [NotNull, ItemNotNull] Stack&lt;IUnixDirectoryEntry&gt; currentPath, [CanBeNull] string path, CancellationToken cancellationToken)</code></pre>
+    <pre><code class="lang-csharp hljs">public static Task&lt;IUnixDirectoryEntry&gt; GetDirectoryAsync(this IUnixFileSystem fileSystem, Stack&lt;IUnixDirectoryEntry&gt; currentPath, string path, CancellationToken cancellationToken)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -394,7 +362,7 @@ public static Task&lt;IUnixDirectoryEntry&gt; GetDirectoryAsync([NotNull] this I
 </td>
       </tr>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.generic.stack-1">Stack</a>&lt;<a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry.html">IUnixDirectoryEntry</a>&gt;</td>
+        <td><span class="xref">Stack</span>&lt;<a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry.html">IUnixDirectoryEntry</a>&gt;</td>
         <td><span class="parametername">currentPath</span></td>
         <td><p>The current path.</p>
 </td>
@@ -406,7 +374,7 @@ public static Task&lt;IUnixDirectoryEntry&gt; GetDirectoryAsync([NotNull] this I
 </td>
       </tr>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.threading.cancellationtoken">CancellationToken</a></td>
+        <td><span class="xref">CancellationToken</span></td>
         <td><span class="parametername">cancellationToken</span></td>
         <td><p>The cancellation token.</p>
 </td>
@@ -423,7 +391,7 @@ public static Task&lt;IUnixDirectoryEntry&gt; GetDirectoryAsync([NotNull] this I
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry.html">IUnixDirectoryEntry</a>&gt;</td>
+        <td><span class="xref">Task</span>&lt;<a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry.html">IUnixDirectoryEntry</a>&gt;</td>
         <td><p>The found <a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry.html">IUnixDirectoryEntry</a> or <code>null</code>.</p>
 </td>
       </tr>
@@ -431,20 +399,19 @@ public static Task&lt;IUnixDirectoryEntry&gt; GetDirectoryAsync([NotNull] this I
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FileSystem_FileSystemExtensions_GetFullPath_System_Collections_Generic_IEnumerable_FubarDev_FtpServer_FileSystem_IUnixDirectoryEntry__.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FileSystem.FileSystemExtensions.GetFullPath(System.Collections.Generic.IEnumerable%7BFubarDev.FtpServer.FileSystem.IUnixDirectoryEntry%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FileSystem_FileSystemExtensions_GetFullPath_IEnumerable_FubarDev_FtpServer_FileSystem_IUnixDirectoryEntry__.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FileSystem.FileSystemExtensions.GetFullPath(IEnumerable%7BFubarDev.FtpServer.FileSystem.IUnixDirectoryEntry%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
     <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.Abstractions/FileSystem/FileSystemExtensions.cs/#L317">View Source</a>
   </span>
   <a id="FubarDev_FtpServer_FileSystem_FileSystemExtensions_GetFullPath_" data-uid="FubarDev.FtpServer.FileSystem.FileSystemExtensions.GetFullPath*"></a>
-  <h4 id="FubarDev_FtpServer_FileSystem_FileSystemExtensions_GetFullPath_System_Collections_Generic_IEnumerable_FubarDev_FtpServer_FileSystem_IUnixDirectoryEntry__" data-uid="FubarDev.FtpServer.FileSystem.FileSystemExtensions.GetFullPath(System.Collections.Generic.IEnumerable{FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry})">GetFullPath(IEnumerable&lt;IUnixDirectoryEntry&gt;)</h4>
+  <h4 id="FubarDev_FtpServer_FileSystem_FileSystemExtensions_GetFullPath_IEnumerable_FubarDev_FtpServer_FileSystem_IUnixDirectoryEntry__" data-uid="FubarDev.FtpServer.FileSystem.FileSystemExtensions.GetFullPath(IEnumerable{FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry})">GetFullPath(IEnumerable&lt;IUnixDirectoryEntry&gt;)</h4>
   <div class="markdown level1 summary"><p>Returns the <code data-dev-comment-type="paramref" class="paramref">path</code> as string.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[NotNull]
-public static string GetFullPath([NotNull, ItemNotNull] this IEnumerable&lt;IUnixDirectoryEntry&gt; path)</code></pre>
+    <pre><code class="lang-csharp hljs">public static string GetFullPath(this IEnumerable&lt;IUnixDirectoryEntry&gt; path)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -457,7 +424,7 @@ public static string GetFullPath([NotNull, ItemNotNull] this IEnumerable&lt;IUni
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.generic.ienumerable-1">IEnumerable</a>&lt;<a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry.html">IUnixDirectoryEntry</a>&gt;</td>
+        <td><span class="xref">IEnumerable</span>&lt;<a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry.html">IUnixDirectoryEntry</a>&gt;</td>
         <td><span class="parametername">path</span></td>
         <td><p>The path to convert to string.</p>
 </td>
@@ -482,20 +449,19 @@ public static string GetFullPath([NotNull, ItemNotNull] this IEnumerable&lt;IUni
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FileSystem_FileSystemExtensions_GetFullPath_System_Collections_Generic_Stack_FubarDev_FtpServer_FileSystem_IUnixDirectoryEntry__.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FileSystem.FileSystemExtensions.GetFullPath(System.Collections.Generic.Stack%7BFubarDev.FtpServer.FileSystem.IUnixDirectoryEntry%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FileSystem_FileSystemExtensions_GetFullPath_Stack_FubarDev_FtpServer_FileSystem_IUnixDirectoryEntry__.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FileSystem.FileSystemExtensions.GetFullPath(Stack%7BFubarDev.FtpServer.FileSystem.IUnixDirectoryEntry%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
     <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.Abstractions/FileSystem/FileSystemExtensions.cs/#L306">View Source</a>
   </span>
   <a id="FubarDev_FtpServer_FileSystem_FileSystemExtensions_GetFullPath_" data-uid="FubarDev.FtpServer.FileSystem.FileSystemExtensions.GetFullPath*"></a>
-  <h4 id="FubarDev_FtpServer_FileSystem_FileSystemExtensions_GetFullPath_System_Collections_Generic_Stack_FubarDev_FtpServer_FileSystem_IUnixDirectoryEntry__" data-uid="FubarDev.FtpServer.FileSystem.FileSystemExtensions.GetFullPath(System.Collections.Generic.Stack{FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry})">GetFullPath(Stack&lt;IUnixDirectoryEntry&gt;)</h4>
+  <h4 id="FubarDev_FtpServer_FileSystem_FileSystemExtensions_GetFullPath_Stack_FubarDev_FtpServer_FileSystem_IUnixDirectoryEntry__" data-uid="FubarDev.FtpServer.FileSystem.FileSystemExtensions.GetFullPath(Stack{FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry})">GetFullPath(Stack&lt;IUnixDirectoryEntry&gt;)</h4>
   <div class="markdown level1 summary"><p>Returns the <code data-dev-comment-type="paramref" class="paramref">path</code> as string.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[NotNull]
-public static string GetFullPath([NotNull, ItemNotNull] this Stack&lt;IUnixDirectoryEntry&gt; path)</code></pre>
+    <pre><code class="lang-csharp hljs">public static string GetFullPath(this Stack&lt;IUnixDirectoryEntry&gt; path)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -508,7 +474,7 @@ public static string GetFullPath([NotNull, ItemNotNull] this Stack&lt;IUnixDirec
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.generic.stack-1">Stack</a>&lt;<a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry.html">IUnixDirectoryEntry</a>&gt;</td>
+        <td><span class="xref">Stack</span>&lt;<a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry.html">IUnixDirectoryEntry</a>&gt;</td>
         <td><span class="parametername">path</span></td>
         <td><p>The path to convert to string.</p>
 </td>
@@ -533,20 +499,19 @@ public static string GetFullPath([NotNull, ItemNotNull] this Stack&lt;IUnixDirec
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FileSystem_FileSystemExtensions_GetFullPath_System_Collections_Generic_Stack_FubarDev_FtpServer_FileSystem_IUnixDirectoryEntry__System_String_.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FileSystem.FileSystemExtensions.GetFullPath(System.Collections.Generic.Stack%7BFubarDev.FtpServer.FileSystem.IUnixDirectoryEntry%7D%2CSystem.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FileSystem_FileSystemExtensions_GetFullPath_Stack_FubarDev_FtpServer_FileSystem_IUnixDirectoryEntry__System_String_.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FileSystem.FileSystemExtensions.GetFullPath(Stack%7BFubarDev.FtpServer.FileSystem.IUnixDirectoryEntry%7D%2CSystem.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
     <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.Abstractions/FileSystem/FileSystemExtensions.cs/#L357">View Source</a>
   </span>
   <a id="FubarDev_FtpServer_FileSystem_FileSystemExtensions_GetFullPath_" data-uid="FubarDev.FtpServer.FileSystem.FileSystemExtensions.GetFullPath*"></a>
-  <h4 id="FubarDev_FtpServer_FileSystem_FileSystemExtensions_GetFullPath_System_Collections_Generic_Stack_FubarDev_FtpServer_FileSystem_IUnixDirectoryEntry__System_String_" data-uid="FubarDev.FtpServer.FileSystem.FileSystemExtensions.GetFullPath(System.Collections.Generic.Stack{FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry},System.String)">GetFullPath(Stack&lt;IUnixDirectoryEntry&gt;, String)</h4>
+  <h4 id="FubarDev_FtpServer_FileSystem_FileSystemExtensions_GetFullPath_Stack_FubarDev_FtpServer_FileSystem_IUnixDirectoryEntry__System_String_" data-uid="FubarDev.FtpServer.FileSystem.FileSystemExtensions.GetFullPath(Stack{FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry},System.String)">GetFullPath(Stack&lt;IUnixDirectoryEntry&gt;, String)</h4>
   <div class="markdown level1 summary"><p>Returns the <code data-dev-comment-type="paramref" class="paramref">path</code> as string.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[NotNull]
-public static string GetFullPath([NotNull, ItemNotNull] this Stack&lt;IUnixDirectoryEntry&gt; path, [CanBeNull] string fileName)</code></pre>
+    <pre><code class="lang-csharp hljs">public static string GetFullPath(this Stack&lt;IUnixDirectoryEntry&gt; path, string fileName)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -559,7 +524,7 @@ public static string GetFullPath([NotNull, ItemNotNull] this Stack&lt;IUnixDirec
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.generic.stack-1">Stack</a>&lt;<a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry.html">IUnixDirectoryEntry</a>&gt;</td>
+        <td><span class="xref">Stack</span>&lt;<a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry.html">IUnixDirectoryEntry</a>&gt;</td>
         <td><span class="parametername">path</span></td>
         <td><p>The path to convert to string.</p>
 </td>
@@ -602,8 +567,7 @@ public static string GetFullPath([NotNull, ItemNotNull] this Stack&lt;IUnixDirec
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[NotNull]
-public static string GetParentPath([NotNull] this string path)</code></pre>
+    <pre><code class="lang-csharp hljs">public static string GetParentPath(this string path)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -641,19 +605,19 @@ public static string GetParentPath([NotNull] this string path)</code></pre>
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FileSystem_FileSystemExtensions_IsChildOfOrSameAs_System_Collections_Generic_Stack_FubarDev_FtpServer_FileSystem_IUnixDirectoryEntry__System_Collections_Generic_Stack_FubarDev_FtpServer_FileSystem_IUnixDirectoryEntry__FubarDev_FtpServer_FileSystem_IUnixFileSystem_.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FileSystem.FileSystemExtensions.IsChildOfOrSameAs(System.Collections.Generic.Stack%7BFubarDev.FtpServer.FileSystem.IUnixDirectoryEntry%7D%2CSystem.Collections.Generic.Stack%7BFubarDev.FtpServer.FileSystem.IUnixDirectoryEntry%7D%2CFubarDev.FtpServer.FileSystem.IUnixFileSystem)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FileSystem_FileSystemExtensions_IsChildOfOrSameAs_Stack_FubarDev_FtpServer_FileSystem_IUnixDirectoryEntry__Stack_FubarDev_FtpServer_FileSystem_IUnixDirectoryEntry__FubarDev_FtpServer_FileSystem_IUnixFileSystem_.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FileSystem.FileSystemExtensions.IsChildOfOrSameAs(Stack%7BFubarDev.FtpServer.FileSystem.IUnixDirectoryEntry%7D%2CStack%7BFubarDev.FtpServer.FileSystem.IUnixDirectoryEntry%7D%2CFubarDev.FtpServer.FileSystem.IUnixFileSystem)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
     <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.Abstractions/FileSystem/FileSystemExtensions.cs/#L43">View Source</a>
   </span>
   <a id="FubarDev_FtpServer_FileSystem_FileSystemExtensions_IsChildOfOrSameAs_" data-uid="FubarDev.FtpServer.FileSystem.FileSystemExtensions.IsChildOfOrSameAs*"></a>
-  <h4 id="FubarDev_FtpServer_FileSystem_FileSystemExtensions_IsChildOfOrSameAs_System_Collections_Generic_Stack_FubarDev_FtpServer_FileSystem_IUnixDirectoryEntry__System_Collections_Generic_Stack_FubarDev_FtpServer_FileSystem_IUnixDirectoryEntry__FubarDev_FtpServer_FileSystem_IUnixFileSystem_" data-uid="FubarDev.FtpServer.FileSystem.FileSystemExtensions.IsChildOfOrSameAs(System.Collections.Generic.Stack{FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry},System.Collections.Generic.Stack{FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry},FubarDev.FtpServer.FileSystem.IUnixFileSystem)">IsChildOfOrSameAs(Stack&lt;IUnixDirectoryEntry&gt;, Stack&lt;IUnixDirectoryEntry&gt;, IUnixFileSystem)</h4>
+  <h4 id="FubarDev_FtpServer_FileSystem_FileSystemExtensions_IsChildOfOrSameAs_Stack_FubarDev_FtpServer_FileSystem_IUnixDirectoryEntry__Stack_FubarDev_FtpServer_FileSystem_IUnixDirectoryEntry__FubarDev_FtpServer_FileSystem_IUnixFileSystem_" data-uid="FubarDev.FtpServer.FileSystem.FileSystemExtensions.IsChildOfOrSameAs(Stack{FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry},Stack{FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry},FubarDev.FtpServer.FileSystem.IUnixFileSystem)">IsChildOfOrSameAs(Stack&lt;IUnixDirectoryEntry&gt;, Stack&lt;IUnixDirectoryEntry&gt;, IUnixFileSystem)</h4>
   <div class="markdown level1 summary"><p>Determines whether the <code data-dev-comment-type="paramref" class="paramref">pathToTestAsChild</code> is a child or the same path as <code data-dev-comment-type="paramref" class="paramref">pathToTestAsParent</code>.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public static bool IsChildOfOrSameAs([NotNull, ItemNotNull] this Stack&lt;IUnixDirectoryEntry&gt; pathToTestAsChild, [NotNull, ItemNotNull] Stack&lt;IUnixDirectoryEntry&gt; pathToTestAsParent, [NotNull] IUnixFileSystem fileSystem)</code></pre>
+    <pre><code class="lang-csharp hljs">public static bool IsChildOfOrSameAs(this Stack&lt;IUnixDirectoryEntry&gt; pathToTestAsChild, Stack&lt;IUnixDirectoryEntry&gt; pathToTestAsParent, IUnixFileSystem fileSystem)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -666,13 +630,13 @@ public static string GetParentPath([NotNull] this string path)</code></pre>
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.generic.stack-1">Stack</a>&lt;<a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry.html">IUnixDirectoryEntry</a>&gt;</td>
+        <td><span class="xref">Stack</span>&lt;<a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry.html">IUnixDirectoryEntry</a>&gt;</td>
         <td><span class="parametername">pathToTestAsChild</span></td>
         <td><p>The path to test as child.</p>
 </td>
       </tr>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.generic.stack-1">Stack</a>&lt;<a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry.html">IUnixDirectoryEntry</a>&gt;</td>
+        <td><span class="xref">Stack</span>&lt;<a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry.html">IUnixDirectoryEntry</a>&gt;</td>
         <td><span class="parametername">pathToTestAsParent</span></td>
         <td><p>The path to test as parent.</p>
 </td>
@@ -703,21 +667,19 @@ public static string GetParentPath([NotNull] this string path)</code></pre>
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FileSystem_FileSystemExtensions_SearchDirectoryAsync_FubarDev_FtpServer_FileSystem_IUnixFileSystem_System_Collections_Generic_Stack_FubarDev_FtpServer_FileSystem_IUnixDirectoryEntry__System_Collections_Generic_IReadOnlyList_System_String__System_Threading_CancellationToken_.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FileSystem.FileSystemExtensions.SearchDirectoryAsync(FubarDev.FtpServer.FileSystem.IUnixFileSystem%2CSystem.Collections.Generic.Stack%7BFubarDev.FtpServer.FileSystem.IUnixDirectoryEntry%7D%2CSystem.Collections.Generic.IReadOnlyList%7BSystem.String%7D%2CSystem.Threading.CancellationToken)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FileSystem_FileSystemExtensions_SearchDirectoryAsync_FubarDev_FtpServer_FileSystem_IUnixFileSystem_Stack_FubarDev_FtpServer_FileSystem_IUnixDirectoryEntry__IReadOnlyList_System_String__CancellationToken_.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FileSystem.FileSystemExtensions.SearchDirectoryAsync(FubarDev.FtpServer.FileSystem.IUnixFileSystem%2CStack%7BFubarDev.FtpServer.FileSystem.IUnixDirectoryEntry%7D%2CIReadOnlyList%7BSystem.String%7D%2CCancellationToken)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
     <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.Abstractions/FileSystem/FileSystemExtensions.cs/#L141">View Source</a>
   </span>
   <a id="FubarDev_FtpServer_FileSystem_FileSystemExtensions_SearchDirectoryAsync_" data-uid="FubarDev.FtpServer.FileSystem.FileSystemExtensions.SearchDirectoryAsync*"></a>
-  <h4 id="FubarDev_FtpServer_FileSystem_FileSystemExtensions_SearchDirectoryAsync_FubarDev_FtpServer_FileSystem_IUnixFileSystem_System_Collections_Generic_Stack_FubarDev_FtpServer_FileSystem_IUnixDirectoryEntry__System_Collections_Generic_IReadOnlyList_System_String__System_Threading_CancellationToken_" data-uid="FubarDev.FtpServer.FileSystem.FileSystemExtensions.SearchDirectoryAsync(FubarDev.FtpServer.FileSystem.IUnixFileSystem,System.Collections.Generic.Stack{FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry},System.Collections.Generic.IReadOnlyList{System.String},System.Threading.CancellationToken)">SearchDirectoryAsync(IUnixFileSystem, Stack&lt;IUnixDirectoryEntry&gt;, IReadOnlyList&lt;String&gt;, CancellationToken)</h4>
+  <h4 id="FubarDev_FtpServer_FileSystem_FileSystemExtensions_SearchDirectoryAsync_FubarDev_FtpServer_FileSystem_IUnixFileSystem_Stack_FubarDev_FtpServer_FileSystem_IUnixDirectoryEntry__IReadOnlyList_System_String__CancellationToken_" data-uid="FubarDev.FtpServer.FileSystem.FileSystemExtensions.SearchDirectoryAsync(FubarDev.FtpServer.FileSystem.IUnixFileSystem,Stack{FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry},IReadOnlyList{System.String},CancellationToken)">SearchDirectoryAsync(IUnixFileSystem, Stack&lt;IUnixDirectoryEntry&gt;, IReadOnlyList&lt;String&gt;, CancellationToken)</h4>
   <div class="markdown level1 summary"><p>Searches for a <a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry.html">IUnixDirectoryEntry</a> by using the <code data-dev-comment-type="paramref" class="paramref">currentPath</code> and <code data-dev-comment-type="paramref" class="paramref">pathElements</code>.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[NotNull]
-[ItemCanBeNull]
-public static Task&lt;SearchResult&lt;IUnixDirectoryEntry&gt;&gt; SearchDirectoryAsync([NotNull] this IUnixFileSystem fileSystem, [NotNull, ItemNotNull] Stack&lt;IUnixDirectoryEntry&gt; currentPath, [NotNull, ItemNotNull] IReadOnlyList&lt;string&gt; pathElements, CancellationToken cancellationToken)</code></pre>
+    <pre><code class="lang-csharp hljs">public static Task&lt;SearchResult&lt;IUnixDirectoryEntry&gt;&gt; SearchDirectoryAsync(this IUnixFileSystem fileSystem, Stack&lt;IUnixDirectoryEntry&gt; currentPath, IReadOnlyList&lt;string&gt; pathElements, CancellationToken cancellationToken)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -736,19 +698,19 @@ public static Task&lt;SearchResult&lt;IUnixDirectoryEntry&gt;&gt; SearchDirector
 </td>
       </tr>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.generic.stack-1">Stack</a>&lt;<a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry.html">IUnixDirectoryEntry</a>&gt;</td>
+        <td><span class="xref">Stack</span>&lt;<a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry.html">IUnixDirectoryEntry</a>&gt;</td>
         <td><span class="parametername">currentPath</span></td>
         <td><p>The current path.</p>
 </td>
       </tr>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.generic.ireadonlylist-1">IReadOnlyList</a>&lt;<a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a>&gt;</td>
+        <td><span class="xref">IReadOnlyList</span>&lt;<a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a>&gt;</td>
         <td><span class="parametername">pathElements</span></td>
         <td><p>The relative path elements to search for.</p>
 </td>
       </tr>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.threading.cancellationtoken">CancellationToken</a></td>
+        <td><span class="xref">CancellationToken</span></td>
         <td><span class="parametername">cancellationToken</span></td>
         <td><p>The cancellation token.</p>
 </td>
@@ -765,7 +727,7 @@ public static Task&lt;SearchResult&lt;IUnixDirectoryEntry&gt;&gt; SearchDirector
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a class="xref" href="FubarDev.FtpServer.FileSystem.SearchResult-1.html">SearchResult</a>&lt;<a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry.html">IUnixDirectoryEntry</a>&gt;&gt;</td>
+        <td><span class="xref">Task</span>&lt;<a class="xref" href="FubarDev.FtpServer.FileSystem.SearchResult-1.html">SearchResult</a>&lt;<a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry.html">IUnixDirectoryEntry</a>&gt;&gt;</td>
         <td><p>The found <a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry.html">IUnixDirectoryEntry</a>.</p>
 </td>
       </tr>
@@ -773,21 +735,19 @@ public static Task&lt;SearchResult&lt;IUnixDirectoryEntry&gt;&gt; SearchDirector
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FileSystem_FileSystemExtensions_SearchDirectoryAsync_FubarDev_FtpServer_FileSystem_IUnixFileSystem_System_Collections_Generic_Stack_FubarDev_FtpServer_FileSystem_IUnixDirectoryEntry__System_String_System_Threading_CancellationToken_.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FileSystem.FileSystemExtensions.SearchDirectoryAsync(FubarDev.FtpServer.FileSystem.IUnixFileSystem%2CSystem.Collections.Generic.Stack%7BFubarDev.FtpServer.FileSystem.IUnixDirectoryEntry%7D%2CSystem.String%2CSystem.Threading.CancellationToken)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FileSystem_FileSystemExtensions_SearchDirectoryAsync_FubarDev_FtpServer_FileSystem_IUnixFileSystem_Stack_FubarDev_FtpServer_FileSystem_IUnixDirectoryEntry__System_String_CancellationToken_.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FileSystem.FileSystemExtensions.SearchDirectoryAsync(FubarDev.FtpServer.FileSystem.IUnixFileSystem%2CStack%7BFubarDev.FtpServer.FileSystem.IUnixDirectoryEntry%7D%2CSystem.String%2CCancellationToken)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
     <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.Abstractions/FileSystem/FileSystemExtensions.cs/#L125">View Source</a>
   </span>
   <a id="FubarDev_FtpServer_FileSystem_FileSystemExtensions_SearchDirectoryAsync_" data-uid="FubarDev.FtpServer.FileSystem.FileSystemExtensions.SearchDirectoryAsync*"></a>
-  <h4 id="FubarDev_FtpServer_FileSystem_FileSystemExtensions_SearchDirectoryAsync_FubarDev_FtpServer_FileSystem_IUnixFileSystem_System_Collections_Generic_Stack_FubarDev_FtpServer_FileSystem_IUnixDirectoryEntry__System_String_System_Threading_CancellationToken_" data-uid="FubarDev.FtpServer.FileSystem.FileSystemExtensions.SearchDirectoryAsync(FubarDev.FtpServer.FileSystem.IUnixFileSystem,System.Collections.Generic.Stack{FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry},System.String,System.Threading.CancellationToken)">SearchDirectoryAsync(IUnixFileSystem, Stack&lt;IUnixDirectoryEntry&gt;, String, CancellationToken)</h4>
+  <h4 id="FubarDev_FtpServer_FileSystem_FileSystemExtensions_SearchDirectoryAsync_FubarDev_FtpServer_FileSystem_IUnixFileSystem_Stack_FubarDev_FtpServer_FileSystem_IUnixDirectoryEntry__System_String_CancellationToken_" data-uid="FubarDev.FtpServer.FileSystem.FileSystemExtensions.SearchDirectoryAsync(FubarDev.FtpServer.FileSystem.IUnixFileSystem,Stack{FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry},System.String,CancellationToken)">SearchDirectoryAsync(IUnixFileSystem, Stack&lt;IUnixDirectoryEntry&gt;, String, CancellationToken)</h4>
   <div class="markdown level1 summary"><p>Searches for a <a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry.html">IUnixDirectoryEntry</a> by using the <code data-dev-comment-type="paramref" class="paramref">currentPath</code> and <code data-dev-comment-type="paramref" class="paramref">path</code>.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[NotNull]
-[ItemCanBeNull]
-public static Task&lt;SearchResult&lt;IUnixDirectoryEntry&gt;&gt; SearchDirectoryAsync([NotNull] this IUnixFileSystem fileSystem, [NotNull, ItemNotNull] Stack&lt;IUnixDirectoryEntry&gt; currentPath, [CanBeNull] string path, CancellationToken cancellationToken)</code></pre>
+    <pre><code class="lang-csharp hljs">public static Task&lt;SearchResult&lt;IUnixDirectoryEntry&gt;&gt; SearchDirectoryAsync(this IUnixFileSystem fileSystem, Stack&lt;IUnixDirectoryEntry&gt; currentPath, string path, CancellationToken cancellationToken)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -806,7 +766,7 @@ public static Task&lt;SearchResult&lt;IUnixDirectoryEntry&gt;&gt; SearchDirector
 </td>
       </tr>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.generic.stack-1">Stack</a>&lt;<a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry.html">IUnixDirectoryEntry</a>&gt;</td>
+        <td><span class="xref">Stack</span>&lt;<a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry.html">IUnixDirectoryEntry</a>&gt;</td>
         <td><span class="parametername">currentPath</span></td>
         <td><p>The current path.</p>
 </td>
@@ -818,7 +778,7 @@ public static Task&lt;SearchResult&lt;IUnixDirectoryEntry&gt;&gt; SearchDirector
 </td>
       </tr>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.threading.cancellationtoken">CancellationToken</a></td>
+        <td><span class="xref">CancellationToken</span></td>
         <td><span class="parametername">cancellationToken</span></td>
         <td><p>The cancellation token.</p>
 </td>
@@ -835,7 +795,7 @@ public static Task&lt;SearchResult&lt;IUnixDirectoryEntry&gt;&gt; SearchDirector
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a class="xref" href="FubarDev.FtpServer.FileSystem.SearchResult-1.html">SearchResult</a>&lt;<a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry.html">IUnixDirectoryEntry</a>&gt;&gt;</td>
+        <td><span class="xref">Task</span>&lt;<a class="xref" href="FubarDev.FtpServer.FileSystem.SearchResult-1.html">SearchResult</a>&lt;<a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry.html">IUnixDirectoryEntry</a>&gt;&gt;</td>
         <td><p>The found <a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry.html">IUnixDirectoryEntry</a>.</p>
 </td>
       </tr>
@@ -843,21 +803,19 @@ public static Task&lt;SearchResult&lt;IUnixDirectoryEntry&gt;&gt; SearchDirector
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FileSystem_FileSystemExtensions_SearchEntryAsync_FubarDev_FtpServer_FileSystem_IUnixFileSystem_System_Collections_Generic_Stack_FubarDev_FtpServer_FileSystem_IUnixDirectoryEntry__System_Collections_Generic_IReadOnlyList_System_String__System_Threading_CancellationToken_.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FileSystem.FileSystemExtensions.SearchEntryAsync(FubarDev.FtpServer.FileSystem.IUnixFileSystem%2CSystem.Collections.Generic.Stack%7BFubarDev.FtpServer.FileSystem.IUnixDirectoryEntry%7D%2CSystem.Collections.Generic.IReadOnlyList%7BSystem.String%7D%2CSystem.Threading.CancellationToken)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FileSystem_FileSystemExtensions_SearchEntryAsync_FubarDev_FtpServer_FileSystem_IUnixFileSystem_Stack_FubarDev_FtpServer_FileSystem_IUnixDirectoryEntry__IReadOnlyList_System_String__CancellationToken_.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FileSystem.FileSystemExtensions.SearchEntryAsync(FubarDev.FtpServer.FileSystem.IUnixFileSystem%2CStack%7BFubarDev.FtpServer.FileSystem.IUnixDirectoryEntry%7D%2CIReadOnlyList%7BSystem.String%7D%2CCancellationToken)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
     <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.Abstractions/FileSystem/FileSystemExtensions.cs/#L231">View Source</a>
   </span>
   <a id="FubarDev_FtpServer_FileSystem_FileSystemExtensions_SearchEntryAsync_" data-uid="FubarDev.FtpServer.FileSystem.FileSystemExtensions.SearchEntryAsync*"></a>
-  <h4 id="FubarDev_FtpServer_FileSystem_FileSystemExtensions_SearchEntryAsync_FubarDev_FtpServer_FileSystem_IUnixFileSystem_System_Collections_Generic_Stack_FubarDev_FtpServer_FileSystem_IUnixDirectoryEntry__System_Collections_Generic_IReadOnlyList_System_String__System_Threading_CancellationToken_" data-uid="FubarDev.FtpServer.FileSystem.FileSystemExtensions.SearchEntryAsync(FubarDev.FtpServer.FileSystem.IUnixFileSystem,System.Collections.Generic.Stack{FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry},System.Collections.Generic.IReadOnlyList{System.String},System.Threading.CancellationToken)">SearchEntryAsync(IUnixFileSystem, Stack&lt;IUnixDirectoryEntry&gt;, IReadOnlyList&lt;String&gt;, CancellationToken)</h4>
+  <h4 id="FubarDev_FtpServer_FileSystem_FileSystemExtensions_SearchEntryAsync_FubarDev_FtpServer_FileSystem_IUnixFileSystem_Stack_FubarDev_FtpServer_FileSystem_IUnixDirectoryEntry__IReadOnlyList_System_String__CancellationToken_" data-uid="FubarDev.FtpServer.FileSystem.FileSystemExtensions.SearchEntryAsync(FubarDev.FtpServer.FileSystem.IUnixFileSystem,Stack{FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry},IReadOnlyList{System.String},CancellationToken)">SearchEntryAsync(IUnixFileSystem, Stack&lt;IUnixDirectoryEntry&gt;, IReadOnlyList&lt;String&gt;, CancellationToken)</h4>
   <div class="markdown level1 summary"><p>Searches for a <a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixFileSystemEntry.html">IUnixFileSystemEntry</a> by using the <code data-dev-comment-type="paramref" class="paramref">currentPath</code> and <code data-dev-comment-type="paramref" class="paramref">pathElements</code>.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[NotNull]
-[ItemCanBeNull]
-public static Task&lt;SearchResult&lt;IUnixFileSystemEntry&gt;&gt; SearchEntryAsync(this IUnixFileSystem fileSystem, [NotNull, ItemNotNull] Stack&lt;IUnixDirectoryEntry&gt; currentPath, [NotNull, ItemNotNull] IReadOnlyList&lt;string&gt; pathElements, CancellationToken cancellationToken)</code></pre>
+    <pre><code class="lang-csharp hljs">public static Task&lt;SearchResult&lt;IUnixFileSystemEntry&gt;&gt; SearchEntryAsync(this IUnixFileSystem fileSystem, Stack&lt;IUnixDirectoryEntry&gt; currentPath, IReadOnlyList&lt;string&gt; pathElements, CancellationToken cancellationToken)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -876,19 +834,19 @@ public static Task&lt;SearchResult&lt;IUnixFileSystemEntry&gt;&gt; SearchEntryAs
 </td>
       </tr>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.generic.stack-1">Stack</a>&lt;<a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry.html">IUnixDirectoryEntry</a>&gt;</td>
+        <td><span class="xref">Stack</span>&lt;<a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry.html">IUnixDirectoryEntry</a>&gt;</td>
         <td><span class="parametername">currentPath</span></td>
         <td><p>The current path.</p>
 </td>
       </tr>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.generic.ireadonlylist-1">IReadOnlyList</a>&lt;<a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a>&gt;</td>
+        <td><span class="xref">IReadOnlyList</span>&lt;<a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a>&gt;</td>
         <td><span class="parametername">pathElements</span></td>
         <td><p>The relative path elements to search for.</p>
 </td>
       </tr>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.threading.cancellationtoken">CancellationToken</a></td>
+        <td><span class="xref">CancellationToken</span></td>
         <td><span class="parametername">cancellationToken</span></td>
         <td><p>The cancellation token.</p>
 </td>
@@ -905,7 +863,7 @@ public static Task&lt;SearchResult&lt;IUnixFileSystemEntry&gt;&gt; SearchEntryAs
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a class="xref" href="FubarDev.FtpServer.FileSystem.SearchResult-1.html">SearchResult</a>&lt;<a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixFileSystemEntry.html">IUnixFileSystemEntry</a>&gt;&gt;</td>
+        <td><span class="xref">Task</span>&lt;<a class="xref" href="FubarDev.FtpServer.FileSystem.SearchResult-1.html">SearchResult</a>&lt;<a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixFileSystemEntry.html">IUnixFileSystemEntry</a>&gt;&gt;</td>
         <td><p>The found <a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixFileSystemEntry.html">IUnixFileSystemEntry</a>.</p>
 </td>
       </tr>
@@ -913,21 +871,19 @@ public static Task&lt;SearchResult&lt;IUnixFileSystemEntry&gt;&gt; SearchEntryAs
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FileSystem_FileSystemExtensions_SearchEntryAsync_FubarDev_FtpServer_FileSystem_IUnixFileSystem_System_Collections_Generic_Stack_FubarDev_FtpServer_FileSystem_IUnixDirectoryEntry__System_String_System_Threading_CancellationToken_.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FileSystem.FileSystemExtensions.SearchEntryAsync(FubarDev.FtpServer.FileSystem.IUnixFileSystem%2CSystem.Collections.Generic.Stack%7BFubarDev.FtpServer.FileSystem.IUnixDirectoryEntry%7D%2CSystem.String%2CSystem.Threading.CancellationToken)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FileSystem_FileSystemExtensions_SearchEntryAsync_FubarDev_FtpServer_FileSystem_IUnixFileSystem_Stack_FubarDev_FtpServer_FileSystem_IUnixDirectoryEntry__System_String_CancellationToken_.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FileSystem.FileSystemExtensions.SearchEntryAsync(FubarDev.FtpServer.FileSystem.IUnixFileSystem%2CStack%7BFubarDev.FtpServer.FileSystem.IUnixDirectoryEntry%7D%2CSystem.String%2CCancellationToken)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
     <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.Abstractions/FileSystem/FileSystemExtensions.cs/#L215">View Source</a>
   </span>
   <a id="FubarDev_FtpServer_FileSystem_FileSystemExtensions_SearchEntryAsync_" data-uid="FubarDev.FtpServer.FileSystem.FileSystemExtensions.SearchEntryAsync*"></a>
-  <h4 id="FubarDev_FtpServer_FileSystem_FileSystemExtensions_SearchEntryAsync_FubarDev_FtpServer_FileSystem_IUnixFileSystem_System_Collections_Generic_Stack_FubarDev_FtpServer_FileSystem_IUnixDirectoryEntry__System_String_System_Threading_CancellationToken_" data-uid="FubarDev.FtpServer.FileSystem.FileSystemExtensions.SearchEntryAsync(FubarDev.FtpServer.FileSystem.IUnixFileSystem,System.Collections.Generic.Stack{FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry},System.String,System.Threading.CancellationToken)">SearchEntryAsync(IUnixFileSystem, Stack&lt;IUnixDirectoryEntry&gt;, String, CancellationToken)</h4>
+  <h4 id="FubarDev_FtpServer_FileSystem_FileSystemExtensions_SearchEntryAsync_FubarDev_FtpServer_FileSystem_IUnixFileSystem_Stack_FubarDev_FtpServer_FileSystem_IUnixDirectoryEntry__System_String_CancellationToken_" data-uid="FubarDev.FtpServer.FileSystem.FileSystemExtensions.SearchEntryAsync(FubarDev.FtpServer.FileSystem.IUnixFileSystem,Stack{FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry},System.String,CancellationToken)">SearchEntryAsync(IUnixFileSystem, Stack&lt;IUnixDirectoryEntry&gt;, String, CancellationToken)</h4>
   <div class="markdown level1 summary"><p>Searches for a <a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixFileSystemEntry.html">IUnixFileSystemEntry</a> by using the <code data-dev-comment-type="paramref" class="paramref">currentPath</code> and <code data-dev-comment-type="paramref" class="paramref">path</code>.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[NotNull]
-[ItemCanBeNull]
-public static Task&lt;SearchResult&lt;IUnixFileSystemEntry&gt;&gt; SearchEntryAsync([NotNull] this IUnixFileSystem fileSystem, [NotNull, ItemNotNull] Stack&lt;IUnixDirectoryEntry&gt; currentPath, [CanBeNull] string path, CancellationToken cancellationToken)</code></pre>
+    <pre><code class="lang-csharp hljs">public static Task&lt;SearchResult&lt;IUnixFileSystemEntry&gt;&gt; SearchEntryAsync(this IUnixFileSystem fileSystem, Stack&lt;IUnixDirectoryEntry&gt; currentPath, string path, CancellationToken cancellationToken)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -946,7 +902,7 @@ public static Task&lt;SearchResult&lt;IUnixFileSystemEntry&gt;&gt; SearchEntryAs
 </td>
       </tr>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.generic.stack-1">Stack</a>&lt;<a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry.html">IUnixDirectoryEntry</a>&gt;</td>
+        <td><span class="xref">Stack</span>&lt;<a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry.html">IUnixDirectoryEntry</a>&gt;</td>
         <td><span class="parametername">currentPath</span></td>
         <td><p>The current path.</p>
 </td>
@@ -958,7 +914,7 @@ public static Task&lt;SearchResult&lt;IUnixFileSystemEntry&gt;&gt; SearchEntryAs
 </td>
       </tr>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.threading.cancellationtoken">CancellationToken</a></td>
+        <td><span class="xref">CancellationToken</span></td>
         <td><span class="parametername">cancellationToken</span></td>
         <td><p>The cancellation token.</p>
 </td>
@@ -975,7 +931,7 @@ public static Task&lt;SearchResult&lt;IUnixFileSystemEntry&gt;&gt; SearchEntryAs
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a class="xref" href="FubarDev.FtpServer.FileSystem.SearchResult-1.html">SearchResult</a>&lt;<a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixFileSystemEntry.html">IUnixFileSystemEntry</a>&gt;&gt;</td>
+        <td><span class="xref">Task</span>&lt;<a class="xref" href="FubarDev.FtpServer.FileSystem.SearchResult-1.html">SearchResult</a>&lt;<a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixFileSystemEntry.html">IUnixFileSystemEntry</a>&gt;&gt;</td>
         <td><p>The found <a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixFileSystemEntry.html">IUnixFileSystemEntry</a>.</p>
 </td>
       </tr>
@@ -983,21 +939,19 @@ public static Task&lt;SearchResult&lt;IUnixFileSystemEntry&gt;&gt; SearchEntryAs
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FileSystem_FileSystemExtensions_SearchFileAsync_FubarDev_FtpServer_FileSystem_IUnixFileSystem_System_Collections_Generic_Stack_FubarDev_FtpServer_FileSystem_IUnixDirectoryEntry__System_Collections_Generic_IReadOnlyList_System_String__System_Threading_CancellationToken_.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FileSystem.FileSystemExtensions.SearchFileAsync(FubarDev.FtpServer.FileSystem.IUnixFileSystem%2CSystem.Collections.Generic.Stack%7BFubarDev.FtpServer.FileSystem.IUnixDirectoryEntry%7D%2CSystem.Collections.Generic.IReadOnlyList%7BSystem.String%7D%2CSystem.Threading.CancellationToken)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FileSystem_FileSystemExtensions_SearchFileAsync_FubarDev_FtpServer_FileSystem_IUnixFileSystem_Stack_FubarDev_FtpServer_FileSystem_IUnixDirectoryEntry__IReadOnlyList_System_String__CancellationToken_.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FileSystem.FileSystemExtensions.SearchFileAsync(FubarDev.FtpServer.FileSystem.IUnixFileSystem%2CStack%7BFubarDev.FtpServer.FileSystem.IUnixDirectoryEntry%7D%2CIReadOnlyList%7BSystem.String%7D%2CCancellationToken)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
     <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.Abstractions/FileSystem/FileSystemExtensions.cs/#L186">View Source</a>
   </span>
   <a id="FubarDev_FtpServer_FileSystem_FileSystemExtensions_SearchFileAsync_" data-uid="FubarDev.FtpServer.FileSystem.FileSystemExtensions.SearchFileAsync*"></a>
-  <h4 id="FubarDev_FtpServer_FileSystem_FileSystemExtensions_SearchFileAsync_FubarDev_FtpServer_FileSystem_IUnixFileSystem_System_Collections_Generic_Stack_FubarDev_FtpServer_FileSystem_IUnixDirectoryEntry__System_Collections_Generic_IReadOnlyList_System_String__System_Threading_CancellationToken_" data-uid="FubarDev.FtpServer.FileSystem.FileSystemExtensions.SearchFileAsync(FubarDev.FtpServer.FileSystem.IUnixFileSystem,System.Collections.Generic.Stack{FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry},System.Collections.Generic.IReadOnlyList{System.String},System.Threading.CancellationToken)">SearchFileAsync(IUnixFileSystem, Stack&lt;IUnixDirectoryEntry&gt;, IReadOnlyList&lt;String&gt;, CancellationToken)</h4>
+  <h4 id="FubarDev_FtpServer_FileSystem_FileSystemExtensions_SearchFileAsync_FubarDev_FtpServer_FileSystem_IUnixFileSystem_Stack_FubarDev_FtpServer_FileSystem_IUnixDirectoryEntry__IReadOnlyList_System_String__CancellationToken_" data-uid="FubarDev.FtpServer.FileSystem.FileSystemExtensions.SearchFileAsync(FubarDev.FtpServer.FileSystem.IUnixFileSystem,Stack{FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry},IReadOnlyList{System.String},CancellationToken)">SearchFileAsync(IUnixFileSystem, Stack&lt;IUnixDirectoryEntry&gt;, IReadOnlyList&lt;String&gt;, CancellationToken)</h4>
   <div class="markdown level1 summary"><p>Searches for a <a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixFileEntry.html">IUnixFileEntry</a> by using the <code data-dev-comment-type="paramref" class="paramref">currentPath</code> and <code data-dev-comment-type="paramref" class="paramref">pathElements</code>.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[NotNull]
-[ItemCanBeNull]
-public static Task&lt;SearchResult&lt;IUnixFileEntry&gt;&gt; SearchFileAsync(this IUnixFileSystem fileSystem, [NotNull, ItemNotNull] Stack&lt;IUnixDirectoryEntry&gt; currentPath, [NotNull, ItemNotNull] IReadOnlyList&lt;string&gt; pathElements, CancellationToken cancellationToken)</code></pre>
+    <pre><code class="lang-csharp hljs">public static Task&lt;SearchResult&lt;IUnixFileEntry&gt;&gt; SearchFileAsync(this IUnixFileSystem fileSystem, Stack&lt;IUnixDirectoryEntry&gt; currentPath, IReadOnlyList&lt;string&gt; pathElements, CancellationToken cancellationToken)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -1016,19 +970,19 @@ public static Task&lt;SearchResult&lt;IUnixFileEntry&gt;&gt; SearchFileAsync(thi
 </td>
       </tr>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.generic.stack-1">Stack</a>&lt;<a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry.html">IUnixDirectoryEntry</a>&gt;</td>
+        <td><span class="xref">Stack</span>&lt;<a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry.html">IUnixDirectoryEntry</a>&gt;</td>
         <td><span class="parametername">currentPath</span></td>
         <td><p>The current path.</p>
 </td>
       </tr>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.generic.ireadonlylist-1">IReadOnlyList</a>&lt;<a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a>&gt;</td>
+        <td><span class="xref">IReadOnlyList</span>&lt;<a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a>&gt;</td>
         <td><span class="parametername">pathElements</span></td>
         <td><p>The relative path elements to search for.</p>
 </td>
       </tr>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.threading.cancellationtoken">CancellationToken</a></td>
+        <td><span class="xref">CancellationToken</span></td>
         <td><span class="parametername">cancellationToken</span></td>
         <td><p>The cancellation token.</p>
 </td>
@@ -1045,7 +999,7 @@ public static Task&lt;SearchResult&lt;IUnixFileEntry&gt;&gt; SearchFileAsync(thi
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a class="xref" href="FubarDev.FtpServer.FileSystem.SearchResult-1.html">SearchResult</a>&lt;<a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixFileEntry.html">IUnixFileEntry</a>&gt;&gt;</td>
+        <td><span class="xref">Task</span>&lt;<a class="xref" href="FubarDev.FtpServer.FileSystem.SearchResult-1.html">SearchResult</a>&lt;<a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixFileEntry.html">IUnixFileEntry</a>&gt;&gt;</td>
         <td><p>The found <a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry.html">IUnixDirectoryEntry</a>.</p>
 </td>
       </tr>
@@ -1053,21 +1007,19 @@ public static Task&lt;SearchResult&lt;IUnixFileEntry&gt;&gt; SearchFileAsync(thi
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FileSystem_FileSystemExtensions_SearchFileAsync_FubarDev_FtpServer_FileSystem_IUnixFileSystem_System_Collections_Generic_Stack_FubarDev_FtpServer_FileSystem_IUnixDirectoryEntry__System_String_System_Threading_CancellationToken_.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FileSystem.FileSystemExtensions.SearchFileAsync(FubarDev.FtpServer.FileSystem.IUnixFileSystem%2CSystem.Collections.Generic.Stack%7BFubarDev.FtpServer.FileSystem.IUnixDirectoryEntry%7D%2CSystem.String%2CSystem.Threading.CancellationToken)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FileSystem_FileSystemExtensions_SearchFileAsync_FubarDev_FtpServer_FileSystem_IUnixFileSystem_Stack_FubarDev_FtpServer_FileSystem_IUnixDirectoryEntry__System_String_CancellationToken_.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FileSystem.FileSystemExtensions.SearchFileAsync(FubarDev.FtpServer.FileSystem.IUnixFileSystem%2CStack%7BFubarDev.FtpServer.FileSystem.IUnixDirectoryEntry%7D%2CSystem.String%2CCancellationToken)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
     <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.Abstractions/FileSystem/FileSystemExtensions.cs/#L170">View Source</a>
   </span>
   <a id="FubarDev_FtpServer_FileSystem_FileSystemExtensions_SearchFileAsync_" data-uid="FubarDev.FtpServer.FileSystem.FileSystemExtensions.SearchFileAsync*"></a>
-  <h4 id="FubarDev_FtpServer_FileSystem_FileSystemExtensions_SearchFileAsync_FubarDev_FtpServer_FileSystem_IUnixFileSystem_System_Collections_Generic_Stack_FubarDev_FtpServer_FileSystem_IUnixDirectoryEntry__System_String_System_Threading_CancellationToken_" data-uid="FubarDev.FtpServer.FileSystem.FileSystemExtensions.SearchFileAsync(FubarDev.FtpServer.FileSystem.IUnixFileSystem,System.Collections.Generic.Stack{FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry},System.String,System.Threading.CancellationToken)">SearchFileAsync(IUnixFileSystem, Stack&lt;IUnixDirectoryEntry&gt;, String, CancellationToken)</h4>
+  <h4 id="FubarDev_FtpServer_FileSystem_FileSystemExtensions_SearchFileAsync_FubarDev_FtpServer_FileSystem_IUnixFileSystem_Stack_FubarDev_FtpServer_FileSystem_IUnixDirectoryEntry__System_String_CancellationToken_" data-uid="FubarDev.FtpServer.FileSystem.FileSystemExtensions.SearchFileAsync(FubarDev.FtpServer.FileSystem.IUnixFileSystem,Stack{FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry},System.String,CancellationToken)">SearchFileAsync(IUnixFileSystem, Stack&lt;IUnixDirectoryEntry&gt;, String, CancellationToken)</h4>
   <div class="markdown level1 summary"><p>Searches for a <a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixFileEntry.html">IUnixFileEntry</a> by using the <code data-dev-comment-type="paramref" class="paramref">currentPath</code> and <code data-dev-comment-type="paramref" class="paramref">path</code>.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[NotNull]
-[ItemCanBeNull]
-public static Task&lt;SearchResult&lt;IUnixFileEntry&gt;&gt; SearchFileAsync([NotNull] this IUnixFileSystem fileSystem, [NotNull, ItemNotNull] Stack&lt;IUnixDirectoryEntry&gt; currentPath, [CanBeNull] string path, CancellationToken cancellationToken)</code></pre>
+    <pre><code class="lang-csharp hljs">public static Task&lt;SearchResult&lt;IUnixFileEntry&gt;&gt; SearchFileAsync(this IUnixFileSystem fileSystem, Stack&lt;IUnixDirectoryEntry&gt; currentPath, string path, CancellationToken cancellationToken)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -1086,7 +1038,7 @@ public static Task&lt;SearchResult&lt;IUnixFileEntry&gt;&gt; SearchFileAsync([No
 </td>
       </tr>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.generic.stack-1">Stack</a>&lt;<a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry.html">IUnixDirectoryEntry</a>&gt;</td>
+        <td><span class="xref">Stack</span>&lt;<a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry.html">IUnixDirectoryEntry</a>&gt;</td>
         <td><span class="parametername">currentPath</span></td>
         <td><p>The current path.</p>
 </td>
@@ -1098,7 +1050,7 @@ public static Task&lt;SearchResult&lt;IUnixFileEntry&gt;&gt; SearchFileAsync([No
 </td>
       </tr>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.threading.cancellationtoken">CancellationToken</a></td>
+        <td><span class="xref">CancellationToken</span></td>
         <td><span class="parametername">cancellationToken</span></td>
         <td><p>The cancellation token.</p>
 </td>
@@ -1115,7 +1067,7 @@ public static Task&lt;SearchResult&lt;IUnixFileEntry&gt;&gt; SearchFileAsync([No
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a class="xref" href="FubarDev.FtpServer.FileSystem.SearchResult-1.html">SearchResult</a>&lt;<a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixFileEntry.html">IUnixFileEntry</a>&gt;&gt;</td>
+        <td><span class="xref">Task</span>&lt;<a class="xref" href="FubarDev.FtpServer.FileSystem.SearchResult-1.html">SearchResult</a>&lt;<a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixFileEntry.html">IUnixFileEntry</a>&gt;&gt;</td>
         <td><p>The found <a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry.html">IUnixDirectoryEntry</a>.</p>
 </td>
       </tr>
@@ -1135,9 +1087,7 @@ public static Task&lt;SearchResult&lt;IUnixFileEntry&gt;&gt; SearchFileAsync([No
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[NotNull]
-[ItemNotNull]
-public static IReadOnlyList&lt;string&gt; SplitPath([CanBeNull] string path)</code></pre>
+    <pre><code class="lang-csharp hljs">public static IReadOnlyList&lt;string&gt; SplitPath(string path)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -1167,7 +1117,7 @@ public static IReadOnlyList&lt;string&gt; SplitPath([CanBeNull] string path)</co
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.generic.ireadonlylist-1">IReadOnlyList</a>&lt;<a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a>&gt;</td>
+        <td><span class="xref">IReadOnlyList</span>&lt;<a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a>&gt;</td>
         <td><p>The parts of the path.</p>
 </td>
       </tr>
@@ -1175,21 +1125,20 @@ public static IReadOnlyList&lt;string&gt; SplitPath([CanBeNull] string path)</co
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FileSystem_FileSystemExtensions_ToDisplayString_System_Collections_Generic_Stack_FubarDev_FtpServer_FileSystem_IUnixDirectoryEntry__.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FileSystem.FileSystemExtensions.ToDisplayString(System.Collections.Generic.Stack%7BFubarDev.FtpServer.FileSystem.IUnixDirectoryEntry%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FileSystem_FileSystemExtensions_ToDisplayString_Stack_FubarDev_FtpServer_FileSystem_IUnixDirectoryEntry__.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FileSystem.FileSystemExtensions.ToDisplayString(Stack%7BFubarDev.FtpServer.FileSystem.IUnixDirectoryEntry%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
     <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.Abstractions/FileSystem/FileSystemExtensions.cs/#L295">View Source</a>
   </span>
   <a id="FubarDev_FtpServer_FileSystem_FileSystemExtensions_ToDisplayString_" data-uid="FubarDev.FtpServer.FileSystem.FileSystemExtensions.ToDisplayString*"></a>
-  <h4 id="FubarDev_FtpServer_FileSystem_FileSystemExtensions_ToDisplayString_System_Collections_Generic_Stack_FubarDev_FtpServer_FileSystem_IUnixDirectoryEntry__" data-uid="FubarDev.FtpServer.FileSystem.FileSystemExtensions.ToDisplayString(System.Collections.Generic.Stack{FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry})">ToDisplayString(Stack&lt;IUnixDirectoryEntry&gt;)</h4>
-  <div class="markdown level1 summary"><p>Returns the <code data-dev-comment-type="paramref" class="paramref">path</code> as string like <a class="xref" href="FubarDev.FtpServer.FileSystem.FileSystemExtensions.html#FubarDev_FtpServer_FileSystem_FileSystemExtensions_GetFullPath_System_Collections_Generic_Stack_FubarDev_FtpServer_FileSystem_IUnixDirectoryEntry__">GetFullPath(Stack&lt;IUnixDirectoryEntry&gt;)</a>, with the
+  <h4 id="FubarDev_FtpServer_FileSystem_FileSystemExtensions_ToDisplayString_Stack_FubarDev_FtpServer_FileSystem_IUnixDirectoryEntry__" data-uid="FubarDev.FtpServer.FileSystem.FileSystemExtensions.ToDisplayString(Stack{FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry})">ToDisplayString(Stack&lt;IUnixDirectoryEntry&gt;)</h4>
+  <div class="markdown level1 summary"><p>Returns the <code data-dev-comment-type="paramref" class="paramref">path</code> as string like <see cref="!:GetFullPath(System.Collections.Generic.Stack&lt;FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry>)"></see>, with the
 difference that it doesn't add the trailing <code>/</code>.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[NotNull]
-public static string ToDisplayString([NotNull, ItemNotNull] this Stack&lt;IUnixDirectoryEntry&gt; path)</code></pre>
+    <pre><code class="lang-csharp hljs">public static string ToDisplayString(this Stack&lt;IUnixDirectoryEntry&gt; path)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -1202,7 +1151,7 @@ public static string ToDisplayString([NotNull, ItemNotNull] this Stack&lt;IUnixD
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.collections.generic.stack-1">Stack</a>&lt;<a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry.html">IUnixDirectoryEntry</a>&gt;</td>
+        <td><span class="xref">Stack</span>&lt;<a class="xref" href="FubarDev.FtpServer.FileSystem.IUnixDirectoryEntry.html">IUnixDirectoryEntry</a>&gt;</td>
         <td><span class="parametername">path</span></td>
         <td><p>The path to convert to string.</p>
 </td>

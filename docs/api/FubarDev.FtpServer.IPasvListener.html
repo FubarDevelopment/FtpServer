@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Interface IPasvListener
    | FTP Server documentation ">
-    <meta name="generator" content="docfx 2.42.3.0">
+    <meta name="generator" content="docfx 2.43.2.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -86,12 +86,6 @@
   <div class="markdown level0 summary"><p>Wraps a TCPListener so we can easily use it in our commands that require a passive data connection.</p>
 </div>
   <div class="markdown level0 conceptual"></div>
-  <div class="inheritedMembers">
-    <h5>Inherited Members</h5>
-    <div>
-      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.idisposable.dispose#System_IDisposable_Dispose">IDisposable.Dispose()</a>
-    </div>
-  </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="FubarDev.FtpServer.html">FubarDev.FtpServer</a></h6>
   <h6><strong>Assembly</strong>: FubarDev.FtpServer.Abstractions.dll</h6>
   <h5 id="FubarDev_FtpServer_IPasvListener_syntax">Syntax</h5>
@@ -126,7 +120,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.net.ipendpoint">IPEndPoint</a></td>
+        <td><span class="xref">IPEndPoint</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -159,29 +153,8 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a class="xref" href="https://docs.microsoft.com/dotnet/api/system.net.sockets.tcpclient">TcpClient</a>&gt;</td>
+        <td><span class="xref">Task</span>&lt;<span class="xref">TcpClient</span>&gt;</td>
         <td><p>A TcpClient with which to communicate with the client.</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="exceptions">Exceptions</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Condition</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Net.Sockets.SocketException</span></td>
-        <td><p>Network error, see <span class="xref">System.Net.Sockets.SocketError</span>.</p>
-</td>
-      </tr>
-      <tr>
-        <td><span class="xref">System.ObjectDisposedException</span></td>
-        <td><p>Listener was disposed of.</p>
 </td>
       </tr>
     </tbody>

@@ -8,7 +8,7 @@
     <title>FTP Server logging | FTP Server documentation </title>
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="FTP Server logging | FTP Server documentation ">
-    <meta name="generator" content="docfx 2.42.3.0">
+    <meta name="generator" content="docfx 2.43.2.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -104,7 +104,7 @@ namespace QuickStart
 {
     class Program
     {
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
             // Configure Serilog
             Log.Logger = new LoggerConfiguration()
@@ -140,13 +140,13 @@ namespace QuickStart
                 var ftpServerHost = serviceProvider.GetRequiredService&lt;IFtpServerHost&gt;();
 
                 // Start the FTP server
-                ftpServerHost.StartAsync().Wait();
+                await ftpServerHost.StartAsync();
 
                 Console.WriteLine(&quot;Press ENTER/RETURN to close the test application.&quot;);
                 Console.ReadLine();
 
                 // Stop the FTP server
-                ftpServerHost.StopAsync().Wait();
+                await ftpServerHost.StopAsync();
             }
         }
     }
@@ -180,6 +180,12 @@ dotnet add package NLog.Extensions.Logging
 <p>Change the <code>csproj</code> file by adding the following lines:</p>
 <pre><code class="lang-xml" name="QuickStart.csproj" title="Project file" highlight-lines="13-18">&lt;Project Sdk=&quot;Microsoft.NET.Sdk&quot;&gt;
 
+  &lt;PropertyGroup&gt;
+    &lt;OutputType&gt;Exe&lt;/OutputType&gt;
+    &lt;TargetFramework&gt;netcoreapp2.2&lt;/TargetFramework&gt;
+    &lt;RootNamespace&gt;QuickStart&lt;/RootNamespace&gt;
+  &lt;/PropertyGroup&gt;
+
   &lt;ItemGroup&gt;
     &lt;ProjectReference Include=&quot;..\..\..\src\FubarDev.FtpServer\FubarDev.FtpServer.csproj&quot; /&gt;
     &lt;ProjectReference Include=&quot;..\..\..\src\FubarDev.FtpServer.FileSystem.DotNet\FubarDev.FtpServer.FileSystem.DotNet.csproj&quot; /&gt;
@@ -195,12 +201,6 @@ dotnet add package NLog.Extensions.Logging
       &lt;CopyToOutputDirectory&gt;PreserveNewest&lt;/CopyToOutputDirectory&gt;
     &lt;/Content&gt;
   &lt;/ItemGroup&gt;
-
-  &lt;PropertyGroup&gt;
-    &lt;OutputType&gt;Exe&lt;/OutputType&gt;
-    &lt;TargetFramework&gt;netcoreapp2.1&lt;/TargetFramework&gt;
-    &lt;RootNamespace&gt;QuickStart&lt;/RootNamespace&gt;
-  &lt;/PropertyGroup&gt;
 
 &lt;/Project&gt;
 </code></pre>
@@ -221,7 +221,7 @@ namespace QuickStart
 {
     class Program
     {
-        static void Main(string[] args)
+        static async Task Main()
         {
             // Setup dependency injection
             var services = new ServiceCollection();
@@ -256,13 +256,13 @@ namespace QuickStart
                 var ftpServerHost = serviceProvider.GetRequiredService&lt;IFtpServerHost&gt;();
 
                 // Start the FTP server
-                ftpServerHost.StartAsync().Wait();
+                await ftpServerHost.StartAsync();
 
                 Console.WriteLine(&quot;Press ENTER/RETURN to close the test application.&quot;);
                 Console.ReadLine();
 
                 // Stop the FTP server
-                ftpServerHost.StopAsync().Wait();
+                await ftpServerHost.StopAsync();
             }
         }
     }

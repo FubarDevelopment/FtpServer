@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Delegate FtpCommandHandlerProcessDelegate
    | FTP Server documentation ">
-    <meta name="generator" content="docfx 2.42.3.0">
+    <meta name="generator" content="docfx 2.43.2.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -90,9 +90,7 @@
   <h6><strong>Assembly</strong>: FubarDev.FtpServer.Abstractions.dll</h6>
   <h5 id="FubarDev_FtpServer_FtpCommandHandlerProcessDelegate_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[NotNull]
-[ItemCanBeNull]
-public delegate Task&lt;IFtpResponse&gt; FtpCommandHandlerProcessDelegate([NotNull] FtpCommand command, CancellationToken cancellationToken);</code></pre>
+    <pre><code class="lang-csharp hljs">public delegate Task&lt;IFtpResponse&gt; FtpCommandHandlerProcessDelegate(FtpCommand command, CancellationToken cancellationToken);</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -111,7 +109,7 @@ public delegate Task&lt;IFtpResponse&gt; FtpCommandHandlerProcessDelegate([NotNu
 </td>
       </tr>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.threading.cancellationtoken">CancellationToken</a></td>
+        <td><span class="xref">CancellationToken</span></td>
         <td><span class="parametername">cancellationToken</span></td>
         <td><p>The cancellation token to signal command abortion.</p>
 </td>
@@ -128,7 +126,7 @@ public delegate Task&lt;IFtpResponse&gt; FtpCommandHandlerProcessDelegate([NotNu
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a class="xref" href="FubarDev.FtpServer.IFtpResponse.html">IFtpResponse</a>&gt;</td>
+        <td><span class="xref">Task</span>&lt;<a class="xref" href="FubarDev.FtpServer.IFtpResponse.html">IFtpResponse</a>&gt;</td>
         <td><p>The FTP response.</p>
 </td>
       </tr>

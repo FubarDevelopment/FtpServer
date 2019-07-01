@@ -10,7 +10,7 @@
     <meta name="viewport" content="width=device-width">
     <meta name="title" content="Interface IBackgroundCommandHandler
    | FTP Server documentation ">
-    <meta name="generator" content="docfx 2.42.3.0">
+    <meta name="generator" content="docfx 2.43.2.0">
     
     <link rel="shortcut icon" href="../favicon.ico">
     <link rel="stylesheet" href="../styles/docfx.vendor.css">
@@ -90,8 +90,7 @@
   <h6><strong>Assembly</strong>: FubarDev.FtpServer.Abstractions.dll</h6>
   <h5 id="FubarDev_FtpServer_IBackgroundCommandHandler_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[Obsolete(&quot;Not needed any more. Command execution was streamlined.&quot;)]
-public interface IBackgroundCommandHandler</code></pre>
+    <pre><code class="lang-csharp hljs">public interface IBackgroundCommandHandler</code></pre>
   </div>
   <h5 id="FubarDev_FtpServer_IBackgroundCommandHandler_remarks"><strong>Remarks</strong></h5>
   <div class="markdown level0 remarks"><p>This allows the implementation of the <code>ABOR</code> command.</p>
@@ -144,9 +143,7 @@ public interface IBackgroundCommandHandler</code></pre>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">[NotNull]
-[ItemCanBeNull]
-Task&lt;IFtpResponse&gt; Execute([NotNull] IFtpCommandBase handler, [NotNull] FtpCommand command)</code></pre>
+    <pre><code class="lang-csharp hljs">Task&lt;IFtpResponse&gt; Execute(IFtpCommandBase handler, FtpCommand command)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -182,7 +179,7 @@ Task&lt;IFtpResponse&gt; Execute([NotNull] IFtpCommandBase handler, [NotNull] Ft
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a class="xref" href="FubarDev.FtpServer.IFtpResponse.html">IFtpResponse</a>&gt;</td>
+        <td><span class="xref">Task</span>&lt;<a class="xref" href="FubarDev.FtpServer.IFtpResponse.html">IFtpResponse</a>&gt;</td>
         <td><pre><code>null</code></pre> when the command could not be processed.
 </td>
       </tr>
