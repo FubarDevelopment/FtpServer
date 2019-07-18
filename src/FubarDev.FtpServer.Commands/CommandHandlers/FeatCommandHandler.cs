@@ -64,7 +64,7 @@ namespace FubarDev.FtpServer.CommandHandlers
                     211,
                     T("Extensions supported:"),
                     T("END"),
-                    features.Distinct(StringComparer.OrdinalIgnoreCase)));
+                    features.Distinct(StringComparer.OrdinalIgnoreCase).ToList()));
         }
 
         [Obsolete]

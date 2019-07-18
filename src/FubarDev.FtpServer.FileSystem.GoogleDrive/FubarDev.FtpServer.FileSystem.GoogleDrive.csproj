@@ -1,21 +1,15 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>netstandard1.3;netstandard2.0;net461</TargetFrameworks>
+    <TargetFramework>netstandard2.1</TargetFramework>
     <Description>Google Drive file system for the portable FTP server</Description>
     <PackageTags>portable;FTP;server;Google;Drive</PackageTags>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Google.Apis.Drive.v3" Version="1.39.0.1566" />
   </ItemGroup>
-  <ItemGroup Condition=" '$(TargetFramework)' != 'netstandard1.3' ">
+  <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Options" Version="2.0.0" />
-  </ItemGroup>
-  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard1.3' ">
-    <PackageReference Include="Microsoft.Extensions.Options" Version="1.0.0" />
-  </ItemGroup>
-  <ItemGroup Condition=" '$(TargetFramework)' != 'netstandard2.0' ">
-    <PackageReference Include="System.ValueTuple" Version="4.3.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\FubarDev.FtpServer.Abstractions\FubarDev.FtpServer.Abstractions.csproj" />

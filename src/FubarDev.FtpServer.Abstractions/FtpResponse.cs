@@ -6,6 +6,7 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -53,21 +54,63 @@ namespace FubarDev.FtpServer
         [Obsolete("Use a custom server command.")]
         public FtpResponseAfterWriteAsyncDelegate? AfterWriteAction { get; set; }
 
+        /// <inheritdoc />
+        public IAsyncEnumerable<string> GetNextLineAsync(CancellationToken cancellationToken)
+        {
+            return new SingleLineEnumerable(ToString());
+        }
+
         /// <inheritdoc/>
         public override string ToString()
         {
             return $"{Code:D3} {Message}".TrimEnd();
         }
 
-        /// <inheritdoc />
-        public Task<FtpResponseLine> GetNextLineAsync(object? token, CancellationToken cancellationToken)
+        private class SingleLineEnumerable : IAsyncEnumerable<string>
         {
-            if (token is null)
+            private readonly string _line;
+
+            public SingleLineEnumerable(string line)
             {
-                return Task.FromResult(new FtpResponseLine(ToString(), new object()));
+                _line = line;
             }
 
-            return Task.FromResult(new FtpResponseLine(null, null));
+            /// <inheritdoc />
+            public IAsyncEnumerator<string> GetAsyncEnumerator(CancellationToken cancellationToken = default)
+            {
+                return new SingleLineEnumerator(_line);
+            }
+
+            private class SingleLineEnumerator : IAsyncEnumerator<string>
+            {
+                private int _lineCount;
+
+                public SingleLineEnumerator(string line)
+                {
+                    Current = line;
+                }
+
+                /// <inheritdoc />
+                public string Current { get; }
+
+                /// <inheritdoc />
+                public ValueTask DisposeAsync()
+                {
+                    return default;
+                }
+
+                /// <inheritdoc />
+                public ValueTask<bool> MoveNextAsync()
+                {
+                    if (_lineCount == 0)
+                    {
+                        _lineCount += 1;
+                        return new ValueTask<bool>(true);
+                    }
+
+                    return new ValueTask<bool>(false);
+                }
+            }
         }
     }
 }

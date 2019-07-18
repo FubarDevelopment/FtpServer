@@ -51,33 +51,19 @@ namespace FubarDev.FtpServer.ServerCommandHandlers
 
             var writer = networkStreamFeature.Output;
 
-            object? token = null;
-            do
+            await foreach (var line in response.GetNextLineAsync(cancellationToken))
             {
-                var line = await response.GetNextLineAsync(token, cancellationToken)
-                   .ConfigureAwait(false);
-                if (line.HasText)
-                {
-                    _logger?.LogDebug(line.Text);
-                    var data = encoding.GetBytes($"{line.Text}\r\n");
-                    var memory = writer.GetMemory(data.Length);
-                    data.AsSpan().CopyTo(memory.Span);
-                    writer.Advance(data.Length);
-                    var flushResult = await writer.FlushAsync(cancellationToken);
-                    if (flushResult.IsCanceled || flushResult.IsCompleted)
-                    {
-                        break;
-                    }
-                }
-
-                if (!line.HasMoreData)
+                _logger?.LogDebug(line);
+                var data = encoding.GetBytes($"{line}\r\n");
+                var memory = writer.GetMemory(data.Length);
+                data.AsSpan().CopyTo(memory.Span);
+                writer.Advance(data.Length);
+                var flushResult = await writer.FlushAsync(cancellationToken);
+                if (flushResult.IsCanceled || flushResult.IsCompleted)
                 {
                     break;
                 }
-
-                token = line.Token;
             }
-            while (token != null);
 
 #pragma warning disable CS0618 // Typ oder Element ist veraltet
             if (response.AfterWriteAction != null)

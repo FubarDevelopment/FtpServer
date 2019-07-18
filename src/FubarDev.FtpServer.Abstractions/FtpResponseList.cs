@@ -5,16 +5,17 @@
 using System;
 using System.Collections.Generic;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace FubarDev.FtpServer
 {
     /// <summary>
     /// An FTP response for lists.
     /// </summary>
-    public class FtpResponseList : FtpResponseList<IEnumerator<string>>
+    public class FtpResponseList : FtpResponseListBase
     {
-        private readonly IEnumerable<string> _lines;
+        private readonly string _startMessage;
+        private readonly string _endMessage;
+        private readonly ICollection<string> _lines;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FtpResponseList"/> class.
@@ -27,9 +28,11 @@ namespace FubarDev.FtpServer
             int code,
             string startMessage,
             string endMessage,
-            IEnumerable<string> lines)
-            : base(code, startMessage, endMessage)
+            ICollection<string> lines)
+            : base(code)
         {
+            _startMessage = startMessage;
+            _endMessage = endMessage;
             _lines = lines;
         }
 
@@ -38,27 +41,22 @@ namespace FubarDev.FtpServer
         {
             return string.Join(
                 Environment.NewLine,
-                $"{Code}-{StartMessage}".TrimEnd(),
+                $"{Code}-{_startMessage}".TrimEnd(),
                 " ... stripped ...",
-                $"{Code} {EndMessage}".TrimEnd());
+                $"{Code} {_endMessage}".TrimEnd());
         }
 
-        /// <inheritdoc />
-        protected override Task<IEnumerator<string>> CreateInitialStatusAsync(CancellationToken cancellationToken)
+        protected override IEnumerable<string> GetOutputLines(CancellationToken cancellationToken)
         {
-            return Task.FromResult(_lines.GetEnumerator());
-        }
+            yield return $"{Code}-{_startMessage}".TrimEnd();
 
-        /// <inheritdoc />
-        protected override Task<string?> GetNextLineAsync(IEnumerator<string> status, CancellationToken cancellationToken)
-        {
-            if (status.MoveNext())
+            foreach (var line in _lines)
             {
-                return Task.FromResult((string?)status.Current);
+                cancellationToken.ThrowIfCancellationRequested();
+                yield return $" {line}";
             }
 
-            status.Dispose();
-            return Task.FromResult<string?>(null);
+            yield return $"{Code} {_endMessage}".TrimEnd();
         }
     }
 }

@@ -208,7 +208,7 @@ namespace FubarDev.FtpServer.CommandHandlers
             return new FtpResponse(226, T("Closing data connection."));
         }
 
-        private class MlstFtpResponse : FtpResponseList<Tuple<DirectoryListingEnumerator, FactsListFormatter>>
+        private class MlstFtpResponse : FtpResponseListBase
         {
             private readonly ISet<string> _activeMlstFacts;
             private readonly IFtpUser _user;
@@ -222,7 +222,7 @@ namespace FubarDev.FtpServer.CommandHandlers
                 IUnixFileSystem fileSystem,
                 IUnixFileSystemEntry targetEntry,
                 Stack<IUnixDirectoryEntry> path)
-                : base(250, $" {targetEntry.Name}", "End")
+                : base(250)
             {
                 _activeMlstFacts = activeMlstFacts;
                 _user = user;
@@ -232,8 +232,10 @@ namespace FubarDev.FtpServer.CommandHandlers
             }
 
             /// <inheritdoc />
-            protected override Task<Tuple<DirectoryListingEnumerator, FactsListFormatter>> CreateInitialStatusAsync(CancellationToken cancellationToken)
+            protected override IEnumerable<string> GetOutputLines(CancellationToken cancellationToken)
             {
+                yield return $"{Code}-{_targetEntry.Name}";
+
                 var entries = new List<IUnixFileSystemEntry>()
                 {
                     _targetEntry,
@@ -241,29 +243,14 @@ namespace FubarDev.FtpServer.CommandHandlers
 
                 var enumerator = new DirectoryListingEnumerator(entries, _fileSystem, _path, false);
                 var formatter = new FactsListFormatter(_user, enumerator, _activeMlstFacts, true);
-
-                return Task.FromResult(Tuple.Create(enumerator, formatter));
-            }
-
-            /// <inheritdoc />
-            protected override Task<string?> GetNextLineAsync(Tuple<DirectoryListingEnumerator, FactsListFormatter> status, CancellationToken cancellationToken)
-            {
-                if (status == null)
+                while (enumerator.MoveNext())
                 {
-                    return Task.FromResult<string?>(null);
+                    cancellationToken.ThrowIfCancellationRequested();
+                    var line = formatter.Format(enumerator.Entry, enumerator.Name);
+                    yield return $" {line}";
                 }
 
-                var enumerator = status.Item1;
-                var formatter = status.Item2;
-
-                if (enumerator.MoveNext())
-                {
-                    var name = enumerator.Name;
-                    var entry = enumerator.Entry;
-                    return Task.FromResult<string?>(formatter.Format(entry, name));
-                }
-
-                return Task.FromResult<string?>(null);
+                yield return $"{Code} End";
             }
         }
     }

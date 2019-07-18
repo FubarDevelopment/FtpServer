@@ -152,6 +152,7 @@ namespace FubarDev.FtpServer.Utilities
 
                 _enumerateDotEntries = false;
             }
+
             return _entriesEnumerator.MoveNext();
         }
 

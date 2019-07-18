@@ -2,18 +2,16 @@
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace FubarDev.FtpServer
 {
     /// <summary>
     /// An implementation of <see cref="IFtpResponse"/> that is usable for the FTP servers banner message.
     /// </summary>
-    public class FtpResponseTextBlock : IFtpResponse
+    public class FtpResponseTextBlock : FtpResponseListBase
     {
         private readonly List<string> _lines;
 
@@ -25,53 +23,26 @@ namespace FubarDev.FtpServer
         public FtpResponseTextBlock(
             int code,
             IEnumerable<string> lines)
+            : base(code)
         {
-            Code = code;
-            _lines = lines.Reverse().SkipWhile(x => string.IsNullOrWhiteSpace(x)).Reverse().ToList();
+            _lines = lines.Reverse().SkipWhile(string.IsNullOrWhiteSpace).Reverse().ToList();
         }
 
         /// <inheritdoc />
-        public int Code { get; }
-
-        /// <inheritdoc />
-        [Obsolete("Use a custom server command.")]
-        public FtpResponseAfterWriteAsyncDelegate? AfterWriteAction => null;
-
-        /// <inheritdoc />
-        public Task<FtpResponseLine> GetNextLineAsync(object? token, CancellationToken cancellationToken)
+        protected override IEnumerable<string> GetOutputLines(CancellationToken cancellationToken)
         {
-            IEnumerator<string> enumerator;
-            if (token == null)
+            if (_lines.Count == 0)
             {
-                // Start of enumeration
-                enumerator = GetLines().GetEnumerator();
-            }
-            else
-            {
-                enumerator = (IEnumerator<string>)token;
+                yield break;
             }
 
-            if (!enumerator.MoveNext())
+            var lineIndex = 0;
+            var lastLineIndex = _lines.Count - 1;
+            foreach (var line in _lines)
             {
-                enumerator.Dispose();
-                return Task.FromResult(new FtpResponseLine(null, null));
-            }
+                cancellationToken.ThrowIfCancellationRequested();
 
-            return Task.FromResult(new FtpResponseLine(enumerator.Current, enumerator));
-        }
-
-        /// <inheritdoc />
-        public override string ToString()
-        {
-            return string.Join("\r\n", GetLines());
-        }
-
-        private IEnumerable<string> GetLines()
-        {
-            for (var i = 0; i != _lines.Count; ++i)
-            {
-                var line = _lines[i];
-                if ((_lines.Count - 1) == i)
+                if (lineIndex == lastLineIndex)
                 {
                     // Last line
                     yield return $"{Code:D3} {line}";
@@ -81,6 +52,8 @@ namespace FubarDev.FtpServer
                     // All lines except last
                     yield return $"{Code:D3}-{line}";
                 }
+
+                lineIndex += 1;
             }
         }
     }

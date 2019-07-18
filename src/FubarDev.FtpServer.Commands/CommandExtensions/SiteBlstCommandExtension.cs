@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -79,7 +80,7 @@ namespace FubarDev.FtpServer.CommandExtensions
                     211,
                     T("Active background tasks:"),
                     T("END"),
-                    GetLines(taskStates)));
+                    GetLines(taskStates).ToList()));
         }
 
         private async Task<IFtpResponse?> SendBlstWithDataConnection(CancellationToken cancellationToken)

@@ -3,6 +3,7 @@
 // </copyright>
 
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -27,9 +28,8 @@ namespace FubarDev.FtpServer
         /// <summary>
         /// Tries to get the the next line.
         /// </summary>
-        /// <param name="token">Token that saves the current position. Must be <see langword="null"/> at the beginning.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
-        /// <returns><see langword="true"/> when a new line is available to send.</returns>
-        Task<FtpResponseLine> GetNextLineAsync(object? token, CancellationToken cancellationToken);
+        /// <returns>All text to be sent to the client.</returns>
+        IAsyncEnumerable<string> GetNextLineAsync(CancellationToken cancellationToken);
     }
 }

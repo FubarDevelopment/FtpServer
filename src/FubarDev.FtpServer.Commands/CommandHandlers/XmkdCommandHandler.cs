@@ -5,8 +5,8 @@
 // <author>Mark Junker</author>
 //-----------------------------------------------------------------------
 
+using System;
 using System.IO;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -46,7 +46,7 @@ namespace FubarDev.FtpServer.CommandHandlers
                     521,
                     message,
                     T("Taking no action."),
-                    Enumerable.Empty<string>());
+                    Array.Empty<string>());
             }
 
             try

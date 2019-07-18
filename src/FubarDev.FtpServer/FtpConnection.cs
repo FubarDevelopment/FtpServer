@@ -739,26 +739,14 @@ namespace FubarDev.FtpServer
             public PipeWriter Output { get; }
         }
 
-        private class DirectFtpResponse : IFtpResponse
+        private class DirectFtpResponse : FtpResponse
         {
             private readonly string _text;
 
             public DirectFtpResponse(string text)
+                : base(-1, text)
             {
                 _text = text;
-            }
-
-            /// <inheritdoc />
-            public int Code { get; } = -1;
-
-            /// <inheritdoc />
-            [Obsolete("Use a custom server command.")]
-            public FtpResponseAfterWriteAsyncDelegate? AfterWriteAction { get; } = null;
-
-            /// <inheritdoc />
-            public Task<FtpResponseLine> GetNextLineAsync(object? token, CancellationToken cancellationToken)
-            {
-                return Task.FromResult(new FtpResponseLine(_text, null));
             }
 
             /// <inheritdoc />
