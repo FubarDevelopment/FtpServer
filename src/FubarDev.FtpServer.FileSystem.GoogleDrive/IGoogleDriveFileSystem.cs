@@ -4,8 +4,6 @@
 
 using Google.Apis.Drive.v3;
 
-using JetBrains.Annotations;
-
 namespace FubarDev.FtpServer.FileSystem.GoogleDrive
 {
     /// <summary>
@@ -16,7 +14,6 @@ namespace FubarDev.FtpServer.FileSystem.GoogleDrive
         /// <summary>
         /// Gets the <see cref="DriveService"/> instance to use to access the Google Drive.
         /// </summary>
-        [NotNull]
         DriveService Service { get; }
 
         /// <summary>

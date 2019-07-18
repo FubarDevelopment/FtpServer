@@ -8,8 +8,6 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-using JetBrains.Annotations;
-
 using JKang.IpcServiceFramework;
 
 using TestFtpServer.Api;
@@ -27,8 +25,8 @@ namespace TestFtpServer.Shell.Commands
         /// <param name="client">The client to be used to communicate with the FTP server.</param>
         /// <param name="status">The status of the shell.</param>
         public ShowCommandHandler(
-            [NotNull] IpcServiceClient<IFtpServerHost> client,
-            [NotNull] IShellStatus status)
+            IpcServiceClient<IFtpServerHost> client,
+            IShellStatus status)
         {
             SubCommands = status.ExtendedModuleInfoName
                .Select(x => new ModuleCommandInfo(client, x))
@@ -46,7 +44,6 @@ namespace TestFtpServer.Shell.Commands
 
         private class ModuleCommandInfo : IExecutableCommandInfo
         {
-            [NotNull]
             private readonly IpcServiceClient<IFtpServerHost> _client;
 
             /// <summary>
@@ -55,8 +52,8 @@ namespace TestFtpServer.Shell.Commands
             /// <param name="client">The client to be used to communicate with the FTP server.</param>
             /// <param name="moduleName">The name of the module.</param>
             public ModuleCommandInfo(
-                [NotNull] IpcServiceClient<IFtpServerHost> client,
-                [NotNull] string moduleName)
+                IpcServiceClient<IFtpServerHost> client,
+                string moduleName)
             {
                 _client = client;
                 Name = moduleName;

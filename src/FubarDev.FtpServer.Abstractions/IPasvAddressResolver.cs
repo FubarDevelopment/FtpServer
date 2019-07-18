@@ -6,8 +6,6 @@ using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
 
-using JetBrains.Annotations;
-
 namespace FubarDev.FtpServer
 {
     /// <summary>
@@ -22,10 +20,8 @@ namespace FubarDev.FtpServer
         /// <param name="addressFamily">The address family for the address to be selected.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>The task returning the options.</returns>
-        [NotNull]
-        [ItemNotNull]
         Task<PasvListenerOptions> GetOptionsAsync(
-            [NotNull] IFtpConnection connection,
+            IFtpConnection connection,
             AddressFamily? addressFamily,
             CancellationToken cancellationToken);
     }

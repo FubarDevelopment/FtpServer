@@ -12,8 +12,6 @@ using System.Threading.Tasks;
 using FubarDev.FtpServer.Authentication;
 using FubarDev.FtpServer.Networking;
 
-using JetBrains.Annotations;
-
 using Microsoft.Extensions.Logging;
 
 namespace FubarDev.FtpServer.ConnectionHandlers
@@ -23,28 +21,20 @@ namespace FubarDev.FtpServer.ConnectionHandlers
     /// </summary>
     internal class SslStreamConnectionAdapter : IFtpConnectionAdapter
     {
-        [NotNull]
         private readonly IDuplexPipe _socketPipe;
-
-        [NotNull]
         private readonly IDuplexPipe _connectionPipe;
-
-        [NotNull]
         private readonly ISslStreamWrapperFactory _sslStreamWrapperFactory;
-
-        [NotNull]
         private readonly X509Certificate2 _certificate;
 
         private readonly CancellationToken _connectionClosed;
 
-        [CanBeNull]
-        private SslCommunicationInfo _info;
+        private SslCommunicationInfo? _info;
 
         public SslStreamConnectionAdapter(
-            [NotNull] IDuplexPipe socketPipe,
-            [NotNull] IDuplexPipe connectionPipe,
-            [NotNull] ISslStreamWrapperFactory sslStreamWrapperFactory,
-            [NotNull] X509Certificate2 certificate,
+            IDuplexPipe socketPipe,
+            IDuplexPipe connectionPipe,
+            ISslStreamWrapperFactory sslStreamWrapperFactory,
+            X509Certificate2 certificate,
             CancellationToken connectionClosed)
         {
             _socketPipe = socketPipe;
@@ -116,36 +106,29 @@ namespace FubarDev.FtpServer.ConnectionHandlers
         private class SslCommunicationInfo
         {
             public SslCommunicationInfo(
-                [NotNull] IFtpService transmitterService,
-                [NotNull] IPausableFtpService receiverService,
-                [NotNull] Stream sslStream)
+                IFtpService transmitterService,
+                IPausableFtpService receiverService,
+                Stream sslStream)
             {
                 TransmitterService = transmitterService;
                 ReceiverService = receiverService;
                 SslStream = sslStream;
             }
-
-            [NotNull]
             public IFtpService TransmitterService { get; }
-
-            [NotNull]
             public IPausableFtpService ReceiverService { get; }
-
-            [NotNull]
             public Stream SslStream { get; }
         }
 
         private class NonClosingNetworkStreamReader : StreamPipeReaderService
         {
-            [NotNull]
             private readonly PipeReader _socketPipeReader;
 
             public NonClosingNetworkStreamReader(
-                [NotNull] Stream stream,
-                [NotNull] PipeWriter pipeWriter,
-                [NotNull] PipeReader socketPipeReader,
+                Stream stream,
+                PipeWriter pipeWriter,
+                PipeReader socketPipeReader,
                 CancellationToken connectionClosed,
-                [CanBeNull] ILogger logger = null)
+                ILogger? logger = null)
                 : base(stream, pipeWriter, connectionClosed, logger)
             {
                 _socketPipeReader = socketPipeReader;
@@ -159,7 +142,7 @@ namespace FubarDev.FtpServer.ConnectionHandlers
             }
 
             /// <inheritdoc />
-            protected override Task OnCloseAsync(Exception exception, CancellationToken cancellationToken)
+            protected override Task OnCloseAsync(Exception? exception, CancellationToken cancellationToken)
             {
                 // Do nothing
                 return Task.CompletedTask;
@@ -169,16 +152,16 @@ namespace FubarDev.FtpServer.ConnectionHandlers
         private class NonClosingNetworkStreamWriter : StreamPipeWriterService
         {
             public NonClosingNetworkStreamWriter(
-                [NotNull] Stream stream,
-                [NotNull] PipeReader pipeReader,
+                Stream stream,
+                PipeReader pipeReader,
                 CancellationToken connectionClosed,
-                [CanBeNull] ILogger logger = null)
+                ILogger? logger = null)
                 : base(stream, pipeReader, connectionClosed, logger)
             {
             }
 
             /// <inheritdoc />
-            protected override Task OnCloseAsync(Exception exception, CancellationToken cancellationToken)
+            protected override Task OnCloseAsync(Exception? exception, CancellationToken cancellationToken)
             {
                 // Do nothing
                 return Task.CompletedTask;

@@ -5,8 +5,6 @@
 using System;
 using System.Collections.Generic;
 
-using JetBrains.Annotations;
-
 namespace FubarDev.FtpServer
 {
     /// <summary>
@@ -20,9 +18,7 @@ namespace FubarDev.FtpServer
         /// </summary>
         /// <param name="connection">The FTP connection.</param>
         /// <returns>A list of features supported by this command handler.</returns>
-        [NotNull]
-        [ItemNotNull]
         [Obsolete("FTP command handlers (and other types) are now annotated with attributes implementing IFeatureInfo.")]
-        IEnumerable<IFeatureInfo> GetSupportedFeatures([NotNull] IFtpConnection connection);
+        IEnumerable<IFeatureInfo> GetSupportedFeatures(IFtpConnection connection);
     }
 }

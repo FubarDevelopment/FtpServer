@@ -6,8 +6,6 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-using JetBrains.Annotations;
-
 namespace FubarDev.FtpServer.BackgroundTransfer
 {
     /// <summary>
@@ -21,15 +19,12 @@ namespace FubarDev.FtpServer.BackgroundTransfer
         /// <param name="backgroundTransfer">The background transfer to enqueue.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>The task.</returns>
-        [NotNull]
-        Task EnqueueAsync([NotNull] IBackgroundTransfer backgroundTransfer, CancellationToken cancellationToken);
+        Task EnqueueAsync(IBackgroundTransfer backgroundTransfer, CancellationToken cancellationToken);
 
         /// <summary>
         /// Get the status of all pending and active background transfers.
         /// </summary>
         /// <returns>The status of all background transfers.</returns>
-        [NotNull]
-        [ItemNotNull]
         IReadOnlyCollection<BackgroundTransferInfo> GetStates();
     }
 }

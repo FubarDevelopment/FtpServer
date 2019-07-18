@@ -15,8 +15,6 @@ using FubarDev.FtpServer.Features;
 using FubarDev.FtpServer.FileSystem;
 using FubarDev.FtpServer.ServerCommands;
 
-using JetBrains.Annotations;
-
 using Microsoft.Extensions.Logging;
 
 namespace FubarDev.FtpServer.CommandHandlers
@@ -29,24 +27,23 @@ namespace FubarDev.FtpServer.CommandHandlers
     {
         private const int BufferSize = 4096;
 
-        [CanBeNull]
-        private readonly ILogger<RetrCommandHandler> _logger;
+        private readonly ILogger<RetrCommandHandler>? _logger;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RetrCommandHandler"/> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
         public RetrCommandHandler(
-            [CanBeNull] ILogger<RetrCommandHandler> logger = null)
+            ILogger<RetrCommandHandler>? logger = null)
         {
             _logger = logger;
         }
 
         /// <inheritdoc/>
-        public override async Task<IFtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
+        public override async Task<IFtpResponse?> Process(FtpCommand command, CancellationToken cancellationToken)
         {
-            var restartPosition = Connection.Features.Get<IRestCommandFeature>()?.RestartPosition;
-            Connection.Features.Set<IRestCommandFeature>(null);
+            var restartPosition = Connection.Features.Get<IRestCommandFeature?>()?.RestartPosition;
+            Connection.Features.Set<IRestCommandFeature?>(null);
 
             var transferMode = Connection.Features.Get<ITransferConfigurationFeature>().TransferMode;
             if (!transferMode.IsBinary && transferMode.FileType != FtpFileType.Ascii)
@@ -81,7 +78,7 @@ namespace FubarDev.FtpServer.CommandHandlers
             }
         }
 
-        private async Task<IFtpResponse> ExecuteSendAsync(
+        private async Task<IFtpResponse?> ExecuteSendAsync(
             IFtpDataConnection dataConnection,
             Stream input,
             CancellationToken cancellationToken)

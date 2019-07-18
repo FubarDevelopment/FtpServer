@@ -7,8 +7,6 @@ using System.Threading.Tasks;
 
 using FubarDev.FtpServer.Authentication;
 
-using JetBrains.Annotations;
-
 namespace FubarDev.FtpServer.Authorization
 {
     /// <summary>
@@ -20,7 +18,7 @@ namespace FubarDev.FtpServer.Authorization
         /// Resets the authorization mechanism.
         /// </summary>
         /// <param name="authenticationMechanism">The previously selected authentication mechanism.</param>
-        void Reset([CanBeNull] IAuthenticationMechanism authenticationMechanism);
+        void Reset(IAuthenticationMechanism? authenticationMechanism);
 
         /// <summary>
         /// Handles the <c>USER</c> command.
@@ -28,9 +26,7 @@ namespace FubarDev.FtpServer.Authorization
         /// <param name="userIdentifier">The user identifier.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>The task returning the FTP response.</returns>
-        [NotNull]
-        [ItemNotNull]
-        Task<IFtpResponse> HandleUserAsync([NotNull] string userIdentifier, CancellationToken cancellationToken);
+        Task<IFtpResponse> HandleUserAsync(string userIdentifier, CancellationToken cancellationToken);
 
         /// <summary>
         /// Handles the <c>PASS</c> command.
@@ -38,9 +34,7 @@ namespace FubarDev.FtpServer.Authorization
         /// <param name="password">The password.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>The task returning the FTP response.</returns>
-        [NotNull]
-        [ItemNotNull]
-        Task<IFtpResponse> HandlePassAsync([NotNull] string password, CancellationToken cancellationToken);
+        Task<IFtpResponse> HandlePassAsync(string password, CancellationToken cancellationToken);
 
         /// <summary>
         /// Handles the <c>ACCT</c> command.
@@ -48,8 +42,6 @@ namespace FubarDev.FtpServer.Authorization
         /// <param name="account">The account to select.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>The task returning the FTP response.</returns>
-        [NotNull]
-        [ItemNotNull]
-        Task<IFtpResponse> HandleAcctAsync([NotNull] string account, CancellationToken cancellationToken);
+        Task<IFtpResponse> HandleAcctAsync(string account, CancellationToken cancellationToken);
     }
 }

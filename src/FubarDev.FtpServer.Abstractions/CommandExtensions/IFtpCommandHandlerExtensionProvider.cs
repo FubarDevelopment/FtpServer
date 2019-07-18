@@ -4,8 +4,6 @@
 
 using System.Collections.Generic;
 
-using JetBrains.Annotations;
-
 namespace FubarDev.FtpServer.CommandExtensions
 {
     /// <summary>
@@ -16,8 +14,6 @@ namespace FubarDev.FtpServer.CommandExtensions
         /// <summary>
         /// Gets the information for all command handler extensions.
         /// </summary>
-        [NotNull]
-        [ItemNotNull]
         IEnumerable<IFtpCommandHandlerExtensionInformation> CommandHandlerExtensions { get; }
     }
 }

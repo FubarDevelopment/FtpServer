@@ -7,8 +7,6 @@ using System.Threading.Tasks;
 
 using FubarDev.FtpServer.ServerCommands;
 
-using JetBrains.Annotations;
-
 namespace FubarDev.FtpServer.ServerCommandHandlers
 {
     /// <summary>
@@ -16,7 +14,6 @@ namespace FubarDev.FtpServer.ServerCommandHandlers
     /// </summary>
     public class CloseConnectionServerCommandHandler : IServerCommandHandler<CloseConnectionServerCommand>
     {
-        [NotNull]
         private readonly IFtpConnectionAccessor _connectionAccessor;
 
         /// <summary>
@@ -24,7 +21,7 @@ namespace FubarDev.FtpServer.ServerCommandHandlers
         /// </summary>
         /// <param name="connectionAccessor">The FTP connection accessor.</param>
         public CloseConnectionServerCommandHandler(
-            [NotNull] IFtpConnectionAccessor connectionAccessor)
+            IFtpConnectionAccessor connectionAccessor)
         {
             _connectionAccessor = connectionAccessor;
         }

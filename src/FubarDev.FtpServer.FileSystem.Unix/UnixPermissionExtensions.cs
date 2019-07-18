@@ -4,15 +4,13 @@
 
 using FubarDev.FtpServer.AccountManagement;
 using FubarDev.FtpServer.FileSystem.Generic;
-using JetBrains.Annotations;
-
 namespace FubarDev.FtpServer.FileSystem.Unix
 {
     internal static class UnixPermissionExtensions
     {
         public static IAccessMode GetEffectivePermissions(
-            [NotNull] this IUnixDirectoryEntry entry,
-            [NotNull] IFtpUser ftpUser)
+            this IUnixDirectoryEntry entry,
+            IFtpUser ftpUser)
         {
             var canRead = false;
             var canWrite = false;

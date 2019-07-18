@@ -4,8 +4,6 @@
 
 using System.Collections.Generic;
 
-using JetBrains.Annotations;
-
 namespace TestFtpServer.ServerInfo
 {
     /// <summary>
@@ -17,7 +15,6 @@ namespace TestFtpServer.ServerInfo
         /// Gets labels and values to be printed.
         /// </summary>
         /// <returns></returns>
-        [NotNull]
         IEnumerable<(string label, string value)> GetInfo();
     }
 }

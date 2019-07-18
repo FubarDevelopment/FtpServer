@@ -16,8 +16,6 @@ using System.Threading.Tasks;
 using FubarDev.FtpServer.Features;
 using FubarDev.FtpServer.Networking;
 
-using JetBrains.Annotations;
-
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -29,23 +27,12 @@ namespace FubarDev.FtpServer
     /// </summary>
     public sealed class FtpServer : IFtpServer, IDisposable
     {
-        [NotNull]
         private readonly FtpServerStatistics _statistics = new FtpServerStatistics();
-
-        [NotNull]
         private readonly IServiceProvider _serviceProvider;
-
         private readonly ConcurrentDictionary<IFtpConnection, FtpConnectionInfo> _connections = new ConcurrentDictionary<IFtpConnection, FtpConnectionInfo>();
-
         private readonly FtpServerListenerService _serverListener;
-
-        [CanBeNull]
-        private readonly ILogger<FtpServer> _log;
-
-        [NotNull]
+        private readonly ILogger<FtpServer>? _log;
         private readonly Task _clientReader;
-
-        [NotNull]
         private readonly CancellationTokenSource _serverShutdown = new CancellationTokenSource();
 
         /// <summary>
@@ -55,9 +42,9 @@ namespace FubarDev.FtpServer
         /// <param name="serviceProvider">The service provider used to query services.</param>
         /// <param name="logger">The FTP server logger.</param>
         public FtpServer(
-            [NotNull] IOptions<FtpServerOptions> serverOptions,
-            [NotNull] IServiceProvider serviceProvider,
-            [CanBeNull] ILogger<FtpServer> logger = null)
+            IOptions<FtpServerOptions> serverOptions,
+            IServiceProvider serviceProvider,
+            ILogger<FtpServer>? logger = null)
         {
             _serviceProvider = serviceProvider;
             _log = logger;
@@ -86,7 +73,7 @@ namespace FubarDev.FtpServer
         public IFtpServerStatistics Statistics => _statistics;
 
         /// <inheritdoc />
-        public string ServerAddress { get; }
+        public string? ServerAddress { get; }
 
         /// <inheritdoc />
         public int Port { get; private set; }
@@ -167,7 +154,7 @@ namespace FubarDev.FtpServer
         }
 
         private async Task ReadClientsAsync(
-            [NotNull] ChannelReader<TcpClient> tcpClientReader,
+            ChannelReader<TcpClient> tcpClientReader,
             CancellationToken cancellationToken)
         {
             try

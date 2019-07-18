@@ -9,8 +9,6 @@ using System.Linq;
 
 using FubarDev.FtpServer.FileSystem;
 
-using JetBrains.Annotations;
-
 namespace FubarDev.FtpServer.Utilities
 {
     /// <summary>
@@ -81,31 +79,26 @@ namespace FubarDev.FtpServer.Utilities
         /// <summary>
         /// Gets the file system of the entries to be enumerated.
         /// </summary>
-        [NotNull]
         public IUnixFileSystem FileSystem { get; }
 
         /// <summary>
         /// Gets the current directory.
         /// </summary>
-        [NotNull]
         public IUnixDirectoryEntry CurrentDirectory { get; }
 
         /// <summary>
         /// Gets the parent directory.
         /// </summary>
-        [CanBeNull]
-        public IUnixDirectoryEntry ParentDirectory { get; }
+        public IUnixDirectoryEntry? ParentDirectory { get; }
 
         /// <summary>
         /// Gets the grand parent directory.
         /// </summary>
-        [CanBeNull]
-        public IUnixDirectoryEntry GrandParentDirectory { get; }
+        public IUnixDirectoryEntry? GrandParentDirectory { get; }
 
         /// <summary>
         /// Gets the name of the entry which might be different from the original entries name.
         /// </summary>
-        [NotNull]
         public string Name
         {
             get
@@ -124,7 +117,6 @@ namespace FubarDev.FtpServer.Utilities
         /// <summary>
         /// Gets the file system entry.
         /// </summary>
-        [NotNull]
         public IUnixFileSystemEntry Entry
         {
             get

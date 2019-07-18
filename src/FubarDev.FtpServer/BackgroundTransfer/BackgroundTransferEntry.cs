@@ -7,8 +7,6 @@
 
 using System;
 
-using JetBrains.Annotations;
-
 namespace FubarDev.FtpServer.BackgroundTransfer
 {
     internal class BackgroundTransferEntry
@@ -17,7 +15,7 @@ namespace FubarDev.FtpServer.BackgroundTransfer
         private long? _transferred;
 
         public BackgroundTransferEntry(
-            [NotNull] IBackgroundTransfer backgroundTransfer,
+            IBackgroundTransfer backgroundTransfer,
             long sequenceNumber)
         {
             BackgroundTransfer = backgroundTransfer;
@@ -26,8 +24,6 @@ namespace FubarDev.FtpServer.BackgroundTransfer
         }
 
         public Guid Id { get; } = Guid.NewGuid();
-
-        [NotNull]
         public IBackgroundTransfer BackgroundTransfer { get; }
 
         public BackgroundTransferStatus Status { get; set; }

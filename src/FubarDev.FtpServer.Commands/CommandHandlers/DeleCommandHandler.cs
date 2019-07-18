@@ -13,8 +13,6 @@ using FubarDev.FtpServer.Commands;
 using FubarDev.FtpServer.Features;
 using FubarDev.FtpServer.FileSystem;
 
-using JetBrains.Annotations;
-
 using Microsoft.Extensions.Logging;
 
 namespace FubarDev.FtpServer.CommandHandlers
@@ -25,20 +23,19 @@ namespace FubarDev.FtpServer.CommandHandlers
     [FtpCommandHandler("DELE")]
     public class DeleCommandHandler : FtpCommandHandler
     {
-        [CanBeNull]
-        private readonly ILogger<DeleCommandHandler> _logger;
+        private readonly ILogger<DeleCommandHandler>? _logger;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DeleCommandHandler"/> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
-        public DeleCommandHandler([CanBeNull] ILogger<DeleCommandHandler> logger = null)
+        public DeleCommandHandler(ILogger<DeleCommandHandler>? logger = null)
         {
             _logger = logger;
         }
 
         /// <inheritdoc/>
-        public override async Task<IFtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
+        public override async Task<IFtpResponse?> Process(FtpCommand command, CancellationToken cancellationToken)
         {
             var path = command.Argument;
             var fsFeature = Connection.Features.Get<IFileSystemFeature>();

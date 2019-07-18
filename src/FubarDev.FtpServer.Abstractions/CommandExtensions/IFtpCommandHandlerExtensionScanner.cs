@@ -4,8 +4,6 @@
 
 using System.Collections.Generic;
 
-using JetBrains.Annotations;
-
 namespace FubarDev.FtpServer.CommandExtensions
 {
     /// <summary>
@@ -17,8 +15,6 @@ namespace FubarDev.FtpServer.CommandExtensions
         /// Search for FTP command handler extensions.
         /// </summary>
         /// <returns>The information about the found FTP command handler extensions.</returns>
-        [NotNull]
-        [ItemNotNull]
         IEnumerable<IFtpCommandHandlerExtensionInformation> Search();
     }
 }

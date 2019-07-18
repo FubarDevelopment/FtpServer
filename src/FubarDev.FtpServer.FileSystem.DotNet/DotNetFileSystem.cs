@@ -87,11 +87,11 @@ namespace FubarDev.FtpServer.FileSystem.DotNet
         }
 
         /// <inheritdoc/>
-        public Task<IUnixFileSystemEntry> GetEntryByNameAsync(IUnixDirectoryEntry directoryEntry, string name, CancellationToken cancellationToken)
+        public Task<IUnixFileSystemEntry?> GetEntryByNameAsync(IUnixDirectoryEntry directoryEntry, string name, CancellationToken cancellationToken)
         {
             var searchDirInfo = ((DotNetDirectoryEntry)directoryEntry).Info;
             var fullPath = Path.Combine(searchDirInfo.FullName, name);
-            IUnixFileSystemEntry result;
+            IUnixFileSystemEntry? result;
             if (File.Exists(fullPath))
             {
                 result = new DotNetFileEntry(new FileInfo(fullPath));
@@ -163,7 +163,7 @@ namespace FubarDev.FtpServer.FileSystem.DotNet
         }
 
         /// <inheritdoc/>
-        public async Task<IBackgroundTransfer> AppendAsync(IUnixFileEntry fileEntry, long? startPosition, Stream data, CancellationToken cancellationToken)
+        public async Task<IBackgroundTransfer?> AppendAsync(IUnixFileEntry fileEntry, long? startPosition, Stream data, CancellationToken cancellationToken)
         {
             var fileInfo = ((DotNetFileEntry)fileEntry).FileInfo;
             using (var output = fileInfo.OpenWrite())
@@ -181,7 +181,7 @@ namespace FubarDev.FtpServer.FileSystem.DotNet
         }
 
         /// <inheritdoc/>
-        public async Task<IBackgroundTransfer> CreateAsync(IUnixDirectoryEntry targetDirectory, string fileName, Stream data, CancellationToken cancellationToken)
+        public async Task<IBackgroundTransfer?> CreateAsync(IUnixDirectoryEntry targetDirectory, string fileName, Stream data, CancellationToken cancellationToken)
         {
             var targetEntry = (DotNetDirectoryEntry)targetDirectory;
             var fileInfo = new FileInfo(Path.Combine(targetEntry.Info.FullName, fileName));
@@ -194,7 +194,7 @@ namespace FubarDev.FtpServer.FileSystem.DotNet
         }
 
         /// <inheritdoc/>
-        public async Task<IBackgroundTransfer> ReplaceAsync(IUnixFileEntry fileEntry, Stream data, CancellationToken cancellationToken)
+        public async Task<IBackgroundTransfer?> ReplaceAsync(IUnixFileEntry fileEntry, Stream data, CancellationToken cancellationToken)
         {
             var fileInfo = ((DotNetFileEntry)fileEntry).FileInfo;
             using (var output = fileInfo.OpenWrite())

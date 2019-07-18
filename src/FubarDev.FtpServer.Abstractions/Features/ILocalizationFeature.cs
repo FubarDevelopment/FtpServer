@@ -4,8 +4,6 @@
 
 using System.Globalization;
 
-using JetBrains.Annotations;
-
 using NGettext;
 
 namespace FubarDev.FtpServer.Features
@@ -18,13 +16,11 @@ namespace FubarDev.FtpServer.Features
         /// <summary>
         /// Gets or sets the selected language.
         /// </summary>
-        [NotNull]
         CultureInfo Language { get; set; }
 
         /// <summary>
         /// Gets or sets the catalog to be used by the default FTP server implementation.
         /// </summary>
-        [NotNull]
         ICatalog Catalog { get; set; }
     }
 }

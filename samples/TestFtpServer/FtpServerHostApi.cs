@@ -5,8 +5,6 @@ using System.Threading.Tasks;
 
 using FubarDev.FtpServer;
 
-using JetBrains.Annotations;
-
 using Microsoft.Extensions.Hosting;
 
 using TestFtpServer.ServerInfo;
@@ -18,14 +16,8 @@ namespace TestFtpServer
     /// </summary>
     internal class FtpServerHostApi : Api.IFtpServerHost
     {
-        [NotNull]
         private readonly IApplicationLifetime _applicationLifetime;
-
-        [NotNull]
         private readonly IFtpServer _ftpServer;
-
-        [NotNull]
-        [ItemNotNull]
         private readonly IReadOnlyCollection<IModuleInfo> _moduleInfoItems;
 
         /// <summary>
@@ -35,9 +27,9 @@ namespace TestFtpServer
         /// <param name="ftpServer">The FTP server to control/query.</param>
         /// <param name="moduleInfoItems">The registered information modules.</param>
         public FtpServerHostApi(
-            [NotNull] IApplicationLifetime applicationLifetime,
-            [NotNull] IFtpServer ftpServer,
-            [NotNull, ItemNotNull] IEnumerable<IModuleInfo> moduleInfoItems)
+            IApplicationLifetime applicationLifetime,
+            IFtpServer ftpServer,
+            IEnumerable<IModuleInfo> moduleInfoItems)
         {
             _applicationLifetime = applicationLifetime;
             _ftpServer = ftpServer;

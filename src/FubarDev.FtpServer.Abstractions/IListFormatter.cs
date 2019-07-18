@@ -7,8 +7,6 @@
 
 using FubarDev.FtpServer.FileSystem;
 
-using JetBrains.Annotations;
-
 namespace FubarDev.FtpServer
 {
     /// <summary>
@@ -22,7 +20,6 @@ namespace FubarDev.FtpServer
         /// <param name="entry">The entry to create the output line for.</param>
         /// <param name="entryName">The name of the entry (can be null if the original entry name should be used).</param>
         /// <returns>The text to write to the client.</returns>
-        [NotNull]
-        string Format([NotNull] IUnixFileSystemEntry entry, [CanBeNull] string entryName = null);
+        string Format(IUnixFileSystemEntry entry, string? entryName = null);
     }
 }

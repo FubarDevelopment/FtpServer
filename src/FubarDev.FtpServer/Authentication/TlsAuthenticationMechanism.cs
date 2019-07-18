@@ -10,8 +10,6 @@ using System.Threading.Tasks;
 using FubarDev.FtpServer.Features;
 using FubarDev.FtpServer.ServerCommands;
 
-using JetBrains.Annotations;
-
 using Microsoft.Extensions.DependencyInjection;
 
 namespace FubarDev.FtpServer.Authentication
@@ -24,7 +22,6 @@ namespace FubarDev.FtpServer.Authentication
     public class TlsAuthenticationMechanism : AuthenticationMechanism, IFeatureHost
 #pragma warning restore CS0618 // Typ oder Element ist veraltet
     {
-        [NotNull]
         private readonly ISslStreamWrapperFactory _sslStreamWrapperFactory;
 
         /// <summary>
@@ -33,8 +30,8 @@ namespace FubarDev.FtpServer.Authentication
         /// <param name="connection">The required FTP connection.</param>
         /// <param name="sslStreamWrapperFactory">The SslStream wrapper factory.</param>
         public TlsAuthenticationMechanism(
-            [NotNull] IFtpConnection connection,
-            [NotNull] ISslStreamWrapperFactory sslStreamWrapperFactory)
+            IFtpConnection connection,
+            ISslStreamWrapperFactory sslStreamWrapperFactory)
             : base(connection)
         {
             _sslStreamWrapperFactory = sslStreamWrapperFactory;
@@ -45,8 +42,7 @@ namespace FubarDev.FtpServer.Authentication
         /// </summary>
         /// <param name="connection">The FTP connection.</param>
         /// <returns>The string(s) to be returned.</returns>
-        [NotNull]
-        public static IEnumerable<string> CreateAuthTlsFeatureString([NotNull] IFtpConnection connection)
+        public static IEnumerable<string> CreateAuthTlsFeatureString(IFtpConnection connection)
         {
             var hostSelector = connection.ConnectionServices.GetRequiredService<IFtpHostSelector>();
             if (hostSelector.SelectedHost.Certificate != null)
@@ -148,7 +144,7 @@ namespace FubarDev.FtpServer.Authentication
                 switch (protCode.ToUpperInvariant())
                 {
                     case "C":
-                        secureConnectionFeature.CreateEncryptedStream = null;
+                        secureConnectionFeature.CreateEncryptedStream = Task.FromResult;
                         response = new FtpResponse(200, T("Data channel protection level set to {0}.", protCode));
                         break;
                     case "P":

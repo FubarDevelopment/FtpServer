@@ -9,8 +9,6 @@ using System.IO.Pipelines;
 using System.Threading;
 using System.Threading.Tasks;
 
-using JetBrains.Annotations;
-
 using Microsoft.Extensions.Logging;
 
 namespace FubarDev.FtpServer.Networking
@@ -20,14 +18,10 @@ namespace FubarDev.FtpServer.Networking
     /// </summary>
     internal class SimplePipeStream : Stream
     {
-        [NotNull]
         private readonly PipeReader _input;
-
-        [NotNull]
         private readonly PipeWriter _output;
 
-        [CanBeNull]
-        private readonly ILogger<SimplePipeStream> _logger;
+        private readonly ILogger<SimplePipeStream>? _logger;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SimplePipeStream"/> class.
@@ -36,9 +30,9 @@ namespace FubarDev.FtpServer.Networking
         /// <param name="output">The pipe writer to be used to write to.</param>
         /// <param name="logger">The logger.</param>
         public SimplePipeStream(
-            [NotNull] PipeReader input,
-            [NotNull] PipeWriter output,
-            [CanBeNull] ILogger<SimplePipeStream> logger = null)
+            PipeReader input,
+            PipeWriter output,
+            ILogger<SimplePipeStream>? logger = null)
         {
             _input = input;
             _output = output;
@@ -114,9 +108,9 @@ namespace FubarDev.FtpServer.Networking
         }
 
         /// <inheritdoc />
-        public override Task FlushAsync(CancellationToken cancellationToken)
+        public override async Task FlushAsync(CancellationToken cancellationToken)
         {
-            return WriteAsync(null, 0, 0, cancellationToken);
+            await _output.FlushAsync(cancellationToken);
         }
 
         private async ValueTask<int> ReadAsyncInternal(Memory<byte> destination, CancellationToken cancellationToken)

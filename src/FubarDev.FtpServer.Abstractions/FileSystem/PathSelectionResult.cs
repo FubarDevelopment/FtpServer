@@ -8,8 +8,6 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 
-using JetBrains.Annotations;
-
 namespace FubarDev.FtpServer.FileSystem
 {
     /// <summary>
@@ -17,22 +15,15 @@ namespace FubarDev.FtpServer.FileSystem
     /// </summary>
     public class PathSelectionResult
     {
-        [CanBeNull]
-        private readonly IUnixFileEntry _document;
-
-        [NotNull]
-        [ItemNotNull]
+        private readonly IUnixFileEntry? _document;
         private readonly Stack<IUnixDirectoryEntry> _foundPathSegments;
-
-        [NotNull]
-        [ItemNotNull]
         private readonly IReadOnlyCollection<string> _missingPathSegments;
 
         internal PathSelectionResult(
             PathSelectionResultType resultType,
-            [CanBeNull] IUnixFileEntry document,
-            [NotNull][ItemNotNull] Stack<IUnixDirectoryEntry> foundPathSegments,
-            [CanBeNull][ItemNotNull] IReadOnlyCollection<string> missingPathSegments)
+            IUnixFileEntry? document,
+            Stack<IUnixDirectoryEntry> foundPathSegments,
+            IReadOnlyCollection<string>? missingPathSegments)
         {
             ResultType = resultType;
             _document = document;
@@ -60,7 +51,6 @@ namespace FubarDev.FtpServer.FileSystem
         /// When <see cref="ResultType"/> is <see cref="PathSelectionResultType.FoundFile"/>, this is the parent directory.
         /// Otherwise, this is the last found directory.
         /// </remarks>
-        [NotNull]
         public IUnixDirectoryEntry Directory => _foundPathSegments.Peek();
 
         /// <summary>
@@ -69,8 +59,7 @@ namespace FubarDev.FtpServer.FileSystem
         /// <remarks>
         /// This property is only valid when <see cref="ResultType"/> is <see cref="PathSelectionResultType.FoundFile"/>.
         /// </remarks>
-        [CanBeNull]
-        public IUnixFileEntry File
+        public IUnixFileEntry? File
         {
             get
             {
@@ -89,8 +78,6 @@ namespace FubarDev.FtpServer.FileSystem
         /// <remarks>
         /// This is only valid, when <see cref="IsMissing"/> is <see langword="true"/>.
         /// </remarks>
-        [NotNull]
-        [ItemNotNull]
         public IReadOnlyCollection<string> MissingNames
         {
             get
@@ -107,7 +94,6 @@ namespace FubarDev.FtpServer.FileSystem
         /// <summary>
         /// Gets the full root-relative path of the element that was searched.
         /// </summary>
-        [NotNull]
         public string FullPath
         {
             get
@@ -134,7 +120,6 @@ namespace FubarDev.FtpServer.FileSystem
         /// <remarks>
         /// This is only valid when <see cref="IsMissing"/> is <see langword="false"/>.
         /// </remarks>
-        [NotNull]
         public IUnixFileSystemEntry TargetEntry
         {
             get
@@ -160,10 +145,9 @@ namespace FubarDev.FtpServer.FileSystem
         /// <param name="foundPathSegments">The found path segments.</param>
         /// <param name="document">The found file.</param>
         /// <returns>The created selection result.</returns>
-        [NotNull]
         public static PathSelectionResult Create(
-            [NotNull, ItemNotNull] Stack<IUnixDirectoryEntry> foundPathSegments,
-            [NotNull] IUnixFileEntry document)
+            Stack<IUnixDirectoryEntry> foundPathSegments,
+            IUnixFileEntry document)
         {
             return new PathSelectionResult(
                 PathSelectionResultType.FoundFile,
@@ -177,9 +161,8 @@ namespace FubarDev.FtpServer.FileSystem
         /// </summary>
         /// <param name="foundPathSegments">The found path segments.</param>
         /// <returns>The created selection result.</returns>
-        [NotNull]
         public static PathSelectionResult Create(
-            [NotNull, ItemNotNull] Stack<IUnixDirectoryEntry> foundPathSegments)
+            Stack<IUnixDirectoryEntry> foundPathSegments)
         {
             return new PathSelectionResult(
                 PathSelectionResultType.FoundDirectory,
@@ -194,10 +177,9 @@ namespace FubarDev.FtpServer.FileSystem
         /// <param name="foundPathSegments">The found path segments.</param>
         /// <param name="missingPathSegments">The missing path elements.</param>
         /// <returns>The created selection result.</returns>
-        [NotNull]
         public static PathSelectionResult CreateMissingFileOrDirectory(
-            [NotNull, ItemNotNull] Stack<IUnixDirectoryEntry> foundPathSegments,
-            [NotNull] [ItemNotNull] IReadOnlyCollection<string> missingPathSegments)
+            Stack<IUnixDirectoryEntry> foundPathSegments,
+            IReadOnlyCollection<string> missingPathSegments)
         {
             return new PathSelectionResult(
                 PathSelectionResultType.MissingFileOrDirectory,
@@ -212,10 +194,9 @@ namespace FubarDev.FtpServer.FileSystem
         /// <param name="foundPathSegments">The found path segments.</param>
         /// <param name="missingPathSegments">The missing path elements.</param>
         /// <returns>The created selection result.</returns>
-        [NotNull]
         public static PathSelectionResult CreateMissingDirectory(
-            [NotNull, ItemNotNull] Stack<IUnixDirectoryEntry> foundPathSegments,
-            [NotNull] [ItemNotNull] IReadOnlyCollection<string> missingPathSegments)
+            Stack<IUnixDirectoryEntry> foundPathSegments,
+            IReadOnlyCollection<string> missingPathSegments)
         {
             return new PathSelectionResult(
                 PathSelectionResultType.MissingDirectory,
@@ -228,8 +209,6 @@ namespace FubarDev.FtpServer.FileSystem
         /// Get the full path as directory entries.
         /// </summary>
         /// <returns>The full path as directory entries.</returns>
-        [NotNull]
-        [ItemNotNull]
         public Stack<IUnixDirectoryEntry> GetPath()
         {
             return new Stack<IUnixDirectoryEntry>(_foundPathSegments.Reverse().SkipWhile(x => x.IsRoot));

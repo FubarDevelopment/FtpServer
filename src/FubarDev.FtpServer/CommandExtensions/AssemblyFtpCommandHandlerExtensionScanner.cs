@@ -9,8 +9,6 @@ using System.Reflection;
 
 using FubarDev.FtpServer.Commands;
 
-using JetBrains.Annotations;
-
 using Microsoft.Extensions.Logging;
 
 namespace FubarDev.FtpServer.CommandExtensions
@@ -20,17 +18,10 @@ namespace FubarDev.FtpServer.CommandExtensions
     /// </summary>
     public class AssemblyFtpCommandHandlerExtensionScanner : IFtpCommandHandlerExtensionScanner
     {
-        [NotNull]
         private readonly Dictionary<string, IFtpCommandHandlerInformation> _commandHandlers;
-
-        [NotNull]
         private readonly ILookup<Type, IFtpCommandHandlerInformation> _commandHandlersByType;
 
-        [CanBeNull]
-        private readonly ILogger<AssemblyFtpCommandHandlerExtensionScanner> _logger;
-
-        [NotNull]
-        [ItemNotNull]
+        private readonly ILogger<AssemblyFtpCommandHandlerExtensionScanner>? _logger;
         private readonly Assembly[] _assemblies;
 
         /// <summary>
@@ -40,9 +31,9 @@ namespace FubarDev.FtpServer.CommandExtensions
         /// <param name="logger">The logger.</param>
         /// <param name="assemblies">The assemblies to scan for FTP command handlers.</param>
         public AssemblyFtpCommandHandlerExtensionScanner(
-            [NotNull] IFtpCommandHandlerProvider commandHandlerProvider,
-            [CanBeNull] ILogger<AssemblyFtpCommandHandlerExtensionScanner> logger = null,
-            [NotNull, ItemNotNull] params Assembly[] assemblies)
+            IFtpCommandHandlerProvider commandHandlerProvider,
+            ILogger<AssemblyFtpCommandHandlerExtensionScanner>? logger = null,
+            params Assembly[] assemblies)
         {
             var cmdHandlers = commandHandlerProvider.CommandHandlers.ToList();
             _commandHandlers = cmdHandlers.ToDictionary(x => x.Name, StringComparer.OrdinalIgnoreCase);
@@ -82,7 +73,7 @@ namespace FubarDev.FtpServer.CommandExtensions
             return true;
         }
 
-        private IEnumerable<IFtpCommandHandlerExtensionInformation> Search([NotNull] Assembly assembly)
+        private IEnumerable<IFtpCommandHandlerExtensionInformation> Search(Assembly assembly)
         {
             foreach (var typeInfo in assembly.DefinedTypes.Where(IsCommandHandlerExtensionClass))
             {

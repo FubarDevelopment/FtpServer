@@ -4,8 +4,6 @@
 
 using System.Collections.Generic;
 
-using JetBrains.Annotations;
-
 namespace TestFtpServer.Shell
 {
     /// <summary>
@@ -16,15 +14,11 @@ namespace TestFtpServer.Shell
         /// <summary>
         /// Gets or sets the simple module information names.
         /// </summary>
-        [NotNull]
-        [ItemNotNull]
         ICollection<string> SimpleModuleInfoNames { get; }
 
         /// <summary>
         /// Gets or sets the extended module information names.
         /// </summary>
-        [NotNull]
-        [ItemNotNull]
         ICollection<string> ExtendedModuleInfoName { get; }
 
         /// <summary>

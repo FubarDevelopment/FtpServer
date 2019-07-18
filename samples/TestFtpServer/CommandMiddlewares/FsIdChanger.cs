@@ -12,8 +12,6 @@ using FubarDev.FtpServer.Commands;
 using FubarDev.FtpServer.Features;
 using FubarDev.FtpServer.FileSystem.Unix;
 
-using JetBrains.Annotations;
-
 using Microsoft.Extensions.Logging;
 
 using Mono.Unix;
@@ -27,10 +25,7 @@ namespace TestFtpServer.CommandMiddlewares
     /// </summary>
     public class FsIdChanger : IFtpCommandMiddleware
     {
-        [CanBeNull]
-        private readonly ILogger<FsIdChanger> _logger;
-
-        [NotNull]
+        private readonly ILogger<FsIdChanger>? _logger;
         private readonly UnixUserInfo _serverUser;
 
         /// <summary>
@@ -38,7 +33,7 @@ namespace TestFtpServer.CommandMiddlewares
         /// </summary>
         /// <param name="logger">The logger.</param>
         public FsIdChanger(
-            [CanBeNull] ILogger<FsIdChanger> logger = null)
+            ILogger<FsIdChanger>? logger = null)
         {
             _serverUser = UnixUserInfo.GetRealUser();
             _logger = logger;
@@ -64,26 +59,28 @@ namespace TestFtpServer.CommandMiddlewares
         }
 
         private async Task ExecuteWithChangedFsId(
-            [NotNull] FtpExecutionContext context,
-            [NotNull] IUnixUser unixUser,
-            [NotNull] FtpCommandExecutionDelegate next)
+            FtpExecutionContext context,
+            IUnixUser unixUser,
+            FtpCommandExecutionDelegate next)
         {
-            var contextThread = new AsyncContextThread();
-            await contextThread.Factory.Run(
-                    async () =>
-                    {
-                        using (new UnixFileSystemIdChanger(
-                            _logger,
-                            unixUser.UserId,
-                            unixUser.GroupId,
-                            _serverUser.UserId,
-                            _serverUser.GroupId))
+            using (var contextThread = new AsyncContextThread())
+            {
+                await contextThread.Factory.Run(
+                        async () =>
                         {
-                            await next(context).ConfigureAwait(true);
-                        }
-                    })
-               .ConfigureAwait(true);
-            await contextThread.JoinAsync().ConfigureAwait(false);
+                            using (new UnixFileSystemIdChanger(
+                                _logger,
+                                unixUser.UserId,
+                                unixUser.GroupId,
+                                _serverUser.UserId,
+                                _serverUser.GroupId))
+                            {
+                                await next(context).ConfigureAwait(true);
+                            }
+                        })
+                   .ConfigureAwait(true);
+                await contextThread.JoinAsync().ConfigureAwait(false);
+            }
         }
 
         /// <summary>
@@ -94,8 +91,7 @@ namespace TestFtpServer.CommandMiddlewares
             private readonly bool _hasUserInfo;
             private readonly uint _setUserId;
             private readonly uint _setGroupId;
-            [CanBeNull]
-            private readonly ILogger _logger;
+            private readonly ILogger? _logger;
             private readonly uint _defaultUserId;
             private readonly uint _defaultGroupId;
 
@@ -108,7 +104,7 @@ namespace TestFtpServer.CommandMiddlewares
             /// <param name="defaultUserId">The user ID to restore.</param>
             /// <param name="defaultGroupId">The group ID to restore.</param>
             public UnixFileSystemIdChanger(
-                [CanBeNull] ILogger logger,
+                ILogger? logger,
                 long userId,
                 long groupId,
                 long defaultUserId,

@@ -8,8 +8,6 @@ using System.Threading.Tasks;
 using FubarDev.FtpServer.Features;
 using FubarDev.FtpServer.ServerCommands;
 
-using JetBrains.Annotations;
-
 using Microsoft.Extensions.Logging;
 
 namespace FubarDev.FtpServer.ServerCommandHandlers
@@ -19,11 +17,9 @@ namespace FubarDev.FtpServer.ServerCommandHandlers
     /// </summary>
     public class PauseConnectionServerCommandHandler : IServerCommandHandler<PauseConnectionServerCommand>
     {
-        [NotNull]
         private readonly IFtpConnectionAccessor _connectionAccessor;
 
-        [CanBeNull]
-        private readonly ILogger<PauseConnectionServerCommandHandler> _logger;
+        private readonly ILogger<PauseConnectionServerCommandHandler>? _logger;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PauseConnectionServerCommandHandler"/> class.
@@ -31,8 +27,8 @@ namespace FubarDev.FtpServer.ServerCommandHandlers
         /// <param name="connectionAccessor">The FTP connection accessor.</param>
         /// <param name="logger">The logger.</param>
         public PauseConnectionServerCommandHandler(
-            [NotNull] IFtpConnectionAccessor connectionAccessor,
-            [CanBeNull] ILogger<PauseConnectionServerCommandHandler> logger = null)
+            IFtpConnectionAccessor connectionAccessor,
+            ILogger<PauseConnectionServerCommandHandler>? logger = null)
         {
             _connectionAccessor = connectionAccessor;
             _logger = logger;

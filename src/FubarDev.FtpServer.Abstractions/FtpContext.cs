@@ -6,8 +6,6 @@ using System.Threading.Channels;
 
 using FubarDev.FtpServer.ServerCommands;
 
-using JetBrains.Annotations;
-
 namespace FubarDev.FtpServer
 {
     /// <summary>
@@ -22,9 +20,9 @@ namespace FubarDev.FtpServer
         /// <param name="serverCommandWriter">The FTP response writer.</param>
         /// <param name="connection">The FTP connection.</param>
         public FtpContext(
-            [NotNull] FtpCommand command,
-            [NotNull] ChannelWriter<IServerCommand> serverCommandWriter,
-            [NotNull] IFtpConnection connection)
+            FtpCommand command,
+            ChannelWriter<IServerCommand> serverCommandWriter,
+            IFtpConnection connection)
         {
             Command = command;
             ServerCommandWriter = serverCommandWriter;
@@ -34,19 +32,16 @@ namespace FubarDev.FtpServer
         /// <summary>
         /// Gets the FTP command to be executed.
         /// </summary>
-        [NotNull]
         public FtpCommand Command { get; }
 
         /// <summary>
         /// Gets the FTP connection.
         /// </summary>
-        [NotNull]
         public IFtpConnection Connection { get; }
 
         /// <summary>
         /// Gets the response writer.
         /// </summary>
-        [NotNull]
         public ChannelWriter<IServerCommand> ServerCommandWriter { get; }
     }
 }

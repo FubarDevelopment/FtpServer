@@ -10,8 +10,6 @@ using System.Threading.Tasks;
 using FubarDev.FtpServer.Features;
 using FubarDev.FtpServer.ServerCommands;
 
-using JetBrains.Annotations;
-
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
@@ -22,14 +20,9 @@ namespace FubarDev.FtpServer.ServerCommandHandlers
     /// </summary>
     public class TlsEnableServerCommandHandler : IServerCommandHandler<TlsEnableServerCommand>
     {
-        [NotNull]
         private readonly IFtpConnectionAccessor _connectionAccessor;
-
-        [CanBeNull]
-        private readonly ILogger<TlsEnableServerCommandHandler> _logger;
-
-        [CanBeNull]
-        private readonly X509Certificate2 _serverCertificate;
+        private readonly ILogger<TlsEnableServerCommandHandler>? _logger;
+        private readonly X509Certificate2? _serverCertificate;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TlsEnableServerCommandHandler"/> class.
@@ -38,9 +31,9 @@ namespace FubarDev.FtpServer.ServerCommandHandlers
         /// <param name="options">Options for the AUTH TLS command.</param>
         /// <param name="logger">The logger.</param>
         public TlsEnableServerCommandHandler(
-            [NotNull] IFtpConnectionAccessor connectionAccessor,
-            [NotNull] IOptions<AuthTlsOptions> options,
-            [CanBeNull] ILogger<TlsEnableServerCommandHandler> logger = null)
+            IFtpConnectionAccessor connectionAccessor,
+            IOptions<AuthTlsOptions> options,
+            ILogger<TlsEnableServerCommandHandler>? logger = null)
         {
             _connectionAccessor = connectionAccessor;
             _logger = logger;
@@ -56,9 +49,9 @@ namespace FubarDev.FtpServer.ServerCommandHandlers
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public static async Task EnableTlsAsync(
-            [NotNull] IFtpConnection connection,
-            [NotNull] X509Certificate2 certificate,
-            [CanBeNull] ILogger logger,
+            IFtpConnection connection,
+            X509Certificate2 certificate,
+            ILogger? logger,
             CancellationToken cancellationToken)
         {
             var networkStreamFeature = connection.Features.Get<INetworkStreamFeature>();
@@ -110,14 +103,14 @@ namespace FubarDev.FtpServer.ServerCommandHandlers
         }
 
         private static async Task CloseEncryptedControlConnectionAsync(
-            [NotNull] INetworkStreamFeature networkStreamFeature,
-            [NotNull] ISecureConnectionFeature secureConnectionFeature,
+            INetworkStreamFeature networkStreamFeature,
+            ISecureConnectionFeature secureConnectionFeature,
             CancellationToken cancellationToken)
         {
             var service = networkStreamFeature.SecureConnectionAdapter;
             await service.ResetAsync(cancellationToken).ConfigureAwait(false);
 
-            secureConnectionFeature.CreateEncryptedStream = null;
+            secureConnectionFeature.CreateEncryptedStream = Task.FromResult;
             secureConnectionFeature.CloseEncryptedControlStream = ct => Task.CompletedTask;
         }
     }

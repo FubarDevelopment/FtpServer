@@ -4,8 +4,6 @@
 
 using System;
 
-using JetBrains.Annotations;
-
 namespace FubarDev.FtpServer.Commands
 {
     /// <summary>
@@ -16,7 +14,6 @@ namespace FubarDev.FtpServer.Commands
         /// <summary>
         /// Gets the type of the FTP command handler.
         /// </summary>
-        [NotNull]
         Type Type { get; }
 
         /// <summary>

@@ -9,8 +9,6 @@ using System.Threading.Tasks;
 
 using FubarDev.FtpServer.AccountManagement;
 
-using JetBrains.Annotations;
-
 namespace FubarDev.FtpServer.FileSystem
 {
     /// <summary>
@@ -26,6 +24,6 @@ namespace FubarDev.FtpServer.FileSystem
         /// <remarks>
         /// When the login is anonymous, the <see cref="IAccountInformation.User"/> must be of type <see cref="IAnonymousFtpUser"/>.
         /// </remarks>
-        Task<IUnixFileSystem> Create([NotNull] IAccountInformation accountInformation);
+        Task<IUnixFileSystem> Create(IAccountInformation accountInformation);
     }
 }

@@ -2,8 +2,6 @@
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
-using JetBrains.Annotations;
-
 namespace FubarDev.FtpServer
 {
     /// <summary>
@@ -18,7 +16,7 @@ namespace FubarDev.FtpServer
         /// Set to <see langword="null"/> to indicate that no more lines will follow.</param>
         /// <param name="token">The token to be passes to the <see cref="IFtpResponse.GetNextLineAsync"/> function
         /// to get the next line.</param>
-        public FtpResponseLine([CanBeNull] string text, object token)
+        public FtpResponseLine(string? text, object? token)
         {
             HasText = text != null;
             Text = text;
@@ -42,14 +40,12 @@ namespace FubarDev.FtpServer
         /// <remarks>
         /// Is <see langword="null"/> when no text should be sent to the client.
         /// </remarks>
-        [CanBeNull]
-        public string Text { get; }
+        public string? Text { get; }
 
         /// <summary>
         /// Gets the token to be passed to <see cref="IFtpResponse.GetNextLineAsync"/> to get the next line.
         /// </summary>
-        [CanBeNull]
-        public object Token { get; }
+        public object? Token { get; }
 
         /// <inheritdoc />
         public override string ToString()

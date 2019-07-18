@@ -4,8 +4,6 @@
 
 using System.Threading;
 
-using JetBrains.Annotations;
-
 namespace FubarDev.FtpServer.Commands
 {
     /// <summary>
@@ -20,8 +18,8 @@ namespace FubarDev.FtpServer.Commands
         /// <param name="commandHandler">The FTP command handler.</param>
         /// <param name="commandAborted">The cancellation token signalling an aborted command.</param>
         public FtpExecutionContext(
-            [NotNull] FtpContext ftpContext,
-            [NotNull] IFtpCommandBase commandHandler,
+            FtpContext ftpContext,
+            IFtpCommandBase commandHandler,
             CancellationToken commandAborted)
             : base(ftpContext.Command, ftpContext.ServerCommandWriter, ftpContext.Connection)
         {
@@ -32,7 +30,6 @@ namespace FubarDev.FtpServer.Commands
         /// <summary>
         /// Gets the selected command handler.
         /// </summary>
-        [NotNull]
         public IFtpCommandBase CommandHandler { get; }
 
         /// <summary>

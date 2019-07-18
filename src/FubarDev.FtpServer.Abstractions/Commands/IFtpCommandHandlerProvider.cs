@@ -4,8 +4,6 @@
 
 using System.Collections.Generic;
 
-using JetBrains.Annotations;
-
 namespace FubarDev.FtpServer.Commands
 {
     /// <summary>
@@ -16,8 +14,6 @@ namespace FubarDev.FtpServer.Commands
         /// <summary>
         /// Gets the information for all command handlers.
         /// </summary>
-        [NotNull]
-        [ItemNotNull]
         IEnumerable<IFtpCommandHandlerInformation> CommandHandlers { get; }
     }
 }

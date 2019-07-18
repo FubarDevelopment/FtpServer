@@ -10,8 +10,6 @@ using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
 
-using JetBrains.Annotations;
-
 using Microsoft.Extensions.Logging;
 
 namespace FubarDev.FtpServer
@@ -21,20 +19,12 @@ namespace FubarDev.FtpServer
     /// </summary>
     public class MultiBindingTcpListener
     {
-        [NotNull]
-        private readonly string _address;
+        private readonly string? _address;
 
         private readonly int _port;
 
-        [CanBeNull]
-        private readonly ILogger _logger;
-
-        [NotNull]
-        [ItemNotNull]
+        private readonly ILogger? _logger;
         private readonly IList<TcpListener> _listeners = new List<TcpListener>();
-
-        [NotNull]
-        [ItemNotNull]
         private readonly IList<Task<TcpClient>> _acceptors = new List<Task<TcpClient>>();
 
         /// <summary>
@@ -44,9 +34,9 @@ namespace FubarDev.FtpServer
         /// <param name="port">The listener port.</param>
         /// <param name="logger">The logger.</param>
         public MultiBindingTcpListener(
-            [NotNull] string address,
+            string? address,
             int port,
-            [CanBeNull] ILogger logger = null)
+            ILogger? logger = null)
         {
             if (port < 0 || port > 65535)
             {

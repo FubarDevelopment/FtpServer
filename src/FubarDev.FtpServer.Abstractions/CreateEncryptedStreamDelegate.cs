@@ -5,8 +5,6 @@
 using System.IO;
 using System.Threading.Tasks;
 
-using JetBrains.Annotations;
-
 namespace FubarDev.FtpServer
 {
     /// <summary>
@@ -14,6 +12,5 @@ namespace FubarDev.FtpServer
     /// </summary>
     /// <param name="unencryptedStream">The unencrypted stream.</param>
     /// <returns>The encrypted stream.</returns>
-    [NotNull]
-    public delegate Task<Stream> CreateEncryptedStreamDelegate([NotNull] Stream unencryptedStream);
+    public delegate Task<Stream> CreateEncryptedStreamDelegate(Stream unencryptedStream);
 }

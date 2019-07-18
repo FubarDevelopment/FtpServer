@@ -6,8 +6,6 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-using JetBrains.Annotations;
-
 namespace FubarDev.FtpServer
 {
     /// <summary>
@@ -24,8 +22,7 @@ namespace FubarDev.FtpServer
         /// Gets the async action to execute after sending the response to the client.
         /// </summary>
         [Obsolete("Use a custom server command.")]
-        [CanBeNull]
-        FtpResponseAfterWriteAsyncDelegate AfterWriteAction { get; }
+        FtpResponseAfterWriteAsyncDelegate? AfterWriteAction { get; }
 
         /// <summary>
         /// Tries to get the the next line.
@@ -33,7 +30,6 @@ namespace FubarDev.FtpServer
         /// <param name="token">Token that saves the current position. Must be <see langword="null"/> at the beginning.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns><see langword="true"/> when a new line is available to send.</returns>
-        [NotNull]
-        Task<FtpResponseLine> GetNextLineAsync(object token, CancellationToken cancellationToken);
+        Task<FtpResponseLine> GetNextLineAsync(object? token, CancellationToken cancellationToken);
     }
 }

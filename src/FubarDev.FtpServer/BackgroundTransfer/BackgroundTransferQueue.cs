@@ -1,4 +1,4 @@
-﻿//-----------------------------------------------------------------------
+//-----------------------------------------------------------------------
 // <copyright file="BackgroundTransferQueue.cs" company="Fubar Development Junker">
 //     Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
@@ -8,8 +8,6 @@
 using System;
 using System.Collections.Generic;
 using System.Threading;
-
-using JetBrains.Annotations;
 
 namespace FubarDev.FtpServer.BackgroundTransfer
 {
@@ -38,7 +36,7 @@ namespace FubarDev.FtpServer.BackgroundTransfer
             }
         }
 
-        public void Enqueue([NotNull] BackgroundTransferEntry transfer)
+        public void Enqueue(BackgroundTransferEntry transfer)
         {
             lock (_syncRoot)
             {
@@ -52,8 +50,7 @@ namespace FubarDev.FtpServer.BackgroundTransfer
             }
         }
 
-        [CanBeNull]
-        public BackgroundTransferEntry Dequeue()
+        public BackgroundTransferEntry? Dequeue()
         {
             lock (_syncRoot)
             {

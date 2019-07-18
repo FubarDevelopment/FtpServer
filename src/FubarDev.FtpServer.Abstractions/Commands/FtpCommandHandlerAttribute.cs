@@ -4,8 +4,6 @@
 
 using System;
 
-using JetBrains.Annotations;
-
 namespace FubarDev.FtpServer.Commands
 {
     /// <summary>
@@ -23,7 +21,7 @@ namespace FubarDev.FtpServer.Commands
         /// <param name="name">The name of the FTP command this handler accepts.</param>
         /// <param name="isAbortable">Indicates whether a login is required to execute this command.</param>
         /// <param name="isLoginRequired">Indicates whether this command is abortable.</param>
-        public FtpCommandHandlerAttribute([NotNull] string name, bool isAbortable = false, bool isLoginRequired = true)
+        public FtpCommandHandlerAttribute(string name, bool isAbortable = false, bool isLoginRequired = true)
         {
             Name = name;
             IsAbortable = isAbortable;

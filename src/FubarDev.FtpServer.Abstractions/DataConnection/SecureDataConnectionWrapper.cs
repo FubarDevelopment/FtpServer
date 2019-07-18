@@ -10,8 +10,6 @@ using System.Threading.Tasks;
 using FubarDev.FtpServer.Authentication;
 using FubarDev.FtpServer.Features;
 
-using JetBrains.Annotations;
-
 namespace FubarDev.FtpServer.DataConnection
 {
     /// <summary>
@@ -19,10 +17,7 @@ namespace FubarDev.FtpServer.DataConnection
     /// </summary>
     public class SecureDataConnectionWrapper
     {
-        [NotNull]
         private readonly IFtpConnectionAccessor _connectionAccessor;
-
-        [NotNull]
         private readonly ISslStreamWrapperFactory _sslStreamWrapperFactory;
 
         /// <summary>
@@ -31,8 +26,8 @@ namespace FubarDev.FtpServer.DataConnection
         /// <param name="connectionAccessor">Accessor for the FTP connection.</param>
         /// <param name="sslStreamWrapperFactory">The SSL stream wrapper factory.</param>
         public SecureDataConnectionWrapper(
-            [NotNull] IFtpConnectionAccessor connectionAccessor,
-            [NotNull] ISslStreamWrapperFactory sslStreamWrapperFactory)
+            IFtpConnectionAccessor connectionAccessor,
+            ISslStreamWrapperFactory sslStreamWrapperFactory)
         {
             _connectionAccessor = connectionAccessor;
             _sslStreamWrapperFactory = sslStreamWrapperFactory;
@@ -43,37 +38,29 @@ namespace FubarDev.FtpServer.DataConnection
         /// </summary>
         /// <param name="dataConnection">The data connection that should - if needed - be wrapped into a secure data connection.</param>
         /// <returns>The task returning the same or a secure data connection.</returns>
-        [NotNull]
-        [ItemNotNull]
-        public async Task<IFtpDataConnection> WrapAsync([NotNull] IFtpDataConnection dataConnection)
+        public async Task<IFtpDataConnection> WrapAsync(IFtpDataConnection dataConnection)
         {
             var connection = _connectionAccessor.FtpConnection;
             var secureConnectionFeature = connection.Features.Get<ISecureConnectionFeature>();
-
-            if (secureConnectionFeature.CreateEncryptedStream == null)
-            {
-                return dataConnection;
-            }
-
             var newStream = await secureConnectionFeature.CreateEncryptedStream(dataConnection.Stream)
                .ConfigureAwait(false);
-            return new SecureFtpDataConnection(dataConnection, _sslStreamWrapperFactory, newStream);
+
+            return ReferenceEquals(newStream, dataConnection.Stream)
+                ? dataConnection
+                : new SecureFtpDataConnection(dataConnection, _sslStreamWrapperFactory, newStream);
         }
 
         private class SecureFtpDataConnection : IFtpDataConnection
         {
-            [NotNull]
             private readonly IFtpDataConnection _originalDataConnection;
-
-            [NotNull]
             private readonly ISslStreamWrapperFactory _sslStreamWrapperFactory;
 
             private bool _closed;
 
             public SecureFtpDataConnection(
-                [NotNull] IFtpDataConnection originalDataConnection,
-                [NotNull] ISslStreamWrapperFactory sslStreamWrapperFactory,
-                [NotNull] Stream stream)
+                IFtpDataConnection originalDataConnection,
+                ISslStreamWrapperFactory sslStreamWrapperFactory,
+                Stream stream)
             {
                 _originalDataConnection = originalDataConnection;
                 _sslStreamWrapperFactory = sslStreamWrapperFactory;

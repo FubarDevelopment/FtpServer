@@ -23,7 +23,7 @@ namespace FubarDev.FtpServer.CommandHandlers
     public class MfctCommandHandler : FtpCommandHandler
     {
         /// <inheritdoc/>
-        public override async Task<IFtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
+        public override async Task<IFtpResponse?> Process(FtpCommand command, CancellationToken cancellationToken)
         {
             var parts = command.Argument.Split(new[] { ' ' }, 2);
             if (parts.Length != 2)

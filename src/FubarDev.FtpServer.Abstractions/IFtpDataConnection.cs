@@ -7,8 +7,6 @@ using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 
-using JetBrains.Annotations;
-
 namespace FubarDev.FtpServer
 {
     /// <summary>
@@ -19,19 +17,16 @@ namespace FubarDev.FtpServer
         /// <summary>
         /// Gets the local IP end point.
         /// </summary>
-        [NotNull]
         IPEndPoint LocalAddress { get; }
 
         /// <summary>
         /// Gets the remote IP end point.
         /// </summary>
-        [NotNull]
         IPEndPoint RemoteAddress { get; }
 
         /// <summary>
         /// Gets the stream for this data connection.
         /// </summary>
-        [NotNull]
         Stream Stream { get; }
 
         /// <summary>
@@ -39,7 +34,6 @@ namespace FubarDev.FtpServer
         /// </summary>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>The task.</returns>
-        [NotNull]
         Task CloseAsync(CancellationToken cancellationToken);
     }
 }

@@ -8,8 +8,6 @@ using System.Linq;
 
 using FubarDev.FtpServer.Commands;
 
-using JetBrains.Annotations;
-
 using Microsoft.Extensions.Logging;
 
 namespace FubarDev.FtpServer.CommandExtensions
@@ -29,9 +27,9 @@ namespace FubarDev.FtpServer.CommandExtensions
         /// <param name="commandHandlerExtensions">The FTP command handler extensions.</param>
         /// <param name="logger">The logger.</param>
         public ServiceFtpCommandHandlerExtensionScanner(
-            [NotNull] IFtpCommandHandlerProvider commandHandlerProvider,
-            [NotNull, ItemNotNull] IEnumerable<IFtpCommandHandlerExtension> commandHandlerExtensions,
-            [CanBeNull] ILogger<ServiceFtpCommandHandlerScanner> logger = null)
+            IFtpCommandHandlerProvider commandHandlerProvider,
+            IEnumerable<IFtpCommandHandlerExtension> commandHandlerExtensions,
+            ILogger<ServiceFtpCommandHandlerScanner>? logger = null)
         {
             _extensionInformation = CreateInformation(commandHandlerProvider, commandHandlerExtensions, logger).ToList();
         }
@@ -43,9 +41,9 @@ namespace FubarDev.FtpServer.CommandExtensions
         }
 
         private static IEnumerable<IFtpCommandHandlerExtensionInstanceInformation> CreateInformation(
-            [NotNull] IFtpCommandHandlerProvider commandHandlerProvider,
-            [NotNull, ItemNotNull] IEnumerable<IFtpCommandHandlerExtension> commandHandlerExtensions,
-            [CanBeNull] ILogger<ServiceFtpCommandHandlerScanner> logger = null)
+            IFtpCommandHandlerProvider commandHandlerProvider,
+            IEnumerable<IFtpCommandHandlerExtension> commandHandlerExtensions,
+            ILogger<ServiceFtpCommandHandlerScanner>? logger = null)
         {
             var cmdHandlers = commandHandlerProvider.CommandHandlers.ToList();
             var commandHandlers = cmdHandlers.ToDictionary(x => x.Name, StringComparer.OrdinalIgnoreCase);

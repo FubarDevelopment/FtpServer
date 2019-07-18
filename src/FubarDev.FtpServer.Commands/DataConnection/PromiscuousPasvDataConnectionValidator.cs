@@ -9,8 +9,6 @@ using System.Threading.Tasks;
 
 using FubarDev.FtpServer.Features;
 
-using JetBrains.Annotations;
-
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
@@ -21,8 +19,7 @@ namespace FubarDev.FtpServer.DataConnection
     /// </summary>
     public class PromiscuousPasvDataConnectionValidator : IFtpDataConnectionValidator
     {
-        [CanBeNull]
-        private readonly ILogger<PromiscuousPasvDataConnectionValidator> _logger;
+        private readonly ILogger<PromiscuousPasvDataConnectionValidator>? _logger;
         private readonly bool _allowPromiscuousPasv;
 
         /// <summary>
@@ -31,15 +28,15 @@ namespace FubarDev.FtpServer.DataConnection
         /// <param name="options">The PASV command handler options.</param>
         /// <param name="logger">The logger.</param>
         public PromiscuousPasvDataConnectionValidator(
-            [NotNull] IOptions<PasvCommandOptions> options,
-            [CanBeNull] ILogger<PromiscuousPasvDataConnectionValidator> logger = null)
+            IOptions<PasvCommandOptions> options,
+            ILogger<PromiscuousPasvDataConnectionValidator>? logger = null)
         {
             _logger = logger;
             _allowPromiscuousPasv = options.Value.PromiscuousPasv;
         }
 
         /// <inheritdoc />
-        public Task<ValidationResult> ValidateAsync(
+        public Task<ValidationResult?> ValidateAsync(
             IFtpConnection connection,
             IFtpDataConnectionFeature dataConnectionFeature,
             IFtpDataConnection dataConnection,
@@ -47,24 +44,24 @@ namespace FubarDev.FtpServer.DataConnection
         {
             if (_allowPromiscuousPasv)
             {
-                return Task.FromResult(ValidationResult.Success);
+                return Task.FromResult<ValidationResult?>(ValidationResult.Success);
             }
 
             if (dataConnectionFeature.Command == null)
             {
-                return Task.FromResult(ValidationResult.Success);
+                return Task.FromResult<ValidationResult?>(ValidationResult.Success);
             }
 
             if (!string.Equals(dataConnectionFeature.Command.Name, "PASV", StringComparison.OrdinalIgnoreCase)
                 && !string.Equals(dataConnectionFeature.Command.Name, "EPSV", StringComparison.OrdinalIgnoreCase))
             {
-                return Task.FromResult(ValidationResult.Success);
+                return Task.FromResult<ValidationResult?>(ValidationResult.Success);
             }
 
             var pasvRemoteAddress = dataConnection.RemoteAddress.Address;
             if (Equals(pasvRemoteAddress, connection.RemoteAddress.IPAddress))
             {
-                return Task.FromResult(ValidationResult.Success);
+                return Task.FromResult<ValidationResult?>(ValidationResult.Success);
             }
 
             var localizationFeature = connection.Features.Get<ILocalizationFeature>();
@@ -73,7 +70,7 @@ namespace FubarDev.FtpServer.DataConnection
                 pasvRemoteAddress,
                 connection.RemoteAddress.IPAddress);
             _logger?.LogWarning(errorMessage);
-            return Task.FromResult(new ValidationResult(errorMessage));
+            return Task.FromResult<ValidationResult?>(new ValidationResult(errorMessage));
         }
     }
 }

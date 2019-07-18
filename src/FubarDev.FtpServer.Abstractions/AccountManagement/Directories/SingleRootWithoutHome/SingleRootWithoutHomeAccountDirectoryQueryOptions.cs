@@ -2,8 +2,6 @@
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
-using JetBrains.Annotations;
-
 namespace FubarDev.FtpServer.AccountManagement.Directories.SingleRootWithoutHome
 {
     /// <summary>
@@ -14,7 +12,6 @@ namespace FubarDev.FtpServer.AccountManagement.Directories.SingleRootWithoutHome
         /// <summary>
         /// Gets or sets the root path.
         /// </summary>
-        [CanBeNull]
-        public string RootPath { get; set; }
+        public string? RootPath { get; set; }
     }
 }

@@ -4,8 +4,6 @@
 
 using System.Threading.Tasks;
 
-using JetBrains.Annotations;
-
 namespace FubarDev.FtpServer.Features
 {
     /// <summary>
@@ -16,19 +14,16 @@ namespace FubarDev.FtpServer.Features
         /// <summary>
         /// Gets the command that gets run in the background.
         /// </summary>
-        [NotNull]
         FtpCommand Command { get; }
 
         /// <summary>
         /// Gets the FTP command handler.
         /// </summary>
-        [NotNull]
         IFtpCommandBase Handler { get; }
 
         /// <summary>
         /// Gets the abortable task.
         /// </summary>
-        [NotNull]
         Task Task { get; }
 
         /// <summary>

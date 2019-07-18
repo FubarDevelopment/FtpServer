@@ -4,8 +4,6 @@
 
 using System.Threading.Tasks;
 
-using JetBrains.Annotations;
-
 namespace FubarDev.FtpServer.Commands
 {
     /// <summary>
@@ -13,7 +11,5 @@ namespace FubarDev.FtpServer.Commands
     /// </summary>
     /// <param name="context">The context of the current FTP command.</param>
     /// <returns>The task.</returns>
-    [NotNull]
-    public delegate Task FtpCommandExecutionDelegate(
-        [NotNull] FtpExecutionContext context);
+    public delegate Task FtpCommandExecutionDelegate(FtpExecutionContext context);
 }

@@ -7,8 +7,6 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-using JetBrains.Annotations;
-
 namespace FubarDev.FtpServer.FileSystem
 {
     /// <summary>
@@ -24,8 +22,8 @@ namespace FubarDev.FtpServer.FileSystem
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>The result of the selection.</returns>
         public static Task<PathSelectionResult> SelectAsync(
-            [NotNull] this IUnixFileSystem fileSystem,
-            [CanBeNull] string path,
+            this IUnixFileSystem fileSystem,
+            string? path,
             CancellationToken cancellationToken)
         {
             return SelectAsync(fileSystem, Enumerable.Empty<IUnixDirectoryEntry>(), path, cancellationToken);
@@ -40,9 +38,9 @@ namespace FubarDev.FtpServer.FileSystem
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>The result of the selection.</returns>
         public static async Task<PathSelectionResult> SelectAsync(
-            [NotNull] this IUnixFileSystem fileSystem,
-            [NotNull] IEnumerable<IUnixDirectoryEntry> pathEntries,
-            [CanBeNull] string path,
+            this IUnixFileSystem fileSystem,
+            IEnumerable<IUnixDirectoryEntry> pathEntries,
+            string? path,
             CancellationToken cancellationToken)
         {
             var currentDirectoryEntries = new Stack<IUnixDirectoryEntry>(pathEntries);
@@ -122,17 +120,11 @@ namespace FubarDev.FtpServer.FileSystem
             return PathSelectionResult.Create(
                 currentDirectoryEntries);
         }
-
-        [NotNull]
-        [ItemNotNull]
-        private static IEnumerable<string> GetPathEntryNames([NotNull, ItemNotNull] this Stack<IUnixDirectoryEntry> pathEntries)
+        private static IEnumerable<string> GetPathEntryNames(this Stack<IUnixDirectoryEntry> pathEntries)
         {
             return pathEntries.Reverse().GetPathEntryNames();
         }
-
-        [NotNull]
-        [ItemNotNull]
-        private static IEnumerable<string> GetPathEntryNames([NotNull, ItemNotNull] this IEnumerable<IUnixDirectoryEntry> pathEntries)
+        private static IEnumerable<string> GetPathEntryNames(this IEnumerable<IUnixDirectoryEntry> pathEntries)
         {
             return pathEntries.Select(pathEntry => pathEntry.GetPathSegment());
         }

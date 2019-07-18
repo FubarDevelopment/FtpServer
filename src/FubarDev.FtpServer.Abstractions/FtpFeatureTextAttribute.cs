@@ -5,8 +5,6 @@
 using System;
 using System.Collections.Generic;
 
-using JetBrains.Annotations;
-
 namespace FubarDev.FtpServer
 {
     /// <summary>
@@ -15,14 +13,13 @@ namespace FubarDev.FtpServer
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
     public class FtpFeatureTextAttribute : Attribute, IFeatureInfo
     {
-        [NotNull]
         private readonly string _featureText;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FtpFeatureTextAttribute"/> class.
         /// </summary>
         /// <param name="featureText">The text sent by the FEAT command.</param>
-        public FtpFeatureTextAttribute([NotNull] string featureText)
+        public FtpFeatureTextAttribute(string featureText)
         {
             _featureText = featureText;
         }

@@ -18,7 +18,7 @@ namespace FubarDev.FtpServer.CommandHandlers
     public class AuthCommandHandler : FtpCommandHandler
     {
         /// <inheritdoc/>
-        public override Task<IFtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
+        public override Task<IFtpResponse?> Process(FtpCommand command, CancellationToken cancellationToken)
         {
             var loginStateMachine = Connection.ConnectionServices.GetRequiredService<IFtpLoginStateMachine>();
             return loginStateMachine.ExecuteAsync(command, cancellationToken);

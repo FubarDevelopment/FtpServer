@@ -4,8 +4,6 @@
 
 using FubarDev.FtpServer.FileSystem;
 
-using JetBrains.Annotations;
-
 namespace FubarDev.FtpServer.AccountManagement.Directories
 {
     /// <summary>
@@ -19,17 +17,17 @@ namespace FubarDev.FtpServer.AccountManagement.Directories
         /// <param name="rootPath">The root path relative to the file systems root path.</param>
         /// <param name="homePath">The home directory of the user relative to the <paramref name="rootPath"/>.</param>
         public GenericAccountDirectories(
-            [CanBeNull] string rootPath,
-            [CanBeNull] string homePath = null)
+            string? rootPath,
+            string? homePath = null)
         {
-            RootPath = rootPath.RemoveRoot();
-            HomePath = homePath.RemoveRoot();
+            RootPath = rootPath?.RemoveRoot();
+            HomePath = homePath?.RemoveRoot();
         }
 
         /// <inheritdoc />
-        public string RootPath { get; }
+        public string? RootPath { get; }
 
         /// <inheritdoc />
-        public string HomePath { get; }
+        public string? HomePath { get; }
     }
 }

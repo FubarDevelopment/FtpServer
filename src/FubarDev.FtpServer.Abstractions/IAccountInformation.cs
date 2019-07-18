@@ -4,8 +4,6 @@
 
 using FubarDev.FtpServer.AccountManagement;
 
-using JetBrains.Annotations;
-
 namespace FubarDev.FtpServer
 {
     /// <summary>
@@ -16,7 +14,6 @@ namespace FubarDev.FtpServer
         /// <summary>
         /// Gets the current user name.
         /// </summary>
-        [NotNull]
         IFtpUser User { get; }
     }
 }

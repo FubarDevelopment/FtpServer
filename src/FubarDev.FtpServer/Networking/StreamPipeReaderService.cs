@@ -8,8 +8,6 @@ using System.IO.Pipelines;
 using System.Threading;
 using System.Threading.Tasks;
 
-using JetBrains.Annotations;
-
 using Microsoft.Extensions.Logging;
 
 namespace FubarDev.FtpServer.Networking
@@ -19,11 +17,9 @@ namespace FubarDev.FtpServer.Networking
     /// </summary>
     internal class StreamPipeReaderService : PausableFtpService
     {
-        [NotNull]
         private readonly PipeWriter _pipeWriter;
 
-        [CanBeNull]
-        private Exception _exception;
+        private Exception? _exception;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="StreamPipeReaderService"/> class.
@@ -33,17 +29,15 @@ namespace FubarDev.FtpServer.Networking
         /// <param name="connectionClosed">Cancellation token for a closed connection.</param>
         /// <param name="logger">The logger.</param>
         public StreamPipeReaderService(
-            [NotNull] Stream stream,
-            [NotNull] PipeWriter pipeWriter,
+            Stream stream,
+            PipeWriter pipeWriter,
             CancellationToken connectionClosed,
-            [CanBeNull] ILogger logger = null)
+            ILogger? logger = null)
             : base(connectionClosed, logger)
         {
             Stream = stream;
             _pipeWriter = pipeWriter;
         }
-
-        [NotNull]
         protected Stream Stream { get; }
 
         protected virtual Task<int> ReadFromStreamAsync(byte[] buffer, int offset, int length, CancellationToken cancellationToken)
@@ -112,10 +106,10 @@ namespace FubarDev.FtpServer.Networking
             return true;
         }
 
-        protected virtual Task OnCloseAsync(Exception exception, CancellationToken cancellationToken)
+        protected virtual Task OnCloseAsync(Exception? exception, CancellationToken cancellationToken)
         {
             // Tell the PipeReader that there's no more data coming
-            _pipeWriter.Complete(_exception);
+            _pipeWriter.Complete(exception);
 
             return Task.CompletedTask;
         }

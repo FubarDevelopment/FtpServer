@@ -9,8 +9,6 @@ using FubarDev.FtpServer;
 using FubarDev.FtpServer.CommandHandlers;
 using FubarDev.FtpServer.Commands;
 
-using JetBrains.Annotations;
-
 using TestFtpServer.Utilities;
 
 namespace TestFtpServer.Commands
@@ -22,22 +20,21 @@ namespace TestFtpServer.Commands
     [FtpFeatureText("HELLO")]
     public class HelloFtpCommandHandler : FtpCommandHandler
     {
-        [NotNull]
         private readonly Hello _hello;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="HelloFtpCommandHandler"/> class.
         /// </summary>
         /// <param name="hello">The greeter.</param>
-        public HelloFtpCommandHandler([NotNull] Hello hello)
+        public HelloFtpCommandHandler(Hello hello)
         {
             _hello = hello;
         }
 
         /// <inheritdoc />
-        public override Task<IFtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
+        public override Task<IFtpResponse?> Process(FtpCommand command, CancellationToken cancellationToken)
         {
-            return Task.FromResult(_hello.CreateResponse(command.Argument));
+            return Task.FromResult<IFtpResponse?>(_hello.CreateResponse(command.Argument));
         }
     }
 }

@@ -15,8 +15,6 @@ using FubarDev.FtpServer.DataConnection;
 using FubarDev.FtpServer.Features;
 using FubarDev.FtpServer.ServerCommands;
 
-using JetBrains.Annotations;
-
 namespace FubarDev.FtpServer.CommandHandlers
 {
     /// <summary>
@@ -27,7 +25,6 @@ namespace FubarDev.FtpServer.CommandHandlers
     [FtpFeatureText("EPSV")]
     public class PasvCommandHandler : FtpCommandHandler
     {
-        [NotNull]
         private readonly PassiveDataConnectionFeatureFactory _dataConnectionFeatureFactory;
 
         /// <summary>
@@ -35,13 +32,13 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// </summary>
         /// <param name="dataConnectionFeatureFactory">The data connection feature factory.</param>
         public PasvCommandHandler(
-            [NotNull] PassiveDataConnectionFeatureFactory dataConnectionFeatureFactory)
+            PassiveDataConnectionFeatureFactory dataConnectionFeatureFactory)
         {
             _dataConnectionFeatureFactory = dataConnectionFeatureFactory;
         }
 
         /// <inheritdoc/>
-        public override async Task<IFtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
+        public override async Task<IFtpResponse?> Process(FtpCommand command, CancellationToken cancellationToken)
         {
             AddressFamily? addressFamily;
 

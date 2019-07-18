@@ -6,21 +6,16 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-using JetBrains.Annotations;
-
 namespace TestFtpServer.Shell
 {
     internal class ServerShell
     {
-        [NotNull]
         private readonly IShellStatus _status;
-
-        [NotNull]
         private readonly FtpShellCommandAutoCompletion _autoCompletionHandler;
 
         public ServerShell(
-            [NotNull] IShellStatus status,
-            [NotNull] FtpShellCommandAutoCompletion autoCompletionHandler)
+            IShellStatus status,
+            FtpShellCommandAutoCompletion autoCompletionHandler)
         {
             _status = status;
             _autoCompletionHandler = autoCompletionHandler;

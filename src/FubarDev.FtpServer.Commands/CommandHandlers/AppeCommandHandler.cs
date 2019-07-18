@@ -15,8 +15,6 @@ using FubarDev.FtpServer.Features;
 using FubarDev.FtpServer.FileSystem;
 using FubarDev.FtpServer.ServerCommands;
 
-using JetBrains.Annotations;
-
 using Microsoft.Extensions.Logging;
 
 namespace FubarDev.FtpServer.CommandHandlers
@@ -27,11 +25,9 @@ namespace FubarDev.FtpServer.CommandHandlers
     [FtpCommandHandler("APPE", isAbortable: true)]
     public class AppeCommandHandler : FtpCommandHandler
     {
-        [NotNull]
         private readonly IBackgroundTransferWorker _backgroundTransferWorker;
 
-        [CanBeNull]
-        private readonly ILogger<AppeCommandHandler> _logger;
+        private readonly ILogger<AppeCommandHandler>? _logger;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AppeCommandHandler"/> class.
@@ -39,18 +35,18 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// <param name="backgroundTransferWorker">The background transfer worker service.</param>
         /// <param name="logger">The logger.</param>
         public AppeCommandHandler(
-            [NotNull] IBackgroundTransferWorker backgroundTransferWorker,
-            [CanBeNull] ILogger<AppeCommandHandler> logger = null)
+            IBackgroundTransferWorker backgroundTransferWorker,
+            ILogger<AppeCommandHandler>? logger = null)
         {
             _backgroundTransferWorker = backgroundTransferWorker;
             _logger = logger;
         }
 
         /// <inheritdoc/>
-        public override async Task<IFtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
+        public override async Task<IFtpResponse?> Process(FtpCommand command, CancellationToken cancellationToken)
         {
-            var restartPosition = Connection.Features.Get<IRestCommandFeature>()?.RestartPosition;
-            Connection.Features.Set<IRestCommandFeature>(null);
+            var restartPosition = Connection.Features.Get<IRestCommandFeature?>()?.RestartPosition;
+            Connection.Features.Set<IRestCommandFeature?>(null);
 
             var transferMode = Connection.Features.Get<ITransferConfigurationFeature>().TransferMode;
             if (!transferMode.IsBinary && transferMode.FileType != FtpFileType.Ascii)
@@ -91,9 +87,9 @@ namespace FubarDev.FtpServer.CommandHandlers
                .ConfigureAwait(false);
         }
 
-        private async Task<IFtpResponse> ExecuteSend(
-            [NotNull] IFtpDataConnection dataConnection,
-            [NotNull] SearchResult<IUnixFileEntry> fileInfo,
+        private async Task<IFtpResponse?> ExecuteSend(
+            IFtpDataConnection dataConnection,
+            SearchResult<IUnixFileEntry> fileInfo,
             long? restartPosition,
             CancellationToken cancellationToken)
         {
@@ -101,7 +97,7 @@ namespace FubarDev.FtpServer.CommandHandlers
             var stream = dataConnection.Stream;
             stream.ReadTimeout = 10000;
 
-            IBackgroundTransfer backgroundTransfer;
+            IBackgroundTransfer? backgroundTransfer;
             if ((restartPosition != null && restartPosition.Value == 0) || fileInfo.Entry == null)
             {
                 if (fileInfo.Entry == null)

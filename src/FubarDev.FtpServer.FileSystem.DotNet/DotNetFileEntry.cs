@@ -7,8 +7,6 @@
 
 using System.IO;
 
-using JetBrains.Annotations;
-
 namespace FubarDev.FtpServer.FileSystem.DotNet
 {
     /// <summary>
@@ -21,7 +19,7 @@ namespace FubarDev.FtpServer.FileSystem.DotNet
         /// Initializes a new instance of the <see cref="DotNetFileEntry"/> class.
         /// </summary>
         /// <param name="info">The <see cref="FileInfo"/> to extract the information from.</param>
-        public DotNetFileEntry([NotNull] FileInfo info)
+        public DotNetFileEntry(FileInfo info)
             : base(info)
         {
             FileInfo = info;

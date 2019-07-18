@@ -14,6 +14,6 @@ namespace FubarDev.FtpServer
         /// <summary>
         /// Gets or sets the current <see cref="TcpClient"/>.
         /// </summary>
-        public TcpClient TcpSocketClient { get; set; }
+        public TcpClient? TcpSocketClient { get; set; }
     }
 }

@@ -9,8 +9,6 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-using JetBrains.Annotations;
-
 namespace FubarDev.FtpServer
 {
     /// <summary>
@@ -25,7 +23,7 @@ namespace FubarDev.FtpServer
         /// <param name="message">The response message.</param>
         public FtpResponse(
             int code,
-            [CanBeNull] string message)
+            string? message)
         {
             Code = code;
             Message = message;
@@ -36,7 +34,7 @@ namespace FubarDev.FtpServer
         /// </summary>
         /// <param name="code">The response code.</param>
         /// <param name="message">The response message.</param>
-        public FtpResponse(SecurityActionResult code, [CanBeNull] string message)
+        public FtpResponse(SecurityActionResult code, string? message)
             : this((int)code, message)
         {
         }
@@ -47,14 +45,13 @@ namespace FubarDev.FtpServer
         /// <summary>
         /// Gets the response message.
         /// </summary>
-        [CanBeNull]
-        public string Message { get; }
+        public string? Message { get; }
 
         /// <summary>
         /// Gets or sets the async action to execute after sending the response to the client.
         /// </summary>
         [Obsolete("Use a custom server command.")]
-        public FtpResponseAfterWriteAsyncDelegate AfterWriteAction { get; set; }
+        public FtpResponseAfterWriteAsyncDelegate? AfterWriteAction { get; set; }
 
         /// <inheritdoc/>
         public override string ToString()
@@ -63,7 +60,7 @@ namespace FubarDev.FtpServer
         }
 
         /// <inheritdoc />
-        public Task<FtpResponseLine> GetNextLineAsync(object token, CancellationToken cancellationToken)
+        public Task<FtpResponseLine> GetNextLineAsync(object? token, CancellationToken cancellationToken)
         {
             if (token is null)
             {

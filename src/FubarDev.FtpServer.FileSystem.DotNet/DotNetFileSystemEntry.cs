@@ -7,8 +7,6 @@ using System.IO;
 
 using FubarDev.FtpServer.FileSystem.Generic;
 
-using JetBrains.Annotations;
-
 namespace FubarDev.FtpServer.FileSystem.DotNet
 {
     /// <summary>
@@ -20,7 +18,7 @@ namespace FubarDev.FtpServer.FileSystem.DotNet
         /// Initializes a new instance of the <see cref="DotNetFileSystemEntry"/> class.
         /// </summary>
         /// <param name="fsInfo">The <see cref="FileSystemInfo"/> to extract the information from.</param>
-        protected DotNetFileSystemEntry([NotNull] FileSystemInfo fsInfo)
+        protected DotNetFileSystemEntry(FileSystemInfo fsInfo)
         {
             Info = fsInfo;
             LastWriteTime = new DateTimeOffset(Info.LastWriteTime);

@@ -37,7 +37,7 @@ namespace FubarDev.FtpServer
         /// <returns>the server builder used to configure the FTP server.</returns>
         public static IFtpServerBuilder UseSingleRoot(
             this IFtpServerBuilder builder,
-            Action<SingleRootWithoutHomeAccountDirectoryQueryOptions> configure = null)
+            Action<SingleRootWithoutHomeAccountDirectoryQueryOptions>? configure = null)
         {
             builder.Services.AddSingleton<IAccountDirectoryQuery, SingleRootWithoutHomeAccountDirectoryQuery>();
             if (configure != null)
@@ -59,7 +59,7 @@ namespace FubarDev.FtpServer
         /// <returns>the server builder used to configure the FTP server.</returns>
         public static IFtpServerBuilder UseRootPerUser(
             this IFtpServerBuilder builder,
-            Action<RootPerUserAccountDirectoryQueryOptions> configure = null)
+            Action<RootPerUserAccountDirectoryQueryOptions>? configure = null)
         {
             builder.Services.AddSingleton<IAccountDirectoryQuery, RootPerUserAccountDirectoryQuery>();
             if (configure != null)

@@ -6,8 +6,6 @@ using System.IO.Pipelines;
 
 using FubarDev.FtpServer.ConnectionHandlers;
 
-using JetBrains.Annotations;
-
 namespace FubarDev.FtpServer.Features
 {
     /// <summary>
@@ -22,13 +20,11 @@ namespace FubarDev.FtpServer.Features
         /// <summary>
         /// Gets the connection adapter that encrypts the network stream with an <c>SslStream</c> or something similar.
         /// </summary>
-        [NotNull]
         IFtpSecureConnectionAdapter SecureConnectionAdapter { get; }
 
         /// <summary>
         /// Gets the pipe writer for sending the responses.
         /// </summary>
-        [NotNull]
         PipeWriter Output { get; }
     }
 }

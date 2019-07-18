@@ -7,8 +7,6 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 
-using JetBrains.Annotations;
-
 using Microsoft.Extensions.Logging;
 
 namespace FubarDev.FtpServer.Networking
@@ -18,15 +16,10 @@ namespace FubarDev.FtpServer.Networking
     /// </summary>
     internal abstract class PausableFtpService : IPausableFtpService
     {
-        [NotNull]
         private readonly CancellationTokenSource _jobStopped = new CancellationTokenSource();
 
         private readonly CancellationToken _connectionClosed;
-
-        [NotNull]
         private CancellationTokenSource _jobPaused = new CancellationTokenSource();
-
-        [NotNull]
         private Task _task = Task.CompletedTask;
 
         /// <summary>
@@ -36,7 +29,7 @@ namespace FubarDev.FtpServer.Networking
         /// <param name="connectionClosed">Cancellation token source for a closed connection.</param>
         protected PausableFtpService(
             CancellationToken connectionClosed,
-            [CanBeNull] ILogger logger = null)
+            ILogger? logger = null)
         {
             Logger = logger;
             _connectionClosed = connectionClosed;
@@ -45,8 +38,7 @@ namespace FubarDev.FtpServer.Networking
         /// <inheritdoc />
         public FtpServiceStatus Status { get; private set; } = FtpServiceStatus.ReadyToRun;
 
-        [CanBeNull]
-        protected ILogger Logger { get; }
+        protected ILogger? Logger { get; }
 
         protected bool IsConnectionClosed => _connectionClosed.IsCancellationRequested;
 
@@ -142,63 +134,45 @@ namespace FubarDev.FtpServer.Networking
 
             _task = RunAsync(new Progress<FtpServiceStatus>(status => Status = status));
         }
-
-        [NotNull]
         protected abstract Task ExecuteAsync(
             CancellationToken cancellationToken);
-
-        [NotNull]
         protected virtual Task OnStopRequestingAsync(
             CancellationToken cancellationToken)
         {
             return Task.CompletedTask;
         }
-
-        [NotNull]
         protected virtual Task OnStopRequestedAsync(
             CancellationToken cancellationToken)
         {
             return Task.CompletedTask;
         }
-
-        [NotNull]
         protected virtual Task OnPauseRequestingAsync(
             CancellationToken cancellationToken)
         {
             return Task.CompletedTask;
         }
-
-        [NotNull]
         protected virtual Task OnPauseRequestedAsync(
             CancellationToken cancellationToken)
         {
             return Task.CompletedTask;
         }
-
-        [NotNull]
         protected virtual Task OnContinueRequestingAsync(
             CancellationToken cancellationToken)
         {
             return Task.CompletedTask;
         }
-
-        [NotNull]
         protected virtual Task OnPausedAsync(
             CancellationToken cancellationToken)
         {
             return Task.CompletedTask;
         }
-
-        [NotNull]
         protected virtual Task OnStoppedAsync(
             CancellationToken cancellationToken)
         {
             return Task.CompletedTask;
         }
-
-        [NotNull]
         protected virtual Task<bool> OnFailedAsync(
-            [NotNull] Exception exception,
+            Exception exception,
             CancellationToken cancellationToken)
         {
             Logger?.LogCritical(exception, exception.Message);
@@ -206,7 +180,7 @@ namespace FubarDev.FtpServer.Networking
         }
 
         private async Task RunAsync(
-            [NotNull] IProgress<FtpServiceStatus> statusProgress)
+            IProgress<FtpServiceStatus> statusProgress)
         {
             using (var globalCts = CancellationTokenSource.CreateLinkedTokenSource(
                 _connectionClosed,

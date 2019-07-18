@@ -7,8 +7,6 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-using JetBrains.Annotations;
-
 namespace TestFtpServer.Shell.Commands
 {
     /// <summary>
@@ -16,11 +14,10 @@ namespace TestFtpServer.Shell.Commands
     /// </summary>
     public class HelpCommandHandler : IRootCommandInfo, IExecutableCommandInfo
     {
-        [NotNull]
         private readonly IShellStatus _status;
 
         public HelpCommandHandler(
-            [NotNull] IShellStatus status)
+            IShellStatus status)
         {
             _status = status;
         }

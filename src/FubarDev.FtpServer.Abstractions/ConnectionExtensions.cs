@@ -8,8 +8,6 @@ using System.Threading.Tasks;
 
 using FubarDev.FtpServer.Features;
 
-using JetBrains.Annotations;
-
 using Microsoft.Extensions.Logging;
 
 namespace FubarDev.FtpServer
@@ -27,12 +25,10 @@ namespace FubarDev.FtpServer
         /// <param name="logger">The logger.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>The task with the FTP response.</returns>
-        [NotNull]
-        [ItemNotNull]
-        public static async Task<IFtpResponse> SendDataAsync(
-            [NotNull] this IFtpConnection connection,
-            [NotNull] Func<IFtpDataConnection, CancellationToken, Task<IFtpResponse>> asyncSendAction,
-            [CanBeNull] ILogger logger,
+        public static async Task<IFtpResponse?> SendDataAsync(
+            this IFtpConnection connection,
+            Func<IFtpDataConnection, CancellationToken, Task<IFtpResponse?>> asyncSendAction,
+            ILogger? logger,
             CancellationToken cancellationToken)
         {
             IFtpDataConnection dataConnection;

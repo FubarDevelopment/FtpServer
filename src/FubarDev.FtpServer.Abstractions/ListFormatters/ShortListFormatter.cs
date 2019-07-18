@@ -15,7 +15,7 @@ namespace FubarDev.FtpServer.ListFormatters
     public class ShortListFormatter : IListFormatter
     {
         /// <inheritdoc/>
-        public string Format(IUnixFileSystemEntry entry, string name)
+        public string Format(IUnixFileSystemEntry entry, string? name)
         {
             return name ?? entry.Name;
         }

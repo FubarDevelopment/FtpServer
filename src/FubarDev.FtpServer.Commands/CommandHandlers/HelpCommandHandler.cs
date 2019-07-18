@@ -16,7 +16,7 @@ namespace FubarDev.FtpServer.CommandHandlers
     public class HelpCommandHandler : FtpCommandHandler
     {
         /// <inheritdoc/>
-        public override Task<IFtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
+        public override Task<IFtpResponse?> Process(FtpCommand command, CancellationToken cancellationToken)
         {
             var helpArg = command.Argument;
             if (string.IsNullOrEmpty(helpArg))
@@ -29,18 +29,18 @@ namespace FubarDev.FtpServer.CommandHandlers
                 case "SITE":
                     return ShowHelpSiteAsync();
                 default:
-                    return Task.FromResult<IFtpResponse>(new FtpResponse(501, T("Syntax error in parameters or arguments.")));
+                    return Task.FromResult<IFtpResponse?>(new FtpResponse(501, T("Syntax error in parameters or arguments.")));
             }
         }
 
-        private Task<IFtpResponse> ShowHelpSiteAsync()
+        private Task<IFtpResponse?> ShowHelpSiteAsync()
         {
             var helpText = new[]
             {
                 "SITE BLST [DIRECT]",
             };
 
-            return Task.FromResult<IFtpResponse>(
+            return Task.FromResult<IFtpResponse?>(
                 new FtpResponseList(
                     211,
                     "HELP",

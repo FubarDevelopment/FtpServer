@@ -6,15 +6,13 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-using JetBrains.Annotations;
-
 namespace FubarDev.FtpServer
 {
     /// <summary>
     /// Interface for a state machine for the FTP server.
     /// </summary>
     /// <typeparam name="TStatus">The type of the status of the state machine.</typeparam>
-    public interface IFtpStateMachine<TStatus>
+    public interface IFtpStateMachine<out TStatus>
         where TStatus : Enum
     {
         /// <summary>
@@ -33,8 +31,6 @@ namespace FubarDev.FtpServer
         /// <param name="ftpCommand">The FTP command to handle.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>The task returning the response.</returns>
-        [NotNull]
-        [ItemCanBeNull]
-        Task<IFtpResponse> ExecuteAsync([NotNull] FtpCommand ftpCommand, CancellationToken cancellationToken = default);
+        Task<IFtpResponse?> ExecuteAsync(FtpCommand ftpCommand, CancellationToken cancellationToken = default);
     }
 }

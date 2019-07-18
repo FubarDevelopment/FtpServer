@@ -13,8 +13,6 @@ using FubarDev.FtpServer.Commands;
 using FubarDev.FtpServer.DataConnection;
 using FubarDev.FtpServer.Features;
 
-using JetBrains.Annotations;
-
 using Microsoft.Extensions.Options;
 
 namespace FubarDev.FtpServer.CommandHandlers
@@ -27,10 +25,7 @@ namespace FubarDev.FtpServer.CommandHandlers
     [FtpFeatureText("EPRT")]
     public class PortCommandHandler : FtpCommandHandler
     {
-        [NotNull]
         private readonly ActiveDataConnectionFeatureFactory _dataConnectionFeatureFactory;
-
-        [NotNull]
         private readonly PortCommandOptions _options;
 
         /// <summary>
@@ -39,15 +34,15 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// <param name="dataConnectionFeatureFactory">The factory to create a data connection feature for active connections.</param>
         /// <param name="options">The options for this command.</param>
         public PortCommandHandler(
-            [NotNull] ActiveDataConnectionFeatureFactory dataConnectionFeatureFactory,
-            [NotNull] IOptions<PortCommandOptions> options)
+            ActiveDataConnectionFeatureFactory dataConnectionFeatureFactory,
+            IOptions<PortCommandOptions> options)
         {
             _dataConnectionFeatureFactory = dataConnectionFeatureFactory;
             _options = options.Value;
         }
 
         /// <inheritdoc/>
-        public override async Task<IFtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
+        public override async Task<IFtpResponse?> Process(FtpCommand command, CancellationToken cancellationToken)
         {
             try
             {

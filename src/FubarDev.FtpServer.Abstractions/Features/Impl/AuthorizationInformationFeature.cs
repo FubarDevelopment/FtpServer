@@ -12,6 +12,6 @@ namespace FubarDev.FtpServer.Features.Impl
     internal class AuthorizationInformationFeature : IAuthorizationInformationFeature
     {
         /// <inheritdoc />
-        public IFtpUser User { get; set; }
+        public IFtpUser? User { get; set; }
     }
 }

@@ -5,8 +5,6 @@
 // <author>Mark Junker</author>
 //-----------------------------------------------------------------------
 
-using JetBrains.Annotations;
-
 namespace FubarDev.FtpServer.FileSystem
 {
     /// <summary>
@@ -17,19 +15,16 @@ namespace FubarDev.FtpServer.FileSystem
         /// <summary>
         /// Gets the user permissions.
         /// </summary>
-        [NotNull]
         IAccessMode User { get; }
 
         /// <summary>
         /// Gets the group permissions.
         /// </summary>
-        [NotNull]
         IAccessMode Group { get; }
 
         /// <summary>
         /// Gets the other permissions.
         /// </summary>
-        [NotNull]
         IAccessMode Other { get; }
     }
 }

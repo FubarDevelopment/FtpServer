@@ -21,7 +21,7 @@ namespace FubarDev.FtpServer.CommandHandlers
     public class QuitCommandHandler : FtpCommandHandler
     {
         /// <inheritdoc/>
-        public override async Task<IFtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
+        public override async Task<IFtpResponse?> Process(FtpCommand command, CancellationToken cancellationToken)
         {
             await FtpContext.ServerCommandWriter.WriteAsync(
                     new SendResponseServerCommand(new FtpResponse(221, T("Service closing control connection."))),

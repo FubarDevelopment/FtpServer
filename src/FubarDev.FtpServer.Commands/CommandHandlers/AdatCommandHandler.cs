@@ -19,13 +19,13 @@ namespace FubarDev.FtpServer.CommandHandlers
     public class AdatCommandHandler : FtpCommandHandler
     {
         /// <inheritdoc />
-        public override Task<IFtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
+        public override async Task<IFtpResponse?> Process(FtpCommand command, CancellationToken cancellationToken)
         {
             var loginStateMachine = Connection.ConnectionServices.GetRequiredService<IFtpLoginStateMachine>();
             var authenticationMechanism = loginStateMachine.SelectedAuthenticationMechanism;
             if (authenticationMechanism == null)
             {
-                return Task.FromResult<IFtpResponse>(new FtpResponse(503, T("Bad sequence of commands")));
+                return new FtpResponse(503, T("Bad sequence of commands"));
             }
 
             byte[] data;
@@ -35,10 +35,10 @@ namespace FubarDev.FtpServer.CommandHandlers
             }
             catch (FormatException)
             {
-                return Task.FromResult<IFtpResponse>(new FtpResponse(501, T("Syntax error in parameters or arguments.")));
+                return new FtpResponse(501, T("Syntax error in parameters or arguments."));
             }
 
-            return authenticationMechanism.HandleAdatAsync(data, cancellationToken);
+            return await authenticationMechanism.HandleAdatAsync(data, cancellationToken).ConfigureAwait(false);
         }
     }
 }

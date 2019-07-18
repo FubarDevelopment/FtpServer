@@ -6,8 +6,6 @@ using System;
 
 using FubarDev.FtpServer.AccountManagement;
 
-using JetBrains.Annotations;
-
 namespace FubarDev.FtpServer.FileSystem.InMemory
 {
     /// <summary>
@@ -22,7 +20,7 @@ namespace FubarDev.FtpServer.FileSystem.InMemory
         /// <param name="name">The name of this entry.</param>
         /// <param name="permissions">The permissions of this entry.</param>
         protected InMemoryFileSystemEntry(
-            InMemoryDirectoryEntry parent,
+            InMemoryDirectoryEntry? parent,
             string name,
             IUnixPermissions permissions)
         {
@@ -58,8 +56,7 @@ namespace FubarDev.FtpServer.FileSystem.InMemory
         /// <summary>
         /// Gets or sets the parent entry.
         /// </summary>
-        [CanBeNull]
-        public InMemoryDirectoryEntry Parent { get; set; }
+        public InMemoryDirectoryEntry? Parent { get; set; }
 
         /// <summary>
         /// Configure directory entry as owned by given <paramref name="user"/>.

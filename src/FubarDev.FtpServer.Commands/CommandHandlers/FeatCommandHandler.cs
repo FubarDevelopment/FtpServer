@@ -13,8 +13,6 @@ using System.Threading.Tasks;
 
 using FubarDev.FtpServer.Commands;
 
-using JetBrains.Annotations;
-
 using Microsoft.Extensions.DependencyInjection;
 
 namespace FubarDev.FtpServer.CommandHandlers
@@ -25,10 +23,7 @@ namespace FubarDev.FtpServer.CommandHandlers
     [FtpCommandHandler("FEAT", isLoginRequired: false)]
     public class FeatCommandHandler : FtpCommandHandler
     {
-        [NotNull]
         private readonly IFeatureInfoProvider _featureInfoProvider;
-
-        [NotNull]
         private readonly IFtpCommandHandlerProvider _commandHandlerProvider;
 
         /// <summary>
@@ -37,15 +32,15 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// <param name="featureInfoProvider">Provider for feature information.</param>
         /// <param name="commandHandlerProvider">The FTP command handler provider.</param>
         public FeatCommandHandler(
-            [NotNull] IFeatureInfoProvider featureInfoProvider,
-            [NotNull] IFtpCommandHandlerProvider commandHandlerProvider)
+            IFeatureInfoProvider featureInfoProvider,
+            IFtpCommandHandlerProvider commandHandlerProvider)
         {
             _featureInfoProvider = featureInfoProvider;
             _commandHandlerProvider = commandHandlerProvider;
         }
 
         /// <inheritdoc/>
-        public override Task<IFtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
+        public override Task<IFtpResponse?> Process(FtpCommand command, CancellationToken cancellationToken)
         {
             var loginStateMachine = Connection.ConnectionServices.GetRequiredService<IFtpLoginStateMachine>();
             var isAuthorized = loginStateMachine.Status == SecurityStatus.Authorized;
@@ -61,10 +56,10 @@ namespace FubarDev.FtpServer.CommandHandlers
 
             if (features.Count == 0)
             {
-                return Task.FromResult<IFtpResponse>(new FtpResponse(211, T("No extensions supported")));
+                return Task.FromResult<IFtpResponse?>(new FtpResponse(211, T("No extensions supported")));
             }
 
-            return Task.FromResult<IFtpResponse>(
+            return Task.FromResult<IFtpResponse?>(
                 new FtpResponseList(
                     211,
                     T("Extensions supported:"),

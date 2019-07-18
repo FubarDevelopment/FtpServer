@@ -5,8 +5,6 @@
 using System.Collections.Generic;
 using FubarDev.FtpServer;
 
-using JetBrains.Annotations;
-
 namespace TestFtpServer.Utilities
 {
     /// <summary>
@@ -14,8 +12,6 @@ namespace TestFtpServer.Utilities
     /// </summary>
     public class Hello
     {
-        [NotNull]
-        [ItemNotNull]
         private readonly ISet<string> _greetedPersons = new HashSet<string>();
 
         /// <summary>
@@ -23,7 +19,7 @@ namespace TestFtpServer.Utilities
         /// </summary>
         /// <param name="name">The name to create the response for.</param>
         /// <returns>The created response.</returns>
-        public IFtpResponse CreateResponse([CanBeNull] string name)
+        public IFtpResponse CreateResponse(string? name)
         {
             IFtpResponse response;
             if (string.IsNullOrEmpty(name))

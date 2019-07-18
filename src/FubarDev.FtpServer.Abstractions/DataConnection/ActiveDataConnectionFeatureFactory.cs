@@ -14,8 +14,6 @@ using System.Threading.Tasks;
 
 using FubarDev.FtpServer.Features;
 
-using JetBrains.Annotations;
-
 namespace FubarDev.FtpServer.DataConnection
 {
     /// <summary>
@@ -23,11 +21,7 @@ namespace FubarDev.FtpServer.DataConnection
     /// </summary>
     public class ActiveDataConnectionFeatureFactory
     {
-        [NotNull]
         private readonly IFtpConnectionAccessor _connectionAccessor;
-
-        [NotNull]
-        [ItemNotNull]
         private readonly List<IFtpDataConnectionValidator> _validators;
 
         /// <summary>
@@ -36,8 +30,8 @@ namespace FubarDev.FtpServer.DataConnection
         /// <param name="connectionAccessor">The FTP connection accessor.</param>
         /// <param name="validators">An enumeration of FTP connection validators.</param>
         public ActiveDataConnectionFeatureFactory(
-            [NotNull] IFtpConnectionAccessor connectionAccessor,
-            [NotNull, ItemNotNull] IEnumerable<IFtpDataConnectionValidator> validators)
+            IFtpConnectionAccessor connectionAccessor,
+            IEnumerable<IFtpDataConnectionValidator> validators)
         {
             _connectionAccessor = connectionAccessor;
             _validators = validators.ToList();
@@ -50,11 +44,9 @@ namespace FubarDev.FtpServer.DataConnection
         /// <param name="portAddress">The address the client wants the FTP server to connect to.</param>
         /// <param name="dataPort">The source port the server should use to connect to the client.</param>
         /// <returns>The task returning the new FTP data connection feature.</returns>
-        [NotNull]
-        [ItemNotNull]
         public Task<IFtpDataConnectionFeature> CreateFeatureAsync(
-            [CanBeNull] FtpCommand ftpCommand,
-            [NotNull] Address portAddress,
+            FtpCommand? ftpCommand,
+            Address portAddress,
             int? dataPort)
         {
             var connection = _connectionAccessor.FtpConnection;
@@ -81,22 +73,16 @@ namespace FubarDev.FtpServer.DataConnection
 
         private class ActiveDataConnectionFeature : IFtpDataConnectionFeature
         {
-            [NotNull]
             private readonly Address _portAddress;
-
-            [NotNull]
-            [ItemNotNull]
             private readonly List<IFtpDataConnectionValidator> _validators;
-
-            [NotNull]
             private readonly IFtpConnection _ftpConnection;
 
             public ActiveDataConnectionFeature(
-                [NotNull] IPEndPoint localEndPoint,
-                [NotNull] Address portAddress,
-                [NotNull] [ItemNotNull] List<IFtpDataConnectionValidator> validators,
-                [CanBeNull] FtpCommand command,
-                [NotNull] IFtpConnection ftpConnection)
+                IPEndPoint localEndPoint,
+                Address portAddress,
+                List<IFtpDataConnectionValidator> validators,
+                FtpCommand? command,
+                IFtpConnection ftpConnection)
             {
                 _portAddress = portAddress;
                 _validators = validators;
@@ -106,7 +92,7 @@ namespace FubarDev.FtpServer.DataConnection
             }
 
             /// <inheritdoc />
-            public FtpCommand Command { get; }
+            public FtpCommand? Command { get; }
 
             /// <inheritdoc />
             public IPEndPoint LocalEndPoint { get; }
@@ -204,13 +190,12 @@ namespace FubarDev.FtpServer.DataConnection
 
             private class ActiveDataConnection : IFtpDataConnection
             {
-                [NotNull]
                 private readonly TcpClient _client;
 
                 private bool _closed;
 
                 public ActiveDataConnection(
-                    [NotNull] TcpClient client)
+                    TcpClient client)
                 {
                     _client = client;
                     Stream = client.GetStream();

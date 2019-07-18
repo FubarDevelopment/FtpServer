@@ -25,7 +25,7 @@ namespace FubarDev.FtpServer.FileSystem.InMemory
         /// <param name="name">The name of this entry.</param>
         /// <param name="children">The children of this directory entry.</param>
         public InMemoryDirectoryEntry(
-            InMemoryDirectoryEntry parent,
+            InMemoryDirectoryEntry? parent,
             string name,
             IDictionary<string, IUnixFileSystemEntry> children)
             : base(parent, name, _defaultPermissions)

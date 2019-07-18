@@ -13,8 +13,6 @@ using FubarDev.FtpServer.BackgroundTransfer;
 using FubarDev.FtpServer.Features;
 using FubarDev.FtpServer.ServerCommands;
 
-using JetBrains.Annotations;
-
 using Microsoft.Extensions.Logging;
 
 namespace FubarDev.FtpServer.CommandExtensions
@@ -26,11 +24,8 @@ namespace FubarDev.FtpServer.CommandExtensions
     [FtpFeatureText("SITE BLST")]
     public class SiteBlstCommandExtension : FtpCommandHandlerExtension
     {
-        [NotNull]
         private readonly IBackgroundTransferWorker _backgroundTransferWorker;
-
-        [CanBeNull]
-        private readonly ILogger<SiteBlstCommandExtension> _logger;
+        private readonly ILogger<SiteBlstCommandExtension>? _logger;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SiteBlstCommandExtension"/> class.
@@ -38,8 +33,8 @@ namespace FubarDev.FtpServer.CommandExtensions
         /// <param name="backgroundTransferWorker">The background transfer worker service.</param>
         /// <param name="logger">The logger.</param>
         public SiteBlstCommandExtension(
-            [NotNull] IBackgroundTransferWorker backgroundTransferWorker,
-            [CanBeNull] ILogger<SiteBlstCommandExtension> logger = null)
+            IBackgroundTransferWorker backgroundTransferWorker,
+            ILogger<SiteBlstCommandExtension>? logger = null)
         {
             _backgroundTransferWorker = backgroundTransferWorker;
             _logger = logger;
@@ -55,7 +50,7 @@ namespace FubarDev.FtpServer.CommandExtensions
         }
 
         /// <inheritdoc/>
-        public override async Task<IFtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
+        public override async Task<IFtpResponse?> Process(FtpCommand command, CancellationToken cancellationToken)
         {
             var mode = (string.IsNullOrEmpty(command.Argument) ? "data" : command.Argument).ToLowerInvariant();
 
@@ -87,7 +82,7 @@ namespace FubarDev.FtpServer.CommandExtensions
                     GetLines(taskStates)));
         }
 
-        private async Task<IFtpResponse> SendBlstWithDataConnection(CancellationToken cancellationToken)
+        private async Task<IFtpResponse?> SendBlstWithDataConnection(CancellationToken cancellationToken)
         {
             await FtpContext.ServerCommandWriter.WriteAsync(
                     new SendResponseServerCommand(new FtpResponse(150, T("Opening data connection."))),
@@ -101,7 +96,7 @@ namespace FubarDev.FtpServer.CommandExtensions
                .ConfigureAwait(false);
         }
 
-        private async Task<IFtpResponse> ExecuteSend(IFtpDataConnection dataConnection, CancellationToken cancellationToken)
+        private async Task<IFtpResponse?> ExecuteSend(IFtpDataConnection dataConnection, CancellationToken cancellationToken)
         {
             var encoding = Connection.Features.Get<IEncodingFeature>().Encoding;
             var stream = dataConnection.Stream;

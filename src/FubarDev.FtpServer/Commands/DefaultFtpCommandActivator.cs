@@ -10,8 +10,6 @@ using System.Reflection;
 using FubarDev.FtpServer.CommandExtensions;
 using FubarDev.FtpServer.CommandHandlers;
 
-using JetBrains.Annotations;
-
 using Microsoft.Extensions.DependencyInjection;
 
 namespace FubarDev.FtpServer.Commands
@@ -21,23 +19,12 @@ namespace FubarDev.FtpServer.Commands
     /// </summary>
     public class DefaultFtpCommandActivator : IFtpCommandActivator
     {
-        [NotNull]
         private readonly IServiceProvider _serviceProvider;
-
-        [NotNull]
         private readonly Dictionary<string, IFtpCommandHandlerInformation> _nameToHandlerInfo;
-
-        [NotNull]
         private readonly ILookup<string, IFtpCommandHandlerExtensionInformation> _hostToExtensionInfo;
-
-        [NotNull]
         private readonly Dictionary<Type, IFtpCommandHandler> _commandHandlers = new Dictionary<Type, IFtpCommandHandler>();
-
-        [NotNull]
         private readonly Dictionary<Type, IFtpCommandHandlerExtension> _commandHandlerExtensions = new Dictionary<Type, IFtpCommandHandlerExtension>();
-
-        [NotNull]
-        private readonly Dictionary<Type, PropertyInfo> _commandContextProperties = new Dictionary<Type, PropertyInfo>();
+        private readonly Dictionary<Type, PropertyInfo?> _commandContextProperties = new Dictionary<Type, PropertyInfo?>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DefaultFtpCommandActivator"/> class.
@@ -46,9 +33,9 @@ namespace FubarDev.FtpServer.Commands
         /// <param name="commandHandlerProvider">The provider for FTP command handlers.</param>
         /// <param name="commandHandlerExtensionProvider">The provider for FTP command handler extensions.</param>
         public DefaultFtpCommandActivator(
-            [NotNull] IServiceProvider serviceProvider,
-            [NotNull] IFtpCommandHandlerProvider commandHandlerProvider,
-            [NotNull] IFtpCommandHandlerExtensionProvider commandHandlerExtensionProvider)
+            IServiceProvider serviceProvider,
+            IFtpCommandHandlerProvider commandHandlerProvider,
+            IFtpCommandHandlerExtensionProvider commandHandlerExtensionProvider)
         {
             _serviceProvider = serviceProvider;
             _nameToHandlerInfo = commandHandlerProvider.CommandHandlers.ToDictionary(
@@ -60,7 +47,7 @@ namespace FubarDev.FtpServer.Commands
         }
 
         /// <inheritdoc />
-        public FtpCommandSelection Create(FtpCommandHandlerContext context)
+        public FtpCommandSelection? Create(FtpCommandHandlerContext context)
         {
             var result = ActivateCommandHandler(context);
             if (result != null)
@@ -71,14 +58,13 @@ namespace FubarDev.FtpServer.Commands
             return result;
         }
 
-        private void ActivateProperty([NotNull] object handler, [NotNull] FtpCommandHandlerContext context)
+        private void ActivateProperty(object handler, FtpCommandHandlerContext context)
         {
             var property = GetCommandContextProperty(handler.GetType());
             property?.SetValue(handler, context);
         }
 
-        [CanBeNull]
-        private PropertyInfo GetCommandContextProperty([NotNull] Type type)
+        private PropertyInfo? GetCommandContextProperty(Type type)
         {
             if (_commandContextProperties.TryGetValue(type, out var commandContextProperty))
             {
@@ -90,8 +76,7 @@ namespace FubarDev.FtpServer.Commands
             return commandContextProperty;
         }
 
-        [CanBeNull]
-        private FtpCommandSelection ActivateCommandHandler([NotNull] FtpCommandHandlerContext context)
+        private FtpCommandSelection? ActivateCommandHandler(FtpCommandHandlerContext context)
         {
             if (!_nameToHandlerInfo.TryGetValue(context.FtpContext.Command.Name, out var handlerInfo))
             {
@@ -129,12 +114,9 @@ namespace FubarDev.FtpServer.Commands
 
             return new FtpCommandSelection(handler, handlerInfo);
         }
-
-        [NotNull]
-        [ItemNotNull]
         private IEnumerable<Tuple<IFtpCommandHandlerExtension, IFtpCommandHandlerExtensionInformation>> ActivateExtensions(
-            [NotNull] FtpCommandHandlerContext context,
-            [NotNull] IFtpCommandHandlerInformation handlerInfo)
+            FtpCommandHandlerContext context,
+            IFtpCommandHandlerInformation handlerInfo)
         {
             var extensionInfos = _hostToExtensionInfo[handlerInfo.Name].ToList();
             var typesToInfos = extensionInfos.ToLookup(x => x.Type);

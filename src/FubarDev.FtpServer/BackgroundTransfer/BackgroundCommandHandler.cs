@@ -36,7 +36,7 @@ namespace FubarDev.FtpServer.BackgroundTransfer
 
         private CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
 
-        private Task<IFtpResponse> _handlerTask;
+        private Task<IFtpResponse?>? _handlerTask;
 
         internal BackgroundCommandHandler(IFtpConnection connection)
         {
@@ -45,7 +45,7 @@ namespace FubarDev.FtpServer.BackgroundTransfer
         }
 
         /// <inheritdoc />
-        public Task<IFtpResponse> Execute(IFtpCommandBase handler, FtpCommand command)
+        public Task<IFtpResponse?> Execute(IFtpCommandBase handler, FtpCommand command)
         {
             lock (_syncRoot)
             {
@@ -61,7 +61,7 @@ namespace FubarDev.FtpServer.BackgroundTransfer
             var localizationFeature = _connection.Features.Get<ILocalizationFeature>();
 
             var taskCanceled = _handlerTask
-                .ContinueWith<IFtpResponse>(
+                .ContinueWith<IFtpResponse?>(
                     t =>
                     {
                         var response = new FtpResponse(426, localizationFeature.Catalog.GetString("Connection closed; transfer aborted."));
@@ -81,7 +81,7 @@ namespace FubarDev.FtpServer.BackgroundTransfer
                     TaskContinuationOptions.OnlyOnRanToCompletion);
 
             var taskFaulted = _handlerTask
-                .ContinueWith<IFtpResponse>(
+                .ContinueWith<IFtpResponse?>(
                     t =>
                     {
                         var ex = t.Exception;
@@ -99,7 +99,7 @@ namespace FubarDev.FtpServer.BackgroundTransfer
             return Task.Run(
                 () =>
                 {
-                    var tasks = new List<Task<IFtpResponse>> { taskCompleted, taskCanceled, taskFaulted };
+                    var tasks = new List<Task<IFtpResponse?>> { taskCompleted, taskCanceled, taskFaulted };
 
                     do
                     {

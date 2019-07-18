@@ -4,8 +4,6 @@
 
 using System.Net;
 
-using JetBrains.Annotations;
-
 namespace FubarDev.FtpServer
 {
     /// <summary>
@@ -36,7 +34,6 @@ namespace FubarDev.FtpServer
         /// <remarks>
         /// This may be necessary if you are behind a forwarding firewall, for example.
         /// </remarks>
-        [CanBeNull]
-        public IPAddress PublicAddress { get; set; }
+        public IPAddress? PublicAddress { get; set; }
     }
 }

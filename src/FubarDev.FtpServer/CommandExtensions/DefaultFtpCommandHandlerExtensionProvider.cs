@@ -5,8 +5,6 @@
 using System.Collections.Generic;
 using System.Linq;
 
-using JetBrains.Annotations;
-
 namespace FubarDev.FtpServer.CommandExtensions
 {
     /// <summary>
@@ -18,7 +16,7 @@ namespace FubarDev.FtpServer.CommandExtensions
         /// Initializes a new instance of the <see cref="DefaultFtpCommandHandlerExtensionProvider"/> class.
         /// </summary>
         /// <param name="scanners">The scanners to search for FTP command handlers.</param>
-        public DefaultFtpCommandHandlerExtensionProvider([NotNull] [ItemNotNull] IEnumerable<IFtpCommandHandlerExtensionScanner> scanners)
+        public DefaultFtpCommandHandlerExtensionProvider(IEnumerable<IFtpCommandHandlerExtensionScanner> scanners)
         {
             CommandHandlerExtensions = scanners.SelectMany(x => x.Search()).ToList();
         }

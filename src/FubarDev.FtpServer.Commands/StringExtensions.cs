@@ -5,8 +5,6 @@
 using System;
 using System.Globalization;
 
-using JetBrains.Annotations;
-
 namespace FubarDev.FtpServer
 {
     /// <summary>
@@ -21,7 +19,7 @@ namespace FubarDev.FtpServer
         /// <param name="timezone">The time zone of the timestamp (must always be <c>UTC</c>).</param>
         /// <param name="result">The parsed timestamp.</param>
         /// <returns><code>true</code> when timestamp and timezone were valid.</returns>
-        public static bool TryParseTimestamp([NotNull] this string timestamp, [NotNull] string timezone, out DateTimeOffset result)
+        public static bool TryParseTimestamp(this string timestamp, string timezone, out DateTimeOffset result)
         {
             if (timestamp.Length != 12 && timestamp.Length != 14)
             {
@@ -39,9 +37,7 @@ namespace FubarDev.FtpServer
             result = DateTimeOffset.ParseExact(timestamp, format, CultureInfo.InvariantCulture, DateTimeStyles.AssumeUniversal);
             return true;
         }
-
-        [NotNull]
-        public static string ChompFromEnd([NotNull] this string input, out string token)
+        public static string ChompFromEnd(this string input, out string token)
         {
             var pos = input.LastIndexOf(' ');
             if (pos == -1)

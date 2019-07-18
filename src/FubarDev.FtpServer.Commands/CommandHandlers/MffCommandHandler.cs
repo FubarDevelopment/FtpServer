@@ -16,8 +16,6 @@ using FubarDev.FtpServer.Features;
 using FubarDev.FtpServer.FileSystem;
 using FubarDev.FtpServer.ListFormatters.Facts;
 
-using JetBrains.Annotations;
-
 namespace FubarDev.FtpServer.CommandHandlers
 {
     /// <summary>
@@ -49,14 +47,14 @@ namespace FubarDev.FtpServer.CommandHandlers
             },
         };
 
-        private delegate IFact CreateFactDelegate(string value);
+        private delegate IFact? CreateFactDelegate(string value);
 
         /// <summary>
         /// Gets the feature string for the <c>MFF</c> command.
         /// </summary>
         /// <param name="connection">The connection.</param>
         /// <returns>The feature string.</returns>
-        public static string FeatureStatus([NotNull] IFtpConnection connection)
+        public static string FeatureStatus(IFtpConnection connection)
         {
             var result = new StringBuilder();
             result.Append("MFF ");
@@ -68,7 +66,7 @@ namespace FubarDev.FtpServer.CommandHandlers
         }
 
         /// <inheritdoc/>
-        public override async Task<IFtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
+        public override async Task<IFtpResponse?> Process(FtpCommand command, CancellationToken cancellationToken)
         {
             var parts = command.Argument.Split(new[] { ' ' }, 2);
             if (parts.Length != 2)
@@ -107,7 +105,10 @@ namespace FubarDev.FtpServer.CommandHandlers
                 }
 
                 var fact = createFact(factInfo.Value);
-                facts.Add(fact);
+                if (fact != null)
+                {
+                    facts.Add(fact);
+                }
             }
 
             DateTimeOffset? modificationTime = null, creationTime = null;

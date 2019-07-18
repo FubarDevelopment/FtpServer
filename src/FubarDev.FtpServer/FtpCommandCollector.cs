@@ -13,8 +13,6 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 
-using JetBrains.Annotations;
-
 namespace FubarDev.FtpServer
 {
     /// <summary>
@@ -55,8 +53,6 @@ namespace FubarDev.FtpServer
         /// </summary>
         /// <param name="buffer">The buffer to collect the data from.</param>
         /// <returns>The found <see cref="FtpCommand"/>s.</returns>
-        [NotNull]
-        [ItemNotNull]
         public IEnumerable<FtpCommand> Collect(ReadOnlySpan<byte> buffer)
         {
 #if DEBUG
@@ -73,9 +69,6 @@ namespace FubarDev.FtpServer
             commands.AddRange(_telnetInputParser.Collect(buffer));
             return commands;
         }
-
-        [NotNull]
-        [ItemNotNull]
         private IEnumerable<FtpCommand> InternalCollect(ReadOnlySpan<byte> buffer)
         {
             var commands = new List<FtpCommand>();
@@ -151,7 +144,7 @@ namespace FubarDev.FtpServer
             return commands;
         }
 
-        private FtpCommand CreateFtpCommand([NotNull] byte[] command)
+        private FtpCommand CreateFtpCommand(byte[] command)
         {
             var message = Encoding.GetString(command, 0, command.Length);
             return FtpCommand.Parse(message);

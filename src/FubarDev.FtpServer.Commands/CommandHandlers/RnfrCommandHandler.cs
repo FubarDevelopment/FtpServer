@@ -12,8 +12,6 @@ using FubarDev.FtpServer.Commands;
 using FubarDev.FtpServer.Features;
 using FubarDev.FtpServer.FileSystem;
 
-using JetBrains.Annotations;
-
 namespace FubarDev.FtpServer.CommandHandlers
 {
     /// <summary>
@@ -23,7 +21,7 @@ namespace FubarDev.FtpServer.CommandHandlers
     public class RnfrCommandHandler : FtpCommandHandler
     {
         /// <inheritdoc/>
-        public override async Task<IFtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
+        public override async Task<IFtpResponse?> Process(FtpCommand command, CancellationToken cancellationToken)
         {
             var fileName = command.Argument;
             var fsFeature = Connection.Features.Get<IFileSystemFeature>();
@@ -40,7 +38,7 @@ namespace FubarDev.FtpServer.CommandHandlers
             }
 
             var renameFeature = new RenameFeature(fileInfo);
-            Connection.Features.Set<IRenameCommandFeature>(renameFeature);
+            Connection.Features.Set<IRenameCommandFeature?>(renameFeature);
 
             var fullName = tempPath.GetFullPath(fileInfo.FileName);
             return new FtpResponse(350, T("Rename started ({0}).", fullName));
@@ -48,7 +46,7 @@ namespace FubarDev.FtpServer.CommandHandlers
 
         private class RenameFeature : IRenameCommandFeature
         {
-            public RenameFeature([NotNull] SearchResult<IUnixFileSystemEntry> renameFrom)
+            public RenameFeature(SearchResult<IUnixFileSystemEntry> renameFrom)
             {
                 RenameFrom = renameFrom;
             }

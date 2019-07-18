@@ -5,8 +5,6 @@
 using System.Threading;
 using System.Threading.Tasks;
 
-using JetBrains.Annotations;
-
 namespace FubarDev.FtpServer.ServerCommands
 {
     /// <summary>
@@ -20,9 +18,8 @@ namespace FubarDev.FtpServer.ServerCommands
         /// <param name="serverCommand">The server command to execute.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>The task.</returns>
-        [NotNull]
         Task ExecuteAsync(
-            [NotNull] IServerCommand serverCommand,
+            IServerCommand serverCommand,
             CancellationToken cancellationToken);
     }
 }

@@ -8,8 +8,6 @@ using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 
-using JetBrains.Annotations;
-
 namespace FubarDev.FtpServer
 {
     /// <summary>
@@ -17,6 +15,7 @@ namespace FubarDev.FtpServer
     /// </summary>
     /// <typeparam name="TStatus">The type of the status used to get the lines.</typeparam>
     public abstract class FtpResponseList<TStatus> : IFtpResponse
+        where TStatus : class
     {
         private readonly List<string> _result = new List<string>();
 
@@ -28,10 +27,10 @@ namespace FubarDev.FtpServer
         /// <param name="code">The status code.</param>
         /// <param name="startMessage">The message in the start line.</param>
         /// <param name="endMessage">The message in the end line.</param>
-        public FtpResponseList(
+        protected FtpResponseList(
             int code,
-            [NotNull] string startMessage,
-            [NotNull] string endMessage)
+            string startMessage,
+            string endMessage)
         {
             StartMessage = startMessage;
             EndMessage = endMessage;
@@ -42,10 +41,10 @@ namespace FubarDev.FtpServer
         public int Code { get; }
 
         /// <summary>
-        /// Gets or sets the async action to execute after sending the response to the client.
+        /// Gets the async action to execute after sending the response to the client.
         /// </summary>
         [Obsolete("Use a custom server command.")]
-        public FtpResponseAfterWriteAsyncDelegate AfterWriteAction { get; set; }
+        public FtpResponseAfterWriteAsyncDelegate? AfterWriteAction => null;
 
         /// <summary>
         /// Gets the message for the first line.
@@ -71,9 +70,9 @@ namespace FubarDev.FtpServer
         }
 
         /// <inheritdoc />
-        public async Task<FtpResponseLine> GetNextLineAsync(object token, CancellationToken cancellationToken)
+        public async Task<FtpResponseLine> GetNextLineAsync(object? token, CancellationToken cancellationToken)
         {
-            StatusStore statusStore;
+            StatusStore? statusStore;
 
             if (token is null)
             {
@@ -100,7 +99,7 @@ namespace FubarDev.FtpServer
                 statusStore = (StatusStore)token;
             }
 
-            string resultLine;
+            string? resultLine;
             if (statusStore.Enumerator is null)
             {
                 switch (_buildStatus)
@@ -111,6 +110,7 @@ namespace FubarDev.FtpServer
                         break;
 
                     case FtpResponseListStatus.Between:
+                        Debug.Assert(statusStore.Status != null, "statusStore.Status != null");
                         resultLine = await GetNextLineAsync(statusStore.Status, cancellationToken)
                            .ConfigureAwait(false);
                         if (resultLine is null)
@@ -164,7 +164,6 @@ namespace FubarDev.FtpServer
         /// </summary>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>The task containing the initial status.</returns>
-        [NotNull]
         protected abstract Task<TStatus> CreateInitialStatusAsync(CancellationToken cancellationToken);
 
         /// <summary>
@@ -173,16 +172,14 @@ namespace FubarDev.FtpServer
         /// <param name="status">The status used to get the next line.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>The task containing the next line or <see langword="null"/> if there are no more lines.</returns>
-        [NotNull]
-        [ItemCanBeNull]
-        protected abstract Task<string> GetNextLineAsync(TStatus status, CancellationToken cancellationToken);
+        protected abstract Task<string?> GetNextLineAsync(TStatus status, CancellationToken cancellationToken);
 
         [DebuggerDisplay("Status store: Status = {Status}, IsFinished = {IsFinished}")]
         private class StatusStore
         {
-            public TStatus Status { get; set; }
+            public TStatus? Status { get; set; }
 
-            public IEnumerator<string> Enumerator { get; set; }
+            public IEnumerator<string>? Enumerator { get; set; }
 
             public bool IsFinished { private get; set; }
         }

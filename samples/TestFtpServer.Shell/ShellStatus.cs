@@ -4,8 +4,6 @@
 
 using System.Collections.Generic;
 
-using JetBrains.Annotations;
-
 namespace TestFtpServer.Shell
 {
     /// <summary>
@@ -19,8 +17,8 @@ namespace TestFtpServer.Shell
         /// <param name="simpleModuleInfoNames">The names of the simple information modules.</param>
         /// <param name="extendedModuleInfoName">The names of the extended information modules.</param>
         public ShellStatus(
-            [NotNull, ItemNotNull] ICollection<string> simpleModuleInfoNames,
-            [NotNull, ItemNotNull] ICollection<string> extendedModuleInfoName)
+            ICollection<string> simpleModuleInfoNames,
+            ICollection<string> extendedModuleInfoName)
         {
             SimpleModuleInfoNames = simpleModuleInfoNames;
             ExtendedModuleInfoName = extendedModuleInfoName;

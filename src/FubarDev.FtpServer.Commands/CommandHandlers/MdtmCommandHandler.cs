@@ -22,13 +22,13 @@ namespace FubarDev.FtpServer.CommandHandlers
     public class MdtmCommandHandler : FtpCommandHandler
     {
         /// <inheritdoc/>
-        public override async Task<IFtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
+        public override async Task<IFtpResponse?> Process(FtpCommand command, CancellationToken cancellationToken)
         {
             var path = command.Argument;
             var fsFeature = Connection.Features.Get<IFileSystemFeature>();
             var currentPath = fsFeature.Path.Clone();
             var fileInfo = await fsFeature.FileSystem.SearchFileAsync(currentPath, path, cancellationToken).ConfigureAwait(false);
-            IUnixFileSystemEntry foundEntry = fileInfo?.Entry;
+            IUnixFileSystemEntry? foundEntry = fileInfo?.Entry;
             if (foundEntry == null)
             {
                 var parts = path.Split(new[] { ' ' }, 2);

@@ -4,8 +4,6 @@
 
 using System;
 
-using JetBrains.Annotations;
-
 namespace TestFtpServer.Configuration
 {
     /// <summary>
@@ -28,25 +26,21 @@ namespace TestFtpServer.Configuration
         /// <summary>
         /// Gets or sets the bits to be removed from the default file system entry permissions.
         /// </summary>
-        [CanBeNull]
-        public string Umask { get; set; }
+        public string? Umask { get; set; }
 
         /// <summary>
         /// Gets or sets the PAM authorization options.
         /// </summary>
-        [NotNull]
         public PamAuthOptions Pam { get; set; } = new PamAuthOptions();
 
         /// <summary>
         /// Gets or sets the FTP server options.
         /// </summary>
-        [NotNull]
         public FtpServerOptions Server { get; set; } = new FtpServerOptions();
 
         /// <summary>
         /// Gets or sets the FTPS options.
         /// </summary>
-        [NotNull]
         public FtpsOptions Ftps { get; set; } = new FtpsOptions();
 
         /// <summary>
@@ -141,25 +135,21 @@ namespace TestFtpServer.Configuration
         /// <summary>
         /// Gets or sets System.IO-based file system options.
         /// </summary>
-        [NotNull]
         public FileSystemSystemIoOptions SystemIo { get; set; } = new FileSystemSystemIoOptions();
 
         /// <summary>
         /// Gets or sets Linux API-based file system options.
         /// </summary>
-        [NotNull]
         public FileSystemUnixOptions Unix { get; set; } = new FileSystemUnixOptions();
 
         /// <summary>
         /// Gets or sets in-memory file system options.
         /// </summary>
-        [NotNull]
         public FileSystemInMemoryOptions InMemory { get; set; } = new FileSystemInMemoryOptions();
 
         /// <summary>
         /// Gets or sets Google Drive file system options.
         /// </summary>
-        [NotNull]
         public FileSystemGoogleDriveOptions GoogleDrive { get; set; } = new FileSystemGoogleDriveOptions();
 
         internal FileSystemLayoutType LayoutType

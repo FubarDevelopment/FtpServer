@@ -8,8 +8,6 @@ using System.Linq;
 
 using FubarDev.FtpServer.AccountManagement;
 
-using JetBrains.Annotations;
-
 using Mono.Unix;
 
 namespace FubarDev.FtpServer.MembershipProvider.Pam
@@ -25,7 +23,7 @@ namespace FubarDev.FtpServer.MembershipProvider.Pam
         /// Initializes a new instance of the <see cref="PamFtpUser"/> class.
         /// </summary>
         /// <param name="userInfo">The Unix PAM user information.</param>
-        internal PamFtpUser([NotNull] UnixUserInfo userInfo)
+        internal PamFtpUser(UnixUserInfo userInfo)
         {
             var groups = UnixGroupInfo.GetLocalGroups();
             var userGroups = groups
@@ -46,7 +44,6 @@ namespace FubarDev.FtpServer.MembershipProvider.Pam
         /// <summary>
         /// Gets the users home directory.
         /// </summary>
-        [NotNull]
         public string HomeDirectory { get; }
 
         /// <inheritdoc />

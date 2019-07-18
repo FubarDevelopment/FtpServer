@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
@@ -16,8 +17,6 @@ using FubarDev.FtpServer.BackgroundTransfer;
 using Google.Apis.Drive.v3;
 using Google.Apis.Upload;
 
-using JetBrains.Annotations;
-
 using File = Google.Apis.Drive.v3.Data.File;
 
 namespace FubarDev.FtpServer.FileSystem.GoogleDrive
@@ -27,7 +26,6 @@ namespace FubarDev.FtpServer.FileSystem.GoogleDrive
     /// </summary>
     public sealed class GoogleDriveFileSystem : IGoogleDriveFileSystem, IDisposable
     {
-        [NotNull]
         private readonly ITemporaryDataFactory _temporaryDataFactory;
 
         private readonly bool _useBackgroundUpload;
@@ -46,9 +44,9 @@ namespace FubarDev.FtpServer.FileSystem.GoogleDrive
         /// <param name="temporaryDataFactory">The factory to create temporary data objects.</param>
         /// <param name="useBackgroundUpload">Use the Google Drive uploader instead of the background uploader.</param>
         public GoogleDriveFileSystem(
-            [NotNull] DriveService service,
-            [NotNull] File rootFolderInfo,
-            [NotNull] ITemporaryDataFactory temporaryDataFactory,
+            DriveService service,
+            File rootFolderInfo,
+            ITemporaryDataFactory temporaryDataFactory,
             bool useBackgroundUpload)
         {
             _temporaryDataFactory = temporaryDataFactory;
@@ -87,7 +85,7 @@ namespace FubarDev.FtpServer.FileSystem.GoogleDrive
         }
 
         /// <inheritdoc/>
-        public async Task<IUnixFileSystemEntry> GetEntryByNameAsync(
+        public async Task<IUnixFileSystemEntry?> GetEntryByNameAsync(
             IUnixDirectoryEntry directoryEntry,
             string name,
             CancellationToken cancellationToken)
@@ -229,7 +227,7 @@ namespace FubarDev.FtpServer.FileSystem.GoogleDrive
         }
 
         /// <inheritdoc/>
-        public Task<IBackgroundTransfer> AppendAsync(
+        public Task<IBackgroundTransfer?> AppendAsync(
             IUnixFileEntry fileEntry,
             long? startPosition,
             Stream data,
@@ -239,7 +237,7 @@ namespace FubarDev.FtpServer.FileSystem.GoogleDrive
         }
 
         /// <inheritdoc/>
-        public async Task<IBackgroundTransfer> CreateAsync(
+        public async Task<IBackgroundTransfer?> CreateAsync(
             IUnixDirectoryEntry targetDirectory,
             string fileName,
             Stream data,
@@ -290,7 +288,7 @@ namespace FubarDev.FtpServer.FileSystem.GoogleDrive
         }
 
         /// <inheritdoc/>
-        public async Task<IBackgroundTransfer> ReplaceAsync(
+        public async Task<IBackgroundTransfer?> ReplaceAsync(
             IUnixFileEntry fileEntry,
             Stream data,
             CancellationToken cancellationToken)
@@ -352,14 +350,14 @@ namespace FubarDev.FtpServer.FileSystem.GoogleDrive
             request.Fields = FileExtensions.DefaultFileFields;
 
             var newItem = await request.ExecuteAsync(cancellationToken).ConfigureAwait(false);
-            var fullName = dirEntry == null ? fileEntry.FullName : dirEntry.FullName;
-            var targetFullName = FileSystemExtensions.CombinePath(fullName.GetParentPath(), newItem.Name);
-            if (dirEntry != null)
+            if (dirEntry == null)
             {
-                return new GoogleDriveDirectoryEntry(newItem, targetFullName, dirEntry.IsRoot);
+                Debug.Assert(fileEntry != null, "fileEntry != null");
+                return new GoogleDriveFileEntry(newItem, fileEntry.FullName, fileEntry.Size);
             }
 
-            return new GoogleDriveFileEntry(newItem, fullName, fileEntry.Size);
+            var targetFullName = FileSystemExtensions.CombinePath(dirEntry.FullName.GetParentPath(), newItem.Name);
+            return new GoogleDriveDirectoryEntry(newItem, targetFullName, dirEntry.IsRoot);
         }
 
         /// <inheritdoc/>

@@ -9,8 +9,6 @@ using System.Threading.Tasks;
 
 using FubarDev.FtpServer.Authentication;
 
-using JetBrains.Annotations;
-
 namespace FubarDev.FtpServer.ConnectionHandlers
 {
     /// <summary>
@@ -18,18 +16,11 @@ namespace FubarDev.FtpServer.ConnectionHandlers
     /// </summary>
     internal class SecureConnectionAdapter : IFtpSecureConnectionAdapter
     {
-        [NotNull]
         private readonly IDuplexPipe _socketPipe;
-
-        [NotNull]
         private readonly IDuplexPipe _connectionPipe;
-
-        [NotNull]
         private readonly ISslStreamWrapperFactory _sslStreamWrapperFactory;
 
         private readonly CancellationToken _connectionClosed;
-
-        [NotNull]
         private IFtpConnectionAdapter _activeCommunicationService;
 
         /// <summary>
@@ -40,9 +31,9 @@ namespace FubarDev.FtpServer.ConnectionHandlers
         /// <param name="sslStreamWrapperFactory">The SSL stream wrapper factory.</param>
         /// <param name="connectionClosed">The cancellation token for a closed connection.</param>
         public SecureConnectionAdapter(
-            [NotNull] IDuplexPipe socketPipe,
-            [NotNull] IDuplexPipe connectionPipe,
-            [NotNull] ISslStreamWrapperFactory sslStreamWrapperFactory,
+            IDuplexPipe socketPipe,
+            IDuplexPipe connectionPipe,
+            ISslStreamWrapperFactory sslStreamWrapperFactory,
             CancellationToken connectionClosed)
         {
             _socketPipe = socketPipe;

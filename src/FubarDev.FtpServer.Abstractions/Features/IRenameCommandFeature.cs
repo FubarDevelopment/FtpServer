@@ -4,8 +4,6 @@
 
 using FubarDev.FtpServer.FileSystem;
 
-using JetBrains.Annotations;
-
 namespace FubarDev.FtpServer.Features
 {
     /// <summary>
@@ -16,7 +14,6 @@ namespace FubarDev.FtpServer.Features
         /// <summary>
         /// Gets or sets the <see cref="IUnixFileEntry"/> to use for a <c>RNTO</c> operation.
         /// </summary>
-        [NotNull]
         SearchResult<IUnixFileSystemEntry> RenameFrom { get; set; }
     }
 }

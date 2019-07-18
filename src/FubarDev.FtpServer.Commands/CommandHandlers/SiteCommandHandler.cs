@@ -22,17 +22,17 @@ namespace FubarDev.FtpServer.CommandHandlers
             = new Dictionary<string, IFtpCommandHandlerExtension>(StringComparer.OrdinalIgnoreCase);
 
         /// <inheritdoc/>
-        public override Task<IFtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
+        public override Task<IFtpResponse?> Process(FtpCommand command, CancellationToken cancellationToken)
         {
             if (string.IsNullOrEmpty(command.Argument))
             {
-                return Task.FromResult<IFtpResponse>(new FtpResponse(501, T("Syntax error in parameters or arguments.")));
+                return Task.FromResult<IFtpResponse?>(new FtpResponse(501, T("Syntax error in parameters or arguments.")));
             }
 
             var argument = FtpCommand.Parse(command.Argument);
             if (!Extensions.TryGetValue(argument.Name, out var extension))
             {
-                return Task.FromResult<IFtpResponse>(new FtpResponse(500, T("Syntax error, command unrecognized.")));
+                return Task.FromResult<IFtpResponse?>(new FtpResponse(500, T("Syntax error, command unrecognized.")));
             }
 
             return extension.Process(argument, cancellationToken);

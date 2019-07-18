@@ -2,8 +2,6 @@
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
-using JetBrains.Annotations;
-
 namespace FubarDev.FtpServer.AccountManagement
 {
     /// <summary>
@@ -14,7 +12,6 @@ namespace FubarDev.FtpServer.AccountManagement
         /// <summary>
         /// Gets the name of the user.
         /// </summary>
-        [NotNull]
         string Name { get; }
 
         /// <summary>
@@ -22,6 +19,6 @@ namespace FubarDev.FtpServer.AccountManagement
         /// </summary>
         /// <param name="groupName">The name of the group.</param>
         /// <returns><c>true</c> when the user is in the queries <paramref name="groupName"/>.</returns>
-        bool IsInGroup([NotNull] string groupName);
+        bool IsInGroup(string groupName);
     }
 }

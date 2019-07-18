@@ -6,8 +6,6 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-using JetBrains.Annotations;
-
 namespace FubarDev.FtpServer.Features.Impl
 {
     /// <summary>
@@ -15,7 +13,6 @@ namespace FubarDev.FtpServer.Features.Impl
     /// </summary>
     public class BackgroundTaskLifetimeFeature : IBackgroundTaskLifetimeFeature
     {
-        [NotNull]
         private readonly CancellationTokenSource _taskCts = new CancellationTokenSource();
 
         /// <summary>
@@ -26,9 +23,9 @@ namespace FubarDev.FtpServer.Features.Impl
         /// <param name="backgroundTask">The task that gets run in the background.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         public BackgroundTaskLifetimeFeature(
-            [NotNull] IFtpCommandBase commandHandler,
-            [NotNull] FtpCommand command,
-            [NotNull] Func<CancellationToken, Task> backgroundTask,
+            IFtpCommandBase commandHandler,
+            FtpCommand command,
+            Func<CancellationToken, Task> backgroundTask,
             CancellationToken cancellationToken)
         {
             Command = command;

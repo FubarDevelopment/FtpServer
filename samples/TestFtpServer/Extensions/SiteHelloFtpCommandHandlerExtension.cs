@@ -8,8 +8,6 @@ using System.Threading.Tasks;
 using FubarDev.FtpServer;
 using FubarDev.FtpServer.CommandExtensions;
 
-using JetBrains.Annotations;
-
 using TestFtpServer.Utilities;
 
 namespace TestFtpServer.Extensions
@@ -18,14 +16,13 @@ namespace TestFtpServer.Extensions
     [FtpFeatureText("SITE HELLO")]
     public class SiteHelloFtpCommandHandlerExtension : FtpCommandHandlerExtension
     {
-        [NotNull]
         private readonly Hello _hello;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SiteHelloFtpCommandHandlerExtension"/> class.
         /// </summary>
         /// <param name="hello">The greeter.</param>
-        public SiteHelloFtpCommandHandlerExtension([NotNull] Hello hello)
+        public SiteHelloFtpCommandHandlerExtension(Hello hello)
         {
             _hello = hello;
         }
@@ -36,9 +33,9 @@ namespace TestFtpServer.Extensions
         }
 
         /// <inheritdoc />
-        public override Task<IFtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
+        public override Task<IFtpResponse?> Process(FtpCommand command, CancellationToken cancellationToken)
         {
-            return Task.FromResult(_hello.CreateResponse(command.Argument));
+            return Task.FromResult<IFtpResponse?>(_hello.CreateResponse(command.Argument));
         }
     }
 }

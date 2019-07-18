@@ -2,8 +2,6 @@
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
-using JetBrains.Annotations;
-
 namespace FubarDev.FtpServer.Commands
 {
     /// <summary>
@@ -16,7 +14,6 @@ namespace FubarDev.FtpServer.Commands
         /// </summary>
         /// <param name="context">The FTP command execution context.</param>
         /// <returns>Information about the FTP command to be executed.</returns>
-        [CanBeNull]
-        FtpCommandSelection Create([NotNull] FtpCommandHandlerContext context);
+        FtpCommandSelection? Create(FtpCommandHandlerContext context);
     }
 }

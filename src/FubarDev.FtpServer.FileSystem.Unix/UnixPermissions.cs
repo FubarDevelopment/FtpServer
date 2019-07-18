@@ -2,15 +2,13 @@
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
-using JetBrains.Annotations;
-
 using Mono.Unix;
 
 namespace FubarDev.FtpServer.FileSystem.Unix
 {
     internal class UnixPermissions : IUnixPermissions
     {
-        public UnixPermissions([NotNull] UnixFileSystemInfo info)
+        public UnixPermissions(UnixFileSystemInfo info)
         {
             User = new UnixAccessInfo(
                 info,
@@ -46,7 +44,7 @@ namespace FubarDev.FtpServer.FileSystem.Unix
             private readonly FileAccessPermissions _executeMask;
 
             public UnixAccessInfo(
-                [NotNull] UnixFileSystemInfo info,
+                UnixFileSystemInfo info,
                 FileAccessPermissions readMask,
                 FileAccessPermissions writeMask,
                 FileAccessPermissions executeMask)

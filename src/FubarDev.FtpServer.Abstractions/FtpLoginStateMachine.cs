@@ -10,8 +10,6 @@ using System.Threading.Tasks;
 using FubarDev.FtpServer.Authentication;
 using FubarDev.FtpServer.Authorization;
 
-using JetBrains.Annotations;
-
 namespace FubarDev.FtpServer
 {
     /// <summary>
@@ -46,21 +44,15 @@ namespace FubarDev.FtpServer
             new Transition(SecurityStatus.NeedAccount, SecurityStatus.Authenticated, "ACCT", 4),
             new Transition(SecurityStatus.NeedAccount, SecurityStatus.Authenticated, "ACCT", 5),
         };
-
-        [NotNull]
         private readonly IFtpHostSelector _hostSelector;
 
-        [CanBeNull]
-        private IAuthenticationMechanism _filteredAuthenticationMechanism;
+        private IAuthenticationMechanism? _filteredAuthenticationMechanism;
 
-        [CanBeNull]
-        private IAuthorizationMechanism _filteredAuthorizationMechanism;
+        private IAuthorizationMechanism? _filteredAuthorizationMechanism;
 
-        [CanBeNull]
-        private IAuthenticationMechanism _selectedAuthenticationMechanism;
+        private IAuthenticationMechanism? _selectedAuthenticationMechanism;
 
-        [CanBeNull]
-        private IAuthorizationMechanism _selectedAuthorizationMechanism;
+        private IAuthorizationMechanism? _selectedAuthorizationMechanism;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FtpLoginStateMachine"/> class.
@@ -68,18 +60,18 @@ namespace FubarDev.FtpServer
         /// <param name="connection">The FTP connection.</param>
         /// <param name="hostSelector">The FTP host selector.</param>
         public FtpLoginStateMachine(
-            [NotNull] IFtpConnection connection,
-            [NotNull] IFtpHostSelector hostSelector)
+            IFtpConnection connection,
+            IFtpHostSelector hostSelector)
             : base(connection, _transitions, SecurityStatus.Unauthenticated)
         {
             _hostSelector = hostSelector;
         }
 
         /// <inheritdoc />
-        public IAuthenticationMechanism SelectedAuthenticationMechanism => _selectedAuthenticationMechanism;
+        public IAuthenticationMechanism? SelectedAuthenticationMechanism => _selectedAuthenticationMechanism;
 
         /// <inheritdoc />
-        public IAuthorizationMechanism SelectedAuthorizationMechanism => _selectedAuthorizationMechanism;
+        public IAuthorizationMechanism? SelectedAuthorizationMechanism => _selectedAuthorizationMechanism;
 
         /// <summary>
         /// Gets the selected host.
@@ -87,22 +79,28 @@ namespace FubarDev.FtpServer
         public IFtpHost SelectedHost => _hostSelector.SelectedHost;
 
         /// <inheritdoc />
-        protected override Task<IFtpResponse> ExecuteCommandAsync(FtpCommand ftpCommand, CancellationToken cancellationToken = default)
+        protected override async Task<IFtpResponse?> ExecuteCommandAsync(FtpCommand ftpCommand, CancellationToken cancellationToken = default)
         {
             switch (ftpCommand.Name.Trim().ToUpperInvariant())
             {
                 case "AUTH":
-                    return HandleAuthAsync(ftpCommand.Argument, cancellationToken);
+                    return await HandleAuthAsync(ftpCommand.Argument, cancellationToken)
+                       .ConfigureAwait(false);
                 case "ADAT":
-                    return HandleAdatAsync(ftpCommand.Argument, cancellationToken);
+                    return await HandleAdatAsync(ftpCommand.Argument, cancellationToken)
+                       .ConfigureAwait(false);
                 case "USER":
-                    return HandleUserAsync(ftpCommand.Argument, cancellationToken);
+                    return await HandleUserAsync(ftpCommand.Argument, cancellationToken)
+                       .ConfigureAwait(false);
                 case "PASS":
-                    return HandlePassAsync(ftpCommand.Argument, cancellationToken);
+                    return await HandlePassAsync(ftpCommand.Argument, cancellationToken)
+                       .ConfigureAwait(false);
                 case "ACCT":
-                    return HandleAcctAsync(ftpCommand.Argument, cancellationToken);
+                    return await HandleAcctAsync(ftpCommand.Argument, cancellationToken)
+                       .ConfigureAwait(false);
                 default:
-                    return UnhandledCommandAsync(ftpCommand, cancellationToken);
+                    return await UnhandledCommandAsync(ftpCommand, cancellationToken)
+                       .ConfigureAwait(false);
             }
         }
 

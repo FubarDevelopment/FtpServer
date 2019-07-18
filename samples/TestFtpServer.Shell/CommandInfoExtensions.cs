@@ -6,8 +6,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-using JetBrains.Annotations;
-
 namespace TestFtpServer.Shell
 {
     /// <summary>
@@ -21,11 +19,9 @@ namespace TestFtpServer.Shell
         /// <param name="commands">The commands to be filtered.</param>
         /// <param name="text">The text to get the commands for.</param>
         /// <returns>The matching commands.</returns>
-        [NotNull]
-        [ItemNotNull]
         public static IReadOnlyCollection<ICommandInfo> FindCommandInfo(
-            [NotNull, ItemNotNull] this IReadOnlyCollection<ICommandInfo> commands,
-            [NotNull] string text)
+            this IReadOnlyCollection<ICommandInfo> commands,
+            string text)
         {
             var exactMatch = commands
                .Where(

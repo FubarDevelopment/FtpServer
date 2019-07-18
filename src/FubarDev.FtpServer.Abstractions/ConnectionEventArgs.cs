@@ -4,8 +4,6 @@
 
 using System;
 
-using JetBrains.Annotations;
-
 namespace FubarDev.FtpServer
 {
     /// <summary>
@@ -17,7 +15,7 @@ namespace FubarDev.FtpServer
         /// Initializes a new instance of the <see cref="ConnectionEventArgs"/> class.
         /// </summary>
         /// <param name="connection">The connection of the event.</param>
-        public ConnectionEventArgs([NotNull] IFtpConnection connection)
+        public ConnectionEventArgs(IFtpConnection connection)
         {
             Connection = connection;
         }
@@ -25,7 +23,6 @@ namespace FubarDev.FtpServer
         /// <summary>
         /// Gets the connection for this event.
         /// </summary>
-        [NotNull]
         public IFtpConnection Connection { get; }
     }
 }

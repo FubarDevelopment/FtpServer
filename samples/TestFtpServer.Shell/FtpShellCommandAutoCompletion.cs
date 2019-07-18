@@ -6,8 +6,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-using JetBrains.Annotations;
-
 namespace TestFtpServer.Shell
 {
     /// <summary>
@@ -15,8 +13,6 @@ namespace TestFtpServer.Shell
     /// </summary>
     internal class FtpShellCommandAutoCompletion : IAutoCompleteHandler
     {
-        [NotNull]
-        [ItemNotNull]
         private readonly IReadOnlyCollection<ICommandInfo> _commands;
 
         /// <summary>
@@ -24,7 +20,7 @@ namespace TestFtpServer.Shell
         /// </summary>
         /// <param name="commandInfos">The registered command handlers.</param>
         public FtpShellCommandAutoCompletion(
-            [NotNull, ItemNotNull] IEnumerable<ICommandInfo> commandInfos)
+            IEnumerable<ICommandInfo> commandInfos)
         {
             _commands = commandInfos.OfType<IRootCommandInfo>().ToList();
         }
@@ -34,8 +30,7 @@ namespace TestFtpServer.Shell
         /// </summary>
         /// <param name="text"></param>
         /// <returns></returns>
-        [CanBeNull]
-        public IExecutableCommandInfo GetCommand([NotNull] string text)
+        public IExecutableCommandInfo? GetCommand(string text)
         {
             var words = text.Trim().Split(
                 Separators,
@@ -58,9 +53,7 @@ namespace TestFtpServer.Shell
         }
 
         /// <inheritdoc />
-        [NotNull]
-        [ItemNotNull]
-        public string[] GetSuggestions([CanBeNull] string text, int index)
+        public string[] GetSuggestions(string? text, int index)
         {
             if (string.IsNullOrWhiteSpace(text))
             {
@@ -94,7 +87,6 @@ namespace TestFtpServer.Shell
         }
 
         /// <inheritdoc />
-        [NotNull]
         public char[] Separators { get; set; } = { ' ', '\t' };
     }
 }

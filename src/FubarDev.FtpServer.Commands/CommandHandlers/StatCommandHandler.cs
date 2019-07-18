@@ -14,8 +14,6 @@ using FubarDev.FtpServer.Commands;
 using FubarDev.FtpServer.Features;
 using FubarDev.FtpServer.ListFormatters;
 
-using JetBrains.Annotations;
-
 namespace FubarDev.FtpServer.CommandHandlers
 {
     /// <summary>
@@ -24,10 +22,7 @@ namespace FubarDev.FtpServer.CommandHandlers
     [FtpCommandHandler("STAT")]
     public class StatCommandHandler : FtpCommandHandler
     {
-        [NotNull]
         private readonly IFtpServer _server;
-
-        [NotNull]
         private readonly IBackgroundTransferWorker _backgroundTransferWorker;
 
         /// <summary>
@@ -36,15 +31,15 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// <param name="server">The FTP server.</param>
         /// <param name="backgroundTransferWorker">The background transfer worker service.</param>
         public StatCommandHandler(
-            [NotNull] IFtpServer server,
-            [NotNull] IBackgroundTransferWorker backgroundTransferWorker)
+            IFtpServer server,
+            IBackgroundTransferWorker backgroundTransferWorker)
         {
             _server = server;
             _backgroundTransferWorker = backgroundTransferWorker;
         }
 
         /// <inheritdoc/>
-        public override async Task<IFtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
+        public override async Task<IFtpResponse?> Process(FtpCommand command, CancellationToken cancellationToken)
         {
             if (string.IsNullOrEmpty(command.Argument))
             {

@@ -2,8 +2,6 @@
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
-using JetBrains.Annotations;
-
 namespace FubarDev.FtpServer.Commands
 {
     /// <summary>
@@ -14,7 +12,6 @@ namespace FubarDev.FtpServer.Commands
         /// <summary>
         /// Gets the name of the FTP command.
         /// </summary>
-        [NotNull]
         string Name { get; }
 
         /// <summary>

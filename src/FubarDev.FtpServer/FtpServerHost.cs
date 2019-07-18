@@ -7,8 +7,6 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-using JetBrains.Annotations;
-
 namespace FubarDev.FtpServer
 {
     /// <summary>
@@ -19,8 +17,6 @@ namespace FubarDev.FtpServer
     /// </remarks>
     public class FtpServerHost : IFtpServerHost
     {
-        [NotNull]
-        [ItemNotNull]
         private readonly IReadOnlyCollection<IFtpService> _ftpServices;
 
         /// <summary>

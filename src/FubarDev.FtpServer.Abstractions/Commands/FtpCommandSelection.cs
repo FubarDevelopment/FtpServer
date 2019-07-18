@@ -2,8 +2,6 @@
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
-using JetBrains.Annotations;
-
 namespace FubarDev.FtpServer.Commands
 {
     /// <summary>
@@ -17,8 +15,8 @@ namespace FubarDev.FtpServer.Commands
         /// <param name="handler">The FTP command handler.</param>
         /// <param name="handlerInformation">The FTP command handler information.</param>
         public FtpCommandSelection(
-            [NotNull] IFtpCommandBase handler,
-            [NotNull] IFtpCommandInformation handlerInformation)
+            IFtpCommandBase handler,
+            IFtpCommandInformation handlerInformation)
         {
             Handler = handler;
             Information = handlerInformation;
@@ -27,13 +25,11 @@ namespace FubarDev.FtpServer.Commands
         /// <summary>
         /// Gets the command handler.
         /// </summary>
-        [NotNull]
         public IFtpCommandBase Handler { get; }
 
         /// <summary>
         /// Gets a value indicating whether a successful login is required.
         /// </summary>
-        [NotNull]
         public IFtpCommandInformation Information { get; }
     }
 }

@@ -69,7 +69,7 @@ namespace FubarDev.FtpServer
             public HostInfo Info { get; } = new HostInfo();
 
             /// <inheritdoc />
-            public X509Certificate Certificate { get; }
+            public X509Certificate? Certificate { get; }
 
             /// <inheritdoc />
             public IEnumerable<IAuthenticationMechanism> AuthenticationMechanisms { get; }

@@ -7,8 +7,6 @@
 
 using System.Threading.Tasks;
 
-using JetBrains.Annotations;
-
 namespace FubarDev.FtpServer.AccountManagement
 {
     /// <summary>
@@ -25,6 +23,6 @@ namespace FubarDev.FtpServer.AccountManagement
         /// <param name="username">The user name.</param>
         /// <param name="password">The password.</param>
         /// <returns>The result of the validation.</returns>
-        Task<MemberValidationResult> ValidateUserAsync([NotNull] string username, [NotNull] string password);
+        Task<MemberValidationResult> ValidateUserAsync(string username, string password);
     }
 }

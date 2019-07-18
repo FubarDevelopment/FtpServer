@@ -4,8 +4,6 @@
 
 using System.Collections.Generic;
 
-using JetBrains.Annotations;
-
 namespace FubarDev.FtpServer.Commands
 {
     /// <summary>
@@ -17,8 +15,6 @@ namespace FubarDev.FtpServer.Commands
         /// Search for FTP command handlers.
         /// </summary>
         /// <returns>The information about the found FTP command handlers.</returns>
-        [NotNull]
-        [ItemNotNull]
         IEnumerable<IFtpCommandHandlerInformation> Search();
     }
 }

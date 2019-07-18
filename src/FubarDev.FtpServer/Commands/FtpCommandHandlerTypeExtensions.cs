@@ -9,29 +9,23 @@ using System.Reflection;
 
 using FubarDev.FtpServer.CommandHandlers;
 
-using JetBrains.Annotations;
-
 namespace FubarDev.FtpServer.Commands
 {
     internal static class FtpCommandHandlerTypeExtensions
     {
         [Obsolete]
-        [NotNull]
-        [ItemNotNull]
-        public static IEnumerable<IFtpCommandHandlerInstanceInformation> GetInformation([NotNull] this IFtpCommandHandler commandHandler)
+        public static IEnumerable<IFtpCommandHandlerInstanceInformation> GetInformation(this IFtpCommandHandler commandHandler)
         {
             return commandHandler.Names.Select(x => new CommandHandlerInstanceInformation(commandHandler, x));
         }
-
-        [NotNull]
-        public static IFtpCommandHandlerInformation GetInformation([NotNull] this Type commandHandlerType, [NotNull] FtpCommandHandlerAttribute attribute)
+        public static IFtpCommandHandlerInformation GetInformation(this Type commandHandlerType, FtpCommandHandlerAttribute attribute)
         {
             return new CommandHandlerInformation(commandHandlerType, attribute);
         }
 
         private class CommandHandlerInformation : IFtpCommandHandlerInformation
         {
-            public CommandHandlerInformation([NotNull] Type type, [NotNull] FtpCommandHandlerAttribute attribute)
+            public CommandHandlerInformation(Type type, FtpCommandHandlerAttribute attribute)
             {
                 Name = attribute.Name;
                 IsLoginRequired = attribute.IsLoginRequired;
@@ -59,7 +53,7 @@ namespace FubarDev.FtpServer.Commands
         [Obsolete]
         private class CommandHandlerInstanceInformation : IFtpCommandHandlerInstanceInformation
         {
-            public CommandHandlerInstanceInformation([NotNull] IFtpCommandHandler commandHandler, [NotNull] string name)
+            public CommandHandlerInstanceInformation(IFtpCommandHandler commandHandler, string name)
             {
                 Name = name;
                 IsLoginRequired = commandHandler.IsLoginRequired;

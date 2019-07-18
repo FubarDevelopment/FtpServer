@@ -13,8 +13,6 @@ using FubarDev.FtpServer.Authentication;
 using FubarDev.FtpServer.Features;
 using FubarDev.FtpServer.Localization;
 
-using JetBrains.Annotations;
-
 namespace FubarDev.FtpServer.Authorization
 {
     /// <summary>
@@ -22,18 +20,13 @@ namespace FubarDev.FtpServer.Authorization
     /// </summary>
     public class PasswordAuthorization : AuthorizationMechanism
     {
-        [NotNull]
         private readonly IFtpServerMessages _serverMessages;
 
-        [NotNull]
-        [ItemNotNull]
         private readonly IReadOnlyCollection<IAuthorizationAction> _authorizationActions;
 
-        [NotNull]
-        [ItemNotNull]
         private readonly IReadOnlyCollection<IMembershipProvider> _membershipProviders;
 
-        private string _userName;
+        private string? _userName;
         private bool _needsPassword;
 
         /// <summary>
@@ -44,10 +37,10 @@ namespace FubarDev.FtpServer.Authorization
         /// <param name="authorizationActions">Actions to be executed upon authorization.</param>
         /// <param name="serverMessages">The FTP server messages.</param>
         public PasswordAuthorization(
-            [NotNull] IFtpConnection connection,
-            [NotNull, ItemNotNull] IEnumerable<IMembershipProvider> membershipProviders,
-            [NotNull, ItemNotNull] IEnumerable<IAuthorizationAction> authorizationActions,
-            [NotNull] IFtpServerMessages serverMessages)
+            IFtpConnection connection,
+            IEnumerable<IMembershipProvider> membershipProviders,
+            IEnumerable<IAuthorizationAction> authorizationActions,
+            IFtpServerMessages serverMessages)
             : base(connection)
         {
             _serverMessages = serverMessages;
@@ -64,7 +57,7 @@ namespace FubarDev.FtpServer.Authorization
         /// <inheritdoc />
         public override async Task<IFtpResponse> HandlePassAsync(string password, CancellationToken cancellationToken)
         {
-            if (!_needsPassword)
+            if (!_needsPassword || _userName == null)
             {
                 return new FtpResponse(530, T("No user name given"));
             }
@@ -107,7 +100,7 @@ namespace FubarDev.FtpServer.Authorization
         }
 
         /// <inheritdoc />
-        public override void Reset(IAuthenticationMechanism authenticationMechanism)
+        public override void Reset(IAuthenticationMechanism? authenticationMechanism)
         {
             _needsPassword = false;
             _userName = null;

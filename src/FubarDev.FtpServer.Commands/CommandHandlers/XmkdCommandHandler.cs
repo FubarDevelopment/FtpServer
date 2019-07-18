@@ -23,7 +23,7 @@ namespace FubarDev.FtpServer.CommandHandlers
     public class XmkdCommandHandler : FtpCommandHandler
     {
         /// <inheritdoc/>
-        public override async Task<IFtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
+        public override async Task<IFtpResponse?> Process(FtpCommand command, CancellationToken cancellationToken)
         {
             var fsFeature = Connection.Features.Get<IFileSystemFeature>();
             var directoryName = command.Argument;

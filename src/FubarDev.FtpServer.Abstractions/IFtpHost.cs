@@ -8,8 +8,6 @@ using System.Security.Cryptography.X509Certificates;
 using FubarDev.FtpServer.Authentication;
 using FubarDev.FtpServer.Authorization;
 
-using JetBrains.Annotations;
-
 namespace FubarDev.FtpServer
 {
     /// <summary>
@@ -20,27 +18,21 @@ namespace FubarDev.FtpServer
         /// <summary>
         /// Gets the FTP host information as passed to the <c>HOST</c> command.
         /// </summary>
-        [NotNull]
         HostInfo Info { get; }
 
         /// <summary>
         /// Gets the certificate for this host.
         /// </summary>
-        [CanBeNull]
-        X509Certificate Certificate { get; }
+        X509Certificate? Certificate { get; }
 
         /// <summary>
         /// Gets the authentication mechanisms for this host.
         /// </summary>
-        [NotNull]
-        [ItemNotNull]
         IEnumerable<IAuthenticationMechanism> AuthenticationMechanisms { get; }
 
         /// <summary>
         /// Gets the authorization mechanisms for this host.
         /// </summary>
-        [NotNull]
-        [ItemNotNull]
         IEnumerable<IAuthorizationMechanism> AuthorizationMechanisms { get; }
     }
 }

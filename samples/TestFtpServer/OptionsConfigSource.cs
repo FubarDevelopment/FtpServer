@@ -8,8 +8,6 @@ using System.Globalization;
 using System.Linq;
 using System.Xml;
 
-using JetBrains.Annotations;
-
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Configuration.Memory;
 
@@ -19,11 +17,9 @@ namespace TestFtpServer
 {
     public class OptionsConfigSource : IConfigurationSource
     {
-        [NotNull]
-        [ItemNotNull]
         private readonly string[] _args;
 
-        public OptionsConfigSource([NotNull, ItemNotNull] string[] args)
+        public OptionsConfigSource(string[] args)
         {
             _args = args;
         }
@@ -198,7 +194,7 @@ namespace TestFtpServer
 
             if (optionSet.showHelp)
             {
-                if (command.Options?.Contains("help") ?? true)
+                if (command.Options == null || command.Options.Contains("help"))
                 {
                     extra.Add("--help");
                     return command.Invoke(extra);
@@ -212,14 +208,14 @@ namespace TestFtpServer
         }
 
         private void ConfigureInMemory(
-            [NotNull] Dictionary<string, string> values)
+            Dictionary<string, string> values)
         {
             values["backend"] = "in-memory";
         }
 
         private void ConfigureGoogleDriveService(
-            [NotNull, ItemNotNull] string[] args,
-            [NotNull] Dictionary<string, string> values)
+            string[] args,
+            Dictionary<string, string> values)
         {
             if (args.Length != 1)
             {
@@ -231,8 +227,8 @@ namespace TestFtpServer
         }
 
         private void ConfigureGoogleDriveUser(
-            [NotNull, ItemNotNull] string[] args,
-            [NotNull] Dictionary<string, string> values)
+            string[] args,
+            Dictionary<string, string> values)
         {
             if (args.Length != 2)
             {
@@ -245,8 +241,8 @@ namespace TestFtpServer
         }
 
         private void ConfigureUnix(
-            [NotNull, ItemNotNull] string[] args,
-            [NotNull] IDictionary<string, string> values)
+            string[] args,
+            IDictionary<string, string> values)
         {
             values["backend"] = "unix";
 
@@ -257,8 +253,8 @@ namespace TestFtpServer
         }
 
         private void ConfigureSystemIo(
-            [NotNull, ItemNotNull] string[] args,
-            [NotNull] IDictionary<string, string> values)
+            string[] args,
+            IDictionary<string, string> values)
         {
             values["backend"] = "system-io";
 

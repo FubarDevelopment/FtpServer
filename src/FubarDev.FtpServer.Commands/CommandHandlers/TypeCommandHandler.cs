@@ -20,7 +20,7 @@ namespace FubarDev.FtpServer.CommandHandlers
     public class TypeCommandHandler : FtpCommandHandler
     {
         /// <inheritdoc/>
-        public override Task<IFtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
+        public override Task<IFtpResponse?> Process(FtpCommand command, CancellationToken cancellationToken)
         {
             var transferMode = FtpTransferMode.Parse(command.Argument);
 
@@ -44,7 +44,7 @@ namespace FubarDev.FtpServer.CommandHandlers
                 transferModeFeature.TransferMode = transferMode;
             }
 
-            return Task.FromResult<IFtpResponse>(response);
+            return Task.FromResult<IFtpResponse?>(response);
         }
     }
 }

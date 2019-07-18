@@ -50,15 +50,15 @@ namespace FubarDev.FtpServer
         }
 
         /// <inheritdoc />
-        protected override Task<string> GetNextLineAsync(IEnumerator<string> status, CancellationToken cancellationToken)
+        protected override Task<string?> GetNextLineAsync(IEnumerator<string> status, CancellationToken cancellationToken)
         {
             if (status.MoveNext())
             {
-                return Task.FromResult(status.Current);
+                return Task.FromResult((string?)status.Current);
             }
 
             status.Dispose();
-            return Task.FromResult<string>(null);
+            return Task.FromResult<string?>(null);
         }
     }
 }

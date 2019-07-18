@@ -6,8 +6,6 @@ using System.Threading.Channels;
 
 using FubarDev.FtpServer.ServerCommands;
 
-using JetBrains.Annotations;
-
 namespace FubarDev.FtpServer.Features.Impl
 {
     /// <summary>
@@ -19,7 +17,7 @@ namespace FubarDev.FtpServer.Features.Impl
         /// Initializes a new instance of the <see cref="ServerCommandFeature"/> class.
         /// </summary>
         /// <param name="serverCommandWriter">The channel for sending the server commands.</param>
-        public ServerCommandFeature([NotNull] ChannelWriter<IServerCommand> serverCommandWriter)
+        public ServerCommandFeature(ChannelWriter<IServerCommand> serverCommandWriter)
         {
             ServerCommandWriter = serverCommandWriter;
         }

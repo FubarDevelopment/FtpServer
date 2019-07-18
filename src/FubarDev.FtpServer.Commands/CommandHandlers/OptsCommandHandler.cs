@@ -25,7 +25,7 @@ namespace FubarDev.FtpServer.CommandHandlers
             = new Dictionary<string, IFtpCommandHandlerExtension>(StringComparer.OrdinalIgnoreCase);
 
         /// <inheritdoc/>
-        public override async Task<IFtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
+        public override async Task<IFtpResponse?> Process(FtpCommand command, CancellationToken cancellationToken)
         {
             var argument = FtpCommand.Parse(command.Argument);
             if (!Extensions.TryGetValue(argument.Name, out var extension))

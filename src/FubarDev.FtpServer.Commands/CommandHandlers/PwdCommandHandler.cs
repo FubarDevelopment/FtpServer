@@ -22,7 +22,7 @@ namespace FubarDev.FtpServer.CommandHandlers
     public class PwdCommandHandler : FtpCommandHandler
     {
         /// <inheritdoc/>
-        public override Task<IFtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
+        public override Task<IFtpResponse?> Process(FtpCommand command, CancellationToken cancellationToken)
         {
             var fsFeature = Connection.Features.Get<IFileSystemFeature>();
             var path = fsFeature.Path.GetFullPath();
@@ -31,7 +31,7 @@ namespace FubarDev.FtpServer.CommandHandlers
                 path = path.Substring(0, path.Length - 1);
             }
 
-            return Task.FromResult<IFtpResponse>(new FtpResponse(257, $"\"{path}\""));
+            return Task.FromResult<IFtpResponse?>(new FtpResponse(257, $"\"{path}\""));
         }
     }
 }

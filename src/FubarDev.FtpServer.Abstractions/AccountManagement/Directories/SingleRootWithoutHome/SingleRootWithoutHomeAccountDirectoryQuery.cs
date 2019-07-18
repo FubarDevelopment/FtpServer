@@ -4,8 +4,6 @@
 
 using FubarDev.FtpServer.FileSystem;
 
-using JetBrains.Annotations;
-
 using Microsoft.Extensions.Options;
 
 namespace FubarDev.FtpServer.AccountManagement.Directories.SingleRootWithoutHome
@@ -15,7 +13,6 @@ namespace FubarDev.FtpServer.AccountManagement.Directories.SingleRootWithoutHome
     /// </summary>
     public class SingleRootWithoutHomeAccountDirectoryQuery : IAccountDirectoryQuery
     {
-        [NotNull]
         private readonly GenericAccountDirectories _accountDirectories;
 
         /// <summary>
