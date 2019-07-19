@@ -100,9 +100,6 @@ namespace FubarDev.FtpServer.DataConnection
             /// <inheritdoc />
             public async Task<IFtpDataConnection> GetDataConnectionAsync(TimeSpan timeout, CancellationToken cancellationToken)
             {
-#if NETSTANDARD1_3
-                var client = new TcpClient(LocalEndPoint.AddressFamily);
-#else
                 TcpClient client;
                 if (LocalEndPoint.Port != 0)
                 {
@@ -117,7 +114,6 @@ namespace FubarDev.FtpServer.DataConnection
                 {
                     client = new TcpClient(LocalEndPoint);
                 }
-#endif
 
                 var exceptions = new List<Exception>();
                 var tries = 0;
