@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>netstandard2.1</TargetFramework>
+    <TargetFrameworks>netstandard2.1;netstandard2.0;net461</TargetFrameworks>
     <Description>In-memory file system for portable FTP server</Description>
     <PackageTags>file;system;portable;FTP;server</PackageTags>
   </PropertyGroup>

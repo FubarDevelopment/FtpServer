@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>netstandard2.1</TargetFramework>
+    <TargetFrameworks>netstandard2.1;netstandard2.0;net461</TargetFrameworks>
     <Description>Google Drive file system for the portable FTP server</Description>
     <PackageTags>portable;FTP;server;Google;Drive</PackageTags>
   </PropertyGroup>
