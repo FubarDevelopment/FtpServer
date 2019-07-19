@@ -563,7 +563,7 @@ namespace FubarDev.FtpServer
 
                         while (commandReader.TryRead(out var command))
                         {
-                            _logger?.Command(command);
+                            _logger?.LogCommand(command);
                             var context = new FtpContext(command, _serverCommandChannel, this);
                             await requestDelegate(context)
                                .ConfigureAwait(false);
