@@ -171,12 +171,12 @@ namespace FubarDev.FtpServer.CommandHandlers
 
                     var glob = Glob.Parse(mask, globOptions);
 
-                    var entries = await fsFeature.FileSystem.GetEntriesAsync(currentDirEntry, cancellationToken).ConfigureAwait(false);
-                    var enumerator = new DirectoryListingEnumerator(entries, fsFeature.FileSystem, currentPath, true);
-                    while (enumerator.MoveNext())
+                    var entries = fsFeature.FileSystem.GetEntriesAsync(currentDirEntry, cancellationToken);
+                    var listing = new DirectoryListing(entries, fsFeature.FileSystem, currentPath, true);
+                    await foreach (var listingEntry in listing.ConfigureAwait(false).WithCancellation(cancellationToken))
                     {
-                        var name = enumerator.Name;
-                        if (!enumerator.IsDotEntry)
+                        var name = listingEntry.Name;
+                        if (!listingEntry.IsDotEntry)
                         {
                             if (!glob.IsMatch(name))
                             {
@@ -194,9 +194,9 @@ namespace FubarDev.FtpServer.CommandHandlers
                             continue;
                         }
 
-                        var entry = enumerator.Entry;
+                        var entry = listingEntry.Entry;
 
-                        if (argument.Recursive && !enumerator.IsDotEntry)
+                        if (argument.Recursive && !listingEntry.IsDotEntry)
                         {
                             if (entry is IUnixDirectoryEntry dirEntry)
                             {
@@ -206,7 +206,7 @@ namespace FubarDev.FtpServer.CommandHandlers
                             }
                         }
 
-                        var line = formatter.Format(entry, name);
+                        var line = formatter.Format(listingEntry);
                         _logger?.LogTrace(line);
                         await writer.WriteLineAsync(line).ConfigureAwait(false);
                     }
@@ -262,8 +262,12 @@ namespace FubarDev.FtpServer.CommandHandlers
                     { "a|A", v => showAll = v != null },
                 };
 
-                var args = ArgumentSource.GetArguments(new StringReader(arguments));
-                Paths = options.Parse(args).ToList();
+                using (var reader = new StringReader(arguments))
+                {
+                    var args = ArgumentSource.GetArguments(reader);
+                    Paths = options.Parse(args).ToList();
+                }
+
                 PreferLong = preferLong;
                 All = showAll;
                 Recursive = recursive;

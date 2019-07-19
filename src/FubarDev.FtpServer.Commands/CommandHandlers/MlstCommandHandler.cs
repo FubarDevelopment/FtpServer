@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -189,14 +190,12 @@ namespace FubarDev.FtpServer.CommandHandlers
                 NewLine = "\r\n",
             })
             {
-                var entries = await fileSystem.GetEntriesAsync(dirEntry, cancellationToken).ConfigureAwait(false);
-                var enumerator = new DirectoryListingEnumerator(entries, fileSystem, path, true);
-                var formatter = new FactsListFormatter(user, enumerator, factsFeature.ActiveMlstFacts, false);
-                while (enumerator.MoveNext())
+                var formatter = new FactsListFormatter(user, factsFeature.ActiveMlstFacts, false);
+                var entries = fileSystem.GetEntriesAsync(dirEntry, cancellationToken);
+                var listing = new DirectoryListing(entries, fileSystem, path, true);
+                await foreach (var entry in listing.ConfigureAwait(false).WithCancellation(cancellationToken))
                 {
-                    var name = enumerator.Name;
-                    var entry = enumerator.Entry;
-                    var line = formatter.Format(entry, name);
+                    var line = formatter.Format(entry);
                     _logger?.LogTrace(line);
                     await writer.WriteLineAsync(line).ConfigureAwait(false);
                 }
@@ -208,7 +207,7 @@ namespace FubarDev.FtpServer.CommandHandlers
             return new FtpResponse(226, T("Closing data connection."));
         }
 
-        private class MlstFtpResponse : FtpResponseListBase
+        private class MlstFtpResponse : FtpResponseAsyncList
         {
             private readonly ISet<string> _activeMlstFacts;
             private readonly IFtpUser _user;
@@ -222,7 +221,7 @@ namespace FubarDev.FtpServer.CommandHandlers
                 IUnixFileSystem fileSystem,
                 IUnixFileSystemEntry targetEntry,
                 Stack<IUnixDirectoryEntry> path)
-                : base(250)
+                : base(250, targetEntry.Name, "End")
             {
                 _activeMlstFacts = activeMlstFacts;
                 _user = user;
@@ -232,25 +231,20 @@ namespace FubarDev.FtpServer.CommandHandlers
             }
 
             /// <inheritdoc />
-            protected override IEnumerable<string> GetOutputLines(CancellationToken cancellationToken)
+            protected override async IAsyncEnumerable<string> GetLinesAsync([EnumeratorCancellation] CancellationToken cancellationToken = default)
             {
-                yield return $"{Code}-{_targetEntry.Name}";
-
                 var entries = new List<IUnixFileSystemEntry>()
                 {
                     _targetEntry,
                 };
 
-                var enumerator = new DirectoryListingEnumerator(entries, _fileSystem, _path, false);
-                var formatter = new FactsListFormatter(_user, enumerator, _activeMlstFacts, true);
-                while (enumerator.MoveNext())
+                var formatter = new FactsListFormatter(_user, _activeMlstFacts, true);
+                var listing = new DirectoryListing(entries.ToAsyncEnumerable(), _fileSystem, _path, false);
+                await foreach (var entry in listing.ConfigureAwait(false).WithCancellation(cancellationToken))
                 {
-                    cancellationToken.ThrowIfCancellationRequested();
-                    var line = formatter.Format(enumerator.Entry, enumerator.Name);
-                    yield return $" {line}";
+                    var line = formatter.Format(entry);
+                    yield return line;
                 }
-
-                yield return $"{Code} End";
             }
         }
     }

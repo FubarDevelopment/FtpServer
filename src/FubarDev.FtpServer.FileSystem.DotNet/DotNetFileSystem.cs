@@ -12,6 +12,7 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using FubarDev.FtpServer.BackgroundTransfer;
+using FubarDev.FtpServer.Utilities;
 
 namespace FubarDev.FtpServer.FileSystem.DotNet
 {
@@ -65,25 +66,28 @@ namespace FubarDev.FtpServer.FileSystem.DotNet
         public bool SupportsAppend => true;
 
         /// <inheritdoc/>
-        public Task<IReadOnlyList<IUnixFileSystemEntry>> GetEntriesAsync(IUnixDirectoryEntry directoryEntry, CancellationToken cancellationToken)
+        public IAsyncEnumerable<IUnixFileSystemEntry> GetEntriesAsync(IUnixDirectoryEntry directoryEntry, CancellationToken cancellationToken)
         {
-            var result = new List<IUnixFileSystemEntry>();
-            var searchDirInfo = ((DotNetDirectoryEntry)directoryEntry).DirectoryInfo;
-            foreach (var info in searchDirInfo.EnumerateFileSystemInfos())
+            IEnumerable<IUnixFileSystemEntry> GetEntries()
             {
-                if (info is DirectoryInfo dirInfo)
+                var searchDirInfo = ((DotNetDirectoryEntry)directoryEntry).DirectoryInfo;
+                foreach (var info in searchDirInfo.EnumerateFileSystemInfos())
                 {
-                    result.Add(new DotNetDirectoryEntry(dirInfo, false, SupportsNonEmptyDirectoryDelete));
-                }
-                else
-                {
-                    if (info is FileInfo fileInfo)
+                    cancellationToken.ThrowIfCancellationRequested();
+
+                    switch (info)
                     {
-                        result.Add(new DotNetFileEntry(fileInfo));
+                        case DirectoryInfo dirInfo:
+                            yield return new DotNetDirectoryEntry(dirInfo, false, SupportsNonEmptyDirectoryDelete);
+                            break;
+                        case FileInfo fileInfo:
+                            yield return new DotNetFileEntry(fileInfo);
+                            break;
                     }
                 }
             }
-            return Task.FromResult<IReadOnlyList<IUnixFileSystemEntry>>(result);
+
+            return GetEntries().ToAsyncEnumerable();
         }
 
         /// <inheritdoc/>

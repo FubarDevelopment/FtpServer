@@ -21,8 +21,6 @@ namespace FubarDev.FtpServer.ListFormatters
     {
         private readonly IFtpUser _user;
 
-        private readonly DirectoryListingEnumerator _enumerator;
-
         private readonly ISet<string> _activeFacts;
 
         private readonly bool _absoluteName;
@@ -31,62 +29,61 @@ namespace FubarDev.FtpServer.ListFormatters
         /// Initializes a new instance of the <see cref="FactsListFormatter"/> class.
         /// </summary>
         /// <param name="user">The user to create this formatter for.</param>
-        /// <param name="enumerator">The enumerator for the directory listing to format.</param>
         /// <param name="activeFacts">The active facts to return for the entries.</param>
         /// <param name="absoluteName">Returns an absolute entry name.</param>
-        public FactsListFormatter(IFtpUser user, DirectoryListingEnumerator enumerator, ISet<string> activeFacts, bool absoluteName)
+        public FactsListFormatter(IFtpUser user, ISet<string> activeFacts, bool absoluteName)
         {
             _user = user;
-            _enumerator = enumerator;
             _activeFacts = activeFacts;
             _absoluteName = absoluteName;
         }
 
         /// <inheritdoc/>
-        public string Format(IUnixFileSystemEntry entry, string? name)
+        public string Format(DirectoryListingEntry listingEntry)
         {
-            switch (name)
+            switch (listingEntry.Name)
             {
                 case ".":
-                    return FormatThisDirectoryEntry();
+                    return FormatThisDirectoryEntry(listingEntry);
                 case "..":
-                    return FormatParentDirectoryEntry();
+                    return FormatParentDirectoryEntry(listingEntry);
                 default:
                 {
-                    var currentDirEntry = _enumerator.CurrentDirectory;
+                    var currentDirEntry = listingEntry.CurrentDirectory;
+                    var entry = listingEntry.Entry;
                     if (entry is IUnixDirectoryEntry dirEntry)
                     {
-                        return BuildLine(BuildFacts(currentDirEntry, dirEntry, new TypeFact(dirEntry)), dirEntry.IsRoot ? string.Empty : name ?? entry.Name);
+                        return BuildLine(BuildFacts(currentDirEntry, dirEntry, new TypeFact(dirEntry)), listingEntry);
                     }
 
-                    return BuildLine(BuildFacts(_enumerator.FileSystem, currentDirEntry, (IUnixFileEntry)entry), name ?? entry.Name);
+                    return BuildLine(BuildFacts(listingEntry.FileSystem, currentDirEntry, (IUnixFileEntry)entry), listingEntry);
                 }
             }
         }
 
-        private string FormatThisDirectoryEntry()
+        private string FormatThisDirectoryEntry(DirectoryListingEntry listingEntry)
         {
-            return BuildLine(BuildFacts(_enumerator.ParentDirectory, _enumerator.CurrentDirectory, new CurrentDirectoryFact()), ".");
+            return BuildLine(BuildFacts(listingEntry.ParentDirectory, listingEntry.CurrentDirectory, new CurrentDirectoryFact()), listingEntry);
         }
 
-        private string FormatParentDirectoryEntry()
+        private string FormatParentDirectoryEntry(DirectoryListingEntry listingEntry)
         {
-            if (_enumerator.ParentDirectory == null)
+            if (listingEntry.ParentDirectory == null)
             {
                 throw new InvalidOperationException("Internal program error: The parent directory could not be determined.");
             }
 
-            return BuildLine(BuildFacts(_enumerator.GrandParentDirectory, _enumerator.ParentDirectory, new ParentDirectoryFact()), "..");
+            return BuildLine(BuildFacts(listingEntry.GrandParentDirectory, listingEntry.ParentDirectory, new ParentDirectoryFact()), listingEntry);
         }
 
-        private string BuildLine(IEnumerable<IFact> facts, string entryName)
+        private string BuildLine(IEnumerable<IFact> facts, DirectoryListingEntry listingEntry)
         {
             var result = new StringBuilder();
             foreach (var fact in facts.Where(fact => _activeFacts.Contains(fact.Name)))
             {
                 result.AppendFormat("{0}={1};", fact.Name, fact.Value);
             }
-            var fullName = _absoluteName ? _enumerator.GetFullPath(entryName) : entryName;
+            var fullName = _absoluteName ? listingEntry.FullName : listingEntry.Name;
             result.AppendFormat(" {0}", fullName);
             return result.ToString();
         }
