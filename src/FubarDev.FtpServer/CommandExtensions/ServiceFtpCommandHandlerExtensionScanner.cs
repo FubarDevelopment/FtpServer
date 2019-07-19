@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 
 using FubarDev.FtpServer.Commands;
@@ -20,6 +21,8 @@ namespace FubarDev.FtpServer.CommandExtensions
     [Obsolete]
     public class ServiceFtpCommandHandlerExtensionScanner : IFtpCommandHandlerExtensionScanner
     {
+        [NotNull]
+        [ItemNotNull]
         private readonly IReadOnlyCollection<IFtpCommandHandlerExtensionInstanceInformation> _extensionInformation;
 
         /// <summary>
@@ -34,6 +37,19 @@ namespace FubarDev.FtpServer.CommandExtensions
             [CanBeNull] ILogger<ServiceFtpCommandHandlerScanner> logger = null)
         {
             _extensionInformation = CreateInformation(commandHandlerProvider, commandHandlerExtensions, logger).ToList();
+
+            // Write warning about obsolete functionality.
+            foreach (var information in _extensionInformation)
+            {
+                var message =
+                    $"The command handler extension of type {information.Instance.GetType()}" +
+                    $" for {information.Name} was registered via dependency injection." +
+                    " This will not be supported in version 4.0 and is currently obsoleted." +
+                    " Please create and register your own implementation of IFtpCommandHandlerExtensionScanner or" +
+                    " use the AssemblyFtpCommandHandlerExtensionScanner.";
+                logger?.LogWarning(message);
+                Debug.WriteLine($"WARNING: {message}");
+            }
         }
 
         /// <inheritdoc />
