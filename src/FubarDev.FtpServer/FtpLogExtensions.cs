@@ -19,7 +19,7 @@ namespace FubarDev.FtpServer
         /// </summary>
         /// <param name="log">The <see cref="ILogger"/> to use.</param>
         /// <param name="command">The <see cref="FtpCommand"/> to log.</param>
-        public static void Command(this ILogger log, FtpCommand command)
+        public static void LogCommand(this ILogger log, FtpCommand command)
         {
             var arguments = string.Equals(command.Name, "PASS", System.StringComparison.OrdinalIgnoreCase)
                 ? @"**************** (password omitted)"
@@ -32,7 +32,7 @@ namespace FubarDev.FtpServer
         /// </summary>
         /// <param name="log">The <see cref="ILogger"/> to use.</param>
         /// <param name="response">The <see cref="FtpResponse"/> to log.</param>
-        public static void Trace(this ILogger log, IFtpResponse response)
+        public static void LogTrace(this ILogger log, IFtpResponse response)
         {
             if (response is FtpResponse ftpResponse)
             {
@@ -49,7 +49,7 @@ namespace FubarDev.FtpServer
         /// </summary>
         /// <param name="log">The <see cref="ILogger"/> to use.</param>
         /// <param name="response">The <see cref="FtpResponse"/> to log.</param>
-        public static void Debug(this ILogger log, IFtpResponse response)
+        public static void LogDebug(this ILogger log, IFtpResponse response)
         {
             if (response is FtpResponse ftpResponse)
             {
@@ -66,7 +66,7 @@ namespace FubarDev.FtpServer
         /// </summary>
         /// <param name="log">The <see cref="ILogger"/> to use.</param>
         /// <param name="response">The <see cref="FtpResponse"/> to log.</param>
-        public static void Info(this ILogger log, IFtpResponse response)
+        public static void LogInfo(this ILogger log, IFtpResponse response)
         {
             if (response is FtpResponse ftpResponse)
             {
@@ -83,7 +83,7 @@ namespace FubarDev.FtpServer
         /// </summary>
         /// <param name="log">The <see cref="ILogger"/> to use.</param>
         /// <param name="response">The <see cref="FtpResponse"/> to log.</param>
-        public static void Warn(this ILogger log, IFtpResponse response)
+        public static void LogWarning(this ILogger log, IFtpResponse response)
         {
             if (response is FtpResponse ftpResponse)
             {
@@ -100,7 +100,7 @@ namespace FubarDev.FtpServer
         /// </summary>
         /// <param name="log">The <see cref="ILogger"/> to use.</param>
         /// <param name="response">The <see cref="FtpResponse"/> to log.</param>
-        public static void Error(this ILogger log, IFtpResponse response)
+        public static void LogError(this ILogger log, IFtpResponse response)
         {
             if (response is FtpResponse ftpResponse)
             {
@@ -125,19 +125,19 @@ namespace FubarDev.FtpServer
         {
             if (response.Code >= 200 && response.Code < 300)
             {
-                log.Trace(response);
+                log.LogTrace(response);
             }
             else if (response.Code >= 300 && response.Code < 400)
             {
-                log.Info(response);
+                log.LogInfo(response);
             }
             else if (response.Code < 200)
             {
-                log.Debug(response);
+                log.LogDebug(response);
             }
             else
             {
-                log.Warn(response);
+                log.LogWarning(response);
             }
         }
     }
