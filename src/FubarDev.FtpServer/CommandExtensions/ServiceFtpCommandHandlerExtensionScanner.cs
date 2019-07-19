@@ -45,7 +45,7 @@ namespace FubarDev.FtpServer.CommandExtensions
         private static IEnumerable<IFtpCommandHandlerExtensionInstanceInformation> CreateInformation(
             [NotNull] IFtpCommandHandlerProvider commandHandlerProvider,
             [NotNull, ItemNotNull] IEnumerable<IFtpCommandHandlerExtension> commandHandlerExtensions,
-            [CanBeNull] ILogger<ServiceFtpCommandHandlerScanner> logger = null)
+            [CanBeNull] ILogger logger = null)
         {
             var cmdHandlers = commandHandlerProvider.CommandHandlers.ToList();
             var commandHandlers = cmdHandlers.ToDictionary(x => x.Name, StringComparer.OrdinalIgnoreCase);
@@ -55,7 +55,7 @@ namespace FubarDev.FtpServer.CommandExtensions
             {
                 if (!commandHandlers.TryGetValue(handlerExtension.ExtensionFor, out var commandHandlerInformation))
                 {
-                    logger.LogWarning($"No command handler found for ID {handlerExtension.ExtensionFor}.");
+                    logger?.LogWarning($"No command handler found for ID {handlerExtension.ExtensionFor}.");
                     continue;
                 }
 
