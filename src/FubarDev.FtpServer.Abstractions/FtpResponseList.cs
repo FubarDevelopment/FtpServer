@@ -43,7 +43,7 @@ namespace FubarDev.FtpServer
                 Environment.NewLine,
                 $"{Code}-{_startMessage}".TrimEnd(),
                 " ... stripped ...",
-                $"{Code} {_endMessage}".TrimEnd());
+                $"{Code} {_endMessage.TrimEnd()}");
         }
 
         protected override IEnumerable<string> GetOutputLines(CancellationToken cancellationToken)
@@ -56,7 +56,7 @@ namespace FubarDev.FtpServer
                 yield return $" {line}";
             }
 
-            yield return $"{Code} {_endMessage}".TrimEnd();
+            yield return $"{Code} {_endMessage.TrimEnd()}";
         }
     }
 }

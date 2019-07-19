@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace FubarDev.FtpServer
 {
@@ -56,7 +57,7 @@ namespace FubarDev.FtpServer
             {
                 $"{Code}-{StartMessage}".TrimEnd(),
                 " ... stripped ... async data",
-                $"{Code} {EndMessage}".TrimEnd(),
+                $"{Code} {EndMessage.TrimEnd()}",
             };
 
             return string.Join(Environment.NewLine, lines);
@@ -72,7 +73,7 @@ namespace FubarDev.FtpServer
                 yield return $" {line}";
             }
 
-            yield return $"{Code} {EndMessage}".TrimEnd();
+            yield return $"{Code} {EndMessage.TrimEnd()}";
         }
 
         protected abstract IAsyncEnumerable<string> GetLinesAsync(CancellationToken cancellationToken = default);

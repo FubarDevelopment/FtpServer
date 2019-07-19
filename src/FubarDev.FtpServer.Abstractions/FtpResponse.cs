@@ -63,7 +63,7 @@ namespace FubarDev.FtpServer
         /// <inheritdoc/>
         public override string ToString()
         {
-            return $"{Code:D3} {Message}".TrimEnd();
+            return $"{Code:D3} {Message?.TrimEnd()}";
         }
 
         private class SingleLineEnumerable : IAsyncEnumerable<string>
