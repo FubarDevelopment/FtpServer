@@ -41,10 +41,6 @@ namespace FubarDev.FtpServer.CommandExtensions
             _logger = logger;
         }
 
-        /// <inheritdoc/>
-        [Obsolete("Use the FtpCommandHandlerExtension attribute instead.")]
-        public override bool? IsLoginRequired { get; } = true;
-
         /// <inheritdoc />
         public override void InitializeConnectionData()
         {

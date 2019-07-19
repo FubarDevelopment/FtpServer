@@ -53,9 +53,6 @@ namespace Microsoft.Extensions.DependencyInjection
             // Command handlers
             services.AddSingleton<IFtpCommandHandlerScanner>(
                 _ => new AssemblyFtpCommandHandlerScanner(commandAssembly));
-#pragma warning disable CS0612 // Typ oder Element ist veraltet
-            services.AddScoped<IFtpCommandHandlerScanner, ServiceFtpCommandHandlerScanner>();
-#pragma warning restore CS0612 // Typ oder Element ist veraltet
             services.TryAddScoped<IFtpCommandHandlerProvider, DefaultFtpCommandHandlerProvider>();
 
             // Command handler extensions
@@ -64,9 +61,6 @@ namespace Microsoft.Extensions.DependencyInjection
                     sp.GetRequiredService<IFtpCommandHandlerProvider>(),
                     sp.GetService<ILogger<AssemblyFtpCommandHandlerExtensionScanner>>(),
                     commandAssembly));
-#pragma warning disable CS0612 // Typ oder Element ist veraltet
-            services.AddScoped<IFtpCommandHandlerExtensionScanner, ServiceFtpCommandHandlerExtensionScanner>();
-#pragma warning restore CS0612 // Typ oder Element ist veraltet
             services.TryAddScoped<IFtpCommandHandlerExtensionProvider, DefaultFtpCommandHandlerExtensionProvider>();
 
             // Activator for FTP commands (and extensions)
@@ -80,9 +74,6 @@ namespace Microsoft.Extensions.DependencyInjection
 
             services.AddScoped<IFtpConnection, FtpConnection>();
             services.AddScoped<IFtpLoginStateMachine, FtpLoginStateMachine>();
-#pragma warning disable 618
-            services.AddScoped<IBackgroundCommandHandler>(sp => new BackgroundCommandHandler(sp.GetRequiredService<IFtpConnection>()));
-#pragma warning restore 618
             services.AddScoped<IFtpCommandDispatcher, DefaultFtpCommandDispatcher>();
 
             services.AddScoped<IFtpHostSelector, SingleFtpHostSelector>();

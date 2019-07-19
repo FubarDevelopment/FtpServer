@@ -34,14 +34,7 @@ namespace FubarDev.FtpServer.Authorization.Actions
         public Task AuthorizedAsync(IAccountInformation accountInformation, CancellationToken cancellationToken)
         {
             var connection = _ftpConnectionAccessor.FtpConnection;
-
             connection.Features.Get<IAuthorizationInformationFeature>().User = accountInformation.User;
-
-#pragma warning disable 618
-            connection.Data.IsAnonymous = accountInformation.User is IAnonymousFtpUser;
-            connection.Data.IsLoggedIn = true;
-#pragma warning restore 618
-
             return Task.CompletedTask;
         }
     }

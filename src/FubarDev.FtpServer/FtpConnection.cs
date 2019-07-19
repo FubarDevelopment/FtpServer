@@ -135,6 +135,8 @@ namespace FubarDev.FtpServer
 
             _logger = logger;
 
+            var defaultEncoding = options.Value.DefaultEncoding ?? Encoding.ASCII;
+
             var parentFeatures = new FeatureCollection();
             var connectionFeature = new ConnectionFeature(
                 (IPEndPoint)socket.Client.LocalEndPoint,
@@ -168,13 +170,11 @@ namespace FubarDev.FtpServer
             parentFeatures.Set<INetworkStreamFeature>(_networkStreamFeature);
 
             var features = new FeatureCollection(parentFeatures);
-#pragma warning disable 618
-            Data = new FtpConnectionData(
-                options.Value.DefaultEncoding ?? Encoding.ASCII,
-                features,
-                catalogLoader);
-#pragma warning restore 618
-
+            features.Set<ILocalizationFeature>(new LocalizationFeature(catalogLoader));
+            features.Set<IFileSystemFeature>(new FileSystemFeature());
+            features.Set<IAuthorizationInformationFeature>(new AuthorizationInformationFeature());
+            features.Set<IEncodingFeature>(new EncodingFeature(defaultEncoding));
+            features.Set<ITransferConfigurationFeature>(new TransferConfigurationFeature());
             Features = features;
 
             _commandReader = ReadCommandsFromPipeline(
@@ -196,48 +196,6 @@ namespace FubarDev.FtpServer
         /// Gets the feature collection.
         /// </summary>
         public override IFeatureCollection Features { get; }
-
-        /// <inheritdoc />
-        [Obsolete("Query the information using the IEncodingFeature instead.")]
-        public Encoding Encoding
-        {
-            get => Features.Get<IEncodingFeature>().Encoding;
-            set => Features.Get<IEncodingFeature>().Encoding = value;
-        }
-
-        /// <inheritdoc />
-        [Obsolete("Query the information using the Features property instead.")]
-        public FtpConnectionData Data { get; }
-
-        /// <inheritdoc />
-        [Obsolete("Use your own logger instead of the one from the connection.")]
-        public ILogger? Log => _logger;
-
-        /// <inheritdoc />
-        [Obsolete("Query the information using the IConnectionFeature instead.")]
-        public IPEndPoint LocalEndPoint
-            => Features.Get<IConnectionFeature>().LocalEndPoint;
-
-        /// <inheritdoc />
-        [Obsolete("Query the information using the IConnectionFeature instead.")]
-        public Address RemoteAddress
-            => Features.Get<IConnectionFeature>().RemoteAddress;
-
-        /// <inheritdoc />
-        [Obsolete("Query the information using the ISecureConnectionFeature instead.")]
-        public Stream OriginalStream => Features.Get<ISecureConnectionFeature>().OriginalStream;
-
-        /// <inheritdoc />
-        [Obsolete("Not needed anymore.")]
-        public Stream SocketStream
-        {
-            get => OriginalStream;
-            set => throw new NotSupportedException("Setting the socket stream isn't supported.");
-        }
-
-        /// <inheritdoc />
-        [Obsolete("Not needed anymore.")]
-        public bool IsSecure => throw new NotSupportedException("Access to irrelevant leaking abstraction.");
 
         /// <summary>
         /// Gets the cancellation token to use to signal a task cancellation.
@@ -349,18 +307,6 @@ namespace FubarDev.FtpServer
                .ConfigureAwait(false);
         }
 
-        /// <summary>
-        /// Create an encrypted stream.
-        /// </summary>
-        /// <param name="unencryptedStream">The stream to encrypt.</param>
-        /// <returns>The encrypted stream.</returns>
-        [Obsolete("The data connection returned by OpenDataConnection is already encrypted.")]
-        public Task<Stream> CreateEncryptedStream(Stream unencryptedStream)
-        {
-            var createEncryptedStream = Features.Get<ISecureConnectionFeature>().CreateEncryptedStream;
-            return createEncryptedStream(unencryptedStream);
-        }
-
         /// <inheritdoc/>
         public void Dispose()
         {
@@ -371,9 +317,6 @@ namespace FubarDev.FtpServer
 
             _socket.Dispose();
             _cancellationTokenSource.Dispose();
-#pragma warning disable 618
-            Data.Dispose();
-#pragma warning restore 618
             _loggerScope?.Dispose();
         }
 

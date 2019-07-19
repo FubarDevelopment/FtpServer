@@ -20,12 +20,6 @@ namespace FubarDev.FtpServer
         int Code { get; }
 
         /// <summary>
-        /// Gets the async action to execute after sending the response to the client.
-        /// </summary>
-        [Obsolete("Use a custom server command.")]
-        FtpResponseAfterWriteAsyncDelegate? AfterWriteAction { get; }
-
-        /// <summary>
         /// Get the the lines to be sent to the client.
         /// </summary>
         /// <param name="cancellationToken">The cancellation token.</param>

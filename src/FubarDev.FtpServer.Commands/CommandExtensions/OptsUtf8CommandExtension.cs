@@ -20,10 +20,6 @@ namespace FubarDev.FtpServer.CommandExtensions
     public class OptsUtf8CommandExtension : FtpCommandHandlerExtension
     {
         /// <inheritdoc />
-        [Obsolete("Use the FtpCommandHandlerExtension attribute instead.")]
-        public override bool? IsLoginRequired { get; } = false;
-
-        /// <inheritdoc />
         public override void InitializeConnectionData()
         {
         }

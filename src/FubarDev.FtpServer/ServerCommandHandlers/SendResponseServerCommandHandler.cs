@@ -64,19 +64,6 @@ namespace FubarDev.FtpServer.ServerCommandHandlers
                     break;
                 }
             }
-
-#pragma warning disable CS0618 // Typ oder Element ist veraltet
-            if (response.AfterWriteAction != null)
-            {
-                var nextResponse = await response.AfterWriteAction(connection, cancellationToken)
-                   .ConfigureAwait(false);
-                if (nextResponse != null)
-                {
-                    await WriteResponseAsync(connection, nextResponse, cancellationToken)
-                       .ConfigureAwait(false);
-                }
-            }
-#pragma warning restore CS0618 // Typ oder Element ist veraltet
         }
     }
 }

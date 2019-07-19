@@ -29,10 +29,6 @@ namespace FubarDev.FtpServer
         public int Code { get; }
 
         /// <inheritdoc />
-        [Obsolete("Use a custom server command.")]
-        public FtpResponseAfterWriteAsyncDelegate? AfterWriteAction => null;
-
-        /// <inheritdoc />
         public IAsyncEnumerable<string> GetLinesAsync(CancellationToken cancellationToken)
         {
             return GetOutputLines(cancellationToken).ToAsyncEnumerable();

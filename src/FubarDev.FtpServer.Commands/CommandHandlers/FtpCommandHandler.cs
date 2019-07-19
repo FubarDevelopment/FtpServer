@@ -26,44 +26,8 @@ namespace FubarDev.FtpServer.CommandHandlers
     /// </summary>
     public abstract class FtpCommandHandler : IFtpCommandHandler
     {
-        private readonly IReadOnlyCollection<string>? _names;
         private IFtpServerMessages? _serverMessages;
         private FtpCommandHandlerContext? _commandHandlerContext;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="FtpCommandHandler"/> class.
-        /// </summary>
-        protected FtpCommandHandler()
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="FtpCommandHandler"/> class.
-        /// </summary>
-        /// <param name="name">The command name.</param>
-        /// <param name="alternativeNames">Alternative names.</param>
-        [Obsolete("The mapping from name to command handler is created by using the FtpCommandHandlerAttribute.")]
-        protected FtpCommandHandler(string name, params string[] alternativeNames)
-        {
-            var names = new List<string>
-            {
-                name,
-            };
-            names.AddRange(alternativeNames);
-            _names = names;
-        }
-
-        /// <inheritdoc />
-        [Obsolete("The mapping from name to command handler is created by using the FtpCommandHandlerAttribute.")]
-        public IReadOnlyCollection<string> Names => _names ?? throw new InvalidOperationException("Obsolete property \"Names\" called for a command handler.");
-
-        /// <inheritdoc />
-        [Obsolete("Information about an FTP command handler can be queried through the IFtpCommandHandlerProvider service.")]
-        public virtual bool IsLoginRequired => true;
-
-        /// <inheritdoc />
-        [Obsolete("Information about an FTP command handler can be queried through the IFtpCommandHandlerProvider service.")]
-        public virtual bool IsAbortable => false;
 
         /// <summary>
         /// Gets or sets the FTP command context.
@@ -87,29 +51,10 @@ namespace FubarDev.FtpServer.CommandHandlers
         protected IFtpConnection Connection => FtpContext.Connection;
 
         /// <summary>
-        /// Gets the connection data.
-        /// </summary>
-        [Obsolete("Query the information using the Features property instead.")]
-        protected FtpConnectionData Data => Connection.Data;
-
-        /// <summary>
         /// Gets the server messages to be returned.
         /// </summary>
         protected IFtpServerMessages ServerMessages
             => _serverMessages ??= Connection.ConnectionServices.GetRequiredService<IFtpServerMessages>();
-
-        /// <inheritdoc />
-        [Obsolete("FTP command handlers (and other types) are now annotated with attributes implementing IFeatureInfo.")]
-        public virtual IEnumerable<IFeatureInfo> GetSupportedFeatures(IFtpConnection connection)
-        {
-            return Enumerable.Empty<IFeatureInfo>();
-        }
-
-        /// <inheritdoc />
-        public virtual IEnumerable<IFtpCommandHandlerExtension> GetExtensions()
-        {
-            return Enumerable.Empty<IFtpCommandHandlerExtension>();
-        }
 
         /// <inheritdoc />
         public abstract Task<IFtpResponse?> Process(FtpCommand command, CancellationToken cancellationToken);

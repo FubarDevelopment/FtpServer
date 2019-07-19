@@ -48,12 +48,6 @@ namespace FubarDev.FtpServer
         /// </summary>
         public string? Message { get; }
 
-        /// <summary>
-        /// Gets or sets the async action to execute after sending the response to the client.
-        /// </summary>
-        [Obsolete("Use a custom server command.")]
-        public FtpResponseAfterWriteAsyncDelegate? AfterWriteAction { get; set; }
-
         /// <inheritdoc />
         public IAsyncEnumerable<string> GetLinesAsync(CancellationToken cancellationToken)
         {
