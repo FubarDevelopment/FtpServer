@@ -67,7 +67,7 @@ namespace FubarDev.FtpServer
         {
             yield return $"{Code}-{StartMessage}".TrimEnd();
 
-            await foreach (var line in GetLinesAsync(cancellationToken))
+            await foreach (var line in GetLinesAsync(cancellationToken).ConfigureAwait(false))
             {
                 yield return $" {line}";
             }
@@ -75,6 +75,6 @@ namespace FubarDev.FtpServer
             yield return $"{Code} {EndMessage}".TrimEnd();
         }
 
-        protected abstract IAsyncEnumerable<string> GetLinesAsync(CancellationToken cancellationToken);
+        protected abstract IAsyncEnumerable<string> GetLinesAsync(CancellationToken cancellationToken = default);
     }
 }
