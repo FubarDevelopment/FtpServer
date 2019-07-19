@@ -72,9 +72,8 @@ namespace FubarDev.FtpServer.FileSystem.Unix
             var dirInfo = dirEntry.Info;
             var entry = dirInfo.GetFileSystemEntries($"^{Regex.Escape(name)}$")
                .Select(x => CreateEntry(dirEntry, x))
-               .Cast<IUnixFileSystemEntry?>()
                .SingleOrDefault();
-            return Task.FromResult(entry);
+            return Task.FromResult<IUnixFileSystemEntry?>(entry);
         }
 
         /// <inheritdoc />
@@ -235,15 +234,12 @@ namespace FubarDev.FtpServer.FileSystem.Unix
         }
         private IUnixFileSystemEntry CreateEntry(IUnixDirectoryEntry parent, UnixFileSystemInfo info)
         {
-            switch (info)
+            return info switch
             {
-                case UnixFileInfo fileInfo:
-                    return new UnixFileEntry(fileInfo);
-                case UnixDirectoryInfo dirInfo:
-                    return new UnixDirectoryEntry(dirInfo, _user, _userInfo, parent);
-                default:
-                    throw new NotSupportedException($"Unsupported file system info type {info}");
-            }
+                UnixFileInfo fileInfo => (IUnixFileSystemEntry)new UnixFileEntry(fileInfo),
+                UnixDirectoryInfo dirInfo => new UnixDirectoryEntry(dirInfo, _user, _userInfo, parent),
+                _ => throw new NotSupportedException($"Unsupported file system info type {info}"),
+            };
         }
     }
 }
