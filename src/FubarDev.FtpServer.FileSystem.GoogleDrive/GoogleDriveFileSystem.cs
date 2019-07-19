@@ -196,36 +196,34 @@ namespace FubarDev.FtpServer.FileSystem.GoogleDrive
             var fe = (GoogleDriveFileEntry)fileEntry;
             var request = Service.Files.Get(fe.File.Id);
 
-            using (var msg = request.CreateRequest())
+            using var msg = request.CreateRequest();
+            if (from != null)
             {
-                if (from != null)
-                {
-                    msg.Headers.Range = new RangeHeaderValue(from, null);
-                }
-
-                // Add alt=media to the query parameters.
-                var uri = new UriBuilder(msg.RequestUri);
-                if (uri.Query.Length <= 1)
-                {
-                    uri.Query = "alt=media";
-                }
-                else
-                {
-                    // Remove the leading '?'. UriBuilder.Query doesn't round-trip.
-                    uri.Query = uri.Query.Substring(1) + "&alt=media";
-                }
-
-                msg.RequestUri = uri.Uri;
-
-                var response = await request.Service.HttpClient.SendAsync(
-                        msg,
-                        HttpCompletionOption.ResponseHeadersRead,
-                        cancellationToken)
-                    .ConfigureAwait(false);
-                response.EnsureSuccessStatusCode();
-                var responseStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
-                return new GoogleDriveDownloadStream(response, responseStream, startPosition, fe.Size);
+                msg.Headers.Range = new RangeHeaderValue(from, null);
             }
+
+            // Add alt=media to the query parameters.
+            var uri = new UriBuilder(msg.RequestUri);
+            if (uri.Query.Length <= 1)
+            {
+                uri.Query = "alt=media";
+            }
+            else
+            {
+                // Remove the leading '?'. UriBuilder.Query doesn't round-trip.
+                uri.Query = uri.Query.Substring(1) + "&alt=media";
+            }
+
+            msg.RequestUri = uri.Uri;
+
+            var response = await request.Service.HttpClient.SendAsync(
+                    msg,
+                    HttpCompletionOption.ResponseHeadersRead,
+                    cancellationToken)
+               .ConfigureAwait(false);
+            response.EnsureSuccessStatusCode();
+            var responseStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
+            return new GoogleDriveDownloadStream(response, responseStream, startPosition, fe.Size);
         }
 
         /// <inheritdoc/>
