@@ -116,7 +116,7 @@ namespace FubarDev.FtpServer.Commands
                     handlerInfo.Type);
             }
 
-            if (handler is IFtpCommandHandlerExtensionHost extensionHost)
+            if (handlerInfo.IsExtensible && handler is IFtpCommandHandlerExtensionHost extensionHost)
             {
                 var extensions = ActivateExtensions(context, handlerInfo).ToList();
                 extensionHost.Extensions = extensions.ToDictionary(
