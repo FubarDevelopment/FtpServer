@@ -51,7 +51,7 @@ namespace FubarDev.FtpServer.ServerCommandHandlers
 
             var writer = networkStreamFeature.Output;
 
-            await foreach (var line in response.GetNextLineAsync(cancellationToken))
+            await foreach (var line in response.GetLinesAsync(cancellationToken))
             {
                 _logger?.LogDebug(line);
                 var data = encoding.GetBytes($"{line}\r\n");

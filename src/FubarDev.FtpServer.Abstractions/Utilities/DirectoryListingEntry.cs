@@ -9,6 +9,9 @@ using FubarDev.FtpServer.FileSystem;
 
 namespace FubarDev.FtpServer.Utilities
 {
+    /// <summary>
+    /// The entry found by the <see cref="DirectoryListing"/>.
+    /// </summary>
     public class DirectoryListingEntry
     {
         private readonly Lazy<string> _fullName;

@@ -55,7 +55,7 @@ namespace FubarDev.FtpServer
         public FtpResponseAfterWriteAsyncDelegate? AfterWriteAction { get; set; }
 
         /// <inheritdoc />
-        public IAsyncEnumerable<string> GetNextLineAsync(CancellationToken cancellationToken)
+        public IAsyncEnumerable<string> GetLinesAsync(CancellationToken cancellationToken)
         {
             return new SingleLineEnumerable(ToString());
         }

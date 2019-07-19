@@ -64,11 +64,11 @@ namespace FubarDev.FtpServer
         }
 
         /// <inheritdoc />
-        public async IAsyncEnumerable<string> GetNextLineAsync([EnumeratorCancellation] CancellationToken cancellationToken)
+        public async IAsyncEnumerable<string> GetLinesAsync([EnumeratorCancellation] CancellationToken cancellationToken)
         {
             yield return $"{Code}-{StartMessage}".TrimEnd();
 
-            await foreach (var line in GetLinesAsync(cancellationToken).ConfigureAwait(false))
+            await foreach (var line in GetSourceLinesAsync(cancellationToken).ConfigureAwait(false))
             {
                 yield return $" {line}";
             }
@@ -76,6 +76,11 @@ namespace FubarDev.FtpServer
             yield return $"{Code} {EndMessage.TrimEnd()}";
         }
 
-        protected abstract IAsyncEnumerable<string> GetLinesAsync(CancellationToken cancellationToken = default);
+        /// <summary>
+        /// Get the raw lines to be used to create the lines to be sent to the client.
+        /// </summary>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <returns>The source lines.</returns>
+        protected abstract IAsyncEnumerable<string> GetSourceLinesAsync(CancellationToken cancellationToken = default);
     }
 }

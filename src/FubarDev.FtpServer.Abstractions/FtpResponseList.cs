@@ -46,6 +46,7 @@ namespace FubarDev.FtpServer
                 $"{Code} {_endMessage.TrimEnd()}");
         }
 
+        /// <inheritdoc />
         protected override IEnumerable<string> GetOutputLines(CancellationToken cancellationToken)
         {
             yield return $"{Code}-{_startMessage}".TrimEnd();

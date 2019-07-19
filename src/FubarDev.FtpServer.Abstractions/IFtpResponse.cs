@@ -26,10 +26,10 @@ namespace FubarDev.FtpServer
         FtpResponseAfterWriteAsyncDelegate? AfterWriteAction { get; }
 
         /// <summary>
-        /// Tries to get the the next line.
+        /// Get the the lines to be sent to the client.
         /// </summary>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>All text to be sent to the client.</returns>
-        IAsyncEnumerable<string> GetNextLineAsync(CancellationToken cancellationToken);
+        IAsyncEnumerable<string> GetLinesAsync(CancellationToken cancellationToken);
     }
 }

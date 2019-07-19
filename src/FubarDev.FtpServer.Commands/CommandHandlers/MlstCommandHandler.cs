@@ -231,7 +231,7 @@ namespace FubarDev.FtpServer.CommandHandlers
             }
 
             /// <inheritdoc />
-            protected override async IAsyncEnumerable<string> GetLinesAsync([EnumeratorCancellation] CancellationToken cancellationToken = default)
+            protected override async IAsyncEnumerable<string> GetSourceLinesAsync([EnumeratorCancellation] CancellationToken cancellationToken = default)
             {
                 var entries = new List<IUnixFileSystemEntry>()
                 {
