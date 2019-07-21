@@ -6,6 +6,7 @@
     <OutputType>Exe</OutputType>
     <AssemblyName>ftpserver</AssemblyName>
     <IsPackable>false</IsPackable>
+    <GenerateErrorForMissingTargetingPacks>false</GenerateErrorForMissingTargetingPacks>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="JKang.IpcServiceFramework.Server" Version="2.2.2" />
