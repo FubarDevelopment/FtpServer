@@ -5,7 +5,6 @@
 using System.Threading;
 using System.Threading.Tasks;
 
-using FubarDev.FtpServer.AccountManagement;
 using FubarDev.FtpServer.Features;
 
 namespace FubarDev.FtpServer.Authorization.Actions

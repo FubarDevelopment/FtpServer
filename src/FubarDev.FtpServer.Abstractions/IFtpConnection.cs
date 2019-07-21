@@ -7,15 +7,10 @@
 
 using System;
 using System.ComponentModel;
-using System.IO;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-using FubarDev.FtpServer.Features;
-
 using Microsoft.AspNetCore.Http.Features;
-using Microsoft.Extensions.Logging;
 
 namespace FubarDev.FtpServer
 {

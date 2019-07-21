@@ -5,7 +5,6 @@
 // <author>Mark Junker</author>
 //-----------------------------------------------------------------------
 
-using FubarDev.FtpServer.FileSystem;
 using FubarDev.FtpServer.Utilities;
 
 namespace FubarDev.FtpServer.ListFormatters

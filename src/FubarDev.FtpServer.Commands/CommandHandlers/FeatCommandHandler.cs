@@ -24,19 +24,15 @@ namespace FubarDev.FtpServer.CommandHandlers
     public class FeatCommandHandler : FtpCommandHandler
     {
         private readonly IFeatureInfoProvider _featureInfoProvider;
-        private readonly IFtpCommandHandlerProvider _commandHandlerProvider;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FeatCommandHandler"/> class.
         /// </summary>
         /// <param name="featureInfoProvider">Provider for feature information.</param>
-        /// <param name="commandHandlerProvider">The FTP command handler provider.</param>
         public FeatCommandHandler(
-            IFeatureInfoProvider featureInfoProvider,
-            IFtpCommandHandlerProvider commandHandlerProvider)
+            IFeatureInfoProvider featureInfoProvider)
         {
             _featureInfoProvider = featureInfoProvider;
-            _commandHandlerProvider = commandHandlerProvider;
         }
 
         /// <inheritdoc/>

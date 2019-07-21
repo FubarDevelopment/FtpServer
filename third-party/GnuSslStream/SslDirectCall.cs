@@ -30,7 +30,7 @@ namespace System.Net.Security
                 fixed (NativeApi.SecurityBufferStruct* ptr = unmanagedBuffer)
                 fixed (void* workArrayPtr = workArray)
                 {
-                    securityBufferDescriptor.UnmanagedPointer = (void*)ptr;
+                    securityBufferDescriptor.UnmanagedPointer = ptr;
 
                     unmanagedBuffer[0].token = (IntPtr)workArrayPtr;
                     unmanagedBuffer[0].count = workArray.Length;
