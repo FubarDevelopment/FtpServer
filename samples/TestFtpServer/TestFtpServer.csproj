@@ -6,7 +6,6 @@
     <OutputType>Exe</OutputType>
     <AssemblyName>ftpserver</AssemblyName>
     <IsPackable>false</IsPackable>
-    <GenerateErrorForMissingTargetingPacks>false</GenerateErrorForMissingTargetingPacks>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="JKang.IpcServiceFramework.Server" Version="2.2.2" />
@@ -17,8 +16,8 @@
     <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="2.2.0" />
     <PackageReference Include="Microsoft.Extensions.Options" Version="2.2.0" />
     <PackageReference Include="Nito.AsyncEx.Context" Version="5.0.0" />
-    <PackageReference Include="NLog" Version="4.6.5" />
-    <PackageReference Include="NLog.Web.AspNetCore" Version="4.8.3" />
+    <PackageReference Include="NLog" Version="4.6.6" />
+    <PackageReference Include="NLog.Web.AspNetCore" Version="4.8.4" />
     <PackageReference Include="Portable.BouncyCastle" Version="1.8.5" />
   </ItemGroup>
   <ItemGroup>
