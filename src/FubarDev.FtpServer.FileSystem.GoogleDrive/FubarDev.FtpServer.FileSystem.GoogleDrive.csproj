@@ -1,19 +1,24 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="../../PackageLibrary.props" />
+
   <PropertyGroup>
     <TargetFrameworks>netstandard2.1;netstandard2.0;net461</TargetFrameworks>
     <Description>Google Drive file system for the portable FTP server</Description>
     <PackageTags>portable;FTP;server;Google;Drive</PackageTags>
   </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="Google.Apis.Drive.v3" Version="1.40.2.1649" />
   </ItemGroup>
+
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Options" Version="2.0.0" />
   </ItemGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\FubarDev.FtpServer.Abstractions\FubarDev.FtpServer.Abstractions.csproj" />
   </ItemGroup>
+
   <Import Project="..\FubarDev.FtpServer.Shared\FubarDev.FtpServer.Shared.projitems" Label="Shared" />
-  <Import Project="../../PackageLibrary.props" />
 </Project>

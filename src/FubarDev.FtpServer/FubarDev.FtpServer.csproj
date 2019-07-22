@@ -1,25 +1,31 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="../../PackageLibrary.props" />
+
   <PropertyGroup>
     <TargetFrameworks>netstandard2.1;netstandard2.0;net461;net47</TargetFrameworks>
     <Description>TCP-based FTP server implementation</Description>
     <PackageTags>portable;FTP;server</PackageTags>
   </PropertyGroup>
+
   <PropertyGroup Condition=" '$(TargetFramework)' == 'net461' ">
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <DefineConstants>USE_GNU_SSL_STREAM;$(DefineConstants)</DefineConstants>
   </PropertyGroup>
+
   <PropertyGroup Condition=" '$(TargetFramework)' == 'net461' or '$(TargetFramework)' == 'net47' ">
     <DefineConstants>USE_SYNC_SSL_STREAM;$(DefineConstants)</DefineConstants>
   </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="Scrutor" Version="3.0.2" />
     <PackageReference Include="System.IO.Pipelines" Version="4.5.1" />
   </ItemGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\FubarDev.FtpServer.Commands\FubarDev.FtpServer.Commands.csproj" />
   </ItemGroup>
+
   <Import Project="..\..\third-party\GnuSslStream\GnuSslStream.projitems" Label="Shared" Condition=" '$(TargetFramework)' == 'net461' " />
   <Import Project="..\FubarDev.FtpServer.Shared\FubarDev.FtpServer.Shared.projitems" Label="Shared" />
-  <Import Project="../../PackageLibrary.props" />
 </Project>
