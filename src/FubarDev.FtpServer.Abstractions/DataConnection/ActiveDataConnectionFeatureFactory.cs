@@ -46,7 +46,7 @@ namespace FubarDev.FtpServer.DataConnection
         /// <returns>The task returning the new FTP data connection feature.</returns>
         public Task<IFtpDataConnectionFeature> CreateFeatureAsync(
             FtpCommand? ftpCommand,
-            Address portAddress,
+            IPEndPoint portAddress,
             int? dataPort)
         {
             var connection = _connectionAccessor.FtpConnection;
@@ -73,13 +73,13 @@ namespace FubarDev.FtpServer.DataConnection
 
         private class ActiveDataConnectionFeature : IFtpDataConnectionFeature
         {
-            private readonly Address _portAddress;
+            private readonly IPEndPoint _portAddress;
             private readonly List<IFtpDataConnectionValidator> _validators;
             private readonly IFtpConnection _ftpConnection;
 
             public ActiveDataConnectionFeature(
                 IPEndPoint localEndPoint,
-                Address portAddress,
+                IPEndPoint portAddress,
                 List<IFtpDataConnectionValidator> validators,
                 FtpCommand? command,
                 IFtpConnection ftpConnection)
@@ -123,7 +123,7 @@ namespace FubarDev.FtpServer.DataConnection
                     try
                     {
                         tries += 1;
-                        var connectTask = client.ConnectAsync(_portAddress.IPAddress, _portAddress.Port);
+                        var connectTask = client.ConnectAsync(_portAddress.Address, _portAddress.Port);
                         var result = await Task.WhenAny(connectTask, Task.Delay(timeout, cancellationToken))
                            .ConfigureAwait(false);
 

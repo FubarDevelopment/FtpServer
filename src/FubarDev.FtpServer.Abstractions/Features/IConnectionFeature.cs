@@ -19,6 +19,6 @@ namespace FubarDev.FtpServer.Features
         /// <summary>
         /// Gets the remote address of the client.
         /// </summary>
-        Address RemoteAddress { get; }
+        IPEndPoint RemoteAddress { get; }
     }
 }

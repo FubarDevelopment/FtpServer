@@ -67,7 +67,7 @@ namespace FubarDev.FtpServer
 
         private readonly Channel<FtpCommand> _ftpCommandChannel = Channel.CreateBounded<FtpCommand>(5);
 
-        private readonly Address _remoteAddress;
+        private readonly IPEndPoint _remoteAddress;
 
         private readonly int? _dataPort;
 
@@ -113,14 +113,13 @@ namespace FubarDev.FtpServer
             ConnectionId = "FTP-" + Guid.NewGuid().ToString("N");
 
             _dataPort = portOptions.Value.DataPort;
-            var endpoint = (IPEndPoint)socket.Client.RemoteEndPoint;
-            var remoteAddress = _remoteAddress = new Address(endpoint.Address.ToString(), endpoint.Port);
+            _remoteAddress = (IPEndPoint)socket.Client.RemoteEndPoint;
 
             var properties = new Dictionary<string, object?>
             {
-                ["RemoteAddress"] = remoteAddress.ToString(true),
-                ["RemoteIp"] = remoteAddress.IPAddress?.ToString(),
-                ["RemotePort"] = remoteAddress.Port,
+                ["RemoteAddress"] = _remoteAddress.ToString(),
+                ["RemoteIp"] = _remoteAddress.Address.ToString(),
+                ["RemotePort"] = _remoteAddress.Port,
                 ["ConnectionId"] = ConnectionId,
             };
 
@@ -140,7 +139,7 @@ namespace FubarDev.FtpServer
             var parentFeatures = new FeatureCollection();
             var connectionFeature = new ConnectionFeature(
                 (IPEndPoint)socket.Client.LocalEndPoint,
-                remoteAddress);
+                _remoteAddress);
             var secureConnectionFeature = new SecureConnectionFeature(socket);
 
             var applicationInputPipe = new Pipe();
@@ -216,7 +215,7 @@ namespace FubarDev.FtpServer
 
             // Connection information
             var connectionFeature = Features.Get<IConnectionFeature>();
-            _logger?.LogInformation($"Connected from {connectionFeature.RemoteAddress.ToString(true)}");
+            _logger?.LogInformation($"Connected from {connectionFeature.RemoteAddress}");
 
             await _networkStreamFeature.StreamWriterService.StartAsync(CancellationToken.None)
                .ConfigureAwait(false);
@@ -635,7 +634,7 @@ namespace FubarDev.FtpServer
         {
             public ConnectionFeature(
                 IPEndPoint localEndPoint,
-                Address remoteAddress)
+                IPEndPoint remoteAddress)
             {
                 LocalEndPoint = localEndPoint;
                 RemoteAddress = remoteAddress;
@@ -645,7 +644,7 @@ namespace FubarDev.FtpServer
             public IPEndPoint LocalEndPoint { get; }
 
             /// <inheritdoc />
-            public Address RemoteAddress { get; }
+            public IPEndPoint RemoteAddress { get; }
         }
 
         private class SecureConnectionFeature : ISecureConnectionFeature

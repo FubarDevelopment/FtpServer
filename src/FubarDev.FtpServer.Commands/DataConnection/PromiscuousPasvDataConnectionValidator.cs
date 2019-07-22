@@ -60,7 +60,7 @@ namespace FubarDev.FtpServer.DataConnection
 
             var connectionFeature = connection.Features.Get<IConnectionFeature>();
             var pasvRemoteAddress = dataConnection.RemoteAddress.Address;
-            if (Equals(pasvRemoteAddress, connectionFeature.RemoteAddress.IPAddress))
+            if (Equals(pasvRemoteAddress, connectionFeature.RemoteAddress.Address))
             {
                 return Task.FromResult<ValidationResult?>(ValidationResult.Success);
             }
@@ -69,7 +69,7 @@ namespace FubarDev.FtpServer.DataConnection
             var errorMessage = string.Format(
                 localizationFeature.Catalog.GetString("Data connection attempt from {0} for control connection from {1}, data connection rejected"),
                 pasvRemoteAddress,
-                connectionFeature.RemoteAddress.IPAddress);
+                connectionFeature.RemoteAddress.Address);
             _logger?.LogWarning(errorMessage);
             return Task.FromResult<ValidationResult?>(new ValidationResult(errorMessage));
         }

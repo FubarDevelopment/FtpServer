@@ -46,7 +46,8 @@ namespace FubarDev.FtpServer.CommandHandlers
         {
             try
             {
-                var address = Address.Parse(command.Argument);
+                var connFeature = Connection.Features.Get<IConnectionFeature>();
+                var address = command.Argument.ParsePortString(connFeature.RemoteAddress);
                 if (address == null)
                 {
                     return new FtpResponse(501, T("Syntax error in parameters or arguments."));

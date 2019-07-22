@@ -6,6 +6,7 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
@@ -93,18 +94,17 @@ namespace FubarDev.FtpServer.CommandHandlers
             var localPort = feature.LocalEndPoint.Port;
             if (isEpsv || address.AddressFamily == AddressFamily.InterNetworkV6)
             {
-                var listenerAddress = new Address(localPort);
                 await FtpContext.ServerCommandWriter.WriteAsync(
                     new SendResponseServerCommand(
-                        new FtpResponse(229, T("Entering Extended Passive Mode ({0}).", listenerAddress))),
+                        new FtpResponse(229, T("Entering Extended Passive Mode (|||{0}|).", localPort))),
                     cancellationToken).ConfigureAwait(false);
             }
             else
             {
-                var listenerAddress = new Address(address.ToString(), localPort);
+                var listenerAddress = new IPEndPoint(address, localPort);
                 await FtpContext.ServerCommandWriter.WriteAsync(
                     new SendResponseServerCommand(
-                        new FtpResponse(227, T("Entering Passive Mode ({0}).", listenerAddress))),
+                        new FtpResponse(227, T("Entering Passive Mode ({0}).", listenerAddress.ToPasvAddress()))),
                     cancellationToken).ConfigureAwait(false);
             }
 
