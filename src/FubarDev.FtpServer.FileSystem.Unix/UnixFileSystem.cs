@@ -6,11 +6,11 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Security.Claims;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
-using FubarDev.FtpServer.AccountManagement;
 using FubarDev.FtpServer.BackgroundTransfer;
 using FubarDev.FtpServer.Utilities;
 
@@ -24,7 +24,7 @@ namespace FubarDev.FtpServer.FileSystem.Unix
     /// </summary>
     public class UnixFileSystem : IUnixFileSystem
     {
-        private readonly IFtpUser _user;
+        private readonly ClaimsPrincipal _user;
 
         private readonly UnixUserInfo? _userInfo;
 
@@ -36,7 +36,7 @@ namespace FubarDev.FtpServer.FileSystem.Unix
         /// <param name="userInfo">The user information.</param>
         public UnixFileSystem(
             IUnixDirectoryEntry root,
-            IFtpUser user,
+            ClaimsPrincipal user,
             UnixUserInfo? userInfo)
         {
             _user = user;

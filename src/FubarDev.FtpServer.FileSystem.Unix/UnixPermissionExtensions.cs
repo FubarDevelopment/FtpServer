@@ -2,15 +2,17 @@
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
-using FubarDev.FtpServer.AccountManagement;
+using System.Security.Claims;
+
 using FubarDev.FtpServer.FileSystem.Generic;
+
 namespace FubarDev.FtpServer.FileSystem.Unix
 {
     internal static class UnixPermissionExtensions
     {
         public static IAccessMode GetEffectivePermissions(
             this IUnixDirectoryEntry entry,
-            IFtpUser ftpUser)
+            ClaimsPrincipal ftpUser)
         {
             var canRead = false;
             var canWrite = false;
@@ -24,12 +26,12 @@ namespace FubarDev.FtpServer.FileSystem.Unix
                 canExecute |= toApply.Execute;
             }
 
-            if (entry.Owner == ftpUser.Name)
+            if (entry.Owner == ftpUser.Identity.Name)
             {
                 UpdatePermissions(entry.Permissions.User);
             }
 
-            if (ftpUser.IsInGroup(entry.Group))
+            if (ftpUser.IsInRole(entry.Group))
             {
                 UpdatePermissions(entry.Permissions.Group);
             }

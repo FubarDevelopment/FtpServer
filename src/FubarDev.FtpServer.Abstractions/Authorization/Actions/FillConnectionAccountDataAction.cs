@@ -5,7 +5,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 
-using FubarDev.FtpServer.Features;
+using Microsoft.AspNetCore.Connections.Features;
 
 namespace FubarDev.FtpServer.Authorization.Actions
 {
@@ -33,7 +33,7 @@ namespace FubarDev.FtpServer.Authorization.Actions
         public Task AuthorizedAsync(IAccountInformation accountInformation, CancellationToken cancellationToken)
         {
             var connection = _ftpConnectionAccessor.FtpConnection;
-            connection.Features.Get<IAuthorizationInformationFeature>().User = accountInformation.User;
+            connection.Features.Get<IConnectionUserFeature>().User = accountInformation.User;
             return Task.CompletedTask;
         }
     }

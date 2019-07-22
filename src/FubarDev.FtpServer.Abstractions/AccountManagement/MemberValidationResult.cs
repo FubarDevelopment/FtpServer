@@ -3,6 +3,7 @@
 // </copyright>
 
 using System;
+using System.Security.Claims;
 
 namespace FubarDev.FtpServer.AccountManagement
 {
@@ -11,7 +12,7 @@ namespace FubarDev.FtpServer.AccountManagement
     /// </summary>
     public class MemberValidationResult
     {
-        private readonly IFtpUser? _user;
+        private readonly ClaimsPrincipal? _user;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MemberValidationResult"/> class.
@@ -32,7 +33,7 @@ namespace FubarDev.FtpServer.AccountManagement
         /// </summary>
         /// <param name="status">The success status for the validation.</param>
         /// <param name="user">The validated user.</param>
-        public MemberValidationResult(MemberValidationStatus status, IFtpUser user)
+        public MemberValidationResult(MemberValidationStatus status, ClaimsPrincipal user)
         {
             if (status != MemberValidationStatus.Anonymous && status != MemberValidationStatus.AuthenticatedUser)
             {
@@ -56,7 +57,7 @@ namespace FubarDev.FtpServer.AccountManagement
         /// <summary>
         /// Gets the authenticated user.
         /// </summary>
-        public IFtpUser User
+        public ClaimsPrincipal User
         {
             get
             {

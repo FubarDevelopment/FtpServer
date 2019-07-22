@@ -56,7 +56,7 @@ namespace FubarDev.FtpServer.FileSystem.DotNet
                 path = Path.Combine(path, directories.RootPath);
             }
 
-            _logger?.LogDebug("The root directory for {userName} is {rootPath}", accountInformation.User.Name, path);
+            _logger?.LogDebug("The root directory for {userName} is {rootPath}", accountInformation.User.Identity.Name, path);
 
             return Task.FromResult<IUnixFileSystem>(new DotNetFileSystem(path, _allowNonEmptyDirectoryDelete, _streamBufferSize));
         }

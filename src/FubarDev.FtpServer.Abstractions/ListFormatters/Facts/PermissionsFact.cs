@@ -2,6 +2,7 @@
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
+using System.Security.Claims;
 using System.Text;
 
 using FubarDev.FtpServer.AccountManagement;
@@ -21,7 +22,7 @@ namespace FubarDev.FtpServer.ListFormatters.Facts
         /// <param name="fileSystem">The current file system of the given <paramref name="entry"/>.</param>
         /// <param name="dir">The current directory.</param>
         /// <param name="entry">The file to create the permissions for.</param>
-        public PermissionsFact(IFtpUser user, IUnixFileSystem fileSystem, IUnixDirectoryEntry dir, IUnixFileEntry entry)
+        public PermissionsFact(ClaimsPrincipal user, IUnixFileSystem fileSystem, IUnixDirectoryEntry dir, IUnixFileEntry entry)
         {
             var values = new StringBuilder();
             var entryPerm = entry.Permissions.GetAccessModeFor(entry, user);
@@ -59,7 +60,7 @@ namespace FubarDev.FtpServer.ListFormatters.Facts
         /// <param name="user">The current user.</param>
         /// <param name="dir">The current directory.</param>
         /// <param name="entry">The directory entry to get the permissions for.</param>
-        public PermissionsFact(IFtpUser user, IUnixDirectoryEntry? dir, IUnixDirectoryEntry entry)
+        public PermissionsFact(ClaimsPrincipal user, IUnixDirectoryEntry? dir, IUnixDirectoryEntry entry)
         {
             var values = new StringBuilder();
             var entryPerm = entry.Permissions.GetAccessModeFor(entry, user);

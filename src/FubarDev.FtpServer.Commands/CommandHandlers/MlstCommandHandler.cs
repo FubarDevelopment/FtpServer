@@ -6,11 +6,11 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.CompilerServices;
+using System.Security.Claims;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-using FubarDev.FtpServer.AccountManagement;
 using FubarDev.FtpServer.Commands;
 using FubarDev.FtpServer.Features;
 using FubarDev.FtpServer.Features.Impl;
@@ -19,6 +19,7 @@ using FubarDev.FtpServer.ListFormatters;
 using FubarDev.FtpServer.ServerCommands;
 using FubarDev.FtpServer.Utilities;
 
+using Microsoft.AspNetCore.Connections.Features;
 using Microsoft.Extensions.Logging;
 
 namespace FubarDev.FtpServer.CommandHandlers
@@ -111,7 +112,7 @@ namespace FubarDev.FtpServer.CommandHandlers
                 targetEntry = foundEntry.Entry;
             }
 
-            var authInfoFeature = Connection.Features.Get<IAuthorizationInformationFeature>();
+            var authInfoFeature = Connection.Features.Get<IConnectionUserFeature>();
             var authUser = authInfoFeature.User;
             if (authUser == null)
             {
@@ -159,7 +160,7 @@ namespace FubarDev.FtpServer.CommandHandlers
                     cancellationToken)
                .ConfigureAwait(false);
 
-            var authInfoFeature = Connection.Features.Get<IAuthorizationInformationFeature>();
+            var authInfoFeature = Connection.Features.Get<IConnectionUserFeature>();
             var authUser = authInfoFeature.User;
             if (authUser == null)
             {
@@ -176,7 +177,7 @@ namespace FubarDev.FtpServer.CommandHandlers
 
         private async Task<IFtpResponse?> ExecuteSendAsync(
             IFtpDataConnection dataConnection,
-            IFtpUser user,
+            ClaimsPrincipal user,
             IUnixFileSystem fileSystem,
             Stack<IUnixDirectoryEntry> path,
             IUnixDirectoryEntry dirEntry,
@@ -210,14 +211,14 @@ namespace FubarDev.FtpServer.CommandHandlers
         private class MlstFtpResponse : FtpResponseAsyncList
         {
             private readonly ISet<string> _activeMlstFacts;
-            private readonly IFtpUser _user;
+            private readonly ClaimsPrincipal _user;
             private readonly IUnixFileSystem _fileSystem;
             private readonly IUnixFileSystemEntry _targetEntry;
             private readonly Stack<IUnixDirectoryEntry> _path;
 
             public MlstFtpResponse(
                 ISet<string> activeMlstFacts,
-                IFtpUser user,
+                ClaimsPrincipal user,
                 IUnixFileSystem fileSystem,
                 IUnixFileSystemEntry targetEntry,
                 Stack<IUnixDirectoryEntry> path)

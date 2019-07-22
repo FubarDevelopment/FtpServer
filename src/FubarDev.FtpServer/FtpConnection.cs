@@ -13,6 +13,7 @@ using System.IO.Pipelines;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
+using System.Security.Claims;
 using System.Text;
 using System.Threading;
 using System.Threading.Channels;
@@ -29,6 +30,7 @@ using FubarDev.FtpServer.Localization;
 using FubarDev.FtpServer.Networking;
 using FubarDev.FtpServer.ServerCommands;
 
+using Microsoft.AspNetCore.Connections.Features;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -39,7 +41,7 @@ namespace FubarDev.FtpServer
     /// <summary>
     /// This class represents a FTP connection.
     /// </summary>
-    public sealed class FtpConnection : FtpConnectionContext, IFtpConnection
+    public sealed class FtpConnection : IFtpConnection
     {
         private readonly CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
 
@@ -110,7 +112,7 @@ namespace FubarDev.FtpServer
         {
             ConnectionServices = serviceProvider;
 
-            ConnectionId = "FTP-" + Guid.NewGuid().ToString("N");
+            var connectionId = "FTP-" + Guid.NewGuid().ToString("N");
 
             _dataPort = portOptions.Value.DataPort;
             _remoteAddress = (IPEndPoint)socket.Client.RemoteEndPoint;
@@ -120,7 +122,7 @@ namespace FubarDev.FtpServer
                 ["RemoteAddress"] = _remoteAddress.ToString(),
                 ["RemoteIp"] = _remoteAddress.Address.ToString(),
                 ["RemotePort"] = _remoteAddress.Port,
-                ["ConnectionId"] = ConnectionId,
+                ["ConnectionId"] = connectionId,
             };
 
             _loggerScope = logger?.BeginScope(properties);
@@ -167,11 +169,14 @@ namespace FubarDev.FtpServer
             parentFeatures.Set<ISecureConnectionFeature>(secureConnectionFeature);
             parentFeatures.Set<IServerCommandFeature>(new ServerCommandFeature(_serverCommandChannel));
             parentFeatures.Set<INetworkStreamFeature>(_networkStreamFeature);
+            parentFeatures.Set<IConnectionLifetimeFeature>(new FtpConnectionLifetimeFeature(this));
+            parentFeatures.Set<IConnectionIdFeature>(new FtpConnectionIdFeature(connectionId));
+            parentFeatures.Set<IConnectionTransportFeature>(new FtpConnectionTransportFeature(socketPipe));
 
             var features = new FeatureCollection(parentFeatures);
             features.Set<ILocalizationFeature>(new LocalizationFeature(catalogLoader));
             features.Set<IFileSystemFeature>(new FileSystemFeature());
-            features.Set<IAuthorizationInformationFeature>(new AuthorizationInformationFeature());
+            features.Set<IConnectionUserFeature>(new FtpConnectionUserFeature(new ClaimsPrincipal()));
             features.Set<IEncodingFeature>(new EncodingFeature(defaultEncoding));
             features.Set<ITransferConfigurationFeature>(new TransferConfigurationFeature());
             Features = features;
@@ -188,13 +193,10 @@ namespace FubarDev.FtpServer
         /// <inheritdoc />
         public IServiceProvider ConnectionServices { get; }
 
-        /// <inheritdoc />
-        public override string ConnectionId { get; set; }
-
         /// <summary>
         /// Gets the feature collection.
         /// </summary>
-        public override IFeatureCollection Features { get; }
+        public IFeatureCollection Features { get; }
 
         /// <summary>
         /// Gets the cancellation token to use to signal a task cancellation.
@@ -651,6 +653,59 @@ namespace FubarDev.FtpServer
 
             /// <inheritdoc />
             public PipeWriter Output { get; }
+        }
+
+        private class FtpConnectionTransportFeature : IConnectionTransportFeature
+        {
+            public FtpConnectionTransportFeature(IDuplexPipe transport)
+            {
+                Transport = transport;
+            }
+
+            /// <inheritdoc />
+            public IDuplexPipe Transport { get; set; }
+        }
+
+        private class FtpConnectionIdFeature : IConnectionIdFeature
+        {
+            public FtpConnectionIdFeature(string connectionId)
+            {
+                ConnectionId = connectionId;
+            }
+
+            /// <inheritdoc />
+            public string ConnectionId { get; set; }
+        }
+
+        private class FtpConnectionLifetimeFeature : IConnectionLifetimeFeature
+        {
+            private readonly FtpConnection _connection;
+
+            public FtpConnectionLifetimeFeature(FtpConnection connection)
+            {
+                _connection = connection;
+                ConnectionClosed = connection._cancellationTokenSource.Token;
+            }
+
+            /// <inheritdoc />
+            public CancellationToken ConnectionClosed { get; set; }
+
+            /// <inheritdoc />
+            public void Abort()
+            {
+                _connection.Abort();
+            }
+        }
+
+        private class FtpConnectionUserFeature : IConnectionUserFeature
+        {
+            public FtpConnectionUserFeature(ClaimsPrincipal user)
+            {
+                User = user;
+            }
+
+            /// <inheritdoc />
+            public ClaimsPrincipal User { get; set; }
         }
     }
 }

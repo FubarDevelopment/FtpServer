@@ -3,6 +3,7 @@
 // </copyright>
 
 using System.IO;
+using System.Security.Claims;
 
 using FubarDev.FtpServer.FileSystem;
 
@@ -42,27 +43,29 @@ namespace FubarDev.FtpServer.AccountManagement.Directories.RootPerUser
         /// <inheritdoc />
         public IAccountDirectories GetDirectories(IAccountInformation accountInformation)
         {
-            if (accountInformation.User is IAnonymousFtpUser anonymousFtpUser)
+            var anonymousClaim = accountInformation.User.FindFirst(ClaimTypes.Anonymous);
+            if (anonymousClaim != null)
             {
-                return GetAnonymousDirectories(anonymousFtpUser);
+                return GetAnonymousDirectories(accountInformation.User, anonymousClaim);
             }
 
-            var rootPath = Path.Combine(_userRoot, accountInformation.User.Name);
+            var rootPath = Path.Combine(_userRoot, accountInformation.User.Identity.Name);
             return new GenericAccountDirectories(rootPath);
         }
 
-        private IAccountDirectories GetAnonymousDirectories(IAnonymousFtpUser ftpUser)
+        private IAccountDirectories GetAnonymousDirectories(ClaimsPrincipal user, Claim anonymousClaim)
         {
             var rootPath = _anonymousRoot;
             if (_anonymousRootPerEmail)
             {
-                if (string.IsNullOrEmpty(ftpUser.Email))
+                var email = (user.FindFirst(ClaimTypes.Email) ?? anonymousClaim).Value;
+                if (string.IsNullOrEmpty(email))
                 {
                     _logger?.LogWarning("Anonymous root per email is configured, but got anonymous user without email. This anonymous user will see the files of all other anonymous users!");
                 }
                 else
                 {
-                    rootPath = Path.Combine(rootPath, ftpUser.Email);
+                    rootPath = Path.Combine(rootPath, email);
                 }
             }
 

@@ -4,9 +4,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.Security.Claims;
 using System.Threading.Tasks;
-
-using FubarDev.FtpServer.AccountManagement;
 
 using Microsoft.Extensions.Options;
 
@@ -58,7 +57,8 @@ namespace FubarDev.FtpServer.FileSystem.InMemory
 
             var directories = _accountDirectoryQuery.GetDirectories(accountInformation);
             var fileSystemId = directories.RootPath ?? string.Empty;
-            if (user is IAnonymousFtpUser)
+            var anonymousClaim = user.FindFirst(ClaimTypes.Anonymous);
+            if (anonymousClaim != null)
             {
                 if (_keepAnonymousFileSystem)
                 {

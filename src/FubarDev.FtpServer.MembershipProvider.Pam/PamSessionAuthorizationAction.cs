@@ -2,10 +2,10 @@
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
+using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
 
-using FubarDev.FtpServer.AccountManagement;
 using FubarDev.FtpServer.Authorization;
 
 namespace FubarDev.FtpServer.MembershipProvider.Pam
@@ -32,7 +32,8 @@ namespace FubarDev.FtpServer.MembershipProvider.Pam
         /// <inheritdoc />
         public Task AuthorizedAsync(IAccountInformation accountInformation, CancellationToken cancellationToken)
         {
-            if (!(accountInformation.User is IUnixUser))
+            var authMethod = accountInformation.User.FindFirst(ClaimTypes.AuthenticationMethod);
+            if (authMethod == null || authMethod.Value != "pam")
             {
                 return Task.CompletedTask;
             }

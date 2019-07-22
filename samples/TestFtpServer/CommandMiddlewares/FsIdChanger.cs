@@ -4,7 +4,9 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.Runtime.InteropServices;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 using FubarDev.FtpServer.AccountManagement;
@@ -12,6 +14,7 @@ using FubarDev.FtpServer.Commands;
 using FubarDev.FtpServer.Features;
 using FubarDev.FtpServer.FileSystem.Unix;
 
+using Microsoft.AspNetCore.Connections.Features;
 using Microsoft.Extensions.Logging;
 
 using Mono.Unix;
@@ -43,8 +46,9 @@ namespace TestFtpServer.CommandMiddlewares
         public Task InvokeAsync(FtpExecutionContext context, FtpCommandExecutionDelegate next)
         {
             var connection = context.Connection;
-            var authInfo = connection.Features.Get<IAuthorizationInformationFeature>();
-            if (!(authInfo.User is IUnixUser unixUser))
+            var authInfo = connection.Features.Get<IConnectionUserFeature>();
+            var identity = authInfo.User.Identity;
+            if (!(identity.IsAuthenticated && identity.AuthenticationType == "pam"))
             {
                 return next(context);
             }
@@ -55,14 +59,16 @@ namespace TestFtpServer.CommandMiddlewares
                 return next(context);
             }
 
-            return ExecuteWithChangedFsId(context, unixUser, next);
+            return ExecuteWithChangedFsId(context, authInfo.User, next);
         }
 
         private async Task ExecuteWithChangedFsId(
             FtpExecutionContext context,
-            IUnixUser unixUser,
+            ClaimsPrincipal unixUser,
             FtpCommandExecutionDelegate next)
         {
+            var userId = long.Parse(unixUser.FindFirst(FtpClaimTypes.UserId).Value, CultureInfo.InvariantCulture);
+            var groupId = long.Parse(unixUser.FindFirst(FtpClaimTypes.GroupId).Value, CultureInfo.InvariantCulture);
             using (var contextThread = new AsyncContextThread())
             {
                 await contextThread.Factory.Run(
@@ -70,8 +76,8 @@ namespace TestFtpServer.CommandMiddlewares
                         {
                             using (new UnixFileSystemIdChanger(
                                 _logger,
-                                unixUser.UserId,
-                                unixUser.GroupId,
+                                userId,
+                                groupId,
                                 _serverUser.UserId,
                                 _serverUser.GroupId))
                             {

@@ -3,8 +3,8 @@
 // </copyright>
 
 using System;
+using System.Security.Claims;
 
-using FubarDev.FtpServer.AccountManagement;
 using FubarDev.FtpServer.FileSystem;
 using FubarDev.FtpServer.FileSystem.Generic;
 
@@ -22,11 +22,11 @@ namespace FubarDev.FtpServer
         /// <param name="entity">The entity owner information.</param>
         /// <param name="user">The FTP user to determine the access mode for.</param>
         /// <returns>The effective access mode for the <paramref name="user"/>.</returns>
-        public static IAccessMode GetAccessModeFor(this IUnixPermissions permissions, IUnixOwner entity, IFtpUser user)
+        public static IAccessMode GetAccessModeFor(this IUnixPermissions permissions, IUnixOwner entity, ClaimsPrincipal user)
         {
-            var isUser = string.Equals(entity.GetOwner(), user.Name, StringComparison.OrdinalIgnoreCase);
+            var isUser = string.Equals(entity.GetOwner(), user.Identity.Name, StringComparison.OrdinalIgnoreCase);
             var group = entity.GetGroup();
-            var isGroup = group != null && user.IsInGroup(group);
+            var isGroup = group != null && user.IsInRole(group);
             var canRead = (isUser && permissions.User.Read)
                           || (isGroup && permissions.Group.Read)
                           || permissions.Other.Read;

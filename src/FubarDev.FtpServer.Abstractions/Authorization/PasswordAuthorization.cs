@@ -5,13 +5,15 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
 
 using FubarDev.FtpServer.AccountManagement;
 using FubarDev.FtpServer.Authentication;
-using FubarDev.FtpServer.Features;
 using FubarDev.FtpServer.Localization;
+
+using Microsoft.AspNetCore.Connections.Features;
 
 namespace FubarDev.FtpServer.Authorization
 {
@@ -94,7 +96,14 @@ namespace FubarDev.FtpServer.Authorization
             _userName = userIdentifier;
             _needsPassword = true;
 
-            Connection.Features.Get<IAuthorizationInformationFeature>().User = new UnauthenticatedUser(userIdentifier);
+            var identity = new ClaimsIdentity(
+                new[]
+                {
+                    new Claim(ClaimsIdentity.DefaultNameClaimType, userIdentifier),
+                });
+            var principal = new ClaimsPrincipal(identity);
+
+            Connection.Features.Get<IConnectionUserFeature>().User = principal;
 
             return Task.FromResult<IFtpResponse>(new FtpResponse(331, T("User {0} logged in, needs password", userIdentifier)));
         }
@@ -108,25 +117,13 @@ namespace FubarDev.FtpServer.Authorization
 
         private class DefaultAccountInformation : IAccountInformation
         {
-            public DefaultAccountInformation(IFtpUser user)
+            public DefaultAccountInformation(ClaimsPrincipal user)
             {
                 User = user;
             }
 
             /// <inheritdoc />
-            public IFtpUser User { get; }
-        }
-
-        private class UnauthenticatedUser : IFtpUser
-        {
-            public UnauthenticatedUser(string name)
-            {
-                Name = name;
-            }
-
-            public string Name { get; }
-
-            public bool IsInGroup(string groupName) => false;
+            public ClaimsPrincipal User { get; }
         }
     }
 }

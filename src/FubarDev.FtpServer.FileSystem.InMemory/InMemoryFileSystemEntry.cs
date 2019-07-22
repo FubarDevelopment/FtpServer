@@ -3,8 +3,7 @@
 // </copyright>
 
 using System;
-
-using FubarDev.FtpServer.AccountManagement;
+using System.Security.Claims;
 
 namespace FubarDev.FtpServer.FileSystem.InMemory
 {
@@ -63,9 +62,9 @@ namespace FubarDev.FtpServer.FileSystem.InMemory
         /// </summary>
         /// <param name="user">The user that becomes the new owner of this directory entry.</param>
         /// <returns>The changed file system entry.</returns>
-        public InMemoryFileSystemEntry WithOwner(IFtpUser user)
+        public InMemoryFileSystemEntry WithOwner(ClaimsPrincipal user)
         {
-            Owner = user.Name;
+            Owner = user.Identity.Name;
             return this;
         }
 

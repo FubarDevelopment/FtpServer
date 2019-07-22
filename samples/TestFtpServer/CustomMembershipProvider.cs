@@ -2,6 +2,8 @@
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
+using System.Collections.Generic;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 using FubarDev.FtpServer.AccountManagement;
@@ -21,36 +23,23 @@ namespace TestFtpServer
                 return Task.FromResult(
                     new MemberValidationResult(
                         MemberValidationStatus.AuthenticatedUser,
-                        new CustomFtpUser(username)));
+                        CreateCustomUser(username)));
             }
 
             return Task.FromResult(new MemberValidationResult(MemberValidationStatus.InvalidLogin));
         }
 
-        /// <summary>
-        /// Custom FTP user implementation
-        /// </summary>
-        private class CustomFtpUser : IFtpUser
+        private static ClaimsPrincipal CreateCustomUser(string name)
         {
-            /// <summary>
-            /// Initializes a new instance of the <see cref="CustomFtpUser"/> instance.
-            /// </summary>
-            /// <param name="name">The user name</param>
-            public CustomFtpUser(string name)
-            {
-                Name = name;
-            }
-
-            /// <inheritdoc />
-            public string Name { get; }
-
-            /// <inheritdoc />
-            public bool IsInGroup(string groupName)
-            {
-                // We claim that the user is in both the "user" group and in the
-                // a group with the same name as the user name.
-                return groupName == "user" || groupName == Name;
-            }
+            return new ClaimsPrincipal(
+                new ClaimsIdentity(
+                    new List<Claim>()
+                    {
+                        new Claim(ClaimsIdentity.DefaultNameClaimType, name),
+                        new Claim(ClaimsIdentity.DefaultRoleClaimType, "user"),
+                        new Claim(ClaimsIdentity.DefaultRoleClaimType, name),
+                    },
+                    "custom"));
         }
     }
 }

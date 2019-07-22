@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 
 using FubarDev.FtpServer.AccountManagement;
@@ -19,7 +20,7 @@ namespace FubarDev.FtpServer.ListFormatters
     /// </summary>
     public class FactsListFormatter : IListFormatter
     {
-        private readonly IFtpUser _user;
+        private readonly ClaimsPrincipal _user;
 
         private readonly ISet<string> _activeFacts;
 
@@ -31,7 +32,7 @@ namespace FubarDev.FtpServer.ListFormatters
         /// <param name="user">The user to create this formatter for.</param>
         /// <param name="activeFacts">The active facts to return for the entries.</param>
         /// <param name="absoluteName">Returns an absolute entry name.</param>
-        public FactsListFormatter(IFtpUser user, ISet<string> activeFacts, bool absoluteName)
+        public FactsListFormatter(ClaimsPrincipal user, ISet<string> activeFacts, bool absoluteName)
         {
             _user = user;
             _activeFacts = activeFacts;

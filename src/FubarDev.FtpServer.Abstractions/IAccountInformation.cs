@@ -2,6 +2,8 @@
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
+using System.Security.Claims;
+
 using FubarDev.FtpServer.AccountManagement;
 
 namespace FubarDev.FtpServer
@@ -14,6 +16,6 @@ namespace FubarDev.FtpServer
         /// <summary>
         /// Gets the current user name.
         /// </summary>
-        IFtpUser User { get; }
+        ClaimsPrincipal User { get; }
     }
 }
