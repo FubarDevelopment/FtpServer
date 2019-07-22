@@ -268,34 +268,6 @@ namespace FubarDev.FtpServer
             OnClosed();
         }
 
-        /// <summary>
-        /// Writes a FTP response to a client.
-        /// </summary>
-        /// <param name="response">The response to write to the client.</param>
-        /// <param name="cancellationToken">The cancellation token.</param>
-        /// <returns>The task.</returns>
-        [Obsolete("Use the IConnectionFeature.ServerCommandWriter instead.")]
-        public async Task WriteAsync(IFtpResponse response, CancellationToken cancellationToken)
-        {
-            await _serverCommandChannel.Writer.WriteAsync(
-                    new SendResponseServerCommand(response),
-                    cancellationToken)
-               .ConfigureAwait(false);
-        }
-
-        /// <summary>
-        /// Writes response to a client.
-        /// </summary>
-        /// <param name="response">The response to write to the client.</param>
-        /// <param name="cancellationToken">The cancellation token.</param>
-        /// <returns>The task.</returns>
-        [Obsolete("Use the IConnectionFeature.ServerCommandWriter instead.")]
-        public async Task WriteAsync(string response, CancellationToken cancellationToken)
-        {
-            await _serverCommandChannel.Writer.WriteAsync(new SendResponseServerCommand(new DirectFtpResponse(response)), cancellationToken)
-               .ConfigureAwait(false);
-        }
-
         /// <inheritdoc/>
         public async Task<IFtpDataConnection> OpenDataConnectionAsync(TimeSpan? timeout, CancellationToken cancellationToken)
         {
@@ -679,23 +651,6 @@ namespace FubarDev.FtpServer
 
             /// <inheritdoc />
             public PipeWriter Output { get; }
-        }
-
-        private class DirectFtpResponse : FtpResponse
-        {
-            private readonly string _text;
-
-            public DirectFtpResponse(string text)
-                : base(-1, text)
-            {
-                _text = text;
-            }
-
-            /// <inheritdoc />
-            public override string ToString()
-            {
-                return _text;
-            }
         }
     }
 }
