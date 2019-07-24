@@ -84,28 +84,26 @@ namespace TestFtpServer
 
             try
             {
-                using (var host = hostBuilder.Build())
+                using var host = hostBuilder.Build();
+                var appLifetime = host.Services.GetRequiredService<IHostApplicationLifetime>();
+
+                var ipcServiceHost = new IpcServiceHostBuilder(host.Services)
+                   .AddNamedPipeEndpoint<Api.IFtpServerHost>("ftpserver", "ftpserver")
+                   .Build();
+
+                // Catch request to stop the application
+                using var appStopCts = new CancellationTokenSource();
+                await using (appLifetime.ApplicationStopping.Register(() => appStopCts.Cancel()))
                 {
-                    var appLifetime = host.Services.GetRequiredService<IApplicationLifetime>();
+                    // Start the host
+                    await host.StartAsync(appStopCts.Token).ConfigureAwait(false);
 
-                    var ipcServiceHost = new IpcServiceHostBuilder(host.Services)
-                        .AddNamedPipeEndpoint<Api.IFtpServerHost>("ftpserver", "ftpserver")
-                        .Build();
+                    // Run the shell
+                    await ipcServiceHost.RunAsync(appStopCts.Token)
+                       .ConfigureAwait(false);
 
-                    // Catch request to stop the application
-                    var appStopCts = new CancellationTokenSource();
-                    using (appLifetime.ApplicationStopping.Register(() => appStopCts.Cancel()))
-                    {
-                        // Start the host
-                        await host.StartAsync(appStopCts.Token).ConfigureAwait(false);
-
-                        // Run the shell
-                        await ipcServiceHost.RunAsync(appStopCts.Token)
-                            .ConfigureAwait(false);
-
-                        // Ignore. Shell not available?
-                        await host.WaitForShutdownAsync(CancellationToken.None).ConfigureAwait(false);
-                    }
+                    // Ignore. Shell not available?
+                    await host.WaitForShutdownAsync(CancellationToken.None).ConfigureAwait(false);
                 }
             }
             catch (Exception ex)

@@ -16,7 +16,7 @@ namespace TestFtpServer
     /// </summary>
     internal class FtpServerHostApi : Api.IFtpServerHost
     {
-        private readonly IApplicationLifetime _applicationLifetime;
+        private readonly IHostApplicationLifetime _applicationLifetime;
         private readonly IFtpServer _ftpServer;
         private readonly IReadOnlyCollection<IModuleInfo> _moduleInfoItems;
 
@@ -27,7 +27,7 @@ namespace TestFtpServer
         /// <param name="ftpServer">The FTP server to control/query.</param>
         /// <param name="moduleInfoItems">The registered information modules.</param>
         public FtpServerHostApi(
-            IApplicationLifetime applicationLifetime,
+            IHostApplicationLifetime applicationLifetime,
             IFtpServer ftpServer,
             IEnumerable<IModuleInfo> moduleInfoItems)
         {

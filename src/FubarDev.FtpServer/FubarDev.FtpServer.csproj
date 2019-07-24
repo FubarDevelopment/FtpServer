@@ -19,7 +19,7 @@
 
   <ItemGroup>
     <PackageReference Include="Scrutor" Version="3.0.2" />
-    <PackageReference Include="System.IO.Pipelines" Version="4.5.1" />
+    <PackageReference Include="System.IO.Pipelines" Version="4.6.0-preview7.19362.9" />
   </ItemGroup>
 
   <ItemGroup>
