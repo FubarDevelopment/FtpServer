@@ -25,7 +25,7 @@ namespace FubarDev.FtpServer
     /// <summary>
     /// The portable FTP server.
     /// </summary>
-    public sealed class FtpServer : IFtpServer, IDisposable
+    public sealed class FtpServer : IFtpServer, IDisposable, IAsyncDisposable
     {
         private readonly FtpServerStatistics _statistics = new FtpServerStatistics();
         private readonly IServiceProvider _serviceProvider;
@@ -87,19 +87,25 @@ namespace FubarDev.FtpServer
         /// <inheritdoc />
         public bool Ready => Status == FtpServiceStatus.Running;
 
-        /// <inheritdoc/>
-        public void Dispose()
+        /// <inheritdoc />
+        public async ValueTask DisposeAsync()
         {
             if (Status != FtpServiceStatus.Stopped)
             {
-                StopAsync(CancellationToken.None).Wait();
+                await StopAsync(CancellationToken.None);
             }
 
             _serverShutdown.Dispose();
             foreach (var connectionInfo in _connections.Values)
             {
-                connectionInfo.Scope.Dispose();
+                await DisposeScope(connectionInfo.Scope);
             }
+        }
+
+        /// <inheritdoc/>
+        public void Dispose()
+        {
+            DisposeAsync().GetAwaiter().GetResult();
         }
 
         /// <inheritdoc />
@@ -130,6 +136,18 @@ namespace FubarDev.FtpServer
 
             await _serverListener.StopAsync(cancellationToken).ConfigureAwait(false);
             await _clientReader.ConfigureAwait(false);
+        }
+
+        private async ValueTask DisposeScope(IServiceScope serviceScope)
+        {
+            if (serviceScope is IAsyncDisposable ad)
+            {
+                await ad.DisposeAsync();
+            }
+            else
+            {
+                serviceScope.Dispose();
+            }
         }
 
         private void OnConfigureConnection(IFtpConnection connection)
@@ -219,7 +237,7 @@ namespace FubarDev.FtpServer
             }
             catch (Exception ex)
             {
-                scope.Dispose();
+                await DisposeScope(scope);
                 _log?.LogError(ex, ex.Message);
             }
         }
@@ -237,7 +255,7 @@ namespace FubarDev.FtpServer
                 return;
             }
 
-            info.Scope.Dispose();
+            DisposeScope(info.Scope).GetAwaiter().GetResult();
 
             _statistics.CloseConnection();
         }

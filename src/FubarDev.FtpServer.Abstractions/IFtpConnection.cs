@@ -10,6 +10,7 @@ using System.ComponentModel;
 using System.Threading;
 using System.Threading.Tasks;
 
+using Microsoft.AspNetCore.Connections;
 using Microsoft.AspNetCore.Http.Features;
 
 namespace FubarDev.FtpServer
@@ -17,7 +18,7 @@ namespace FubarDev.FtpServer
     /// <summary>
     /// The interface for an FTP connection.
     /// </summary>
-    public interface IFtpConnection : IDisposable
+    public interface IFtpConnection
     {
         /// <summary>
         /// Gets or sets the event handler that is triggered when the connection is closed.
