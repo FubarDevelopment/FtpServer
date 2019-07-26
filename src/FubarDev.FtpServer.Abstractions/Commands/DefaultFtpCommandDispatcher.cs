@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
 using System.Linq;
+using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -179,6 +180,7 @@ namespace FubarDev.FtpServer.Commands
                         _logger?.LogWarning(validationException.Message);
                         break;
 
+                    case SocketException se when se.ErrorCode == 10053:
                     case OperationCanceledException _:
                         response = new FtpResponse(426, localizationFeature.Catalog.GetString("Connection closed; transfer aborted."));
                         Debug.WriteLine($"Command {command} cancelled with response {response}");
