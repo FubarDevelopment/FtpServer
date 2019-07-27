@@ -2,8 +2,6 @@
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
-using System;
-
 namespace TestFtpServer.Configuration
 {
     /// <summary>

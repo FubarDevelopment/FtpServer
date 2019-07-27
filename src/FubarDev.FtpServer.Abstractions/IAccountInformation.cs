@@ -4,8 +4,6 @@
 
 using System.Security.Claims;
 
-using FubarDev.FtpServer.AccountManagement;
-
 namespace FubarDev.FtpServer
 {
     /// <summary>

@@ -2,24 +2,10 @@
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
-using System;
-using System.Diagnostics.CodeAnalysis;
-using System.Globalization;
-using System.Runtime.InteropServices;
-using System.Security.Claims;
-using System.Threading.Tasks;
-
 using FubarDev.FtpServer.AccountManagement;
 using FubarDev.FtpServer.Commands;
 using FubarDev.FtpServer.Features;
 using FubarDev.FtpServer.FileSystem.Unix;
-
-using Microsoft.AspNetCore.Connections.Features;
-using Microsoft.Extensions.Logging;
-
-using Mono.Unix;
-
-using Nito.AsyncEx;
 
 namespace TestFtpServer.CommandMiddlewares
 {

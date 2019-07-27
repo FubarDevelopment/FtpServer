@@ -5,8 +5,6 @@
 using FubarDev.FtpServer;
 using FubarDev.FtpServer.AccountManagement;
 
-using Microsoft.Extensions.DependencyInjection;
-
 using TestFtpServer.Configuration;
 
 namespace TestFtpServer

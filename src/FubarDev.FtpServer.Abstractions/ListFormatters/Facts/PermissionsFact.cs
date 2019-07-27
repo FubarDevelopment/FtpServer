@@ -5,7 +5,6 @@
 using System.Security.Claims;
 using System.Text;
 
-using FubarDev.FtpServer.AccountManagement;
 using FubarDev.FtpServer.FileSystem;
 
 namespace FubarDev.FtpServer.ListFormatters.Facts
