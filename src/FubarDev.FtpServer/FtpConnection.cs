@@ -197,7 +197,7 @@ namespace FubarDev.FtpServer
         public event EventHandler Closed;
 
         /// <summary>
-        /// Gets or sets the connection context.
+        /// Gets the connection context.
         /// </summary>
         public ConnectionContext Context { get; }
 
