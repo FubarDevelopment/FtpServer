@@ -38,12 +38,24 @@ namespace FubarDev.FtpServer.Networking
         /// <inheritdoc />
         public FtpServiceStatus Status { get; private set; } = FtpServiceStatus.ReadyToRun;
 
+        /// <summary>
+        /// Gets the logger.
+        /// </summary>
         protected ILogger? Logger { get; }
 
+        /// <summary>
+        /// Gets a value indicating whether the connection is closed.
+        /// </summary>
         protected bool IsConnectionClosed => _connectionClosed.IsCancellationRequested;
 
+        /// <summary>
+        /// Gets a value indicating whether stopping the connection was requested.
+        /// </summary>
         protected bool IsStopRequested => _jobStopped.IsCancellationRequested;
 
+        /// <summary>
+        /// Gets a value indicating whether pausing the connection was requested.
+        /// </summary>
         protected bool IsPauseRequested => _jobPaused.IsCancellationRequested;
 
         /// <inheritdoc />
@@ -134,43 +146,98 @@ namespace FubarDev.FtpServer.Networking
 
             _task = RunAsync(new Progress<FtpServiceStatus>(status => Status = status));
         }
+
+        /// <summary>
+        /// Execute the task this service needs to execute.
+        /// </summary>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <returns>The task doing its job.</returns>
         protected abstract Task ExecuteAsync(
             CancellationToken cancellationToken);
+
+        /// <summary>
+        /// Gets called when stopping the service is about to be requested.
+        /// </summary>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <returns>The task.</returns>
         protected virtual Task OnStopRequestingAsync(
             CancellationToken cancellationToken)
         {
             return Task.CompletedTask;
         }
+
+        /// <summary>
+        /// Gets called when stopping the service was requested.
+        /// </summary>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <returns>The task.</returns>
         protected virtual Task OnStopRequestedAsync(
             CancellationToken cancellationToken)
         {
             return Task.CompletedTask;
         }
+
+        /// <summary>
+        /// Gets called when the pause is about to be requested.
+        /// </summary>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <returns>The task.</returns>
         protected virtual Task OnPauseRequestingAsync(
             CancellationToken cancellationToken)
         {
             return Task.CompletedTask;
         }
+
+        /// <summary>
+        /// Gets called when the pause was requested.
+        /// </summary>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <returns>The task.</returns>
         protected virtual Task OnPauseRequestedAsync(
             CancellationToken cancellationToken)
         {
             return Task.CompletedTask;
         }
+
+        /// <summary>
+        /// Gets called when the continuation request is about to be issued.
+        /// </summary>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <returns>The task.</returns>
         protected virtual Task OnContinueRequestingAsync(
             CancellationToken cancellationToken)
         {
             return Task.CompletedTask;
         }
+
+        /// <summary>
+        /// Gets called when the service was paused.
+        /// </summary>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <returns>The task.</returns>
         protected virtual Task OnPausedAsync(
             CancellationToken cancellationToken)
         {
             return Task.CompletedTask;
         }
+
+        /// <summary>
+        /// Gets called when the service was stopped.
+        /// </summary>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <returns>The task.</returns>
         protected virtual Task OnStoppedAsync(
             CancellationToken cancellationToken)
         {
             return Task.CompletedTask;
         }
+
+        /// <summary>
+        /// Gets called when the service failed.
+        /// </summary>
+        /// <param name="exception">The exception for the failure.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <returns>The task returning <see langword="true"/>, when the failure was handled and shouldn't be rethrown.</returns>
         protected virtual Task<bool> OnFailedAsync(
             Exception exception,
             CancellationToken cancellationToken)
