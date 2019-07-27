@@ -5,12 +5,12 @@
 
 using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
 
-using FubarDev.FtpServer.Features;
-
+using Microsoft.AspNetCore.Connections.Features;
 using Microsoft.Extensions.Logging;
 
 namespace FubarDev.FtpServer
@@ -60,14 +60,15 @@ namespace FubarDev.FtpServer
                     $"must be in {pasvOptions.PasvMinPort}:{pasvOptions.PasvMaxPort}");
             }
 
-            var connectionFeature = connection.Features.Get<IConnectionFeature>();
+            var connectionFeature = connection.Features.Get<IConnectionEndPointFeature>();
             if (port == 0 && pasvOptions.HasPortRange)
             {
                 listener = CreateListenerInRange(connectionFeature, pasvOptions);
             }
             else
             {
-                listener = new PasvListener(connectionFeature.LocalEndPoint.Address, port, pasvOptions.PublicAddress);
+                var localIpEndPoint = (IPEndPoint)connectionFeature.LocalEndPoint;
+                listener = new PasvListener(localIpEndPoint.Address, port, pasvOptions.PublicAddress);
             }
 
             return listener;
@@ -80,7 +81,7 @@ namespace FubarDev.FtpServer
         /// <param name="pasvOptions">The options for the <see cref="IPasvListener"/>.</param>
         /// <returns>Configured PasvListener.</returns>
         /// <exception cref="SocketException">When no free port could be found, or other bad things happen. See <see cref="SocketError"/>.</exception>
-        private IPasvListener CreateListenerInRange(IConnectionFeature connectionFeature, PasvListenerOptions pasvOptions)
+        private IPasvListener CreateListenerInRange(IConnectionEndPointFeature connectionFeature, PasvListenerOptions pasvOptions)
         {
             lock (_listenerLock)
             {
@@ -89,7 +90,8 @@ namespace FubarDev.FtpServer
                 {
                     try
                     {
-                        return new PasvListener(connectionFeature.LocalEndPoint.Address, port, pasvOptions.PublicAddress);
+                        var localIpEndPoint = (IPEndPoint)connectionFeature.LocalEndPoint;
+                        return new PasvListener(localIpEndPoint.Address, port, pasvOptions.PublicAddress);
                     }
                     catch (SocketException se)
                     {

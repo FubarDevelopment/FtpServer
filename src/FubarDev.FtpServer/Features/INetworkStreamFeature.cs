@@ -15,7 +15,7 @@ namespace FubarDev.FtpServer.Features
     /// The main purpose for this services is the ability to pause and resume
     /// reading/writing from/to the stream to be able to enable TLS on demand.
     /// </remarks>
-    internal interface INetworkStreamFeature
+    public interface INetworkStreamFeature
     {
         /// <summary>
         /// Gets the connection adapter that encrypts the network stream with an <c>SslStream</c> or something similar.
