@@ -2,6 +2,15 @@
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
+using System.Xml;
+
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Configuration.Memory;
+
 using Mono.Options;
 
 namespace TestFtpServer

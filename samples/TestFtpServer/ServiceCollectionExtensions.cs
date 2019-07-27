@@ -2,6 +2,11 @@
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
+using System;
+using System.IO;
+using System.Text;
+using System.Threading;
+
 using FubarDev.FtpServer;
 using FubarDev.FtpServer.AccountManagement.Directories.RootPerUser;
 using FubarDev.FtpServer.AccountManagement.Directories.SingleRootWithoutHome;
@@ -15,6 +20,16 @@ using FubarDev.FtpServer.FileSystem.Unix;
 using FubarDev.FtpServer.MembershipProvider.Pam;
 using FubarDev.FtpServer.MembershipProvider.Pam.Directories;
 using FubarDev.FtpServer.ServerCommandHandlers;
+
+using Google.Apis.Auth.OAuth2;
+using Google.Apis.Drive.v3;
+
+using Microsoft.DotNet.PlatformAbstractions;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+
+using Mono.Unix.Native;
 
 using TestFtpServer.CommandMiddlewares;
 using TestFtpServer.Commands;

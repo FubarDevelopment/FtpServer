@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 
@@ -162,6 +163,9 @@ namespace FubarDev.FtpServer.Tests
         public void TestWithCyrillicTextWithWindows1251Encoding()
         {
             var encoding = CodePagesEncodingProvider.Instance.GetEncoding(codepage: 1251);
+            Assert.NotNull(encoding);
+            Debug.Assert(encoding != null, nameof(encoding) + " != null");
+
             var collector = new FtpCommandCollector(() => encoding);
 
             const string cyrillicSymbols = "абвгдеёжзийклмнопрстуфхцчшщыъьэюя";

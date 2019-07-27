@@ -2,8 +2,12 @@
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
+using System.Threading;
+using System.Threading.Tasks;
+
 using FubarDev.FtpServer;
 using FubarDev.FtpServer.CommandHandlers;
+using FubarDev.FtpServer.Commands;
 
 using TestFtpServer.Utilities;
 

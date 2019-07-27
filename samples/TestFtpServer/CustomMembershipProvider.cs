@@ -2,6 +2,10 @@
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
+using System.Collections.Generic;
+using System.Security.Claims;
+using System.Threading.Tasks;
+
 using FubarDev.FtpServer.AccountManagement;
 
 namespace TestFtpServer
