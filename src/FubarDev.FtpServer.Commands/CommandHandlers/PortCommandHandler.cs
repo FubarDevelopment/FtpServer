@@ -6,6 +6,7 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -13,6 +14,7 @@ using FubarDev.FtpServer.Commands;
 using FubarDev.FtpServer.DataConnection;
 using FubarDev.FtpServer.Features;
 
+using Microsoft.AspNetCore.Connections.Features;
 using Microsoft.Extensions.Options;
 
 namespace FubarDev.FtpServer.CommandHandlers
@@ -46,8 +48,8 @@ namespace FubarDev.FtpServer.CommandHandlers
         {
             try
             {
-                var connFeature = Connection.Features.Get<IConnectionFeature>();
-                var address = command.Argument.ParsePortString(connFeature.RemoteAddress);
+                var connFeature = Connection.Features.Get<IConnectionEndPointFeature>();
+                var address = command.Argument.ParsePortString((IPEndPoint)connFeature.RemoteEndPoint);
                 if (address == null)
                 {
                     return new FtpResponse(501, T("Syntax error in parameters or arguments."));

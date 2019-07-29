@@ -14,6 +14,8 @@ using System.Threading.Tasks;
 
 using FubarDev.FtpServer.Features;
 
+using Microsoft.AspNetCore.Connections.Features;
+
 namespace FubarDev.FtpServer.DataConnection
 {
     /// <summary>
@@ -50,21 +52,22 @@ namespace FubarDev.FtpServer.DataConnection
             int? dataPort)
         {
             var connection = _connectionAccessor.FtpConnection;
-            var connectionFeature = connection.Features.Get<IConnectionFeature>();
+            var connectionFeature = connection.Features.Get<IConnectionEndPointFeature>();
+            var localEndPoint = (IPEndPoint)connectionFeature.LocalEndPoint;
 
-            IPEndPoint localEndPoint;
+            IPEndPoint dataEndPoint;
             if (dataPort != null)
             {
-                localEndPoint = new IPEndPoint(connectionFeature.LocalEndPoint.Address, dataPort.Value);
+                dataEndPoint = new IPEndPoint(localEndPoint.Address, dataPort.Value);
             }
             else
             {
-                localEndPoint = new IPEndPoint(connectionFeature.LocalEndPoint.Address, 0);
+                dataEndPoint = new IPEndPoint(localEndPoint.Address, 0);
             }
 
             return Task.FromResult<IFtpDataConnectionFeature>(
                 new ActiveDataConnectionFeature(
-                    localEndPoint,
+                    dataEndPoint,
                     portAddress,
                     _validators,
                     ftpCommand,

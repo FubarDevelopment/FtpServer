@@ -165,13 +165,13 @@ namespace FubarDev.FtpServer
                     _cancellationTokenSource.Token),
                 applicationOutputPipe.Writer);
 
-            parentFeatures.Set<IConnectionFeature>(connectionFeature);
+            parentFeatures.Set<IConnectionEndPointFeature>(connectionFeature);
             parentFeatures.Set<ISecureConnectionFeature>(secureConnectionFeature);
             parentFeatures.Set<IServerCommandFeature>(new ServerCommandFeature(_serverCommandChannel));
             parentFeatures.Set<INetworkStreamFeature>(_networkStreamFeature);
             parentFeatures.Set<IConnectionLifetimeFeature>(new FtpConnectionLifetimeFeature(this));
             parentFeatures.Set<IConnectionIdFeature>(new FtpConnectionIdFeature(connectionId));
-            parentFeatures.Set<IConnectionTransportFeature>(new FtpConnectionTransportFeature(socketPipe));
+            parentFeatures.Set<IConnectionTransportFeature>(new FtpConnectionTransportFeature(connectionPipe));
 
             var features = new FeatureCollection(parentFeatures);
             features.Set<ILocalizationFeature>(new LocalizationFeature(catalogLoader));
@@ -216,8 +216,8 @@ namespace FubarDev.FtpServer
             Features.Set(dataConnectionFeature);
 
             // Connection information
-            var connectionFeature = Features.Get<IConnectionFeature>();
-            _logger?.LogInformation($"Connected from {connectionFeature.RemoteAddress}");
+            var connectionFeature = Features.Get<IConnectionEndPointFeature>();
+            _logger?.LogInformation($"Connected from {connectionFeature.RemoteEndPoint}");
 
             await _networkStreamFeature.StreamWriterService.StartAsync(CancellationToken.None)
                .ConfigureAwait(false);
@@ -604,21 +604,21 @@ namespace FubarDev.FtpServer
             }
         }
 
-        private class ConnectionFeature : IConnectionFeature
+        private class ConnectionFeature : IConnectionEndPointFeature
         {
             public ConnectionFeature(
-                IPEndPoint localEndPoint,
-                IPEndPoint remoteAddress)
+                EndPoint localEndPoint,
+                EndPoint remoteAddress)
             {
                 LocalEndPoint = localEndPoint;
-                RemoteAddress = remoteAddress;
+                RemoteEndPoint = remoteAddress;
             }
 
             /// <inheritdoc />
-            public IPEndPoint LocalEndPoint { get; }
+            public EndPoint LocalEndPoint { get; set; }
 
             /// <inheritdoc />
-            public IPEndPoint RemoteAddress { get; }
+            public EndPoint RemoteEndPoint { get; set; }
         }
 
         private class SecureConnectionFeature : ISecureConnectionFeature
