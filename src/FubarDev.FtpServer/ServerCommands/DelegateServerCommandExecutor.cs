@@ -18,16 +18,16 @@ namespace FubarDev.FtpServer.ServerCommands
     /// </summary>
     public class DelegateServerCommandExecutor : IServerCommandExecutor
     {
-        private readonly IFtpConnectionAccessor _ftpConnectionAccessor;
+        private readonly IFtpConnectionContextAccessor _ftpConnectionContextAccessor;
         private readonly Dictionary<Type, Delegate> _serverCommandHandlerDelegates = new Dictionary<Type, Delegate>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DelegateServerCommandExecutor"/> class.
         /// </summary>
-        /// <param name="ftpConnectionAccessor">Accessor to get the FTP connection.</param>
-        public DelegateServerCommandExecutor(IFtpConnectionAccessor ftpConnectionAccessor)
+        /// <param name="ftpConnectionContextAccessor">Accessor to get the FTP connection.</param>
+        public DelegateServerCommandExecutor(IFtpConnectionContextAccessor ftpConnectionContextAccessor)
         {
-            _ftpConnectionAccessor = ftpConnectionAccessor;
+            _ftpConnectionContextAccessor = ftpConnectionContextAccessor;
         }
 
         /// <inheritdoc />
@@ -38,7 +38,7 @@ namespace FubarDev.FtpServer.ServerCommands
             {
                 var handlerType = typeof(IServerCommandHandler<>).MakeGenericType(serverCommandType);
                 var executeAsyncMethod = handlerType.GetRuntimeMethod("ExecuteAsync", new[] { serverCommandType, typeof(CancellationToken) });
-                var handler = _ftpConnectionAccessor.FtpConnection.ConnectionServices.GetRequiredService(handlerType);
+                var handler = _ftpConnectionContextAccessor.FtpConnectionContext.ConnectionServices.GetRequiredService(handlerType);
                 var commandParameter = Expression.Parameter(serverCommandType, "serverCommand");
                 var cancellationTokenParameter = Expression.Parameter(typeof(CancellationToken), "cancellationToken");
                 var call = Expression.Call(

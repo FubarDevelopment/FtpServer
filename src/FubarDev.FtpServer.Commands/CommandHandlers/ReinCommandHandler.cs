@@ -51,13 +51,13 @@ namespace FubarDev.FtpServer.CommandHandlers
         public override async Task<IFtpResponse?> Process(FtpCommand command, CancellationToken cancellationToken)
         {
             // Reset the login
-            var loginStateMachine = Connection.ConnectionServices.GetRequiredService<IFtpLoginStateMachine>();
+            var loginStateMachine = FtpContext.ConnectionServices.GetRequiredService<IFtpLoginStateMachine>();
             loginStateMachine.Reset();
 
             // Remember old features
-            var fileSystemFeature = Connection.Features.Get<IFileSystemFeature>();
-            var connectionFeature = Connection.Features.Get<IConnectionEndPointFeature>();
-            var secureConnectionFeature = Connection.Features.Get<ISecureConnectionFeature>();
+            var fileSystemFeature = FtpContext.Features.Get<IFileSystemFeature>();
+            var connectionFeature = FtpContext.Features.Get<IConnectionEndPointFeature>();
+            var secureConnectionFeature = FtpContext.Features.Get<ISecureConnectionFeature>();
 
             // Reset to empty file system
             fileSystemFeature.FileSystem = new EmptyUnixFileSystem();
@@ -68,41 +68,59 @@ namespace FubarDev.FtpServer.CommandHandlers
                .ConfigureAwait(false);
 
             // Dispose and remove all features (if disposable)
-            var setFeatureMethod = Connection.Features.GetType().GetTypeInfo().GetDeclaredMethod("Set");
-            foreach (var featureItem in Connection.Features)
+            var setFeatureMethod = FtpContext.Features.GetType().GetTypeInfo().GetDeclaredMethod("Set");
+            foreach (var featureItem in FtpContext.Features)
             {
-                if (!(featureItem.Value is IDisposable disposableFeature))
+                if (featureItem.Value is IAsyncDisposable asyncDisposableFeature)
+                {
+                    try
+                    {
+                        await asyncDisposableFeature.DisposeAsync().ConfigureAwait(false);
+                    }
+                    catch (Exception ex)
+                    {
+                        // Ignore exceptions
+                        _logger?.LogWarning(
+                            ex,
+                            "Failed to feature of type {featureType}: {errorMessage}",
+                            featureItem.Key,
+                            ex.Message);
+                    }
+                }
+                else if (featureItem.Value is IDisposable disposableFeature)
+                {
+                    try
+                    {
+                        disposableFeature.Dispose();
+                    }
+                    catch (Exception ex)
+                    {
+                        // Ignore exceptions
+                        _logger?.LogWarning(
+                            ex,
+                            "Failed to feature of type {featureType}: {errorMessage}",
+                            featureItem.Key,
+                            ex.Message);
+                    }
+                }
+                else
                 {
                     continue;
                 }
 
-                try
-                {
-                    disposableFeature.Dispose();
-                }
-                catch (Exception ex)
-                {
-                    // Ignore exceptions
-                    _logger?.LogWarning(
-                        ex,
-                        "Failed to feature of type {featureType}: {errorMessage}",
-                        featureItem.Key,
-                        ex.Message);
-                }
-
                 // Remove from features collection
                 var setMethod = setFeatureMethod.MakeGenericMethod(featureItem.Key);
-                setMethod.Invoke(Connection.Features, new object?[] { null });
+                setMethod.Invoke(FtpContext.Features, new object?[] { null });
             }
 
             // Set the default FTP data connection feature
-            var activeDataConnectionFeatureFactory = Connection.ConnectionServices.GetRequiredService<ActiveDataConnectionFeatureFactory>();
+            var activeDataConnectionFeatureFactory = FtpContext.ConnectionServices.GetRequiredService<ActiveDataConnectionFeatureFactory>();
             var dataConnectionFeature = await activeDataConnectionFeatureFactory.CreateFeatureAsync(
                     null,
                     (IPEndPoint)connectionFeature.RemoteEndPoint,
                     _dataPort)
                .ConfigureAwait(false);
-            Connection.Features.Set(dataConnectionFeature);
+            FtpContext.Features.Set(dataConnectionFeature);
 
             return new FtpResponseTextBlock(220, _serverMessages.GetBannerMessage());
         }

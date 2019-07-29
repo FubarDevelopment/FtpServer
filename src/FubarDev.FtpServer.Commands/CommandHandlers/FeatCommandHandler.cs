@@ -38,7 +38,7 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// <inheritdoc/>
         public override Task<IFtpResponse?> Process(FtpCommand command, CancellationToken cancellationToken)
         {
-            var loginStateMachine = Connection.ConnectionServices.GetRequiredService<IFtpLoginStateMachine>();
+            var loginStateMachine = FtpContext.ConnectionServices.GetRequiredService<IFtpLoginStateMachine>();
             var isAuthorized = loginStateMachine.Status == SecurityStatus.Authorized;
             var features = _featureInfoProvider.GetFeatureInfoItems()
                .Where(x => IsFeatureAllowed(x, isAuthorized))
@@ -64,17 +64,17 @@ namespace FubarDev.FtpServer.CommandHandlers
         {
             if (foundFeatureInfo.IsCommandHandler)
             {
-                return foundFeatureInfo.FeatureInfo.BuildInfo(foundFeatureInfo.CommandHandlerInfo.Type, Connection);
+                return foundFeatureInfo.FeatureInfo.BuildInfo(foundFeatureInfo.CommandHandlerInfo.Type, FtpContext);
             }
 
             if (foundFeatureInfo.IsExtension)
             {
-                return foundFeatureInfo.FeatureInfo.BuildInfo(foundFeatureInfo.ExtensionInfo.Type, Connection);
+                return foundFeatureInfo.FeatureInfo.BuildInfo(foundFeatureInfo.ExtensionInfo.Type, FtpContext);
             }
 
             if (foundFeatureInfo.IsAuthenticationMechanism)
             {
-                return foundFeatureInfo.FeatureInfo.BuildInfo(foundFeatureInfo.AuthenticationMechanism.GetType(), Connection);
+                return foundFeatureInfo.FeatureInfo.BuildInfo(foundFeatureInfo.AuthenticationMechanism.GetType(), FtpContext);
             }
 
             throw new NotSupportedException("Unknown feature source.");

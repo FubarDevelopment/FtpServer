@@ -1,4 +1,4 @@
-// <copyright file="FtpExecutionContext.cs" company="Fubar Development Junker">
+// <copyright file="FtpActionContext.cs" company="Fubar Development Junker">
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
@@ -7,21 +7,24 @@ using System.Threading;
 namespace FubarDev.FtpServer.Commands
 {
     /// <summary>
-    /// A specialized context for the <see cref="IFtpCommandMiddleware"/>.
+    /// A specialized context for the <see cref="IFtpCommandMiddleware"/> (post-routing).
     /// </summary>
-    public class FtpExecutionContext : FtpContext
+    public class FtpActionContext : FtpContext
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="FtpExecutionContext"/> class.
+        /// Initializes a new instance of the <see cref="FtpActionContext"/> class.
         /// </summary>
         /// <param name="ftpContext">The FTP context.</param>
         /// <param name="commandHandler">The FTP command handler.</param>
         /// <param name="commandAborted">The cancellation token signalling an aborted command.</param>
-        public FtpExecutionContext(
+        public FtpActionContext(
             FtpContext ftpContext,
             IFtpCommandBase commandHandler,
             CancellationToken commandAborted)
-            : base(ftpContext.Command, ftpContext.ServerCommandWriter, ftpContext.Connection)
+            : base(
+                ftpContext.Command,
+                ftpContext.ServerCommandWriter,
+                ftpContext)
         {
             CommandHandler = commandHandler;
             CommandAborted = commandAborted;

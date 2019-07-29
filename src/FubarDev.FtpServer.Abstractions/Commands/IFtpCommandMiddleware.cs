@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace FubarDev.FtpServer.Commands
 {
     /// <summary>
-    /// FTP command middleware.
+    /// FTP command middleware (post-routing).
     /// </summary>
     public interface IFtpCommandMiddleware
     {
@@ -18,7 +18,7 @@ namespace FubarDev.FtpServer.Commands
         /// <param name="next">The next middleware.</param>
         /// <returns>The task.</returns>
         Task InvokeAsync(
-            FtpExecutionContext context,
+            FtpActionContext context,
             FtpCommandExecutionDelegate next);
     }
 }

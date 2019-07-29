@@ -14,16 +14,16 @@ namespace FubarDev.FtpServer.Authorization.Actions
     /// </summary>
     public class FillConnectionAccountDataAction : IAuthorizationAction
     {
-        private readonly IFtpConnectionAccessor _ftpConnectionAccessor;
+        private readonly IFtpConnectionContextAccessor _ftpConnectionContextAccessor;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FillConnectionAccountDataAction"/> class.
         /// </summary>
-        /// <param name="ftpConnectionAccessor">The FTP connection accessor.</param>
+        /// <param name="ftpConnectionContextAccessor">The FTP connection accessor.</param>
         public FillConnectionAccountDataAction(
-            IFtpConnectionAccessor ftpConnectionAccessor)
+            IFtpConnectionContextAccessor ftpConnectionContextAccessor)
         {
-            _ftpConnectionAccessor = ftpConnectionAccessor;
+            _ftpConnectionContextAccessor = ftpConnectionContextAccessor;
         }
 
         /// <inheritdoc />
@@ -32,7 +32,7 @@ namespace FubarDev.FtpServer.Authorization.Actions
         /// <inheritdoc />
         public Task AuthorizedAsync(IAccountInformation accountInformation, CancellationToken cancellationToken)
         {
-            var connection = _ftpConnectionAccessor.FtpConnection;
+            var connection = _ftpConnectionContextAccessor.FtpConnectionContext;
             connection.Features.Get<IConnectionUserFeature>().User = accountInformation.User;
             return Task.CompletedTask;
         }

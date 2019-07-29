@@ -16,20 +16,20 @@ namespace FubarDev.FtpServer.Authorization.Actions
     /// </summary>
     public class FillConnectionFileSystemDataAction : IAuthorizationAction
     {
-        private readonly IFtpConnectionAccessor _ftpConnectionAccessor;
+        private readonly IFtpConnectionContextAccessor _ftpConnectionContextAccessor;
 
         private readonly IFileSystemClassFactory _fileSystemFactory;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FillConnectionFileSystemDataAction"/> class.
         /// </summary>
-        /// <param name="ftpConnectionAccessor">The FTP connection accessor.</param>
+        /// <param name="ftpConnectionContextAccessor">The FTP connection accessor.</param>
         /// <param name="fileSystemFactory">The file system factory.</param>
         public FillConnectionFileSystemDataAction(
-            IFtpConnectionAccessor ftpConnectionAccessor,
+            IFtpConnectionContextAccessor ftpConnectionContextAccessor,
             IFileSystemClassFactory fileSystemFactory)
         {
-            _ftpConnectionAccessor = ftpConnectionAccessor;
+            _ftpConnectionContextAccessor = ftpConnectionContextAccessor;
             _fileSystemFactory = fileSystemFactory;
         }
 
@@ -39,7 +39,7 @@ namespace FubarDev.FtpServer.Authorization.Actions
         /// <inheritdoc />
         public async Task AuthorizedAsync(IAccountInformation accountInformation, CancellationToken cancellationToken)
         {
-            var connection = _ftpConnectionAccessor.FtpConnection;
+            var connection = _ftpConnectionContextAccessor.FtpConnectionContext;
 
             var fsFeature = connection.Features.Get<IFileSystemFeature>();
             fsFeature.FileSystem = await _fileSystemFactory

@@ -26,7 +26,7 @@ namespace FubarDev.FtpServer.CommandHandlers
                 return new FtpResponse(501, T("Protection buffer size not specified."));
             }
 
-            var loginStateMachine = Connection.ConnectionServices.GetRequiredService<IFtpLoginStateMachine>();
+            var loginStateMachine = FtpContext.ConnectionServices.GetRequiredService<IFtpLoginStateMachine>();
             var authMechanism = loginStateMachine.SelectedAuthenticationMechanism;
             if (authMechanism == null)
             {

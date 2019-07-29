@@ -17,27 +17,27 @@ namespace FubarDev.FtpServer.ServerCommandHandlers
     /// </summary>
     public class PauseConnectionServerCommandHandler : IServerCommandHandler<PauseConnectionServerCommand>
     {
-        private readonly IFtpConnectionAccessor _connectionAccessor;
+        private readonly IFtpConnectionContextAccessor _connectionContextAccessor;
 
         private readonly ILogger<PauseConnectionServerCommandHandler>? _logger;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PauseConnectionServerCommandHandler"/> class.
         /// </summary>
-        /// <param name="connectionAccessor">The FTP connection accessor.</param>
+        /// <param name="connectionContextAccessor">The FTP connection accessor.</param>
         /// <param name="logger">The logger.</param>
         public PauseConnectionServerCommandHandler(
-            IFtpConnectionAccessor connectionAccessor,
+            IFtpConnectionContextAccessor connectionContextAccessor,
             ILogger<PauseConnectionServerCommandHandler>? logger = null)
         {
-            _connectionAccessor = connectionAccessor;
+            _connectionContextAccessor = connectionContextAccessor;
             _logger = logger;
         }
 
         /// <inheritdoc />
         public async Task ExecuteAsync(PauseConnectionServerCommand command, CancellationToken cancellationToken)
         {
-            var connection = _connectionAccessor.FtpConnection;
+            var connection = _connectionContextAccessor.FtpConnectionContext;
             var networkStreamFeature = connection.Features.Get<INetworkStreamFeature>();
 
             await networkStreamFeature.SecureConnectionAdapter.Receiver.PauseAsync(cancellationToken)

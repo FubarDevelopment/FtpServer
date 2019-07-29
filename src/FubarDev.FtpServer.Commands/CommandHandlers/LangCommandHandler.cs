@@ -30,12 +30,12 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// <summary>
         /// Build a string to be returned by the <c>FEAT</c> command handler.
         /// </summary>
-        /// <param name="connection">The FTP connection.</param>
+        /// <param name="connectionContext">The FTP connection context.</param>
         /// <returns>The string to be returned.</returns>
-        public static string CreateFeatureString(IFtpConnection connection)
+        public static string CreateFeatureString(IFtpConnectionContext connectionContext)
         {
-            var catalogLoader = connection.ConnectionServices.GetRequiredService<IFtpCatalogLoader>();
-            var currentLanguage = connection.Features.Get<ILocalizationFeature>().Language.IetfLanguageTag;
+            var catalogLoader = connectionContext.ConnectionServices.GetRequiredService<IFtpCatalogLoader>();
+            var currentLanguage = connectionContext.Features.Get<ILocalizationFeature>().Language.IetfLanguageTag;
             var languages = catalogLoader.GetSupportedLanguages()
                .Select(x => x + (string.Equals(x, currentLanguage) ? "*" : string.Empty));
             var feature = "LANG " + string.Join(";", languages);
@@ -45,8 +45,8 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// <inheritdoc />
         public override async Task<IFtpResponse?> Process(FtpCommand command, CancellationToken cancellationToken)
         {
-            var catalogLoader = Connection.ConnectionServices.GetRequiredService<IFtpCatalogLoader>();
-            var localizationFeature = Connection.Features.Get<ILocalizationFeature>();
+            var catalogLoader = FtpContext.ConnectionServices.GetRequiredService<IFtpCatalogLoader>();
+            var localizationFeature = FtpContext.Features.Get<ILocalizationFeature>();
             if (string.IsNullOrWhiteSpace(command.Argument))
             {
                 localizationFeature.Language = catalogLoader.DefaultLanguage;

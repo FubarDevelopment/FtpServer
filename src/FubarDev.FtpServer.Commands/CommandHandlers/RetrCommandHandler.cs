@@ -10,6 +10,7 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 
+using FubarDev.FtpServer.Authentication;
 using FubarDev.FtpServer.Commands;
 using FubarDev.FtpServer.Features;
 using FubarDev.FtpServer.FileSystem;
@@ -23,35 +24,38 @@ namespace FubarDev.FtpServer.CommandHandlers
     /// Implements the <c>RETR</c> command.
     /// </summary>
     [FtpCommandHandler("RETR", isAbortable: true)]
-    public class RetrCommandHandler : FtpCommandHandler
+    public class RetrCommandHandler : FtpDataCommandHandler
     {
         private const int BufferSize = 4096;
-
-        private readonly ILogger<RetrCommandHandler>? _logger;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RetrCommandHandler"/> class.
         /// </summary>
+        /// <param name="sslStreamWrapperFactory">The SSL stream wrapper factory.</param>
         /// <param name="logger">The logger.</param>
         public RetrCommandHandler(
+            ISslStreamWrapperFactory sslStreamWrapperFactory,
             ILogger<RetrCommandHandler>? logger = null)
+            : base(sslStreamWrapperFactory, logger)
         {
-            _logger = logger;
         }
+
+        /// <inheritdoc />
+        protected override string DataConnectionOpenText { get; } = "Opening connection for data transfer.";
 
         /// <inheritdoc/>
         public override async Task<IFtpResponse?> Process(FtpCommand command, CancellationToken cancellationToken)
         {
-            var restartPosition = Connection.Features.Get<IRestCommandFeature?>()?.RestartPosition;
-            Connection.Features.Set<IRestCommandFeature?>(null);
+            var restartPosition = FtpContext.Features.Get<IRestCommandFeature?>()?.RestartPosition;
+            FtpContext.Features.Set<IRestCommandFeature?>(null);
 
-            var transferMode = Connection.Features.Get<ITransferConfigurationFeature>().TransferMode;
+            var transferMode = FtpContext.Features.Get<ITransferConfigurationFeature>().TransferMode;
             if (!transferMode.IsBinary && transferMode.FileType != FtpFileType.Ascii)
             {
                 throw new NotSupportedException();
             }
 
-            var fsFeature = Connection.Features.Get<IFileSystemFeature>();
+            var fsFeature = FtpContext.Features.Get<IFileSystemFeature>();
 
             var fileName = command.Argument;
             var currentPath = fsFeature.Path.Clone();
@@ -63,16 +67,9 @@ namespace FubarDev.FtpServer.CommandHandlers
 
             using (var input = await fsFeature.FileSystem.OpenReadAsync(fileInfo.Entry, restartPosition ?? 0, cancellationToken).ConfigureAwait(false))
             {
-                await FtpContext.ServerCommandWriter
-                   .WriteAsync(
-                        new SendResponseServerCommand(new FtpResponse(150, T("Opening connection for data transfer."))),
-                        cancellationToken)
-                   .ConfigureAwait(false);
-
                 // ReSharper disable once AccessToDisposedClosure
-                return await Connection.SendDataAsync(
+                return await SendDataAsync(
                         (dataConnection, ct) => ExecuteSendAsync(dataConnection, input, ct),
-                        _logger,
                         cancellationToken)
                     .ConfigureAwait(false);
             }

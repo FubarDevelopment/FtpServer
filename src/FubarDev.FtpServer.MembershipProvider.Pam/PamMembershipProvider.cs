@@ -24,22 +24,22 @@ namespace FubarDev.FtpServer.MembershipProvider.Pam
     /// </summary>
     public class PamMembershipProvider : IMembershipProvider
     {
-        private readonly IFtpConnectionAccessor _connectionAccessor;
+        private readonly IFtpConnectionContextAccessor _connectionContextAccessor;
         private readonly IPamService _pamService;
         private readonly PamMembershipProviderOptions _options;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PamMembershipProvider"/> class.
         /// </summary>
-        /// <param name="connectionAccessor">The FTP connection accessor.</param>
+        /// <param name="connectionContextAccessor">The FTP connection accessor.</param>
         /// <param name="pamService">The PAM service.</param>
         /// <param name="options">The options for this membership provider.</param>
         public PamMembershipProvider(
-            IFtpConnectionAccessor connectionAccessor,
+            IFtpConnectionContextAccessor connectionContextAccessor,
             IPamService pamService,
             IOptions<PamMembershipProviderOptions> options)
         {
-            _connectionAccessor = connectionAccessor;
+            _connectionContextAccessor = connectionContextAccessor;
             _pamService = pamService;
             _options = options.Value;
         }
@@ -107,7 +107,7 @@ namespace FubarDev.FtpServer.MembershipProvider.Pam
                     throw;
                 }
 
-                _connectionAccessor.FtpConnection.Features.Set(new PamSessionFeature(pamTransaction));
+                _connectionContextAccessor.FtpConnectionContext.Features.Set(new PamSessionFeature(pamTransaction));
 
                 result = new MemberValidationResult(
                     MemberValidationStatus.AuthenticatedUser,

@@ -15,15 +15,15 @@ namespace FubarDev.FtpServer.MembershipProvider.Pam
     /// </summary>
     public class PamSessionAuthorizationAction : IAuthorizationAction
     {
-        private readonly IFtpConnectionAccessor _connectionAccessor;
+        private readonly IFtpConnectionContextAccessor _connectionContextAccessor;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PamSessionAuthorizationAction"/> class.
         /// </summary>
-        /// <param name="connectionAccessor">The FTP connection accessor.</param>
-        public PamSessionAuthorizationAction(IFtpConnectionAccessor connectionAccessor)
+        /// <param name="connectionContextAccessor">The FTP connection accessor.</param>
+        public PamSessionAuthorizationAction(IFtpConnectionContextAccessor connectionContextAccessor)
         {
-            _connectionAccessor = connectionAccessor;
+            _connectionContextAccessor = connectionContextAccessor;
         }
 
         /// <inheritdoc />
@@ -38,7 +38,7 @@ namespace FubarDev.FtpServer.MembershipProvider.Pam
                 return Task.CompletedTask;
             }
 
-            var pamSessionFeature = _connectionAccessor.FtpConnection.Features.Get<PamSessionFeature>();
+            var pamSessionFeature = _connectionContextAccessor.FtpConnectionContext.Features.Get<PamSessionFeature>();
             if (pamSessionFeature == null)
             {
                 return Task.CompletedTask;

@@ -41,17 +41,15 @@ namespace FubarDev.FtpServer
     /// <summary>
     /// This class represents a FTP connection.
     /// </summary>
-    public sealed class FtpConnection : IFtpConnection
+    public sealed class FtpConnection : IFtpConnection, IDisposable
     {
         private readonly CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
 
         private readonly TcpClient _socket;
 
-        private readonly IFtpConnectionAccessor _connectionAccessor;
+        private readonly IFtpConnectionContextAccessor _connectionContextAccessor;
 
         private readonly IServerCommandExecutor _serverCommandExecutor;
-
-        private readonly SecureDataConnectionWrapper _secureDataConnectionWrapper;
 
         private readonly IFtpServerMessages _serverMessages;
 
@@ -89,11 +87,10 @@ namespace FubarDev.FtpServer
         /// <param name="socket">The socket to use to communicate with the client.</param>
         /// <param name="options">The options for the FTP connection.</param>
         /// <param name="portOptions">The <c>PORT</c> command options.</param>
-        /// <param name="connectionAccessor">The accessor to get the connection that is active during the <see cref="FtpCommandHandler.Process"/> method execution.</param>
+        /// <param name="connectionContextAccessor">The accessor to get the connection that is active during the <see cref="FtpCommandHandler.Process"/> method execution.</param>
         /// <param name="catalogLoader">The catalog loader for the FTP server.</param>
         /// <param name="serverCommandExecutor">The executor for server commands.</param>
         /// <param name="serviceProvider">The service provider for the connection.</param>
-        /// <param name="secureDataConnectionWrapper">Wraps a data connection into an SSL stream.</param>
         /// <param name="serverMessages">The server messages.</param>
         /// <param name="sslStreamWrapperFactory">The SSL stream wrapper factory.</param>
         /// <param name="logger">The logger for the FTP connection.</param>
@@ -101,11 +98,10 @@ namespace FubarDev.FtpServer
             TcpClient socket,
             IOptions<FtpConnectionOptions> options,
             IOptions<PortCommandOptions> portOptions,
-            IFtpConnectionAccessor connectionAccessor,
+            IFtpConnectionContextAccessor connectionContextAccessor,
             IFtpCatalogLoader catalogLoader,
             IServerCommandExecutor serverCommandExecutor,
             IServiceProvider serviceProvider,
-            SecureDataConnectionWrapper secureDataConnectionWrapper,
             IFtpServerMessages serverMessages,
             ISslStreamWrapperFactory sslStreamWrapperFactory,
             ILogger<FtpConnection>? logger = null)
@@ -128,9 +124,8 @@ namespace FubarDev.FtpServer
             _loggerScope = logger?.BeginScope(properties);
 
             _socket = socket;
-            _connectionAccessor = connectionAccessor;
+            _connectionContextAccessor = connectionContextAccessor;
             _serverCommandExecutor = serverCommandExecutor;
-            _secureDataConnectionWrapper = secureDataConnectionWrapper;
             _serverMessages = serverMessages;
             _serverCommandChannel = Channel.CreateBounded<IServerCommand>(new BoundedChannelOptions(3));
 
@@ -198,16 +193,11 @@ namespace FubarDev.FtpServer
         /// </summary>
         public IFeatureCollection Features { get; }
 
-        /// <summary>
-        /// Gets the cancellation token to use to signal a task cancellation.
-        /// </summary>
-        CancellationToken IFtpConnection.CancellationToken => _cancellationTokenSource.Token;
-
         /// <inheritdoc />
         public async Task StartAsync()
         {
             // Initialize the FTP connection accessor
-            _connectionAccessor.FtpConnection = this;
+            _connectionContextAccessor.FtpConnectionContext = this;
 
             // Set the default FTP data connection feature
             var activeDataConnectionFeatureFactory = ConnectionServices.GetRequiredService<ActiveDataConnectionFeatureFactory>();
@@ -268,16 +258,6 @@ namespace FubarDev.FtpServer
             _logger?.LogInformation("Connection closed");
 
             OnClosed();
-        }
-
-        /// <inheritdoc/>
-        public async Task<IFtpDataConnection> OpenDataConnectionAsync(TimeSpan? timeout, CancellationToken cancellationToken)
-        {
-            var dataConnectionFeature = Features.Get<IFtpDataConnectionFeature>();
-            var dataConnection = await dataConnectionFeature.GetDataConnectionAsync(timeout ?? TimeSpan.FromSeconds(10), cancellationToken)
-               .ConfigureAwait(false);
-            return await _secureDataConnectionWrapper.WrapAsync(dataConnection)
-               .ConfigureAwait(false);
         }
 
         /// <inheritdoc/>

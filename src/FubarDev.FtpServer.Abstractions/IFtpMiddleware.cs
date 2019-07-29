@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace FubarDev.FtpServer
 {
     /// <summary>
-    /// FTP middleware.
+    /// FTP middleware (pre-routing).
     /// </summary>
     public interface IFtpMiddleware
     {

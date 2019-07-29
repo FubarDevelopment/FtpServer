@@ -25,7 +25,7 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// <inheritdoc/>
         public override async Task<IFtpResponse?> Process(FtpCommand command, CancellationToken cancellationToken)
         {
-            var fsFeature = Connection.Features.Get<IFileSystemFeature>();
+            var fsFeature = FtpContext.Features.Get<IFileSystemFeature>();
             var directoryName = command.Argument;
             var currentPath = fsFeature.Path.Clone();
             var dirInfo = await fsFeature.FileSystem.SearchDirectoryAsync(currentPath, directoryName, cancellationToken).ConfigureAwait(false);

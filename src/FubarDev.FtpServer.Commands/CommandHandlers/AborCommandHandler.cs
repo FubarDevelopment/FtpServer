@@ -22,7 +22,7 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// <inheritdoc/>
         public override Task<IFtpResponse?> Process(FtpCommand command, CancellationToken cancellationToken)
         {
-            var backgroundTaskLifetimeFeature = Connection.Features.Get<IBackgroundTaskLifetimeFeature?>();
+            var backgroundTaskLifetimeFeature = FtpContext.Features.Get<IBackgroundTaskLifetimeFeature?>();
             if (backgroundTaskLifetimeFeature != null)
             {
                 backgroundTaskLifetimeFeature.Abort();

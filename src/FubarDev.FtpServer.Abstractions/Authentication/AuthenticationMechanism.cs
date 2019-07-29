@@ -19,16 +19,16 @@ namespace FubarDev.FtpServer.Authentication
         /// <summary>
         /// Initializes a new instance of the <see cref="AuthenticationMechanism"/> class.
         /// </summary>
-        /// <param name="connection">The required FTP connection.</param>
-        protected AuthenticationMechanism(IFtpConnection connection)
+        /// <param name="connectionContext">The required FTP connection context.</param>
+        protected AuthenticationMechanism(IFtpConnectionContext connectionContext)
         {
-            Connection = connection;
+            ConnectionContext = connectionContext;
         }
 
         /// <summary>
         /// Gets the FTP connection.
         /// </summary>
-        public IFtpConnection Connection { get; }
+        public IFtpConnectionContext ConnectionContext { get; }
 
         /// <inheritdoc />
         public abstract void Reset();
@@ -55,7 +55,7 @@ namespace FubarDev.FtpServer.Authentication
         /// <returns>The translated message.</returns>
         protected string T(string message)
         {
-            return Connection.Features.Get<ILocalizationFeature>().Catalog.GetString(message);
+            return ConnectionContext.Features.Get<ILocalizationFeature>().Catalog.GetString(message);
         }
 
         /// <summary>
@@ -67,7 +67,7 @@ namespace FubarDev.FtpServer.Authentication
         [StringFormatMethod("message")]
         protected string T(string message, params object[] args)
         {
-            return Connection.Features.Get<ILocalizationFeature>().Catalog.GetString(message, args);
+            return ConnectionContext.Features.Get<ILocalizationFeature>().Catalog.GetString(message, args);
         }
     }
 }

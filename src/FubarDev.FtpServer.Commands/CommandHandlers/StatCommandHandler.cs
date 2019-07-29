@@ -74,7 +74,7 @@ namespace FubarDev.FtpServer.CommandHandlers
                 mask += "*";
             }
 
-            var fsFeature = Connection.Features.Get<IFileSystemFeature>();
+            var fsFeature = FtpContext.Features.Get<IFileSystemFeature>();
 
             var globOptions = new GlobOptions
             {

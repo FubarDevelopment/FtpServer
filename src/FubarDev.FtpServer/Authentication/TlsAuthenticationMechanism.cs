@@ -25,12 +25,12 @@ namespace FubarDev.FtpServer.Authentication
         /// <summary>
         /// Initializes a new instance of the <see cref="TlsAuthenticationMechanism"/> class.
         /// </summary>
-        /// <param name="connection">The required FTP connection.</param>
+        /// <param name="connectionContextAccessor">The required FTP connection context accessor.</param>
         /// <param name="sslStreamWrapperFactory">The SslStream wrapper factory.</param>
         public TlsAuthenticationMechanism(
-            IFtpConnection connection,
+            IFtpConnectionContextAccessor connectionContextAccessor,
             ISslStreamWrapperFactory sslStreamWrapperFactory)
-            : base(connection)
+            : base(connectionContextAccessor.FtpConnectionContext)
         {
             _sslStreamWrapperFactory = sslStreamWrapperFactory;
         }
@@ -38,11 +38,11 @@ namespace FubarDev.FtpServer.Authentication
         /// <summary>
         /// Build a string to be returned by the <c>FEAT</c> command handler.
         /// </summary>
-        /// <param name="connection">The FTP connection.</param>
+        /// <param name="connectionContext">The FTP connection context.</param>
         /// <returns>The string(s) to be returned.</returns>
-        public static IEnumerable<string> CreateAuthTlsFeatureString(IFtpConnection connection)
+        public static IEnumerable<string> CreateAuthTlsFeatureString(IFtpConnectionContext connectionContext)
         {
-            var hostSelector = connection.ConnectionServices.GetRequiredService<IFtpHostSelector>();
+            var hostSelector = connectionContext.ConnectionServices.GetRequiredService<IFtpHostSelector>();
             if (hostSelector.SelectedHost.Certificate != null)
             {
                 return new[] { "AUTH TLS", "PBSZ", "PROT" };
@@ -66,8 +66,8 @@ namespace FubarDev.FtpServer.Authentication
         /// <inheritdoc />
         public override async Task<IFtpResponse> HandleAuthAsync(string methodIdentifier, CancellationToken cancellationToken)
         {
-            var serverCommandWriter = Connection.Features.Get<IServerCommandFeature>().ServerCommandWriter;
-            var hostSelector = Connection.ConnectionServices.GetRequiredService<IFtpHostSelector>();
+            var serverCommandWriter = ConnectionContext.Features.Get<IServerCommandFeature>().ServerCommandWriter;
+            var hostSelector = ConnectionContext.ConnectionServices.GetRequiredService<IFtpHostSelector>();
 
             if (hostSelector.SelectedHost.Certificate == null)
             {
@@ -109,7 +109,7 @@ namespace FubarDev.FtpServer.Authentication
         {
             IFtpResponse response;
 
-            var hostSelector = Connection.ConnectionServices.GetRequiredService<IFtpHostSelector>();
+            var hostSelector = ConnectionContext.ConnectionServices.GetRequiredService<IFtpHostSelector>();
             if (hostSelector.SelectedHost.Certificate == null)
             {
                 response = new FtpResponse(500, T("Syntax error, command unrecognized."));
@@ -131,14 +131,14 @@ namespace FubarDev.FtpServer.Authentication
         {
             IFtpResponse response;
 
-            var hostSelector = Connection.ConnectionServices.GetRequiredService<IFtpHostSelector>();
+            var hostSelector = ConnectionContext.ConnectionServices.GetRequiredService<IFtpHostSelector>();
             if (hostSelector.SelectedHost.Certificate == null)
             {
                 response = new FtpResponse(500, T("Syntax error, command unrecognized."));
             }
             else
             {
-                var secureConnectionFeature = Connection.Features.Get<ISecureConnectionFeature>();
+                var secureConnectionFeature = ConnectionContext.Features.Get<ISecureConnectionFeature>();
                 switch (protCode.ToUpperInvariant())
                 {
                     case "C":

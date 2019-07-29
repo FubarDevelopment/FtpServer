@@ -29,15 +29,15 @@ namespace FubarDev.FtpServer
         /// <summary>
         /// Initializes a new instance of the <see cref="FtpStateMachine{TStatus}"/> class.
         /// </summary>
-        /// <param name="connection">The FTP connection.</param>
+        /// <param name="connectionContext">The FTP connection.</param>
         /// <param name="transitions">The supported transitions.</param>
         /// <param name="initialStatus">The initial status.</param>
         protected FtpStateMachine(
-            IFtpConnection connection,
+            IFtpConnectionContext connectionContext,
             IEnumerable<Transition> transitions,
             TStatus initialStatus)
         {
-            Connection = connection;
+            ConnectionContext = connectionContext;
             _initialStatus = initialStatus;
             _transitions = transitions
                 .ToLookup(x => x.Source)
@@ -54,7 +54,7 @@ namespace FubarDev.FtpServer
         /// <summary>
         /// Gets the connection this state machine belongs to.
         /// </summary>
-        public IFtpConnection Connection { get; }
+        public IFtpConnectionContext ConnectionContext { get; }
 
         /// <summary>
         /// Resets the state machine to the initial status.
@@ -161,7 +161,7 @@ namespace FubarDev.FtpServer
         /// <returns>The translated message.</returns>
         protected string T(string message)
         {
-            return Connection.Features.Get<ILocalizationFeature>().Catalog.GetString(message);
+            return ConnectionContext.Features.Get<ILocalizationFeature>().Catalog.GetString(message);
         }
 
         /// <summary>
@@ -173,7 +173,7 @@ namespace FubarDev.FtpServer
         [StringFormatMethod("message")]
         protected string T(string message, params object[] args)
         {
-            return Connection.Features.Get<ILocalizationFeature>().Catalog.GetString(message, args);
+            return ConnectionContext.Features.Get<ILocalizationFeature>().Catalog.GetString(message, args);
         }
 
         /// <summary>

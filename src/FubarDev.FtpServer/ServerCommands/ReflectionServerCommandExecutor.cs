@@ -17,17 +17,17 @@ namespace FubarDev.FtpServer.ServerCommands
     /// </summary>
     public class ReflectionServerCommandExecutor : IServerCommandExecutor
     {
-        private readonly IFtpConnectionAccessor _ftpConnectionAccessor;
+        private readonly IFtpConnectionContextAccessor _ftpConnectionContextAccessor;
         private readonly Dictionary<Type, CommandHandlerInfo> _serverCommandHandlerInfo =
             new Dictionary<Type, CommandHandlerInfo>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ReflectionServerCommandExecutor"/> class.
         /// </summary>
-        /// <param name="ftpConnectionAccessor">Accessor to get the FTP connection.</param>
-        public ReflectionServerCommandExecutor(IFtpConnectionAccessor ftpConnectionAccessor)
+        /// <param name="ftpConnectionContextAccessor">Accessor to get the FTP connection.</param>
+        public ReflectionServerCommandExecutor(IFtpConnectionContextAccessor ftpConnectionContextAccessor)
         {
-            _ftpConnectionAccessor = ftpConnectionAccessor;
+            _ftpConnectionContextAccessor = ftpConnectionContextAccessor;
         }
 
         /// <inheritdoc />
@@ -38,7 +38,7 @@ namespace FubarDev.FtpServer.ServerCommands
             {
                 var handlerType = typeof(IServerCommandHandler<>).MakeGenericType(serverCommandType);
                 var executeAsyncMethod = handlerType.GetRuntimeMethod("ExecuteAsync", new[] { serverCommandType, typeof(CancellationToken) });
-                var handler = _ftpConnectionAccessor.FtpConnection.ConnectionServices.GetRequiredService(handlerType);
+                var handler = _ftpConnectionContextAccessor.FtpConnectionContext.ConnectionServices.GetRequiredService(handlerType);
 
                 commandHandlerInfo = new CommandHandlerInfo(handler, executeAsyncMethod);
                 _serverCommandHandlerInfo.Add(serverCommandType, commandHandlerInfo);

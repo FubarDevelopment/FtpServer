@@ -38,7 +38,7 @@ namespace FubarDev.FtpServer
 
         /// <inheritdoc />
         public async Task<IPasvListener> CreateTcpListenerAsync(
-            IFtpConnection connection,
+            IFtpConnectionContext connectionContext,
             AddressFamily? addressFamily,
             int port,
             CancellationToken cancellationToken)
@@ -50,7 +50,7 @@ namespace FubarDev.FtpServer
                 throw new ArgumentOutOfRangeException(nameof(port), "may not be less than 0");
             }
 
-            var pasvOptions = await _addressResolver.GetOptionsAsync(connection, addressFamily, cancellationToken)
+            var pasvOptions = await _addressResolver.GetOptionsAsync(connectionContext, addressFamily, cancellationToken)
                .ConfigureAwait(false);
 
             if (port > 0 && pasvOptions.HasPortRange && (port > pasvOptions.PasvMaxPort || port < pasvOptions.PasvMinPort))
@@ -60,7 +60,7 @@ namespace FubarDev.FtpServer
                     $"must be in {pasvOptions.PasvMinPort}:{pasvOptions.PasvMaxPort}");
             }
 
-            var connectionFeature = connection.Features.Get<IConnectionEndPointFeature>();
+            var connectionFeature = connectionContext.Features.Get<IConnectionEndPointFeature>();
             if (port == 0 && pasvOptions.HasPortRange)
             {
                 listener = CreateListenerInRange(connectionFeature, pasvOptions);

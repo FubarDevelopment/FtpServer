@@ -48,7 +48,7 @@ namespace FubarDev.FtpServer.CommandHandlers
         {
             try
             {
-                var connFeature = Connection.Features.Get<IConnectionEndPointFeature>();
+                var connFeature = FtpContext.Features.Get<IConnectionEndPointFeature>();
                 var address = command.Argument.ParsePortString((IPEndPoint)connFeature.RemoteEndPoint);
                 if (address == null)
                 {
@@ -57,7 +57,7 @@ namespace FubarDev.FtpServer.CommandHandlers
 
                 var feature = await _dataConnectionFeatureFactory.CreateFeatureAsync(command, address, _options.DataPort)
                    .ConfigureAwait(false);
-                var oldFeature = Connection.Features.Get<IFtpDataConnectionFeature>();
+                var oldFeature = FtpContext.Features.Get<IFtpDataConnectionFeature>();
                 try
                 {
                     oldFeature.Dispose();
@@ -67,7 +67,7 @@ namespace FubarDev.FtpServer.CommandHandlers
                     // Ignore dispose errors!
                 }
 
-                Connection.Features.Set(feature);
+                FtpContext.Features.Set(feature);
             }
             catch (NotSupportedException ex)
             {

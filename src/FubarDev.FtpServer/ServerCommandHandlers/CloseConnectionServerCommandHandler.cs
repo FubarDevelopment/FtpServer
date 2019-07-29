@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 
 using FubarDev.FtpServer.ServerCommands;
 
+using Microsoft.AspNetCore.Connections.Features;
+
 namespace FubarDev.FtpServer.ServerCommandHandlers
 {
     /// <summary>
@@ -14,28 +16,35 @@ namespace FubarDev.FtpServer.ServerCommandHandlers
     /// </summary>
     public class CloseConnectionServerCommandHandler : IServerCommandHandler<CloseConnectionServerCommand>
     {
-        private readonly IFtpConnectionAccessor _connectionAccessor;
+        private readonly IFtpConnectionContextAccessor _connectionContextAccessor;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CloseConnectionServerCommandHandler"/> class.
         /// </summary>
-        /// <param name="connectionAccessor">The FTP connection accessor.</param>
+        /// <param name="connectionContextAccessor">The FTP connection accessor.</param>
         public CloseConnectionServerCommandHandler(
-            IFtpConnectionAccessor connectionAccessor)
+            IFtpConnectionContextAccessor connectionContextAccessor)
         {
-            _connectionAccessor = connectionAccessor;
+            _connectionContextAccessor = connectionContextAccessor;
         }
 
         /// <inheritdoc />
-        public async Task ExecuteAsync(CloseConnectionServerCommand command, CancellationToken cancellationToken)
+        public Task ExecuteAsync(CloseConnectionServerCommand command, CancellationToken cancellationToken)
         {
-            var connection = _connectionAccessor.FtpConnection;
+            var connection = _connectionContextAccessor.FtpConnectionContext;
 
+            // TODO: Evaluate if this **really** works as expected.
+            var lifetimeFeature = connection.Features.Get<IConnectionLifetimeFeature>();
+            lifetimeFeature.Abort();
+            return Task.CompletedTask;
+
+            /*
             // - Flush the remaining data
             // - Close the SslStream (if active)
             // - Stop all connection tasks
             await Task.WhenAny(connection.StopAsync(), Task.Delay(-1, cancellationToken))
                .ConfigureAwait(false);
+            */
         }
     }
 }

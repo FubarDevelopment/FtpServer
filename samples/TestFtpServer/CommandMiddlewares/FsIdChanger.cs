@@ -43,17 +43,16 @@ namespace TestFtpServer.CommandMiddlewares
         }
 
         /// <inheritdoc />
-        public Task InvokeAsync(FtpExecutionContext context, FtpCommandExecutionDelegate next)
+        public Task InvokeAsync(FtpActionContext context, FtpCommandExecutionDelegate next)
         {
-            var connection = context.Connection;
-            var authInfo = connection.Features.Get<IConnectionUserFeature>();
+            var authInfo = context.Features.Get<IConnectionUserFeature>();
             var identity = authInfo.User.Identity;
             if (!(identity.IsAuthenticated && identity.AuthenticationType == "pam"))
             {
                 return next(context);
             }
 
-            var fsInfo = connection.Features.Get<IFileSystemFeature>();
+            var fsInfo = context.Features.Get<IFileSystemFeature>();
             if (!(fsInfo.FileSystem is UnixFileSystem))
             {
                 return next(context);
@@ -63,7 +62,7 @@ namespace TestFtpServer.CommandMiddlewares
         }
 
         private async Task ExecuteWithChangedFsId(
-            FtpExecutionContext context,
+            FtpActionContext context,
             ClaimsPrincipal unixUser,
             FtpCommandExecutionDelegate next)
         {

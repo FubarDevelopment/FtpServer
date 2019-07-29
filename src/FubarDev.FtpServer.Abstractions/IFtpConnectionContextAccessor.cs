@@ -1,17 +1,19 @@
-// <copyright file="IFtpConnectionAccessor.cs" company="Fubar Development Junker">
+// <copyright file="IFtpConnectionContextAccessor.cs" company="Fubar Development Junker">
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
+
+using System;
 
 namespace FubarDev.FtpServer
 {
     /// <summary>
     /// Accessor to get/set the current (scoped) FTP connection.
     /// </summary>
-    public interface IFtpConnectionAccessor
+    public interface IFtpConnectionContextAccessor
     {
         /// <summary>
         /// Gets or sets the current FTP connection.
         /// </summary>
-        IFtpConnection FtpConnection { get; set; }
+        IFtpConnectionContext FtpConnectionContext { get; set; }
     }
 }

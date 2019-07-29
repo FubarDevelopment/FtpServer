@@ -16,12 +16,12 @@ namespace FubarDev.FtpServer
         /// <summary>
         /// Get the <c>PASV</c>/<c>EPSV</c> options.
         /// </summary>
-        /// <param name="connection">The FTP connection.</param>
+        /// <param name="connectionContext">The FTP connection.</param>
         /// <param name="addressFamily">The address family for the address to be selected.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>The task returning the options.</returns>
         Task<PasvListenerOptions> GetOptionsAsync(
-            IFtpConnection connection,
+            IFtpConnectionContext connectionContext,
             AddressFamily? addressFamily,
             CancellationToken cancellationToken);
     }

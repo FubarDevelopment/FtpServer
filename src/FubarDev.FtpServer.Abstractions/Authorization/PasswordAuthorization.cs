@@ -34,16 +34,16 @@ namespace FubarDev.FtpServer.Authorization
         /// <summary>
         /// Initializes a new instance of the <see cref="PasswordAuthorization"/> class.
         /// </summary>
-        /// <param name="connection">The required FTP connection.</param>
+        /// <param name="connectionContextAccessor">The required FTP connection context accessor.</param>
         /// <param name="membershipProviders">The membership providers for password authorization.</param>
         /// <param name="authorizationActions">Actions to be executed upon authorization.</param>
         /// <param name="serverMessages">The FTP server messages.</param>
         public PasswordAuthorization(
-            IFtpConnection connection,
+            IFtpConnectionContextAccessor connectionContextAccessor,
             IEnumerable<IMembershipProvider> membershipProviders,
             IEnumerable<IAuthorizationAction> authorizationActions,
             IFtpServerMessages serverMessages)
-            : base(connection)
+            : base(connectionContextAccessor.FtpConnectionContext)
         {
             _serverMessages = serverMessages;
             _authorizationActions = authorizationActions.OrderByDescending(x => x.Level).ToList();
@@ -103,7 +103,7 @@ namespace FubarDev.FtpServer.Authorization
                 });
             var principal = new ClaimsPrincipal(identity);
 
-            Connection.Features.Get<IConnectionUserFeature>().User = principal;
+            ConnectionContext.Features.Get<IConnectionUserFeature>().User = principal;
 
             return Task.FromResult<IFtpResponse>(new FtpResponse(331, T("User {0} logged in, needs password", userIdentifier)));
         }

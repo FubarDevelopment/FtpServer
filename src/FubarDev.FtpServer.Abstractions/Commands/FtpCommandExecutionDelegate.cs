@@ -11,5 +11,5 @@ namespace FubarDev.FtpServer.Commands
     /// </summary>
     /// <param name="context">The context of the current FTP command.</param>
     /// <returns>The task.</returns>
-    public delegate Task FtpCommandExecutionDelegate(FtpExecutionContext context);
+    public delegate Task FtpCommandExecutionDelegate(FtpActionContext context);
 }

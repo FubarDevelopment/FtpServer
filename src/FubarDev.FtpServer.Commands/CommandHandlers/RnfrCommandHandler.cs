@@ -24,7 +24,7 @@ namespace FubarDev.FtpServer.CommandHandlers
         public override async Task<IFtpResponse?> Process(FtpCommand command, CancellationToken cancellationToken)
         {
             var fileName = command.Argument;
-            var fsFeature = Connection.Features.Get<IFileSystemFeature>();
+            var fsFeature = FtpContext.Features.Get<IFileSystemFeature>();
             var tempPath = fsFeature.Path.Clone();
             var fileInfo = await fsFeature.FileSystem.SearchEntryAsync(tempPath, fileName, cancellationToken).ConfigureAwait(false);
             if (fileInfo == null)
@@ -38,7 +38,7 @@ namespace FubarDev.FtpServer.CommandHandlers
             }
 
             var renameFeature = new RenameFeature(fileInfo);
-            Connection.Features.Set<IRenameCommandFeature?>(renameFeature);
+            FtpContext.Features.Set<IRenameCommandFeature?>(renameFeature);
 
             var fullName = tempPath.GetFullPath(fileInfo.FileName);
             return new FtpResponse(350, T("Rename started ({0}).", fullName));

@@ -21,17 +21,17 @@ namespace FubarDev.FtpServer
     /// </summary>
     public class SingleFtpHostSelector : IFtpHostSelector
     {
-        private readonly IFtpConnection _connection;
+        private readonly IFtpConnectionContextAccessor _connectionContextAccessor;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SingleFtpHostSelector"/> class.
         /// </summary>
-        /// <param name="connection">The FTP connection.</param>
+        /// <param name="connectionContextAccessor">The FTP connection.</param>
         /// <param name="authenticationMechanisms">The registered authentication mechanisms.</param>
         /// <param name="authorizationMechanisms">The registered authorization mechanisms.</param>
         /// <param name="authTlsOptions">The options for the AUTH TLS command.</param>
         public SingleFtpHostSelector(
-            IFtpConnection connection,
+            IFtpConnectionContextAccessor connectionContextAccessor,
             IEnumerable<IAuthenticationMechanism> authenticationMechanisms,
             IEnumerable<IAuthorizationMechanism> authorizationMechanisms,
             IOptions<AuthTlsOptions> authTlsOptions)
@@ -40,7 +40,7 @@ namespace FubarDev.FtpServer
                 authenticationMechanisms.ToList(),
                 authorizationMechanisms.ToList(),
                 authTlsOptions);
-            _connection = connection;
+            _connectionContextAccessor = connectionContextAccessor;
         }
 
         /// <inheritdoc />
@@ -49,7 +49,7 @@ namespace FubarDev.FtpServer
         /// <inheritdoc />
         public Task<IFtpResponse> SelectHostAsync(HostInfo hostInfo, CancellationToken cancellationToken)
         {
-            var localizationFeature = _connection.Features.Get<ILocalizationFeature>();
+            var localizationFeature = _connectionContextAccessor.FtpConnectionContext.Features.Get<ILocalizationFeature>();
             return Task.FromResult<IFtpResponse>(new FtpResponse(504, localizationFeature.Catalog.GetString("Unknown host \"{0}\"", hostInfo)));
         }
 

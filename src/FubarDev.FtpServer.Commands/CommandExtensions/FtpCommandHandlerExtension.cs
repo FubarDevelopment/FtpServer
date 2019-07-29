@@ -7,6 +7,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
 
+using FubarDev.FtpServer.Commands;
 using FubarDev.FtpServer.Features;
 
 using JetBrains.Annotations;
@@ -36,11 +37,6 @@ namespace FubarDev.FtpServer.CommandExtensions
         /// </summary>
         protected FtpContext FtpContext => CommandContext.FtpContext ?? throw new InvalidOperationException("The connection information was used outside of an active connection.");
 
-        /// <summary>
-        /// Gets the connection this command was created for.
-        /// </summary>
-        protected IFtpConnection Connection => FtpContext.Connection;
-
         /// <inheritdoc />
         public abstract void InitializeConnectionData();
 
@@ -54,7 +50,7 @@ namespace FubarDev.FtpServer.CommandExtensions
         /// <returns>The translated message.</returns>
         protected string T(string message)
         {
-            return Connection.Features.Get<ILocalizationFeature>().Catalog.GetString(message);
+            return FtpContext.Features.Get<ILocalizationFeature>().Catalog.GetString(message);
         }
 
         /// <summary>
@@ -66,7 +62,7 @@ namespace FubarDev.FtpServer.CommandExtensions
         [StringFormatMethod("message")]
         protected string T(string message, params object[] args)
         {
-            return Connection.Features.Get<ILocalizationFeature>().Catalog.GetString(message, args);
+            return FtpContext.Features.Get<ILocalizationFeature>().Catalog.GetString(message, args);
         }
     }
 }

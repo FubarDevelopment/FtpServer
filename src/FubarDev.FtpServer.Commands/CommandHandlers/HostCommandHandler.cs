@@ -27,7 +27,7 @@ namespace FubarDev.FtpServer.CommandHandlers
                 return new FtpResponse(501, T("Syntax error in parameters or arguments."));
             }
 
-            var loginStateMachine = Connection.ConnectionServices.GetRequiredService<IFtpLoginStateMachine>();
+            var loginStateMachine = FtpContext.ConnectionServices.GetRequiredService<IFtpLoginStateMachine>();
 
             if (loginStateMachine.Status != SecurityStatus.Unauthenticated &&
                 loginStateMachine.Status != SecurityStatus.Authenticated)
@@ -36,7 +36,7 @@ namespace FubarDev.FtpServer.CommandHandlers
             }
 
             var hostInfo = ParseHost(command.Argument);
-            var hostSelector = Connection.ConnectionServices.GetRequiredService<IFtpHostSelector>();
+            var hostSelector = FtpContext.ConnectionServices.GetRequiredService<IFtpHostSelector>();
             return await hostSelector.SelectHostAsync(hostInfo, cancellationToken).ConfigureAwait(false);
         }
 

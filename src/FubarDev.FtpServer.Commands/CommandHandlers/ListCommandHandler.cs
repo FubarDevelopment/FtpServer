@@ -15,6 +15,7 @@ using System.Threading.Tasks;
 
 using DotNet.Globbing;
 
+using FubarDev.FtpServer.Authentication;
 using FubarDev.FtpServer.Commands;
 using FubarDev.FtpServer.Features;
 using FubarDev.FtpServer.FileSystem;
@@ -32,16 +33,19 @@ namespace FubarDev.FtpServer.CommandHandlers
     [FtpCommandHandler("LIST")]
     [FtpCommandHandler("NLST")]
     [FtpCommandHandler("LS")]
-    public class ListCommandHandler : FtpCommandHandler
+    public class ListCommandHandler : FtpDataCommandHandler
     {
         private readonly ILogger<ListCommandHandler>? _logger;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ListCommandHandler"/> class.
         /// </summary>
+        /// <param name="sslStreamWrapperFactory">The SSL stream wrapper factory.</param>
         /// <param name="logger">The logger.</param>
         public ListCommandHandler(
+            ISslStreamWrapperFactory sslStreamWrapperFactory,
             ILogger<ListCommandHandler>? logger = null)
+            : base(sslStreamWrapperFactory, logger)
         {
             _logger = logger;
         }
@@ -49,22 +53,15 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// <inheritdoc/>
         public override async Task<IFtpResponse?> Process(FtpCommand command, CancellationToken cancellationToken)
         {
-            await FtpContext.ServerCommandWriter
-               .WriteAsync(
-                    new SendResponseServerCommand(new FtpResponse(150, T("Opening data connection."))),
-                    cancellationToken)
-               .ConfigureAwait(false);
-
-            return await Connection.SendDataAsync(
+            return await SendDataAsync(
                     (dataConnection, ct) => ExecuteSend(dataConnection, command, ct),
-                    _logger,
                     cancellationToken)
                 .ConfigureAwait(false);
         }
 
         private async Task<IFtpResponse?> ExecuteSend(IFtpDataConnection dataConnection, FtpCommand command, CancellationToken cancellationToken)
         {
-            var encodingFeature = Connection.Features.Get<IEncodingFeature>();
+            var encodingFeature = FtpContext.Features.Get<IEncodingFeature>();
 
             // Parse arguments in a way that's compatible with broken FTP clients
             var argument = new ListArguments(command.Argument);
@@ -99,7 +96,7 @@ namespace FubarDev.FtpServer.CommandHandlers
             // Parse the given path to determine the mask (e.g. when information about a file was requested)
             var directoriesToProcess = new Queue<DirectoryQueueItem>();
 
-            var fsFeature = Connection.Features.Get<IFileSystemFeature>();
+            var fsFeature = FtpContext.Features.Get<IFileSystemFeature>();
 
             // Use braces to avoid the definition of mask and path in the following parts
             // of this function.

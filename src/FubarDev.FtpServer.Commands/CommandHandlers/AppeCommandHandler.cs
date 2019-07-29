@@ -9,6 +9,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
+using FubarDev.FtpServer.Authentication;
 using FubarDev.FtpServer.BackgroundTransfer;
 using FubarDev.FtpServer.Commands;
 using FubarDev.FtpServer.Features;
@@ -23,32 +24,35 @@ namespace FubarDev.FtpServer.CommandHandlers
     /// Implements the <c>APPE</c> command.
     /// </summary>
     [FtpCommandHandler("APPE", isAbortable: true)]
-    public class AppeCommandHandler : FtpCommandHandler
+    public class AppeCommandHandler : FtpDataCommandHandler
     {
         private readonly IBackgroundTransferWorker _backgroundTransferWorker;
-
-        private readonly ILogger<AppeCommandHandler>? _logger;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AppeCommandHandler"/> class.
         /// </summary>
+        /// <param name="sslStreamWrapperFactory">The SSL stream wrapper factory.</param>
         /// <param name="backgroundTransferWorker">The background transfer worker service.</param>
         /// <param name="logger">The logger.</param>
         public AppeCommandHandler(
+            ISslStreamWrapperFactory sslStreamWrapperFactory,
             IBackgroundTransferWorker backgroundTransferWorker,
             ILogger<AppeCommandHandler>? logger = null)
+            : base(sslStreamWrapperFactory, logger)
         {
             _backgroundTransferWorker = backgroundTransferWorker;
-            _logger = logger;
         }
+
+        /// <inheritdoc />
+        protected override string DataConnectionOpenText { get; } = "Opening connection for data transfer.";
 
         /// <inheritdoc/>
         public override async Task<IFtpResponse?> Process(FtpCommand command, CancellationToken cancellationToken)
         {
-            var restartPosition = Connection.Features.Get<IRestCommandFeature?>()?.RestartPosition;
-            Connection.Features.Set<IRestCommandFeature?>(null);
+            var restartPosition = FtpContext.Features.Get<IRestCommandFeature?>()?.RestartPosition;
+            FtpContext.Features.Set<IRestCommandFeature?>(null);
 
-            var transferMode = Connection.Features.Get<ITransferConfigurationFeature>().TransferMode;
+            var transferMode = FtpContext.Features.Get<ITransferConfigurationFeature>().TransferMode;
             if (!transferMode.IsBinary && transferMode.FileType != FtpFileType.Ascii)
             {
                 throw new NotSupportedException();
@@ -60,7 +64,7 @@ namespace FubarDev.FtpServer.CommandHandlers
                 return new FtpResponse(501, T("No file name specified"));
             }
 
-            var fsFeature = Connection.Features.Get<IFileSystemFeature>();
+            var fsFeature = FtpContext.Features.Get<IFileSystemFeature>();
             var currentPath = fsFeature.Path.Clone();
             var fileInfo = await fsFeature.FileSystem.SearchFileAsync(currentPath, fileName, cancellationToken).ConfigureAwait(false);
             if (fileInfo == null)
@@ -73,16 +77,8 @@ namespace FubarDev.FtpServer.CommandHandlers
                 return new FtpResponse(553, T("File name not allowed."));
             }
 
-            await FtpContext.ServerCommandWriter
-               .WriteAsync(
-                    new SendResponseServerCommand(new FtpResponse(150, T("Opening connection for data transfer."))),
-                    cancellationToken)
-               .ConfigureAwait(false);
-
-            return await Connection
-               .SendDataAsync(
+            return await SendDataAsync(
                     (dataConnection, ct) => ExecuteSend(dataConnection, fileInfo, restartPosition, ct),
-                    _logger,
                     cancellationToken)
                .ConfigureAwait(false);
         }
@@ -93,7 +89,7 @@ namespace FubarDev.FtpServer.CommandHandlers
             long? restartPosition,
             CancellationToken cancellationToken)
         {
-            var fsFeature = Connection.Features.Get<IFileSystemFeature>();
+            var fsFeature = FtpContext.Features.Get<IFileSystemFeature>();
             var stream = dataConnection.Stream;
             stream.ReadTimeout = 10000;
 

@@ -23,7 +23,7 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// <inheritdoc/>
         public override Task<IFtpResponse?> Process(FtpCommand command, CancellationToken cancellationToken)
         {
-            var fsFeature = Connection.Features.Get<IFileSystemFeature>();
+            var fsFeature = FtpContext.Features.Get<IFileSystemFeature>();
             if (fsFeature.CurrentDirectory.IsRoot)
             {
                 return Task.FromResult<IFtpResponse?>(new FtpResponse(550, T("Not a valid directory.")));

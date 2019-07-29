@@ -24,7 +24,7 @@ namespace FubarDev.FtpServer.DataConnection
     public class PassiveDataConnectionFeatureFactory
     {
         private readonly IPasvListenerFactory _pasvListenerFactory;
-        private readonly IFtpConnectionAccessor _connectionAccessor;
+        private readonly IFtpConnectionContextAccessor _connectionContextAccessor;
         private readonly ILogger<PassiveDataConnectionFeatureFactory>? _logger;
         private readonly List<IFtpDataConnectionValidator> _validators;
 
@@ -32,17 +32,17 @@ namespace FubarDev.FtpServer.DataConnection
         /// Initializes a new instance of the <see cref="PassiveDataConnectionFeatureFactory"/> class.
         /// </summary>
         /// <param name="pasvListenerFactory">The PASV listener factory.</param>
-        /// <param name="connectionAccessor">The FTP connection accessor.</param>
+        /// <param name="connectionContextAccessor">The FTP connection accessor.</param>
         /// <param name="validators">An enumeration of FTP connection validators.</param>
         /// <param name="logger">The logger.</param>
         public PassiveDataConnectionFeatureFactory(
             IPasvListenerFactory pasvListenerFactory,
-            IFtpConnectionAccessor connectionAccessor,
+            IFtpConnectionContextAccessor connectionContextAccessor,
             IEnumerable<IFtpDataConnectionValidator> validators,
             ILogger<PassiveDataConnectionFeatureFactory>? logger = null)
         {
             _pasvListenerFactory = pasvListenerFactory;
-            _connectionAccessor = connectionAccessor;
+            _connectionContextAccessor = connectionContextAccessor;
             _logger = logger;
             _validators = validators.ToList();
         }
@@ -59,7 +59,7 @@ namespace FubarDev.FtpServer.DataConnection
             AddressFamily? addressFamily,
             CancellationToken cancellationToken)
         {
-            var connection = _connectionAccessor.FtpConnection;
+            var connection = _connectionContextAccessor.FtpConnectionContext;
             var listener = await _pasvListenerFactory.CreateTcpListenerAsync(
                 connection,
                 addressFamily,
@@ -78,7 +78,7 @@ namespace FubarDev.FtpServer.DataConnection
         {
             private readonly IPasvListener _listener;
             private readonly List<IFtpDataConnectionValidator> _validators;
-            private readonly IFtpConnection _ftpConnection;
+            private readonly IFtpConnectionContext _ftpConnectionContext;
 
             private readonly ILogger? _logger;
 
@@ -86,13 +86,13 @@ namespace FubarDev.FtpServer.DataConnection
                 IPasvListener listener,
                 List<IFtpDataConnectionValidator> validators,
                 FtpCommand? command,
-                IFtpConnection ftpConnection,
+                IFtpConnectionContext ftpConnectionContext,
                 IPEndPoint localEndPoint,
                 ILogger? logger)
             {
                 _listener = listener;
                 _validators = validators;
-                _ftpConnection = ftpConnection;
+                _ftpConnectionContext = ftpConnectionContext;
                 _logger = logger;
                 LocalEndPoint = localEndPoint;
                 Command = command;
@@ -130,7 +130,7 @@ namespace FubarDev.FtpServer.DataConnection
                     var dataConnection = new PassiveDataConnection(client);
                     foreach (var validator in _validators)
                     {
-                        var validationResult = await validator.ValidateAsync(_ftpConnection, this, dataConnection, cancellationToken)
+                        var validationResult = await validator.ValidateAsync(_ftpConnectionContext, this, dataConnection, cancellationToken)
                            .ConfigureAwait(false);
                         if (validationResult != ValidationResult.Success && validationResult != null)
                         {

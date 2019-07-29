@@ -18,36 +18,36 @@ namespace FubarDev.FtpServer.ServerCommandHandlers
     /// </summary>
     public class SendResponseServerCommandHandler : IServerCommandHandler<SendResponseServerCommand>
     {
-        private readonly IFtpConnectionAccessor _connectionAccessor;
+        private readonly IFtpConnectionContextAccessor _connectionContextAccessor;
 
         private readonly ILogger<SendResponseServerCommandHandler>? _logger;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SendResponseServerCommandHandler"/> class.
         /// </summary>
-        /// <param name="connectionAccessor">The FTP connection accessor.</param>
+        /// <param name="connectionContextAccessor">The FTP connection accessor.</param>
         /// <param name="logger">The logger.</param>
         public SendResponseServerCommandHandler(
-            IFtpConnectionAccessor connectionAccessor,
+            IFtpConnectionContextAccessor connectionContextAccessor,
             ILogger<SendResponseServerCommandHandler>? logger = null)
         {
-            _connectionAccessor = connectionAccessor;
+            _connectionContextAccessor = connectionContextAccessor;
             _logger = logger;
         }
 
         /// <inheritdoc />
         public Task ExecuteAsync(SendResponseServerCommand command, CancellationToken cancellationToken)
         {
-            return WriteResponseAsync(_connectionAccessor.FtpConnection, command.Response, cancellationToken);
+            return WriteResponseAsync(_connectionContextAccessor.FtpConnectionContext, command.Response, cancellationToken);
         }
 
         private async Task WriteResponseAsync(
-            IFtpConnection connection,
+            IFtpConnectionContext connectionContext,
             IFtpResponse response,
             CancellationToken cancellationToken)
         {
-            var networkStreamFeature = connection.Features.Get<INetworkStreamFeature>();
-            var encoding = connection.Features.Get<IEncodingFeature>().Encoding;
+            var networkStreamFeature = connectionContext.Features.Get<INetworkStreamFeature>();
+            var encoding = connectionContext.Features.Get<IEncodingFeature>().Encoding;
 
             var writer = networkStreamFeature.Output;
 

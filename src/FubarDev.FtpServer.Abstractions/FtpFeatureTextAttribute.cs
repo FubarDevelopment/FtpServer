@@ -25,7 +25,7 @@ namespace FubarDev.FtpServer
         }
 
         /// <inheritdoc />
-        public IEnumerable<string> BuildInfo(Type reference, IFtpConnection connection)
+        public IEnumerable<string> BuildInfo(Type reference, IFtpConnectionContext connectionContext)
         {
             return new[] { _featureText };
         }

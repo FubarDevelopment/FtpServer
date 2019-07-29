@@ -94,7 +94,7 @@ namespace FubarDev.FtpServer.CommandExtensions
                 return new FtpResponse(501, T("No file name."));
             }
 
-            var fsFeature = Connection.Features.Get<IFileSystemFeature>();
+            var fsFeature = FtpContext.Features.Get<IFileSystemFeature>();
             var currentPath = fsFeature.Path.Clone();
             var foundEntry = await fsFeature.FileSystem.SearchEntryAsync(currentPath, path, cancellationToken).ConfigureAwait(false);
             if (foundEntry?.Entry == null)
@@ -125,7 +125,7 @@ namespace FubarDev.FtpServer.CommandExtensions
                 return new FtpResponse(501, T("No file name."));
             }
 
-            var fsFeature = Connection.Features.Get<IFileSystemFeature>();
+            var fsFeature = FtpContext.Features.Get<IFileSystemFeature>();
             var currentPath = fsFeature.Path.Clone();
             var foundEntry = await fsFeature.FileSystem.SearchEntryAsync(currentPath, path, cancellationToken).ConfigureAwait(false);
             if (foundEntry?.Entry == null)

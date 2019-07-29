@@ -35,7 +35,7 @@ namespace FubarDev.FtpServer
 
         /// <inheritdoc />
         public Task<PasvListenerOptions> GetOptionsAsync(
-            IFtpConnection connection,
+            IFtpConnectionContext connectionContext,
             AddressFamily? addressFamily,
             CancellationToken cancellationToken)
         {
@@ -47,7 +47,7 @@ namespace FubarDev.FtpServer
 
             var maxPort = Math.Max(_options.PasvMaxPort ?? 0, minPort);
 
-            var connectionFeature = connection.Features.Get<IConnectionEndPointFeature>();
+            var connectionFeature = connectionContext.Features.Get<IConnectionEndPointFeature>();
             var publicAddress = _options.PublicAddress ?? ((IPEndPoint)connectionFeature.LocalEndPoint).Address;
 
             return Task.FromResult(new PasvListenerOptions(minPort, maxPort, publicAddress));

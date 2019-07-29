@@ -23,19 +23,19 @@ namespace FubarDev.FtpServer.DataConnection
     /// </summary>
     public class ActiveDataConnectionFeatureFactory
     {
-        private readonly IFtpConnectionAccessor _connectionAccessor;
+        private readonly IFtpConnectionContextAccessor _connectionContextAccessor;
         private readonly List<IFtpDataConnectionValidator> _validators;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ActiveDataConnectionFeatureFactory"/> class.
         /// </summary>
-        /// <param name="connectionAccessor">The FTP connection accessor.</param>
+        /// <param name="connectionContextAccessor">The FTP connection accessor.</param>
         /// <param name="validators">An enumeration of FTP connection validators.</param>
         public ActiveDataConnectionFeatureFactory(
-            IFtpConnectionAccessor connectionAccessor,
+            IFtpConnectionContextAccessor connectionContextAccessor,
             IEnumerable<IFtpDataConnectionValidator> validators)
         {
-            _connectionAccessor = connectionAccessor;
+            _connectionContextAccessor = connectionContextAccessor;
             _validators = validators.ToList();
         }
 
@@ -51,7 +51,7 @@ namespace FubarDev.FtpServer.DataConnection
             IPEndPoint portAddress,
             int? dataPort)
         {
-            var connection = _connectionAccessor.FtpConnection;
+            var connection = _connectionContextAccessor.FtpConnectionContext;
             var connectionFeature = connection.Features.Get<IConnectionEndPointFeature>();
             var localEndPoint = (IPEndPoint)connectionFeature.LocalEndPoint;
 
@@ -78,18 +78,18 @@ namespace FubarDev.FtpServer.DataConnection
         {
             private readonly IPEndPoint _portAddress;
             private readonly List<IFtpDataConnectionValidator> _validators;
-            private readonly IFtpConnection _ftpConnection;
+            private readonly IFtpConnectionContext _ftpConnectionContext;
 
             public ActiveDataConnectionFeature(
                 IPEndPoint localEndPoint,
                 IPEndPoint portAddress,
                 List<IFtpDataConnectionValidator> validators,
                 FtpCommand? command,
-                IFtpConnection ftpConnection)
+                IFtpConnectionContext ftpConnectionContext)
             {
                 _portAddress = portAddress;
                 _validators = validators;
-                _ftpConnection = ftpConnection;
+                _ftpConnectionContext = ftpConnectionContext;
                 LocalEndPoint = localEndPoint;
                 Command = command;
             }
@@ -155,7 +155,7 @@ namespace FubarDev.FtpServer.DataConnection
                         var dataConnection = new ActiveDataConnection(client);
                         foreach (var validator in _validators)
                         {
-                            var validationResult = await validator.ValidateAsync(_ftpConnection, this, dataConnection, cancellationToken)
+                            var validationResult = await validator.ValidateAsync(_ftpConnectionContext, this, dataConnection, cancellationToken)
                                .ConfigureAwait(false);
                             if (validationResult != ValidationResult.Success && validationResult != null)
                             {

@@ -9,9 +9,9 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
+using FubarDev.FtpServer.Authentication;
 using FubarDev.FtpServer.BackgroundTransfer;
 using FubarDev.FtpServer.Features;
-using FubarDev.FtpServer.ServerCommands;
 
 using Microsoft.Extensions.Logging;
 
@@ -22,7 +22,7 @@ namespace FubarDev.FtpServer.CommandExtensions
     /// </summary>
     [FtpCommandHandlerExtension("BLST", "SITE", true)]
     [FtpFeatureText("SITE BLST")]
-    public class SiteBlstCommandExtension : FtpCommandHandlerExtension
+    public class SiteBlstCommandExtension : FtpDataCommandHandlerExtension
     {
         private readonly IBackgroundTransferWorker _backgroundTransferWorker;
         private readonly ILogger<SiteBlstCommandExtension>? _logger;
@@ -30,11 +30,14 @@ namespace FubarDev.FtpServer.CommandExtensions
         /// <summary>
         /// Initializes a new instance of the <see cref="SiteBlstCommandExtension"/> class.
         /// </summary>
+        /// <param name="sslStreamWrapperFactory">The SSL stream wrapper factory.</param>
         /// <param name="backgroundTransferWorker">The background transfer worker service.</param>
         /// <param name="logger">The logger.</param>
         public SiteBlstCommandExtension(
+            ISslStreamWrapperFactory sslStreamWrapperFactory,
             IBackgroundTransferWorker backgroundTransferWorker,
             ILogger<SiteBlstCommandExtension>? logger = null)
+            : base(sslStreamWrapperFactory, logger)
         {
             _backgroundTransferWorker = backgroundTransferWorker;
             _logger = logger;
@@ -78,23 +81,14 @@ namespace FubarDev.FtpServer.CommandExtensions
                     GetLines(taskStates).ToList()));
         }
 
-        private async Task<IFtpResponse?> SendBlstWithDataConnection(CancellationToken cancellationToken)
+        private Task<IFtpResponse?> SendBlstWithDataConnection(CancellationToken cancellationToken)
         {
-            await FtpContext.ServerCommandWriter.WriteAsync(
-                    new SendResponseServerCommand(new FtpResponse(150, T("Opening data connection."))),
-                    cancellationToken)
-               .ConfigureAwait(false);
-
-            return await Connection.SendDataAsync(
-                    ExecuteSend,
-                    _logger,
-                    cancellationToken)
-               .ConfigureAwait(false);
+            return SendDataAsync(ExecuteSend, cancellationToken);
         }
 
         private async Task<IFtpResponse?> ExecuteSend(IFtpDataConnection dataConnection, CancellationToken cancellationToken)
         {
-            var encoding = Connection.Features.Get<IEncodingFeature>().Encoding;
+            var encoding = FtpContext.Features.Get<IEncodingFeature>().Encoding;
             var stream = dataConnection.Stream;
             using (var writer = new StreamWriter(stream, encoding, 4096, true)
             {

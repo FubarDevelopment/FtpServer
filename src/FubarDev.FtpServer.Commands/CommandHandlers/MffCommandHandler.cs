@@ -52,9 +52,9 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// <summary>
         /// Gets the feature string for the <c>MFF</c> command.
         /// </summary>
-        /// <param name="connection">The connection.</param>
+        /// <param name="connectionContext">The connection context.</param>
         /// <returns>The feature string.</returns>
-        public static string FeatureStatus(IFtpConnection connection)
+        public static string FeatureStatus(IFtpConnectionContext connectionContext)
         {
             var result = new StringBuilder();
             result.Append("MFF ");
@@ -86,7 +86,7 @@ namespace FubarDev.FtpServer.CommandHandlers
                 factInfos.Add(keyValue[0], keyValue[1]);
             }
 
-            var fsFeature = Connection.Features.Get<IFileSystemFeature>();
+            var fsFeature = FtpContext.Features.Get<IFileSystemFeature>();
 
             var path = parts[1];
             var currentPath = fsFeature.Path.Clone();

@@ -191,8 +191,8 @@ namespace FubarDev.FtpServer
                 socketAccessor.TcpSocketClient = client;
 
                 var connection = scope.ServiceProvider.GetRequiredService<IFtpConnection>();
-                var connectionAccessor = scope.ServiceProvider.GetRequiredService<IFtpConnectionAccessor>();
-                connectionAccessor.FtpConnection = connection;
+                var connectionAccessor = scope.ServiceProvider.GetRequiredService<IFtpConnectionContextAccessor>();
+                connectionAccessor.FtpConnectionContext = connection;
 
                 if (MaxActiveConnections != 0 && _statistics.ActiveConnections >= MaxActiveConnections)
                 {

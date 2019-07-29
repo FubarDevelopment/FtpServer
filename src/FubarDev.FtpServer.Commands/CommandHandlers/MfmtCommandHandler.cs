@@ -36,7 +36,7 @@ namespace FubarDev.FtpServer.CommandHandlers
                 return new FtpResponse(551, T("Invalid timestamp."));
             }
 
-            var fsFeature = Connection.Features.Get<IFileSystemFeature>();
+            var fsFeature = FtpContext.Features.Get<IFileSystemFeature>();
 
             var path = parts[1];
             var currentPath = fsFeature.Path.Clone();

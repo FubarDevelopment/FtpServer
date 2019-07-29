@@ -40,7 +40,7 @@ namespace FubarDev.FtpServer.CommandHandlers
 
             if (response.Code == 200)
             {
-                var transferModeFeature = Connection.Features.Get<ITransferConfigurationFeature>();
+                var transferModeFeature = FtpContext.Features.Get<ITransferConfigurationFeature>();
                 transferModeFeature.TransferMode = transferMode;
             }
 

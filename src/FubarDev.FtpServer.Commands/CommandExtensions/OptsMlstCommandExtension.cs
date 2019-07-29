@@ -24,14 +24,14 @@ namespace FubarDev.FtpServer.CommandExtensions
         /// <inheritdoc />
         public override void InitializeConnectionData()
         {
-            Connection.Features.Set(MlstCommandHandler.CreateMlstFactsFeature());
+            FtpContext.Features.Set(MlstCommandHandler.CreateMlstFactsFeature());
         }
 
         /// <inheritdoc />
         public override Task<IFtpResponse?> Process(FtpCommand command, CancellationToken cancellationToken)
         {
             var facts = command.Argument.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
-            var factsFeature = Connection.Features.Get<IMlstFactsFeature>();
+            var factsFeature = FtpContext.Features.Get<IMlstFactsFeature>();
             factsFeature.ActiveMlstFacts.Clear();
             foreach (var fact in facts)
             {

@@ -78,7 +78,7 @@ namespace FubarDev.FtpServer.CommandHandlers
 
             var feature = await _dataConnectionFeatureFactory.CreateFeatureAsync(command, addressFamily, cancellationToken)
                .ConfigureAwait(false);
-            var oldFeature = Connection.Features.Get<IFtpDataConnectionFeature>();
+            var oldFeature = FtpContext.Features.Get<IFtpDataConnectionFeature>();
             try
             {
                 oldFeature.Dispose();
@@ -88,7 +88,7 @@ namespace FubarDev.FtpServer.CommandHandlers
                 // Ignore dispose errors!
             }
 
-            Connection.Features.Set(feature);
+            FtpContext.Features.Set(feature);
 
             var address = feature.LocalEndPoint.Address;
             var localPort = feature.LocalEndPoint.Port;

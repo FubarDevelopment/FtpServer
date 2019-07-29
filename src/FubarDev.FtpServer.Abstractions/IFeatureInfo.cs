@@ -16,8 +16,8 @@ namespace FubarDev.FtpServer
         /// Build an informational string to be sent by the <c>FEAT</c> command.
         /// </summary>
         /// <param name="reference">The reference object type (e.g. an FTP command handler).</param>
-        /// <param name="connection">The configured connection.</param>
+        /// <param name="connectionContext">The configured connection.</param>
         /// <returns>the informational strings to be sent by the <c>FEAT</c> command.</returns>
-        IEnumerable<string> BuildInfo(Type reference, IFtpConnection connection);
+        IEnumerable<string> BuildInfo(Type reference, IFtpConnectionContext connectionContext);
     }
 }

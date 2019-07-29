@@ -46,7 +46,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddSingleton<ITemporaryDataFactory, TemporaryDataFactory>();
             services.AddSingleton<IPasvListenerFactory, PasvListenerFactory>();
             services.AddSingleton<IPasvAddressResolver, SimplePasvAddressResolver>();
-            services.AddSingleton<IFtpConnectionAccessor, FtpConnectionAccessor>();
+            services.AddSingleton<IFtpConnectionContextAccessor, FtpConnectionContextAccessor>();
 
             var commandAssembly = typeof(PassCommandHandler).GetTypeInfo().Assembly;
 
@@ -116,8 +116,7 @@ namespace Microsoft.Extensions.DependencyInjection
 
             services
                .AddSingleton<ActiveDataConnectionFeatureFactory>()
-               .AddSingleton<PassiveDataConnectionFeatureFactory>()
-               .AddSingleton<SecureDataConnectionWrapper>();
+               .AddSingleton<PassiveDataConnectionFeatureFactory>();
 
             services
                .AddSingleton<IFtpDataConnectionValidator, PromiscuousPasvDataConnectionValidator>();

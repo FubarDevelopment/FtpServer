@@ -18,13 +18,13 @@ namespace FubarDev.FtpServer.DataConnection
         /// <summary>
         /// Checks if the FTP data connection is valid.
         /// </summary>
-        /// <param name="connection">The FTP connection that created the data connection.</param>
+        /// <param name="connectionContext">The FTP connection context.</param>
         /// <param name="dataConnectionFeature">The FTP data connection feature that crated the data connection.</param>
         /// <param name="dataConnection">The created data connection that needs to be validated.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>The task returning the validation result.</returns>
         Task<ValidationResult?> ValidateAsync(
-            IFtpConnection connection,
+            IFtpConnectionContext connectionContext,
             IFtpDataConnectionFeature dataConnectionFeature,
             IFtpDataConnection dataConnection,
             CancellationToken cancellationToken);

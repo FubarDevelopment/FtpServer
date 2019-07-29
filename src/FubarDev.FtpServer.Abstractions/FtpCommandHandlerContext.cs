@@ -2,6 +2,8 @@
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
+using FubarDev.FtpServer.Commands;
+
 namespace FubarDev.FtpServer
 {
     /// <summary>
