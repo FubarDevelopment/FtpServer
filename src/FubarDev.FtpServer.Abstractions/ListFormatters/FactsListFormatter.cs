@@ -8,7 +8,6 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 
-using FubarDev.FtpServer.AccountManagement;
 using FubarDev.FtpServer.FileSystem;
 using FubarDev.FtpServer.ListFormatters.Facts;
 using FubarDev.FtpServer.Utilities;

@@ -7,8 +7,6 @@
 
 using System.Threading.Tasks;
 
-using FubarDev.FtpServer.AccountManagement;
-
 namespace FubarDev.FtpServer.FileSystem
 {
     /// <summary>
