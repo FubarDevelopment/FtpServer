@@ -2,7 +2,7 @@
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
-using System.Net.Sockets;
+using System.IO;
 
 namespace FubarDev.FtpServer.Features
 {
@@ -14,7 +14,7 @@ namespace FubarDev.FtpServer.Features
         /// <summary>
         /// Gets the control connection stream.
         /// </summary>
-        NetworkStream OriginalStream { get; }
+        Stream OriginalStream { get; }
 
         /// <summary>
         /// Gets or sets a delegate that allows the creation of an encrypted stream.

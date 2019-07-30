@@ -137,7 +137,7 @@ namespace FubarDev.FtpServer
             var connectionFeature = new ConnectionFeature(
                 (IPEndPoint)socket.Client.LocalEndPoint,
                 _remoteAddress);
-            var secureConnectionFeature = new SecureConnectionFeature(socket);
+            var secureConnectionFeature = new SecureConnectionFeature(socket.GetStream());
 
             var applicationInputPipe = new Pipe();
             var applicationOutputPipe = new Pipe();
@@ -603,15 +603,15 @@ namespace FubarDev.FtpServer
 
         private class SecureConnectionFeature : ISecureConnectionFeature
         {
-            public SecureConnectionFeature(TcpClient tcpClient)
+            public SecureConnectionFeature(Stream originalStream)
             {
-                OriginalStream = tcpClient.GetStream();
+                OriginalStream = originalStream;
                 CreateEncryptedStream = Task.FromResult;
                 CloseEncryptedControlStream = ct => Task.CompletedTask;
             }
 
             /// <inheritdoc />
-            public NetworkStream OriginalStream { get; }
+            public Stream OriginalStream { get; }
 
             /// <inheritdoc />
             public CreateEncryptedStreamDelegate CreateEncryptedStream { get; set; }
