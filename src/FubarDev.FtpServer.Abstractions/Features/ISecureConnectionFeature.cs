@@ -12,11 +12,6 @@ namespace FubarDev.FtpServer.Features
     public interface ISecureConnectionFeature
     {
         /// <summary>
-        /// Gets the control connection stream.
-        /// </summary>
-        Stream OriginalStream { get; }
-
-        /// <summary>
         /// Gets or sets a delegate that allows the creation of an encrypted stream.
         /// </summary>
         CreateEncryptedStreamDelegate CreateEncryptedStream { get; set; }

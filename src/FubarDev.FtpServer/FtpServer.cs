@@ -13,9 +13,9 @@ using System.Threading;
 using System.Threading.Channels;
 using System.Threading.Tasks;
 
-using FubarDev.FtpServer.Features;
 using FubarDev.FtpServer.Networking;
 
+using Microsoft.AspNetCore.Connections.Features;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -198,8 +198,17 @@ namespace FubarDev.FtpServer
                 {
                     var response = new FtpResponse(10068, "Too many users, server is full.");
                     var responseBuffer = Encoding.UTF8.GetBytes($"{response}\r\n");
-                    var secureConnectionFeature = connection.Features.Get<ISecureConnectionFeature>();
-                    secureConnectionFeature.OriginalStream.Write(responseBuffer, 0, responseBuffer.Length);
+
+                    var lifetimeFeature = connection.Features.Get<IConnectionLifetimeFeature>();
+                    var transportFeature = connection.Features.Get<IConnectionTransportFeature>();
+                    using (var outputStream = transportFeature.Transport.Output.AsStream(true))
+                    {
+                        await outputStream.WriteAsync(responseBuffer, 0, responseBuffer.Length, lifetimeFeature.ConnectionClosed)
+                           .ConfigureAwait(false);
+                        await outputStream.FlushAsync(lifetimeFeature.ConnectionClosed)
+                           .ConfigureAwait(false);
+                    }
+
                     client.Dispose();
                     scope.Dispose();
                     return;
