@@ -55,17 +55,31 @@ namespace FubarDev.FtpServer.Networking
         protected bool IsPauseRequested => _jobPaused.IsCancellationRequested;
 
         /// <inheritdoc />
-        public Task StartAsync(CancellationToken cancellationToken)
+        public async Task StartAsync(CancellationToken cancellationToken)
         {
             if (Status != FtpServiceStatus.ReadyToRun)
             {
                 throw new InvalidOperationException($"Status must be {FtpServiceStatus.ReadyToRun}, but was {Status}.");
             }
 
-            _jobPaused = new CancellationTokenSource();
-            _task = RunAsync(new Progress<FtpServiceStatus>(status => Status = status));
+            using (var semaphore = new SemaphoreSlim(0, 1))
+            {
+                _jobPaused = new CancellationTokenSource();
+                _task = RunAsync(
+                    new Progress<FtpServiceStatus>(
+                        status =>
+                        {
+                            Status = status;
 
-            return Task.CompletedTask;
+                            if (status == FtpServiceStatus.Running)
+                            {
+                                // ReSharper disable once AccessToDisposedClosure
+                                semaphore.Release();
+                            }
+                        }));
+
+                await semaphore.WaitAsync(cancellationToken);
+            }
         }
 
         /// <inheritdoc />
@@ -140,7 +154,21 @@ namespace FubarDev.FtpServer.Networking
             await OnContinueRequestingAsync(cancellationToken)
                .ConfigureAwait(false);
 
-            _task = RunAsync(new Progress<FtpServiceStatus>(status => Status = status));
+            using (var semaphore = new SemaphoreSlim(0, 1))
+            {
+                _task = RunAsync(new Progress<FtpServiceStatus>(status =>
+                {
+                    Status = status;
+
+                    if (status == FtpServiceStatus.Running)
+                    {
+                        // ReSharper disable once AccessToDisposedClosure
+                        semaphore.Release();
+                    }
+                }));
+
+                await semaphore.WaitAsync(cancellationToken);
+            }
         }
 
         [NotNull]
