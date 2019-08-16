@@ -6,6 +6,7 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
@@ -78,7 +79,7 @@ namespace FubarDev.FtpServer.CommandHandlers
                 addressFamily = AddressFamily.InterNetwork;
             }
 
-            var feature = await _dataConnectionFeatureFactory.CreateFeatureAsync(command, addressFamily, cancellationToken)
+            var dataConnectionFeature = await _dataConnectionFeatureFactory.CreateFeatureAsync(command, addressFamily, cancellationToken)
                .ConfigureAwait(false);
             var oldFeature = Connection.Features.Get<IFtpDataConnectionFeature>();
             try
@@ -90,28 +91,43 @@ namespace FubarDev.FtpServer.CommandHandlers
                 // Ignore dispose errors!
             }
 
-            Connection.Features.Set(feature);
+            Connection.Features.Set(dataConnectionFeature);
 
-            var address = feature.LocalEndPoint.Address;
-            var localPort = feature.LocalEndPoint.Port;
+            var address = dataConnectionFeature.LocalEndPoint.Address;
+            var localPort = dataConnectionFeature.LocalEndPoint.Port;
             if (isEpsv || address.AddressFamily == AddressFamily.InterNetworkV6)
             {
-                var listenerAddress = new Address(localPort);
                 await FtpContext.ServerCommandWriter.WriteAsync(
                     new SendResponseServerCommand(
-                        new FtpResponse(229, T("Entering Extended Passive Mode ({0}).", listenerAddress))),
+                        new FtpResponse(229, T("Entering Extended Passive Mode (|||{0}|).", localPort))),
                     cancellationToken).ConfigureAwait(false);
             }
             else
             {
-                var listenerAddress = new Address(address.ToString(), localPort);
+                var listenerAddress = dataConnectionFeature.LocalEndPoint;
                 await FtpContext.ServerCommandWriter.WriteAsync(
                     new SendResponseServerCommand(
-                        new FtpResponse(227, T("Entering Passive Mode ({0}).", listenerAddress))),
+                        new FtpResponse(227, T("Entering Passive Mode ({0}).", ToPasvAddress(listenerAddress)))),
                     cancellationToken).ConfigureAwait(false);
             }
 
             return null;
+        }
+
+        /// <summary>
+        /// Returns a PASV-compatible response text for the given end point.
+        /// </summary>
+        /// <param name="endPoint">The end point to return the PASV-compatible response for.</param>
+        /// <returns>The PASV-compatible response.</returns>
+        private static string ToPasvAddress(EndPoint endPoint)
+        {
+            switch (endPoint)
+            {
+                case IPEndPoint ipep:
+                    return $"{ipep.Address.ToString().Replace('.', ',')},{ipep.Port / 256},{ipep.Port & 0xFF}";
+                default:
+                    throw new InvalidOperationException($"Unknown end point of type {endPoint.GetType()}: {endPoint}");
+            }
         }
     }
 }

@@ -81,13 +81,14 @@ namespace FubarDev.FtpServer
         [NotNull]
         private readonly Channel<FtpCommand> _ftpCommandChannel = Channel.CreateBounded<FtpCommand>(5);
 
-        [NotNull]
-        private readonly Address _remoteAddress;
+#pragma warning restore 618
 
         private readonly int? _dataPort;
 
         [CanBeNull]
         private readonly ILogger<FtpConnection> _logger;
+
+        private readonly IPEndPoint _remoteEndPoint;
 
         private bool _connectionClosing;
 
@@ -131,14 +132,16 @@ namespace FubarDev.FtpServer
             ConnectionId = "FTP-" + Guid.NewGuid().ToString("N");
 
             _dataPort = portOptions.Value.DataPort;
-            var endpoint = (IPEndPoint)socket.Client.RemoteEndPoint;
-            var remoteAddress = _remoteAddress = new Address(endpoint.Address.ToString(), endpoint.Port);
+            var remoteEndPoint = _remoteEndPoint = (IPEndPoint)socket.Client.RemoteEndPoint;
+#pragma warning disable 618
+            RemoteAddress = new Address(remoteEndPoint.Address.ToString(), remoteEndPoint.Port);
+#pragma warning restore 618
 
             var properties = new Dictionary<string, object>
             {
-                ["RemoteAddress"] = remoteAddress.ToString(true),
-                ["RemoteIp"] = remoteAddress.IPAddress?.ToString(),
-                ["RemotePort"] = remoteAddress.Port,
+                ["RemoteAddress"] = remoteEndPoint.ToString(),
+                ["RemoteIp"] = remoteEndPoint.Address.ToString(),
+                ["RemotePort"] = remoteEndPoint.Port,
                 ["ConnectionId"] = ConnectionId,
             };
 
@@ -156,7 +159,7 @@ namespace FubarDev.FtpServer
             var parentFeatures = new FeatureCollection();
             var connectionFeature = new ConnectionFeature(
                 (IPEndPoint)socket.Client.LocalEndPoint,
-                remoteAddress);
+                remoteEndPoint);
             var secureConnectionFeature = new SecureConnectionFeature(socket);
 
             var applicationInputPipe = new Pipe();
@@ -238,8 +241,11 @@ namespace FubarDev.FtpServer
 
         /// <inheritdoc />
         [Obsolete("Query the information using the IConnectionFeature instead.")]
-        public Address RemoteAddress
-            => Features.Get<IConnectionFeature>().RemoteAddress;
+        public IPEndPoint RemoteEndPoint => _remoteEndPoint;
+
+        /// <inheritdoc />
+        [Obsolete("Query the information using the IConnectionFeature instead - and use the RemoteEndPoint property.")]
+        public Address RemoteAddress { get; }
 
         /// <inheritdoc />
         [Obsolete("Query the information using the ISecureConnectionFeature instead.")]
@@ -270,13 +276,13 @@ namespace FubarDev.FtpServer
 
             // Set the default FTP data connection feature
             var activeDataConnectionFeatureFactory = ConnectionServices.GetRequiredService<ActiveDataConnectionFeatureFactory>();
-            var dataConnectionFeature = await activeDataConnectionFeatureFactory.CreateFeatureAsync(null, _remoteAddress, _dataPort)
+            var dataConnectionFeature = await activeDataConnectionFeatureFactory.CreateFeatureAsync(null, _remoteEndPoint, _dataPort)
                .ConfigureAwait(false);
             Features.Set(dataConnectionFeature);
 
             // Connection information
             var connectionFeature = Features.Get<IConnectionFeature>();
-            _logger?.LogInformation($"Connected from {connectionFeature.RemoteAddress.ToString(true)}");
+            _logger?.LogInformation($"Connected from {connectionFeature.RemoteEndPoint}");
 
             await _networkStreamFeature.StreamWriterService.StartAsync(CancellationToken.None)
                .ConfigureAwait(false);
@@ -719,17 +725,26 @@ namespace FubarDev.FtpServer
         {
             public ConnectionFeature(
                 [NotNull] IPEndPoint localEndPoint,
-                [NotNull] Address remoteAddress)
+                [NotNull] IPEndPoint remoteEndPoint)
             {
                 LocalEndPoint = localEndPoint;
-                RemoteAddress = remoteAddress;
+                RemoteEndPoint = remoteEndPoint;
+#pragma warning disable 612
+#pragma warning disable 618
+                RemoteAddress = new Address(remoteEndPoint.Address.ToString(), remoteEndPoint.Port);
+#pragma warning restore 618
+#pragma warning restore 612
             }
 
             /// <inheritdoc />
             public IPEndPoint LocalEndPoint { get; }
 
             /// <inheritdoc />
+            [Obsolete]
             public Address RemoteAddress { get; }
+
+            /// <inheritdoc />
+            public IPEndPoint RemoteEndPoint { get; }
         }
 
         private class SecureConnectionFeature : ISecureConnectionFeature

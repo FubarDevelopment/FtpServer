@@ -18,6 +18,7 @@ namespace FubarDev.FtpServer
     /// <summary>
     /// Abstraction for an IP address.
     /// </summary>
+    [Obsolete("Use IPEndPoint instead")]
     public class Address
     {
         private readonly bool _isEnhanced;

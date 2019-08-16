@@ -52,6 +52,7 @@ namespace FubarDev.FtpServer.DataConnection
         /// <returns>The task returning the new FTP data connection feature.</returns>
         [NotNull]
         [ItemNotNull]
+        [Obsolete("Use the overload with IPEndPoint as address instead.")]
         public Task<IFtpDataConnectionFeature> CreateFeatureAsync(
             [CanBeNull] FtpCommand ftpCommand,
             [NotNull] Address portAddress,
@@ -70,10 +71,42 @@ namespace FubarDev.FtpServer.DataConnection
                 localEndPoint = new IPEndPoint(connectionFeature.LocalEndPoint.Address, 0);
             }
 
+            var address = portAddress.IPAddress ?? connectionFeature.RemoteEndPoint.Address;
+            var portEndPoint = new IPEndPoint(address, portAddress.Port);
             return Task.FromResult<IFtpDataConnectionFeature>(
                 new ActiveDataConnectionFeature(
                     localEndPoint,
-                    portAddress,
+                    portEndPoint,
+                    _validators,
+                    ftpCommand,
+                    connection));
+        }
+
+        /// <summary>
+        /// Creates a <see cref="IFtpDataConnectionFeature"/> implementation for an active FTP data connection.
+        /// </summary>
+        /// <param name="ftpCommand">The FTP command that initiated the creation of the feature.</param>
+        /// <param name="portEndPoint">The address the client wants the FTP server to connect to.</param>
+        /// <param name="dataPort">The source port the server should use to connect to the client.</param>
+        /// <returns>The task returning the new FTP data connection feature.</returns>
+        [NotNull]
+        [ItemNotNull]
+        public Task<IFtpDataConnectionFeature> CreateFeatureAsync(
+            [CanBeNull] FtpCommand ftpCommand,
+            [NotNull] IPEndPoint portEndPoint,
+            int? dataPort)
+        {
+            var connection = _connectionAccessor.FtpConnection;
+            var connectionFeature = connection.Features.Get<IConnectionFeature>();
+
+            var localEndPoint = dataPort != null
+                ? new IPEndPoint(connectionFeature.LocalEndPoint.Address, dataPort.Value)
+                : new IPEndPoint(connectionFeature.LocalEndPoint.Address, 0);
+
+            return Task.FromResult<IFtpDataConnectionFeature>(
+                new ActiveDataConnectionFeature(
+                    localEndPoint,
+                    portEndPoint,
                     _validators,
                     ftpCommand,
                     connection));
@@ -82,7 +115,7 @@ namespace FubarDev.FtpServer.DataConnection
         private class ActiveDataConnectionFeature : IFtpDataConnectionFeature
         {
             [NotNull]
-            private readonly Address _portAddress;
+            private readonly IPEndPoint _portAddress;
 
             [NotNull]
             [ItemNotNull]
@@ -93,7 +126,7 @@ namespace FubarDev.FtpServer.DataConnection
 
             public ActiveDataConnectionFeature(
                 [NotNull] IPEndPoint localEndPoint,
-                [NotNull] Address portAddress,
+                [NotNull] IPEndPoint portAddress,
                 [NotNull] [ItemNotNull] List<IFtpDataConnectionValidator> validators,
                 [CanBeNull] FtpCommand command,
                 [NotNull] IFtpConnection ftpConnection)
@@ -141,7 +174,7 @@ namespace FubarDev.FtpServer.DataConnection
                     try
                     {
                         tries += 1;
-                        var connectTask = client.ConnectAsync(_portAddress.IPAddress, _portAddress.Port);
+                        var connectTask = client.ConnectAsync(_portAddress.Address, _portAddress.Port);
                         var result = await Task.WhenAny(connectTask, Task.Delay(timeout, cancellationToken))
                            .ConfigureAwait(false);
 
