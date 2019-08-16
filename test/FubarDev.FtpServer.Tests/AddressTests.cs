@@ -9,6 +9,7 @@ using Xunit;
 
 namespace FubarDev.FtpServer.Tests
 {
+    [Obsolete]
     public class AddressTests
     {
         [Fact]
@@ -60,6 +61,16 @@ namespace FubarDev.FtpServer.Tests
         {
             public bool Equals(Address x, Address y)
             {
+                if (ReferenceEquals(x, y))
+                {
+                    return true;
+                }
+
+                if (x is null || y is null)
+                {
+                    return false;
+                }
+
                 if (x.AddressFamily == null)
                 {
                     if (y.AddressFamily != null)
