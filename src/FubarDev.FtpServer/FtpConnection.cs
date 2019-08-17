@@ -73,6 +73,22 @@ namespace FubarDev.FtpServer
 
         private readonly IPEndPoint _remoteEndPoint;
 
+        /// <summary>
+        /// Gets the stream reader service.
+        /// </summary>
+        /// <remarks>
+        /// It writes data from the network stream into a pipe.
+        /// </remarks>
+        private readonly IFtpService _streamReaderService;
+
+        /// <summary>
+        /// Gets the stream writer service.
+        /// </summary>
+        /// <remarks>
+        /// It reads data from the pipe and writes it to the network stream.
+        /// </remarks>
+        private readonly IFtpService _streamWriterService;
+
         private bool _connectionClosing;
 
         private int _connectionClosed;
@@ -149,19 +165,20 @@ namespace FubarDev.FtpServer
             var connectionPipe = new DuplexPipe(applicationOutputPipe.Reader, applicationInputPipe.Writer);
 
             var originalStream = socket.GetStream();
+            _streamReaderService = new ConnectionClosingNetworkStreamReader(
+                originalStream,
+                _socketCommandPipe.Writer,
+                _cancellationTokenSource);
+            _streamWriterService = new StreamPipeWriterService(
+                originalStream,
+                _socketResponsePipe.Reader,
+                _cancellationTokenSource.Token);
+
             _networkStreamFeature = new NetworkStreamFeature(
                 new SecureConnectionAdapter(
                     socketPipe,
                     connectionPipe,
                     sslStreamWrapperFactory,
-                    _cancellationTokenSource.Token),
-                new ConnectionClosingNetworkStreamReader(
-                    originalStream,
-                    _socketCommandPipe.Writer,
-                    _cancellationTokenSource),
-                new StreamPipeWriterService(
-                    originalStream,
-                    _socketResponsePipe.Reader,
                     _cancellationTokenSource.Token),
                 applicationOutputPipe.Writer);
 
@@ -266,9 +283,9 @@ namespace FubarDev.FtpServer
             var connectionFeature = Features.Get<IConnectionFeature>();
             _logger?.LogInformation($"Connected from {connectionFeature.RemoteEndPoint}");
 
-            await _networkStreamFeature.StreamWriterService.StartAsync(CancellationToken.None)
+            await _streamWriterService.StartAsync(CancellationToken.None)
                .ConfigureAwait(false);
-            await _networkStreamFeature.StreamReaderService.StartAsync(CancellationToken.None)
+            await _streamReaderService.StartAsync(CancellationToken.None)
                .ConfigureAwait(false);
             await _networkStreamFeature.SecureConnectionAdapter.StartAsync(CancellationToken.None)
                .ConfigureAwait(false);
@@ -305,9 +322,9 @@ namespace FubarDev.FtpServer
                 await _serverCommandHandler.ConfigureAwait(false);
             }
 
-            await _networkStreamFeature.StreamReaderService.StopAsync(CancellationToken.None)
+            await _streamReaderService.StopAsync(CancellationToken.None)
                .ConfigureAwait(false);
-            await _networkStreamFeature.StreamWriterService.StopAsync(CancellationToken.None)
+            await _streamWriterService.StopAsync(CancellationToken.None)
                .ConfigureAwait(false);
             await _networkStreamFeature.SecureConnectionAdapter.StopAsync(CancellationToken.None)
                .ConfigureAwait(false);
