@@ -11,7 +11,7 @@ namespace FubarDev.FtpServer.AccountManagement
     /// </summary>
     public class MemberValidationResult
     {
-        private readonly IFtpUser _user;
+        private readonly IFtpUser? _user;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MemberValidationResult"/> class.
@@ -46,8 +46,7 @@ namespace FubarDev.FtpServer.AccountManagement
         /// <summary>
         /// Gets the status of the validation.
         /// </summary>
-        public MemberValidationStatus Status
-        { get; }
+        public MemberValidationStatus Status { get; }
 
         /// <summary>
         /// Gets a value indicating whether the user login succeeded.
@@ -66,7 +65,7 @@ namespace FubarDev.FtpServer.AccountManagement
                     throw new InvalidOperationException("User is only available when the authentication was successful.");
                 }
 
-                return _user;
+                return _user!;
             }
         }
     }

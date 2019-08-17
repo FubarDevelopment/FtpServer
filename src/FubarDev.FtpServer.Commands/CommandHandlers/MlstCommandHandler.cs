@@ -18,8 +18,6 @@ using FubarDev.FtpServer.ListFormatters;
 using FubarDev.FtpServer.ServerCommands;
 using FubarDev.FtpServer.Utilities;
 
-using JetBrains.Annotations;
-
 using Microsoft.Extensions.Logging;
 
 namespace FubarDev.FtpServer.CommandHandlers
@@ -37,15 +35,14 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// </summary>
         internal static readonly ISet<string> KnownFacts = new HashSet<string> { "type", "size", "perm", "modify", "create" };
 
-        [CanBeNull]
-        private readonly ILogger<MlstCommandHandler> _logger;
+        private readonly ILogger<MlstCommandHandler>? _logger;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MlstCommandHandler"/> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
         public MlstCommandHandler(
-            [CanBeNull] ILogger<MlstCommandHandler> logger = null)
+            ILogger<MlstCommandHandler>? logger = null)
         {
             _logger = logger;
         }
@@ -55,7 +52,7 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// </summary>
         /// <param name="connection">The connection.</param>
         /// <returns>The feature string.</returns>
-        public static string FeatureStatus([NotNull] IFtpConnection connection)
+        public static string FeatureStatus(IFtpConnection connection)
         {
             var factsFeature = connection.Features.Get<IMlstFactsFeature>() ?? CreateMlstFactsFeature();
             var result = new StringBuilder();
@@ -69,7 +66,7 @@ namespace FubarDev.FtpServer.CommandHandlers
         }
 
         /// <inheritdoc/>
-        public override Task<IFtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
+        public override Task<IFtpResponse?> Process(FtpCommand command, CancellationToken cancellationToken)
         {
             var listDir = string.Equals(command.Name, "MLSD", StringComparison.OrdinalIgnoreCase);
             if (listDir)
@@ -91,7 +88,7 @@ namespace FubarDev.FtpServer.CommandHandlers
             return factsFeature;
         }
 
-        private async Task<IFtpResponse> ProcessMlstAsync(FtpCommand command, CancellationToken cancellationToken)
+        private async Task<IFtpResponse?> ProcessMlstAsync(FtpCommand command, CancellationToken cancellationToken)
         {
             var argument = command.Argument;
             var fsFeature = Connection.Features.Get<IFileSystemFeature>();
@@ -114,17 +111,22 @@ namespace FubarDev.FtpServer.CommandHandlers
             }
 
             var authInfoFeature = Connection.Features.Get<IAuthorizationInformationFeature>();
+            var authUser = authInfoFeature.User;
+            if (authUser == null)
+            {
+                return new FtpResponse(530, T("Not logged in."));
+            }
 
             var factsFeature = Connection.Features.Get<IMlstFactsFeature>() ?? CreateMlstFactsFeature();
-            return new MlstFtpResponse(factsFeature.ActiveMlstFacts, authInfoFeature.User, fsFeature.FileSystem, targetEntry, path);
+            return new MlstFtpResponse(factsFeature.ActiveMlstFacts, authUser, fsFeature.FileSystem, targetEntry, path);
         }
 
-        private async Task<IFtpResponse> ProcessMlsdAsync(FtpCommand command, CancellationToken cancellationToken)
+        private async Task<IFtpResponse?> ProcessMlsdAsync(FtpCommand command, CancellationToken cancellationToken)
         {
             var argument = command.Argument;
             var fsFeature = Connection.Features.Get<IFileSystemFeature>();
             var path = fsFeature.Path.Clone();
-            IUnixDirectoryEntry dirEntry;
+            IUnixDirectoryEntry? dirEntry;
 
             if (string.IsNullOrEmpty(argument))
             {
@@ -157,15 +159,21 @@ namespace FubarDev.FtpServer.CommandHandlers
                .ConfigureAwait(false);
 
             var authInfoFeature = Connection.Features.Get<IAuthorizationInformationFeature>();
+            var authUser = authInfoFeature.User;
+            if (authUser == null)
+            {
+                return new FtpResponse(530, T("Not logged in."));
+            }
+
             var factsFeature = Connection.Features.Get<IMlstFactsFeature>() ?? CreateMlstFactsFeature();
             return await Connection.SendDataAsync(
-                    (dataConnection, ct) => ExecuteSendAsync(dataConnection, authInfoFeature.User, fsFeature.FileSystem, path, dirEntry, factsFeature, ct),
+                    (dataConnection, ct) => ExecuteSendAsync(dataConnection, authUser, fsFeature.FileSystem, path, dirEntry, factsFeature, ct),
                     _logger,
                     cancellationToken)
                 .ConfigureAwait(false);
         }
 
-        private async Task<IFtpResponse> ExecuteSendAsync(
+        private async Task<IFtpResponse?> ExecuteSendAsync(
             IFtpDataConnection dataConnection,
             IFtpUser user,
             IUnixFileSystem fileSystem,
@@ -238,8 +246,13 @@ namespace FubarDev.FtpServer.CommandHandlers
             }
 
             /// <inheritdoc />
-            protected override Task<string> GetNextLineAsync(Tuple<DirectoryListingEnumerator, FactsListFormatter> status, CancellationToken cancellationToken)
+            protected override Task<string?> GetNextLineAsync(Tuple<DirectoryListingEnumerator, FactsListFormatter> status, CancellationToken cancellationToken)
             {
+                if (status == null)
+                {
+                    return Task.FromResult<string?>(null);
+                }
+
                 var enumerator = status.Item1;
                 var formatter = status.Item2;
 
@@ -247,10 +260,10 @@ namespace FubarDev.FtpServer.CommandHandlers
                 {
                     var name = enumerator.Name;
                     var entry = enumerator.Entry;
-                    return Task.FromResult(formatter.Format(entry, name));
+                    return Task.FromResult<string?>(formatter.Format(entry, name));
                 }
 
-                return Task.FromResult<string>(null);
+                return Task.FromResult<string?>(null);
             }
         }
     }

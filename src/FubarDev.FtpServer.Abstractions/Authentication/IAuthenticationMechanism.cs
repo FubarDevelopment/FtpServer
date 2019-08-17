@@ -5,8 +5,6 @@
 using System.Threading;
 using System.Threading.Tasks;
 
-using JetBrains.Annotations;
-
 namespace FubarDev.FtpServer.Authentication
 {
     /// <summary>
@@ -24,7 +22,7 @@ namespace FubarDev.FtpServer.Authentication
         /// </summary>
         /// <param name="methodIdentifier">The method identifier.</param>
         /// <returns><see langword="true"/> when the given <paramref name="methodIdentifier"/> is supported by this implementor.</returns>
-        bool CanHandle([NotNull] string methodIdentifier);
+        bool CanHandle(string methodIdentifier);
 
         /// <summary>
         /// Processes the <c>AUTH</c> command.
@@ -36,9 +34,7 @@ namespace FubarDev.FtpServer.Authentication
         /// <param name="methodIdentifier">The method identifier.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>The response to return.</returns>
-        [NotNull]
-        [ItemNotNull]
-        Task<IFtpResponse> HandleAuthAsync([NotNull] string methodIdentifier, CancellationToken cancellationToken);
+        Task<IFtpResponse> HandleAuthAsync(string methodIdentifier, CancellationToken cancellationToken);
 
         /// <summary>
         /// Processes the <c>ADAT</c> command.
@@ -46,9 +42,7 @@ namespace FubarDev.FtpServer.Authentication
         /// <param name="data">The data passed to the ADAT command.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>The response to return.</returns>
-        [NotNull]
-        [ItemNotNull]
-        Task<IFtpResponse> HandleAdatAsync([NotNull] byte[] data, CancellationToken cancellationToken);
+        Task<IFtpResponse> HandleAdatAsync(byte[] data, CancellationToken cancellationToken);
 
         /// <summary>
         /// Processes the <c>PBSZ</c> command.
@@ -56,8 +50,6 @@ namespace FubarDev.FtpServer.Authentication
         /// <param name="size">The protected buffer size passed to the PBSZ command.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>The response to return.</returns>
-        [NotNull]
-        [ItemNotNull]
         Task<IFtpResponse> HandlePbszAsync(long size, CancellationToken cancellationToken);
 
         /// <summary>
@@ -66,8 +58,6 @@ namespace FubarDev.FtpServer.Authentication
         /// <param name="protCode">The code passed to the PROT command.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>The response to return.</returns>
-        [NotNull]
-        [ItemNotNull]
-        Task<IFtpResponse> HandleProtAsync([NotNull] string protCode, CancellationToken cancellationToken);
+        Task<IFtpResponse> HandleProtAsync(string protCode, CancellationToken cancellationToken);
     }
 }

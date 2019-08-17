@@ -4,8 +4,6 @@
 
 using FubarDev.FtpServer.AccountManagement;
 
-using JetBrains.Annotations;
-
 using Mono.Unix;
 
 namespace FubarDev.FtpServer.FileSystem.Unix
@@ -13,10 +11,10 @@ namespace FubarDev.FtpServer.FileSystem.Unix
     internal class UnixDirectoryEntry : UnixFileSystemEntry, IUnixDirectoryEntry
     {
         public UnixDirectoryEntry(
-            [NotNull] UnixDirectoryInfo info,
-            [NotNull] IFtpUser user,
-            [CanBeNull] UnixUserInfo userInfo,
-            IUnixDirectoryEntry parent = null)
+            UnixDirectoryInfo info,
+            IFtpUser user,
+            UnixUserInfo? userInfo,
+            IUnixDirectoryEntry? parent = null)
             : base(info)
         {
             IsRoot = parent == null;
@@ -45,7 +43,6 @@ namespace FubarDev.FtpServer.FileSystem.Unix
         /// <summary>
         /// Gets the unix directory info.
         /// </summary>
-        [NotNull]
         public UnixDirectoryInfo Info { get; }
 
         /// <inheritdoc />

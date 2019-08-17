@@ -6,8 +6,6 @@ using System.Threading.Tasks;
 
 using FubarDev.FtpServer.AccountManagement;
 
-using JetBrains.Annotations;
-
 namespace TestFtpServer
 {
     /// <summary>
@@ -38,7 +36,7 @@ namespace TestFtpServer
             /// Initializes a new instance of the <see cref="CustomFtpUser"/> instance.
             /// </summary>
             /// <param name="name">The user name</param>
-            public CustomFtpUser([NotNull] string name)
+            public CustomFtpUser(string name)
             {
                 Name = name;
             }

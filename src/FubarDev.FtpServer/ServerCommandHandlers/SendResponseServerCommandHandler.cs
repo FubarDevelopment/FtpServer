@@ -9,8 +9,6 @@ using System.Threading.Tasks;
 using FubarDev.FtpServer.Features;
 using FubarDev.FtpServer.ServerCommands;
 
-using JetBrains.Annotations;
-
 using Microsoft.Extensions.Logging;
 
 namespace FubarDev.FtpServer.ServerCommandHandlers
@@ -20,11 +18,9 @@ namespace FubarDev.FtpServer.ServerCommandHandlers
     /// </summary>
     public class SendResponseServerCommandHandler : IServerCommandHandler<SendResponseServerCommand>
     {
-        [NotNull]
         private readonly IFtpConnectionAccessor _connectionAccessor;
 
-        [CanBeNull]
-        private readonly ILogger<SendResponseServerCommandHandler> _logger;
+        private readonly ILogger<SendResponseServerCommandHandler>? _logger;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SendResponseServerCommandHandler"/> class.
@@ -32,8 +28,8 @@ namespace FubarDev.FtpServer.ServerCommandHandlers
         /// <param name="connectionAccessor">The FTP connection accessor.</param>
         /// <param name="logger">The logger.</param>
         public SendResponseServerCommandHandler(
-            [NotNull] IFtpConnectionAccessor connectionAccessor,
-            [CanBeNull] ILogger<SendResponseServerCommandHandler> logger = null)
+            IFtpConnectionAccessor connectionAccessor,
+            ILogger<SendResponseServerCommandHandler>? logger = null)
         {
             _connectionAccessor = connectionAccessor;
             _logger = logger;
@@ -55,7 +51,7 @@ namespace FubarDev.FtpServer.ServerCommandHandlers
 
             var writer = networkStreamFeature.Output;
 
-            object token = null;
+            object? token = null;
             do
             {
                 var line = await response.GetNextLineAsync(token, cancellationToken)

@@ -14,8 +14,6 @@ using System.Threading.Tasks;
 
 using FubarDev.FtpServer.Features;
 
-using JetBrains.Annotations;
-
 using Microsoft.Extensions.Logging;
 
 namespace FubarDev.FtpServer.DataConnection
@@ -25,17 +23,9 @@ namespace FubarDev.FtpServer.DataConnection
     /// </summary>
     public class PassiveDataConnectionFeatureFactory
     {
-        [NotNull]
         private readonly IPasvListenerFactory _pasvListenerFactory;
-
-        [NotNull]
         private readonly IFtpConnectionAccessor _connectionAccessor;
-
-        [CanBeNull]
-        private readonly ILogger<PassiveDataConnectionFeatureFactory> _logger;
-
-        [NotNull]
-        [ItemNotNull]
+        private readonly ILogger<PassiveDataConnectionFeatureFactory>? _logger;
         private readonly List<IFtpDataConnectionValidator> _validators;
 
         /// <summary>
@@ -46,10 +36,10 @@ namespace FubarDev.FtpServer.DataConnection
         /// <param name="validators">An enumeration of FTP connection validators.</param>
         /// <param name="logger">The logger.</param>
         public PassiveDataConnectionFeatureFactory(
-            [NotNull] IPasvListenerFactory pasvListenerFactory,
-            [NotNull] IFtpConnectionAccessor connectionAccessor,
-            [NotNull] [ItemNotNull] IEnumerable<IFtpDataConnectionValidator> validators,
-            [CanBeNull] ILogger<PassiveDataConnectionFeatureFactory> logger = null)
+            IPasvListenerFactory pasvListenerFactory,
+            IFtpConnectionAccessor connectionAccessor,
+            IEnumerable<IFtpDataConnectionValidator> validators,
+            ILogger<PassiveDataConnectionFeatureFactory>? logger = null)
         {
             _pasvListenerFactory = pasvListenerFactory;
             _connectionAccessor = connectionAccessor;
@@ -64,10 +54,8 @@ namespace FubarDev.FtpServer.DataConnection
         /// <param name="addressFamily">The address family for the address to be selected.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>The task returning the <see cref="IFtpDataConnectionFeature"/> instance.</returns>
-        [NotNull]
-        [ItemNotNull]
         public async Task<IFtpDataConnectionFeature> CreateFeatureAsync(
-            [NotNull] FtpCommand ftpCommand,
+            FtpCommand ftpCommand,
             AddressFamily? addressFamily,
             CancellationToken cancellationToken)
         {
@@ -88,26 +76,19 @@ namespace FubarDev.FtpServer.DataConnection
 
         private class PassiveDataConnectionFeature : IFtpDataConnectionFeature
         {
-            [NotNull]
             private readonly IPasvListener _listener;
-
-            [NotNull]
-            [ItemNotNull]
             private readonly List<IFtpDataConnectionValidator> _validators;
-
-            [NotNull]
             private readonly IFtpConnection _ftpConnection;
 
-            [CanBeNull]
-            private readonly ILogger _logger;
+            private readonly ILogger? _logger;
 
             public PassiveDataConnectionFeature(
-                [NotNull] IPasvListener listener,
-                [NotNull] [ItemNotNull] List<IFtpDataConnectionValidator> validators,
-                [NotNull] FtpCommand command,
-                [NotNull] IFtpConnection ftpConnection,
-                [NotNull] IPEndPoint localEndPoint,
-                [CanBeNull] ILogger logger)
+                IPasvListener listener,
+                List<IFtpDataConnectionValidator> validators,
+                FtpCommand? command,
+                IFtpConnection ftpConnection,
+                IPEndPoint localEndPoint,
+                ILogger? logger)
             {
                 _listener = listener;
                 _validators = validators;
@@ -118,7 +99,7 @@ namespace FubarDev.FtpServer.DataConnection
             }
 
             /// <inheritdoc />
-            public FtpCommand Command { get; }
+            public FtpCommand? Command { get; }
 
             /// <inheritdoc />
             public IPEndPoint LocalEndPoint { get; }
@@ -175,13 +156,12 @@ namespace FubarDev.FtpServer.DataConnection
 
             private class PassiveDataConnection : IFtpDataConnection
             {
-                [NotNull]
                 private readonly TcpClient _client;
 
                 private bool _closed;
 
                 public PassiveDataConnection(
-                    [NotNull] TcpClient client)
+                    TcpClient client)
                 {
                     _client = client;
                     Stream = _client.GetStream();

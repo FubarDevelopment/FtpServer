@@ -8,8 +8,6 @@ using System.Threading.Tasks;
 using FubarDev.FtpServer.AccountManagement;
 using FubarDev.FtpServer.Features;
 
-using JetBrains.Annotations;
-
 namespace FubarDev.FtpServer.Authorization.Actions
 {
     /// <summary>
@@ -17,7 +15,6 @@ namespace FubarDev.FtpServer.Authorization.Actions
     /// </summary>
     public class FillConnectionAccountDataAction : IAuthorizationAction
     {
-        [NotNull]
         private readonly IFtpConnectionAccessor _ftpConnectionAccessor;
 
         /// <summary>
@@ -25,7 +22,7 @@ namespace FubarDev.FtpServer.Authorization.Actions
         /// </summary>
         /// <param name="ftpConnectionAccessor">The FTP connection accessor.</param>
         public FillConnectionAccountDataAction(
-            [NotNull] IFtpConnectionAccessor ftpConnectionAccessor)
+            IFtpConnectionAccessor ftpConnectionAccessor)
         {
             _ftpConnectionAccessor = ftpConnectionAccessor;
         }

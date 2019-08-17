@@ -8,8 +8,6 @@ using FubarDev.FtpServer.AccountManagement;
 using FubarDev.FtpServer.FileSystem;
 using FubarDev.FtpServer.FileSystem.Generic;
 
-using JetBrains.Annotations;
-
 namespace FubarDev.FtpServer
 {
     /// <summary>
@@ -24,8 +22,7 @@ namespace FubarDev.FtpServer
         /// <param name="entity">The entity owner information.</param>
         /// <param name="user">The FTP user to determine the access mode for.</param>
         /// <returns>The effective access mode for the <paramref name="user"/>.</returns>
-        [NotNull]
-        public static IAccessMode GetAccessModeFor([NotNull] this IUnixPermissions permissions, [NotNull] IUnixOwner entity, [NotNull] IFtpUser user)
+        public static IAccessMode GetAccessModeFor(this IUnixPermissions permissions, IUnixOwner entity, IFtpUser user)
         {
             var isUser = string.Equals(entity.GetOwner(), user.Name, StringComparison.OrdinalIgnoreCase);
             var group = entity.GetGroup();
@@ -42,8 +39,7 @@ namespace FubarDev.FtpServer
             return new GenericAccessMode(canRead, canWrite, canExecute);
         }
 
-        [CanBeNull]
-        private static string GetOwner([NotNull] this IUnixOwner entity)
+        private static string? GetOwner(this IUnixOwner entity)
         {
             try
             {
@@ -55,8 +51,7 @@ namespace FubarDev.FtpServer
             }
         }
 
-        [CanBeNull]
-        private static string GetGroup([NotNull] this IUnixOwner entity)
+        private static string? GetGroup(this IUnixOwner entity)
         {
             try
             {

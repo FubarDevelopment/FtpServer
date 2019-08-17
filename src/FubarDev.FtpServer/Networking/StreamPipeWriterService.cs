@@ -9,8 +9,6 @@ using System.IO.Pipelines;
 using System.Threading;
 using System.Threading.Tasks;
 
-using JetBrains.Annotations;
-
 using Microsoft.Extensions.Logging;
 
 namespace FubarDev.FtpServer.Networking
@@ -20,11 +18,9 @@ namespace FubarDev.FtpServer.Networking
     /// </summary>
     internal class StreamPipeWriterService : PausableFtpService
     {
-        [NotNull]
         private readonly PipeReader _pipeReader;
 
-        [CanBeNull]
-        private Exception _exception;
+        private Exception? _exception;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="StreamPipeWriterService"/> class.
@@ -34,17 +30,15 @@ namespace FubarDev.FtpServer.Networking
         /// <param name="connectionClosed">Cancellation token for a closed connection.</param>
         /// <param name="logger">The logger.</param>
         public StreamPipeWriterService(
-            [NotNull] Stream stream,
-            [NotNull] PipeReader pipeReader,
+            Stream stream,
+            PipeReader pipeReader,
             CancellationToken connectionClosed,
-            [CanBeNull] ILogger logger = null)
+            ILogger? logger = null)
             : base(connectionClosed, logger)
         {
             Stream = stream;
             _pipeReader = pipeReader;
         }
-
-        [NotNull]
         protected Stream Stream { get; }
 
         /// <inheritdoc />
@@ -111,7 +105,7 @@ namespace FubarDev.FtpServer.Networking
         /// <param name="exception">The exception that occurred during the operation.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>The task.</returns>
-        protected virtual Task OnCloseAsync(Exception exception, CancellationToken cancellationToken)
+        protected virtual Task OnCloseAsync(Exception? exception, CancellationToken cancellationToken)
         {
             // Tell the PipeReader that there's no more data coming
             _pipeReader.Complete(exception);
@@ -131,11 +125,9 @@ namespace FubarDev.FtpServer.Networking
         {
             return Stream.WriteAsync(buffer, offset, length, cancellationToken);
         }
-
-        [NotNull]
         private async Task FlushAsync(
-            [NotNull] Stream stream,
-            [NotNull] PipeReader reader,
+            Stream stream,
+            PipeReader reader,
             CancellationToken cancellationToken)
         {
             Logger?.LogTrace("Flushing");
@@ -153,11 +145,9 @@ namespace FubarDev.FtpServer.Networking
 
             Logger?.LogTrace("Flushed");
         }
-
-        [NotNull]
         private async Task SendDataToStream(
             ReadOnlySequence<byte> buffer,
-            [NotNull] Stream stream,
+            Stream stream,
             CancellationToken cancellationToken)
         {
             Logger?.LogTrace("Start sending");

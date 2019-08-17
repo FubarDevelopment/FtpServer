@@ -9,8 +9,6 @@ using System;
 using System.IO;
 using System.Threading.Tasks;
 
-using JetBrains.Annotations;
-
 namespace FubarDev.FtpServer.BackgroundTransfer
 {
     /// <summary>
@@ -30,8 +28,6 @@ namespace FubarDev.FtpServer.BackgroundTransfer
         /// Opens the temporary data and returns a stream.
         /// </summary>
         /// <returns>The stream containig the temporary data.</returns>
-        [NotNull]
-        [ItemNotNull]
         Task<Stream> OpenAsync();
     }
 }

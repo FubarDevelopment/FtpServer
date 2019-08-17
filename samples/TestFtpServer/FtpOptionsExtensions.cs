@@ -7,8 +7,6 @@ using System.IO;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 
-using JetBrains.Annotations;
-
 using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.OpenSsl;
 using Org.BouncyCastle.Pkcs;
@@ -27,7 +25,7 @@ namespace TestFtpServer
         /// Validates the current configuration.
         /// </summary>
         /// <param name="options">The FTP options.</param>
-        public static void Validate([NotNull] this FtpOptions options)
+        public static void Validate(this FtpOptions options)
         {
             if (options.Ftps.Implicit && !string.IsNullOrEmpty(options.Ftps.Certificate))
             {
@@ -36,10 +34,12 @@ namespace TestFtpServer
 
             if (!string.IsNullOrEmpty(options.Ftps.Certificate))
             {
-                var cert = new X509Certificate2(options.Ftps.Certificate, options.Ftps.Password);
-                if (!cert.HasPrivateKey && string.IsNullOrEmpty(options.Ftps.PrivateKey))
+                using (var cert = new X509Certificate2(options.Ftps.Certificate, options.Ftps.Password))
                 {
-                    throw new Exception("Certificate requires private key.");
+                    if (!cert.HasPrivateKey && string.IsNullOrEmpty(options.Ftps.PrivateKey))
+                    {
+                        throw new Exception("Certificate requires private key.");
+                    }
                 }
             }
         }
@@ -49,7 +49,7 @@ namespace TestFtpServer
         /// </summary>
         /// <param name="options">The FTP options.</param>
         /// <returns>The FTP server port.</returns>
-        public static int GetServerPort([NotNull] this FtpOptions options)
+        public static int GetServerPort(this FtpOptions options)
         {
             return options.Server.Port ?? (options.Ftps.Implicit ? 990 : 21);
         }
@@ -59,14 +59,14 @@ namespace TestFtpServer
         /// </summary>
         /// <param name="options">The FTP options.</param>
         /// <returns>The port range.</returns>
-        public static (int from, int to)? GetPasvPortRange([NotNull] this FtpOptions options)
+        public static (int from, int to)? GetPasvPortRange(this FtpOptions options)
         {
             if (string.IsNullOrWhiteSpace(options.Server.Pasv.Range))
             {
                 return null;
             }
 
-            var portRange = options.Server.Pasv.Range.Split(new[] { ':' }, StringSplitOptions.RemoveEmptyEntries);
+            var portRange = options.Server.Pasv.Range!.Split(new[] { ':' }, StringSplitOptions.RemoveEmptyEntries);
 
             if (portRange.Length != 2)
             {
@@ -88,8 +88,7 @@ namespace TestFtpServer
         /// </summary>
         /// <param name="options">The options used to load the certificate.</param>
         /// <returns>The certificate.</returns>
-        [CanBeNull]
-        public static X509Certificate2 GetCertificate([NotNull] this FtpOptions options)
+        public static X509Certificate2? GetCertificate(this FtpOptions options)
         {
             if (string.IsNullOrEmpty(options.Ftps.Certificate))
             {
@@ -102,11 +101,13 @@ namespace TestFtpServer
                 return cert;
             }
 
+            cert.Dispose();
+
             var certCollection = new X509Certificate2Collection();
             certCollection.Import(options.Ftps.Certificate, options.Ftps.Password, X509KeyStorageFlags.Exportable);
 
             var passwordFinder = string.IsNullOrEmpty(options.Ftps.Password)
-                ? (IPasswordFinder)null
+                ? (IPasswordFinder?)null
                 : new BcStaticPassword(options.Ftps.Password);
 
             AsymmetricKeyParameter keyParameter;
@@ -139,10 +140,9 @@ namespace TestFtpServer
 
         private class BcStaticPassword : IPasswordFinder
         {
-            [NotNull]
             private readonly string _password;
 
-            public BcStaticPassword([CanBeNull] string password)
+            public BcStaticPassword(string? password)
             {
                 _password = password ?? string.Empty;
             }

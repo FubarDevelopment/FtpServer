@@ -6,8 +6,6 @@ using System.Collections.Generic;
 
 using FubarDev.FtpServer.FileSystem;
 
-using JetBrains.Annotations;
-
 namespace FubarDev.FtpServer.Localization
 {
     /// <summary>
@@ -23,8 +21,6 @@ namespace FubarDev.FtpServer.Localization
         /// Gets the FTP servers banner message.
         /// </summary>
         /// <returns>the FTP servers banner message.</returns>
-        [NotNull]
-        [ItemNotNull]
         IEnumerable<string> GetBannerMessage();
 
         /// <summary>
@@ -32,19 +28,15 @@ namespace FubarDev.FtpServer.Localization
         /// </summary>
         /// <param name="path">The path the message needs to be created for.</param>
         /// <returns>the FTP servers message.</returns>
-        [NotNull]
-        [ItemNotNull]
         IEnumerable<string> GetDirectoryChangedMessage(
-            [NotNull, ItemNotNull] Stack<IUnixDirectoryEntry> path);
+            Stack<IUnixDirectoryEntry> path);
 
         /// <summary>
         /// Gets the message that the password authorization was successfully.
         /// </summary>
         /// <param name="accountInformation">The account information.</param>
         /// <returns>the FTP servers message.</returns>
-        [NotNull]
-        [ItemNotNull]
         IEnumerable<string> GetPasswordAuthorizationSuccessfulMessage(
-            [NotNull] IAccountInformation accountInformation);
+            IAccountInformation accountInformation);
     }
 }

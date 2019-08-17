@@ -7,8 +7,6 @@ using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
 
-using JetBrains.Annotations;
-
 namespace FubarDev.FtpServer
 {
     internal static class PathExtensions
@@ -16,8 +14,7 @@ namespace FubarDev.FtpServer
         private static readonly string _directorySeparatorPattern =
             $"[{Regex.Escape($"{Path.DirectorySeparatorChar}{Path.AltDirectorySeparatorChar}")}]";
 
-        [CanBeNull]
-        public static string RemoveRoot([CanBeNull] this string path)
+        public static string? RemoveRoot(this string path)
         {
             if (string.IsNullOrEmpty(path))
             {
@@ -81,13 +78,13 @@ namespace FubarDev.FtpServer
             return relativePath;
         }
 
-        private static bool EndsWithDirectorySeparator([NotNull] this string path)
+        private static bool EndsWithDirectorySeparator(this string path)
         {
             return path.EndsWith(Path.DirectorySeparatorChar.ToString())
                 || path.EndsWith(Path.AltDirectorySeparatorChar.ToString());
         }
 
-        private static bool StartsWithDirectorySeparator([NotNull] this string path)
+        private static bool StartsWithDirectorySeparator(this string path)
         {
             return path.StartsWith(Path.DirectorySeparatorChar.ToString())
                 || path.StartsWith(Path.AltDirectorySeparatorChar.ToString());

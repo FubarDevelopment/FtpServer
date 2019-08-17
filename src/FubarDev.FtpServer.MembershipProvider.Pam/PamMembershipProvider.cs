@@ -9,8 +9,6 @@ using FubarDev.FtpServer.AccountManagement;
 using FubarDev.PamSharp;
 using FubarDev.PamSharp.MessageHandlers;
 
-using JetBrains.Annotations;
-
 using Microsoft.Extensions.Options;
 
 using Mono.Unix;
@@ -22,13 +20,8 @@ namespace FubarDev.FtpServer.MembershipProvider.Pam
     /// </summary>
     public class PamMembershipProvider : IMembershipProvider
     {
-        [NotNull]
         private readonly IFtpConnectionAccessor _connectionAccessor;
-
-        [NotNull]
         private readonly IPamService _pamService;
-
-        [NotNull]
         private readonly PamMembershipProviderOptions _options;
 
         /// <summary>
@@ -38,9 +31,9 @@ namespace FubarDev.FtpServer.MembershipProvider.Pam
         /// <param name="pamService">The PAM service.</param>
         /// <param name="options">The options for this membership provider.</param>
         public PamMembershipProvider(
-            [NotNull] IFtpConnectionAccessor connectionAccessor,
-            [NotNull] IPamService pamService,
-            [NotNull] IOptions<PamMembershipProviderOptions> options)
+            IFtpConnectionAccessor connectionAccessor,
+            IPamService pamService,
+            IOptions<PamMembershipProviderOptions> options)
         {
             _connectionAccessor = connectionAccessor;
             _pamService = pamService;

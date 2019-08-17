@@ -2,6 +2,7 @@
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
+using System;
 using System.Threading;
 
 namespace FubarDev.FtpServer
@@ -18,7 +19,7 @@ namespace FubarDev.FtpServer
         {
             get
             {
-                return _ftpConnectionCurrent.Value?.Connection;
+                return _ftpConnectionCurrent.Value?.Connection ?? throw new InvalidOperationException("No active connection");
             }
             set
             {
@@ -43,7 +44,7 @@ namespace FubarDev.FtpServer
 
         private class FtpConnectionHolder
         {
-            public IFtpConnection Connection { get; set; }
+            public IFtpConnection? Connection { get; set; }
         }
     }
 }

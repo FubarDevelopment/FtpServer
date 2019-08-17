@@ -6,8 +6,6 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-using JetBrains.Annotations;
-
 namespace FubarDev.FtpServer
 {
     /// <summary>
@@ -16,10 +14,8 @@ namespace FubarDev.FtpServer
     /// <param name="connection">The FTP connection.</param>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>The task.</returns>
-    [NotNull]
-    [ItemCanBeNull]
     [Obsolete("Use a custom server command.")]
-    public delegate Task<IFtpResponse> FtpResponseAfterWriteAsyncDelegate(
-        [NotNull] IFtpConnection connection,
+    public delegate Task<IFtpResponse?> FtpResponseAfterWriteAsyncDelegate(
+        IFtpConnection connection,
         CancellationToken cancellationToken);
 }

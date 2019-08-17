@@ -8,8 +8,6 @@ using FubarDev.FtpServer.FileSystem.Generic;
 
 using Google.Apis.Drive.v3.Data;
 
-using JetBrains.Annotations;
-
 namespace FubarDev.FtpServer.FileSystem.GoogleDrive
 {
    /// <summary>
@@ -23,7 +21,7 @@ namespace FubarDev.FtpServer.FileSystem.GoogleDrive
         /// <param name="file">The directory this entry belongs to.</param>
         /// <param name="fullPath">The full path.</param>
         /// <param name="isRoot">Determines whether this a root directory.</param>
-        public GoogleDriveDirectoryEntry([NotNull] File file, [NotNull] string fullPath, bool isRoot = false)
+        public GoogleDriveDirectoryEntry(File file, string fullPath, bool isRoot = false)
         {
             File = file;
             Permissions = new GenericUnixPermissions(

@@ -7,8 +7,6 @@ using System.Threading.Tasks;
 
 using FubarDev.FtpServer.BackgroundTransfer;
 
-using JetBrains.Annotations;
-
 using Microsoft.Extensions.Options;
 
 namespace FubarDev.FtpServer.FileSystem.GoogleDrive
@@ -18,13 +16,8 @@ namespace FubarDev.FtpServer.FileSystem.GoogleDrive
     /// </summary>
     public class GoogleDriveFileSystemProvider : IFileSystemClassFactory
     {
-        [NotNull]
         private readonly IGoogleDriveServiceProvider _serviceProvider;
-
-        [NotNull]
         private readonly ITemporaryDataFactory _temporaryDataFactory;
-
-        [NotNull]
         private readonly GoogleDriveOptions _options;
 
         /// <summary>
@@ -34,9 +27,9 @@ namespace FubarDev.FtpServer.FileSystem.GoogleDrive
         /// <param name="temporaryDataFactory">The factory to create temporary data objects.</param>
         /// <param name="options">Options for the Google Drive file system.</param>
         public GoogleDriveFileSystemProvider(
-            [NotNull] IGoogleDriveServiceProvider serviceProvider,
-            [NotNull] ITemporaryDataFactory temporaryDataFactory,
-            [NotNull] IOptions<GoogleDriveOptions> options)
+            IGoogleDriveServiceProvider serviceProvider,
+            ITemporaryDataFactory temporaryDataFactory,
+            IOptions<GoogleDriveOptions> options)
         {
             _serviceProvider = serviceProvider;
             _temporaryDataFactory = temporaryDataFactory;

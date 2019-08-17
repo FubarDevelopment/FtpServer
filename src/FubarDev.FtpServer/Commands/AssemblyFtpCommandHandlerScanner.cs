@@ -6,8 +6,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-using JetBrains.Annotations;
-
 namespace FubarDev.FtpServer.Commands
 {
     /// <summary>
@@ -15,15 +13,13 @@ namespace FubarDev.FtpServer.Commands
     /// </summary>
     public class AssemblyFtpCommandHandlerScanner : IFtpCommandHandlerScanner
     {
-        [NotNull]
-        [ItemNotNull]
         private readonly Assembly[] _assemblies;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AssemblyFtpCommandHandlerScanner"/> class.
         /// </summary>
         /// <param name="assemblies">The assemblies to scan for FTP command handlers.</param>
-        public AssemblyFtpCommandHandlerScanner([NotNull, ItemNotNull] params Assembly[] assemblies)
+        public AssemblyFtpCommandHandlerScanner(params Assembly[] assemblies)
         {
             _assemblies = assemblies;
         }
@@ -34,7 +30,7 @@ namespace FubarDev.FtpServer.Commands
             return _assemblies.SelectMany(Search);
         }
 
-        private static IEnumerable<IFtpCommandHandlerInformation> Search([NotNull] Assembly assembly)
+        private static IEnumerable<IFtpCommandHandlerInformation> Search(Assembly assembly)
         {
             foreach (var typeInfo in assembly.DefinedTypes.Where(IsCommandHandlerClass))
             {

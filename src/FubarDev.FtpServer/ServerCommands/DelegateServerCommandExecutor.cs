@@ -9,8 +9,6 @@ using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 
-using JetBrains.Annotations;
-
 using Microsoft.Extensions.DependencyInjection;
 
 namespace FubarDev.FtpServer.ServerCommands
@@ -20,17 +18,14 @@ namespace FubarDev.FtpServer.ServerCommands
     /// </summary>
     public class DelegateServerCommandExecutor : IServerCommandExecutor
     {
-        [NotNull]
         private readonly IFtpConnectionAccessor _ftpConnectionAccessor;
-
-        [NotNull]
         private readonly Dictionary<Type, Delegate> _serverCommandHandlerDelegates = new Dictionary<Type, Delegate>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DelegateServerCommandExecutor"/> class.
         /// </summary>
         /// <param name="ftpConnectionAccessor">Accessor to get the FTP connection.</param>
-        public DelegateServerCommandExecutor([NotNull] IFtpConnectionAccessor ftpConnectionAccessor)
+        public DelegateServerCommandExecutor(IFtpConnectionAccessor ftpConnectionAccessor)
         {
             _ftpConnectionAccessor = ftpConnectionAccessor;
         }

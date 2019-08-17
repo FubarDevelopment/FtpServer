@@ -23,7 +23,7 @@ namespace FubarDev.FtpServer.FileSystem
     {
         private bool _disposedValue;
 
-        private MemoryStream _data;
+        private MemoryStream? _data;
 
         /// <inheritdoc/>
         public long Size => _data?.Length ?? 0;
@@ -44,7 +44,15 @@ namespace FubarDev.FtpServer.FileSystem
         /// <inheritdoc/>
         public Task<Stream> OpenAsync()
         {
-            _data.Position = 0;
+            if (_data == null)
+            {
+                _data = new MemoryStream();
+            }
+            else
+            {
+                _data.Position = 0;
+            }
+
             return Task.FromResult<Stream>(_data);
         }
 

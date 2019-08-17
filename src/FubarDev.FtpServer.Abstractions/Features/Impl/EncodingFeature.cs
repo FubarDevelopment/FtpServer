@@ -4,8 +4,6 @@
 
 using System.Text;
 
-using JetBrains.Annotations;
-
 namespace FubarDev.FtpServer.Features.Impl
 {
     /// <summary>
@@ -13,13 +11,10 @@ namespace FubarDev.FtpServer.Features.Impl
     /// </summary>
     internal class EncodingFeature : IEncodingFeature
     {
-        [CanBeNull]
-        private Encoding _encoding;
+        private Encoding? _encoding;
+        private Encoding? _nlstEncoding;
 
-        [CanBeNull]
-        private Encoding _nlstEncoding;
-
-        public EncodingFeature([NotNull] Encoding defaultEncoding)
+        public EncodingFeature(Encoding defaultEncoding)
         {
             DefaultEncoding = defaultEncoding;
         }

@@ -8,8 +8,6 @@ using System.Threading.Tasks;
 
 using FubarDev.FtpServer.Features;
 
-using JetBrains.Annotations;
-
 namespace FubarDev.FtpServer.DataConnection
 {
     /// <summary>
@@ -25,12 +23,10 @@ namespace FubarDev.FtpServer.DataConnection
         /// <param name="dataConnection">The created data connection that needs to be validated.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>The task returning the validation result.</returns>
-        [NotNull]
-        [ItemCanBeNull]
-        Task<ValidationResult> ValidateAsync(
-            [NotNull] IFtpConnection connection,
-            [NotNull] IFtpDataConnectionFeature dataConnectionFeature,
-            [NotNull] IFtpDataConnection dataConnection,
+        Task<ValidationResult?> ValidateAsync(
+            IFtpConnection connection,
+            IFtpDataConnectionFeature dataConnectionFeature,
+            IFtpDataConnection dataConnection,
             CancellationToken cancellationToken);
     }
 }

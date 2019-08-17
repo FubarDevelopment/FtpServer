@@ -5,8 +5,6 @@
 // <author>Mark Junker</author>
 //-----------------------------------------------------------------------
 
-using JetBrains.Annotations;
-
 namespace FubarDev.FtpServer.FileSystem.Generic
 {
     /// <summary>
@@ -20,7 +18,7 @@ namespace FubarDev.FtpServer.FileSystem.Generic
         /// <param name="user">The user permissions.</param>
         /// <param name="group">The group permissions.</param>
         /// <param name="other">The other permissions.</param>
-        public GenericUnixPermissions([NotNull] IAccessMode user, [NotNull] IAccessMode group, [NotNull] IAccessMode other)
+        public GenericUnixPermissions(IAccessMode user, IAccessMode group, IAccessMode other)
         {
             User = user;
             Group = group;

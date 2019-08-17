@@ -2,8 +2,6 @@
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
-using JetBrains.Annotations;
-
 namespace FubarDev.FtpServer.AccountManagement
 {
     /// <summary>
@@ -17,7 +15,6 @@ namespace FubarDev.FtpServer.AccountManagement
         /// <summary>
         /// Gets the e-mail of the anonymous user which was given as password.
         /// </summary>
-        [CanBeNull]
-        string Email { get; }
+        string? Email { get; }
     }
 }

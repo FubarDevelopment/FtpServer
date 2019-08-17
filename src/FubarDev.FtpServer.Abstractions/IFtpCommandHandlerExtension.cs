@@ -4,8 +4,6 @@
 
 using System;
 
-using JetBrains.Annotations;
-
 namespace FubarDev.FtpServer
 {
     /// <summary>
@@ -23,7 +21,6 @@ namespace FubarDev.FtpServer
         /// Gets a name of the command this extension is for.
         /// </summary>
         [Obsolete("Use the FtpCommandHandlerExtensionAttribute together with an additional IFtpCommandHandlerExtensionScanner.")]
-        [NotNull]
         string ExtensionFor { get; }
 
         /// <summary>

@@ -8,8 +8,6 @@ using System.Threading.Tasks;
 
 using FubarDev.FtpServer.Commands;
 
-using JetBrains.Annotations;
-
 using Microsoft.Extensions.DependencyInjection;
 
 namespace FubarDev.FtpServer.CommandHandlers
@@ -22,11 +20,11 @@ namespace FubarDev.FtpServer.CommandHandlers
     public class HostCommandHandler : FtpCommandHandler
     {
         /// <inheritdoc />
-        public override Task<IFtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
+        public override async Task<IFtpResponse?> Process(FtpCommand command, CancellationToken cancellationToken)
         {
             if (string.IsNullOrWhiteSpace(command.Argument))
             {
-                return Task.FromResult<IFtpResponse>(new FtpResponse(501, T("Syntax error in parameters or arguments.")));
+                return new FtpResponse(501, T("Syntax error in parameters or arguments."));
             }
 
             var loginStateMachine = Connection.ConnectionServices.GetRequiredService<IFtpLoginStateMachine>();
@@ -34,15 +32,15 @@ namespace FubarDev.FtpServer.CommandHandlers
             if (loginStateMachine.Status != SecurityStatus.Unauthenticated &&
                 loginStateMachine.Status != SecurityStatus.Authenticated)
             {
-                return Task.FromResult<IFtpResponse>(new FtpResponse(503, T("Bad sequence of commands")));
+                return new FtpResponse(503, T("Bad sequence of commands"));
             }
 
             var hostInfo = ParseHost(command.Argument);
             var hostSelector = Connection.ConnectionServices.GetRequiredService<IFtpHostSelector>();
-            return hostSelector.SelectHostAsync(hostInfo, cancellationToken);
+            return await hostSelector.SelectHostAsync(hostInfo, cancellationToken).ConfigureAwait(false);
         }
 
-        private static HostInfo ParseHost([NotNull] string host)
+        private static HostInfo ParseHost(string host)
         {
             if (host.StartsWith("[") && host.EndsWith("]"))
             {

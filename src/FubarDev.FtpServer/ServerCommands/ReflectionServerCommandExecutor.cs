@@ -8,8 +8,6 @@ using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 
-using JetBrains.Annotations;
-
 using Microsoft.Extensions.DependencyInjection;
 
 namespace FubarDev.FtpServer.ServerCommands
@@ -19,10 +17,7 @@ namespace FubarDev.FtpServer.ServerCommands
     /// </summary>
     public class ReflectionServerCommandExecutor : IServerCommandExecutor
     {
-        [NotNull]
         private readonly IFtpConnectionAccessor _ftpConnectionAccessor;
-
-        [NotNull]
         private readonly Dictionary<Type, CommandHandlerInfo> _serverCommandHandlerInfo =
             new Dictionary<Type, CommandHandlerInfo>();
 
@@ -30,7 +25,7 @@ namespace FubarDev.FtpServer.ServerCommands
         /// Initializes a new instance of the <see cref="ReflectionServerCommandExecutor"/> class.
         /// </summary>
         /// <param name="ftpConnectionAccessor">Accessor to get the FTP connection.</param>
-        public ReflectionServerCommandExecutor([NotNull] IFtpConnectionAccessor ftpConnectionAccessor)
+        public ReflectionServerCommandExecutor(IFtpConnectionAccessor ftpConnectionAccessor)
         {
             _ftpConnectionAccessor = ftpConnectionAccessor;
         }
@@ -56,16 +51,12 @@ namespace FubarDev.FtpServer.ServerCommands
 
         private class CommandHandlerInfo
         {
-            public CommandHandlerInfo([NotNull] object commandHandler, [NotNull] MethodInfo executeMethodInfo)
+            public CommandHandlerInfo(object commandHandler, MethodInfo executeMethodInfo)
             {
                 CommandHandler = commandHandler;
                 ExecuteMethodInfo = executeMethodInfo;
             }
-
-            [NotNull]
             public object CommandHandler { get; }
-
-            [NotNull]
             public MethodInfo ExecuteMethodInfo { get; }
         }
     }

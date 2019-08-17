@@ -18,21 +18,21 @@ namespace FubarDev.FtpServer.CommandHandlers
     public class ProtCommandHandler : FtpCommandHandler
     {
         /// <inheritdoc/>
-        public override Task<IFtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
+        public override async Task<IFtpResponse?> Process(FtpCommand command, CancellationToken cancellationToken)
         {
             if (string.IsNullOrWhiteSpace(command.Argument))
             {
-                return Task.FromResult<IFtpResponse>(new FtpResponse(501, T("Data channel protection level not specified.")));
+                return new FtpResponse(501, T("Data channel protection level not specified."));
             }
 
             var loginStateMachine = Connection.ConnectionServices.GetRequiredService<IFtpLoginStateMachine>();
             var authMechanism = loginStateMachine.SelectedAuthenticationMechanism;
             if (authMechanism == null)
             {
-                return Task.FromResult<IFtpResponse>(new FtpResponse(503, T("No authentication mechanism selected.")));
+                return new FtpResponse(503, T("No authentication mechanism selected."));
             }
 
-            return authMechanism.HandleProtAsync(command.Argument.Trim(), cancellationToken);
+            return await authMechanism.HandleProtAsync(command.Argument.Trim(), cancellationToken).ConfigureAwait(false);
         }
     }
 }

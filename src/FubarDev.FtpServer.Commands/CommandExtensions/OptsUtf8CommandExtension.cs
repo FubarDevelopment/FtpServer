@@ -29,7 +29,7 @@ namespace FubarDev.FtpServer.CommandExtensions
         }
 
         /// <inheritdoc />
-        public override Task<IFtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
+        public override Task<IFtpResponse?> Process(FtpCommand command, CancellationToken cancellationToken)
         {
             var encodingFeature = Connection.Features.Get<IEncodingFeature>();
             switch (command.Argument.ToUpperInvariant())
@@ -45,10 +45,10 @@ namespace FubarDev.FtpServer.CommandExtensions
                     encodingFeature.NlstEncoding = Encoding.UTF8;
                     break;
                 default:
-                    return Task.FromResult<IFtpResponse>(new FtpResponse(501, T("Syntax error in parameters or arguments.")));
+                    return Task.FromResult<IFtpResponse?>(new FtpResponse(501, T("Syntax error in parameters or arguments.")));
             }
 
-            return Task.FromResult<IFtpResponse>(new FtpResponse(200, T("Command okay.")));
+            return Task.FromResult<IFtpResponse?>(new FtpResponse(200, T("Command okay.")));
         }
     }
 }

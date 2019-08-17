@@ -2,8 +2,6 @@
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
-using JetBrains.Annotations;
-
 namespace FubarDev.FtpServer.FileSystem
 {
     /// <summary>
@@ -16,7 +14,6 @@ namespace FubarDev.FtpServer.FileSystem
         /// </summary>
         /// <param name="accountInformation">The account to get the directories from.</param>
         /// <returns>The directories for the account.</returns>
-        [NotNull]
-        IAccountDirectories GetDirectories([NotNull] IAccountInformation accountInformation);
+        IAccountDirectories GetDirectories(IAccountInformation accountInformation);
     }
 }

@@ -2,8 +2,6 @@
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
-using JetBrains.Annotations;
-
 namespace FubarDev.FtpServer.ConnectionHandlers
 {
     /// <summary>
@@ -17,13 +15,11 @@ namespace FubarDev.FtpServer.ConnectionHandlers
         /// <summary>
         /// Gets the sender for this connection adapter.
         /// </summary>
-        [NotNull]
         IFtpService Sender { get; }
 
         /// <summary>
         /// Gets the pausable receiver for this connection adapter.
         /// </summary>
-        [NotNull]
         IPausableFtpService Receiver { get; }
     }
 }

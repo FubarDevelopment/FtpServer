@@ -9,8 +9,6 @@ using System.Security.Cryptography.X509Certificates;
 using System.Threading;
 using System.Threading.Tasks;
 
-using JetBrains.Annotations;
-
 using Microsoft.Extensions.Logging;
 
 namespace FubarDev.FtpServer.Authentication
@@ -20,15 +18,14 @@ namespace FubarDev.FtpServer.Authentication
     /// </summary>
     public class DefaultSslStreamWrapperFactory : ISslStreamWrapperFactory
     {
-        [CanBeNull]
-        private readonly ILogger<DefaultSslStreamWrapperFactory> _logger;
+        private readonly ILogger<DefaultSslStreamWrapperFactory>? _logger;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DefaultSslStreamWrapperFactory"/> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
         public DefaultSslStreamWrapperFactory(
-            [CanBeNull] ILogger<DefaultSslStreamWrapperFactory> logger = null)
+            ILogger<DefaultSslStreamWrapperFactory>? logger = null)
         {
             _logger = logger;
         }

@@ -7,8 +7,6 @@ using System.Security.Cryptography.X509Certificates;
 using System.Threading;
 using System.Threading.Tasks;
 
-using JetBrains.Annotations;
-
 namespace FubarDev.FtpServer.ConnectionHandlers
 {
     /// <summary>
@@ -21,7 +19,6 @@ namespace FubarDev.FtpServer.ConnectionHandlers
         /// </summary>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>The task.</returns>
-        [NotNull]
         Task ResetAsync(CancellationToken cancellationToken);
 
         /// <summary>
@@ -30,7 +27,6 @@ namespace FubarDev.FtpServer.ConnectionHandlers
         /// <param name="certificate">The server certificate (with private key).</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>The task.</returns>
-        [NotNull]
-        Task EnableSslStreamAsync([NotNull] X509Certificate2 certificate, CancellationToken cancellationToken);
+        Task EnableSslStreamAsync(X509Certificate2 certificate, CancellationToken cancellationToken);
     }
 }

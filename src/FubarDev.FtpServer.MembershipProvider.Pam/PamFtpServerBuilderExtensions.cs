@@ -11,8 +11,6 @@ using FubarDev.FtpServer.MembershipProvider.Pam;
 using FubarDev.FtpServer.MembershipProvider.Pam.Directories;
 using FubarDev.PamSharp;
 
-using JetBrains.Annotations;
-
 using Microsoft.Extensions.DependencyInjection;
 
 // ReSharper disable once CheckNamespace
@@ -28,8 +26,7 @@ namespace FubarDev.FtpServer
         /// </summary>
         /// <param name="builder">The server builder used to configure the FTP server.</param>
         /// <returns>the server builder used to configure the FTP server.</returns>
-        [NotNull]
-        public static IFtpServerBuilder EnablePamAuthentication([NotNull] this IFtpServerBuilder builder)
+        public static IFtpServerBuilder EnablePamAuthentication(this IFtpServerBuilder builder)
         {
             builder.Services
                .AddSingleton<IMembershipProvider, PamMembershipProvider>()
@@ -47,10 +44,9 @@ namespace FubarDev.FtpServer
         /// <param name="builder">The server builder used to configure the FTP server.</param>
         /// <param name="configure">Optional service configuration.</param>
         /// <returns>the server builder used to configure the FTP server.</returns>
-        [NotNull]
         public static IFtpServerBuilder UsePamUserHome(
-            [NotNull] this IFtpServerBuilder builder,
-            [CanBeNull] Action<PamAccountDirectoryQueryOptions> configure = null)
+            this IFtpServerBuilder builder,
+            Action<PamAccountDirectoryQueryOptions>? configure = null)
         {
             builder.Services.AddSingleton<IAccountDirectoryQuery, PamAccountDirectoryQuery>();
             if (configure != null)

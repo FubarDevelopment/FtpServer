@@ -13,8 +13,6 @@ using System.Threading.Tasks;
 
 using FubarDev.FtpServer.BackgroundTransfer;
 
-using JetBrains.Annotations;
-
 namespace FubarDev.FtpServer.FileSystem
 {
     /// <summary>
@@ -38,13 +36,11 @@ namespace FubarDev.FtpServer.FileSystem
         /// <remarks>
         /// Required to support case insensitive file systems.
         /// </remarks>
-        [NotNull]
         StringComparer FileSystemEntryComparer { get; }
 
         /// <summary>
         /// Gets the root directory entry.
         /// </summary>
-        [NotNull]
         IUnixDirectoryEntry Root { get; }
 
         /// <summary>
@@ -53,9 +49,7 @@ namespace FubarDev.FtpServer.FileSystem
         /// <param name="directoryEntry">The <see cref="IUnixDirectoryEntry"/> to get the file system entries for.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>The list of <see cref="IUnixFileSystemEntry"/> objects for a given <paramref name="directoryEntry"/>.</returns>
-        [NotNull]
-        [ItemNotNull]
-        Task<IReadOnlyList<IUnixFileSystemEntry>> GetEntriesAsync([NotNull] IUnixDirectoryEntry directoryEntry, CancellationToken cancellationToken);
+        Task<IReadOnlyList<IUnixFileSystemEntry>> GetEntriesAsync(IUnixDirectoryEntry directoryEntry, CancellationToken cancellationToken);
 
         /// <summary>
         /// Gets a file system entry by name.
@@ -64,9 +58,7 @@ namespace FubarDev.FtpServer.FileSystem
         /// <param name="name">The name of the file system entry to search.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>Returns the found <see cref="IUnixFileSystemEntry"/>.</returns>
-        [NotNull]
-        [ItemCanBeNull]
-        Task<IUnixFileSystemEntry> GetEntryByNameAsync([NotNull] IUnixDirectoryEntry directoryEntry, [NotNull] string name, CancellationToken cancellationToken);
+        Task<IUnixFileSystemEntry?> GetEntryByNameAsync(IUnixDirectoryEntry directoryEntry, string name, CancellationToken cancellationToken);
 
         /// <summary>
         /// Moves a file system entry from <paramref name="parent"/> to <paramref name="target"/>.
@@ -77,8 +69,7 @@ namespace FubarDev.FtpServer.FileSystem
         /// <param name="fileName">The new name of <paramref name="source"/>.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>Returns the new <see cref="IUnixFileSystemEntry"/>.</returns>
-        [NotNull]
-        Task<IUnixFileSystemEntry> MoveAsync([NotNull] IUnixDirectoryEntry parent, [NotNull] IUnixFileSystemEntry source, [NotNull] IUnixDirectoryEntry target, [NotNull] string fileName, CancellationToken cancellationToken);
+        Task<IUnixFileSystemEntry> MoveAsync(IUnixDirectoryEntry parent, IUnixFileSystemEntry source, IUnixDirectoryEntry target, string fileName, CancellationToken cancellationToken);
 
         /// <summary>
         /// Deletes a <see cref="IUnixFileSystemEntry"/>.
@@ -89,8 +80,7 @@ namespace FubarDev.FtpServer.FileSystem
         /// <remarks>
         /// An implementation might decide to move the <paramref name="entry"/> into the trash instead of deleting it.
         /// </remarks>
-        [NotNull]
-        Task UnlinkAsync([NotNull] IUnixFileSystemEntry entry, CancellationToken cancellationToken);
+        Task UnlinkAsync(IUnixFileSystemEntry entry, CancellationToken cancellationToken);
 
         /// <summary>
         /// Creates a sub directory with the name <paramref name="directoryName"/> in <paramref name="targetDirectory"/>.
@@ -99,8 +89,7 @@ namespace FubarDev.FtpServer.FileSystem
         /// <param name="directoryName">The name of the new sub directory.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>The new <see cref="IUnixDirectoryEntry"/>.</returns>
-        [NotNull]
-        Task<IUnixDirectoryEntry> CreateDirectoryAsync([NotNull] IUnixDirectoryEntry targetDirectory, [NotNull] string directoryName, CancellationToken cancellationToken);
+        Task<IUnixDirectoryEntry> CreateDirectoryAsync(IUnixDirectoryEntry targetDirectory, string directoryName, CancellationToken cancellationToken);
 
         /// <summary>
         /// Opens a file for reading.
@@ -109,8 +98,7 @@ namespace FubarDev.FtpServer.FileSystem
         /// <param name="startPosition">The start position to read from.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>The <see cref="Stream"/> to be used for reading.</returns>
-        [NotNull]
-        Task<Stream> OpenReadAsync([NotNull] IUnixFileEntry fileEntry, long startPosition, CancellationToken cancellationToken);
+        Task<Stream> OpenReadAsync(IUnixFileEntry fileEntry, long startPosition, CancellationToken cancellationToken);
 
         /// <summary>
         /// Appends data to a file.
@@ -120,9 +108,7 @@ namespace FubarDev.FtpServer.FileSystem
         /// <param name="data">The data stream to read from.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>an optional <see cref="IBackgroundTransfer"/> when the transfer needs to happen in the background.</returns>
-        [NotNull]
-        [ItemCanBeNull]
-        Task<IBackgroundTransfer> AppendAsync([NotNull] IUnixFileEntry fileEntry, long? startPosition, [NotNull] Stream data, CancellationToken cancellationToken);
+        Task<IBackgroundTransfer?> AppendAsync(IUnixFileEntry fileEntry, long? startPosition, Stream data, CancellationToken cancellationToken);
 
         /// <summary>
         /// Creates a file with the given <paramref name="fileName"/> and <paramref name="data"/>.
@@ -132,9 +118,7 @@ namespace FubarDev.FtpServer.FileSystem
         /// <param name="data">The <see cref="Stream"/> used to read the data for the new file.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>an optional <see cref="IBackgroundTransfer"/> when the transfer needs to happen in the background.</returns>
-        [NotNull]
-        [ItemCanBeNull]
-        Task<IBackgroundTransfer> CreateAsync([NotNull] IUnixDirectoryEntry targetDirectory, [NotNull] string fileName, [NotNull] Stream data, CancellationToken cancellationToken);
+        Task<IBackgroundTransfer?> CreateAsync(IUnixDirectoryEntry targetDirectory, string fileName, Stream data, CancellationToken cancellationToken);
 
         /// <summary>
         /// Replaces the contents of a file.
@@ -143,9 +127,7 @@ namespace FubarDev.FtpServer.FileSystem
         /// <param name="data">The data to be written to the given <paramref name="fileEntry"/>.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>an optional <see cref="IBackgroundTransfer"/> when the transfer needs to happen in the background.</returns>
-        [NotNull]
-        [ItemCanBeNull]
-        Task<IBackgroundTransfer> ReplaceAsync([NotNull] IUnixFileEntry fileEntry, [NotNull] Stream data, CancellationToken cancellationToken);
+        Task<IBackgroundTransfer?> ReplaceAsync(IUnixFileEntry fileEntry, Stream data, CancellationToken cancellationToken);
 
         /// <summary>
         /// Sets the modify/access/create timestamp of a file system item.
@@ -156,8 +138,6 @@ namespace FubarDev.FtpServer.FileSystem
         /// <param name="create">The creation timestamp.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>The modified <see cref="IUnixFileSystemEntry"/>.</returns>
-        [NotNull]
-        [ItemNotNull]
-        Task<IUnixFileSystemEntry> SetMacTimeAsync([NotNull] IUnixFileSystemEntry entry, DateTimeOffset? modify, DateTimeOffset? access, DateTimeOffset? create, CancellationToken cancellationToken);
+        Task<IUnixFileSystemEntry> SetMacTimeAsync(IUnixFileSystemEntry entry, DateTimeOffset? modify, DateTimeOffset? access, DateTimeOffset? create, CancellationToken cancellationToken);
     }
 }

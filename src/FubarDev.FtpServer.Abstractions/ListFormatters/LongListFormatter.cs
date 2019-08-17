@@ -18,13 +18,13 @@ namespace FubarDev.FtpServer.ListFormatters
     public class LongListFormatter : IListFormatter
     {
         /// <inheritdoc/>
-        public string Format(IUnixFileSystemEntry entry, string name)
+        public string Format(IUnixFileSystemEntry entry, string? name)
         {
             var fileEntry = entry as IUnixFileEntry;
             return BuildLine(entry, fileEntry, name ?? entry.Name);
         }
 
-        private static string BuildLine(IUnixFileSystemEntry entry, IUnixFileEntry fileEntry, string name)
+        private static string BuildLine(IUnixFileSystemEntry entry, IUnixFileEntry? fileEntry, string name)
         {
             var lastWriteDate = entry.LastWriteTime ?? new DateTimeOffset(new DateTime(1970, 01, 01));
             var format = lastWriteDate.Year == DateTimeOffset.UtcNow.Year

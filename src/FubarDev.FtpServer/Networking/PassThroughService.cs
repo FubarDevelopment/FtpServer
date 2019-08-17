@@ -8,22 +8,16 @@ using System.IO.Pipelines;
 using System.Threading;
 using System.Threading.Tasks;
 
-using JetBrains.Annotations;
-
 using Microsoft.Extensions.Logging;
 
 namespace FubarDev.FtpServer.Networking
 {
     internal class PassThroughService : PausableFtpService
     {
-        [NotNull]
         private readonly PipeReader _reader;
-
-        [NotNull]
         private readonly PipeWriter _writer;
 
-        [CanBeNull]
-        private Exception _exception;
+        private Exception? _exception;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PassThroughService"/> class.
@@ -33,10 +27,10 @@ namespace FubarDev.FtpServer.Networking
         /// <param name="connectionClosed">Cancellation token for a closed connection.</param>
         /// <param name="logger">The logger.</param>
         public PassThroughService(
-            [NotNull] PipeReader reader,
-            [NotNull] PipeWriter writer,
+            PipeReader reader,
+            PipeWriter writer,
             CancellationToken connectionClosed,
-            [CanBeNull] ILogger logger = null)
+            ILogger? logger = null)
             : base(connectionClosed, logger)
         {
             _reader = reader;
@@ -120,7 +114,7 @@ namespace FubarDev.FtpServer.Networking
                .ConfigureAwait(false);
         }
 
-        protected virtual Task OnCloseAsync(Exception exception, CancellationToken cancellationToken)
+        protected virtual Task OnCloseAsync(Exception? exception, CancellationToken cancellationToken)
         {
             // Tell the PipeReader that there's no more data coming
             _reader.Complete(_exception);

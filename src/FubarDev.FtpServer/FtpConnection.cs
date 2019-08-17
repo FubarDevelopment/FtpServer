@@ -29,8 +29,6 @@ using FubarDev.FtpServer.Localization;
 using FubarDev.FtpServer.Networking;
 using FubarDev.FtpServer.ServerCommands;
 
-using JetBrains.Annotations;
-
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -45,48 +43,33 @@ namespace FubarDev.FtpServer
     {
         private readonly CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
 
-        [NotNull]
         private readonly TcpClient _socket;
 
-        [NotNull]
         private readonly IFtpConnectionAccessor _connectionAccessor;
 
-        [NotNull]
         private readonly IServerCommandExecutor _serverCommandExecutor;
 
-        [NotNull]
         private readonly SecureDataConnectionWrapper _secureDataConnectionWrapper;
 
-        [NotNull]
         private readonly IFtpServerMessages _serverMessages;
 
-        [CanBeNull]
-        private readonly IDisposable _loggerScope;
+        private readonly IDisposable? _loggerScope;
 
-        [NotNull]
         private readonly Channel<IServerCommand> _serverCommandChannel;
 
-        [NotNull]
         private readonly Pipe _socketCommandPipe = new Pipe();
 
-        [NotNull]
         private readonly Pipe _socketResponsePipe = new Pipe();
 
-        [NotNull]
         private readonly NetworkStreamFeature _networkStreamFeature;
 
-        [NotNull]
         private readonly Task _commandReader;
 
-        [NotNull]
         private readonly Channel<FtpCommand> _ftpCommandChannel = Channel.CreateBounded<FtpCommand>(5);
-
-#pragma warning restore 618
 
         private readonly int? _dataPort;
 
-        [CanBeNull]
-        private readonly ILogger<FtpConnection> _logger;
+        private readonly ILogger<FtpConnection>? _logger;
 
         private readonly IPEndPoint _remoteEndPoint;
 
@@ -94,11 +77,9 @@ namespace FubarDev.FtpServer
 
         private int _connectionClosed;
 
-        [CanBeNull]
-        private Task _commandChannelReader;
+        private Task? _commandChannelReader;
 
-        [CanBeNull]
-        private Task _serverCommandHandler;
+        private Task? _serverCommandHandler;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FtpConnection"/> class.
@@ -115,17 +96,17 @@ namespace FubarDev.FtpServer
         /// <param name="sslStreamWrapperFactory">The SSL stream wrapper factory.</param>
         /// <param name="logger">The logger for the FTP connection.</param>
         public FtpConnection(
-            [NotNull] TcpClient socket,
-            [NotNull] IOptions<FtpConnectionOptions> options,
-            [NotNull] IOptions<PortCommandOptions> portOptions,
-            [NotNull] IFtpConnectionAccessor connectionAccessor,
-            [NotNull] IFtpCatalogLoader catalogLoader,
-            [NotNull] IServerCommandExecutor serverCommandExecutor,
-            [NotNull] IServiceProvider serviceProvider,
-            [NotNull] SecureDataConnectionWrapper secureDataConnectionWrapper,
-            [NotNull] IFtpServerMessages serverMessages,
-            [NotNull] ISslStreamWrapperFactory sslStreamWrapperFactory,
-            [CanBeNull] ILogger<FtpConnection> logger = null)
+            TcpClient socket,
+            IOptions<FtpConnectionOptions> options,
+            IOptions<PortCommandOptions> portOptions,
+            IFtpConnectionAccessor connectionAccessor,
+            IFtpCatalogLoader catalogLoader,
+            IServerCommandExecutor serverCommandExecutor,
+            IServiceProvider serviceProvider,
+            SecureDataConnectionWrapper secureDataConnectionWrapper,
+            IFtpServerMessages serverMessages,
+            ISslStreamWrapperFactory sslStreamWrapperFactory,
+            ILogger<FtpConnection>? logger = null)
         {
             ConnectionServices = serviceProvider;
 
@@ -137,7 +118,7 @@ namespace FubarDev.FtpServer
             RemoteAddress = new Address(remoteEndPoint.Address.ToString(), remoteEndPoint.Port);
 #pragma warning restore 618
 
-            var properties = new Dictionary<string, object>
+            var properties = new Dictionary<string, object?>
             {
                 ["RemoteAddress"] = remoteEndPoint.ToString(),
                 ["RemoteIp"] = remoteEndPoint.Address.ToString(),
@@ -205,7 +186,7 @@ namespace FubarDev.FtpServer
         }
 
         /// <inheritdoc />
-        public event EventHandler Closed;
+        public event EventHandler? Closed;
 
         /// <inheritdoc />
         public IServiceProvider ConnectionServices { get; }
@@ -232,7 +213,7 @@ namespace FubarDev.FtpServer
 
         /// <inheritdoc />
         [Obsolete("Use your own logger instead of the one from the connection.")]
-        public ILogger Log => _logger;
+        public ILogger? Log => _logger;
 
         /// <inheritdoc />
         [Obsolete("Query the information using the IConnectionFeature instead.")]
@@ -382,12 +363,6 @@ namespace FubarDev.FtpServer
         public Task<Stream> CreateEncryptedStream(Stream unencryptedStream)
         {
             var createEncryptedStream = Features.Get<ISecureConnectionFeature>().CreateEncryptedStream;
-
-            if (createEncryptedStream == null)
-            {
-                return Task.FromResult(unencryptedStream);
-            }
-
             return createEncryptedStream(unencryptedStream);
         }
 
@@ -438,9 +413,8 @@ namespace FubarDev.FtpServer
         /// <param name="serverCommandReader">Reader for the responses.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>The task.</returns>
-        [NotNull]
         private async Task SendResponsesAsync(
-            [NotNull] ChannelReader<IServerCommand> serverCommandReader,
+            ChannelReader<IServerCommand> serverCommandReader,
             CancellationToken cancellationToken)
         {
             try
@@ -510,8 +484,7 @@ namespace FubarDev.FtpServer
         /// </summary>
         /// <param name="context">The context for the FTP command execution.</param>
         /// <returns>The task.</returns>
-        [NotNull]
-        private Task DispatchCommandAsync([NotNull] FtpContext context)
+        private Task DispatchCommandAsync(FtpContext context)
         {
             var dispatcher = ConnectionServices.GetRequiredService<IFtpCommandDispatcher>();
             return dispatcher.DispatchAsync(context, _cancellationTokenSource.Token);
@@ -523,8 +496,8 @@ namespace FubarDev.FtpServer
         }
 
         private async Task ReadCommandsFromPipeline(
-            [NotNull] PipeReader reader,
-            [NotNull] ChannelWriter<FtpCommand> commandWriter,
+            PipeReader reader,
+            ChannelWriter<FtpCommand> commandWriter,
             CancellationToken cancellationToken)
         {
             var collector = new FtpCommandCollector(() => Features.Get<IEncodingFeature>().Encoding);
@@ -610,7 +583,7 @@ namespace FubarDev.FtpServer
 
             try
             {
-                Task<bool> readTask = null;
+                Task<bool>? readTask = null;
                 while (!cancellationToken.IsCancellationRequested)
                 {
                     if (readTask == null)
@@ -619,7 +592,7 @@ namespace FubarDev.FtpServer
                     }
 
                     var tasks = new List<Task>() { readTask };
-                    var backgroundTaskLifetimeService = Features.Get<IBackgroundTaskLifetimeFeature>();
+                    var backgroundTaskLifetimeService = Features.Get<IBackgroundTaskLifetimeFeature?>();
                     if (backgroundTaskLifetimeService != null)
                     {
                         tasks.Add(backgroundTaskLifetimeService.Task);
@@ -638,7 +611,7 @@ namespace FubarDev.FtpServer
                     if (backgroundTaskLifetimeService?.Task == completedTask)
                     {
                         await completedTask.ConfigureAwait(false);
-                        Features.Set<IBackgroundTaskLifetimeFeature>(null);
+                        Features.Set<IBackgroundTaskLifetimeFeature?>(null);
                     }
                     else
                     {
@@ -678,14 +651,13 @@ namespace FubarDev.FtpServer
 
         private class ConnectionClosingNetworkStreamReader : StreamPipeReaderService
         {
-            [NotNull]
             private readonly CancellationTokenSource _connectionClosedCts;
 
             public ConnectionClosingNetworkStreamReader(
-                [NotNull] Stream stream,
-                [NotNull] PipeWriter pipeWriter,
-                [NotNull] CancellationTokenSource connectionClosedCts,
-                [CanBeNull] ILogger logger = null)
+                Stream stream,
+                PipeWriter pipeWriter,
+                CancellationTokenSource connectionClosedCts,
+                ILogger? logger = null)
                 : base(stream, pipeWriter, connectionClosedCts.Token, logger)
             {
                 _connectionClosedCts = connectionClosedCts;
@@ -711,7 +683,7 @@ namespace FubarDev.FtpServer
             }
 
             /// <inheritdoc />
-            protected override async Task OnCloseAsync(Exception exception, CancellationToken cancellationToken)
+            protected override async Task OnCloseAsync(Exception? exception, CancellationToken cancellationToken)
             {
                 await base.OnCloseAsync(exception, cancellationToken)
                    .ConfigureAwait(false);
@@ -724,8 +696,8 @@ namespace FubarDev.FtpServer
         private class ConnectionFeature : IConnectionFeature
         {
             public ConnectionFeature(
-                [NotNull] IPEndPoint localEndPoint,
-                [NotNull] IPEndPoint remoteEndPoint)
+                IPEndPoint localEndPoint,
+                IPEndPoint remoteEndPoint)
             {
                 LocalEndPoint = localEndPoint;
                 RemoteEndPoint = remoteEndPoint;
@@ -749,9 +721,10 @@ namespace FubarDev.FtpServer
 
         private class SecureConnectionFeature : ISecureConnectionFeature
         {
-            public SecureConnectionFeature([NotNull] TcpClient tcpClient)
+            public SecureConnectionFeature(TcpClient tcpClient)
             {
                 OriginalStream = tcpClient.GetStream();
+                CreateEncryptedStream = Task.FromResult;
                 CloseEncryptedControlStream = ct => Task.CompletedTask;
             }
 
@@ -794,10 +767,10 @@ namespace FubarDev.FtpServer
 
             /// <inheritdoc />
             [Obsolete("Use a custom server command.")]
-            public FtpResponseAfterWriteAsyncDelegate AfterWriteAction { get; } = null;
+            public FtpResponseAfterWriteAsyncDelegate? AfterWriteAction { get; } = null;
 
             /// <inheritdoc />
-            public Task<FtpResponseLine> GetNextLineAsync(object token, CancellationToken cancellationToken)
+            public Task<FtpResponseLine> GetNextLineAsync(object? token, CancellationToken cancellationToken)
             {
                 return Task.FromResult(new FtpResponseLine(_text, null));
             }

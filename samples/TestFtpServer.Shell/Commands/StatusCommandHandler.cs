@@ -8,8 +8,6 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-using JetBrains.Annotations;
-
 using JKang.IpcServiceFramework;
 
 using TestFtpServer.Api;
@@ -21,7 +19,6 @@ namespace TestFtpServer.Shell.Commands
     /// </summary>
     public class StatusCommandHandler : IRootCommandInfo, IExecutableCommandInfo
     {
-        [NotNull]
         private readonly IpcServiceClient<IFtpServerHost> _client;
 
         /// <summary>
@@ -29,7 +26,7 @@ namespace TestFtpServer.Shell.Commands
         /// </summary>
         /// <param name="client">The client to be used to communicate with the FTP server.</param>
         public StatusCommandHandler(
-            [NotNull] IpcServiceClient<IFtpServerHost> client)
+            IpcServiceClient<IFtpServerHost> client)
         {
             _client = client;
         }

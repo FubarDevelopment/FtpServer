@@ -21,16 +21,16 @@ namespace FubarDev.FtpServer.CommandHandlers
     public class CdUpCommandHandler : FtpCommandHandler
     {
         /// <inheritdoc/>
-        public override Task<IFtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
+        public override Task<IFtpResponse?> Process(FtpCommand command, CancellationToken cancellationToken)
         {
             var fsFeature = Connection.Features.Get<IFileSystemFeature>();
             if (fsFeature.CurrentDirectory.IsRoot)
             {
-                return Task.FromResult<IFtpResponse>(new FtpResponse(550, T("Not a valid directory.")));
+                return Task.FromResult<IFtpResponse?>(new FtpResponse(550, T("Not a valid directory.")));
             }
 
             fsFeature.Path.Pop();
-            return Task.FromResult<IFtpResponse>(new FtpResponse(200, T("Command okay.")));
+            return Task.FromResult<IFtpResponse?>(new FtpResponse(200, T("Command okay.")));
         }
     }
 }

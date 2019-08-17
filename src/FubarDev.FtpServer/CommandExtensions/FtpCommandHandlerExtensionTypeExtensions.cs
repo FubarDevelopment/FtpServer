@@ -8,27 +8,21 @@ using System.Linq;
 
 using FubarDev.FtpServer.Commands;
 
-using JetBrains.Annotations;
-
 namespace FubarDev.FtpServer.CommandExtensions
 {
     internal static class FtpCommandHandlerExtensionTypeExtensions
     {
         [Obsolete]
-        [NotNull]
-        [ItemNotNull]
         public static IEnumerable<IFtpCommandHandlerExtensionInstanceInformation> GetInformation(
-            [NotNull] this IFtpCommandHandlerExtension commandHandler,
-            [NotNull] IFtpCommandHandlerInformation extensionOf)
+            this IFtpCommandHandlerExtension commandHandler,
+            IFtpCommandHandlerInformation extensionOf)
         {
             return commandHandler.Names.Select(x => new CommandHandlerExtensionInstanceInformation(extensionOf, commandHandler, x));
         }
-
-        [NotNull]
         public static IFtpCommandHandlerExtensionInformation GetInformation(
-            [NotNull] this Type commandHandlerType,
-            [NotNull] IFtpCommandHandlerInformation extensionOf,
-            [NotNull] FtpCommandHandlerExtensionAttribute attribute)
+            this Type commandHandlerType,
+            IFtpCommandHandlerInformation extensionOf,
+            FtpCommandHandlerExtensionAttribute attribute)
         {
             return new CommandHandlerExtensionInformation(extensionOf, commandHandlerType, attribute);
         }
@@ -36,9 +30,9 @@ namespace FubarDev.FtpServer.CommandExtensions
         private class CommandHandlerExtensionInformation : IFtpCommandHandlerExtensionInformation
         {
             public CommandHandlerExtensionInformation(
-                [NotNull] IFtpCommandHandlerInformation extensionOf,
-                [NotNull] Type type,
-                [NotNull] FtpCommandHandlerExtensionAttribute attribute)
+                IFtpCommandHandlerInformation extensionOf,
+                Type type,
+                FtpCommandHandlerExtensionAttribute attribute)
             {
                 Name = attribute.Name;
                 IsLoginRequired = attribute.IsLoginRequired ?? extensionOf.IsLoginRequired;
@@ -67,9 +61,9 @@ namespace FubarDev.FtpServer.CommandExtensions
         private class CommandHandlerExtensionInstanceInformation : IFtpCommandHandlerExtensionInstanceInformation
         {
             public CommandHandlerExtensionInstanceInformation(
-                [NotNull] IFtpCommandHandlerInformation extensionOf,
-                [NotNull] IFtpCommandHandlerExtension commandHandler,
-                [NotNull] string name)
+                IFtpCommandHandlerInformation extensionOf,
+                IFtpCommandHandlerExtension commandHandler,
+                string name)
             {
                 Name = name;
                 IsLoginRequired = commandHandler.IsLoginRequired ?? extensionOf.IsLoginRequired;

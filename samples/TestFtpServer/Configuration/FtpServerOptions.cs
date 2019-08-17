@@ -2,8 +2,6 @@
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
-using JetBrains.Annotations;
-
 namespace TestFtpServer.Configuration
 {
     /// <summary>
@@ -14,8 +12,7 @@ namespace TestFtpServer.Configuration
         /// <summary>
         /// Gets or sets the FTP server address.
         /// </summary>
-        [CanBeNull]
-        public string Address { get; set; }
+        public string? Address { get; set; }
 
         /// <summary>
         /// Gets or sets the port.
@@ -30,7 +27,6 @@ namespace TestFtpServer.Configuration
         /// <summary>
         /// Gets or sets the PASV options.
         /// </summary>
-        [NotNull]
         public FtpServerPasvOptions Pasv { get; set; } = new FtpServerPasvOptions();
     }
 }

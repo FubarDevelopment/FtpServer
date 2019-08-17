@@ -9,8 +9,6 @@ using System.Threading.Tasks;
 
 using FubarDev.FtpServer.AccountManagement.Anonymous;
 
-using JetBrains.Annotations;
-
 namespace FubarDev.FtpServer.AccountManagement
 {
     /// <summary>
@@ -36,7 +34,7 @@ namespace FubarDev.FtpServer.AccountManagement
         /// Initializes a new instance of the <see cref="AnonymousMembershipProvider"/> class.
         /// </summary>
         /// <param name="anonymousPasswordValidator">Anonymous login validation.</param>
-        public AnonymousMembershipProvider([NotNull] IAnonymousPasswordValidator anonymousPasswordValidator)
+        public AnonymousMembershipProvider(IAnonymousPasswordValidator anonymousPasswordValidator)
         {
             _anonymousPasswordValidator = anonymousPasswordValidator;
         }

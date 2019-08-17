@@ -38,10 +38,10 @@ namespace FubarDev.FtpServer.CommandHandlers
         public override bool IsLoginRequired => false;
 
         /// <inheritdoc/>
-        public override Task<IFtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
+        public override Task<IFtpResponse?> Process(FtpCommand command, CancellationToken cancellationToken)
         {
             var transferMode = Connection.Features.Get<ITransferConfigurationFeature>().TransferMode;
-            return Task.FromResult<IFtpResponse>(new FtpResponse(215, T("{0} Type: {1}", _operatingSystem, transferMode)));
+            return Task.FromResult<IFtpResponse?>(new FtpResponse(215, T("{0} Type: {1}", _operatingSystem, transferMode)));
         }
     }
 }

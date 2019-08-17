@@ -21,9 +21,9 @@ namespace FubarDev.FtpServer.CommandHandlers
     public class RntoCommandHandler : FtpCommandHandler
     {
         /// <inheritdoc/>
-        public override async Task<IFtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
+        public override async Task<IFtpResponse?> Process(FtpCommand command, CancellationToken cancellationToken)
         {
-            var renameFrom = Connection.Features.Get<IRenameCommandFeature>()?.RenameFrom;
+            var renameFrom = Connection.Features.Get<IRenameCommandFeature?>()?.RenameFrom;
             if (renameFrom == null)
             {
                 return new FtpResponse(503, T("RNTO must be preceded by a RNFR."));
@@ -58,7 +58,7 @@ namespace FubarDev.FtpServer.CommandHandlers
             var targetDir = fileInfo.Directory;
             await fsFeature.FileSystem.MoveAsync(renameFrom.Directory, renameFrom.Entry, targetDir, fileInfo.FileName, cancellationToken).ConfigureAwait(false);
 
-            Connection.Features.Set<IRenameCommandFeature>(null);
+            Connection.Features.Set<IRenameCommandFeature?>(null);
 
             return new FtpResponse(250, T("Renamed file successfully."));
         }

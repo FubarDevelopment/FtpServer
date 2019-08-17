@@ -10,6 +10,7 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using FubarDev.FtpServer.BackgroundTransfer;
+using FubarDev.FtpServer.FileSystem.Error;
 
 namespace FubarDev.FtpServer.FileSystem.InMemory
 {
@@ -54,15 +55,15 @@ namespace FubarDev.FtpServer.FileSystem.InMemory
         }
 
         /// <inheritdoc />
-        public Task<IUnixFileSystemEntry> GetEntryByNameAsync(IUnixDirectoryEntry directoryEntry, string name, CancellationToken cancellationToken)
+        public Task<IUnixFileSystemEntry?> GetEntryByNameAsync(IUnixDirectoryEntry directoryEntry, string name, CancellationToken cancellationToken)
         {
             var entry = (InMemoryDirectoryEntry)directoryEntry;
             if (entry.Children.TryGetValue(name, out var childEntry))
             {
-                return Task.FromResult(childEntry);
+                return Task.FromResult<IUnixFileSystemEntry?>(childEntry);
             }
 
-            return Task.FromResult<IUnixFileSystemEntry>(null);
+            return Task.FromResult<IUnixFileSystemEntry?>(null);
         }
 
         /// <inheritdoc />
@@ -82,7 +83,7 @@ namespace FubarDev.FtpServer.FileSystem.InMemory
             if (!parentEntry.Children.Remove(source.Name))
             {
                 targetEntry.Children.Remove(fileName);
-                return Task.FromResult<IUnixFileSystemEntry>(null);
+                throw new FileUnavailableException($"The source file {source.Name} couldn't be found in directory {parentEntry.Name}");
             }
 
             var now = DateTimeOffset.Now;
@@ -98,7 +99,7 @@ namespace FubarDev.FtpServer.FileSystem.InMemory
         public Task UnlinkAsync(IUnixFileSystemEntry entry, CancellationToken cancellationToken)
         {
             var fsEntry = (InMemoryFileSystemEntry)entry;
-            if (fsEntry.Parent?.Children.Remove(entry.Name) ?? false)
+            if (fsEntry.Parent != null && fsEntry.Parent.Children.Remove(entry.Name))
             {
                 fsEntry.Parent.SetLastWriteTime(DateTimeOffset.Now);
                 fsEntry.Parent = null;
@@ -138,7 +139,7 @@ namespace FubarDev.FtpServer.FileSystem.InMemory
         }
 
         /// <inheritdoc />
-        public async Task<IBackgroundTransfer> AppendAsync(IUnixFileEntry fileEntry, long? startPosition, Stream data, CancellationToken cancellationToken)
+        public async Task<IBackgroundTransfer?> AppendAsync(IUnixFileEntry fileEntry, long? startPosition, Stream data, CancellationToken cancellationToken)
         {
             var entry = (InMemoryFileEntry)fileEntry;
 
@@ -164,7 +165,7 @@ namespace FubarDev.FtpServer.FileSystem.InMemory
         }
 
         /// <inheritdoc />
-        public async Task<IBackgroundTransfer> CreateAsync(
+        public async Task<IBackgroundTransfer?> CreateAsync(
             IUnixDirectoryEntry targetDirectory,
             string fileName,
             Stream data,
@@ -189,7 +190,7 @@ namespace FubarDev.FtpServer.FileSystem.InMemory
         }
 
         /// <inheritdoc />
-        public async Task<IBackgroundTransfer> ReplaceAsync(IUnixFileEntry fileEntry, Stream data, CancellationToken cancellationToken)
+        public async Task<IBackgroundTransfer?> ReplaceAsync(IUnixFileEntry fileEntry, Stream data, CancellationToken cancellationToken)
         {
             var temp = new MemoryStream();
             await data.CopyToAsync(temp, 81920, cancellationToken)

@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 using FubarDev.FtpServer.AccountManagement;
 using FubarDev.FtpServer.BackgroundTransfer;
-using JetBrains.Annotations;
+
 using Mono.Unix;
 using Mono.Unix.Native;
 
@@ -23,11 +23,9 @@ namespace FubarDev.FtpServer.FileSystem.Unix
     /// </summary>
     public class UnixFileSystem : IUnixFileSystem
     {
-        [NotNull]
         private readonly IFtpUser _user;
 
-        [CanBeNull]
-        private readonly UnixUserInfo _userInfo;
+        private readonly UnixUserInfo? _userInfo;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="UnixFileSystem"/> class.
@@ -36,9 +34,9 @@ namespace FubarDev.FtpServer.FileSystem.Unix
         /// <param name="user">The current user.</param>
         /// <param name="userInfo">The user information.</param>
         public UnixFileSystem(
-            [NotNull] IUnixDirectoryEntry root,
-            [NotNull] IFtpUser user,
-            [CanBeNull] UnixUserInfo userInfo)
+            IUnixDirectoryEntry root,
+            IFtpUser user,
+            UnixUserInfo? userInfo)
         {
             _user = user;
             _userInfo = userInfo;
@@ -67,12 +65,13 @@ namespace FubarDev.FtpServer.FileSystem.Unix
         }
 
         /// <inheritdoc />
-        public Task<IUnixFileSystemEntry> GetEntryByNameAsync(IUnixDirectoryEntry directoryEntry, string name, CancellationToken cancellationToken)
+        public Task<IUnixFileSystemEntry?> GetEntryByNameAsync(IUnixDirectoryEntry directoryEntry, string name, CancellationToken cancellationToken)
         {
             var dirEntry = (UnixDirectoryEntry)directoryEntry;
             var dirInfo = dirEntry.Info;
             var entry = dirInfo.GetFileSystemEntries($"^{Regex.Escape(name)}$")
                .Select(x => CreateEntry(dirEntry, x))
+               .Cast<IUnixFileSystemEntry?>()
                .SingleOrDefault();
             return Task.FromResult(entry);
         }
@@ -134,7 +133,7 @@ namespace FubarDev.FtpServer.FileSystem.Unix
         }
 
         /// <inheritdoc />
-        public async Task<IBackgroundTransfer> AppendAsync(IUnixFileEntry fileEntry, long? startPosition, Stream data, CancellationToken cancellationToken)
+        public async Task<IBackgroundTransfer?> AppendAsync(IUnixFileEntry fileEntry, long? startPosition, Stream data, CancellationToken cancellationToken)
         {
             var fileInfo = ((UnixFileEntry)fileEntry).Info;
             var stream = fileInfo.Open(FileMode.Append);
@@ -151,7 +150,7 @@ namespace FubarDev.FtpServer.FileSystem.Unix
         }
 
         /// <inheritdoc />
-        public async Task<IBackgroundTransfer> CreateAsync(
+        public async Task<IBackgroundTransfer?> CreateAsync(
             IUnixDirectoryEntry targetDirectory,
             string fileName,
             Stream data,
@@ -169,7 +168,7 @@ namespace FubarDev.FtpServer.FileSystem.Unix
         }
 
         /// <inheritdoc />
-        public async Task<IBackgroundTransfer> ReplaceAsync(IUnixFileEntry fileEntry, Stream data, CancellationToken cancellationToken)
+        public async Task<IBackgroundTransfer?> ReplaceAsync(IUnixFileEntry fileEntry, Stream data, CancellationToken cancellationToken)
         {
             var fileInfo = ((UnixFileEntry)fileEntry).Info;
             var stream = fileInfo.Open(FileMode.Create, FileAccess.Write, FilePermissions.DEFFILEMODE);
@@ -233,9 +232,7 @@ namespace FubarDev.FtpServer.FileSystem.Unix
                 tv_usec = microseconds,
             };
         }
-
-        [NotNull]
-        private IUnixFileSystemEntry CreateEntry([NotNull] IUnixDirectoryEntry parent, [NotNull] UnixFileSystemInfo info)
+        private IUnixFileSystemEntry CreateEntry(IUnixDirectoryEntry parent, UnixFileSystemInfo info)
         {
             switch (info)
             {

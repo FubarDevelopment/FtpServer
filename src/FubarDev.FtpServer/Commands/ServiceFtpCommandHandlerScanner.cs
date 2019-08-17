@@ -7,8 +7,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 
-using JetBrains.Annotations;
-
 using Microsoft.Extensions.Logging;
 
 namespace FubarDev.FtpServer.Commands
@@ -19,8 +17,6 @@ namespace FubarDev.FtpServer.Commands
     [Obsolete]
     public class ServiceFtpCommandHandlerScanner : IFtpCommandHandlerScanner
     {
-        [NotNull]
-        [ItemNotNull]
         private readonly IReadOnlyCollection<IFtpCommandHandlerInstanceInformation> _handlerInformation;
 
         /// <summary>
@@ -29,8 +25,8 @@ namespace FubarDev.FtpServer.Commands
         /// <param name="commandHandlers">The FTP command handlers.</param>
         /// <param name="logger">The logger.</param>
         public ServiceFtpCommandHandlerScanner(
-            [NotNull, ItemNotNull] IEnumerable<IFtpCommandHandler> commandHandlers,
-            [CanBeNull] ILogger<ServiceFtpCommandHandlerScanner> logger = null)
+            IEnumerable<IFtpCommandHandler> commandHandlers,
+            ILogger<ServiceFtpCommandHandlerScanner>? logger = null)
         {
             _handlerInformation = commandHandlers.SelectMany(x => x.GetInformation()).ToList();
 

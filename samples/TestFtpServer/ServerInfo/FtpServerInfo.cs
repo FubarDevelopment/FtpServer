@@ -6,8 +6,6 @@ using System.Collections.Generic;
 
 using FubarDev.FtpServer;
 
-using JetBrains.Annotations;
-
 namespace TestFtpServer.ServerInfo
 {
     /// <summary>
@@ -15,14 +13,13 @@ namespace TestFtpServer.ServerInfo
     /// </summary>
     public class FtpServerInfo : ISimpleModuleInfo
     {
-        [NotNull]
         private readonly IFtpServer _ftpServer;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FtpServerInfo"/>.
         /// </summary>
         /// <param name="ftpServer">The FTP server to get the information from.</param>
-        public FtpServerInfo([NotNull] IFtpServer ftpServer)
+        public FtpServerInfo(IFtpServer ftpServer)
         {
             _ftpServer = ftpServer;
         }

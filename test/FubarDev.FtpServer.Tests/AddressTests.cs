@@ -26,8 +26,8 @@ namespace FubarDev.FtpServer.Tests
         {
             var address = Address.Parse("|1|132.235.1.2|6275|");
             Assert.NotNull(address);
-            Assert.Equal(new Address("132.235.1.2", 6275), address, new AddressComparer());
-            Assert.Equal(new Uri("port://132.235.1.2:6275"), address.ToUri());
+            Assert.Equal(new Address("132.235.1.2", 6275), address, new AddressComparer() !);
+            Assert.Equal(new Uri("port://132.235.1.2:6275"), address!.ToUri());
         }
 
         [Fact]
@@ -35,8 +35,8 @@ namespace FubarDev.FtpServer.Tests
         {
             var address = Address.Parse("132,235,1,2,24,131");
             Assert.NotNull(address);
-            Assert.Equal(new Address("132.235.1.2", 6275), address, new AddressComparer());
-            Assert.Equal(new Uri("port://132.235.1.2:6275"), address.ToUri());
+            Assert.Equal(new Address("132.235.1.2", 6275), address, new AddressComparer() !);
+            Assert.Equal(new Uri("port://132.235.1.2:6275"), address!.ToUri());
         }
 
         [Fact]
@@ -44,8 +44,8 @@ namespace FubarDev.FtpServer.Tests
         {
             var address = Address.Parse("|2|1080::8:800:200C:417A|5282|");
             Assert.NotNull(address);
-            Assert.Equal(new Address("1080::8:800:200C:417A", 5282), address, new AddressComparer());
-            Assert.Equal(new Uri("port://[1080::8:800:200C:417A]:5282"), address.ToUri());
+            Assert.Equal(new Address("1080::8:800:200C:417A", 5282), address, new AddressComparer() !);
+            Assert.Equal(new Uri("port://[1080::8:800:200C:417A]:5282"), address!.ToUri());
         }
 
         [Fact]
@@ -53,8 +53,8 @@ namespace FubarDev.FtpServer.Tests
         {
             var address = Address.Parse("|||1234|");
             Assert.NotNull(address);
-            Assert.Equal(new Address(1234), address, new AddressComparer());
-            Assert.Throws<UriFormatException>(() => address.ToUri());
+            Assert.Equal(new Address(1234), address, new AddressComparer() !);
+            Assert.Throws<UriFormatException>(() => address!.ToUri());
         }
 
         private class AddressComparer : IEqualityComparer<Address>

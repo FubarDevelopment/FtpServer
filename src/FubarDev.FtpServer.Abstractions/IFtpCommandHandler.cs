@@ -5,8 +5,6 @@
 using System;
 using System.Collections.Generic;
 
-using JetBrains.Annotations;
-
 namespace FubarDev.FtpServer
 {
     /// <summary>
@@ -32,8 +30,6 @@ namespace FubarDev.FtpServer
         /// Gets a collection of command handler extensions provided by this command handler.
         /// </summary>
         /// <returns>A collection of command handler extensions provided by this command handler.</returns>
-        [NotNull]
-        [ItemNotNull]
         [Obsolete("All IFtpCommandHandlerExtension implementations are now stand-alone.", true)]
         IEnumerable<IFtpCommandHandlerExtension> GetExtensions();
     }

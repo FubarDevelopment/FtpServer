@@ -27,17 +27,10 @@ namespace FubarDev.FtpServer.Commands
     /// </summary>
     public class DefaultFtpCommandDispatcher : IFtpCommandDispatcher
     {
-        [NotNull]
         private readonly IFtpConnection _connection;
-        [NotNull]
         private readonly IFtpLoginStateMachine _loginStateMachine;
-        [NotNull]
         private readonly IFtpCommandActivator _commandActivator;
-
-        [CanBeNull]
-        private readonly ILogger<DefaultFtpCommandDispatcher> _logger;
-
-        [NotNull]
+        private readonly ILogger<DefaultFtpCommandDispatcher>? _logger;
         private readonly FtpCommandExecutionDelegate _executionDelegate;
 
         /// <summary>
@@ -49,11 +42,11 @@ namespace FubarDev.FtpServer.Commands
         /// <param name="middlewareObjects">The list of middleware objects.</param>
         /// <param name="logger">The logger.</param>
         public DefaultFtpCommandDispatcher(
-            [NotNull] IFtpConnection connection,
-            [NotNull] IFtpLoginStateMachine loginStateMachine,
-            [NotNull] IFtpCommandActivator commandActivator,
-            [NotNull, ItemNotNull] IEnumerable<IFtpCommandMiddleware> middlewareObjects,
-            [CanBeNull] ILogger<DefaultFtpCommandDispatcher> logger = null)
+            IFtpConnection connection,
+            IFtpLoginStateMachine loginStateMachine,
+            IFtpCommandActivator commandActivator,
+            IEnumerable<IFtpCommandMiddleware> middlewareObjects,
+            ILogger<DefaultFtpCommandDispatcher>? logger = null)
         {
             _connection = connection;
             _loginStateMachine = loginStateMachine;
@@ -116,8 +109,7 @@ namespace FubarDev.FtpServer.Commands
         /// </summary>
         /// <param name="message">The message to translate.</param>
         /// <returns>The translated message.</returns>
-        [NotNull]
-        private string T([NotNull] string message)
+        private string T(string message)
         {
             return _connection.Features.Get<ILocalizationFeature>().Catalog.GetString(message);
         }
@@ -129,19 +121,17 @@ namespace FubarDev.FtpServer.Commands
         /// <param name="args">The format arguments.</param>
         /// <returns>The translated message.</returns>
         [StringFormatMethod("message")]
-        [NotNull]
-        private string T([NotNull] string message, [NotNull] params object[] args)
+        private string T(string message, params object[] args)
         {
             return _connection.Features.Get<ILocalizationFeature>().Catalog.GetString(message, args);
         }
 
-        [NotNull]
         private Task ExecuteBackgroundCommandAsync(
-            [NotNull] FtpContext context,
-            [NotNull] IFtpCommandBase handler,
+            FtpContext context,
+            IFtpCommandBase handler,
             CancellationToken cancellationToken)
         {
-            var backgroundTaskFeature = _connection.Features.Get<IBackgroundTaskLifetimeFeature>();
+            var backgroundTaskFeature = _connection.Features.Get<IBackgroundTaskLifetimeFeature?>();
             if (backgroundTaskFeature == null)
             {
                 backgroundTaskFeature = new BackgroundTaskLifetimeFeature(
@@ -162,13 +152,12 @@ namespace FubarDev.FtpServer.Commands
                 cancellationToken);
         }
 
-        [NotNull]
         private async Task ExecuteCommandAsync(
-            [NotNull] FtpExecutionContext context)
+            FtpExecutionContext context)
         {
             var localizationFeature = context.Connection.Features.Get<ILocalizationFeature>();
             var command = context.Command;
-            IFtpResponse response;
+            IFtpResponse? response;
             try
             {
                 response = await context.CommandHandler.Process(command, context.CommandAborted)
@@ -236,8 +225,7 @@ namespace FubarDev.FtpServer.Commands
             }
         }
 
-        [NotNull]
-        private async Task SendResponseAsync([CanBeNull] IFtpResponse response, CancellationToken cancellationToken)
+        private async Task SendResponseAsync(IFtpResponse? response, CancellationToken cancellationToken)
         {
             if (response == null)
             {

@@ -7,8 +7,6 @@
 
 using System;
 
-using JetBrains.Annotations;
-
 namespace FubarDev.FtpServer
 {
     /// <summary>
@@ -23,7 +21,7 @@ namespace FubarDev.FtpServer
         /// </summary>
         /// <param name="commandName">The command name.</param>
         /// <param name="commandArgument">The command argument.</param>
-        public FtpCommand([NotNull] string commandName, [CanBeNull] string commandArgument)
+        public FtpCommand(string commandName, string? commandArgument)
         {
             Name = commandName;
             Argument = commandArgument ?? string.Empty;
@@ -32,13 +30,11 @@ namespace FubarDev.FtpServer
         /// <summary>
         /// Gets the command name.
         /// </summary>
-        [NotNull]
         public string Name { get; }
 
         /// <summary>
         /// Gets the command argument.
         /// </summary>
-        [NotNull]
         public string Argument { get; }
 
         /// <summary>
@@ -46,8 +42,7 @@ namespace FubarDev.FtpServer
         /// </summary>
         /// <param name="command">The command to split into name and arguments.</param>
         /// <returns>The created <see cref="FtpCommand"/>.</returns>
-        [NotNull]
-        public static FtpCommand Parse([NotNull] string command)
+        public static FtpCommand Parse(string command)
         {
             var spaceIndex = command.IndexOfAny(_whiteSpaces);
             var commandName = spaceIndex == -1 ? command : command.Substring(0, spaceIndex);

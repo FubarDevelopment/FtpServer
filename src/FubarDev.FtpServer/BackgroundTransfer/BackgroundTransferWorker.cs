@@ -12,33 +12,25 @@ using System.Threading;
 using System.Threading.Channels;
 using System.Threading.Tasks;
 
-using JetBrains.Annotations;
-
 using Microsoft.Extensions.Logging;
 
 namespace FubarDev.FtpServer.BackgroundTransfer
 {
     internal class BackgroundTransferWorker : IBackgroundTransferWorker, IFtpService, IDisposable
     {
-        [CanBeNull]
-        private readonly ILogger _log;
-
-        [NotNull]
+        private readonly ILogger? _log;
         private readonly CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
-
-        [NotNull]
         private readonly Channel<BackgroundTransferEntry> _channel;
 
         private readonly Dictionary<Guid, BackgroundTransferEntry> _pendingOrActiveEntries = new Dictionary<Guid, BackgroundTransferEntry>();
 
-        [CanBeNull]
-        private Task _processQueueTask;
+        private Task? _processQueueTask;
 
         private long _sequenceNumber;
 
         private bool _disposedValue;
 
-        public BackgroundTransferWorker(ILogger<BackgroundTransferWorker> logger = null)
+        public BackgroundTransferWorker(ILogger<BackgroundTransferWorker>? logger = null)
         {
             _log = logger;
             _channel = Channel.CreateUnbounded<BackgroundTransferEntry>();
@@ -106,6 +98,7 @@ namespace FubarDev.FtpServer.BackgroundTransfer
                 if (disposing)
                 {
                     _cancellationTokenSource.Cancel();
+                    _cancellationTokenSource.Dispose();
                 }
 
                 _disposedValue = true;

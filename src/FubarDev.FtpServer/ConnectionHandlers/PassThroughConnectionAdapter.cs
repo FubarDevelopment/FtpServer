@@ -9,8 +9,6 @@ using System.Threading.Tasks;
 
 using FubarDev.FtpServer.Networking;
 
-using JetBrains.Annotations;
-
 using Microsoft.Extensions.Logging;
 
 namespace FubarDev.FtpServer.ConnectionHandlers
@@ -20,10 +18,7 @@ namespace FubarDev.FtpServer.ConnectionHandlers
     /// </summary>
     internal class PassThroughConnectionAdapter : IFtpConnectionAdapter
     {
-        [NotNull]
         private readonly IFtpService _transmitService;
-
-        [NotNull]
         private readonly IPausableFtpService _receiverService;
 
         /// <summary>
@@ -34,10 +29,10 @@ namespace FubarDev.FtpServer.ConnectionHandlers
         /// <param name="connectionClosed">A cancellation token for a closed connection.</param>
         /// <param name="loggerFactory">The logger factory.</param>
         public PassThroughConnectionAdapter(
-            [NotNull] IDuplexPipe socketPipe,
-            [NotNull] IDuplexPipe connectionPipe,
+            IDuplexPipe socketPipe,
+            IDuplexPipe connectionPipe,
             CancellationToken connectionClosed,
-            [CanBeNull] ILoggerFactory loggerFactory = null)
+            ILoggerFactory? loggerFactory = null)
         {
             _receiverService = new NonClosingNetworkPassThrough(
                 socketPipe.Input,
@@ -76,16 +71,16 @@ namespace FubarDev.FtpServer.ConnectionHandlers
         private class NonClosingNetworkPassThrough : PassThroughService
         {
             public NonClosingNetworkPassThrough(
-                [NotNull] PipeReader reader,
-                [NotNull] PipeWriter writer,
+                PipeReader reader,
+                PipeWriter writer,
                 CancellationToken connectionClosed,
-                [CanBeNull] ILogger logger = null)
+                ILogger? logger = null)
                 : base(reader, writer, connectionClosed, logger)
             {
             }
 
             /// <inheritdoc />
-            protected override Task OnCloseAsync(Exception exception, CancellationToken cancellationToken)
+            protected override Task OnCloseAsync(Exception? exception, CancellationToken cancellationToken)
             {
                 return Task.CompletedTask;
             }

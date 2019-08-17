@@ -6,8 +6,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
-using JetBrains.Annotations;
-
 namespace FubarDev.FtpServer.FileSystem
 {
     /// <summary>
@@ -15,14 +13,13 @@ namespace FubarDev.FtpServer.FileSystem
     /// </summary>
     public class PathEnumerator : IEnumerable<string>
     {
-        [CanBeNull]
-        private readonly string _path;
+        private readonly string? _path;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PathEnumerator"/> class.
         /// </summary>
         /// <param name="path">The path to enumerate.</param>
-        public PathEnumerator([CanBeNull] string path)
+        public PathEnumerator(string? path)
         {
             _path = path;
         }
@@ -30,12 +27,12 @@ namespace FubarDev.FtpServer.FileSystem
         /// <inheritdoc />
         public IEnumerator<string> GetEnumerator()
         {
-            if (_path == null)
+            if (string.IsNullOrEmpty(_path))
             {
                 return Enumerable.Empty<string>().GetEnumerator();
             }
 
-            return SplitPath(_path).GetEnumerator();
+            return SplitPath(_path!).GetEnumerator();
         }
 
         /// <inheritdoc />
@@ -43,10 +40,7 @@ namespace FubarDev.FtpServer.FileSystem
         {
             return GetEnumerator();
         }
-
-        [NotNull]
-        [ItemNotNull]
-        private static IEnumerable<string> SplitPath([NotNull] string path)
+        private static IEnumerable<string> SplitPath(string path)
         {
             var lastIndex = 0;
             var indexOfSlash = path.IndexOf('/');
@@ -59,7 +53,9 @@ namespace FubarDev.FtpServer.FileSystem
 
             var remaining = path.Substring(lastIndex);
             if (!string.IsNullOrEmpty(remaining))
+            {
                 yield return remaining;
+            }
         }
     }
 }

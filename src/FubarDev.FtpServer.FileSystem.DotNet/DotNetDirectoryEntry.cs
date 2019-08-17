@@ -8,8 +8,6 @@
 using System.IO;
 using System.Linq;
 
-using JetBrains.Annotations;
-
 namespace FubarDev.FtpServer.FileSystem.DotNet
 {
     /// <summary>
@@ -26,7 +24,7 @@ namespace FubarDev.FtpServer.FileSystem.DotNet
         /// <param name="dirInfo">The <see cref="DirectoryInfo"/> to extract the information from.</param>
         /// <param name="isRoot">Defines whether this the root directory.</param>
         /// <param name="allowDeleteIfNotEmpty">Is deletion of this directory allowed if it's not empty.</param>
-        public DotNetDirectoryEntry([NotNull] DirectoryInfo dirInfo, bool isRoot, bool allowDeleteIfNotEmpty)
+        public DotNetDirectoryEntry(DirectoryInfo dirInfo, bool isRoot, bool allowDeleteIfNotEmpty)
             : base(dirInfo)
         {
             _allowDeleteIfNotEmpty = allowDeleteIfNotEmpty;

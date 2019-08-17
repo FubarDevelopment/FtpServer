@@ -9,8 +9,6 @@ using System;
 using System.Net;
 using System.Text;
 
-using JetBrains.Annotations;
-
 using AF = System.Net.Sockets.AddressFamily;
 
 namespace FubarDev.FtpServer
@@ -28,7 +26,7 @@ namespace FubarDev.FtpServer
         /// </summary>
         /// <param name="address">IPv4 address.</param>
         /// <param name="port">The port.</param>
-        public Address(string address, int port)
+        public Address(string? address, int port)
         {
             _isEnhanced = false;
             IPAddress = IPAddress.Parse(address);
@@ -57,8 +55,7 @@ namespace FubarDev.FtpServer
         /// <summary>
         /// Gets the IP address.
         /// </summary>
-        [CanBeNull]
-        public IPAddress IPAddress { get; }
+        public IPAddress? IPAddress { get; }
 
         /// <summary>
         /// Gets the port.
@@ -70,16 +67,16 @@ namespace FubarDev.FtpServer
         /// </summary>
         /// <param name="address">The IP address to parse.</param>
         /// <returns>The parsed IP address.</returns>
-        public static Address Parse(string address)
+        public static Address? Parse(string? address)
         {
             if (string.IsNullOrEmpty(address))
             {
                 return null;
             }
 
-            return IsEnhancedAddress(address)
-                       ? ParseEnhanced(address)
-                       : ParseLegacy(address);
+            return IsEnhancedAddress(address!)
+                ? ParseEnhanced(address!)
+                : ParseLegacy(address!);
         }
 
         /// <summary>
@@ -157,7 +154,7 @@ namespace FubarDev.FtpServer
             return number.IndexOf(address[0]) == -1;
         }
 
-        private static Address ParseLegacy(string address)
+        private static Address? ParseLegacy(string address)
         {
             var addressParts = address.Split(',');
             if (addressParts.Length != 6)
@@ -172,7 +169,7 @@ namespace FubarDev.FtpServer
             return new Address(ipAddress, port);
         }
 
-        private static Address ParseEnhanced(string address)
+        private static Address? ParseEnhanced(string address)
         {
             var dividerChar = address[0];
             var addressParts = address.Substring(1, address.Length - 2).Split(dividerChar);

@@ -4,8 +4,6 @@
 
 using System;
 
-using JetBrains.Annotations;
-
 namespace FubarDev.FtpServer.CommandExtensions
 {
     /// <summary>
@@ -22,7 +20,7 @@ namespace FubarDev.FtpServer.CommandExtensions
         /// </summary>
         /// <param name="name">The name of the FTP command this handler accepts.</param>
         /// <param name="extensionOf">The na of the FTP command this extension belongs to.</param>
-        public FtpCommandHandlerExtensionAttribute([NotNull] string name, [NotNull] string extensionOf)
+        public FtpCommandHandlerExtensionAttribute(string name, string extensionOf)
         {
             Name = name;
             ExtensionOf = extensionOf;
@@ -34,7 +32,7 @@ namespace FubarDev.FtpServer.CommandExtensions
         /// <param name="name">The name of the FTP command this handler accepts.</param>
         /// <param name="extensionOf">The na of the FTP command this extension belongs to.</param>
         /// <param name="isLoginRequired">Indicates whether this command is abortable.</param>
-        public FtpCommandHandlerExtensionAttribute([NotNull] string name, [NotNull] string extensionOf, bool isLoginRequired)
+        public FtpCommandHandlerExtensionAttribute(string name, string extensionOf, bool isLoginRequired)
         {
             Name = name;
             ExtensionOf = extensionOf;

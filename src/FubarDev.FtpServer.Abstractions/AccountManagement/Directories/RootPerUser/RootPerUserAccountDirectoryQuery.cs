@@ -6,8 +6,6 @@ using System.IO;
 
 using FubarDev.FtpServer.FileSystem;
 
-using JetBrains.Annotations;
-
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
@@ -18,13 +16,10 @@ namespace FubarDev.FtpServer.AccountManagement.Directories.RootPerUser
     /// </summary>
     public class RootPerUserAccountDirectoryQuery : IAccountDirectoryQuery
     {
-        [CanBeNull]
-        private readonly ILogger<RootPerUserAccountDirectoryQuery> _logger;
+        private readonly ILogger<RootPerUserAccountDirectoryQuery>? _logger;
 
-        [NotNull]
         private readonly string _anonymousRoot;
 
-        [NotNull]
         private readonly string _userRoot;
 
         private readonly bool _anonymousRootPerEmail;
@@ -35,12 +30,12 @@ namespace FubarDev.FtpServer.AccountManagement.Directories.RootPerUser
         /// <param name="options">The options.</param>
         /// <param name="logger">The logger.</param>
         public RootPerUserAccountDirectoryQuery(
-            [NotNull] IOptions<RootPerUserAccountDirectoryQueryOptions> options,
-            [CanBeNull] ILogger<RootPerUserAccountDirectoryQuery> logger = null)
+            IOptions<RootPerUserAccountDirectoryQueryOptions> options,
+            ILogger<RootPerUserAccountDirectoryQuery>? logger = null)
         {
             _logger = logger;
-            _anonymousRoot = options.Value.AnonymousRootDirectory.RemoveRoot() ?? string.Empty;
-            _userRoot = options.Value.UserRootDirectory.RemoveRoot() ?? string.Empty;
+            _anonymousRoot = options.Value.AnonymousRootDirectory?.RemoveRoot() ?? string.Empty;
+            _userRoot = options.Value.UserRootDirectory?.RemoveRoot() ?? string.Empty;
             _anonymousRootPerEmail = options.Value.AnonymousRootPerEmail;
         }
 

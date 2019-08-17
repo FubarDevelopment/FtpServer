@@ -5,19 +5,16 @@
 using System;
 using System.Globalization;
 
-using JetBrains.Annotations;
-
 using Mono.Unix;
 
 namespace FubarDev.FtpServer.FileSystem.Unix
 {
     internal abstract class UnixFileSystemEntry : IUnixFileSystemEntry
     {
-        [NotNull]
         private readonly UnixFileSystemInfo _info;
 
         protected UnixFileSystemEntry(
-            [NotNull] UnixFileSystemInfo info)
+            UnixFileSystemInfo info)
         {
             GenericInfo = _info = info;
             Permissions = new UnixPermissions(info);
@@ -28,7 +25,6 @@ namespace FubarDev.FtpServer.FileSystem.Unix
         /// <summary>
         /// Gets generic unix file system entry information.
         /// </summary>
-        [NotNull]
         public UnixFileSystemInfo GenericInfo { get; }
 
         /// <inheritdoc />

@@ -12,7 +12,7 @@ namespace FubarDev.FtpServer.FileSystem.DotNet
         /// <summary>
         /// Gets or sets the root path for all users.
         /// </summary>
-        public string RootPath { get; set; }
+        public string? RootPath { get; set; }
 
         /// <summary>
         /// Gets or sets the buffer size to be used in async IO methods.

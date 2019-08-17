@@ -19,8 +19,6 @@ using FubarDev.FtpServer.Localization;
 using FubarDev.FtpServer.ServerCommandHandlers;
 using FubarDev.FtpServer.ServerCommands;
 
-using JetBrains.Annotations;
-
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 
@@ -40,7 +38,7 @@ namespace Microsoft.Extensions.DependencyInjection
         /// <returns>The service collection.</returns>
         public static IServiceCollection AddFtpServer(
             this IServiceCollection services,
-            [NotNull] Action<IFtpServerBuilder> configure)
+            Action<IFtpServerBuilder> configure)
         {
             services.AddOptions();
 

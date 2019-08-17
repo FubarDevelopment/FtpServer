@@ -4,8 +4,6 @@
 
 using System;
 
-using JetBrains.Annotations;
-
 namespace FubarDev.FtpServer.CommandExtensions
 {
     /// <summary>
@@ -17,7 +15,6 @@ namespace FubarDev.FtpServer.CommandExtensions
         /// <summary>
         /// Gets the FTP command handler extension instance.
         /// </summary>
-        [NotNull]
         IFtpCommandHandlerExtension Instance { get; }
     }
 }

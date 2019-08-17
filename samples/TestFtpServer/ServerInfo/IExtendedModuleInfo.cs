@@ -4,8 +4,6 @@
 
 using System.Collections.Generic;
 
-using JetBrains.Annotations;
-
 namespace TestFtpServer.ServerInfo
 {
     /// <summary>
@@ -17,8 +15,6 @@ namespace TestFtpServer.ServerInfo
         /// Gets the extended information.
         /// </summary>
         /// <returns>The lines to be printed.</returns>
-        [NotNull]
-        [ItemNotNull]
         IEnumerable<string> GetExtendedInfo();
     }
 }

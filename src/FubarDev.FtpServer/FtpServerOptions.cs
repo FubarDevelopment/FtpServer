@@ -13,7 +13,7 @@ namespace FubarDev.FtpServer
         /// Gets or sets the address the server listens on.
         /// Leave empty to listen on all interfaces.
         /// </summary>
-        public string ServerAddress { get; set; }
+        public string? ServerAddress { get; set; }
 
         /// <summary>
         /// Gets or sets the server port.

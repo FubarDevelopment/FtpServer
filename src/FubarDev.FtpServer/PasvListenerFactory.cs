@@ -9,8 +9,6 @@ using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
 
-using JetBrains.Annotations;
-
 using Microsoft.Extensions.Logging;
 
 namespace FubarDev.FtpServer
@@ -21,8 +19,7 @@ namespace FubarDev.FtpServer
     public class PasvListenerFactory : IPasvListenerFactory
     {
         private readonly IPasvAddressResolver _addressResolver;
-        [CanBeNull]
-        private readonly ILogger<PasvListenerFactory> _log;
+        private readonly ILogger<PasvListenerFactory>? _log;
         private readonly Random _prng = new Random();
         private readonly object _listenerLock = new object();
 
@@ -31,7 +28,7 @@ namespace FubarDev.FtpServer
         /// </summary>
         /// <param name="addressResolver">The address resolver for <c>PASV</c>/<c>EPSV</c>.</param>
         /// <param name="logger">Logger instance.</param>
-        public PasvListenerFactory(IPasvAddressResolver addressResolver, ILogger<PasvListenerFactory> logger = null)
+        public PasvListenerFactory(IPasvAddressResolver addressResolver, ILogger<PasvListenerFactory>? logger = null)
         {
             _addressResolver = addressResolver;
             _log = logger;

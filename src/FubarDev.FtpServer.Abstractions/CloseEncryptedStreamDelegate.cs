@@ -5,8 +5,6 @@
 using System.Threading;
 using System.Threading.Tasks;
 
-using JetBrains.Annotations;
-
 namespace FubarDev.FtpServer
 {
     /// <summary>
@@ -14,7 +12,5 @@ namespace FubarDev.FtpServer
     /// </summary>
     /// <param name="cancellationToken">The cancellation token.</param>
     /// <returns>The task.</returns>
-    [NotNull]
-    [ItemNotNull]
     public delegate Task CloseEncryptedStreamDelegate(CancellationToken cancellationToken);
 }

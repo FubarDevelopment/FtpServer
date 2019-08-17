@@ -2,8 +2,6 @@
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
-using JetBrains.Annotations;
-
 namespace FubarDev.FtpServer.FileSystem
 {
     /// <summary>
@@ -18,8 +16,7 @@ namespace FubarDev.FtpServer.FileSystem
         /// The root path is <b>always</b> relative to the file system root path.
         /// If this path is not set, the file systems root directory will be used.
         /// </remarks>
-        [CanBeNull]
-        string RootPath { get; }
+        string? RootPath { get; }
 
         /// <summary>
         /// Gets the initial path for the account.
@@ -29,7 +26,6 @@ namespace FubarDev.FtpServer.FileSystem
         /// <c>/</c> will be used if the <see cref="RootPath"/>
         /// is not set.
         /// </remarks>
-        [CanBeNull]
-        string HomePath { get; }
+        string? HomePath { get; }
     }
 }

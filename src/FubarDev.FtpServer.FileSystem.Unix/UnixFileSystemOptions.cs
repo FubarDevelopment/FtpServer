@@ -12,6 +12,6 @@ namespace FubarDev.FtpServer.FileSystem.Unix
         /// <summary>
         /// Gets or sets the default root path.
         /// </summary>
-        public string Root { get; set; }
+        public string? Root { get; set; }
     }
 }

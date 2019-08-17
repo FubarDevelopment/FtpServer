@@ -8,8 +8,6 @@
 using System.IO;
 using System.Threading.Tasks;
 
-using JetBrains.Annotations;
-
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
@@ -21,17 +19,10 @@ namespace FubarDev.FtpServer.FileSystem.DotNet
     /// </summary>
     public class DotNetFileSystemProvider : IFileSystemClassFactory
     {
-        [NotNull]
         private readonly IAccountDirectoryQuery _accountDirectoryQuery;
-
-        [CanBeNull]
-        private readonly ILogger<DotNetFileSystemProvider> _logger;
-
-        [NotNull]
+        private readonly ILogger<DotNetFileSystemProvider>? _logger;
         private readonly string _rootPath;
-
         private readonly int _streamBufferSize;
-
         private readonly bool _allowNonEmptyDirectoryDelete;
 
         /// <summary>
@@ -41,13 +32,15 @@ namespace FubarDev.FtpServer.FileSystem.DotNet
         /// <param name="accountDirectoryQuery">Interface to query account directories.</param>
         /// <param name="logger">The logger.</param>
         public DotNetFileSystemProvider(
-            [NotNull] IOptions<DotNetFileSystemOptions> options,
-            [NotNull] IAccountDirectoryQuery accountDirectoryQuery,
-            [CanBeNull] ILogger<DotNetFileSystemProvider> logger = null)
+            IOptions<DotNetFileSystemOptions> options,
+            IAccountDirectoryQuery accountDirectoryQuery,
+            ILogger<DotNetFileSystemProvider>? logger = null)
         {
             _accountDirectoryQuery = accountDirectoryQuery;
             _logger = logger;
-            _rootPath = string.IsNullOrEmpty(options.Value.RootPath) ? Path.GetTempPath() : options.Value.RootPath;
+            _rootPath = string.IsNullOrEmpty(options.Value.RootPath)
+                ? Path.GetTempPath()
+                : options.Value.RootPath!;
             _streamBufferSize = options.Value.StreamBufferSize ?? DotNetFileSystem.DefaultStreamBufferSize;
             _allowNonEmptyDirectoryDelete = options.Value.AllowNonEmptyDirectoryDelete;
         }

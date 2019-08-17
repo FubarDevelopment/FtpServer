@@ -6,8 +6,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-using JetBrains.Annotations;
-
 using Microsoft.Extensions.Logging;
 
 namespace FubarDev.FtpServer.CommandExtensions
@@ -23,8 +21,8 @@ namespace FubarDev.FtpServer.CommandExtensions
         /// <param name="scanners">The scanners to search for FTP command handlers.</param>
         /// <param name="logger">The logger.</param>
         public DefaultFtpCommandHandlerExtensionProvider(
-            [NotNull] [ItemNotNull] IEnumerable<IFtpCommandHandlerExtensionScanner> scanners,
-            [CanBeNull] ILogger<DefaultFtpCommandHandlerExtensionProvider> logger = null)
+            IEnumerable<IFtpCommandHandlerExtensionScanner> scanners,
+            ILogger<DefaultFtpCommandHandlerExtensionProvider>? logger = null)
         {
             CommandHandlerExtensions = GetSanitizedCommandHandlers(scanners, logger).ToList();
         }
@@ -33,8 +31,8 @@ namespace FubarDev.FtpServer.CommandExtensions
         public IEnumerable<IFtpCommandHandlerExtensionInformation> CommandHandlerExtensions { get; }
 
         private IEnumerable<IFtpCommandHandlerExtensionInformation> GetSanitizedCommandHandlers(
-            [NotNull] [ItemNotNull] IEnumerable<IFtpCommandHandlerExtensionScanner> scanners,
-            [CanBeNull] ILogger<DefaultFtpCommandHandlerExtensionProvider> logger = null)
+            IEnumerable<IFtpCommandHandlerExtensionScanner> scanners,
+            ILogger<DefaultFtpCommandHandlerExtensionProvider>? logger = null)
         {
             var commandExtensionHandlers = scanners.SelectMany(x => x.Search())
                .GroupBy(x => x.Name, StringComparer.OrdinalIgnoreCase);

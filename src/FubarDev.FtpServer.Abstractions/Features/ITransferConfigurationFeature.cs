@@ -2,8 +2,6 @@
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
-using JetBrains.Annotations;
-
 namespace FubarDev.FtpServer.Features
 {
     /// <summary>
@@ -14,7 +12,6 @@ namespace FubarDev.FtpServer.Features
         /// <summary>
         /// Gets or sets the <see cref="FtpTransferMode"/>.
         /// </summary>
-        [NotNull]
         FtpTransferMode TransferMode { get; set; }
     }
 }

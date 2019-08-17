@@ -2,8 +2,6 @@
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
-using JetBrains.Annotations;
-
 namespace TestFtpServer.Configuration
 {
     /// <summary>
@@ -14,7 +12,6 @@ namespace TestFtpServer.Configuration
         /// <summary>
         /// Gets or sets the root directory.
         /// </summary>
-        [NotNull]
         public string Root { get; set; } = "/";
     }
 }

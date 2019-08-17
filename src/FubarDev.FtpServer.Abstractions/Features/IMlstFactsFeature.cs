@@ -6,8 +6,6 @@ using System.Collections.Generic;
 
 using FubarDev.FtpServer.ListFormatters.Facts;
 
-using JetBrains.Annotations;
-
 namespace FubarDev.FtpServer.Features
 {
     /// <summary>
@@ -18,8 +16,6 @@ namespace FubarDev.FtpServer.Features
         /// <summary>
         /// Gets the active <see cref="IFact"/> sent by <c>MLST</c> and <c>MLSD</c>.
         /// </summary>
-        [NotNull]
-        [ItemNotNull]
         ISet<string> ActiveMlstFacts { get; }
     }
 }

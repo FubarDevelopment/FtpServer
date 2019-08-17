@@ -24,9 +24,6 @@ namespace FubarDev.FtpServer
         private readonly IReadOnlyDictionary<TStatus, IReadOnlyCollection<Transition>> _transitions;
 
         private readonly TStatus _initialStatus;
-
-        [NotNull]
-        [ItemNotNull]
         private IReadOnlyCollection<Transition> _possibleTransitions;
 
         /// <summary>
@@ -36,8 +33,8 @@ namespace FubarDev.FtpServer
         /// <param name="transitions">The supported transitions.</param>
         /// <param name="initialStatus">The initial status.</param>
         protected FtpStateMachine(
-            [NotNull] IFtpConnection connection,
-            [NotNull, ItemNotNull] IEnumerable<Transition> transitions,
+            IFtpConnection connection,
+            IEnumerable<Transition> transitions,
             TStatus initialStatus)
         {
             Connection = connection;
@@ -57,7 +54,6 @@ namespace FubarDev.FtpServer
         /// <summary>
         /// Gets the connection this state machine belongs to.
         /// </summary>
-        [NotNull]
         public IFtpConnection Connection { get; }
 
         /// <summary>
@@ -74,7 +70,7 @@ namespace FubarDev.FtpServer
         /// <param name="ftpCommand">The FTP command to execute.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>The task returning the response.</returns>
-        public async Task<IFtpResponse> ExecuteAsync(FtpCommand ftpCommand, CancellationToken cancellationToken = default)
+        public async Task<IFtpResponse?> ExecuteAsync(FtpCommand ftpCommand, CancellationToken cancellationToken = default)
         {
             var commandTransitions = _possibleTransitions
                 .Where(x => x.IsMatch(ftpCommand.Name))
@@ -115,7 +111,7 @@ namespace FubarDev.FtpServer
         /// <param name="ftpCommand">The FTP command to execute.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>The task returning the response.</returns>
-        protected abstract Task<IFtpResponse> ExecuteCommandAsync([NotNull] FtpCommand ftpCommand, CancellationToken cancellationToken = default);
+        protected abstract Task<IFtpResponse?> ExecuteCommandAsync(FtpCommand ftpCommand, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Called when the status was updated.
@@ -148,8 +144,6 @@ namespace FubarDev.FtpServer
         /// </summary>
         /// <param name="status">The status value to get the transitions for.</param>
         /// <returns>The possible transitions for the given status.</returns>
-        [NotNull]
-        [ItemNotNull]
         protected IReadOnlyCollection<Transition> GetPossibleTransitions(TStatus status)
         {
             if (_transitions.TryGetValue(status, out var statusTransitions))
@@ -197,7 +191,7 @@ namespace FubarDev.FtpServer
             /// <param name="target">The target status.</param>
             /// <param name="command">The trigger command.</param>
             /// <param name="resultCode">The expected FTP code.</param>
-            public Transition(TStatus source, TStatus target, [NotNull] string command, SecurityActionResult resultCode)
+            public Transition(TStatus source, TStatus target, string command, SecurityActionResult resultCode)
                 : this(source, target, command, code => code == (int)resultCode)
             {
             }
@@ -212,7 +206,7 @@ namespace FubarDev.FtpServer
             /// <param name="target">The target status.</param>
             /// <param name="command">The trigger command.</param>
             /// <param name="hundredsRange">The hundreds range.</param>
-            public Transition(TStatus source, TStatus target, [NotNull] string command, int hundredsRange)
+            public Transition(TStatus source, TStatus target, string command, int hundredsRange)
                 : this(source, target, command, code => code >= (hundredsRange * 100) && code < (hundredsRange + 1) * 100)
             {
                 if (hundredsRange > 9)
@@ -228,7 +222,7 @@ namespace FubarDev.FtpServer
             /// <param name="target">The target status.</param>
             /// <param name="command">The trigger command.</param>
             /// <param name="isCodeMatch">A function to test if the code triggers this transition.</param>
-            public Transition(TStatus source, TStatus target, [NotNull] string command, Func<int, bool> isCodeMatch)
+            public Transition(TStatus source, TStatus target, string command, Func<int, bool> isCodeMatch)
             {
                 Source = source;
                 Target = target;
@@ -251,7 +245,7 @@ namespace FubarDev.FtpServer
             /// </summary>
             /// <param name="command">The command to test for.</param>
             /// <returns><see langword="true"/> when this transition might be triggered by the given <paramref name="command"/>.</returns>
-            public bool IsMatch([NotNull] string command)
+            public bool IsMatch(string command)
                 => _isCommandMatchFunc(command);
 
             /// <summary>
@@ -260,7 +254,7 @@ namespace FubarDev.FtpServer
             /// <param name="command">The command to test for.</param>
             /// <param name="code">The code to test for.</param>
             /// <returns><see langword="true"/> when this transition will be triggered by the given <paramref name="command"/> and <paramref name="code"/>.</returns>
-            public bool IsMatch([NotNull] string command, int code)
+            public bool IsMatch(string command, int code)
                 => _isCommandMatchFunc(command) && _isCodeMatchFunc(code);
         }
     }

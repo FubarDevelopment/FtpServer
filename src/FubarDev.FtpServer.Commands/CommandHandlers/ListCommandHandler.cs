@@ -22,8 +22,6 @@ using FubarDev.FtpServer.ListFormatters;
 using FubarDev.FtpServer.ServerCommands;
 using FubarDev.FtpServer.Utilities;
 
-using JetBrains.Annotations;
-
 using Microsoft.Extensions.Logging;
 
 namespace FubarDev.FtpServer.CommandHandlers
@@ -36,21 +34,20 @@ namespace FubarDev.FtpServer.CommandHandlers
     [FtpCommandHandler("LS")]
     public class ListCommandHandler : FtpCommandHandler
     {
-        [CanBeNull]
-        private readonly ILogger<ListCommandHandler> _logger;
+        private readonly ILogger<ListCommandHandler>? _logger;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ListCommandHandler"/> class.
         /// </summary>
         /// <param name="logger">The logger.</param>
         public ListCommandHandler(
-            [CanBeNull] ILogger<ListCommandHandler> logger = null)
+            ILogger<ListCommandHandler>? logger = null)
         {
             _logger = logger;
         }
 
         /// <inheritdoc/>
-        public override async Task<IFtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
+        public override async Task<IFtpResponse?> Process(FtpCommand command, CancellationToken cancellationToken)
         {
             await FtpContext.ServerCommandWriter
                .WriteAsync(
@@ -65,7 +62,7 @@ namespace FubarDev.FtpServer.CommandHandlers
                 .ConfigureAwait(false);
         }
 
-        private async Task<IFtpResponse> ExecuteSend(IFtpDataConnection dataConnection, FtpCommand command, CancellationToken cancellationToken)
+        private async Task<IFtpResponse?> ExecuteSend(IFtpDataConnection dataConnection, FtpCommand command, CancellationToken cancellationToken)
         {
             var encodingFeature = Connection.Features.Get<IEncodingFeature>();
 
@@ -122,7 +119,10 @@ namespace FubarDev.FtpServer.CommandHandlers
 
                         if (!(foundEntry.Entry is IUnixDirectoryEntry dirEntry))
                         {
-                            mask = foundEntry.FileName;
+                            if (!string.IsNullOrEmpty(foundEntry.FileName))
+                            {
+                                mask = foundEntry.FileName!;
+                            }
                         }
                         else if (!dirEntry.IsRoot)
                         {

@@ -4,8 +4,6 @@
 
 using System.IO;
 using System.Threading.Tasks;
-using JetBrains.Annotations;
-
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Mono.Unix;
@@ -17,13 +15,9 @@ namespace FubarDev.FtpServer.FileSystem.Unix
     /// </summary>
     public class UnixFileSystemProvider : IFileSystemClassFactory
     {
-        [NotNull]
         private readonly IAccountDirectoryQuery _accountDirectoryQuery;
 
-        [CanBeNull]
-        private readonly ILogger<UnixFileSystemProvider> _logger;
-
-        [NotNull]
+        private readonly ILogger<UnixFileSystemProvider>? _logger;
         private readonly UnixFileSystemOptions _options;
 
         /// <summary>
@@ -33,9 +27,9 @@ namespace FubarDev.FtpServer.FileSystem.Unix
         /// <param name="accountDirectoryQuery">Interface to query account directories.</param>
         /// <param name="logger">The logger for this file system.</param>
         public UnixFileSystemProvider(
-            [NotNull] IOptions<UnixFileSystemOptions> options,
-            [NotNull] IAccountDirectoryQuery accountDirectoryQuery,
-            [CanBeNull] ILogger<UnixFileSystemProvider> logger = null)
+            IOptions<UnixFileSystemOptions> options,
+            IAccountDirectoryQuery accountDirectoryQuery,
+            ILogger<UnixFileSystemProvider>? logger = null)
         {
             _accountDirectoryQuery = accountDirectoryQuery;
             _logger = logger;
@@ -59,8 +53,7 @@ namespace FubarDev.FtpServer.FileSystem.Unix
             return Task.FromResult<IUnixFileSystem>(new UnixFileSystem(rootEntry, accountInformation.User, userInfo));
         }
 
-        [CanBeNull]
-        private static UnixUserInfo GetUserInfo([NotNull] IAccountInformation accountInformation)
+        private static UnixUserInfo? GetUserInfo(IAccountInformation accountInformation)
         {
             var testNames = new[]
             {

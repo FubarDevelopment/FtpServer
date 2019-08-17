@@ -8,8 +8,6 @@ using System.Threading;
 using System.Threading.Channels;
 using System.Threading.Tasks;
 
-using JetBrains.Annotations;
-
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
@@ -23,16 +21,12 @@ namespace FubarDev.FtpServer.Networking
     /// </remarks>
     internal sealed class FtpServerListenerService : PausableFtpService
     {
-        [NotNull]
         private readonly ChannelWriter<TcpClient> _newClientWriter;
-
-        [NotNull]
         private readonly MultiBindingTcpListener _multiBindingTcpListener;
 
         private readonly CancellationTokenSource _connectionClosedCts;
 
-        [CanBeNull]
-        private Exception _exception;
+        private Exception? _exception;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FtpServerListenerService"/> class.
@@ -42,10 +36,10 @@ namespace FubarDev.FtpServer.Networking
         /// <param name="logger">The logger.</param>
         /// <param name="connectionClosedCts">Cancellation token source for a closed connection.</param>
         public FtpServerListenerService(
-            [NotNull] ChannelWriter<TcpClient> newClientWriter,
-            [NotNull] IOptions<FtpServerOptions> serverOptions,
+            ChannelWriter<TcpClient> newClientWriter,
+            IOptions<FtpServerOptions> serverOptions,
             CancellationTokenSource connectionClosedCts,
-            [CanBeNull] ILogger logger = null)
+            ILogger? logger = null)
             : base(connectionClosedCts.Token, logger)
         {
             _newClientWriter = newClientWriter;
@@ -57,7 +51,7 @@ namespace FubarDev.FtpServer.Networking
         /// <summary>
         /// Event for a started listener.
         /// </summary>
-        public event EventHandler<ListenerStartedEventArgs> ListenerStarted;
+        public event EventHandler<ListenerStartedEventArgs>? ListenerStarted;
 
         /// <inheritdoc />
         protected override async Task ExecuteAsync(CancellationToken cancellationToken)

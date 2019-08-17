@@ -3,10 +3,9 @@
 // </copyright>
 
 using System;
+using System.Diagnostics;
 using System.Net;
 using System.Net.Sockets;
-
-using JetBrains.Annotations;
 
 namespace FubarDev.FtpServer
 {
@@ -15,8 +14,8 @@ namespace FubarDev.FtpServer
     /// </summary>
     public class HostInfo
     {
-        private readonly string _hostName;
-        private readonly IPAddress _address;
+        private readonly string? _hostName;
+        private readonly IPAddress? _address;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="HostInfo"/> class.
@@ -29,7 +28,7 @@ namespace FubarDev.FtpServer
         /// Initializes a new instance of the <see cref="HostInfo"/> class.
         /// </summary>
         /// <param name="address">The IP address.</param>
-        public HostInfo([NotNull] IPAddress address)
+        public HostInfo(IPAddress address)
         {
             _address = address;
         }
@@ -38,7 +37,7 @@ namespace FubarDev.FtpServer
         /// Initializes a new instance of the <see cref="HostInfo"/> class.
         /// </summary>
         /// <param name="hostName">The host name.</param>
-        public HostInfo([NotNull] string hostName)
+        public HostInfo(string hostName)
         {
             _hostName = hostName;
         }
@@ -52,6 +51,11 @@ namespace FubarDev.FtpServer
         /// Gets a value indicating whether this object represents an IP address.
         /// </summary>
         public bool IsAddress => _address != null;
+
+        /// <summary>
+        /// Gets a value indicating whether this object represents an host name.
+        /// </summary>
+        public bool IsHostName => _hostName != null;
 
         /// <summary>
         /// Gets the IP address.
@@ -71,10 +75,12 @@ namespace FubarDev.FtpServer
                 return string.Empty;
             }
 
-            if (!IsAddress)
+            if (IsHostName)
             {
-                return _hostName;
+                return HostName;
             }
+
+            Debug.Assert(IsAddress, "It must be an address if its not empty and not a host name.");
 
             if (Address.AddressFamily == AddressFamily.InterNetworkV6)
             {

@@ -7,8 +7,6 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-using JetBrains.Annotations;
-
 using JKang.IpcServiceFramework;
 
 namespace TestFtpServer.Shell.Commands
@@ -18,14 +16,13 @@ namespace TestFtpServer.Shell.Commands
     /// </summary>
     public class ContinueCommandHandler : IRootCommandInfo, IExecutableCommandInfo
     {
-        [NotNull]
         private readonly IpcServiceClient<Api.IFtpServerHost> _client;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ContinueCommandHandler"/> class.
         /// </summary>
         /// <param name="client">The client to be used to communicate with the FTP server.</param>
-        public ContinueCommandHandler([NotNull] IpcServiceClient<Api.IFtpServerHost> client)
+        public ContinueCommandHandler(IpcServiceClient<Api.IFtpServerHost> client)
         {
             _client = client;
         }

@@ -4,8 +4,6 @@
 
 using System.Security.Cryptography.X509Certificates;
 
-using JetBrains.Annotations;
-
 namespace FubarDev.FtpServer
 {
     /// <summary>
@@ -16,7 +14,6 @@ namespace FubarDev.FtpServer
         /// <summary>
         /// Gets or sets the server certificate.
         /// </summary>
-        [CanBeNull]
-        public X509Certificate2 ServerCertificate { get; set; }
+        public X509Certificate2? ServerCertificate { get; set; }
     }
 }

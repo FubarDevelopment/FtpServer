@@ -14,8 +14,6 @@ using FubarDev.FtpServer.Commands;
 using FubarDev.FtpServer.DataConnection;
 using FubarDev.FtpServer.Features;
 
-using JetBrains.Annotations;
-
 using Microsoft.Extensions.Options;
 
 namespace FubarDev.FtpServer.CommandHandlers
@@ -28,10 +26,7 @@ namespace FubarDev.FtpServer.CommandHandlers
     [FtpFeatureText("EPRT")]
     public class PortCommandHandler : FtpCommandHandler
     {
-        [NotNull]
         private readonly ActiveDataConnectionFeatureFactory _dataConnectionFeatureFactory;
-
-        [NotNull]
         private readonly PortCommandOptions _options;
 
         /// <summary>
@@ -40,19 +35,19 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// <param name="dataConnectionFeatureFactory">The factory to create a data connection feature for active connections.</param>
         /// <param name="options">The options for this command.</param>
         public PortCommandHandler(
-            [NotNull] ActiveDataConnectionFeatureFactory dataConnectionFeatureFactory,
-            [NotNull] IOptions<PortCommandOptions> options)
+            ActiveDataConnectionFeatureFactory dataConnectionFeatureFactory,
+            IOptions<PortCommandOptions> options)
         {
             _dataConnectionFeatureFactory = dataConnectionFeatureFactory;
             _options = options.Value;
         }
 
         /// <inheritdoc/>
-        public override async Task<IFtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
+        public override async Task<IFtpResponse?> Process(FtpCommand command, CancellationToken cancellationToken)
         {
             try
             {
-                var connectionFeature = this.Connection.Features.Get<IConnectionFeature>();
+                var connectionFeature = Connection.Features.Get<IConnectionFeature>();
                 var address = Parse(command.Argument, connectionFeature.RemoteEndPoint);
                 if (address == null)
                 {
@@ -87,16 +82,16 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// <param name="address">The IP address to parse.</param>
         /// <param name="remoteEndPoint">The remote end point to use as reference.</param>
         /// <returns>The parsed IP address.</returns>
-        private static IPEndPoint Parse(string address, IPEndPoint remoteEndPoint)
+        private static IPEndPoint? Parse(string? address, IPEndPoint remoteEndPoint)
         {
             if (string.IsNullOrEmpty(address))
             {
                 return null;
             }
 
-            return IsEnhancedAddress(address)
-                ? ParseEnhanced(address, remoteEndPoint)
-                : ParseLegacy(address);
+            return IsEnhancedAddress(address!)
+                ? ParseEnhanced(address!, remoteEndPoint)
+                : ParseLegacy(address!);
         }
 
         private static bool IsEnhancedAddress(string address)
@@ -105,7 +100,7 @@ namespace FubarDev.FtpServer.CommandHandlers
             return number.IndexOf(address[0]) == -1;
         }
 
-        private static IPEndPoint ParseLegacy(string address)
+        private static IPEndPoint? ParseLegacy(string address)
         {
             var addressParts = address.Split(',');
             if (addressParts.Length != 6)
@@ -120,7 +115,7 @@ namespace FubarDev.FtpServer.CommandHandlers
             return new IPEndPoint(IPAddress.Parse(ipAddress), port);
         }
 
-        private static IPEndPoint ParseEnhanced(string address, IPEndPoint remoteEndPoint)
+        private static IPEndPoint? ParseEnhanced(string address, IPEndPoint remoteEndPoint)
         {
             var dividerChar = address[0];
             var addressParts = address.Substring(1, address.Length - 2).Split(dividerChar);

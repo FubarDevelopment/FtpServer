@@ -19,22 +19,22 @@ namespace FubarDev.FtpServer.CommandHandlers
     public class PbszCommandHandler : FtpCommandHandler
     {
         /// <inheritdoc/>
-        public override Task<IFtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
+        public override async Task<IFtpResponse?> Process(FtpCommand command, CancellationToken cancellationToken)
         {
             if (string.IsNullOrEmpty(command.Argument))
             {
-                return Task.FromResult<IFtpResponse>(new FtpResponse(501, T("Protection buffer size not specified.")));
+                return new FtpResponse(501, T("Protection buffer size not specified."));
             }
 
             var loginStateMachine = Connection.ConnectionServices.GetRequiredService<IFtpLoginStateMachine>();
             var authMechanism = loginStateMachine.SelectedAuthenticationMechanism;
             if (authMechanism == null)
             {
-                return Task.FromResult<IFtpResponse>(new FtpResponse(503, T("No authentication mechanism selected.")));
+                return new FtpResponse(503, T("No authentication mechanism selected."));
             }
 
             var size = Convert.ToInt32(command.Argument, 10);
-            return authMechanism.HandlePbszAsync(size, cancellationToken);
+            return await authMechanism.HandlePbszAsync(size, cancellationToken).ConfigureAwait(false);
         }
     }
 }

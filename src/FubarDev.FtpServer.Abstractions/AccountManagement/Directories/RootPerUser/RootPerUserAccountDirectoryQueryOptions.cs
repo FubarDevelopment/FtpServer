@@ -4,8 +4,6 @@
 
 using System.ComponentModel;
 
-using JetBrains.Annotations;
-
 namespace FubarDev.FtpServer.AccountManagement.Directories.RootPerUser
 {
     /// <summary>
@@ -19,8 +17,7 @@ namespace FubarDev.FtpServer.AccountManagement.Directories.RootPerUser
         /// <remarks>
         /// This path is relative to the file systems root path.
         /// </remarks>
-        [CanBeNull]
-        public string UserRootDirectory { get; set; }
+        public string? UserRootDirectory { get; set; }
 
         /// <summary>
         /// Gets or sets the anonymous root directory.
@@ -30,9 +27,8 @@ namespace FubarDev.FtpServer.AccountManagement.Directories.RootPerUser
         /// property isn't set.
         /// This path is relative to the file systems root path.
         /// </remarks>
-        [CanBeNull]
         [DefaultValue("anonymous")]
-        public string AnonymousRootDirectory { get; set; }
+        public string? AnonymousRootDirectory { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether anonymous users should have their own (per-email) root directory.

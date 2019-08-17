@@ -7,8 +7,6 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-using JetBrains.Annotations;
-
 namespace FubarDev.FtpServer
 {
     /// <summary>
@@ -19,8 +17,6 @@ namespace FubarDev.FtpServer
         /// <summary>
         /// Gets a collection of all command names for this command.
         /// </summary>
-        [NotNull]
-        [ItemNotNull]
         [Obsolete("The mapping from name to command handler is created by using the FtpCommandHandlerAttribute.")]
         IReadOnlyCollection<string> Names { get; }
 
@@ -30,8 +26,6 @@ namespace FubarDev.FtpServer
         /// <param name="command">The command to process.</param>
         /// <param name="cancellationToken">The cancellation token to signal command abortion.</param>
         /// <returns>The FTP response.</returns>
-        [NotNull]
-        [ItemCanBeNull]
-        Task<IFtpResponse> Process([NotNull] FtpCommand command, CancellationToken cancellationToken);
+        Task<IFtpResponse?> Process(FtpCommand command, CancellationToken cancellationToken);
     }
 }

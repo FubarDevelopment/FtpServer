@@ -5,8 +5,6 @@
 using System;
 using System.Collections.Generic;
 
-using JetBrains.Annotations;
-
 namespace FubarDev.FtpServer
 {
     /// <summary>
@@ -15,7 +13,7 @@ namespace FubarDev.FtpServer
     [Obsolete("Use an attribute that implements IFeatureInfo, like - for example - FtpFeatureTextAttribute.")]
     public class GenericFeatureInfo : IFeatureInfo
     {
-        private readonly Func<IFtpConnection, string> _toString;
+        private readonly Func<IFtpConnection, string>? _toString;
 
         private readonly string _name;
 
@@ -26,7 +24,7 @@ namespace FubarDev.FtpServer
         /// <param name="requiresAuthentication">Indicates whether this extension requires an authenticated user.</param>
         /// <param name="additionalNames">The additional feature names.</param>
         [Obsolete("Use an attribute that implements IFeatureInfo, like - for example - FtpFeatureTextAttribute.")]
-        public GenericFeatureInfo([NotNull] string name, bool requiresAuthentication, [NotNull, ItemNotNull] params string[] additionalNames)
+        public GenericFeatureInfo(string name, bool requiresAuthentication, params string[] additionalNames)
             : this(name, null, requiresAuthentication, additionalNames)
         {
         }
@@ -39,7 +37,7 @@ namespace FubarDev.FtpServer
         /// <param name="requiresAuthentication">Indicates whether this extension requires an authenticated user.</param>
         /// <param name="additionalNames">The additional feature names.</param>
         [Obsolete("Use an attribute that implements IFeatureInfo, like - for example - FtpFeatureTextAttribute.")]
-        public GenericFeatureInfo([NotNull] string name, [CanBeNull] Func<IFtpConnection, string> toString, bool requiresAuthentication, [NotNull, ItemNotNull] params string[] additionalNames)
+        public GenericFeatureInfo(string name, Func<IFtpConnection, string>? toString, bool requiresAuthentication, params string[] additionalNames)
         {
             _name = name;
             var names = new HashSet<string> { name };
@@ -65,12 +63,7 @@ namespace FubarDev.FtpServer
         [Obsolete("Use BuildInfo(object, IFtpConnection) instead.")]
         public string BuildInfo(IFtpConnection connection)
         {
-            if (_toString == null)
-            {
-                return _name;
-            }
-
-            return _toString(connection);
+            return _toString == null ? _name : _toString(connection);
         }
 
         /// <inheritdoc />

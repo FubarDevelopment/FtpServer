@@ -8,8 +8,6 @@ using System.Threading.Tasks;
 using FubarDev.FtpServer.AccountManagement;
 using FubarDev.FtpServer.Authorization;
 
-using JetBrains.Annotations;
-
 namespace FubarDev.FtpServer.MembershipProvider.Pam
 {
     /// <summary>
@@ -17,14 +15,13 @@ namespace FubarDev.FtpServer.MembershipProvider.Pam
     /// </summary>
     public class PamSessionAuthorizationAction : IAuthorizationAction
     {
-        [NotNull]
         private readonly IFtpConnectionAccessor _connectionAccessor;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PamSessionAuthorizationAction"/> class.
         /// </summary>
         /// <param name="connectionAccessor">The FTP connection accessor.</param>
-        public PamSessionAuthorizationAction([NotNull] IFtpConnectionAccessor connectionAccessor)
+        public PamSessionAuthorizationAction(IFtpConnectionAccessor connectionAccessor)
         {
             _connectionAccessor = connectionAccessor;
         }

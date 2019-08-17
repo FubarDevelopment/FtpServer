@@ -2,8 +2,6 @@
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
-using JetBrains.Annotations;
-
 namespace TestFtpServer.ServerInfo
 {
     /// <summary>
@@ -14,7 +12,6 @@ namespace TestFtpServer.ServerInfo
         /// <summary>
         /// Gets the name of the module.
         /// </summary>
-        [NotNull]
         string Name { get; }
     }
 }

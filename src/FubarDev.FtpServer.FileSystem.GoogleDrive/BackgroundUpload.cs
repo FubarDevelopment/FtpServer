@@ -11,8 +11,6 @@ using FubarDev.FtpServer.BackgroundTransfer;
 
 using Google.Apis.Upload;
 
-using JetBrains.Annotations;
-
 using File = Google.Apis.Drive.v3.Data.File;
 
 namespace FubarDev.FtpServer.FileSystem.GoogleDrive
@@ -22,10 +20,7 @@ namespace FubarDev.FtpServer.FileSystem.GoogleDrive
     /// </summary>
     internal class BackgroundUpload : IBackgroundTransfer
     {
-        [NotNull]
         private readonly ITemporaryData _tempData;
-
-        [NotNull]
         private readonly IGoogleDriveFileSystem _fileSystem;
 
         private bool _notifiedAsFinished;
@@ -40,10 +35,10 @@ namespace FubarDev.FtpServer.FileSystem.GoogleDrive
         /// <param name="tempData">The temporary data used to read from.</param>
         /// <param name="fileSystem">The file system that initiated this background upload.</param>
         public BackgroundUpload(
-            [NotNull] string fullPath,
-            [NotNull] File file,
-            [NotNull] ITemporaryData tempData,
-            [NotNull] IGoogleDriveFileSystem fileSystem)
+            string fullPath,
+            File file,
+            ITemporaryData tempData,
+            IGoogleDriveFileSystem fileSystem)
         {
             TransferId = fullPath;
             File = file;

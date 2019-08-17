@@ -4,8 +4,6 @@
 
 using System.Net;
 
-using JetBrains.Annotations;
-
 namespace FubarDev.FtpServer
 {
     /// <summary>
@@ -47,7 +45,6 @@ namespace FubarDev.FtpServer
         /// <summary>
         /// Gets the address published to clients for PASV connections.
         /// </summary>
-        [NotNull]
         public IPAddress PublicAddress { get; }
     }
 }

@@ -8,8 +8,6 @@ using FubarDev.FtpServer.FileSystem.Generic;
 
 using Google.Apis.Drive.v3.Data;
 
-using JetBrains.Annotations;
-
 namespace FubarDev.FtpServer.FileSystem.GoogleDrive
 {
     /// <summary>
@@ -24,8 +22,8 @@ namespace FubarDev.FtpServer.FileSystem.GoogleDrive
         /// <param name="fullName">The full path and file name of this entry.</param>
         /// <param name="fileSize">The file size (if it differs from the one in the model).</param>
         public GoogleDriveFileEntry(
-            [NotNull] File file,
-            [NotNull] string fullName,
+            File file,
+            string fullName,
             long? fileSize = null)
         {
             File = file;

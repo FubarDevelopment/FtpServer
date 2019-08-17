@@ -13,8 +13,6 @@ using FubarDev.FtpServer.Features;
 using FubarDev.FtpServer.FileSystem;
 using FubarDev.FtpServer.Localization;
 
-using JetBrains.Annotations;
-
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -28,12 +26,8 @@ namespace FubarDev.FtpServer.CommandHandlers
     public class ReinCommandHandler : FtpCommandHandler
     {
         private readonly int? _dataPort;
-
-        [NotNull]
         private readonly IFtpServerMessages _serverMessages;
-
-        [CanBeNull]
-        private readonly ILogger<ReinCommandHandler> _logger;
+        private readonly ILogger<ReinCommandHandler>? _logger;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ReinCommandHandler"/> class.
@@ -42,9 +36,9 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// <param name="serverMessages">The FTP server messages.</param>
         /// <param name="logger">The logger.</param>
         public ReinCommandHandler(
-            [NotNull] IOptions<PortCommandOptions> portOptions,
-            [NotNull] IFtpServerMessages serverMessages,
-            [CanBeNull] ILogger<ReinCommandHandler> logger = null)
+            IOptions<PortCommandOptions> portOptions,
+            IFtpServerMessages serverMessages,
+            ILogger<ReinCommandHandler>? logger = null)
         {
             _dataPort = portOptions.Value.DataPort;
             _serverMessages = serverMessages;
@@ -52,7 +46,7 @@ namespace FubarDev.FtpServer.CommandHandlers
         }
 
         /// <inheritdoc />
-        public override async Task<IFtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
+        public override async Task<IFtpResponse?> Process(FtpCommand command, CancellationToken cancellationToken)
         {
             // Reset the login
             var loginStateMachine = Connection.ConnectionServices.GetRequiredService<IFtpLoginStateMachine>();
@@ -96,7 +90,7 @@ namespace FubarDev.FtpServer.CommandHandlers
 
                 // Remove from features collection
                 var setMethod = setFeatureMethod.MakeGenericMethod(featureItem.Key);
-                setMethod.Invoke(Connection.Features, new object[] { null });
+                setMethod.Invoke(Connection.Features, new object?[] { null });
             }
 
             // Set the default FTP data connection feature

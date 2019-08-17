@@ -8,8 +8,6 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-using JetBrains.Annotations;
-
 namespace FubarDev.FtpServer
 {
     /// <summary>
@@ -17,8 +15,6 @@ namespace FubarDev.FtpServer
     /// </summary>
     public class FtpResponseTextBlock : IFtpResponse
     {
-        [NotNull]
-        [ItemNotNull]
         private readonly List<string> _lines;
 
         /// <summary>
@@ -28,7 +24,7 @@ namespace FubarDev.FtpServer
         /// <param name="lines">The text to be sent to the client.</param>
         public FtpResponseTextBlock(
             int code,
-            [NotNull] [ItemNotNull] IEnumerable<string> lines)
+            IEnumerable<string> lines)
         {
             Code = code;
             _lines = lines.Reverse().SkipWhile(x => string.IsNullOrWhiteSpace(x)).Reverse().ToList();
@@ -39,10 +35,10 @@ namespace FubarDev.FtpServer
 
         /// <inheritdoc />
         [Obsolete("Use a custom server command.")]
-        public FtpResponseAfterWriteAsyncDelegate AfterWriteAction => null;
+        public FtpResponseAfterWriteAsyncDelegate? AfterWriteAction => null;
 
         /// <inheritdoc />
-        public Task<FtpResponseLine> GetNextLineAsync(object token, CancellationToken cancellationToken)
+        public Task<FtpResponseLine> GetNextLineAsync(object? token, CancellationToken cancellationToken)
         {
             IEnumerator<string> enumerator;
             if (token == null)

@@ -7,8 +7,6 @@ using System.Text;
 using FubarDev.FtpServer.AccountManagement;
 using FubarDev.FtpServer.FileSystem;
 
-using JetBrains.Annotations;
-
 namespace FubarDev.FtpServer.ListFormatters.Facts
 {
     /// <summary>
@@ -23,7 +21,7 @@ namespace FubarDev.FtpServer.ListFormatters.Facts
         /// <param name="fileSystem">The current file system of the given <paramref name="entry"/>.</param>
         /// <param name="dir">The current directory.</param>
         /// <param name="entry">The file to create the permissions for.</param>
-        public PermissionsFact([NotNull] IFtpUser user, [NotNull] IUnixFileSystem fileSystem, [NotNull] IUnixDirectoryEntry dir, [NotNull] IUnixFileEntry entry)
+        public PermissionsFact(IFtpUser user, IUnixFileSystem fileSystem, IUnixDirectoryEntry dir, IUnixFileEntry entry)
         {
             var values = new StringBuilder();
             var entryPerm = entry.Permissions.GetAccessModeFor(entry, user);
@@ -61,7 +59,7 @@ namespace FubarDev.FtpServer.ListFormatters.Facts
         /// <param name="user">The current user.</param>
         /// <param name="dir">The current directory.</param>
         /// <param name="entry">The directory entry to get the permissions for.</param>
-        public PermissionsFact([NotNull] IFtpUser user, [CanBeNull] IUnixDirectoryEntry dir, [NotNull] IUnixDirectoryEntry entry)
+        public PermissionsFact(IFtpUser user, IUnixDirectoryEntry? dir, IUnixDirectoryEntry entry)
         {
             var values = new StringBuilder();
             var entryPerm = entry.Permissions.GetAccessModeFor(entry, user);

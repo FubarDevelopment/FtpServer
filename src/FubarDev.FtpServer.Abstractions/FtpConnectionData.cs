@@ -18,8 +18,6 @@ using FubarDev.FtpServer.Features.Impl;
 using FubarDev.FtpServer.FileSystem;
 using FubarDev.FtpServer.Localization;
 
-using JetBrains.Annotations;
-
 using Microsoft.AspNetCore.Http.Features;
 
 using NGettext;
@@ -32,7 +30,6 @@ namespace FubarDev.FtpServer
     public sealed class FtpConnectionData : ILocalizationFeature, IFileSystemFeature, IAuthorizationInformationFeature,
         ITransferConfigurationFeature, IMlstFactsFeature, IDisposable
     {
-        [NotNull]
         private readonly IFeatureCollection _featureCollection;
 
         /// <summary>
@@ -42,9 +39,9 @@ namespace FubarDev.FtpServer
         /// <param name="featureCollection">The feature collection where all features get stored.</param>
         /// <param name="catalogLoader">The catalog loader for the FTP server.</param>
         public FtpConnectionData(
-            [NotNull] Encoding defaultEncoding,
-            [NotNull] IFeatureCollection featureCollection,
-            [NotNull] IFtpCatalogLoader catalogLoader)
+            Encoding defaultEncoding,
+            IFeatureCollection featureCollection,
+            IFtpCatalogLoader catalogLoader)
         {
             _featureCollection = featureCollection;
             featureCollection.Set<ILocalizationFeature>(new LocalizationFeature(catalogLoader));
@@ -56,7 +53,7 @@ namespace FubarDev.FtpServer
 
         /// <inheritdoc />
         [Obsolete("User the IAuthorizationInformationFeature services to get the current status.")]
-        public IFtpUser User
+        public IFtpUser? User
         {
             get => _featureCollection.Get<IAuthorizationInformationFeature>().User;
             set => _featureCollection.Get<IAuthorizationInformationFeature>().User = value;
@@ -79,7 +76,6 @@ namespace FubarDev.FtpServer
         /// Gets or sets the <see cref="Encoding"/> for the <c>NLST</c> command.
         /// </summary>
         [Obsolete("Query the information using the IEncodingFeature instead.")]
-        [NotNull]
         public Encoding NlstEncoding
         {
             get => _featureCollection.Get<IEncodingFeature>().NlstEncoding;
@@ -134,21 +130,19 @@ namespace FubarDev.FtpServer
         /// Gets or sets the address to use for an active data connection.
         /// </summary>
         [Obsolete("This property is not used any more. Use IFtpDataConnectionFeature instead.")]
-        public Address PortAddress { get; set; }
+        public Address? PortAddress { get; set; }
 
         /// <summary>
         /// Gets or sets the data connection for a passive data transfer.
         /// </summary>
-        [CanBeNull]
         [Obsolete("This property is not used any more. Use IFtpDataConnectionFeature instead.")]
-        public TcpClient PassiveSocketClient { get; set; }
+        public TcpClient? PassiveSocketClient { get; set; }
 
         /// <summary>
         /// Gets the <see cref="IBackgroundCommandHandler"/> that's required for the <c>ABOR</c> command.
         /// </summary>
-        [CanBeNull]
         [Obsolete("Query IBackgroundTaskLifetimeFeature to get information about an active background task (if non-null).")]
-        public IBackgroundCommandHandler BackgroundCommandHandler => null;
+        public IBackgroundCommandHandler? BackgroundCommandHandler => null;
 
         /// <summary>
         /// Gets or sets the last used transfer type command.
@@ -157,7 +151,7 @@ namespace FubarDev.FtpServer
         /// It's not allowed to use PASV when PORT was used previously - and vice versa.
         /// </remarks>
         [Obsolete("The restriction was lifted.")]
-        public string TransferTypeCommandUsed { get; set; }
+        public string? TransferTypeCommandUsed { get; set; }
 
         /// <summary>
         /// Gets or sets the restart position for appending data to a file.
@@ -165,10 +159,10 @@ namespace FubarDev.FtpServer
         [Obsolete("Query the information using the IRestCommandFeature instead.")]
         public long? RestartPosition
         {
-            get => _featureCollection.Get<IRestCommandFeature>()?.RestartPosition;
+            get => _featureCollection.Get<IRestCommandFeature?>()?.RestartPosition;
             set
             {
-                var feature = _featureCollection.Get<IRestCommandFeature>();
+                var feature = _featureCollection.Get<IRestCommandFeature?>();
                 if (value != null)
                 {
                     if (feature == null)
@@ -183,7 +177,7 @@ namespace FubarDev.FtpServer
                 {
                     if (feature != null)
                     {
-                        _featureCollection.Set<IRestCommandFeature>(null);
+                        _featureCollection.Set<IRestCommandFeature?>(null);
                     }
                 }
             }
@@ -192,14 +186,13 @@ namespace FubarDev.FtpServer
         /// <summary>
         /// Gets or sets the <see cref="IUnixFileEntry"/> to use for a <c>RNTO</c> operation.
         /// </summary>
-        [CanBeNull]
         [Obsolete("Query the information using the IRenameCommandFeature instead.")]
-        public SearchResult<IUnixFileSystemEntry> RenameFrom
+        public SearchResult<IUnixFileSystemEntry>? RenameFrom
         {
-            get => _featureCollection.Get<IRenameCommandFeature>()?.RenameFrom;
+            get => _featureCollection.Get<IRenameCommandFeature?>()?.RenameFrom;
             set
             {
-                var feature = _featureCollection.Get<IRenameCommandFeature>();
+                var feature = _featureCollection.Get<IRenameCommandFeature?>();
                 if (value != null)
                 {
                     if (feature == null)
@@ -214,7 +207,7 @@ namespace FubarDev.FtpServer
                 {
                     if (feature != null)
                     {
-                        _featureCollection.Set<IRenameCommandFeature>(null);
+                        _featureCollection.Set<IRenameCommandFeature?>(null);
                     }
                 }
             }
@@ -227,12 +220,11 @@ namespace FubarDev.FtpServer
         /// <summary>
         /// Gets or sets a delegate that allows the creation of an encrypted stream.
         /// </summary>
-        [CanBeNull]
         [Obsolete("Query the information using the ISecureConnectionFeature instead.")]
-        public CreateEncryptedStreamDelegate CreateEncryptedStream
+        public CreateEncryptedStreamDelegate? CreateEncryptedStream
         {
             get => _featureCollection.Get<ISecureConnectionFeature>().CreateEncryptedStream;
-            set => _featureCollection.Get<ISecureConnectionFeature>().CreateEncryptedStream = value;
+            set => _featureCollection.Get<ISecureConnectionFeature>().CreateEncryptedStream = value ?? throw new ArgumentNullException(nameof(value));
         }
 
         /// <summary>
@@ -260,7 +252,7 @@ namespace FubarDev.FtpServer
         /// </summary>
         private class RenameCommandFeature : IRenameCommandFeature
         {
-            public RenameCommandFeature([NotNull] SearchResult<IUnixFileSystemEntry> renameFrom)
+            public RenameCommandFeature(SearchResult<IUnixFileSystemEntry> renameFrom)
             {
                 RenameFrom = renameFrom;
             }

@@ -5,8 +5,6 @@
 using System.Threading;
 using System.Threading.Tasks;
 
-using JetBrains.Annotations;
-
 namespace TestFtpServer.Shell
 {
     /// <summary>
@@ -19,7 +17,6 @@ namespace TestFtpServer.Shell
         /// </summary>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        [NotNull]
         Task ExecuteAsync(CancellationToken cancellationToken);
     }
 }

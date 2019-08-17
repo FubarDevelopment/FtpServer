@@ -23,7 +23,7 @@ namespace FubarDev.FtpServer.Localization
         /// </summary>
         /// <param name="connectionAccessor">The FTP connection accessor.</param>
         public DefaultFtpServerMessages(
-            [NotNull] IFtpConnectionAccessor connectionAccessor)
+            IFtpConnectionAccessor connectionAccessor)
         {
             _connectionAccessor = connectionAccessor;
         }
@@ -31,7 +31,6 @@ namespace FubarDev.FtpServer.Localization
         /// <summary>
         /// Gets the connection this command was created for.
         /// </summary>
-        [NotNull]
         private IFtpConnection Connection => _connectionAccessor.FtpConnection ?? throw new InvalidOperationException("FTP server message called without active connection.");
 
         /// <inheritdoc />

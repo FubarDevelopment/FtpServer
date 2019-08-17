@@ -4,8 +4,6 @@
 
 using System;
 
-using JetBrains.Annotations;
-
 namespace FubarDev.FtpServer
 {
     /// <summary>
@@ -19,7 +17,7 @@ namespace FubarDev.FtpServer
         /// <typeparam name="TException">The exception type to check for.</typeparam>
         /// <param name="ex">The exception to check.</param>
         /// <returns><see langword="true"/> if the exception is of the given type.</returns>
-        public static bool Is<TException>([NotNull] this Exception ex)
+        public static bool Is<TException>(this Exception ex)
             where TException : Exception
         {
             switch (ex)
@@ -39,8 +37,7 @@ namespace FubarDev.FtpServer
         /// <typeparam name="TException">The target exception type.</typeparam>
         /// <param name="ex">The exception to cast.</param>
         /// <returns>The exception of the target exception type.</returns>
-        [NotNull]
-        public static TException Get<TException>([NotNull] this Exception ex)
+        public static TException Get<TException>(this Exception ex)
             where TException : Exception
         {
             switch (ex)

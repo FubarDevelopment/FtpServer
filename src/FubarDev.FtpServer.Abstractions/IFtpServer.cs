@@ -4,8 +4,6 @@
 
 using System;
 
-using JetBrains.Annotations;
-
 namespace FubarDev.FtpServer
 {
     /// <summary>
@@ -26,8 +24,7 @@ namespace FubarDev.FtpServer
         /// <summary>
         /// Gets the public IP address (required for <c>PASV</c> and <c>EPSV</c>).
         /// </summary>
-        [NotNull]
-        string ServerAddress { get; }
+        string? ServerAddress { get; }
 
         /// <summary>
         /// Gets the port on which the FTP server is listening for incoming connections.
@@ -54,7 +51,6 @@ namespace FubarDev.FtpServer
         /// <summary>
         /// Gets the FTP server statistics.
         /// </summary>
-        [NotNull]
         IFtpServerStatistics Statistics { get; }
 
         /// <summary>

@@ -6,17 +6,15 @@ using System.IO.Pipelines;
 
 using FubarDev.FtpServer.ConnectionHandlers;
 
-using JetBrains.Annotations;
-
 namespace FubarDev.FtpServer.Features.Impl
 {
     internal class NetworkStreamFeature : INetworkStreamFeature
     {
         public NetworkStreamFeature(
-            [NotNull] IFtpSecureConnectionAdapter secureConnectionAdapter,
-            [NotNull] IFtpService streamReaderService,
-            [NotNull] IFtpService streamWriterService,
-            [NotNull] PipeWriter output)
+            IFtpSecureConnectionAdapter secureConnectionAdapter,
+            IFtpService streamReaderService,
+            IFtpService streamWriterService,
+            PipeWriter output)
         {
             StreamReaderService = streamReaderService;
             StreamWriterService = streamWriterService;

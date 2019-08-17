@@ -20,7 +20,7 @@ namespace FubarDev.FtpServer.Authentication
         /// Initializes a new instance of the <see cref="AuthenticationMechanism"/> class.
         /// </summary>
         /// <param name="connection">The required FTP connection.</param>
-        protected AuthenticationMechanism([NotNull] IFtpConnection connection)
+        protected AuthenticationMechanism(IFtpConnection connection)
         {
             Connection = connection;
         }
@@ -28,7 +28,6 @@ namespace FubarDev.FtpServer.Authentication
         /// <summary>
         /// Gets the FTP connection.
         /// </summary>
-        [NotNull]
         public IFtpConnection Connection { get; }
 
         /// <inheritdoc />

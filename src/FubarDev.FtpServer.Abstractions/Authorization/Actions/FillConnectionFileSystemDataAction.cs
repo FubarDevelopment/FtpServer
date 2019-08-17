@@ -9,8 +9,6 @@ using System.Threading.Tasks;
 using FubarDev.FtpServer.Features;
 using FubarDev.FtpServer.FileSystem;
 
-using JetBrains.Annotations;
-
 namespace FubarDev.FtpServer.Authorization.Actions
 {
     /// <summary>
@@ -18,10 +16,8 @@ namespace FubarDev.FtpServer.Authorization.Actions
     /// </summary>
     public class FillConnectionFileSystemDataAction : IAuthorizationAction
     {
-        [NotNull]
         private readonly IFtpConnectionAccessor _ftpConnectionAccessor;
 
-        [NotNull]
         private readonly IFileSystemClassFactory _fileSystemFactory;
 
         /// <summary>
@@ -30,8 +26,8 @@ namespace FubarDev.FtpServer.Authorization.Actions
         /// <param name="ftpConnectionAccessor">The FTP connection accessor.</param>
         /// <param name="fileSystemFactory">The file system factory.</param>
         public FillConnectionFileSystemDataAction(
-            [NotNull] IFtpConnectionAccessor ftpConnectionAccessor,
-            [NotNull] IFileSystemClassFactory fileSystemFactory)
+            IFtpConnectionAccessor ftpConnectionAccessor,
+            IFileSystemClassFactory fileSystemFactory)
         {
             _ftpConnectionAccessor = ftpConnectionAccessor;
             _fileSystemFactory = fileSystemFactory;

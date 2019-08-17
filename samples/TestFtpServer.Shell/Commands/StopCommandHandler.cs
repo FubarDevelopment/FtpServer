@@ -7,8 +7,6 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-using JetBrains.Annotations;
-
 using JKang.IpcServiceFramework;
 
 namespace TestFtpServer.Shell.Commands
@@ -18,10 +16,7 @@ namespace TestFtpServer.Shell.Commands
     /// </summary>
     public class StopCommandHandler : IRootCommandInfo, IExecutableCommandInfo
     {
-        [NotNull]
         private readonly IpcServiceClient<Api.IFtpServerHost> _client;
-
-        [NotNull]
         private readonly IShellStatus _status;
 
         /// <summary>
@@ -30,8 +25,8 @@ namespace TestFtpServer.Shell.Commands
         /// <param name="client">The client to be used to communicate with the FTP server.</param>
         /// <param name="status">The shell status.</param>
         public StopCommandHandler(
-            [NotNull] IpcServiceClient<Api.IFtpServerHost> client,
-            [NotNull] IShellStatus status)
+            IpcServiceClient<Api.IFtpServerHost> client,
+            IShellStatus status)
         {
             _client = client;
             _status = status;

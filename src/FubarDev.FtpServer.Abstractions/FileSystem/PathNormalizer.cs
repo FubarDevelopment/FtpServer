@@ -6,8 +6,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-using JetBrains.Annotations;
-
 namespace FubarDev.FtpServer.FileSystem
 {
     /// <summary>
@@ -20,8 +18,7 @@ namespace FubarDev.FtpServer.FileSystem
         /// </summary>
         /// <param name="path">The path to normalize.</param>
         /// <returns>The normalized path.</returns>
-        [NotNull]
-        public static string NormalizePath([NotNull] this string path)
+        public static string NormalizePath(this string path)
         {
             return string.Join(string.Empty, new PathEnumerator(path).NormalizePath());
         }
@@ -32,11 +29,9 @@ namespace FubarDev.FtpServer.FileSystem
         /// <param name="pathSegments">The segments of the path to normalize.</param>
         /// <param name="previousPathSegments">Initial path segments to be used as reference.</param>
         /// <returns>The normalized path segments.</returns>
-        [NotNull]
-        [ItemNotNull]
         public static IEnumerable<string> NormalizePath(
-            [NotNull, ItemNotNull] this IEnumerable<string> pathSegments,
-            [CanBeNull] IEnumerable<string> previousPathSegments = null)
+            this IEnumerable<string> pathSegments,
+            IEnumerable<string>? previousPathSegments = null)
         {
             var initialEntries = previousPathSegments?.ToArray() ?? Array.Empty<string>();
             var entries = new Stack<string>(initialEntries);
@@ -86,9 +81,7 @@ namespace FubarDev.FtpServer.FileSystem
 
             return entries.Reverse();
         }
-
-        [NotNull]
-        internal static string GetPathSegment([NotNull] this IUnixDirectoryEntry entry)
+        internal static string GetPathSegment(this IUnixDirectoryEntry entry)
         {
             if (entry.IsRoot)
             {

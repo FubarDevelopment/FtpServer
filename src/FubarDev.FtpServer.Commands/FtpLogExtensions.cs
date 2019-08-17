@@ -6,8 +6,6 @@
 //-----------------------------------------------------------------------
 
 #if NETSTANDARD1_3
-using JetBrains.Annotations;
-
 using Microsoft.Extensions.Logging;
 #endif
 
@@ -20,7 +18,7 @@ namespace FubarDev.FtpServer
     {
 #if NETSTANDARD1_3
         internal static void LogError(
-            [NotNull] this ILogger log,
+            this ILogger log,
             System.Exception exception,
             string message,
             params object[] args)
@@ -29,7 +27,7 @@ namespace FubarDev.FtpServer
         }
 
         internal static void LogWarning(
-            [NotNull] this ILogger log,
+            this ILogger log,
             System.Exception exception,
             string message,
             params object[] args)
@@ -38,7 +36,7 @@ namespace FubarDev.FtpServer
         }
 
         internal static void LogCritical(
-            [NotNull] this ILogger log,
+            this ILogger log,
             System.Exception exception,
             string message,
             params object[] args)

@@ -24,8 +24,6 @@ using FubarDev.FtpServer.ServerCommandHandlers;
 using Google.Apis.Auth.OAuth2;
 using Google.Apis.Drive.v3;
 
-using JetBrains.Annotations;
-
 using Microsoft.DotNet.PlatformAbstractions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -44,10 +42,9 @@ namespace TestFtpServer
 {
     public static class ServiceCollectionExtensions
     {
-        [NotNull]
         public static IServiceCollection AddFtpServices(
-            [NotNull] this IServiceCollection services,
-            [NotNull] FtpOptions options)
+            this IServiceCollection services,
+            FtpOptions options)
         {
             services
                .Configure<AuthTlsOptions>(
@@ -202,7 +199,7 @@ namespace TestFtpServer
                         && RuntimeEnvironment.OperatingSystemPlatform !=
                         Microsoft.DotNet.PlatformAbstractions.Platform.Windows)
                     {
-                        var umask = options.Umask.StartsWith("0")
+                        var umask = options.Umask!.StartsWith("0")
                             ? Convert.ToInt32(options.Umask, 8)
                             : Convert.ToInt32(options.Umask, 10);
 
@@ -222,8 +219,8 @@ namespace TestFtpServer
         }
 
         private static UserCredential GetUserCredential(
-            [NotNull] string clientSecretsFile,
-            [NotNull] string userName,
+            string clientSecretsFile,
+            string userName,
             bool refreshToken)
         {
             UserCredential credential;

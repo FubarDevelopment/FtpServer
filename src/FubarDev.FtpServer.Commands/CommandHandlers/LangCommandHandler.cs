@@ -12,8 +12,6 @@ using FubarDev.FtpServer.Commands;
 using FubarDev.FtpServer.Features;
 using FubarDev.FtpServer.Localization;
 
-using JetBrains.Annotations;
-
 using Microsoft.Extensions.DependencyInjection;
 
 namespace FubarDev.FtpServer.CommandHandlers
@@ -34,8 +32,7 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// </summary>
         /// <param name="connection">The FTP connection.</param>
         /// <returns>The string to be returned.</returns>
-        [NotNull]
-        public static string CreateFeatureString([NotNull] IFtpConnection connection)
+        public static string CreateFeatureString(IFtpConnection connection)
         {
             var catalogLoader = connection.ConnectionServices.GetRequiredService<IFtpCatalogLoader>();
 #if NETSTANDARD1_3
@@ -50,7 +47,7 @@ namespace FubarDev.FtpServer.CommandHandlers
         }
 
         /// <inheritdoc />
-        public override async Task<IFtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
+        public override async Task<IFtpResponse?> Process(FtpCommand command, CancellationToken cancellationToken)
         {
             var catalogLoader = Connection.ConnectionServices.GetRequiredService<IFtpCatalogLoader>();
             var localizationFeature = Connection.Features.Get<ILocalizationFeature>();

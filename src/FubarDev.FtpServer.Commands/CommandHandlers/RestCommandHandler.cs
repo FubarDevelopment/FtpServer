@@ -22,11 +22,11 @@ namespace FubarDev.FtpServer.CommandHandlers
     public class RestCommandHandler : FtpCommandHandler
     {
         /// <inheritdoc/>
-        public override Task<IFtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
+        public override Task<IFtpResponse?> Process(FtpCommand command, CancellationToken cancellationToken)
         {
             var restartPosition = Convert.ToInt64(command.Argument, 10);
-            Connection.Features.Set<IRestCommandFeature>(new RestCommandFeature(restartPosition));
-            return Task.FromResult<IFtpResponse>(new FtpResponse(350, T("Restarting next transfer from position {0}", restartPosition)));
+            Connection.Features.Set<IRestCommandFeature?>(new RestCommandFeature(restartPosition));
+            return Task.FromResult<IFtpResponse?>(new FtpResponse(350, T("Restarting next transfer from position {0}", restartPosition)));
         }
 
         private class RestCommandFeature : IRestCommandFeature

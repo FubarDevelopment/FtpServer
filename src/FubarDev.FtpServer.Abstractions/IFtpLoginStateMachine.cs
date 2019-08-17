@@ -5,8 +5,6 @@
 using FubarDev.FtpServer.Authentication;
 using FubarDev.FtpServer.Authorization;
 
-using JetBrains.Annotations;
-
 namespace FubarDev.FtpServer
 {
     /// <summary>
@@ -17,13 +15,11 @@ namespace FubarDev.FtpServer
         /// <summary>
         /// Gets the selected authentication mechanism.
         /// </summary>
-        [CanBeNull]
-        IAuthenticationMechanism SelectedAuthenticationMechanism { get; }
+        IAuthenticationMechanism? SelectedAuthenticationMechanism { get; }
 
         /// <summary>
         /// Gets the selected authorization mechanism.
         /// </summary>
-        [CanBeNull]
-        IAuthorizationMechanism SelectedAuthorizationMechanism { get; }
+        IAuthorizationMechanism? SelectedAuthorizationMechanism { get; }
     }
 }

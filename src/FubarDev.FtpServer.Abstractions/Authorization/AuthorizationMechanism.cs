@@ -21,7 +21,7 @@ namespace FubarDev.FtpServer.Authorization
         /// Initializes a new instance of the <see cref="AuthorizationMechanism"/> class.
         /// </summary>
         /// <param name="connection">The required FTP connection.</param>
-        protected AuthorizationMechanism([NotNull] IFtpConnection connection)
+        protected AuthorizationMechanism(IFtpConnection connection)
         {
             Connection = connection;
         }
@@ -29,11 +29,10 @@ namespace FubarDev.FtpServer.Authorization
         /// <summary>
         /// Gets the FTP connection.
         /// </summary>
-        [NotNull]
         public IFtpConnection Connection { get; }
 
         /// <inheritdoc />
-        public abstract void Reset(IAuthenticationMechanism authenticationMechanism);
+        public abstract void Reset(IAuthenticationMechanism? authenticationMechanism);
 
         /// <inheritdoc />
         public abstract Task<IFtpResponse> HandleUserAsync(string userIdentifier, CancellationToken cancellationToken);

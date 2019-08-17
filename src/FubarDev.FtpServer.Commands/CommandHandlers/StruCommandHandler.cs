@@ -20,14 +20,14 @@ namespace FubarDev.FtpServer.CommandHandlers
     public class StruCommandHandler : FtpCommandHandler
     {
         /// <inheritdoc/>
-        public override Task<IFtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
+        public override Task<IFtpResponse?> Process(FtpCommand command, CancellationToken cancellationToken)
         {
             if (string.Equals(command.Argument, "F", StringComparison.OrdinalIgnoreCase))
             {
-                return Task.FromResult<IFtpResponse>(new FtpResponse(200, T("Structure set to File.")));
+                return Task.FromResult<IFtpResponse?>(new FtpResponse(200, T("Structure set to File.")));
             }
 
-            return Task.FromResult<IFtpResponse>(new FtpResponse(504, T("File structure {0} not supported.", command.Argument)));
+            return Task.FromResult<IFtpResponse?>(new FtpResponse(504, T("File structure {0} not supported.", command.Argument)));
         }
     }
 }

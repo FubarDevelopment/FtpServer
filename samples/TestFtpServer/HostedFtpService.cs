@@ -7,8 +7,6 @@ using System.Threading.Tasks;
 
 using FubarDev.FtpServer;
 
-using JetBrains.Annotations;
-
 using Microsoft.Extensions.Hosting;
 
 namespace TestFtpServer
@@ -18,7 +16,6 @@ namespace TestFtpServer
     /// </summary>
     public class HostedFtpService : IHostedService
     {
-        [NotNull]
         private readonly IFtpServerHost _ftpServerHost;
 
         /// <summary>
@@ -26,7 +23,7 @@ namespace TestFtpServer
         /// </summary>
         /// <param name="ftpServerHost">The FTP server host that gets wrapped as a hosted service.</param>
         public HostedFtpService(
-            [NotNull] IFtpServerHost ftpServerHost)
+            IFtpServerHost ftpServerHost)
         {
             _ftpServerHost = ftpServerHost;
         }

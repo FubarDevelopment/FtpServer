@@ -7,8 +7,6 @@ using System;
 using FubarDev.FtpServer.Authentication;
 using FubarDev.FtpServer.CommandExtensions;
 
-using JetBrains.Annotations;
-
 namespace FubarDev.FtpServer.Commands
 {
     /// <summary>
@@ -16,16 +14,16 @@ namespace FubarDev.FtpServer.Commands
     /// </summary>
     public class FoundFeatureInfo
     {
-        private readonly IFtpCommandHandlerInformation _commandHandlerInfo;
-        private readonly IFtpCommandHandlerExtensionInformation _extensionInfo;
-        private readonly IAuthenticationMechanism _authenticationMechanism;
+        private readonly IFtpCommandHandlerInformation? _commandHandlerInfo;
+        private readonly IFtpCommandHandlerExtensionInformation? _extensionInfo;
+        private readonly IAuthenticationMechanism? _authenticationMechanism;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FoundFeatureInfo"/> class.
         /// </summary>
         /// <param name="commandHandlerInfo">The FTP command handler information.</param>
         /// <param name="featureInfo">The feature information.</param>
-        public FoundFeatureInfo([NotNull] IFtpCommandHandlerInformation commandHandlerInfo, [NotNull] IFeatureInfo featureInfo)
+        public FoundFeatureInfo(IFtpCommandHandlerInformation commandHandlerInfo, IFeatureInfo featureInfo)
         {
             IsCommandHandler = true;
             _commandHandlerInfo = commandHandlerInfo;
@@ -37,7 +35,7 @@ namespace FubarDev.FtpServer.Commands
         /// </summary>
         /// <param name="extensionInfo">The FTP command handler extension information.</param>
         /// <param name="featureInfo">The feature information.</param>
-        public FoundFeatureInfo([NotNull] IFtpCommandHandlerExtensionInformation extensionInfo, [NotNull] IFeatureInfo featureInfo)
+        public FoundFeatureInfo(IFtpCommandHandlerExtensionInformation extensionInfo, IFeatureInfo featureInfo)
         {
             IsExtension = true;
             _extensionInfo = extensionInfo;
@@ -49,7 +47,7 @@ namespace FubarDev.FtpServer.Commands
         /// </summary>
         /// <param name="authMechanism">The authentication mechanism.</param>
         /// <param name="featureInfo">The feature information.</param>
-        public FoundFeatureInfo([NotNull] IAuthenticationMechanism authMechanism, [NotNull] IFeatureInfo featureInfo)
+        public FoundFeatureInfo(IAuthenticationMechanism authMechanism, IFeatureInfo featureInfo)
         {
             IsAuthenticationMechanism = true;
             _authenticationMechanism = authMechanism;
@@ -64,7 +62,6 @@ namespace FubarDev.FtpServer.Commands
         /// <summary>
         /// Gets the FTP command handler information.
         /// </summary>
-        [NotNull]
         public IFtpCommandHandlerInformation CommandHandlerInfo => _commandHandlerInfo ?? throw new InvalidOperationException();
 
         /// <summary>
@@ -75,7 +72,6 @@ namespace FubarDev.FtpServer.Commands
         /// <summary>
         /// Gets the FTP command handler extension information.
         /// </summary>
-        [NotNull]
         public IFtpCommandHandlerExtensionInformation ExtensionInfo => _extensionInfo ?? throw new InvalidOperationException();
 
         /// <summary>
@@ -86,13 +82,11 @@ namespace FubarDev.FtpServer.Commands
         /// <summary>
         /// Gets the authentication mechanism.
         /// </summary>
-        [NotNull]
         public IAuthenticationMechanism AuthenticationMechanism => _authenticationMechanism ?? throw new InvalidOperationException();
 
         /// <summary>
         /// Gets the feature information.
         /// </summary>
-        [NotNull]
         public IFeatureInfo FeatureInfo { get; }
     }
 }

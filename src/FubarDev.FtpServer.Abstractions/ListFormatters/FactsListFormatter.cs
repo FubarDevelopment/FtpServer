@@ -12,8 +12,6 @@ using FubarDev.FtpServer.FileSystem;
 using FubarDev.FtpServer.ListFormatters.Facts;
 using FubarDev.FtpServer.Utilities;
 
-using JetBrains.Annotations;
-
 namespace FubarDev.FtpServer.ListFormatters
 {
     /// <summary>
@@ -45,7 +43,7 @@ namespace FubarDev.FtpServer.ListFormatters
         }
 
         /// <inheritdoc/>
-        public string Format(IUnixFileSystemEntry entry, string name)
+        public string Format(IUnixFileSystemEntry entry, string? name)
         {
             switch (name)
             {
@@ -81,7 +79,7 @@ namespace FubarDev.FtpServer.ListFormatters
             return BuildLine(BuildFacts(_enumerator.GrandParentDirectory, _enumerator.ParentDirectory, new ParentDirectoryFact()), "..");
         }
 
-        private string BuildLine([NotNull] IEnumerable<IFact> facts, string entryName)
+        private string BuildLine(IEnumerable<IFact> facts, string entryName)
         {
             var result = new StringBuilder();
             foreach (var fact in facts.Where(fact => _activeFacts.Contains(fact.Name)))
@@ -92,9 +90,7 @@ namespace FubarDev.FtpServer.ListFormatters
             result.AppendFormat(" {0}", fullName);
             return result.ToString();
         }
-
-        [NotNull]
-        private IReadOnlyList<IFact> BuildFacts([CanBeNull] IUnixDirectoryEntry parentEntry, [NotNull] IUnixDirectoryEntry currentEntry, TypeFact typeFact)
+        private IReadOnlyList<IFact> BuildFacts(IUnixDirectoryEntry? parentEntry, IUnixDirectoryEntry currentEntry, TypeFact typeFact)
         {
             var result = new List<IFact>()
             {
@@ -113,9 +109,7 @@ namespace FubarDev.FtpServer.ListFormatters
 
             return result;
         }
-
-        [NotNull]
-        private IReadOnlyList<IFact> BuildFacts([NotNull] IUnixFileSystem fileSystem, [NotNull] IUnixDirectoryEntry directoryEntry, [NotNull] IUnixFileEntry entry)
+        private IReadOnlyList<IFact> BuildFacts(IUnixFileSystem fileSystem, IUnixDirectoryEntry directoryEntry, IUnixFileEntry entry)
         {
             var result = new List<IFact>()
             {

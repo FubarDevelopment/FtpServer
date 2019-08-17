@@ -9,8 +9,6 @@ using System.Threading.Tasks;
 using FubarDev.FtpServer.Features;
 using FubarDev.FtpServer.FileSystem;
 
-using JetBrains.Annotations;
-
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
@@ -21,14 +19,11 @@ namespace FubarDev.FtpServer.Authorization.Actions
     /// </summary>
     public class SetHomeDirectoryAction : IAuthorizationAction
     {
-        [NotNull]
         private readonly IFtpConnectionAccessor _ftpConnectionAccessor;
 
-        [NotNull]
         private readonly IAccountDirectoryQuery _accountDirectoryQuery;
 
-        [CanBeNull]
-        private readonly ILogger<SetHomeDirectoryAction> _logger;
+        private readonly ILogger<SetHomeDirectoryAction>? _logger;
 
         private readonly bool _createMissingDirectories;
 
@@ -40,10 +35,10 @@ namespace FubarDev.FtpServer.Authorization.Actions
         /// <param name="accountDirectoryQuery">Interface to query account directories.</param>
         /// <param name="logger">The logger.</param>
         public SetHomeDirectoryAction(
-            [NotNull] IOptions<SetHomeDirectoryActionOptions> options,
-            [NotNull] IFtpConnectionAccessor ftpConnectionAccessor,
-            [NotNull] IAccountDirectoryQuery accountDirectoryQuery,
-            [CanBeNull] ILogger<SetHomeDirectoryAction> logger = null)
+            IOptions<SetHomeDirectoryActionOptions> options,
+            IFtpConnectionAccessor ftpConnectionAccessor,
+            IAccountDirectoryQuery accountDirectoryQuery,
+            ILogger<SetHomeDirectoryAction>? logger = null)
         {
             _ftpConnectionAccessor = ftpConnectionAccessor;
             _accountDirectoryQuery = accountDirectoryQuery;
@@ -61,7 +56,7 @@ namespace FubarDev.FtpServer.Authorization.Actions
             var fsFeature = connection.Features.Get<IFileSystemFeature>();
             var fileSystem = fsFeature.FileSystem;
             var directories = _accountDirectoryQuery.GetDirectories(accountInformation);
-            Stack<IUnixDirectoryEntry> path = null;
+            Stack<IUnixDirectoryEntry>? path = null;
             if (!string.IsNullOrEmpty(directories.HomePath))
             {
                 _logger?.LogDebug("Requested home path is {homePath}", directories.HomePath);

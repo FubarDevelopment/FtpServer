@@ -21,7 +21,7 @@ namespace FubarDev.FtpServer.CommandHandlers
     public class XcwdCommandHandler : FtpCommandHandler
     {
         /// <inheritdoc/>
-        public override async Task<IFtpResponse> Process(FtpCommand command, CancellationToken cancellationToken)
+        public override async Task<IFtpResponse?> Process(FtpCommand command, CancellationToken cancellationToken)
         {
             var fsFeature = Connection.Features.Get<IFileSystemFeature>();
             var path = command.Argument;
