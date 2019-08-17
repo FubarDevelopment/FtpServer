@@ -2,6 +2,7 @@
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
+using System;
 using System.Net.Sockets;
 
 namespace FubarDev.FtpServer.Features
@@ -14,6 +15,7 @@ namespace FubarDev.FtpServer.Features
         /// <summary>
         /// Gets the control connection stream.
         /// </summary>
+        [Obsolete("Unused and will be removed.")]
         NetworkStream OriginalStream { get; }
 
         /// <summary>

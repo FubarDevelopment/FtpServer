@@ -141,13 +141,14 @@ namespace FubarDev.FtpServer
             var connectionFeature = new ConnectionFeature(
                 (IPEndPoint)socket.Client.LocalEndPoint,
                 remoteEndPoint);
-            var secureConnectionFeature = new SecureConnectionFeature(socket);
+            var secureConnectionFeature = new SecureConnectionFeature();
 
             var applicationInputPipe = new Pipe();
             var applicationOutputPipe = new Pipe();
             var socketPipe = new DuplexPipe(_socketCommandPipe.Reader, _socketResponsePipe.Writer);
             var connectionPipe = new DuplexPipe(applicationOutputPipe.Reader, applicationInputPipe.Writer);
 
+            var originalStream = socket.GetStream();
             _networkStreamFeature = new NetworkStreamFeature(
                 new SecureConnectionAdapter(
                     socketPipe,
@@ -155,11 +156,11 @@ namespace FubarDev.FtpServer
                     sslStreamWrapperFactory,
                     _cancellationTokenSource.Token),
                 new ConnectionClosingNetworkStreamReader(
-                    secureConnectionFeature.OriginalStream,
+                    originalStream,
                     _socketCommandPipe.Writer,
                     _cancellationTokenSource),
                 new StreamPipeWriterService(
-                    secureConnectionFeature.OriginalStream,
+                    originalStream,
                     _socketResponsePipe.Reader,
                     _cancellationTokenSource.Token),
                 applicationOutputPipe.Writer);
@@ -721,21 +722,15 @@ namespace FubarDev.FtpServer
 
         private class SecureConnectionFeature : ISecureConnectionFeature
         {
-            public SecureConnectionFeature(TcpClient tcpClient)
-            {
-                OriginalStream = tcpClient.GetStream();
-                CreateEncryptedStream = Task.FromResult;
-                CloseEncryptedControlStream = ct => Task.CompletedTask;
-            }
+            /// <inheritdoc />
+            [Obsolete("Unused and will be removed.")]
+            public NetworkStream OriginalStream => throw new InvalidOperationException("Stream is not available.");
 
             /// <inheritdoc />
-            public NetworkStream OriginalStream { get; }
+            public CreateEncryptedStreamDelegate CreateEncryptedStream { get; set; } = Task.FromResult;
 
             /// <inheritdoc />
-            public CreateEncryptedStreamDelegate CreateEncryptedStream { get; set; }
-
-            /// <inheritdoc />
-            public CloseEncryptedStreamDelegate CloseEncryptedControlStream { get; set; }
+            public CloseEncryptedStreamDelegate CloseEncryptedControlStream { get; set; } = ct => Task.CompletedTask;
         }
 
         private class DuplexPipe : IDuplexPipe
