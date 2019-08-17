@@ -61,9 +61,9 @@ namespace FubarDev.FtpServer
         {
             var lines = new[]
             {
-                $"{Code}-{StartMessage}".TrimEnd(),
+                $"{Code}-{StartMessage.TrimEnd()}",
                 " ... stripped ... async data",
-                $"{Code} {EndMessage}".TrimEnd(),
+                $"{Code} {EndMessage.TrimEnd()}",
             };
 
             return string.Join(Environment.NewLine, lines);
@@ -105,7 +105,7 @@ namespace FubarDev.FtpServer
                 switch (_buildStatus)
                 {
                     case FtpResponseListStatus.StartLine:
-                        resultLine = $"{Code}-{StartMessage}".TrimEnd();
+                        resultLine = $"{Code}-{StartMessage.TrimEnd()}";
                         _buildStatus = FtpResponseListStatus.Between;
                         break;
 
@@ -115,7 +115,7 @@ namespace FubarDev.FtpServer
                            .ConfigureAwait(false);
                         if (resultLine is null)
                         {
-                            resultLine = $"{Code} {EndMessage}".TrimEnd();
+                            resultLine = $"{Code} {EndMessage.TrimEnd()}";
                             _buildStatus = FtpResponseListStatus.Finished;
                         }
                         else

@@ -2,7 +2,6 @@
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
-using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -31,16 +30,6 @@ namespace FubarDev.FtpServer
             : base(code, startMessage, endMessage)
         {
             _lines = lines;
-        }
-
-        /// <inheritdoc />
-        public override string ToString()
-        {
-            return string.Join(
-                Environment.NewLine,
-                $"{Code}-{StartMessage}".TrimEnd(),
-                " ... stripped ...",
-                $"{Code} {EndMessage}".TrimEnd());
         }
 
         /// <inheritdoc />
