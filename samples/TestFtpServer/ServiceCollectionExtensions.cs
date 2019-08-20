@@ -55,6 +55,7 @@ namespace TestFtpServer
                     {
                         opt.ServerAddress = options.Server.Address;
                         opt.Port = options.GetServerPort();
+                        opt.MaxActiveConnections = options.Server.MaxActiveConnections ?? 0;
                     })
                .Configure<PortCommandOptions>(
                     opt =>
