@@ -6,6 +6,7 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -14,7 +15,7 @@ namespace FubarDev.FtpServer
     /// <summary>
     /// FTP response.
     /// </summary>
-    public class FtpResponse : IFtpResponse
+    public class FtpResponse : ISyncFtpResponse
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="FtpResponse"/> class.
@@ -60,14 +61,16 @@ namespace FubarDev.FtpServer
         }
 
         /// <inheritdoc />
+        [Obsolete("Use GetLinesAsync instead.")]
         public Task<FtpResponseLine> GetNextLineAsync(object? token, CancellationToken cancellationToken)
         {
-            if (token is null)
-            {
-                return Task.FromResult(new FtpResponseLine(ToString(), new object()));
-            }
+            return Task.FromResult(new FtpResponseLine(ToString(), null));
+        }
 
-            return Task.FromResult(new FtpResponseLine(null, null));
+        /// <inheritdoc />
+        public IEnumerable<string> GetLines()
+        {
+            return new[] { ToString() };
         }
     }
 }

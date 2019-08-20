@@ -9,6 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -71,17 +72,15 @@ namespace FubarDev.FtpServer.FileSystem.GoogleDrive
         public bool SupportsAppend => false;
 
         /// <inheritdoc/>
-        public async Task<IReadOnlyList<IUnixFileSystemEntry>> GetEntriesAsync(
+        public IAsyncEnumerable<IUnixFileSystemEntry> GetEntriesAsync(
             IUnixDirectoryEntry directoryEntry,
             CancellationToken cancellationToken)
         {
             var dirEntry = (GoogleDriveDirectoryEntry)directoryEntry;
-            var entries = await ConvertEntries(
+            return ConvertEntries(
                     dirEntry,
                     () => GetChildrenAsync(dirEntry.File, cancellationToken),
-                    cancellationToken)
-               .ConfigureAwait(false);
-            return entries;
+                    cancellationToken);
         }
 
         /// <inheritdoc/>
@@ -91,12 +90,16 @@ namespace FubarDev.FtpServer.FileSystem.GoogleDrive
             CancellationToken cancellationToken)
         {
             var dirEntry = (GoogleDriveDirectoryEntry)directoryEntry;
-            var entries = await ConvertEntries(
-                    dirEntry,
-                    () => FindChildByNameAsync(dirEntry.File, name, cancellationToken),
-                    cancellationToken)
-               .ConfigureAwait(false);
-            return entries.FirstOrDefault();
+            var entries = ConvertEntries(
+                dirEntry,
+                () => FindChildByNameAsync(dirEntry.File, name, cancellationToken),
+                cancellationToken);
+            await foreach (var entry in entries)
+            {
+                return entry;
+            }
+
+            return null;
         }
 
         /// <inheritdoc/>
@@ -383,17 +386,17 @@ namespace FubarDev.FtpServer.FileSystem.GoogleDrive
                 _uploadsLock.Wait();
                 try
                 {
-                _uploads.Remove(fileId);
-            }
-            finally
-            {
+                    _uploads.Remove(fileId);
+                }
+                finally
+                {
                     _uploadsLock.Release();
                 }
             }
             catch (Exception ex) when (ex.Is<ObjectDisposedException>())
             {
                 // Ignore. This may happen when the connection
-                // was closed while a background upate was active.
+                // was closed while a background update was active.
             }
         }
 
@@ -444,12 +447,11 @@ namespace FubarDev.FtpServer.FileSystem.GoogleDrive
             }
         }
 
-        private async Task<IReadOnlyList<IUnixFileSystemEntry>> ConvertEntries(
+        private async IAsyncEnumerable<IUnixFileSystemEntry> ConvertEntries(
             GoogleDriveDirectoryEntry dirEntry,
             Func<Task<IReadOnlyCollection<File>>> getEntriesFunc,
-            CancellationToken cancellationToken)
+            [EnumeratorCancellation] CancellationToken cancellationToken)
         {
-            var result = new List<IUnixFileSystemEntry>();
             await _uploadsLock.WaitAsync(cancellationToken).ConfigureAwait(false);
             try
             {
@@ -460,7 +462,7 @@ namespace FubarDev.FtpServer.FileSystem.GoogleDrive
                     var fullName = FileSystemExtensions.CombinePath(baseDir, child.Name);
                     if (child.IsDirectory())
                     {
-                        result.Add(new GoogleDriveDirectoryEntry(child, fullName));
+                        yield return new GoogleDriveDirectoryEntry(child, fullName);
                     }
                     else
                     {
@@ -474,7 +476,7 @@ namespace FubarDev.FtpServer.FileSystem.GoogleDrive
                             fileSize = null;
                         }
 
-                        result.Add(new GoogleDriveFileEntry(child, fullName, fileSize));
+                        yield return new GoogleDriveFileEntry(child, fullName, fileSize);
                     }
                 }
             }
@@ -482,8 +484,6 @@ namespace FubarDev.FtpServer.FileSystem.GoogleDrive
             {
                 _uploadsLock.Release();
             }
-
-            return result;
         }
 
         private Task<IReadOnlyCollection<File>> GetChildrenAsync(File parent, CancellationToken cancellationToken)

@@ -28,6 +28,7 @@ using FubarDev.FtpServer.Features.Impl;
 using FubarDev.FtpServer.Localization;
 using FubarDev.FtpServer.Networking;
 using FubarDev.FtpServer.ServerCommands;
+using FubarDev.FtpServer.Utilities;
 
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.Extensions.DependencyInjection;
@@ -462,7 +463,7 @@ namespace FubarDev.FtpServer
                 var exception = ex;
                 while (exception is AggregateException aggregateException)
                 {
-                    exception = aggregateException.InnerException;
+                    exception = aggregateException.InnerException!;
                 }
 
                 switch (exception)
@@ -766,7 +767,7 @@ namespace FubarDev.FtpServer
             public PipeWriter Output { get; }
         }
 
-        private class DirectFtpResponse : IFtpResponse
+        private class DirectFtpResponse : IAsyncFtpResponse
         {
             private readonly string _text;
 
@@ -783,9 +784,16 @@ namespace FubarDev.FtpServer
             public FtpResponseAfterWriteAsyncDelegate? AfterWriteAction { get; } = null;
 
             /// <inheritdoc />
+            [Obsolete("Use GetLinesAsync instead.")]
             public Task<FtpResponseLine> GetNextLineAsync(object? token, CancellationToken cancellationToken)
             {
                 return Task.FromResult(new FtpResponseLine(_text, null));
+            }
+
+            /// <inheritdoc />
+            public IAsyncEnumerable<string> GetLinesAsync(CancellationToken cancellationToken)
+            {
+                return AsyncCollectionEnumerable.From(new[] { _text });
             }
 
             /// <inheritdoc />

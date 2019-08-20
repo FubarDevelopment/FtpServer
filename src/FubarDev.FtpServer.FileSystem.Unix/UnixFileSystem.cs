@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 
 using FubarDev.FtpServer.AccountManagement;
 using FubarDev.FtpServer.BackgroundTransfer;
+using FubarDev.FtpServer.Utilities;
 
 using Mono.Unix;
 using Mono.Unix.Native;
@@ -56,12 +57,12 @@ namespace FubarDev.FtpServer.FileSystem.Unix
         public IUnixDirectoryEntry Root { get; }
 
         /// <inheritdoc />
-        public Task<IReadOnlyList<IUnixFileSystemEntry>> GetEntriesAsync(IUnixDirectoryEntry directoryEntry, CancellationToken cancellationToken)
+        public IAsyncEnumerable<IUnixFileSystemEntry> GetEntriesAsync(IUnixDirectoryEntry directoryEntry, CancellationToken cancellationToken)
         {
             var dirEntry = (UnixDirectoryEntry)directoryEntry;
             var dirInfo = dirEntry.Info;
             var entries = dirInfo.GetFileSystemEntries().Select(x => CreateEntry(dirEntry, x)).ToList();
-            return Task.FromResult<IReadOnlyList<IUnixFileSystemEntry>>(entries);
+            return AsyncCollectionEnumerable.From(entries);
         }
 
         /// <inheritdoc />

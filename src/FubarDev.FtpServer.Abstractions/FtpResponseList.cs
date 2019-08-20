@@ -3,15 +3,13 @@
 // </copyright>
 
 using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace FubarDev.FtpServer
 {
     /// <summary>
     /// An FTP response for lists.
     /// </summary>
-    public class FtpResponseList : FtpResponseList<IEnumerator<string>>
+    public class FtpResponseList : FtpResponseListBase
     {
         private readonly IEnumerable<string> _lines;
 
@@ -33,21 +31,9 @@ namespace FubarDev.FtpServer
         }
 
         /// <inheritdoc />
-        protected override Task<IEnumerator<string>> CreateInitialStatusAsync(CancellationToken cancellationToken)
+        protected override IEnumerable<string> GetDataLines()
         {
-            return Task.FromResult(_lines.GetEnumerator());
-        }
-
-        /// <inheritdoc />
-        protected override Task<string?> GetNextLineAsync(IEnumerator<string> status, CancellationToken cancellationToken)
-        {
-            if (status.MoveNext())
-            {
-                return Task.FromResult((string?)status.Current);
-            }
-
-            status.Dispose();
-            return Task.FromResult<string?>(null);
+            return _lines;
         }
     }
 }

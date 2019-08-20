@@ -188,7 +188,7 @@ namespace FubarDev.FtpServer
                 var exception = ex;
                 while (exception is AggregateException aggregateException)
                 {
-                    exception = aggregateException.InnerException;
+                    exception = aggregateException.InnerException!;
                 }
 
                 switch (exception)
@@ -245,7 +245,10 @@ namespace FubarDev.FtpServer
                 }
 
                 _statistics.AddConnection();
+
+#nullable disable
                 connection.Closed += ConnectionOnClosed;
+#nullable enable
 
                 var asyncInitFunctions = OnConfigureConnection(connection);
                 foreach (var asyncInitFunction in asyncInitFunctions)

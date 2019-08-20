@@ -14,6 +14,7 @@ namespace FubarDev.FtpServer.Utilities
     /// <summary>
     /// Helps to enumerate a directory with virtual <c>.</c> and <c>..</c> entries.
     /// </summary>
+    [Obsolete("Use the DirectoryListing class")]
     public class DirectoryListingEnumerator
     {
         private readonly Stack<IUnixDirectoryEntry> _pathEntries;

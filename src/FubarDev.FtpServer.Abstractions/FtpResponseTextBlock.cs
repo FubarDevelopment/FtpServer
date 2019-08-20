@@ -8,12 +8,14 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
+using FubarDev.FtpServer.Utilities;
+
 namespace FubarDev.FtpServer
 {
     /// <summary>
     /// An implementation of <see cref="IFtpResponse"/> that is usable for the FTP servers banner message.
     /// </summary>
-    public class FtpResponseTextBlock : IFtpResponse
+    public class FtpResponseTextBlock : IAsyncFtpResponse, ISyncFtpResponse
     {
         private readonly List<string> _lines;
 
@@ -38,6 +40,7 @@ namespace FubarDev.FtpServer
         public FtpResponseAfterWriteAsyncDelegate? AfterWriteAction => null;
 
         /// <inheritdoc />
+        [Obsolete("Use GetLinesAsync instead.")]
         public Task<FtpResponseLine> GetNextLineAsync(object? token, CancellationToken cancellationToken)
         {
             IEnumerator<string> enumerator;
@@ -61,12 +64,13 @@ namespace FubarDev.FtpServer
         }
 
         /// <inheritdoc />
-        public override string ToString()
+        public IAsyncEnumerable<string> GetLinesAsync(CancellationToken cancellationToken)
         {
-            return string.Join("\r\n", GetLines());
+            return AsyncCollectionEnumerable.From(GetLines());
         }
 
-        private IEnumerable<string> GetLines()
+        /// <inheritdoc />
+        public IEnumerable<string> GetLines()
         {
             for (var i = 0; i != _lines.Count; ++i)
             {
@@ -82,6 +86,12 @@ namespace FubarDev.FtpServer
                     yield return $"{Code:D3}-{line}";
                 }
             }
+        }
+
+        /// <inheritdoc />
+        public override string ToString()
+        {
+            return string.Join("\r\n", GetLines());
         }
     }
 }

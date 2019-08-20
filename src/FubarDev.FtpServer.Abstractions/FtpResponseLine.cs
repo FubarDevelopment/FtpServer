@@ -2,13 +2,19 @@
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
+using System;
+
 namespace FubarDev.FtpServer
 {
     /// <summary>
     /// Information about a line to be sent to the client.
     /// </summary>
+    [Obsolete("Use the async enumeration methods instead.")]
     public sealed class FtpResponseLine
     {
+        private readonly string? _text;
+        private readonly object? _token;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="FtpResponseLine"/> class.
         /// </summary>
@@ -19,9 +25,9 @@ namespace FubarDev.FtpServer
         public FtpResponseLine(string? text, object? token)
         {
             HasText = text != null;
-            Text = text;
+            _text = text;
             HasMoreData = token != null;
-            Token = token;
+            _token = token;
         }
 
         /// <summary>
@@ -40,12 +46,12 @@ namespace FubarDev.FtpServer
         /// <remarks>
         /// Is <see langword="null"/> when no text should be sent to the client.
         /// </remarks>
-        public string? Text { get; }
+        public string Text => _text ?? throw new InvalidOperationException("Text not available");
 
         /// <summary>
         /// Gets the token to be passed to <see cref="IFtpResponse.GetNextLineAsync"/> to get the next line.
         /// </summary>
-        public object? Token { get; }
+        public object Token => _token ?? throw new InvalidOperationException("Token not available");
 
         /// <inheritdoc />
         public override string ToString()

@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
@@ -37,16 +38,23 @@ namespace FubarDev.FtpServer.ServerCommands
             if (!_serverCommandHandlerInfo.TryGetValue(serverCommandType, out var commandHandlerInfo))
             {
                 var handlerType = typeof(IServerCommandHandler<>).MakeGenericType(serverCommandType);
-                var executeAsyncMethod = handlerType.GetRuntimeMethod("ExecuteAsync", new[] { serverCommandType, typeof(CancellationToken) });
+                var executeAsyncMethod = handlerType.GetRuntimeMethod(
+                    "ExecuteAsync",
+                    new[] { serverCommandType, typeof(CancellationToken) });
+                Debug.Assert(executeAsyncMethod != null, "executeAsyncMethod != null");
+
                 var handler = _ftpConnectionAccessor.FtpConnection.ConnectionServices.GetRequiredService(handlerType);
 
-                commandHandlerInfo = new CommandHandlerInfo(handler, executeAsyncMethod);
+                commandHandlerInfo = new CommandHandlerInfo(handler, executeAsyncMethod!);
                 _serverCommandHandlerInfo.Add(serverCommandType, commandHandlerInfo);
             }
 
-            return (Task)commandHandlerInfo.ExecuteMethodInfo.Invoke(
+            var result = commandHandlerInfo.ExecuteMethodInfo.Invoke(
                 commandHandlerInfo.CommandHandler,
                 new object[] { serverCommand, cancellationToken });
+            Debug.Assert(result != null, "result != null");
+
+            return (Task)result!;
         }
 
         private class CommandHandlerInfo

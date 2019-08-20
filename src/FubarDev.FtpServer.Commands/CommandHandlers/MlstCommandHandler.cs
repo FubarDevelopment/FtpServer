@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -189,14 +190,12 @@ namespace FubarDev.FtpServer.CommandHandlers
                 NewLine = "\r\n",
             })
             {
-                var entries = await fileSystem.GetEntriesAsync(dirEntry, cancellationToken).ConfigureAwait(false);
-                var enumerator = new DirectoryListingEnumerator(entries, fileSystem, path, true);
-                var formatter = new FactsListFormatter(user, enumerator, factsFeature.ActiveMlstFacts, false);
-                while (enumerator.MoveNext())
+                var entries = fileSystem.GetEntriesAsync(dirEntry, cancellationToken);
+                var listing = new DirectoryListing(entries, fileSystem, path, true);
+                var formatter = new FactsListFormatter(user, factsFeature.ActiveMlstFacts, false);
+                await foreach (var entry in listing.ConfigureAwait(false).WithCancellation(cancellationToken))
                 {
-                    var name = enumerator.Name;
-                    var entry = enumerator.Entry;
-                    var line = formatter.Format(entry, name);
+                    var line = formatter.Format(entry);
                     _logger?.LogTrace(line);
                     await writer.WriteLineAsync(line).ConfigureAwait(false);
                 }
@@ -208,7 +207,7 @@ namespace FubarDev.FtpServer.CommandHandlers
             return new FtpResponse(226, T("Closing data connection."));
         }
 
-        private class MlstFtpResponse : FtpResponseList<Tuple<DirectoryListingEnumerator, FactsListFormatter>>
+        private class MlstFtpResponse : FtpResponseAsyncListBase
         {
             private readonly ISet<string> _activeMlstFacts;
             private readonly IFtpUser _user;
@@ -232,38 +231,21 @@ namespace FubarDev.FtpServer.CommandHandlers
             }
 
             /// <inheritdoc />
-            protected override Task<Tuple<DirectoryListingEnumerator, FactsListFormatter>> CreateInitialStatusAsync(CancellationToken cancellationToken)
+            protected override async IAsyncEnumerable<string> GetDataLinesAsync(
+                [EnumeratorCancellation] CancellationToken cancellationToken)
             {
-                var entries = new List<IUnixFileSystemEntry>()
+                var entries = AsyncCollectionEnumerable.From(
+                    new List<IUnixFileSystemEntry>()
+                    {
+                        _targetEntry,
+                    });
+
+                var listing = new DirectoryListing(entries, _fileSystem, _path, false);
+                var formatter = new FactsListFormatter(_user, _activeMlstFacts, true);
+                await foreach (var entry in listing)
                 {
-                    _targetEntry,
-                };
-
-                var enumerator = new DirectoryListingEnumerator(entries, _fileSystem, _path, false);
-                var formatter = new FactsListFormatter(_user, enumerator, _activeMlstFacts, true);
-
-                return Task.FromResult(Tuple.Create(enumerator, formatter));
-            }
-
-            /// <inheritdoc />
-            protected override Task<string?> GetNextLineAsync(Tuple<DirectoryListingEnumerator, FactsListFormatter> status, CancellationToken cancellationToken)
-            {
-                if (status == null)
-                {
-                    return Task.FromResult<string?>(null);
+                    yield return formatter.Format(entry);
                 }
-
-                var enumerator = status.Item1;
-                var formatter = status.Item2;
-
-                if (enumerator.MoveNext())
-                {
-                    var name = enumerator.Name;
-                    var entry = enumerator.Entry;
-                    return Task.FromResult<string?>(formatter.Format(entry, name));
-                }
-
-                return Task.FromResult<string?>(null);
             }
         }
     }

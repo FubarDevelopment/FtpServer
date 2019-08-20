@@ -62,7 +62,18 @@ namespace FubarDev.FtpServer.Authentication
             }
         }
 
-#if NETCOREAPP || NET47
+#if NET461 || NETSTANDARD2_0
+        /// <inheritdoc />
+        public Task CloseStreamAsync(Stream sslStream, CancellationToken cancellationToken)
+        {
+            if (sslStream is SslStream s)
+            {
+                s.Close();
+            }
+
+            return Task.CompletedTask;
+        }
+#else
         /// <inheritdoc />
         public async Task CloseStreamAsync(Stream sslStream, CancellationToken cancellationToken)
         {
@@ -76,21 +87,6 @@ namespace FubarDev.FtpServer.Authentication
                 await s.FlushAsync(cancellationToken).ConfigureAwait(false);
                 s.Close();
             }
-        }
-#else
-        /// <inheritdoc />
-        public Task CloseStreamAsync(Stream sslStream, CancellationToken cancellationToken)
-        {
-            if (sslStream is SslStream s)
-            {
-#if NET461 || NETSTANDARD2_0
-                s.Close();
-#else
-                s.Dispose();
-#endif
-            }
-
-            return Task.CompletedTask;
         }
 #endif
 

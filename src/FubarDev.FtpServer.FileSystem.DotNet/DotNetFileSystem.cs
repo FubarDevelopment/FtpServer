@@ -12,6 +12,7 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using FubarDev.FtpServer.BackgroundTransfer;
+using FubarDev.FtpServer.Utilities;
 
 namespace FubarDev.FtpServer.FileSystem.DotNet
 {
@@ -65,7 +66,7 @@ namespace FubarDev.FtpServer.FileSystem.DotNet
         public bool SupportsAppend => true;
 
         /// <inheritdoc/>
-        public Task<IReadOnlyList<IUnixFileSystemEntry>> GetEntriesAsync(IUnixDirectoryEntry directoryEntry, CancellationToken cancellationToken)
+        public IAsyncEnumerable<IUnixFileSystemEntry> GetEntriesAsync(IUnixDirectoryEntry directoryEntry, CancellationToken cancellationToken)
         {
             var result = new List<IUnixFileSystemEntry>();
             var searchDirInfo = ((DotNetDirectoryEntry)directoryEntry).DirectoryInfo;
@@ -83,7 +84,8 @@ namespace FubarDev.FtpServer.FileSystem.DotNet
                     }
                 }
             }
-            return Task.FromResult<IReadOnlyList<IUnixFileSystemEntry>>(result);
+
+            return AsyncCollectionEnumerable.From(result);
         }
 
         /// <inheritdoc/>

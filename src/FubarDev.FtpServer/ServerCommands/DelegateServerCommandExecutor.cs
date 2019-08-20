@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Threading;
@@ -38,6 +39,7 @@ namespace FubarDev.FtpServer.ServerCommands
             {
                 var handlerType = typeof(IServerCommandHandler<>).MakeGenericType(serverCommandType);
                 var executeAsyncMethod = handlerType.GetRuntimeMethod("ExecuteAsync", new[] { serverCommandType, typeof(CancellationToken) });
+                Debug.Assert(executeAsyncMethod != null, "executeAsyncMethod != null");
                 var handler = _ftpConnectionAccessor.FtpConnection.ConnectionServices.GetRequiredService(handlerType);
                 var commandParameter = Expression.Parameter(serverCommandType, "serverCommand");
                 var cancellationTokenParameter = Expression.Parameter(typeof(CancellationToken), "cancellationToken");
@@ -51,7 +53,10 @@ namespace FubarDev.FtpServer.ServerCommands
                 _serverCommandHandlerDelegates.Add(serverCommandType, cmdDelegate);
             }
 
-            return (Task)cmdDelegate.DynamicInvoke(serverCommand, cancellationToken);
+            var result = cmdDelegate.DynamicInvoke(serverCommand, cancellationToken);
+            Debug.Assert(result != null, "result != null");
+
+            return (Task)result!;
         }
     }
 }

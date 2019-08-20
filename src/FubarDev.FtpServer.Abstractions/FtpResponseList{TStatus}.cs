@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -14,7 +15,8 @@ namespace FubarDev.FtpServer
     /// Base class for FTP response lists.
     /// </summary>
     /// <typeparam name="TStatus">The type of the status used to get the lines.</typeparam>
-    public abstract class FtpResponseList<TStatus> : IFtpResponse
+    [Obsolete("Implement your own IFtpResponse, usually with the help of the new FtpResponseAsyncListBase class.")]
+    public abstract class FtpResponseList<TStatus> : IAsyncFtpResponse
         where TStatus : class
     {
         private readonly List<string> _result = new List<string>();
@@ -70,6 +72,7 @@ namespace FubarDev.FtpServer
         }
 
         /// <inheritdoc />
+        [Obsolete("Use GetLinesAsync instead.")]
         public async Task<FtpResponseLine> GetNextLineAsync(object? token, CancellationToken cancellationToken)
         {
             StatusStore? statusStore;
@@ -157,6 +160,21 @@ namespace FubarDev.FtpServer
             return new FtpResponseLine(
                 resultLine,
                 statusStore);
+        }
+
+        /// <inheritdoc />
+        public async IAsyncEnumerable<string> GetLinesAsync([EnumeratorCancellation] CancellationToken cancellationToken)
+        {
+            FtpResponseLine line;
+            do
+            {
+                line = await GetNextLineAsync((object?)null, cancellationToken).ConfigureAwait(false);
+                if (line.HasText)
+                {
+                    yield return line.Text;
+                }
+            }
+            while (line.HasMoreData);
         }
 
         /// <summary>

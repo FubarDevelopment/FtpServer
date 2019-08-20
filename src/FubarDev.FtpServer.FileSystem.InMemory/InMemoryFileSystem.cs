@@ -5,12 +5,12 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
 using FubarDev.FtpServer.BackgroundTransfer;
 using FubarDev.FtpServer.FileSystem.Error;
+using FubarDev.FtpServer.Utilities;
 
 namespace FubarDev.FtpServer.FileSystem.InMemory
 {
@@ -45,13 +45,12 @@ namespace FubarDev.FtpServer.FileSystem.InMemory
         public IUnixDirectoryEntry Root { get; }
 
         /// <inheritdoc />
-        public Task<IReadOnlyList<IUnixFileSystemEntry>> GetEntriesAsync(
+        public IAsyncEnumerable<IUnixFileSystemEntry> GetEntriesAsync(
             IUnixDirectoryEntry directoryEntry,
             CancellationToken cancellationToken)
         {
             var entry = (InMemoryDirectoryEntry)directoryEntry;
-            var children = entry.Children.Values.ToList();
-            return Task.FromResult<IReadOnlyList<IUnixFileSystemEntry>>(children);
+            return AsyncCollectionEnumerable.From(entry.Children.Values);
         }
 
         /// <inheritdoc />

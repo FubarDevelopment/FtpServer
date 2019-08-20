@@ -2,11 +2,14 @@
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
+using System;
+
 namespace FubarDev.FtpServer
 {
     /// <summary>
     /// The status for building a response list.
     /// </summary>
+    [Obsolete]
     internal enum FtpResponseListStatus
     {
         /// <summary>

@@ -49,7 +49,7 @@ namespace FubarDev.FtpServer.FileSystem
         /// <param name="directoryEntry">The <see cref="IUnixDirectoryEntry"/> to get the file system entries for.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>The list of <see cref="IUnixFileSystemEntry"/> objects for a given <paramref name="directoryEntry"/>.</returns>
-        Task<IReadOnlyList<IUnixFileSystemEntry>> GetEntriesAsync(IUnixDirectoryEntry directoryEntry, CancellationToken cancellationToken);
+        IAsyncEnumerable<IUnixFileSystemEntry> GetEntriesAsync(IUnixDirectoryEntry directoryEntry, CancellationToken cancellationToken);
 
         /// <summary>
         /// Gets a file system entry by name.
