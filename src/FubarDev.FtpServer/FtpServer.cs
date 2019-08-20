@@ -229,7 +229,14 @@ namespace FubarDev.FtpServer
 
                 _statistics.AddConnection();
                 connection.Closed += ConnectionOnClosed;
-                OnConfigureConnection(connection);
+
+                var asyncInitFunctions = OnConfigureConnection(connection);
+                foreach (var asyncInitFunction in asyncInitFunctions)
+                {
+                    await asyncInitFunction(connection, CancellationToken.None)
+                       .ConfigureAwait(false);
+                }
+
                 await connection.StartAsync()
                    .ConfigureAwait(false);
             }
