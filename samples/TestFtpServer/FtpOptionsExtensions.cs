@@ -27,7 +27,7 @@ namespace TestFtpServer
         /// <param name="options">The FTP options.</param>
         public static void Validate(this FtpOptions options)
         {
-            if (options.Ftps.Implicit && !string.IsNullOrEmpty(options.Ftps.Certificate))
+            if (options.Ftps.Implicit && string.IsNullOrEmpty(options.Ftps.Certificate))
             {
                 throw new Exception("Implicit FTPS requires a server certificate.");
             }

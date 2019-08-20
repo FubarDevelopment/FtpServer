@@ -44,6 +44,7 @@ namespace FubarDev.FtpServer
             new Transition(SecurityStatus.NeedAccount, SecurityStatus.Authenticated, "ACCT", 4),
             new Transition(SecurityStatus.NeedAccount, SecurityStatus.Authenticated, "ACCT", 5),
         };
+
         private readonly IFtpHostSelector _hostSelector;
 
         private IAuthenticationMechanism? _filteredAuthenticationMechanism;
@@ -53,6 +54,8 @@ namespace FubarDev.FtpServer
         private IAuthenticationMechanism? _selectedAuthenticationMechanism;
 
         private IAuthorizationMechanism? _selectedAuthorizationMechanism;
+
+        private IAuthenticationMechanism? _preselectedAuthenticationMechanism;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FtpLoginStateMachine"/> class.
@@ -77,6 +80,25 @@ namespace FubarDev.FtpServer
         /// Gets the selected host.
         /// </summary>
         public IFtpHost SelectedHost => _hostSelector.SelectedHost;
+
+        /// <inheritdoc />
+        public void Activate(IAuthenticationMechanism authenticationMechanism)
+        {
+            _selectedAuthenticationMechanism = _filteredAuthenticationMechanism =
+                _preselectedAuthenticationMechanism = authenticationMechanism;
+            SetStatus(SecurityStatus.Authenticated);
+        }
+
+        /// <inheritdoc />
+        public override void Reset()
+        {
+            base.Reset();
+
+            if (_preselectedAuthenticationMechanism != null)
+            {
+                Activate(_preselectedAuthenticationMechanism);
+            }
+        }
 
         /// <inheritdoc />
         protected override async Task<IFtpResponse?> ExecuteCommandAsync(FtpCommand ftpCommand, CancellationToken cancellationToken = default)

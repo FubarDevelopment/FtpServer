@@ -100,7 +100,7 @@ namespace FubarDev.FtpServer
         /// <summary>
         /// Initializes a new instance of the <see cref="FtpConnection"/> class.
         /// </summary>
-        /// <param name="socket">The socket to use to communicate with the client.</param>
+        /// <param name="socketAccessor">The accessor to get the socket used to communicate with the client.</param>
         /// <param name="options">The options for the FTP connection.</param>
         /// <param name="portOptions">The <c>PORT</c> command options.</param>
         /// <param name="connectionAccessor">The accessor to get the connection that is active during the <see cref="FtpCommandHandler.Process"/> method execution.</param>
@@ -112,7 +112,7 @@ namespace FubarDev.FtpServer
         /// <param name="sslStreamWrapperFactory">The SSL stream wrapper factory.</param>
         /// <param name="logger">The logger for the FTP connection.</param>
         public FtpConnection(
-            TcpClient socket,
+            TcpSocketClientAccessor socketAccessor,
             IOptions<FtpConnectionOptions> options,
             IOptions<PortCommandOptions> portOptions,
             IFtpConnectionAccessor connectionAccessor,
@@ -124,6 +124,7 @@ namespace FubarDev.FtpServer
             ISslStreamWrapperFactory sslStreamWrapperFactory,
             ILogger<FtpConnection>? logger = null)
         {
+            var socket = socketAccessor.TcpSocketClient ?? throw new InvalidOperationException("The socket to communicate with the client was not set");
             ConnectionServices = serviceProvider;
 
             ConnectionId = "FTP-" + Guid.NewGuid().ToString("N");
@@ -164,7 +165,7 @@ namespace FubarDev.FtpServer
             var socketPipe = new DuplexPipe(_socketCommandPipe.Reader, _socketResponsePipe.Writer);
             var connectionPipe = new DuplexPipe(applicationOutputPipe.Reader, applicationInputPipe.Writer);
 
-            var originalStream = socket.GetStream();
+            var originalStream = socketAccessor.TcpSocketStream ?? socket.GetStream();
             _streamReaderService = new ConnectionClosingNetworkStreamReader(
                 originalStream,
                 _socketCommandPipe.Writer,

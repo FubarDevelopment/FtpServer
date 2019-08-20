@@ -2,6 +2,7 @@
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
+using System.IO;
 using System.Net.Sockets;
 
 namespace FubarDev.FtpServer
@@ -15,5 +16,10 @@ namespace FubarDev.FtpServer
         /// Gets or sets the current <see cref="TcpClient"/>.
         /// </summary>
         public TcpClient? TcpSocketClient { get; set; }
+
+        /// <summary>
+        /// Gets or sets the <see cref="Stream"/> to use.
+        /// </summary>
+        public Stream? TcpSocketStream { get; set; }
     }
 }

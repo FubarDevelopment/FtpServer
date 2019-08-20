@@ -7,13 +7,15 @@
 
 using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Channels;
 using System.Threading.Tasks;
 
-using FubarDev.FtpServer.Features;
 using FubarDev.FtpServer.Networking;
 
 using Microsoft.Extensions.DependencyInjection;
@@ -29,6 +31,7 @@ namespace FubarDev.FtpServer
     {
         private readonly FtpServerStatistics _statistics = new FtpServerStatistics();
         private readonly IServiceProvider _serviceProvider;
+        private readonly List<IFtpControlStreamAdapter> _controlStreamAdapters;
         private readonly ConcurrentDictionary<IFtpConnection, FtpConnectionInfo> _connections = new ConcurrentDictionary<IFtpConnection, FtpConnectionInfo>();
         private readonly FtpServerListenerService _serverListener;
         private readonly ILogger<FtpServer>? _log;
@@ -40,13 +43,16 @@ namespace FubarDev.FtpServer
         /// </summary>
         /// <param name="serverOptions">The server options.</param>
         /// <param name="serviceProvider">The service provider used to query services.</param>
+        /// <param name="controlStreamAdapters">Adapters for the control connection stream.</param>
         /// <param name="logger">The FTP server logger.</param>
         public FtpServer(
             IOptions<FtpServerOptions> serverOptions,
             IServiceProvider serviceProvider,
+            IEnumerable<IFtpControlStreamAdapter> controlStreamAdapters,
             ILogger<FtpServer>? logger = null)
         {
             _serviceProvider = serviceProvider;
+            _controlStreamAdapters = controlStreamAdapters.ToList();
             _log = logger;
             ServerAddress = serverOptions.Value.ServerAddress;
             Port = serverOptions.Value.Port;
@@ -148,9 +154,11 @@ namespace FubarDev.FtpServer
             await _clientReader.ConfigureAwait(false);
         }
 
-        private void OnConfigureConnection(IFtpConnection connection)
+        private IEnumerable<ConnectionInitAsyncDelegate> OnConfigureConnection(IFtpConnection connection)
         {
-            ConfigureConnection?.Invoke(this, new ConnectionEventArgs(connection));
+            var eventArgs = new ConnectionEventArgs(connection);
+            ConfigureConnection?.Invoke(this, eventArgs);
+            return eventArgs.AsyncInitFunctions;
         }
 
         private async Task ReadClientsAsync(
@@ -203,9 +211,19 @@ namespace FubarDev.FtpServer
             var scope = _serviceProvider.CreateScope();
             try
             {
+                Stream socketStream = client.GetStream();
+                foreach (var controlStreamAdapter in _controlStreamAdapters)
+                {
+                    socketStream = await controlStreamAdapter.WrapAsync(socketStream, CancellationToken.None)
+                       .ConfigureAwait(false);
+                }
+
+                // Initialize information about the socket
                 var socketAccessor = scope.ServiceProvider.GetRequiredService<TcpSocketClientAccessor>();
                 socketAccessor.TcpSocketClient = client;
+                socketAccessor.TcpSocketStream = socketStream;
 
+                // Create the connection
                 var connection = scope.ServiceProvider.GetRequiredService<IFtpConnection>();
                 var connectionAccessor = scope.ServiceProvider.GetRequiredService<IFtpConnectionAccessor>();
                 connectionAccessor.FtpConnection = connection;
@@ -214,8 +232,7 @@ namespace FubarDev.FtpServer
                 {
                     var response = new FtpResponse(10068, "Too many users, server is full.");
                     var responseBuffer = Encoding.UTF8.GetBytes($"{response}\r\n");
-                    var secureConnectionFeature = connection.Features.Get<ISecureConnectionFeature>();
-                    secureConnectionFeature.OriginalStream.Write(responseBuffer, 0, responseBuffer.Length);
+                    socketStream.Write(responseBuffer, 0, responseBuffer.Length);
                     client.Dispose();
                     scope.Dispose();
                     return;

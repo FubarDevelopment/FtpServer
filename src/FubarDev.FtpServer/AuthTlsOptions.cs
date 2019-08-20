@@ -15,5 +15,10 @@ namespace FubarDev.FtpServer
         /// Gets or sets the server certificate.
         /// </summary>
         public X509Certificate2? ServerCertificate { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether implicit FTPS is used.
+        /// </summary>
+        public bool ImplicitFtps { get; set; }
     }
 }

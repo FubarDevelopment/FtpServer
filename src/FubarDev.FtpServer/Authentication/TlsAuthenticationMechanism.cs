@@ -11,6 +11,7 @@ using FubarDev.FtpServer.Features;
 using FubarDev.FtpServer.ServerCommands;
 
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 
 namespace FubarDev.FtpServer.Authentication
 {
@@ -47,6 +48,12 @@ namespace FubarDev.FtpServer.Authentication
             var hostSelector = connection.ConnectionServices.GetRequiredService<IFtpHostSelector>();
             if (hostSelector.SelectedHost.Certificate != null)
             {
+                var authTlsOptions = connection.ConnectionServices.GetRequiredService<IOptions<AuthTlsOptions>>();
+                if (authTlsOptions.Value.ImplicitFtps)
+                {
+                    return new[] { "PBSZ", "PROT" };
+                }
+
                 return new[] { "AUTH TLS", "PBSZ", "PROT" };
             }
 
