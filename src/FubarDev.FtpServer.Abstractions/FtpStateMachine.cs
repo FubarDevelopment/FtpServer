@@ -22,7 +22,6 @@ namespace FubarDev.FtpServer
             where TStatus : Enum
     {
         private readonly IReadOnlyDictionary<TStatus, IReadOnlyCollection<Transition>> _transitions;
-
         private readonly TStatus _initialStatus;
         private IReadOnlyCollection<Transition> _possibleTransitions;
 
@@ -59,7 +58,7 @@ namespace FubarDev.FtpServer
         /// <summary>
         /// Resets the state machine to the initial status.
         /// </summary>
-        public void Reset()
+        public virtual void Reset()
         {
             SetStatus(_initialStatus);
         }

@@ -3,13 +3,18 @@
 // </copyright>
 
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 
 using FubarDev.FtpServer;
 using FubarDev.FtpServer.AccountManagement.Directories.RootPerUser;
 using FubarDev.FtpServer.AccountManagement.Directories.SingleRootWithoutHome;
+using FubarDev.FtpServer.Authentication;
 using FubarDev.FtpServer.CommandExtensions;
 using FubarDev.FtpServer.Commands;
 using FubarDev.FtpServer.FileSystem;
@@ -19,7 +24,6 @@ using FubarDev.FtpServer.FileSystem.InMemory;
 using FubarDev.FtpServer.FileSystem.Unix;
 using FubarDev.FtpServer.MembershipProvider.Pam;
 using FubarDev.FtpServer.MembershipProvider.Pam.Directories;
-using FubarDev.FtpServer.ServerCommandHandlers;
 
 using Google.Apis.Auth.OAuth2;
 using Google.Apis.Drive.v3;
@@ -27,7 +31,6 @@ using Google.Apis.Drive.v3;
 using Microsoft.DotNet.PlatformAbstractions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 
 using Mono.Unix.Native;
 
@@ -48,7 +51,11 @@ namespace TestFtpServer
         {
             services
                .Configure<AuthTlsOptions>(
-                    opt => opt.ServerCertificate = options.GetCertificate())
+                    opt =>
+                    {
+                        opt.ServerCertificate = options.GetCertificate();
+                        opt.ImplicitFtps = options.Ftps.Implicit;
+                    })
                .Configure<FtpConnectionOptions>(opt => opt.DefaultEncoding = Encoding.ASCII)
                .Configure<FubarDev.FtpServer.FtpServerOptions>(
                     opt =>
@@ -169,28 +176,32 @@ namespace TestFtpServer
                     break;
             }
 
-            services.Decorate<IFtpServer>(
-                (ftpServer, serviceProvider) =>
+            if (options.Ftps.Implicit)
+            {
+                var implicitFtpsCertificate = options.GetCertificate();
+                if (implicitFtpsCertificate != null)
                 {
-                    if (options.Ftps.Implicit)
-                    {
-                        var authTlsOptions = serviceProvider.GetRequiredService<IOptions<AuthTlsOptions>>();
-                        if (authTlsOptions.Value.ServerCertificate != null)
+                    services
+                       .AddSingleton(new ImplicitFtpsControlConnectionStreamAdapterOptions(implicitFtpsCertificate))
+                       .AddSingleton<IFtpControlStreamAdapter, ImplicitFtpsControlConnectionStreamAdapter>();
+
+                    // Ensure that PROT and PBSZ commands are working.
+                    services.Decorate<IFtpServer>(
+                        (ftpServer, _) =>
                         {
-                            // Use an implicit SSL connection (without the AUTH TLS command)
                             ftpServer.ConfigureConnection += (s, e) =>
                             {
-                                TlsEnableServerCommandHandler.EnableTlsAsync(
-                                    e.Connection,
-                                    authTlsOptions.Value.ServerCertificate,
-                                    serviceProvider.GetService<ILogger<TlsEnableServerCommandHandler>>(),
-                                    CancellationToken.None).Wait();
+                                var serviceProvider = e.Connection.ConnectionServices;
+                                var stateMachine = serviceProvider.GetRequiredService<IFtpLoginStateMachine>();
+                                var authTlsMechanism = serviceProvider.GetRequiredService<IEnumerable<IAuthenticationMechanism>>()
+                                   .Single(x => x.CanHandle("TLS"));
+                                stateMachine.Activate(authTlsMechanism);
                             };
-                        }
-                    }
 
-                    return ftpServer;
-                });
+                            return ftpServer;
+                        });
+                }
+            }
 
             services.Decorate<IFtpServer>(
                 (ftpServer, serviceProvider) =>
@@ -241,6 +252,36 @@ namespace TestFtpServer
             }
 
             return credential;
+        }
+
+        private class ImplicitFtpsControlConnectionStreamAdapterOptions
+        {
+            public ImplicitFtpsControlConnectionStreamAdapterOptions(X509Certificate2 certificate)
+            {
+                Certificate = certificate;
+            }
+
+            public X509Certificate2 Certificate { get; }
+        }
+
+        private class ImplicitFtpsControlConnectionStreamAdapter : IFtpControlStreamAdapter
+        {
+            private readonly ImplicitFtpsControlConnectionStreamAdapterOptions _options;
+            private readonly ISslStreamWrapperFactory _sslStreamWrapperFactory;
+
+            public ImplicitFtpsControlConnectionStreamAdapter(
+                ImplicitFtpsControlConnectionStreamAdapterOptions options,
+                ISslStreamWrapperFactory sslStreamWrapperFactory)
+            {
+                _options = options;
+                _sslStreamWrapperFactory = sslStreamWrapperFactory;
+            }
+
+            /// <inheritdoc />
+            public Task<Stream> WrapAsync(Stream stream, CancellationToken cancellationToken)
+            {
+                return _sslStreamWrapperFactory.WrapStreamAsync(stream, false, _options.Certificate, cancellationToken);
+            }
         }
     }
 }

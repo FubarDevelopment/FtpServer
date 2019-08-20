@@ -21,5 +21,11 @@ namespace FubarDev.FtpServer
         /// Gets the selected authorization mechanism.
         /// </summary>
         IAuthorizationMechanism? SelectedAuthorizationMechanism { get; }
+
+        /// <summary>
+        /// Activate this authentication mechanism.
+        /// </summary>
+        /// <param name="authenticationMechanism">The authentication mechanism to activate.</param>
+        void Activate(IAuthenticationMechanism authenticationMechanism);
     }
 }
