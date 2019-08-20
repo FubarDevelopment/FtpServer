@@ -11,12 +11,14 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Sockets;
-using System.Text;
 using System.Threading;
 using System.Threading.Channels;
 using System.Threading.Tasks;
 
+using FubarDev.FtpServer.Features;
+using FubarDev.FtpServer.Localization;
 using FubarDev.FtpServer.Networking;
+using FubarDev.FtpServer.ServerCommands;
 
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -228,28 +230,52 @@ namespace FubarDev.FtpServer
                 var connectionAccessor = scope.ServiceProvider.GetRequiredService<IFtpConnectionAccessor>();
                 connectionAccessor.FtpConnection = connection;
 
-                if (MaxActiveConnections != 0 && _statistics.ActiveConnections >= MaxActiveConnections)
+                // Remember connection
+                if (!_connections.TryAdd(connection, new FtpConnectionInfo(scope)))
                 {
-                    var response = new FtpResponse(10068, "Too many users, server is full.");
-                    var responseBuffer = Encoding.UTF8.GetBytes($"{response}\r\n");
-                    socketStream.Write(responseBuffer, 0, responseBuffer.Length);
+                    _log.LogCritical("A new scope was created, but the connection couldn't be added to the list.");
                     client.Dispose();
                     scope.Dispose();
                     return;
                 }
 
-                if (!_connections.TryAdd(connection, new FtpConnectionInfo(scope)))
+                // Send initial message
+                var serverCommandWriter = connection.Features.Get<IServerCommandFeature>().ServerCommandWriter;
+
+                var blockConnection = MaxActiveConnections != 0
+                    && _statistics.ActiveConnections >= MaxActiveConnections;
+                if (blockConnection)
                 {
-                    scope.Dispose();
-                    return;
+                    // Send response
+                    var response = new FtpResponse(421, "Too many users, server is full.");
+                    await serverCommandWriter.WriteAsync(new SendResponseServerCommand(response))
+                       .ConfigureAwait(false);
+
+                    // Send close
+                    await serverCommandWriter.WriteAsync(new CloseConnectionServerCommand())
+                       .ConfigureAwait(false);
+                }
+                else
+                {
+                    var serverMessages = scope.ServiceProvider.GetRequiredService<IFtpServerMessages>();
+                    var response = new FtpResponseTextBlock(220, serverMessages.GetBannerMessage());
+
+                    // Send initial response
+                    await serverCommandWriter.WriteAsync(
+                            new SendResponseServerCommand(response),
+                            connection.CancellationToken)
+                       .ConfigureAwait(false);
                 }
 
+                // Statistics
                 _statistics.AddConnection();
 
+                // Statistics and cleanup
 #nullable disable
                 connection.Closed += ConnectionOnClosed;
 #nullable enable
 
+                // Connection configuration by host
                 var asyncInitFunctions = OnConfigureConnection(connection);
                 foreach (var asyncInitFunction in asyncInitFunctions)
                 {
@@ -257,6 +283,7 @@ namespace FubarDev.FtpServer
                        .ConfigureAwait(false);
                 }
 
+                // Start connection
                 await connection.StartAsync()
                    .ConfigureAwait(false);
             }
