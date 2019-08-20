@@ -51,8 +51,6 @@ namespace FubarDev.FtpServer
 
         private readonly SecureDataConnectionWrapper _secureDataConnectionWrapper;
 
-        private readonly IFtpServerMessages _serverMessages;
-
         private readonly IDisposable? _loggerScope;
 
         private readonly Channel<IServerCommand> _serverCommandChannel;
@@ -108,7 +106,6 @@ namespace FubarDev.FtpServer
         /// <param name="serverCommandExecutor">The executor for server commands.</param>
         /// <param name="serviceProvider">The service provider for the connection.</param>
         /// <param name="secureDataConnectionWrapper">Wraps a data connection into an SSL stream.</param>
-        /// <param name="serverMessages">The server messages.</param>
         /// <param name="sslStreamWrapperFactory">The SSL stream wrapper factory.</param>
         /// <param name="logger">The logger for the FTP connection.</param>
         public FtpConnection(
@@ -120,7 +117,6 @@ namespace FubarDev.FtpServer
             IServerCommandExecutor serverCommandExecutor,
             IServiceProvider serviceProvider,
             SecureDataConnectionWrapper secureDataConnectionWrapper,
-            IFtpServerMessages serverMessages,
             ISslStreamWrapperFactory sslStreamWrapperFactory,
             ILogger<FtpConnection>? logger = null)
         {
@@ -149,7 +145,6 @@ namespace FubarDev.FtpServer
             _connectionAccessor = connectionAccessor;
             _serverCommandExecutor = serverCommandExecutor;
             _secureDataConnectionWrapper = secureDataConnectionWrapper;
-            _serverMessages = serverMessages;
             _serverCommandChannel = Channel.CreateBounded<IServerCommand>(new BoundedChannelOptions(3));
 
             _logger = logger;
@@ -583,12 +578,6 @@ namespace FubarDev.FtpServer
 
         private async Task CommandChannelDispatcherAsync(ChannelReader<FtpCommand> commandReader, CancellationToken cancellationToken)
         {
-            // Send initial response
-            await _serverCommandChannel.Writer.WriteAsync(
-                    new SendResponseServerCommand(new FtpResponseTextBlock(220, _serverMessages.GetBannerMessage())),
-                    _cancellationTokenSource.Token)
-               .ConfigureAwait(false);
-
             // Initialize middleware objects
             var middlewareObjects = ConnectionServices.GetRequiredService<IEnumerable<IFtpMiddleware>>();
             var nextStep = new FtpRequestDelegate(DispatchCommandAsync);
