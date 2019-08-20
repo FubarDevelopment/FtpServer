@@ -180,9 +180,7 @@ namespace FubarDev.FtpServer.Commands
                         _logger?.LogWarning(validationException.Message);
                         break;
 
-#if !NETSTANDARD1_3
                     case SocketException se when se.ErrorCode == (int)SocketError.ConnectionAborted:
-#endif
                     case OperationCanceledException _:
                         response = new FtpResponse(426, localizationFeature.Catalog.GetString("Connection closed; transfer aborted."));
                         Debug.WriteLine($"Command {command} cancelled with response {response}");
