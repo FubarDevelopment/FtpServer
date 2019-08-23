@@ -19,6 +19,7 @@ using FubarDev.FtpServer.ListFormatters;
 using FubarDev.FtpServer.ServerCommands;
 using FubarDev.FtpServer.Utilities;
 
+using Microsoft.AspNetCore.Connections.Features;
 using Microsoft.Extensions.Logging;
 
 namespace FubarDev.FtpServer.CommandHandlers
@@ -111,8 +112,8 @@ namespace FubarDev.FtpServer.CommandHandlers
                 targetEntry = foundEntry.Entry;
             }
 
-            var authInfoFeature = Connection.Features.Get<IAuthorizationInformationFeature>();
-            var authUser = authInfoFeature.FtpUser;
+            var authInfoFeature = Connection.Features.Get<IConnectionUserFeature>();
+            var authUser = authInfoFeature.User;
             if (authUser == null)
             {
                 return new FtpResponse(530, T("Not logged in."));
@@ -159,8 +160,8 @@ namespace FubarDev.FtpServer.CommandHandlers
                     cancellationToken)
                .ConfigureAwait(false);
 
-            var authInfoFeature = Connection.Features.Get<IAuthorizationInformationFeature>();
-            var authUser = authInfoFeature.FtpUser;
+            var authInfoFeature = Connection.Features.Get<IConnectionUserFeature>();
+            var authUser = authInfoFeature.User;
             if (authUser == null)
             {
                 return new FtpResponse(530, T("Not logged in."));

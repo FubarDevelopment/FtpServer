@@ -185,11 +185,15 @@ namespace FubarDev.FtpServer
             parentFeatures.Set<INetworkStreamFeature>(_networkStreamFeature);
 
             var defaultEncoding = options.Value.DefaultEncoding ?? Encoding.ASCII;
+            var authInfoFeature = new AuthorizationInformationFeature();
 
             var features = new FeatureCollection(parentFeatures);
             features.Set<ILocalizationFeature>(new LocalizationFeature(catalogLoader));
             features.Set<IFileSystemFeature>(new FileSystemFeature());
-            features.Set<IAuthorizationInformationFeature>(new AuthorizationInformationFeature());
+#pragma warning disable 618
+            features.Set<IAuthorizationInformationFeature>(authInfoFeature);
+#pragma warning restore 618
+            features.Set<IConnectionUserFeature>(authInfoFeature);
             features.Set<IEncodingFeature>(new EncodingFeature(defaultEncoding));
             features.Set<ITransferConfigurationFeature>(new TransferConfigurationFeature());
             Features = features;

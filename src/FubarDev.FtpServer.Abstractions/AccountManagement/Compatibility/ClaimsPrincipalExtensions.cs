@@ -5,6 +5,8 @@
 using System;
 using System.Security.Claims;
 
+using FubarDev.FtpServer.Authorization;
+
 namespace FubarDev.FtpServer.AccountManagement.Compatibility
 {
     /// <summary>
@@ -21,6 +23,11 @@ namespace FubarDev.FtpServer.AccountManagement.Compatibility
         [Obsolete("Will only be used for compatibility purposes.")]
         public static IFtpUser CreateUser(this ClaimsPrincipal principal)
         {
+            if (!principal.Identity.IsAuthenticated)
+            {
+                return new PasswordAuthorization.UnauthenticatedUser(principal.Identity.Name);
+            }
+
             if (principal.IsAnonymous())
             {
                 return new AnonymousClaimsFtpUser(principal);

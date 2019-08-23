@@ -12,6 +12,7 @@ namespace FubarDev.FtpServer.Features
     /// <summary>
     /// Authorization information feature.
     /// </summary>
+    [Obsolete("Use Microsoft.AspNetCore.Connections.Features.IConnectionUserFeature")]
     public interface IAuthorizationInformationFeature
     {
         /// <summary>

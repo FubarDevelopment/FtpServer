@@ -96,18 +96,15 @@ namespace FubarDev.FtpServer.Authorization
             _userName = userIdentifier;
             _needsPassword = true;
 
-            var authInfoFeature = Connection.Features.Get<IAuthorizationInformationFeature>();
-#pragma warning disable 618
-#pragma warning disable 612
-            authInfoFeature.User = new UnauthenticatedUser(userIdentifier);
-#pragma warning restore 612
-#pragma warning restore 618
-            authInfoFeature.FtpUser = new ClaimsPrincipal(
+            var unauthenticatedUser = new ClaimsPrincipal(
                 new ClaimsIdentity(
                     new[]
                     {
                         new Claim(ClaimsIdentity.DefaultNameClaimType, userIdentifier),
                     }));
+
+            var connUserFeature = Connection.Features.Get<IConnectionUserFeature>();
+            connUserFeature.User = unauthenticatedUser;
 
             return Task.FromResult<IFtpResponse>(new FtpResponse(331, T("User {0} logged in, needs password", userIdentifier)));
         }
