@@ -4,6 +4,7 @@
 
 using System;
 using System.IO;
+using System.Security.Claims;
 
 using FubarDev.FtpServer.AccountManagement;
 using FubarDev.FtpServer.AccountManagement.Directories;
@@ -45,12 +46,13 @@ namespace FubarDev.FtpServer.MembershipProvider.Pam.Directories
         /// <inheritdoc />
         public IAccountDirectories GetDirectories(IAccountInformation accountInformation)
         {
-            if (accountInformation.User is IAnonymousFtpUser anonymousFtpUser)
+            var user = accountInformation.FtpUser;
+            if (user.IsAnonymous())
             {
-                return GetAnonymousDirectories(anonymousFtpUser);
+                return GetAnonymousDirectories(user);
             }
 
-            var userHome = GetUserHome(accountInformation.User);
+            var userHome = GetUserHome(user);
             if (_userHomeIsRoot)
             {
                 return new GenericAccountDirectories(userHome);
@@ -58,16 +60,17 @@ namespace FubarDev.FtpServer.MembershipProvider.Pam.Directories
 
             return new GenericAccountDirectories(null, userHome);
         }
-        private string GetUserHome(IFtpUser ftpUser)
+        private string GetUserHome(ClaimsPrincipal ftpUser)
         {
-            if (ftpUser is PamFtpUser pamFtpUser)
+            var homePath = ftpUser.FindFirst(FtpClaimTypes.HomePath)?.Value;
+            if (!string.IsNullOrEmpty(homePath))
             {
-                return pamFtpUser.HomeDirectory;
+                return homePath!;
             }
 
-            return $"/home/{ftpUser.Name}";
+            return $"/home/{ftpUser.Identity.Name}";
         }
-        private IAccountDirectories GetAnonymousDirectories(IAnonymousFtpUser ftpUser)
+        private IAccountDirectories GetAnonymousDirectories(ClaimsPrincipal ftpUser)
         {
             var rootPath = _anonymousRootDirectory;
             if (string.IsNullOrEmpty(rootPath))
@@ -78,13 +81,14 @@ namespace FubarDev.FtpServer.MembershipProvider.Pam.Directories
 
             if (_anonymousRootPerEmail)
             {
-                if (string.IsNullOrEmpty(ftpUser.Email))
+                var email = ftpUser.FindFirst(ClaimTypes.Email)?.Value;
+                if (string.IsNullOrEmpty(email))
                 {
                     _logger?.LogWarning("Anonymous root per email is configured, but got anonymous user without email. This anonymous user will see the files of all other anonymous users!");
                 }
                 else
                 {
-                    rootPath = Path.Combine(rootPath, ftpUser.Email);
+                    rootPath = Path.Combine(rootPath, email);
                 }
             }
 

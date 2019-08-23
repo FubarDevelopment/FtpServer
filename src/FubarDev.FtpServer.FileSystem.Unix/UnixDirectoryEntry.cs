@@ -2,6 +2,8 @@
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
+using System.Security.Claims;
+
 using FubarDev.FtpServer.AccountManagement;
 
 using Mono.Unix;
@@ -12,7 +14,7 @@ namespace FubarDev.FtpServer.FileSystem.Unix
     {
         public UnixDirectoryEntry(
             UnixDirectoryInfo info,
-            IFtpUser user,
+            ClaimsPrincipal user,
             UnixUserInfo? userInfo,
             IUnixDirectoryEntry? parent = null)
             : base(info)

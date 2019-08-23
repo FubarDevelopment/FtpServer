@@ -10,6 +10,7 @@ namespace FubarDev.FtpServer.AccountManagement
     /// <summary>
     /// An anonymous FTP user.
     /// </summary>
+    [Obsolete("Use ClaimsPrincipal")]
     public class AnonymousFtpUser : IAnonymousFtpUser
     {
         private readonly HashSet<string> _guestGroups = new HashSet<string>(new[] { "anonymous", "guest" }, StringComparer.OrdinalIgnoreCase);

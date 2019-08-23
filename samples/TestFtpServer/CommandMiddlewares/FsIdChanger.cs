@@ -5,8 +5,10 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
+using FubarDev.FtpServer;
 using FubarDev.FtpServer.AccountManagement;
 using FubarDev.FtpServer.Commands;
 using FubarDev.FtpServer.Features;
@@ -44,7 +46,8 @@ namespace TestFtpServer.CommandMiddlewares
         {
             var connection = context.Connection;
             var authInfo = connection.Features.Get<IAuthorizationInformationFeature>();
-            if (!(authInfo.User is IUnixUser unixUser))
+            var isUnixUser = authInfo.FtpUser?.IsUnixUser() ?? false;
+            if (!isUnixUser)
             {
                 return next(context);
             }
@@ -55,14 +58,27 @@ namespace TestFtpServer.CommandMiddlewares
                 return next(context);
             }
 
-            return ExecuteWithChangedFsId(context, unixUser, next);
+            return ExecuteWithChangedFsId(context, authInfo.FtpUser!, next);
+        }
+
+        private static long? ConvertToLong(string? value)
+        {
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                return null;
+            }
+
+            return Convert.ToInt64(value);
         }
 
         private async Task ExecuteWithChangedFsId(
             FtpExecutionContext context,
-            IUnixUser unixUser,
+            ClaimsPrincipal unixUser,
             FtpCommandExecutionDelegate next)
         {
+            var userId = ConvertToLong(unixUser.FindFirst(FtpClaimTypes.UserId)?.Value) ?? uint.MaxValue;
+            var groupId = ConvertToLong(unixUser.FindFirst(FtpClaimTypes.GroupId)?.Value) ?? uint.MaxValue;
+
             using (var contextThread = new AsyncContextThread())
             {
                 await contextThread.Factory.Run(
@@ -70,8 +86,8 @@ namespace TestFtpServer.CommandMiddlewares
                         {
                             using (new UnixFileSystemIdChanger(
                                 _logger,
-                                unixUser.UserId,
-                                unixUser.GroupId,
+                                userId,
+                                groupId,
                                 _serverUser.UserId,
                                 _serverUser.GroupId))
                             {

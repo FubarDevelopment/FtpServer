@@ -6,11 +6,13 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Security.Claims;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
 using FubarDev.FtpServer.AccountManagement;
+using FubarDev.FtpServer.AccountManagement.Compatibility;
 using FubarDev.FtpServer.BackgroundTransfer;
 
 using Mono.Unix;
@@ -23,7 +25,7 @@ namespace FubarDev.FtpServer.FileSystem.Unix
     /// </summary>
     public class UnixFileSystem : IUnixFileSystem
     {
-        private readonly IFtpUser _user;
+        private readonly ClaimsPrincipal _user;
 
         private readonly UnixUserInfo? _userInfo;
 
@@ -33,9 +35,26 @@ namespace FubarDev.FtpServer.FileSystem.Unix
         /// <param name="root">The root directory.</param>
         /// <param name="user">The current user.</param>
         /// <param name="userInfo">The user information.</param>
+        [Obsolete("Use the overload with ClaimsPrincipal.")]
         public UnixFileSystem(
             IUnixDirectoryEntry root,
             IFtpUser user,
+            UnixUserInfo? userInfo)
+        {
+            _user = user.CreateClaimsPrincipal();
+            _userInfo = userInfo;
+            Root = root;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="UnixFileSystem"/> class.
+        /// </summary>
+        /// <param name="root">The root directory.</param>
+        /// <param name="user">The current user.</param>
+        /// <param name="userInfo">The user information.</param>
+        public UnixFileSystem(
+            IUnixDirectoryEntry root,
+            ClaimsPrincipal user,
             UnixUserInfo? userInfo)
         {
             _user = user;

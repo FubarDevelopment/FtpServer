@@ -10,9 +10,11 @@ using System.Collections.Generic;
 using System.Dynamic;
 using System.Globalization;
 using System.Net.Sockets;
+using System.Security.Claims;
 using System.Text;
 
 using FubarDev.FtpServer.AccountManagement;
+using FubarDev.FtpServer.AccountManagement.Compatibility;
 using FubarDev.FtpServer.Features;
 using FubarDev.FtpServer.Features.Impl;
 using FubarDev.FtpServer.FileSystem;
@@ -56,7 +58,25 @@ namespace FubarDev.FtpServer
         public IFtpUser? User
         {
             get => _featureCollection.Get<IAuthorizationInformationFeature>().User;
-            set => _featureCollection.Get<IAuthorizationInformationFeature>().User = value;
+            set
+            {
+                var feature = _featureCollection.Get<IAuthorizationInformationFeature>();
+                feature.User = value;
+                feature.FtpUser = value?.CreateClaimsPrincipal();
+            }
+        }
+
+        /// <inheritdoc />
+        [Obsolete("User the IAuthorizationInformationFeature services to get the current status.")]
+        public ClaimsPrincipal? FtpUser
+        {
+            get => _featureCollection.Get<IAuthorizationInformationFeature>().FtpUser;
+            set
+            {
+                var feature = _featureCollection.Get<IAuthorizationInformationFeature>();
+                feature.FtpUser = value;
+                feature.User = value?.CreateUser();
+            }
         }
 
         /// <summary>

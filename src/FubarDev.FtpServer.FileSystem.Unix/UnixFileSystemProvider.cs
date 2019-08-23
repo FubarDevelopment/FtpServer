@@ -49,15 +49,15 @@ namespace FubarDev.FtpServer.FileSystem.Unix
                 rootPath);
             var userInfo = GetUserInfo(accountInformation);
             var root = new UnixDirectoryInfo(rootPath);
-            var rootEntry = new UnixDirectoryEntry(root, accountInformation.User, userInfo);
-            return Task.FromResult<IUnixFileSystem>(new UnixFileSystem(rootEntry, accountInformation.User, userInfo));
+            var rootEntry = new UnixDirectoryEntry(root, accountInformation.FtpUser, userInfo);
+            return Task.FromResult<IUnixFileSystem>(new UnixFileSystem(rootEntry, accountInformation.FtpUser, userInfo));
         }
 
         private static UnixUserInfo? GetUserInfo(IAccountInformation accountInformation)
         {
             var testNames = new[]
             {
-                accountInformation.User.Name,
+                accountInformation.FtpUser.Identity.Name,
                 "nobody",
             };
 

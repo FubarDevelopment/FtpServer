@@ -5,9 +5,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Text;
 
 using FubarDev.FtpServer.AccountManagement;
+using FubarDev.FtpServer.AccountManagement.Compatibility;
 using FubarDev.FtpServer.FileSystem;
 using FubarDev.FtpServer.ListFormatters.Facts;
 using FubarDev.FtpServer.Utilities;
@@ -19,7 +21,7 @@ namespace FubarDev.FtpServer.ListFormatters
     /// </summary>
     public class FactsListFormatter : IListFormatter
     {
-        private readonly IFtpUser _user;
+        private readonly ClaimsPrincipal _user;
 
         private readonly DirectoryListingEnumerator _enumerator;
 
@@ -34,7 +36,23 @@ namespace FubarDev.FtpServer.ListFormatters
         /// <param name="enumerator">The enumerator for the directory listing to format.</param>
         /// <param name="activeFacts">The active facts to return for the entries.</param>
         /// <param name="absoluteName">Returns an absolute entry name.</param>
+        [Obsolete("Use the overload with ClaimsPrincipal.")]
         public FactsListFormatter(IFtpUser user, DirectoryListingEnumerator enumerator, ISet<string> activeFacts, bool absoluteName)
+        {
+            _user = user.CreateClaimsPrincipal();
+            _enumerator = enumerator;
+            _activeFacts = activeFacts;
+            _absoluteName = absoluteName;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FactsListFormatter"/> class.
+        /// </summary>
+        /// <param name="user">The user to create this formatter for.</param>
+        /// <param name="enumerator">The enumerator for the directory listing to format.</param>
+        /// <param name="activeFacts">The active facts to return for the entries.</param>
+        /// <param name="absoluteName">Returns an absolute entry name.</param>
+        public FactsListFormatter(ClaimsPrincipal user, DirectoryListingEnumerator enumerator, ISet<string> activeFacts, bool absoluteName)
         {
             _user = user;
             _enumerator = enumerator;
@@ -90,6 +108,7 @@ namespace FubarDev.FtpServer.ListFormatters
             result.AppendFormat(" {0}", fullName);
             return result.ToString();
         }
+
         private IReadOnlyList<IFact> BuildFacts(IUnixDirectoryEntry? parentEntry, IUnixDirectoryEntry currentEntry, TypeFact typeFact)
         {
             var result = new List<IFact>()
@@ -109,6 +128,7 @@ namespace FubarDev.FtpServer.ListFormatters
 
             return result;
         }
+
         private IReadOnlyList<IFact> BuildFacts(IUnixFileSystem fileSystem, IUnixDirectoryEntry directoryEntry, IUnixFileEntry entry)
         {
             var result = new List<IFact>()

@@ -2,11 +2,14 @@
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
+using System;
+
 namespace FubarDev.FtpServer.AccountManagement
 {
     /// <summary>
     /// A basic FTP user interface.
     /// </summary>
+    [Obsolete("Use ClaimsPrincipal")]
     public interface IFtpUser
     {
         /// <summary>
