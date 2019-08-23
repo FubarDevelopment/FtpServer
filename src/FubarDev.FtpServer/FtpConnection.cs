@@ -655,30 +655,5 @@ namespace FubarDev.FtpServer
             /// <inheritdoc />
             public PipeWriter Output { get; }
         }
-
-        private class DirectFtpResponse : IAsyncFtpResponse
-        {
-            private readonly string _text;
-
-            public DirectFtpResponse(string text)
-            {
-                _text = text;
-            }
-
-            /// <inheritdoc />
-            public int Code { get; } = -1;
-
-            /// <inheritdoc />
-            public IAsyncEnumerable<string> GetLinesAsync(CancellationToken cancellationToken)
-            {
-                return AsyncCollectionEnumerable.From(new[] { _text });
-            }
-
-            /// <inheritdoc />
-            public override string ToString()
-            {
-                return _text;
-            }
-        }
     }
 }
