@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;netstandard2.1;net461;net47;netcoreapp2.0;netcoreapp3.0</TargetFrameworks>
@@ -14,7 +14,7 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Scrutor" Version="3.1.0" />
-    <PackageReference Include="System.IO.Pipelines" Version="4.5.1" />
+    <PackageReference Include="System.IO.Pipelines" Version="4.6.0-preview8.19405.3" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\FubarDev.FtpServer.Commands\FubarDev.FtpServer.Commands.csproj" />
