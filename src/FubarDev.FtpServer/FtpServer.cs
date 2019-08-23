@@ -280,11 +280,6 @@ namespace FubarDev.FtpServer
 
         private void ConnectionOnClosed(object sender, EventArgs eventArgs)
         {
-            if (Status == FtpServiceStatus.Stopped)
-            {
-                return;
-            }
-
             var connection = (IFtpConnection)sender;
             if (!_connections.TryRemove(connection, out var info))
             {
