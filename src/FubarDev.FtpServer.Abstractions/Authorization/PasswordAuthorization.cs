@@ -5,13 +5,17 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
 
 using FubarDev.FtpServer.AccountManagement;
+using FubarDev.FtpServer.AccountManagement.Compatibility;
 using FubarDev.FtpServer.Authentication;
 using FubarDev.FtpServer.Features;
 using FubarDev.FtpServer.Localization;
+
+using Microsoft.AspNetCore.Connections.Features;
 
 namespace FubarDev.FtpServer.Authorization
 {
@@ -69,9 +73,7 @@ namespace FubarDev.FtpServer.Authorization
                    .ConfigureAwait(false);
                 if (validationResult.IsSuccess)
                 {
-                    var accountInformation = new DefaultAccountInformation(
-                        validationResult.User ?? throw new InvalidOperationException(
-                            T("The user property must be set if validation succeeded.")));
+                    var accountInformation = new DefaultAccountInformation(validationResult.FtpUser);
 
                     foreach (var authorizationAction in _authorizationActions)
                     {
@@ -94,7 +96,18 @@ namespace FubarDev.FtpServer.Authorization
             _userName = userIdentifier;
             _needsPassword = true;
 
-            Connection.Features.Get<IAuthorizationInformationFeature>().User = new UnauthenticatedUser(userIdentifier);
+            var authInfoFeature = Connection.Features.Get<IAuthorizationInformationFeature>();
+#pragma warning disable 618
+#pragma warning disable 612
+            authInfoFeature.User = new UnauthenticatedUser(userIdentifier);
+#pragma warning restore 612
+#pragma warning restore 618
+            authInfoFeature.FtpUser = new ClaimsPrincipal(
+                new ClaimsIdentity(
+                    new[]
+                    {
+                        new Claim(ClaimsIdentity.DefaultNameClaimType, userIdentifier),
+                    }));
 
             return Task.FromResult<IFtpResponse>(new FtpResponse(331, T("User {0} logged in, needs password", userIdentifier)));
         }
@@ -106,18 +119,8 @@ namespace FubarDev.FtpServer.Authorization
             _userName = null;
         }
 
-        private class DefaultAccountInformation : IAccountInformation
-        {
-            public DefaultAccountInformation(IFtpUser user)
-            {
-                User = user;
-            }
-
-            /// <inheritdoc />
-            public IFtpUser User { get; }
-        }
-
-        private class UnauthenticatedUser : IFtpUser
+        [Obsolete]
+        internal class UnauthenticatedUser : IFtpUser
         {
             public UnauthenticatedUser(string name)
             {
@@ -127,6 +130,26 @@ namespace FubarDev.FtpServer.Authorization
             public string Name { get; }
 
             public bool IsInGroup(string groupName) => false;
+        }
+
+        private class DefaultAccountInformation : IAccountInformation
+        {
+            public DefaultAccountInformation(ClaimsPrincipal user)
+            {
+                FtpUser = user;
+#pragma warning disable 618
+#pragma warning disable 612
+                User = user.CreateUser();
+#pragma warning restore 612
+#pragma warning restore 618
+            }
+
+            /// <inheritdoc />
+            [Obsolete]
+            public IFtpUser User { get; }
+
+            /// <inheritdoc />
+            public ClaimsPrincipal FtpUser { get; }
         }
     }
 }

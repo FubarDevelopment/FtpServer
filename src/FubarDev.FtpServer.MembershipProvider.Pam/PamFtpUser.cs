@@ -15,6 +15,7 @@ namespace FubarDev.FtpServer.MembershipProvider.Pam
     /// <summary>
     /// An FTP user implementation backed by PAM user information.
     /// </summary>
+    [Obsolete]
     public class PamFtpUser : IUnixUser
     {
         private readonly ISet<string> _userGroupNames;
@@ -33,7 +34,7 @@ namespace FubarDev.FtpServer.MembershipProvider.Pam
                 userGroups.Select(x => x.GroupName),
                 StringComparer.Ordinal);
             Name = userInfo.UserName;
-            HomeDirectory = userInfo.HomeDirectory;
+            HomeDirectory = HomePath = userInfo.HomeDirectory;
             UserId = userInfo.UserId;
             GroupId = userInfo.GroupId;
         }
@@ -45,6 +46,9 @@ namespace FubarDev.FtpServer.MembershipProvider.Pam
         /// Gets the users home directory.
         /// </summary>
         public string HomeDirectory { get; }
+
+        /// <inheritdoc />
+        public string HomePath { get; }
 
         /// <inheritdoc />
         public long UserId { get; }

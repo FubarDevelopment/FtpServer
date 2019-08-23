@@ -6,8 +6,6 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-using FubarDev.FtpServer.AccountManagement;
-
 using Microsoft.Extensions.Options;
 
 namespace FubarDev.FtpServer.FileSystem.InMemory
@@ -53,12 +51,12 @@ namespace FubarDev.FtpServer.FileSystem.InMemory
         /// <inheritdoc />
         public Task<IUnixFileSystem> Create(IAccountInformation accountInformation)
         {
-            var user = accountInformation.User;
+            var user = accountInformation.FtpUser;
             InMemoryFileSystem fileSystem;
 
             var directories = _accountDirectoryQuery.GetDirectories(accountInformation);
             var fileSystemId = directories.RootPath ?? string.Empty;
-            if (user is IAnonymousFtpUser)
+            if (user.IsAnonymous())
             {
                 if (_keepAnonymousFileSystem)
                 {

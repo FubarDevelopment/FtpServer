@@ -2,7 +2,11 @@
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
 using System.Net;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 using FubarDev.FtpServer.AccountManagement;
@@ -40,6 +44,39 @@ namespace FubarDev.FtpServer.MembershipProvider.Pam
             _options = options.Value;
         }
 
+        /// <summary>
+        /// Create a principal for a Unix user.
+        /// </summary>
+        /// <param name="userInfo">The user information.</param>
+        /// <returns>The claims principal.</returns>
+        public static ClaimsPrincipal CreateUnixPrincipal(UnixUserInfo userInfo)
+        {
+            var groups = UnixGroupInfo.GetLocalGroups();
+            var userGroups = groups
+               .Where(x => x.GetMemberNames().Any(memberName => memberName == userInfo.UserName))
+               .ToList();
+
+            var claims = new List<Claim>()
+            {
+                new Claim(ClaimsIdentity.DefaultNameClaimType, userInfo.GroupName),
+                new Claim(FtpClaimTypes.UserId, userInfo.UserId.ToString(CultureInfo.InvariantCulture), ClaimValueTypes.Integer64),
+                new Claim(ClaimTypes.AuthenticationMethod, "pam"),
+            };
+
+            if (!string.IsNullOrWhiteSpace(userInfo.HomeDirectory))
+            {
+                claims.Add(new Claim(FtpClaimTypes.HomePath, userInfo.HomeDirectory));
+            }
+
+            foreach (var userGroup in userGroups)
+            {
+                claims.Add(new Claim(FtpClaimTypes.GroupId, userGroup.GroupId.ToString(CultureInfo.InvariantCulture), ClaimValueTypes.Integer64));
+                claims.Add(new Claim(ClaimsIdentity.DefaultRoleClaimType, userGroup.GroupName));
+            }
+
+            return new ClaimsPrincipal(new ClaimsIdentity(claims, "pam"));
+        }
+
         /// <inheritdoc />
         public Task<MemberValidationResult> ValidateUserAsync(
             string username,
@@ -74,7 +111,7 @@ namespace FubarDev.FtpServer.MembershipProvider.Pam
 
                 result = new MemberValidationResult(
                     MemberValidationStatus.AuthenticatedUser,
-                    new PamFtpUser(userInfo));
+                    CreateUnixPrincipal(userInfo));
             }
             catch (PamException)
             {

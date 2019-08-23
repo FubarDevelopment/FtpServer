@@ -2,6 +2,8 @@
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
+using System;
+
 namespace FubarDev.FtpServer.AccountManagement
 {
     /// <summary>
@@ -10,6 +12,7 @@ namespace FubarDev.FtpServer.AccountManagement
     /// <remarks>
     /// The password is interpreted as e-mail.
     /// </remarks>
+    [Obsolete("Use ClaimsPrincipal")]
     public interface IAnonymousFtpUser : IFtpUser
     {
         /// <summary>

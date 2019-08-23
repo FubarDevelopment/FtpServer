@@ -34,7 +34,11 @@ namespace FubarDev.FtpServer.Authorization.Actions
         {
             var connection = _ftpConnectionAccessor.FtpConnection;
 
-            connection.Features.Get<IAuthorizationInformationFeature>().User = accountInformation.User;
+            var authInfoFeature = connection.Features.Get<IAuthorizationInformationFeature>();
+#pragma warning disable 618
+            authInfoFeature.User = accountInformation.User;
+#pragma warning restore 618
+            authInfoFeature.FtpUser = accountInformation.FtpUser;
 
             return Task.CompletedTask;
         }

@@ -2,6 +2,7 @@
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 using FubarDev.FtpServer.AccountManagement;
@@ -16,41 +17,26 @@ namespace TestFtpServer
         /// <inheritdoc />
         public Task<MemberValidationResult> ValidateUserAsync(string username, string password)
         {
-            if (username == "tester" && password == "testing")
+            if (username != "tester" || password != "testing")
             {
-                return Task.FromResult(
-                    new MemberValidationResult(
-                        MemberValidationStatus.AuthenticatedUser,
-                        new CustomFtpUser(username)));
+                return Task.FromResult(new MemberValidationResult(MemberValidationStatus.InvalidLogin));
             }
 
-            return Task.FromResult(new MemberValidationResult(MemberValidationStatus.InvalidLogin));
-        }
+            var user = new ClaimsPrincipal(
+                new ClaimsIdentity(
+                    new[]
+                    {
+                        new Claim(ClaimsIdentity.DefaultNameClaimType, username),
+                        new Claim(ClaimsIdentity.DefaultRoleClaimType, username),
+                        new Claim(ClaimsIdentity.DefaultRoleClaimType, "user"),
+                    },
+                    "custom"));
 
-        /// <summary>
-        /// Custom FTP user implementation
-        /// </summary>
-        private class CustomFtpUser : IFtpUser
-        {
-            /// <summary>
-            /// Initializes a new instance of the <see cref="CustomFtpUser"/> instance.
-            /// </summary>
-            /// <param name="name">The user name</param>
-            public CustomFtpUser(string name)
-            {
-                Name = name;
-            }
+            return Task.FromResult(
+                new MemberValidationResult(
+                    MemberValidationStatus.AuthenticatedUser,
+                    user));
 
-            /// <inheritdoc />
-            public string Name { get; }
-
-            /// <inheritdoc />
-            public bool IsInGroup(string groupName)
-            {
-                // We claim that the user is in both the "user" group and in the
-                // a group with the same name as the user name.
-                return groupName == "user" || groupName == Name;
-            }
         }
     }
 }

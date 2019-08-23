@@ -3,6 +3,7 @@
 // </copyright>
 
 using System;
+using System.Security.Claims;
 
 using FubarDev.FtpServer.AccountManagement;
 using FubarDev.FtpServer.FileSystem;
@@ -22,6 +23,7 @@ namespace FubarDev.FtpServer
         /// <param name="entity">The entity owner information.</param>
         /// <param name="user">The FTP user to determine the access mode for.</param>
         /// <returns>The effective access mode for the <paramref name="user"/>.</returns>
+        [Obsolete("Use the overload with ClaimsPrincipal.")]
         public static IAccessMode GetAccessModeFor(this IUnixPermissions permissions, IUnixOwner entity, IFtpUser user)
         {
             var isUser = string.Equals(entity.GetOwner(), user.Name, StringComparison.OrdinalIgnoreCase);
@@ -36,6 +38,30 @@ namespace FubarDev.FtpServer
             var canExecute = (isUser && permissions.User.Execute)
                              || (isGroup && permissions.Group.Execute)
                              || permissions.Other.Execute;
+            return new GenericAccessMode(canRead, canWrite, canExecute);
+        }
+
+        /// <summary>
+        /// Gets the effective access mode for an <paramref name="entity"/> for the given <paramref name="user"/>.
+        /// </summary>
+        /// <param name="permissions">The permissions used to build the access mode.</param>
+        /// <param name="entity">The entity owner information.</param>
+        /// <param name="user">The FTP user to determine the access mode for.</param>
+        /// <returns>The effective access mode for the <paramref name="user"/>.</returns>
+        public static IAccessMode GetAccessModeFor(this IUnixPermissions permissions, IUnixOwner entity, ClaimsPrincipal user)
+        {
+            var isUser = string.Equals(entity.GetOwner(), user.Identity.Name, StringComparison.OrdinalIgnoreCase);
+            var group = entity.GetGroup();
+            var isGroup = group != null && user.IsInRole(group);
+            var canRead = (isUser && permissions.User.Read)
+                || (isGroup && permissions.Group.Read)
+                || permissions.Other.Read;
+            var canWrite = (isUser && permissions.User.Write)
+                || (isGroup && permissions.Group.Write)
+                || permissions.Other.Write;
+            var canExecute = (isUser && permissions.User.Execute)
+                || (isGroup && permissions.Group.Execute)
+                || permissions.Other.Execute;
             return new GenericAccessMode(canRead, canWrite, canExecute);
         }
 

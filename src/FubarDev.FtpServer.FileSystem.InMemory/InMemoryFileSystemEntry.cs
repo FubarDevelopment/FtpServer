@@ -3,6 +3,7 @@
 // </copyright>
 
 using System;
+using System.Security.Claims;
 
 using FubarDev.FtpServer.AccountManagement;
 
@@ -63,9 +64,21 @@ namespace FubarDev.FtpServer.FileSystem.InMemory
         /// </summary>
         /// <param name="user">The user that becomes the new owner of this directory entry.</param>
         /// <returns>The changed file system entry.</returns>
+        [Obsolete("Use the overload with ClaimsPrincipal.")]
         public InMemoryFileSystemEntry WithOwner(IFtpUser user)
         {
             Owner = user.Name;
+            return this;
+        }
+
+        /// <summary>
+        /// Configure directory entry as owned by given <paramref name="user"/>.
+        /// </summary>
+        /// <param name="user">The user that becomes the new owner of this directory entry.</param>
+        /// <returns>The changed file system entry.</returns>
+        public InMemoryFileSystemEntry WithOwner(ClaimsPrincipal user)
+        {
+            Owner = user.Identity.Name;
             return this;
         }
 

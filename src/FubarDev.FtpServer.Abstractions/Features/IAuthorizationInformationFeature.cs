@@ -2,6 +2,9 @@
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
+using System;
+using System.Security.Claims;
+
 using FubarDev.FtpServer.AccountManagement;
 
 namespace FubarDev.FtpServer.Features
@@ -12,8 +15,14 @@ namespace FubarDev.FtpServer.Features
     public interface IAuthorizationInformationFeature
     {
         /// <summary>
-        /// Gets or sets the current user name.
+        /// Gets or sets the current user.
         /// </summary>
+        [Obsolete("Use the FtpUser property.")]
         IFtpUser? User { get; set; }
+
+        /// <summary>
+        /// Gets or sets the current user.
+        /// </summary>
+        ClaimsPrincipal? FtpUser { get; set; }
     }
 }
