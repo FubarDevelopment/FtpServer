@@ -27,7 +27,7 @@ namespace FubarDev.FtpServer
         /// <summary>
         /// Gets or sets the event handler that is triggered when the connection is closed.
         /// </summary>
-        event EventHandler Closed;
+        event EventHandler? Closed;
 
         /// <summary>
         /// Gets the connection services.
