@@ -305,25 +305,33 @@ namespace FubarDev.FtpServer
 
             Abort();
 
-            _serverCommandChannel.Writer.Complete();
-            await _commandReader.ConfigureAwait(false);
-
-            if (_commandChannelReader != null)
+            try
             {
-                await _commandChannelReader.ConfigureAwait(false);
-            }
+                _serverCommandChannel.Writer.Complete();
+                await _commandReader.ConfigureAwait(false);
 
-            if (_serverCommandHandler != null)
+                if (_commandChannelReader != null)
+                {
+                    await _commandChannelReader.ConfigureAwait(false);
+                }
+
+                if (_serverCommandHandler != null)
+                {
+                    await _serverCommandHandler.ConfigureAwait(false);
+                }
+
+                await _streamReaderService.StopAsync(CancellationToken.None)
+                   .ConfigureAwait(false);
+                await _streamWriterService.StopAsync(CancellationToken.None)
+                   .ConfigureAwait(false);
+                await _networkStreamFeature.SecureConnectionAdapter.StopAsync(CancellationToken.None)
+                   .ConfigureAwait(false);
+            }
+            catch (Exception ex)
             {
-                await _serverCommandHandler.ConfigureAwait(false);
+                // Something went wrong... badly!
+                _logger?.LogError(ex, ex.Message);
             }
-
-            await _streamReaderService.StopAsync(CancellationToken.None)
-               .ConfigureAwait(false);
-            await _streamWriterService.StopAsync(CancellationToken.None)
-               .ConfigureAwait(false);
-            await _networkStreamFeature.SecureConnectionAdapter.StopAsync(CancellationToken.None)
-               .ConfigureAwait(false);
 
             _logger?.LogInformation("Connection closed");
 
