@@ -4,11 +4,13 @@
 
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 
 using FubarDev.FtpServer.Features;
 
+using Microsoft.AspNetCore.Connections.Features;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
@@ -58,9 +60,10 @@ namespace FubarDev.FtpServer.DataConnection
                 return Task.FromResult<ValidationResult?>(ValidationResult.Success);
             }
 
-            var connectionFeature = connection.Features.Get<IConnectionFeature>();
+            var connectionFeature = connection.Features.Get<IConnectionEndPointFeature>();
+            var remoteIpAddress = ((IPEndPoint)connectionFeature.RemoteEndPoint).Address;
             var pasvRemoteAddress = dataConnection.RemoteAddress.Address;
-            if (Equals(pasvRemoteAddress, connectionFeature.RemoteEndPoint.Address))
+            if (Equals(pasvRemoteAddress, remoteIpAddress))
             {
                 return Task.FromResult<ValidationResult?>(ValidationResult.Success);
             }
@@ -69,7 +72,7 @@ namespace FubarDev.FtpServer.DataConnection
             var errorMessage = string.Format(
                 localizationFeature.Catalog.GetString("Data connection attempt from {0} for control connection from {1}, data connection rejected"),
                 pasvRemoteAddress,
-                connectionFeature.RemoteEndPoint.Address);
+                remoteIpAddress);
             _logger?.LogWarning(errorMessage);
             return Task.FromResult<ValidationResult?>(new ValidationResult(errorMessage));
         }

@@ -3,12 +3,12 @@
 // </copyright>
 
 using System;
+using System.Net;
 using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
 
-using FubarDev.FtpServer.Features;
-
+using Microsoft.AspNetCore.Connections.Features;
 using Microsoft.Extensions.Options;
 
 namespace FubarDev.FtpServer
@@ -47,8 +47,9 @@ namespace FubarDev.FtpServer
 
             var maxPort = Math.Max(_options.PasvMaxPort ?? 0, minPort);
 
-            var connectionFeature = connection.Features.Get<IConnectionFeature>();
-            var publicAddress = _options.PublicAddress ?? connectionFeature.LocalEndPoint.Address;
+            var connectionFeature = connection.Features.Get<IConnectionEndPointFeature>();
+            var publicAddress = _options.PublicAddress
+                ?? ((IPEndPoint)connectionFeature.LocalEndPoint).Address;
 
             return Task.FromResult(new PasvListenerOptions(minPort, maxPort, publicAddress));
         }
