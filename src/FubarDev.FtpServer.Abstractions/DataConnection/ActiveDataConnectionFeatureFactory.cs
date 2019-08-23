@@ -41,37 +41,6 @@ namespace FubarDev.FtpServer.DataConnection
         /// Creates a <see cref="IFtpDataConnectionFeature"/> implementation for an active FTP data connection.
         /// </summary>
         /// <param name="ftpCommand">The FTP command that initiated the creation of the feature.</param>
-        /// <param name="portAddress">The address the client wants the FTP server to connect to.</param>
-        /// <param name="dataPort">The source port the server should use to connect to the client.</param>
-        /// <returns>The task returning the new FTP data connection feature.</returns>
-        [Obsolete("Use the overload with IPEndPoint as address instead.")]
-        public Task<IFtpDataConnectionFeature> CreateFeatureAsync(
-            FtpCommand? ftpCommand,
-            Address portAddress,
-            int? dataPort)
-        {
-            var connection = _connectionAccessor.FtpConnection;
-            var connectionFeature = connection.Features.Get<IConnectionFeature>();
-
-            var localEndPoint = dataPort != null
-                ? new IPEndPoint(connectionFeature.LocalEndPoint.Address, dataPort.Value)
-                : new IPEndPoint(connectionFeature.LocalEndPoint.Address, 0);
-
-            var address = portAddress.IPAddress ?? connectionFeature.RemoteEndPoint.Address;
-            var portEndPoint = new IPEndPoint(address, portAddress.Port);
-            return Task.FromResult<IFtpDataConnectionFeature>(
-                new ActiveDataConnectionFeature(
-                    localEndPoint,
-                    portEndPoint,
-                    _validators,
-                    ftpCommand,
-                    connection));
-        }
-
-        /// <summary>
-        /// Creates a <see cref="IFtpDataConnectionFeature"/> implementation for an active FTP data connection.
-        /// </summary>
-        /// <param name="ftpCommand">The FTP command that initiated the creation of the feature.</param>
         /// <param name="portEndPoint">The address the client wants the FTP server to connect to.</param>
         /// <param name="dataPort">The source port the server should use to connect to the client.</param>
         /// <returns>The task returning the new FTP data connection feature.</returns>

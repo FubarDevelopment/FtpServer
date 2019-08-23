@@ -5,7 +5,6 @@
 using System.Threading;
 using System.Threading.Tasks;
 
-using FubarDev.FtpServer.AccountManagement;
 using FubarDev.FtpServer.Features;
 
 namespace FubarDev.FtpServer.Authorization.Actions
@@ -36,11 +35,6 @@ namespace FubarDev.FtpServer.Authorization.Actions
             var connection = _ftpConnectionAccessor.FtpConnection;
 
             connection.Features.Get<IAuthorizationInformationFeature>().User = accountInformation.User;
-
-#pragma warning disable 618
-            connection.Data.IsAnonymous = accountInformation.User is IAnonymousFtpUser;
-            connection.Data.IsLoggedIn = true;
-#pragma warning restore 618
 
             return Task.CompletedTask;
         }

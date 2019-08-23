@@ -25,21 +25,6 @@ namespace FubarDev.FtpServer
         }
 
         /// <inheritdoc />
-        [Obsolete("Features don't have names. Use an attribute that implements IFeatureInfo, like - for example - FtpFeatureTextAttribute.")]
-        public ISet<string> Names { get; } = new HashSet<string>();
-
-        /// <inheritdoc />
-        [Obsolete("This requirement is automatically determined through the FTP command handler.")]
-        public bool RequiresAuthentication { get; } = false;
-
-        /// <inheritdoc />
-        [Obsolete("Use BuildInfo(object, IFtpConnection) instead.")]
-        public string BuildInfo(IFtpConnection connection)
-        {
-            return _featureText;
-        }
-
-        /// <inheritdoc />
         public IEnumerable<string> BuildInfo(Type reference, IFtpConnection connection)
         {
             return new[] { _featureText };

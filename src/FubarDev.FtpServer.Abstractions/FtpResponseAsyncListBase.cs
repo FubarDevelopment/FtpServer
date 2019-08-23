@@ -37,12 +37,6 @@ namespace FubarDev.FtpServer
         /// <inheritdoc />
         public int Code { get; }
 
-        /// <summary>
-        /// Gets the async action to execute after sending the response to the client.
-        /// </summary>
-        [Obsolete("Use a custom server command.")]
-        public FtpResponseAfterWriteAsyncDelegate? AfterWriteAction => null;
-
         /// <inheritdoc />
         public override string ToString()
         {
@@ -54,30 +48,6 @@ namespace FubarDev.FtpServer
             };
 
             return string.Join(Environment.NewLine, lines);
-        }
-
-        /// <inheritdoc />
-        [Obsolete("Use GetLinesAsync instead.")]
-        public async Task<FtpResponseLine> GetNextLineAsync(object? token, CancellationToken cancellationToken)
-        {
-            IAsyncEnumerator<string> linesEnumerator;
-            if (token == null)
-            {
-                var lines = GetLinesAsync(cancellationToken);
-                linesEnumerator = lines.GetAsyncEnumerator(cancellationToken);
-            }
-            else
-            {
-                linesEnumerator = (IAsyncEnumerator<string>)token;
-            }
-
-            if (await linesEnumerator.MoveNextAsync().ConfigureAwait(false))
-            {
-                return new FtpResponseLine(linesEnumerator.Current, linesEnumerator);
-            }
-
-            await linesEnumerator.DisposeAsync().ConfigureAwait(false);
-            return new FtpResponseLine(null, null);
         }
 
         /// <inheritdoc />

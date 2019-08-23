@@ -5,10 +5,7 @@
 // <author>Mark Junker</author>
 //-----------------------------------------------------------------------
 
-using System;
 using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace FubarDev.FtpServer
 {
@@ -48,23 +45,10 @@ namespace FubarDev.FtpServer
         /// </summary>
         public string? Message { get; }
 
-        /// <summary>
-        /// Gets or sets the async action to execute after sending the response to the client.
-        /// </summary>
-        [Obsolete("Use a custom server command.")]
-        public FtpResponseAfterWriteAsyncDelegate? AfterWriteAction { get; set; }
-
         /// <inheritdoc/>
         public override string ToString()
         {
             return $"{Code:D3} {Message}".TrimEnd();
-        }
-
-        /// <inheritdoc />
-        [Obsolete("Use GetLinesAsync instead.")]
-        public Task<FtpResponseLine> GetNextLineAsync(object? token, CancellationToken cancellationToken)
-        {
-            return Task.FromResult(new FtpResponseLine(ToString(), null));
         }
 
         /// <inheritdoc />

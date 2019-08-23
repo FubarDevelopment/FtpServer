@@ -2,11 +2,9 @@
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
-using System.Threading.Tasks;
 
 using FubarDev.FtpServer.Utilities;
 
@@ -34,34 +32,6 @@ namespace FubarDev.FtpServer
 
         /// <inheritdoc />
         public int Code { get; }
-
-        /// <inheritdoc />
-        [Obsolete("Use a custom server command.")]
-        public FtpResponseAfterWriteAsyncDelegate? AfterWriteAction => null;
-
-        /// <inheritdoc />
-        [Obsolete("Use GetLinesAsync instead.")]
-        public Task<FtpResponseLine> GetNextLineAsync(object? token, CancellationToken cancellationToken)
-        {
-            IEnumerator<string> enumerator;
-            if (token == null)
-            {
-                // Start of enumeration
-                enumerator = GetLines().GetEnumerator();
-            }
-            else
-            {
-                enumerator = (IEnumerator<string>)token;
-            }
-
-            if (!enumerator.MoveNext())
-            {
-                enumerator.Dispose();
-                return Task.FromResult(new FtpResponseLine(null, null));
-            }
-
-            return Task.FromResult(new FtpResponseLine(enumerator.Current, enumerator));
-        }
 
         /// <inheritdoc />
         public IAsyncEnumerable<string> GetLinesAsync(CancellationToken cancellationToken)

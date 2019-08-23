@@ -64,25 +64,8 @@ namespace FubarDev.FtpServer.ServerCommandHandlers
                        .ConfigureAwait(false);
                     break;
                 default:
-#pragma warning disable 618
-                    await WriteObsoleteResponseAsync(response, encoding, writer, cancellationToken)
-#pragma warning restore 618
-                       .ConfigureAwait(false);
-                    break;
+                    throw new InvalidOperationException("The response must implement either ISyncFtpResponse or IAsyncFtpResponse.");
             }
-
-#pragma warning disable CS0618 // Typ oder Element ist veraltet
-            if (response.AfterWriteAction != null)
-            {
-                var nextResponse = await response.AfterWriteAction(connection, cancellationToken)
-                   .ConfigureAwait(false);
-                if (nextResponse != null)
-                {
-                    await WriteResponseAsync(connection, nextResponse, cancellationToken)
-                       .ConfigureAwait(false);
-                }
-            }
-#pragma warning restore CS0618 // Typ oder Element ist veraltet
         }
 
         private async ValueTask<FlushResult> WriteSyncResponseAsync(
@@ -129,45 +112,6 @@ namespace FubarDev.FtpServer.ServerCommandHandlers
                     return flushResult;
                 }
             }
-
-            return default;
-        }
-
-        [Obsolete("An FTP response must implement either ISyncFtpResponse or IAsyncFtpResponse.")]
-        private async ValueTask<FlushResult> WriteObsoleteResponseAsync(
-            IFtpResponse response,
-            Encoding encoding,
-            PipeWriter writer,
-            CancellationToken cancellationToken)
-        {
-            _logger.LogWarning("Sending response using an obsolete API.");
-            object? token = null;
-            do
-            {
-                var line = await response.GetNextLineAsync(token, cancellationToken)
-                   .ConfigureAwait(false);
-                if (line.HasText)
-                {
-                    _logger?.LogDebug(line.Text);
-                    var data = encoding.GetBytes($"{line.Text}\r\n");
-                    var memory = writer.GetMemory(data.Length);
-                    data.AsSpan().CopyTo(memory.Span);
-                    writer.Advance(data.Length);
-                    var flushResult = await writer.FlushAsync(cancellationToken);
-                    if (flushResult.IsCanceled || flushResult.IsCompleted)
-                    {
-                        return flushResult;
-                    }
-                }
-
-                if (!line.HasMoreData)
-                {
-                    break;
-                }
-
-                token = line.Token;
-            }
-            while (token != null);
 
             return default;
         }

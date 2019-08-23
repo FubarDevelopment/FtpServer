@@ -40,7 +40,7 @@ namespace FubarDev.FtpServer
     /// <summary>
     /// This class represents a FTP connection.
     /// </summary>
-    public sealed class FtpConnection : FtpConnectionContext, IFtpConnection
+    public sealed class FtpConnection : FtpConnectionContext, IFtpConnection, IDisposable
     {
         private readonly CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
 
@@ -128,9 +128,6 @@ namespace FubarDev.FtpServer
 
             _dataPort = portOptions.Value.DataPort;
             var remoteEndPoint = _remoteEndPoint = (IPEndPoint)socket.Client.RemoteEndPoint;
-#pragma warning disable 618
-            RemoteAddress = new Address(remoteEndPoint.Address.ToString(), remoteEndPoint.Port);
-#pragma warning restore 618
 
             var properties = new Dictionary<string, object?>
             {
@@ -184,14 +181,14 @@ namespace FubarDev.FtpServer
             parentFeatures.Set<IServerCommandFeature>(new ServerCommandFeature(_serverCommandChannel));
             parentFeatures.Set<INetworkStreamFeature>(_networkStreamFeature);
 
-            var features = new FeatureCollection(parentFeatures);
-#pragma warning disable 618
-            Data = new FtpConnectionData(
-                options.Value.DefaultEncoding ?? Encoding.ASCII,
-                features,
-                catalogLoader);
-#pragma warning restore 618
+            var defaultEncoding = options.Value.DefaultEncoding ?? Encoding.ASCII;
 
+            var features = new FeatureCollection(parentFeatures);
+            features.Set<ILocalizationFeature>(new LocalizationFeature(catalogLoader));
+            features.Set<IFileSystemFeature>(new FileSystemFeature());
+            features.Set<IAuthorizationInformationFeature>(new AuthorizationInformationFeature());
+            features.Set<IEncodingFeature>(new EncodingFeature(defaultEncoding));
+            features.Set<ITransferConfigurationFeature>(new TransferConfigurationFeature());
             Features = features;
 
             _commandReader = ReadCommandsFromPipeline(
@@ -213,51 +210,6 @@ namespace FubarDev.FtpServer
         /// Gets the feature collection.
         /// </summary>
         public override IFeatureCollection Features { get; }
-
-        /// <inheritdoc />
-        [Obsolete("Query the information using the IEncodingFeature instead.")]
-        public Encoding Encoding
-        {
-            get => Features.Get<IEncodingFeature>().Encoding;
-            set => Features.Get<IEncodingFeature>().Encoding = value;
-        }
-
-        /// <inheritdoc />
-        [Obsolete("Query the information using the Features property instead.")]
-        public FtpConnectionData Data { get; }
-
-        /// <inheritdoc />
-        [Obsolete("Use your own logger instead of the one from the connection.")]
-        public ILogger? Log => _logger;
-
-        /// <inheritdoc />
-        [Obsolete("Query the information using the IConnectionFeature instead.")]
-        public IPEndPoint LocalEndPoint
-            => Features.Get<IConnectionFeature>().LocalEndPoint;
-
-        /// <inheritdoc />
-        [Obsolete("Query the information using the IConnectionFeature instead.")]
-        public IPEndPoint RemoteEndPoint => _remoteEndPoint;
-
-        /// <inheritdoc />
-        [Obsolete("Query the information using the IConnectionFeature instead - and use the RemoteEndPoint property.")]
-        public Address RemoteAddress { get; }
-
-        /// <inheritdoc />
-        [Obsolete("Query the information using the ISecureConnectionFeature instead.")]
-        public Stream OriginalStream => Features.Get<ISecureConnectionFeature>().OriginalStream;
-
-        /// <inheritdoc />
-        [Obsolete("Not needed anymore.")]
-        public Stream SocketStream
-        {
-            get => OriginalStream;
-            set => throw new NotSupportedException("Setting the socket stream isn't supported.");
-        }
-
-        /// <inheritdoc />
-        [Obsolete("Not needed anymore.")]
-        public bool IsSecure => throw new NotSupportedException("Access to irrelevant leaking abstraction.");
 
         /// <summary>
         /// Gets the cancellation token to use to signal a task cancellation.
@@ -331,34 +283,6 @@ namespace FubarDev.FtpServer
             OnClosed();
         }
 
-        /// <summary>
-        /// Writes a FTP response to a client.
-        /// </summary>
-        /// <param name="response">The response to write to the client.</param>
-        /// <param name="cancellationToken">The cancellation token.</param>
-        /// <returns>The task.</returns>
-        [Obsolete("Use the IConnectionFeature.ServerCommandWriter instead.")]
-        public async Task WriteAsync(IFtpResponse response, CancellationToken cancellationToken)
-        {
-            await _serverCommandChannel.Writer.WriteAsync(
-                    new SendResponseServerCommand(response),
-                    cancellationToken)
-               .ConfigureAwait(false);
-        }
-
-        /// <summary>
-        /// Writes response to a client.
-        /// </summary>
-        /// <param name="response">The response to write to the client.</param>
-        /// <param name="cancellationToken">The cancellation token.</param>
-        /// <returns>The task.</returns>
-        [Obsolete("Use the IConnectionFeature.ServerCommandWriter instead.")]
-        public async Task WriteAsync(string response, CancellationToken cancellationToken)
-        {
-            await _serverCommandChannel.Writer.WriteAsync(new SendResponseServerCommand(new DirectFtpResponse(response)), cancellationToken)
-               .ConfigureAwait(false);
-        }
-
         /// <inheritdoc/>
         public async Task<IFtpDataConnection> OpenDataConnectionAsync(TimeSpan? timeout, CancellationToken cancellationToken)
         {
@@ -367,18 +291,6 @@ namespace FubarDev.FtpServer
                .ConfigureAwait(false);
             return await _secureDataConnectionWrapper.WrapAsync(dataConnection)
                .ConfigureAwait(false);
-        }
-
-        /// <summary>
-        /// Create an encrypted stream.
-        /// </summary>
-        /// <param name="unencryptedStream">The stream to encrypt.</param>
-        /// <returns>The encrypted stream.</returns>
-        [Obsolete("The data connection returned by OpenDataConnection is already encrypted.")]
-        public Task<Stream> CreateEncryptedStream(Stream unencryptedStream)
-        {
-            var createEncryptedStream = Features.Get<ISecureConnectionFeature>().CreateEncryptedStream;
-            return createEncryptedStream(unencryptedStream);
         }
 
         /// <inheritdoc/>
@@ -391,9 +303,6 @@ namespace FubarDev.FtpServer
 
             _socket.Dispose();
             _cancellationTokenSource.Dispose();
-#pragma warning disable 618
-            Data.Dispose();
-#pragma warning restore 618
             _loggerScope?.Dispose();
         }
 
@@ -710,19 +619,10 @@ namespace FubarDev.FtpServer
             {
                 LocalEndPoint = localEndPoint;
                 RemoteEndPoint = remoteEndPoint;
-#pragma warning disable 612
-#pragma warning disable 618
-                RemoteAddress = new Address(remoteEndPoint.Address.ToString(), remoteEndPoint.Port);
-#pragma warning restore 618
-#pragma warning restore 612
             }
 
             /// <inheritdoc />
             public IPEndPoint LocalEndPoint { get; }
-
-            /// <inheritdoc />
-            [Obsolete]
-            public Address RemoteAddress { get; }
 
             /// <inheritdoc />
             public IPEndPoint RemoteEndPoint { get; }
@@ -767,17 +667,6 @@ namespace FubarDev.FtpServer
 
             /// <inheritdoc />
             public int Code { get; } = -1;
-
-            /// <inheritdoc />
-            [Obsolete("Use a custom server command.")]
-            public FtpResponseAfterWriteAsyncDelegate? AfterWriteAction { get; } = null;
-
-            /// <inheritdoc />
-            [Obsolete("Use GetLinesAsync instead.")]
-            public Task<FtpResponseLine> GetNextLineAsync(object? token, CancellationToken cancellationToken)
-            {
-                return Task.FromResult(new FtpResponseLine(_text, null));
-            }
 
             /// <inheritdoc />
             public IAsyncEnumerable<string> GetLinesAsync(CancellationToken cancellationToken)

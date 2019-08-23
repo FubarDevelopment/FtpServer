@@ -24,19 +24,15 @@ namespace FubarDev.FtpServer.CommandHandlers
     public class FeatCommandHandler : FtpCommandHandler
     {
         private readonly IFeatureInfoProvider _featureInfoProvider;
-        private readonly IFtpCommandHandlerProvider _commandHandlerProvider;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FeatCommandHandler"/> class.
         /// </summary>
         /// <param name="featureInfoProvider">Provider for feature information.</param>
-        /// <param name="commandHandlerProvider">The FTP command handler provider.</param>
         public FeatCommandHandler(
-            IFeatureInfoProvider featureInfoProvider,
-            IFtpCommandHandlerProvider commandHandlerProvider)
+            IFeatureInfoProvider featureInfoProvider)
         {
             _featureInfoProvider = featureInfoProvider;
-            _commandHandlerProvider = commandHandlerProvider;
         }
 
         /// <inheritdoc/>
@@ -45,19 +41,11 @@ namespace FubarDev.FtpServer.CommandHandlers
             var loginStateMachine = Connection.ConnectionServices.GetRequiredService<IFtpLoginStateMachine>();
             var isAuthorized = loginStateMachine.Status == SecurityStatus.Authorized;
             var features = _featureInfoProvider.GetFeatureInfoItems()
-#pragma warning disable CS0612 // Typ oder Element ist veraltet
-               .Concat(GetLegacyFeatureInfoItems(_commandHandlerProvider.CommandHandlers))
-#pragma warning restore CS0612 // Typ oder Element ist veraltet
                .Where(x => IsFeatureAllowed(x, isAuthorized))
                .SelectMany(BuildInfo)
                .Distinct(StringComparer.OrdinalIgnoreCase)
                .OrderBy(x => x, StringComparer.OrdinalIgnoreCase)
                .ToList();
-
-            if (features.Count == 0)
-            {
-                return Task.FromResult<IFtpResponse?>(new FtpResponse(211, T("No extensions supported")));
-            }
 
             return Task.FromResult<IFtpResponse?>(
                 new FtpResponseList(
@@ -65,18 +53,6 @@ namespace FubarDev.FtpServer.CommandHandlers
                     T("Extensions supported:"),
                     T("END"),
                     features.Distinct(StringComparer.OrdinalIgnoreCase)));
-        }
-
-        [Obsolete]
-        private IEnumerable<FoundFeatureInfo> GetLegacyFeatureInfoItems(IEnumerable<IFtpCommandHandlerInformation> commandHandlers)
-        {
-            foreach (var handlerInfo in commandHandlers.OfType<IFtpCommandHandlerInstanceInformation>())
-            {
-                foreach (var supportedFeature in handlerInfo.Instance.GetSupportedFeatures(Connection))
-                {
-                    yield return new FoundFeatureInfo(handlerInfo, supportedFeature);
-                }
-            }
         }
 
         private IEnumerable<string> BuildInfo(FoundFeatureInfo foundFeatureInfo)

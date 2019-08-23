@@ -5,7 +5,6 @@
 using System;
 using System.Collections.Generic;
 using System.Threading;
-using System.Threading.Tasks;
 
 using FubarDev.FtpServer.Utilities;
 
@@ -39,10 +38,6 @@ namespace FubarDev.FtpServer
         public int Code { get; }
 
         /// <inheritdoc />
-        [Obsolete("Use a custom server command.")]
-        public FtpResponseAfterWriteAsyncDelegate? AfterWriteAction => null;
-
-        /// <inheritdoc />
         public override string ToString()
         {
             var lines = new[]
@@ -53,30 +48,6 @@ namespace FubarDev.FtpServer
             };
 
             return string.Join(Environment.NewLine, lines);
-        }
-
-        /// <inheritdoc />
-        [Obsolete("Use GetLinesAsync instead.")]
-        public async Task<FtpResponseLine> GetNextLineAsync(object? token, CancellationToken cancellationToken)
-        {
-            IAsyncEnumerator<string> linesEnumerator;
-            if (token == null)
-            {
-                var lines = GetLinesAsync(cancellationToken);
-                linesEnumerator = lines.GetAsyncEnumerator(cancellationToken);
-            }
-            else
-            {
-                linesEnumerator = (IAsyncEnumerator<string>)token;
-            }
-
-            if (await linesEnumerator.MoveNextAsync().ConfigureAwait(false))
-            {
-                return new FtpResponseLine(linesEnumerator.Current, linesEnumerator);
-            }
-
-            await linesEnumerator.DisposeAsync().ConfigureAwait(false);
-            return new FtpResponseLine(null, null);
         }
 
         /// <inheritdoc />

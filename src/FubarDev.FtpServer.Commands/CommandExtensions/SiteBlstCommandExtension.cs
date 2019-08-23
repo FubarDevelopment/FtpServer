@@ -2,7 +2,6 @@
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
@@ -39,10 +38,6 @@ namespace FubarDev.FtpServer.CommandExtensions
             _backgroundTransferWorker = backgroundTransferWorker;
             _logger = logger;
         }
-
-        /// <inheritdoc/>
-        [Obsolete("Use the FtpCommandHandlerExtension attribute instead.")]
-        public override bool? IsLoginRequired { get; } = true;
 
         /// <inheritdoc />
         public override void InitializeConnectionData()
