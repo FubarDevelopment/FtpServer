@@ -400,9 +400,9 @@ namespace FubarDev.FtpServer.FileSystem.GoogleDrive
             }
         }
 
-        private async Task<IReadOnlyCollection<File>> ListFilesAsync(
+        private async IAsyncEnumerable<IList<File>> ListFilesAsync(
             string query,
-            CancellationToken cancellationToken)
+            [EnumeratorCancellation] CancellationToken cancellationToken)
         {
             var request = Service.Files.List();
             request.Q = query;
@@ -410,24 +410,15 @@ namespace FubarDev.FtpServer.FileSystem.GoogleDrive
             request.Fields = FileExtensions.DefaultListFields;
             var response = await request.ExecuteAsync(cancellationToken)
                .ConfigureAwait(false);
+            yield return response.Files;
 
-            if (string.IsNullOrEmpty(response.NextPageToken))
-            {
-                return response.Files as IReadOnlyList<File> ?? response.Files.ToList();
-            }
-
-            var fileList = new List<File>(response.Files);
-
-            do
+            while (!string.IsNullOrEmpty(response.NextPageToken))
             {
                 request.PageToken = response.NextPageToken;
                 response = await request.ExecuteAsync(cancellationToken)
                    .ConfigureAwait(false);
-                fileList.AddRange(response.Files);
+                yield return response.Files;
             }
-            while (!string.IsNullOrEmpty(response.NextPageToken));
-
-            return fileList;
         }
 
         /// <summary>
@@ -449,34 +440,39 @@ namespace FubarDev.FtpServer.FileSystem.GoogleDrive
 
         private async IAsyncEnumerable<IUnixFileSystemEntry> ConvertEntries(
             GoogleDriveDirectoryEntry dirEntry,
-            Func<Task<IReadOnlyCollection<File>>> getEntriesFunc,
+            Func<IAsyncEnumerable<IList<File>>> getEntriesFunc,
             [EnumeratorCancellation] CancellationToken cancellationToken)
         {
             await _uploadsLock.WaitAsync(cancellationToken).ConfigureAwait(false);
             try
             {
                 var baseDir = dirEntry.FullName;
-                var children = await getEntriesFunc().ConfigureAwait(false);
-                foreach (var child in children.Where(x => !x.Trashed.GetValueOrDefault()))
+                var childrenEntries = getEntriesFunc()
+                   .WithCancellation(cancellationToken)
+                   .ConfigureAwait(false);
+                await foreach (var children in childrenEntries)
                 {
-                    var fullName = FileSystemExtensions.CombinePath(baseDir, child.Name);
-                    if (child.IsDirectory())
+                    foreach (var child in children.Where(x => !x.Trashed.GetValueOrDefault()))
                     {
-                        yield return new GoogleDriveDirectoryEntry(child, fullName);
-                    }
-                    else
-                    {
-                        long? fileSize;
-                        if (_uploads.TryGetValue(child.Id, out var uploader))
+                        var fullName = FileSystemExtensions.CombinePath(baseDir, child.Name);
+                        if (child.IsDirectory())
                         {
-                            fileSize = uploader.FileSize;
+                            yield return new GoogleDriveDirectoryEntry(child, fullName);
                         }
                         else
                         {
-                            fileSize = null;
-                        }
+                            long? fileSize;
+                            if (_uploads.TryGetValue(child.Id, out var uploader))
+                            {
+                                fileSize = uploader.FileSize;
+                            }
+                            else
+                            {
+                                fileSize = null;
+                            }
 
-                        yield return new GoogleDriveFileEntry(child, fullName, fileSize);
+                            yield return new GoogleDriveFileEntry(child, fullName, fileSize);
+                        }
                     }
                 }
             }
@@ -486,12 +482,12 @@ namespace FubarDev.FtpServer.FileSystem.GoogleDrive
             }
         }
 
-        private Task<IReadOnlyCollection<File>> GetChildrenAsync(File parent, CancellationToken cancellationToken)
+        private IAsyncEnumerable<IList<File>> GetChildrenAsync(File parent, CancellationToken cancellationToken)
         {
             return ListFilesAsync($"{parent.Id.ToJsonString()} in parents", cancellationToken);
         }
 
-        private Task<IReadOnlyCollection<File>> FindChildByNameAsync(
+        private IAsyncEnumerable<IList<File>> FindChildByNameAsync(
             File parent,
             string name,
             CancellationToken cancellationToken)
