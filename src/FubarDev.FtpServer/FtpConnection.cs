@@ -198,6 +198,7 @@ namespace FubarDev.FtpServer
             parentFeatures.Set<INetworkStreamFeature>(_networkStreamFeature);
             parentFeatures.Set<IConnectionIdFeature>(new FtpConnectionIdFeature(ConnectionId));
             parentFeatures.Set<IConnectionLifetimeFeature>(new FtpConnectionLifetimeFeature(this));
+            parentFeatures.Set<IConnectionTransportFeature>(new FtpConnectionTransportFeature(this));
 
             var defaultEncoding = options.Value.DefaultEncoding ?? Encoding.ASCII;
             var authInfoFeature = new AuthorizationInformationFeature();
@@ -730,6 +731,23 @@ namespace FubarDev.FtpServer
 
             /// <inheritdoc />
             public string ConnectionId { get; set; }
+        }
+
+        private class FtpConnectionTransportFeature : IConnectionTransportFeature
+        {
+            private readonly FtpConnection _connection;
+
+            public FtpConnectionTransportFeature(FtpConnection connection)
+            {
+                _connection = connection;
+            }
+
+            /// <inheritdoc />
+            public IDuplexPipe Transport
+            {
+                get => _connection.Transport;
+                set => _connection.Transport = value;
+            }
         }
 
         private class FtpConnectionLifetimeFeature : IConnectionLifetimeFeature
