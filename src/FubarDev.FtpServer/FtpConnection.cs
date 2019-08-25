@@ -360,7 +360,7 @@ namespace FubarDev.FtpServer
             _cancellationTokenSource.Cancel(true);
 
             // Dispose all features (if disposable)
-            foreach (var featureItem in Features.Where(x => x.Key != typeof(IConnectionLifetimeFeature)))
+            foreach (var featureItem in Features)
             {
                 try
                 {
