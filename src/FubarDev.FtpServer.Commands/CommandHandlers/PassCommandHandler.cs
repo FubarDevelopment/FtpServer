@@ -10,8 +10,6 @@ using System.Threading.Tasks;
 
 using FubarDev.FtpServer.Commands;
 
-using Microsoft.Extensions.DependencyInjection;
-
 namespace FubarDev.FtpServer.CommandHandlers
 {
     /// <summary>
@@ -20,11 +18,21 @@ namespace FubarDev.FtpServer.CommandHandlers
     [FtpCommandHandler("PASS", isLoginRequired: false)]
     public class PassCommandHandler : FtpCommandHandler
     {
+        private readonly IFtpLoginStateMachine _loginStateMachine;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PassCommandHandler"/> class.
+        /// </summary>
+        /// <param name="loginStateMachine">The login state machine.</param>
+        public PassCommandHandler(IFtpLoginStateMachine loginStateMachine)
+        {
+            _loginStateMachine = loginStateMachine;
+        }
+
         /// <inheritdoc/>
         public override Task<IFtpResponse?> Process(FtpCommand command, CancellationToken cancellationToken)
         {
-            var loginStateMachine = Connection.ConnectionServices.GetRequiredService<IFtpLoginStateMachine>();
-            return loginStateMachine.ExecuteAsync(command, cancellationToken);
+            return _loginStateMachine.ExecuteAsync(command, cancellationToken);
         }
     }
 }

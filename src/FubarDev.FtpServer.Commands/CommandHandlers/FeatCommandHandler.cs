@@ -13,8 +13,6 @@ using System.Threading.Tasks;
 
 using FubarDev.FtpServer.Commands;
 
-using Microsoft.Extensions.DependencyInjection;
-
 namespace FubarDev.FtpServer.CommandHandlers
 {
     /// <summary>
@@ -24,22 +22,25 @@ namespace FubarDev.FtpServer.CommandHandlers
     public class FeatCommandHandler : FtpCommandHandler
     {
         private readonly IFeatureInfoProvider _featureInfoProvider;
+        private readonly IFtpLoginStateMachine _loginStateMachine;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FeatCommandHandler"/> class.
         /// </summary>
         /// <param name="featureInfoProvider">Provider for feature information.</param>
+        /// <param name="loginStateMachine">The login state machine.</param>
         public FeatCommandHandler(
-            IFeatureInfoProvider featureInfoProvider)
+            IFeatureInfoProvider featureInfoProvider,
+            IFtpLoginStateMachine loginStateMachine)
         {
             _featureInfoProvider = featureInfoProvider;
+            _loginStateMachine = loginStateMachine;
         }
 
         /// <inheritdoc/>
         public override Task<IFtpResponse?> Process(FtpCommand command, CancellationToken cancellationToken)
         {
-            var loginStateMachine = Connection.ConnectionServices.GetRequiredService<IFtpLoginStateMachine>();
-            var isAuthorized = loginStateMachine.Status == SecurityStatus.Authorized;
+            var isAuthorized = _loginStateMachine.Status == SecurityStatus.Authorized;
             var features = _featureInfoProvider.GetFeatureInfoItems()
                .Where(x => IsFeatureAllowed(x, isAuthorized))
                .SelectMany(BuildInfo)

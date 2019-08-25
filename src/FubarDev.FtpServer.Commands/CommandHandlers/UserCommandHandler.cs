@@ -20,11 +20,21 @@ namespace FubarDev.FtpServer.CommandHandlers
     [FtpCommandHandler("USER", isLoginRequired: false)]
     public class UserCommandHandler : FtpCommandHandler
     {
+        private readonly IFtpLoginStateMachine _loginStateMachine;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="UserCommandHandler"/> class.
+        /// </summary>
+        /// <param name="loginStateMachine">The login state machine.</param>
+        public UserCommandHandler(IFtpLoginStateMachine loginStateMachine)
+        {
+            _loginStateMachine = loginStateMachine;
+        }
+
         /// <inheritdoc/>
         public override Task<IFtpResponse?> Process(FtpCommand command, CancellationToken cancellationToken)
         {
-            var loginStateMachine = Connection.ConnectionServices.GetRequiredService<IFtpLoginStateMachine>();
-            return loginStateMachine.ExecuteAsync(command, cancellationToken);
+            return _loginStateMachine.ExecuteAsync(command, cancellationToken);
         }
     }
 }

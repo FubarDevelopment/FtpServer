@@ -8,8 +8,6 @@ using System.Threading.Tasks;
 
 using FubarDev.FtpServer.Commands;
 
-using Microsoft.Extensions.DependencyInjection;
-
 namespace FubarDev.FtpServer.CommandHandlers
 {
     /// <summary>
@@ -18,11 +16,21 @@ namespace FubarDev.FtpServer.CommandHandlers
     [FtpCommandHandler("ADAT", isLoginRequired: false)]
     public class AdatCommandHandler : FtpCommandHandler
     {
+        private readonly IFtpLoginStateMachine _loginStateMachine;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AdatCommandHandler"/> class.
+        /// </summary>
+        /// <param name="loginStateMachine">The login state machine.</param>
+        public AdatCommandHandler(IFtpLoginStateMachine loginStateMachine)
+        {
+            _loginStateMachine = loginStateMachine;
+        }
+
         /// <inheritdoc />
         public override async Task<IFtpResponse?> Process(FtpCommand command, CancellationToken cancellationToken)
         {
-            var loginStateMachine = Connection.ConnectionServices.GetRequiredService<IFtpLoginStateMachine>();
-            var authenticationMechanism = loginStateMachine.SelectedAuthenticationMechanism;
+            var authenticationMechanism = _loginStateMachine.SelectedAuthenticationMechanism;
             if (authenticationMechanism == null)
             {
                 return new FtpResponse(503, T("Bad sequence of commands"));

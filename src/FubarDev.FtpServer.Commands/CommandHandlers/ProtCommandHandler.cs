@@ -7,8 +7,6 @@ using System.Threading.Tasks;
 
 using FubarDev.FtpServer.Commands;
 
-using Microsoft.Extensions.DependencyInjection;
-
 namespace FubarDev.FtpServer.CommandHandlers
 {
     /// <summary>
@@ -17,6 +15,17 @@ namespace FubarDev.FtpServer.CommandHandlers
     [FtpCommandHandler("PROT", isLoginRequired: false)]
     public class ProtCommandHandler : FtpCommandHandler
     {
+        private readonly IFtpLoginStateMachine _loginStateMachine;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ProtCommandHandler"/> class.
+        /// </summary>
+        /// <param name="loginStateMachine">The login state machine.</param>
+        public ProtCommandHandler(IFtpLoginStateMachine loginStateMachine)
+        {
+            _loginStateMachine = loginStateMachine;
+        }
+
         /// <inheritdoc/>
         public override async Task<IFtpResponse?> Process(FtpCommand command, CancellationToken cancellationToken)
         {
@@ -25,8 +34,7 @@ namespace FubarDev.FtpServer.CommandHandlers
                 return new FtpResponse(501, T("Data channel protection level not specified."));
             }
 
-            var loginStateMachine = Connection.ConnectionServices.GetRequiredService<IFtpLoginStateMachine>();
-            var authMechanism = loginStateMachine.SelectedAuthenticationMechanism;
+            var authMechanism = _loginStateMachine.SelectedAuthenticationMechanism;
             if (authMechanism == null)
             {
                 return new FtpResponse(503, T("No authentication mechanism selected."));

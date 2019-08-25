@@ -29,6 +29,7 @@ namespace FubarDev.FtpServer.CommandHandlers
     {
         private readonly int? _dataPort;
         private readonly IFtpServerMessages _serverMessages;
+        private readonly IFtpLoginStateMachine _loginStateMachine;
         private readonly ILogger<ReinCommandHandler>? _logger;
 
         /// <summary>
@@ -36,14 +37,17 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// </summary>
         /// <param name="portOptions">The PORT command options.</param>
         /// <param name="serverMessages">The FTP server messages.</param>
+        /// <param name="loginStateMachine">The login state machine.</param>
         /// <param name="logger">The logger.</param>
         public ReinCommandHandler(
             IOptions<PortCommandOptions> portOptions,
             IFtpServerMessages serverMessages,
+            IFtpLoginStateMachine loginStateMachine,
             ILogger<ReinCommandHandler>? logger = null)
         {
             _dataPort = portOptions.Value.DataPort;
             _serverMessages = serverMessages;
+            _loginStateMachine = loginStateMachine;
             _logger = logger;
         }
 
@@ -51,8 +55,7 @@ namespace FubarDev.FtpServer.CommandHandlers
         public override async Task<IFtpResponse?> Process(FtpCommand command, CancellationToken cancellationToken)
         {
             // Reset the login
-            var loginStateMachine = Connection.ConnectionServices.GetRequiredService<IFtpLoginStateMachine>();
-            loginStateMachine.Reset();
+            _loginStateMachine.Reset();
 
             // Reset encoding
             var encodingFeature = Connection.Features.Get<IEncodingFeature>();
