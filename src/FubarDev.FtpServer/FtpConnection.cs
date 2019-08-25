@@ -29,6 +29,7 @@ using FubarDev.FtpServer.Localization;
 using FubarDev.FtpServer.Networking;
 using FubarDev.FtpServer.ServerCommands;
 
+using Microsoft.AspNetCore.Connections;
 using Microsoft.AspNetCore.Connections.Features;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.Extensions.DependencyInjection;
@@ -40,7 +41,12 @@ namespace FubarDev.FtpServer
     /// <summary>
     /// This class represents a FTP connection.
     /// </summary>
-    public sealed class FtpConnection : FtpConnectionContext, IFtpConnection, IDisposable
+    public sealed class FtpConnection :
+#pragma warning disable 618
+        FtpConnectionContext,
+#pragma warning restore 618
+        IFtpConnection,
+        IDisposable
     {
         private readonly CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
 
@@ -128,6 +134,11 @@ namespace FubarDev.FtpServer
 
             _dataPort = portOptions.Value.DataPort;
             var remoteEndPoint = _remoteEndPoint = (IPEndPoint)socket.Client.RemoteEndPoint;
+            var localEndPoint = (IPEndPoint)socket.Client.LocalEndPoint;
+
+            LocalEndPoint = localEndPoint;
+            RemoteEndPoint = remoteEndPoint;
+            ConnectionClosed = _cancellationTokenSource.Token;
 
             var properties = new Dictionary<string, object?>
             {
@@ -149,7 +160,7 @@ namespace FubarDev.FtpServer
 
             var parentFeatures = new FeatureCollection();
             var connectionFeature = new ConnectionFeature(
-                (IPEndPoint)socket.Client.LocalEndPoint,
+                localEndPoint,
                 remoteEndPoint);
             var secureConnectionFeature = new SecureConnectionFeature();
 
@@ -168,13 +179,15 @@ namespace FubarDev.FtpServer
                 _socketResponsePipe.Reader,
                 _cancellationTokenSource.Token);
 
+            Transport = new DuplexPipe(applicationInputPipe.Reader, applicationOutputPipe.Writer);
+
             _networkStreamFeature = new NetworkStreamFeature(
                 new SecureConnectionAdapter(
                     socketPipe,
                     connectionPipe,
                     sslStreamWrapperFactory,
                     _cancellationTokenSource.Token),
-                applicationOutputPipe.Writer);
+                this);
 
 #pragma warning disable 618
             parentFeatures.Set<IConnectionFeature>(connectionFeature);
@@ -201,7 +214,6 @@ namespace FubarDev.FtpServer
             Features = features;
 
             _commandReader = ReadCommandsFromPipeline(
-                applicationInputPipe.Reader,
                 _ftpCommandChannel.Writer,
                 _cancellationTokenSource.Token);
         }
@@ -219,6 +231,12 @@ namespace FubarDev.FtpServer
         /// Gets the feature collection.
         /// </summary>
         public override IFeatureCollection Features { get; }
+
+        /// <inheritdoc />
+        public override IDictionary<object, object> Items { get; set; } = new Dictionary<object, object>();
+
+        /// <inheritdoc />
+        public override IDuplexPipe Transport { get; set; }
 
         /// <summary>
         /// Gets the cancellation token to use to signal a task cancellation.
@@ -323,7 +341,15 @@ namespace FubarDev.FtpServer
             _loggerScope?.Dispose();
         }
 
-        private void Abort()
+        /// <inheritdoc />
+        public override ValueTask DisposeAsync()
+        {
+            Dispose();
+            return default;
+        }
+
+        /// <inheritdoc />
+        public override void Abort(ConnectionAbortedException abortReason)
         {
             if (_connectionClosing)
             {
@@ -334,7 +360,7 @@ namespace FubarDev.FtpServer
             _cancellationTokenSource.Cancel(true);
 
             // Dispose all features (if disposable)
-            foreach (var featureItem in Features)
+            foreach (var featureItem in Features.Where(x => x.Key != typeof(IConnectionLifetimeFeature)))
             {
                 try
                 {
@@ -343,7 +369,11 @@ namespace FubarDev.FtpServer
                 catch (Exception ex)
                 {
                     // Ignore exceptions
-                    _logger?.LogWarning(ex, "Failed to feature of type {featureType}: {errorMessage}", featureItem.Key, ex.Message);
+                    _logger?.LogWarning(
+                        ex,
+                        "Failed to feature of type {featureType}: {errorMessage}",
+                        featureItem.Key,
+                        ex.Message);
                 }
             }
         }
@@ -390,15 +420,10 @@ namespace FubarDev.FtpServer
                 switch (exception)
                 {
                     case IOException _:
-                        if (cancellationToken.IsCancellationRequested)
-                        {
-                            _logger?.LogWarning("Last response probably incomplete");
-                        }
-                        else
-                        {
-                            _logger?.LogWarning("Connection lost or closed by client. Remaining output discarded");
-                        }
-
+                        _logger?.LogWarning(
+                            cancellationToken.IsCancellationRequested
+                                ? "Last response probably incomplete"
+                                : "Connection lost or closed by client. Remaining output discarded");
                         break;
 
                     case OperationCanceledException _:
@@ -437,7 +462,6 @@ namespace FubarDev.FtpServer
         }
 
         private async Task ReadCommandsFromPipeline(
-            PipeReader reader,
             ChannelWriter<FtpCommand> commandWriter,
             CancellationToken cancellationToken)
         {
@@ -447,6 +471,7 @@ namespace FubarDev.FtpServer
             {
                 while (!cancellationToken.IsCancellationRequested)
                 {
+                    var reader = Transport.Input;
                     var result = await reader.ReadAsync(cancellationToken)
                        .ConfigureAwait(false);
 
@@ -497,7 +522,7 @@ namespace FubarDev.FtpServer
             }
             finally
             {
-                reader.Complete();
+                Transport.Input.Complete();
 
                 _logger?.LogDebug("Stopped reading commands");
             }
@@ -714,11 +739,14 @@ namespace FubarDev.FtpServer
             public FtpConnectionLifetimeFeature(FtpConnection connection)
             {
                 _connection = connection;
-                ConnectionClosed = connection._cancellationTokenSource.Token;
             }
 
             /// <inheritdoc />
-            public CancellationToken ConnectionClosed { get; set; }
+            public CancellationToken ConnectionClosed
+            {
+                get => _connection.ConnectionClosed;
+                set => _connection.ConnectionClosed = value;
+            }
 
             /// <inheritdoc />
             public void Abort()

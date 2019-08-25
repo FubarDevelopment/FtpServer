@@ -2,23 +2,17 @@
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
-using Microsoft.AspNetCore.Http.Features;
+using System;
+
+using Microsoft.AspNetCore.Connections;
 
 namespace FubarDev.FtpServer
 {
     /// <summary>
     /// The FTP connection context.
     /// </summary>
-    public abstract class FtpConnectionContext
+    [Obsolete("Use ConnectionContext directly.")]
+    public abstract class FtpConnectionContext : ConnectionContext
     {
-        /// <summary>
-        /// Gets or sets the connection identifier.
-        /// </summary>
-        public abstract string ConnectionId { get; set; }
-
-        /// <summary>
-        /// Gets the connection features.
-        /// </summary>
-        public abstract IFeatureCollection Features { get; }
     }
 }
