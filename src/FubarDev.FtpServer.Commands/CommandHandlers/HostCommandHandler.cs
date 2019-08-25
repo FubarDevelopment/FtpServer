@@ -8,8 +8,6 @@ using System.Threading.Tasks;
 
 using FubarDev.FtpServer.Commands;
 
-using Microsoft.Extensions.DependencyInjection;
-
 namespace FubarDev.FtpServer.CommandHandlers
 {
     /// <summary>
@@ -19,6 +17,22 @@ namespace FubarDev.FtpServer.CommandHandlers
     [FtpFeatureText("HOST")]
     public class HostCommandHandler : FtpCommandHandler
     {
+        private readonly IFtpLoginStateMachine _loginStateMachine;
+        private readonly IFtpHostSelector _hostSelector;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="HostCommandHandler"/> class.
+        /// </summary>
+        /// <param name="loginStateMachine">The login state machine.</param>
+        /// <param name="hostSelector">The HOST selector.</param>
+        public HostCommandHandler(
+            IFtpLoginStateMachine loginStateMachine,
+            IFtpHostSelector hostSelector)
+        {
+            _loginStateMachine = loginStateMachine;
+            _hostSelector = hostSelector;
+        }
+
         /// <inheritdoc />
         public override async Task<IFtpResponse?> Process(FtpCommand command, CancellationToken cancellationToken)
         {
@@ -27,17 +41,14 @@ namespace FubarDev.FtpServer.CommandHandlers
                 return new FtpResponse(501, T("Syntax error in parameters or arguments."));
             }
 
-            var loginStateMachine = Connection.ConnectionServices.GetRequiredService<IFtpLoginStateMachine>();
-
-            if (loginStateMachine.Status != SecurityStatus.Unauthenticated &&
-                loginStateMachine.Status != SecurityStatus.Authenticated)
+            if (_loginStateMachine.Status != SecurityStatus.Unauthenticated &&
+                _loginStateMachine.Status != SecurityStatus.Authenticated)
             {
                 return new FtpResponse(503, T("Bad sequence of commands"));
             }
 
             var hostInfo = ParseHost(command.Argument);
-            var hostSelector = Connection.ConnectionServices.GetRequiredService<IFtpHostSelector>();
-            return await hostSelector.SelectHostAsync(hostInfo, cancellationToken).ConfigureAwait(false);
+            return await _hostSelector.SelectHostAsync(hostInfo, cancellationToken).ConfigureAwait(false);
         }
 
         private static HostInfo ParseHost(string host)
