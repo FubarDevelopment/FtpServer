@@ -4,8 +4,6 @@
 
 using System.Security.Claims;
 
-using FubarDev.FtpServer.AccountManagement;
-
 using Mono.Unix;
 
 namespace FubarDev.FtpServer.FileSystem.Unix

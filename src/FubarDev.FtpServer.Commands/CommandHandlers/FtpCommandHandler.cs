@@ -28,13 +28,6 @@ namespace FubarDev.FtpServer.CommandHandlers
         private FtpCommandHandlerContext? _commandHandlerContext;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="FtpCommandHandler"/> class.
-        /// </summary>
-        protected FtpCommandHandler()
-        {
-        }
-
-        /// <summary>
         /// Gets or sets the FTP command context.
         /// </summary>
         [SuppressMessage("ReSharper", "UnusedAutoPropertyAccessor.Global", Justification = "Set using reflection.")]

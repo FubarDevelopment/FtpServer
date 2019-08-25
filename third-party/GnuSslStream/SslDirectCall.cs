@@ -46,7 +46,6 @@ namespace System.Net.Security
 
                         NativeApi.SSPIHandle contextHandleOut = default(NativeApi.SSPIHandle);
                         NativeApi.ContextFlags outflags = NativeApi.ContextFlags.Zero;
-                        long ts = 0;
 
                         var inflags = NativeApi.ContextFlags.SequenceDetect |
                                     NativeApi.ContextFlags.ReplayDetect |
@@ -58,12 +57,12 @@ namespace System.Net.Security
                         if (isServer)
                         {
                             status = (NativeApi.SecurityStatus)NativeApi.AcceptSecurityContext(ref credentialsHandleHandle, ref securityContextHandle, null,
-                                inflags, NativeApi.Endianness.Native, ref contextHandleOut, securityBufferDescriptor, ref outflags, out ts);
+                                inflags, NativeApi.Endianness.Native, ref contextHandleOut, securityBufferDescriptor, ref outflags, out _);
                         }
                         else
                         {
                             status = (NativeApi.SecurityStatus)NativeApi.InitializeSecurityContextW(ref credentialsHandleHandle, ref securityContextHandle, null,
-                                inflags, 0, NativeApi.Endianness.Native, null, 0, ref contextHandleOut, securityBufferDescriptor, ref outflags, out ts);
+                                inflags, 0, NativeApi.Endianness.Native, null, 0, ref contextHandleOut, securityBufferDescriptor, ref outflags, out _);
                         }
                         if (status == NativeApi.SecurityStatus.OK)
                         {

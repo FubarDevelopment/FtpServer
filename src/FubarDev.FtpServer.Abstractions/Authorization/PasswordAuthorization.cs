@@ -12,7 +12,6 @@ using System.Threading.Tasks;
 using FubarDev.FtpServer.AccountManagement;
 using FubarDev.FtpServer.AccountManagement.Compatibility;
 using FubarDev.FtpServer.Authentication;
-using FubarDev.FtpServer.Features;
 using FubarDev.FtpServer.Localization;
 
 using Microsoft.AspNetCore.Connections.Features;

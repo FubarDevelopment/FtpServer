@@ -4,8 +4,8 @@
 
 using System.Security.Claims;
 
-using FubarDev.FtpServer.AccountManagement;
 using FubarDev.FtpServer.FileSystem.Generic;
+
 namespace FubarDev.FtpServer.FileSystem.Unix
 {
     internal static class UnixPermissionExtensions

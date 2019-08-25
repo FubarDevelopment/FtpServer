@@ -5,10 +5,12 @@
 using System.IO;
 using System.Threading.Tasks;
 
+using FubarDev.FtpServer.Features;
+
 namespace FubarDev.FtpServer
 {
     /// <summary>
-    /// A delegate that's used to create an encrypted stream (<see cref="FtpConnectionData.CreateEncryptedStream"/>).
+    /// A delegate that's used to create an encrypted stream (<see cref="ISecureConnectionFeature.CreateEncryptedStream"/>).
     /// </summary>
     /// <param name="unencryptedStream">The unencrypted stream.</param>
     /// <returns>The encrypted stream.</returns>
