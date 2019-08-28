@@ -2,6 +2,7 @@
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
+using System;
 using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -12,6 +13,7 @@ using FubarDev.FtpServer.Commands;
 using FubarDev.FtpServer.Features;
 using FubarDev.FtpServer.Localization;
 
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace FubarDev.FtpServer.CommandHandlers
@@ -34,7 +36,8 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// <returns>The string to be returned.</returns>
         public static string CreateFeatureString(IFtpConnection connection)
         {
-            var catalogLoader = connection.ConnectionServices.GetRequiredService<IFtpCatalogLoader>();
+            var serviceProvider = connection.Features.GetServiceProvider();
+            var catalogLoader = serviceProvider.GetRequiredService<IFtpCatalogLoader>();
             var currentLanguage = connection.Features.Get<ILocalizationFeature>().Language.IetfLanguageTag;
             var languages = catalogLoader.GetSupportedLanguages()
                .Select(x => x + (string.Equals(x, currentLanguage) ? "*" : string.Empty));
@@ -45,7 +48,7 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// <inheritdoc />
         public override async Task<IFtpResponse?> Process(FtpCommand command, CancellationToken cancellationToken)
         {
-            var catalogLoader = Connection.ConnectionServices.GetRequiredService<IFtpCatalogLoader>();
+            var catalogLoader = RequestServices.GetRequiredService<IFtpCatalogLoader>();
             var localizationFeature = Connection.Features.Get<ILocalizationFeature>();
             if (string.IsNullOrWhiteSpace(command.Argument))
             {

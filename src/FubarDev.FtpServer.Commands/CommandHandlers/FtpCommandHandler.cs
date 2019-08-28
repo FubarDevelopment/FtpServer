@@ -25,6 +25,7 @@ namespace FubarDev.FtpServer.CommandHandlers
     public abstract class FtpCommandHandler : IFtpCommandHandler
     {
         private IFtpServerMessages? _serverMessages;
+        private IServiceProvider? _requestServices;
         private FtpCommandHandlerContext? _commandHandlerContext;
 
         /// <summary>
@@ -52,7 +53,13 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// Gets the server messages to be returned.
         /// </summary>
         protected IFtpServerMessages ServerMessages
-            => _serverMessages ??= Connection.ConnectionServices.GetRequiredService<IFtpServerMessages>();
+            => _serverMessages ??= RequestServices.GetRequiredService<IFtpServerMessages>();
+
+        /// <summary>
+        /// Gets the services for the request.
+        /// </summary>
+        protected IServiceProvider RequestServices
+            => _requestServices ??= Connection.Features.GetServiceProvider();
 
         /// <inheritdoc />
         public abstract Task<IFtpResponse?> Process(FtpCommand command, CancellationToken cancellationToken);

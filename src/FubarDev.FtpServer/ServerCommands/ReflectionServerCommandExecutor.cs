@@ -43,7 +43,8 @@ namespace FubarDev.FtpServer.ServerCommands
                     new[] { serverCommandType, typeof(CancellationToken) });
                 Debug.Assert(executeAsyncMethod != null, "executeAsyncMethod != null");
 
-                var handler = _ftpConnectionAccessor.FtpConnection.ConnectionServices.GetRequiredService(handlerType);
+                var serviceProvider = _ftpConnectionAccessor.FtpConnection.Features.GetServiceProvider();
+                var handler = serviceProvider.GetRequiredService(handlerType);
 
                 commandHandlerInfo = new CommandHandlerInfo(handler, executeAsyncMethod!);
                 _serverCommandHandlerInfo.Add(serverCommandType, commandHandlerInfo);

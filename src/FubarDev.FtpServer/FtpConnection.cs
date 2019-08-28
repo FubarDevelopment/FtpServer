@@ -78,6 +78,8 @@ namespace FubarDev.FtpServer
 
         private readonly IPEndPoint _remoteEndPoint;
 
+        private readonly IServiceProvider _serviceProvider;
+
         /// <summary>
         /// Gets the stream reader service.
         /// </summary>
@@ -128,7 +130,10 @@ namespace FubarDev.FtpServer
             ILogger<FtpConnection>? logger = null)
         {
             var socket = socketAccessor.TcpSocketClient ?? throw new InvalidOperationException("The socket to communicate with the client was not set");
-            ConnectionServices = serviceProvider;
+#pragma warning disable 618
+            ConnectionServices =
+#pragma warning restore 618
+                _serviceProvider = serviceProvider;
 
             ConnectionId = "FTP-" + Guid.NewGuid().ToString("N");
 
@@ -199,6 +204,7 @@ namespace FubarDev.FtpServer
             parentFeatures.Set<IConnectionIdFeature>(new FtpConnectionIdFeature(ConnectionId));
             parentFeatures.Set<IConnectionLifetimeFeature>(new FtpConnectionLifetimeFeature(this));
             parentFeatures.Set<IConnectionTransportFeature>(new FtpConnectionTransportFeature(this));
+            parentFeatures.Set<IServiceProvidersFeature>(new FtpServiceProviderFeature(serviceProvider));
 
             var defaultEncoding = options.Value.DefaultEncoding ?? Encoding.ASCII;
             var authInfoFeature = new AuthorizationInformationFeature();
@@ -223,6 +229,7 @@ namespace FubarDev.FtpServer
         public event EventHandler? Closed;
 
         /// <inheritdoc />
+        [Obsolete("Query the IServiceProvidersFeature to get the service provider.")]
         public IServiceProvider ConnectionServices { get; }
 
         /// <inheritdoc />
@@ -251,7 +258,7 @@ namespace FubarDev.FtpServer
             _connectionAccessor.FtpConnection = this;
 
             // Set the default FTP data connection feature
-            var activeDataConnectionFeatureFactory = ConnectionServices.GetRequiredService<ActiveDataConnectionFeatureFactory>();
+            var activeDataConnectionFeatureFactory = _serviceProvider.GetRequiredService<ActiveDataConnectionFeatureFactory>();
             var dataConnectionFeature = await activeDataConnectionFeatureFactory.CreateFeatureAsync(null, _remoteEndPoint, _dataPort)
                .ConfigureAwait(false);
             Features.Set(dataConnectionFeature);
@@ -453,7 +460,7 @@ namespace FubarDev.FtpServer
         /// <returns>The task.</returns>
         private Task DispatchCommandAsync(FtpContext context)
         {
-            var dispatcher = ConnectionServices.GetRequiredService<IFtpCommandDispatcher>();
+            var dispatcher = _serviceProvider.GetRequiredService<IFtpCommandDispatcher>();
             return dispatcher.DispatchAsync(context, _cancellationTokenSource.Token);
         }
 
@@ -532,7 +539,7 @@ namespace FubarDev.FtpServer
         private async Task CommandChannelDispatcherAsync(ChannelReader<FtpCommand> commandReader, CancellationToken cancellationToken)
         {
             // Initialize middleware objects
-            var middlewareObjects = ConnectionServices.GetRequiredService<IEnumerable<IFtpMiddleware>>();
+            var middlewareObjects = _serviceProvider.GetRequiredService<IEnumerable<IFtpMiddleware>>();
             var nextStep = new FtpRequestDelegate(DispatchCommandAsync);
             foreach (var middleware in middlewareObjects.Reverse())
             {
@@ -771,6 +778,18 @@ namespace FubarDev.FtpServer
             {
                 _connection.Abort();
             }
+        }
+
+        private class FtpServiceProviderFeature : IServiceProvidersFeature
+        {
+            public FtpServiceProviderFeature(
+                IServiceProvider serviceProvider)
+            {
+                RequestServices = serviceProvider;
+            }
+
+            /// <inheritdoc />
+            public IServiceProvider RequestServices { get; set; }
         }
     }
 }

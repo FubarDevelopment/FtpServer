@@ -99,7 +99,7 @@ namespace FubarDev.FtpServer.CommandHandlers
             }
 
             // Set the default FTP data connection feature
-            var activeDataConnectionFeatureFactory = Connection.ConnectionServices.GetRequiredService<ActiveDataConnectionFeatureFactory>();
+            var activeDataConnectionFeatureFactory = RequestServices.GetRequiredService<ActiveDataConnectionFeatureFactory>();
             var dataConnectionFeature = await activeDataConnectionFeatureFactory.CreateFeatureAsync(
                     null,
                     (IPEndPoint)connectionFeature.RemoteEndPoint,
