@@ -14,6 +14,7 @@ using System.Threading.Tasks;
 using FubarDev.FtpServer.Commands;
 using FubarDev.FtpServer.DataConnection;
 using FubarDev.FtpServer.Features;
+using FubarDev.FtpServer.Features.Impl;
 using FubarDev.FtpServer.ServerCommands;
 
 namespace FubarDev.FtpServer.CommandHandlers
@@ -46,12 +47,22 @@ namespace FubarDev.FtpServer.CommandHandlers
             var isEpsv = string.Equals(command.Name, "EPSV", StringComparison.OrdinalIgnoreCase);
             if (isEpsv)
             {
-                if (string.IsNullOrEmpty(command.Argument) || string.Equals(
-                        command.Argument,
-                        "ALL",
-                        StringComparison.OrdinalIgnoreCase))
+                if (string.IsNullOrEmpty(command.Argument))
                 {
                     addressFamily = null;
+                }
+                else if (string.Equals(command.Argument, "ALL", StringComparison.OrdinalIgnoreCase))
+                {
+                    var dataConnectionConfigFeature = Connection.Features.Get<IFtpDataConnectionConfigurationFeature>();
+                    if (dataConnectionConfigFeature == null)
+                    {
+                        dataConnectionConfigFeature = new FtpDataConnectionConfigurationFeature();
+                        Connection.Features.Set(dataConnectionConfigFeature);
+                    }
+
+                    dataConnectionConfigFeature.LimitToEpsv = true;
+
+                    return null;
                 }
                 else
                 {
@@ -69,6 +80,13 @@ namespace FubarDev.FtpServer.CommandHandlers
                             return new FtpResponse(501, T("Unsupported address family number ({0}).", addressFamilyNumber));
                     }
                 }
+            }
+            else if (Connection.Features.Get<IFtpDataConnectionConfigurationFeature>()?.LimitToEpsv ?? false)
+            {
+                // EPSV ALL was sent from the client
+                return new FtpResponse(
+                    500,
+                    $"Cannot use {command.Name} when EPSV ALL was used before.");
             }
             else
             {

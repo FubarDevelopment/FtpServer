@@ -5,6 +5,8 @@
     <OutputType>Exe</OutputType>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="FluentFTP" Version="27.0.3" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="2.2.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.2.0" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
       <PrivateAssets>all</PrivateAssets>
@@ -19,6 +21,7 @@
     <PackageReference Include="Xunit.SkippableFact" Version="1.3.12" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\src\FubarDev.FtpServer.FileSystem.InMemory\FubarDev.FtpServer.FileSystem.InMemory.csproj" />
     <ProjectReference Include="..\..\src\FubarDev.FtpServer\FubarDev.FtpServer.csproj" />
   </ItemGroup>
   <Import Project="../../Global.props" />

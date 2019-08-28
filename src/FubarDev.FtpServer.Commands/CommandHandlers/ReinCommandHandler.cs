@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using FubarDev.FtpServer.Commands;
 using FubarDev.FtpServer.DataConnection;
 using FubarDev.FtpServer.Features;
+using FubarDev.FtpServer.Features.Impl;
 using FubarDev.FtpServer.FileSystem;
 using FubarDev.FtpServer.Localization;
 
@@ -97,6 +98,9 @@ namespace FubarDev.FtpServer.CommandHandlers
                 var setMethod = setFeatureMethod.MakeGenericMethod(featureItem.Key);
                 setMethod.Invoke(Connection.Features, new object?[] { null });
             }
+
+            // Reset the FTP data connection configuration feature
+            Connection.Features.Set<IFtpDataConnectionConfigurationFeature>(new FtpDataConnectionConfigurationFeature());
 
             // Set the default FTP data connection feature
             var activeDataConnectionFeatureFactory = RequestServices.GetRequiredService<ActiveDataConnectionFeatureFactory>();
