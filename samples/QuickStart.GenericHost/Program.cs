@@ -12,6 +12,7 @@ using FubarDev.FtpServer;
 
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 
 namespace QuickStart.GenericHost
 {
@@ -25,6 +26,12 @@ namespace QuickStart.GenericHost
                     (hostContext, services) =>
                     {
                         services
+                           .AddLogging(lb => lb.AddConsole()
+                               .SetMinimumLevel(LogLevel.Trace)
+                               .AddFilter("System", LogLevel.Information)
+                               .AddFilter("Microsoft", LogLevel.Information)
+                               .AddFilter("FubarDev.FtpServer.CommandHandlers.ListCommandHandler", LogLevel.Trace)
+                               .AddFilter("FubarDev.FtpServer.CommandHandlers.MlstCommandHandler", LogLevel.Trace))
                            .AddFtpServer(opt => opt
                                .UseDotNetFileSystem()
                                .EnableAnonymousAuthentication())
