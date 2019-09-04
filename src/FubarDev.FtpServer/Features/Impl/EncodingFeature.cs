@@ -9,7 +9,7 @@ namespace FubarDev.FtpServer.Features.Impl
     /// <summary>
     /// Default implementation of <see cref="IEncodingFeature"/>.
     /// </summary>
-    internal class EncodingFeature : IEncodingFeature
+    public class EncodingFeature : IEncodingFeature
     {
         private Encoding? _encoding;
         private Encoding? _nlstEncoding;

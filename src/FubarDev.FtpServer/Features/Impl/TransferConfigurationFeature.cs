@@ -7,7 +7,7 @@ namespace FubarDev.FtpServer.Features.Impl
     /// <summary>
     /// Default implementation of <see cref="ITransferConfigurationFeature"/>.
     /// </summary>
-    internal class TransferConfigurationFeature : ITransferConfigurationFeature
+    public class TransferConfigurationFeature : ITransferConfigurationFeature
     {
         /// <inheritdoc />
         public FtpTransferMode TransferMode { get; set; } = new FtpTransferMode(FtpFileType.Ascii);

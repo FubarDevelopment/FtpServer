@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Connections;
 
 namespace FubarDev.FtpServer.Features.Impl
 {
-    internal class NetworkStreamFeature : INetworkStreamFeature
+    public class NetworkStreamFeature : INetworkStreamFeature
     {
         private readonly ConnectionContext _context;
 

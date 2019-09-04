@@ -35,16 +35,16 @@ namespace FubarDev.FtpServer.Authorization
         /// <summary>
         /// Initializes a new instance of the <see cref="PasswordAuthorization"/> class.
         /// </summary>
-        /// <param name="connection">The required FTP connection.</param>
+        /// <param name="connectionAccessor">The required FTP connection accessor.</param>
         /// <param name="membershipProviders">The membership providers for password authorization.</param>
         /// <param name="authorizationActions">Actions to be executed upon authorization.</param>
         /// <param name="serverMessages">The FTP server messages.</param>
         public PasswordAuthorization(
-            IFtpConnection connection,
+            IFtpConnectionAccessor connectionAccessor,
             IEnumerable<IMembershipProvider> membershipProviders,
             IEnumerable<IAuthorizationAction> authorizationActions,
             IFtpServerMessages serverMessages)
-            : base(connection)
+            : base(connectionAccessor.FtpConnection)
         {
             _serverMessages = serverMessages;
             _authorizationActions = authorizationActions.OrderByDescending(x => x.Level).ToList();

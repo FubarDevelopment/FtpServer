@@ -12,7 +12,7 @@ namespace FubarDev.FtpServer.Features.Impl
     /// <summary>
     /// Default implementation of <see cref="IFileSystemFeature"/>.
     /// </summary>
-    internal class FileSystemFeature : IFileSystemFeature, IDisposable
+    public class FileSystemFeature : IFileSystemFeature, IDisposable
     {
         /// <inheritdoc />
         public IUnixFileSystem FileSystem { get; set; } = new EmptyUnixFileSystem();

@@ -13,7 +13,7 @@ namespace FubarDev.FtpServer.Features.Impl
     /// <summary>
     /// The default implementation of the <see cref="ILocalizationFeature"/> class.
     /// </summary>
-    internal class LocalizationFeature : ILocalizationFeature
+    public class LocalizationFeature : ILocalizationFeature
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="LocalizationFeature"/> class.

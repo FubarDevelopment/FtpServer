@@ -15,7 +15,7 @@ namespace FubarDev.FtpServer.Features.Impl
     /// <summary>
     /// Default implementation of <see cref="IAuthorizationInformationFeature"/>.
     /// </summary>
-    internal class AuthorizationInformationFeature :
+    public class AuthorizationInformationFeature :
 #pragma warning disable 618
         IAuthorizationInformationFeature,
 #pragma warning restore 618

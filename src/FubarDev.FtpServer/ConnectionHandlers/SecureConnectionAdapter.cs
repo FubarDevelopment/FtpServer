@@ -14,7 +14,7 @@ namespace FubarDev.FtpServer.ConnectionHandlers
     /// <summary>
     /// A connection adapter that allows enabling and resetting of an SSL/TLS connection.
     /// </summary>
-    internal class SecureConnectionAdapter : IFtpSecureConnectionAdapter
+    public class SecureConnectionAdapter : IFtpSecureConnectionAdapter
     {
         private readonly IDuplexPipe _socketPipe;
         private readonly IDuplexPipe _connectionPipe;

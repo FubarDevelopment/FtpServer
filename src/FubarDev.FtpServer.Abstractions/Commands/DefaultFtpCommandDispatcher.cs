@@ -36,19 +36,19 @@ namespace FubarDev.FtpServer.Commands
         /// <summary>
         /// Initializes a new instance of the <see cref="DefaultFtpCommandDispatcher"/> class.
         /// </summary>
-        /// <param name="connection">The FTP connection.</param>
+        /// <param name="connectionAccessor">The FTP connection accessor.</param>
         /// <param name="loginStateMachine">The login state machine.</param>
         /// <param name="commandActivator">The command activator.</param>
         /// <param name="middlewareObjects">The list of middleware objects.</param>
         /// <param name="logger">The logger.</param>
         public DefaultFtpCommandDispatcher(
-            IFtpConnection connection,
+            IFtpConnectionAccessor connectionAccessor,
             IFtpLoginStateMachine loginStateMachine,
             IFtpCommandActivator commandActivator,
             IEnumerable<IFtpCommandMiddleware> middlewareObjects,
             ILogger<DefaultFtpCommandDispatcher>? logger = null)
         {
-            _connection = connection;
+            _connection = connectionAccessor.FtpConnection;
             _loginStateMachine = loginStateMachine;
             _commandActivator = commandActivator;
             _logger = logger;

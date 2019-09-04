@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp3.0</TargetFramework>
     <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
+    <Nullable>enable</Nullable>
     <IsPackable>false</IsPackable>
     <SuppressNETCoreSdkPreviewMessage>true</SuppressNETCoreSdkPreviewMessage>
   </PropertyGroup>
@@ -11,5 +12,7 @@
     <ProjectReference Include="..\..\src\FubarDev.FtpServer.FileSystem.DotNet\FubarDev.FtpServer.FileSystem.DotNet.csproj" />
     <ProjectReference Include="..\..\src\FubarDev.FtpServer\FubarDev.FtpServer.csproj" />
   </ItemGroup>
+
+  <Import Project="..\..\src\FubarDev.FtpServer.Shared\FubarDev.FtpServer.Shared.projitems" Label="Shared" />
 
 </Project>

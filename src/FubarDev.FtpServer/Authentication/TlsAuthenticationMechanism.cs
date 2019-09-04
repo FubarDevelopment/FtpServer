@@ -26,12 +26,12 @@ namespace FubarDev.FtpServer.Authentication
         /// <summary>
         /// Initializes a new instance of the <see cref="TlsAuthenticationMechanism"/> class.
         /// </summary>
-        /// <param name="connection">The required FTP connection.</param>
+        /// <param name="connectionAccessor">The required FTP connection accessor.</param>
         /// <param name="sslStreamWrapperFactory">The SslStream wrapper factory.</param>
         public TlsAuthenticationMechanism(
-            IFtpConnection connection,
+            IFtpConnectionAccessor connectionAccessor,
             ISslStreamWrapperFactory sslStreamWrapperFactory)
-            : base(connection)
+            : base(connectionAccessor.FtpConnection)
         {
             _sslStreamWrapperFactory = sslStreamWrapperFactory;
         }

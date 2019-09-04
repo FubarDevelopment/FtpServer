@@ -26,12 +26,12 @@ namespace FubarDev.FtpServer
         /// <summary>
         /// Initializes a new instance of the <see cref="SingleFtpHostSelector"/> class.
         /// </summary>
-        /// <param name="connection">The FTP connection.</param>
+        /// <param name="connectionAccessor">The FTP connection accessor.</param>
         /// <param name="authenticationMechanisms">The registered authentication mechanisms.</param>
         /// <param name="authorizationMechanisms">The registered authorization mechanisms.</param>
         /// <param name="authTlsOptions">The options for the AUTH TLS command.</param>
         public SingleFtpHostSelector(
-            IFtpConnection connection,
+            IFtpConnectionAccessor connectionAccessor,
             IEnumerable<IAuthenticationMechanism> authenticationMechanisms,
             IEnumerable<IAuthorizationMechanism> authorizationMechanisms,
             IOptions<AuthTlsOptions> authTlsOptions)
@@ -40,7 +40,7 @@ namespace FubarDev.FtpServer
                 authenticationMechanisms.ToList(),
                 authorizationMechanisms.ToList(),
                 authTlsOptions);
-            _connection = connection;
+            _connection = connectionAccessor.FtpConnection;
         }
 
         /// <inheritdoc />
