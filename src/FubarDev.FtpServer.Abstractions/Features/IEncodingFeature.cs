@@ -25,5 +25,10 @@ namespace FubarDev.FtpServer.Features
         /// Gets or sets the <see cref="System.Text.Encoding"/> for the <c>NLST</c> command.
         /// </summary>
         Encoding NlstEncoding { get; set; }
+
+        /// <summary>
+        /// Reset all encodings to the default encoding.
+        /// </summary>
+        void Reset();
     }
 }

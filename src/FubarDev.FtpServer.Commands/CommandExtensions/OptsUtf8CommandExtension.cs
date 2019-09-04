@@ -19,6 +19,8 @@ namespace FubarDev.FtpServer.CommandExtensions
     [FtpFeatureText("UTF8")]
     public class OptsUtf8CommandExtension : FtpCommandHandlerExtension
     {
+        private static readonly UTF8Encoding _encodingUtf8 = new UTF8Encoding(false);
+
         /// <inheritdoc />
         [Obsolete("Use the FtpCommandHandlerExtension attribute instead.")]
         public override bool? IsLoginRequired { get; } = false;
@@ -34,15 +36,15 @@ namespace FubarDev.FtpServer.CommandExtensions
             var encodingFeature = Connection.Features.Get<IEncodingFeature>();
             switch (command.Argument.ToUpperInvariant())
             {
-                case "ON":
-                    encodingFeature.Encoding = Encoding.UTF8;
+                case "ON": // Compatibility feature...
+                case "NLST": // NLST and other paths are transmitted as UTF-8
+                    encodingFeature.Reset();
+                    encodingFeature.Encoding = encodingFeature.NlstEncoding = _encodingUtf8;
                     break;
                 case "":
-                    encodingFeature.Encoding = Encoding.UTF8;
-                    encodingFeature.NlstEncoding = encodingFeature.DefaultEncoding;
-                    break;
-                case "NLST":
-                    encodingFeature.NlstEncoding = Encoding.UTF8;
+                    // Only for non-NLST paths are transmitted as UTF-8
+                    encodingFeature.Reset();
+                    encodingFeature.Encoding = _encodingUtf8;
                     break;
                 default:
                     return Task.FromResult<IFtpResponse?>(new FtpResponse(501, T("Syntax error in parameters or arguments.")));

@@ -35,5 +35,11 @@ namespace FubarDev.FtpServer.Features.Impl
             get => _nlstEncoding ?? DefaultEncoding;
             set => _nlstEncoding = value;
         }
+
+        /// <inheritdoc />
+        public void Reset()
+        {
+            _nlstEncoding = _encoding = null;
+        }
     }
 }

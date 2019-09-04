@@ -53,6 +53,10 @@ namespace FubarDev.FtpServer.CommandHandlers
             var loginStateMachine = Connection.ConnectionServices.GetRequiredService<IFtpLoginStateMachine>();
             loginStateMachine.Reset();
 
+            // Reset encoding
+            var encodingFeature = Connection.Features.Get<IEncodingFeature>();
+            encodingFeature.Reset();
+
             // Remember old features
             var fileSystemFeature = Connection.Features.Get<IFileSystemFeature>();
             var connectionFeature = Connection.Features.Get<IConnectionFeature>();
