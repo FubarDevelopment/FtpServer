@@ -2,6 +2,7 @@
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
+using System.Diagnostics;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
@@ -33,6 +34,33 @@ namespace FubarDev.FtpServer.Tests
         public Task DisposeAsync()
         {
             return _client.DisconnectAsync();
+        }
+
+        /// <summary>
+        /// Upload a test file.
+        /// </summary>
+        /// <param name="fileName">The name of the file to write.</param>
+        /// <returns>The task.</returns>
+        [Theory]
+        [InlineData("设备管理-摄像机管理-w.txt")]
+        public async Task TestUtf8FileNamesForUploadAsync(string fileName)
+        {
+            await _client.UploadAsync(
+                Encoding.UTF8.GetBytes("Hello, this is a test!"),
+                fileName);
+
+            var fileNames = await _client.GetNameListingAsync();
+            Assert.NotNull(fileNames);
+            Assert.Collection(
+                fileNames,
+                item =>
+                {
+                    Debug.WriteLine(item.Length);
+                    Debug.WriteLine(item);
+                    Debug.WriteLine(char.ConvertToUtf32(item, 0));
+                    Assert.Equal(".", item);
+                },
+                item => Assert.Equal(fileName, item));
         }
 
         /// <summary>

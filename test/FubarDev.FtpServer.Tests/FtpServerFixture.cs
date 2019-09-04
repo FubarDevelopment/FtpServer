@@ -6,6 +6,7 @@ using System;
 using System.Threading.Tasks;
 
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 using Xunit;
 
@@ -25,6 +26,15 @@ namespace FubarDev.FtpServer.Tests
         public FtpServerFixture()
         {
             var services = new ServiceCollection()
+               .AddLogging(
+                    lb =>
+                    {
+                        lb.AddConsole();
+                        lb.SetMinimumLevel(LogLevel.Trace);
+                        lb.AddFilter("System", LogLevel.Warning);
+                        lb.AddFilter("Microsoft", LogLevel.Warning);
+                        lb.AddFilter("FubarDev.FtpServer", LogLevel.Trace);
+                    })
                .AddFtpServer(
                     opt => opt.EnableAnonymousAuthentication()
                        .UseSingleRoot()
