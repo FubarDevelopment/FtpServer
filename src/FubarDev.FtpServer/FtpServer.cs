@@ -188,7 +188,7 @@ namespace FubarDev.FtpServer
             catch (Exception ex)
             {
                 var exception = ex;
-                while (exception is AggregateException aggregateException)
+                while (exception is AggregateException aggregateException && aggregateException.InnerException != null)
                 {
                     exception = aggregateException.InnerException;
                 }
@@ -292,9 +292,9 @@ namespace FubarDev.FtpServer
             }
         }
 
-        private void ConnectionOnClosed(object sender, EventArgs eventArgs)
+        private void ConnectionOnClosed(object? sender, EventArgs eventArgs)
         {
-            var connection = (IFtpConnection)sender;
+            var connection = (IFtpConnection)(sender ?? throw new InvalidOperationException("Missing sender information."));
             if (!_connections.TryRemove(connection, out var info))
             {
                 return;

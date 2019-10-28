@@ -463,7 +463,7 @@ namespace FubarDev.FtpServer
             catch (Exception ex)
             {
                 var exception = ex;
-                while (exception is AggregateException aggregateException)
+                while (exception is AggregateException aggregateException && aggregateException.InnerException != null)
                 {
                     exception = aggregateException.InnerException;
                 }

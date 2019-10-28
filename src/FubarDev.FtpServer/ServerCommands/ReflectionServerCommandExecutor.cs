@@ -40,13 +40,13 @@ namespace FubarDev.FtpServer.ServerCommands
                 var executeAsyncMethod = handlerType.GetRuntimeMethod("ExecuteAsync", new[] { serverCommandType, typeof(CancellationToken) });
                 var handler = _ftpConnectionAccessor.FtpConnection.ConnectionServices.GetRequiredService(handlerType);
 
-                commandHandlerInfo = new CommandHandlerInfo(handler, executeAsyncMethod);
+                commandHandlerInfo = new CommandHandlerInfo(handler, executeAsyncMethod!);
                 _serverCommandHandlerInfo.Add(serverCommandType, commandHandlerInfo);
             }
 
             return (Task)commandHandlerInfo.ExecuteMethodInfo.Invoke(
                 commandHandlerInfo.CommandHandler,
-                new object[] { serverCommand, cancellationToken });
+                new object[] { serverCommand, cancellationToken })!;
         }
 
         private class CommandHandlerInfo
