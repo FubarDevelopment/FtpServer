@@ -39,6 +39,10 @@ namespace FubarDev.FtpServer.Networking
             Stream = stream;
             _pipeReader = pipeReader;
         }
+
+        /// <summary>
+        /// Gets the stream used to write the output.
+        /// </summary>
         protected Stream Stream { get; }
 
         /// <inheritdoc />
