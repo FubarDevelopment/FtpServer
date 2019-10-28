@@ -18,7 +18,8 @@
     <CodeAnalysisRuleSet>$(MSBuildThisFileDirectory)FubarDev.FtpServer.ruleset</CodeAnalysisRuleSet>
     <NoWarn>SA1636;SA1641;$(NoWarn)</NoWarn>
     <SuppressNETCoreSdkPreviewMessage>true</SuppressNETCoreSdkPreviewMessage>
-    <Nullable>enable</Nullable>
+    <Nullable Condition=" '$(TargetFramework)' == 'netstandard2.1' or '$(TargetFramework)' == 'netcoreapp3.0' ">enable</Nullable>
+    <Nullable Condition=" '$(TargetFramework)' != 'netcoreapp3.0' and '$(TargetFramework)' != 'netstandard2.1' ">annotations</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
