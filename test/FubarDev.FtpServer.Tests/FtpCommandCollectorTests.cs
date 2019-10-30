@@ -162,7 +162,7 @@ namespace FubarDev.FtpServer.Tests
         public void TestWithCyrillicTextWithWindows1251Encoding()
         {
             var encoding = CodePagesEncodingProvider.Instance.GetEncoding(codepage: 1251);
-            var collector = new FtpCommandCollector(() => encoding);
+            var collector = new FtpCommandCollector(() => encoding!);
 
             const string cyrillicSymbols = "абвгдеёжзийклмнопрстуфхцчшщыъьэюя";
 

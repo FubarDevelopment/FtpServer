@@ -47,7 +47,7 @@ namespace FubarDev.FtpServer.Tests.Issues
             {
                 using var responseStream = response.GetResponseStream();
                 using var reader = new StreamReader(responseStream);
-                string line;
+                string? line;
                 while ((line = reader.ReadLine()) != null)
                 {
                     files.Add(Path.GetFileName(line));
