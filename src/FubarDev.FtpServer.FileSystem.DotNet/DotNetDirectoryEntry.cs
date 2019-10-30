@@ -43,6 +43,27 @@ namespace FubarDev.FtpServer.FileSystem.DotNet
         /// <inheritdoc/>
         public bool IsDeletable => CheckIfDeletable();
 
+        /// <summary>
+        /// Check if the directory has child entries.
+        /// </summary>
+        /// <param name="directoryInfo">The directory that gets checked for child entries.</param>
+        /// <returns><see langword="null"/> when an exception occurred.</returns>
+        private static bool? HasChildEntries(DirectoryInfo directoryInfo)
+        {
+            try
+            {
+                return directoryInfo.EnumerateFileSystemInfos().Any();
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Checks if a directory is deletable.
+        /// </summary>
+        /// <returns><see langword="true"/> when the directory is deletable.</returns>
         private bool CheckIfDeletable()
         {
             // Root directory is never deletable.
@@ -62,18 +83,6 @@ namespace FubarDev.FtpServer.FileSystem.DotNet
 
             // We allow deletion if we either allow it globally or when the directory has no child entries.
             return _allowDeleteIfNotEmpty || !hasChildEntries.Value;
-        }
-
-        private static bool? HasChildEntries(DirectoryInfo directoryInfo)
-        {
-            try
-            {
-                return directoryInfo.EnumerateFileSystemInfos().Any();
-            }
-            catch
-            {
-                return null;
-            }
         }
     }
 }
