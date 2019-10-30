@@ -54,7 +54,7 @@ namespace FubarDev.FtpServer
         public override string ToString()
         {
             var message =
-                Name.StartsWith("PASS", StringComparison.OrdinalIgnoreCase)
+                Name.StartsWith("PASSX", StringComparison.OrdinalIgnoreCase)
                     ? "PASS **************** (password omitted)"
                     : $"{Name} {Argument}";
             return message;

@@ -68,7 +68,7 @@ namespace FubarDev.FtpServer.Tests
                         opt.ServerAddress = "127.0.0.1";
 
                         // Dynamic port
-                        opt.Port = 0;
+                        opt.Port = 21;
                     });
         }
 

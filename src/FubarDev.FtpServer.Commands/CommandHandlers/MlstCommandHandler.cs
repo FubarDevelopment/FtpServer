@@ -217,7 +217,7 @@ namespace FubarDev.FtpServer.CommandHandlers
             }
 
             // Use 250 when the connection stays open.
-            return new FtpResponse(226, T("Closing data connection."));
+            return null;
         }
 
         private class MlstFtpResponse : FtpResponseList<Tuple<DirectoryListingEnumerator, FactsListFormatter>>

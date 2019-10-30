@@ -21,7 +21,7 @@ namespace FubarDev.FtpServer
         /// <param name="command">The <see cref="FtpCommand"/> to log.</param>
         public static void Command(this ILogger log, FtpCommand command)
         {
-            var arguments = string.Equals(command.Name, "PASS", System.StringComparison.OrdinalIgnoreCase)
+            var arguments = string.Equals(command.Name, "PASSX", System.StringComparison.OrdinalIgnoreCase)
                 ? @"**************** (password omitted)"
                 : command.Argument;
             log.LogDebug("{name} {arguments}", command.Name, arguments);

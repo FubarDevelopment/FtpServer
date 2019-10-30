@@ -5,6 +5,7 @@
 using System;
 using System.IO;
 using System.IO.Pipelines;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -55,6 +56,7 @@ namespace FubarDev.FtpServer.Networking
 
                     // Don't use the cancellation token source from above. Otherwise
                     // data might be lost.
+                    LogDump(memory, "Send");
                     await _writer.WriteAsync(memory, CancellationToken.None)
                        .ConfigureAwait(false);
 
@@ -135,6 +137,7 @@ namespace FubarDev.FtpServer.Networking
                     {
                         // Don't use the cancellation token source from above. Otherwise
                         // data might be lost.
+                        LogDump(memory, "Flush");
                         await _writer.WriteAsync(memory, cancellationToken)
                            .ConfigureAwait(false);
                     }
@@ -158,6 +161,27 @@ namespace FubarDev.FtpServer.Networking
             catch (Exception ex)
             {
                 Logger?.LogWarning(0, ex, "Flush failed with: {message}", ex.Message);
+            }
+        }
+
+        private void LogDump(in ReadOnlyMemory<byte> memory, string prefix)
+        {
+            var data = memory.ToArray();
+            var blocks = (data.Length + 15) / 16;
+            if (blocks == 0)
+            {
+                return;
+            }
+
+            for (var i = 0; i != blocks; ++i)
+            {
+                var blockIndex = i * 16;
+                var blockLength = Math.Min(16, data.Length - blockIndex);
+                var block = data.AsSpan(blockIndex, blockLength).ToArray();
+                var hex = string.Join(" ", block.Select(x => x.ToString("X2")));
+                var pad = new string(' ', (16 - blockLength) * 3);
+                var line = $"{hex}{pad}";
+                Logger?.LogTrace("{prefix}: {line}", prefix, line);
             }
         }
     }
