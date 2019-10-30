@@ -155,61 +155,11 @@ namespace FubarDev.FtpServer.Commands
         private async Task ExecuteCommandAsync(
             FtpExecutionContext context)
         {
-            var localizationFeature = context.Connection.Features.Get<ILocalizationFeature>();
-            var command = context.Command;
-            IFtpResponse? response;
-            try
-            {
-                response = await context.CommandHandler.Process(command, context.CommandAborted)
-                   .ConfigureAwait(false);
-            }
-            catch (Exception ex)
-            {
-                var exception = ex;
-                while (exception is AggregateException aggregateException)
-                {
-                    exception = aggregateException.InnerException;
-                }
-
-                switch (exception)
-                {
-                    case ValidationException validationException:
-                        response = new FtpResponse(
-                            425,
-                            validationException.Message);
-                        _logger?.LogWarning(validationException.Message);
-                        break;
-
-#if !NETSTANDARD1_3
-                    case SocketException se when se.ErrorCode == (int)SocketError.ConnectionAborted:
-#endif
-                    case OperationCanceledException _:
-                        response = new FtpResponse(426, localizationFeature.Catalog.GetString("Connection closed; transfer aborted."));
-                        Debug.WriteLine($"Command {command} cancelled with response {response}");
-                        break;
-
-                    case FileSystemException fse:
-                    {
-                        var message = fse.Message != null ? $"{fse.FtpErrorName}: {fse.Message}" : fse.FtpErrorName;
-                        _logger?.LogInformation($"Rejected command ({command}) with error {fse.FtpErrorCode} {message}");
-                        response = new FtpResponse(fse.FtpErrorCode, message);
-                        break;
-                    }
-
-                    case NotSupportedException nse:
-                    {
-                        var message = nse.Message ?? T("Command {0} not supported", command);
-                        _logger?.LogInformation(message);
-                        response = new FtpResponse(502, message);
-                        break;
-                    }
-
-                    default:
-                        _logger?.LogError(0, ex, "Failed to process message ({0})", command);
-                        response = new FtpResponse(501, T("Syntax error in parameters or arguments."));
-                        break;
-                }
-            }
+            var response = await _connection.ExecuteCommand(
+                context.Command,
+                (command, ct) => context.CommandHandler.Process(command, ct),
+                _logger,
+                context.CommandAborted);
 
             if (response != null)
             {

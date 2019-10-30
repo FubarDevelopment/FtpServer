@@ -3,10 +3,16 @@
 // </copyright>
 
 using System;
+using System.ComponentModel.DataAnnotations;
+using System.Diagnostics;
+#if !NETSTANDARD1_3
+using System.Net.Sockets;
+#endif
 using System.Threading;
 using System.Threading.Tasks;
 
 using FubarDev.FtpServer.Features;
+using FubarDev.FtpServer.FileSystem.Error;
 
 using Microsoft.Extensions.Logging;
 
@@ -18,42 +24,77 @@ namespace FubarDev.FtpServer
     public static class ConnectionExtensions
     {
         /// <summary>
-        /// Provides a wrapper for safe disposal of a response socket.
+        /// Executes some code with error handling.
         /// </summary>
-        /// <param name="connection">The connection to get the response socket from.</param>
-        /// <param name="asyncSendAction">The action to perform with a working response socket.</param>
-        /// <param name="logger">The logger.</param>
-        /// <param name="cancellationToken">The cancellation token.</param>
-        /// <returns>The task with the FTP response.</returns>
-        public static async Task<IFtpResponse?> SendDataAsync(
+        /// <param name="connection">The connection to execute the code for.</param>
+        /// <param name="command">The command to execute the code for.</param>
+        /// <param name="commandAction">The action to be executed.</param>
+        /// <param name="logger">The logger to be used for logging.</param>
+        /// <param name="cancellationToken">The cancellation token to signal command abortion.</param>
+        /// <returns>The task with the (optional) response.</returns>
+        public static async Task<IFtpResponse?> ExecuteCommand(
             this IFtpConnection connection,
-            Func<IFtpDataConnection, CancellationToken, Task<IFtpResponse?>> asyncSendAction,
+            FtpCommand command,
+            Func<FtpCommand, CancellationToken, Task<IFtpResponse?>> commandAction,
             ILogger? logger,
             CancellationToken cancellationToken)
         {
-            IFtpDataConnection dataConnection;
+            var localizationFeature = connection.Features.Get<ILocalizationFeature>();
+            IFtpResponse? response;
             try
             {
-                dataConnection = await connection.OpenDataConnectionAsync(null, cancellationToken)
+                response = await commandAction(command, cancellationToken)
                    .ConfigureAwait(false);
             }
             catch (Exception ex)
             {
-                logger?.LogWarning(0, ex, "Could not open data connection: {error}", ex.Message);
-                var localizationFeature = connection.Features.Get<ILocalizationFeature>();
-                return new FtpResponse(425, localizationFeature.Catalog.GetString("Could not open data connection"));
+                var exception = ex;
+                while (exception is AggregateException aggregateException)
+                {
+                    exception = aggregateException.InnerException;
+                }
+
+                switch (exception)
+                {
+                    case ValidationException validationException:
+                        response = new FtpResponse(
+                            425,
+                            validationException.Message);
+                        logger?.LogWarning(validationException.Message);
+                        break;
+
+#if !NETSTANDARD1_3
+                    case SocketException se when se.ErrorCode == (int)SocketError.ConnectionAborted:
+#endif
+                    case OperationCanceledException _:
+                        response = new FtpResponse(426, localizationFeature.Catalog.GetString("Connection closed; transfer aborted."));
+                        Debug.WriteLine($"Command {command} cancelled with response {response}");
+                        break;
+
+                    case FileSystemException fse:
+                    {
+                        var message = fse.Message != null ? $"{fse.FtpErrorName}: {fse.Message}" : fse.FtpErrorName;
+                        logger?.LogInformation($"Rejected command ({command}) with error {fse.FtpErrorCode} {message}");
+                        response = new FtpResponse(fse.FtpErrorCode, message);
+                        break;
+                    }
+
+                    case NotSupportedException nse:
+                    {
+                        var message = nse.Message ?? localizationFeature.Catalog.GetString("Command {0} not supported", command);
+                        logger?.LogInformation(message);
+                        response = new FtpResponse(502, message);
+                        break;
+                    }
+
+                    default:
+                        logger?.LogError(0, ex, "Failed to process message ({0})", command);
+                        response = new FtpResponse(501, localizationFeature.Catalog.GetString("Syntax error in parameters or arguments."));
+                        break;
+                }
             }
 
-            try
-            {
-                return await asyncSendAction(dataConnection, cancellationToken)
-                   .ConfigureAwait(false);
-            }
-            finally
-            {
-                await dataConnection.CloseAsync(cancellationToken)
-                   .ConfigureAwait(false);
-            }
+            return response;
         }
     }
 }

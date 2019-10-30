@@ -70,11 +70,15 @@ namespace FubarDev.FtpServer.CommandHandlers
                    .ConfigureAwait(false);
 
                 // ReSharper disable once AccessToDisposedClosure
-                return await Connection.SendDataAsync(
-                        (dataConnection, ct) => ExecuteSendAsync(dataConnection, input, ct),
-                        _logger,
+                await FtpContext.ServerCommandWriter
+                   .WriteAsync(
+                        new DataConnectionServerCommand(
+                            (dataConnection, ct) => ExecuteSendAsync(dataConnection, input, ct),
+                            command),
                         cancellationToken)
-                    .ConfigureAwait(false);
+                   .ConfigureAwait(false);
+
+                return null;
             }
         }
 

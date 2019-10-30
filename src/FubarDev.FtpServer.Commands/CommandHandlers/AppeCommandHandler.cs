@@ -15,8 +15,6 @@ using FubarDev.FtpServer.Features;
 using FubarDev.FtpServer.FileSystem;
 using FubarDev.FtpServer.ServerCommands;
 
-using Microsoft.Extensions.Logging;
-
 namespace FubarDev.FtpServer.CommandHandlers
 {
     /// <summary>
@@ -27,19 +25,14 @@ namespace FubarDev.FtpServer.CommandHandlers
     {
         private readonly IBackgroundTransferWorker _backgroundTransferWorker;
 
-        private readonly ILogger<AppeCommandHandler>? _logger;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="AppeCommandHandler"/> class.
         /// </summary>
         /// <param name="backgroundTransferWorker">The background transfer worker service.</param>
-        /// <param name="logger">The logger.</param>
         public AppeCommandHandler(
-            IBackgroundTransferWorker backgroundTransferWorker,
-            ILogger<AppeCommandHandler>? logger = null)
+            IBackgroundTransferWorker backgroundTransferWorker)
         {
             _backgroundTransferWorker = backgroundTransferWorker;
-            _logger = logger;
         }
 
         /// <inheritdoc/>
@@ -79,12 +72,15 @@ namespace FubarDev.FtpServer.CommandHandlers
                     cancellationToken)
                .ConfigureAwait(false);
 
-            return await Connection
-               .SendDataAsync(
-                    (dataConnection, ct) => ExecuteSend(dataConnection, fileInfo, restartPosition, ct),
-                    _logger,
+            await FtpContext.ServerCommandWriter
+               .WriteAsync(
+                    new DataConnectionServerCommand(
+                        (dataConnection, ct) => ExecuteSend(dataConnection, fileInfo, restartPosition, ct),
+                        command),
                     cancellationToken)
                .ConfigureAwait(false);
+
+            return null;
         }
 
         private async Task<IFtpResponse?> ExecuteSend(

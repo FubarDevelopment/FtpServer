@@ -55,11 +55,15 @@ namespace FubarDev.FtpServer.CommandHandlers
                     cancellationToken)
                .ConfigureAwait(false);
 
-            return await Connection.SendDataAsync(
-                    (dataConnection, ct) => ExecuteSend(dataConnection, command, ct),
-                    _logger,
+            await FtpContext.ServerCommandWriter
+               .WriteAsync(
+                    new DataConnectionServerCommand(
+                        (dataConnection, ct) => ExecuteSend(dataConnection, command, ct),
+                        command),
                     cancellationToken)
-                .ConfigureAwait(false);
+               .ConfigureAwait(false);
+
+            return null;
         }
 
         private async Task<IFtpResponse?> ExecuteSend(IFtpDataConnection dataConnection, FtpCommand command, CancellationToken cancellationToken)
