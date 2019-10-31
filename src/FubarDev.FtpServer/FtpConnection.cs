@@ -164,11 +164,13 @@ namespace FubarDev.FtpServer
             _streamReaderService = new ConnectionClosingNetworkStreamReader(
                 originalStream,
                 _socketCommandPipe.Writer,
-                _cancellationTokenSource);
+                _cancellationTokenSource,
+                loggerFactory?.CreateLogger($"{nameof(StreamPipeWriterService)}:Socket:Receive"));
             _streamWriterService = new StreamPipeWriterService(
                 originalStream,
                 _socketResponsePipe.Reader,
-                _cancellationTokenSource.Token);
+                _cancellationTokenSource.Token,
+                loggerFactory?.CreateLogger($"{nameof(StreamPipeWriterService)}:Socket:Transmit"));
 
             _networkStreamFeature = new NetworkStreamFeature(
                 new SecureConnectionAdapter(
