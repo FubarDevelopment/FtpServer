@@ -129,6 +129,7 @@ namespace FubarDev.FtpServer.Networking
         {
             return Stream.WriteAsync(buffer, offset, length, cancellationToken);
         }
+
         private async Task FlushAsync(
             Stream stream,
             PipeReader reader,
@@ -149,6 +150,7 @@ namespace FubarDev.FtpServer.Networking
 
             Logger?.LogTrace("Flushed");
         }
+
         private async Task SendDataToStream(
             ReadOnlySequence<byte> buffer,
             Stream stream,
