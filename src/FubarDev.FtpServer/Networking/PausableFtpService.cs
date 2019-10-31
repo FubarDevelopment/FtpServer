@@ -256,7 +256,7 @@ namespace FubarDev.FtpServer.Networking
 
             // Change the status
             statusProgress.Report(FtpServiceStatus.Stopped);
-            await OnStoppedAsync(_connectionClosed)
+            await OnStoppedAsync(CancellationToken.None)
                .ConfigureAwait(false);
         }
     }
