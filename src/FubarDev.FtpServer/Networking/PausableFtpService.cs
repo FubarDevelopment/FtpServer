@@ -162,43 +162,52 @@ namespace FubarDev.FtpServer.Networking
                 await semaphore.WaitAsync(cancellationToken);
             }
         }
+
         protected abstract Task ExecuteAsync(
             CancellationToken cancellationToken);
+
         protected virtual Task OnStopRequestingAsync(
             CancellationToken cancellationToken)
         {
             return Task.CompletedTask;
         }
+
         protected virtual Task OnStopRequestedAsync(
             CancellationToken cancellationToken)
         {
             return Task.CompletedTask;
         }
+
         protected virtual Task OnPauseRequestingAsync(
             CancellationToken cancellationToken)
         {
             return Task.CompletedTask;
         }
+
         protected virtual Task OnPauseRequestedAsync(
             CancellationToken cancellationToken)
         {
             return Task.CompletedTask;
         }
+
         protected virtual Task OnContinueRequestingAsync(
             CancellationToken cancellationToken)
         {
             return Task.CompletedTask;
         }
+
         protected virtual Task OnPausedAsync(
             CancellationToken cancellationToken)
         {
             return Task.CompletedTask;
         }
+
         protected virtual Task OnStoppedAsync(
             CancellationToken cancellationToken)
         {
             return Task.CompletedTask;
         }
+        
         protected virtual Task<bool> OnFailedAsync(
             Exception exception,
             CancellationToken cancellationToken)
