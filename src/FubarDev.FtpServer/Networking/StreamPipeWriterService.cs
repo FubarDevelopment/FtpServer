@@ -46,6 +46,17 @@ namespace FubarDev.FtpServer.Networking
         protected Stream Stream { get; }
 
         /// <inheritdoc />
+        public override async Task StopAsync(CancellationToken cancellationToken)
+        {
+            await base.StopAsync(cancellationToken)
+               .ConfigureAwait(false);
+            await SafeFlushAsync(cancellationToken)
+               .ConfigureAwait(false);
+            await OnCloseAsync(_exception, cancellationToken)
+               .ConfigureAwait(false);
+        }
+
+        /// <inheritdoc />
         protected override async Task ExecuteAsync(CancellationToken cancellationToken)
         {
             while (true)
@@ -73,15 +84,6 @@ namespace FubarDev.FtpServer.Networking
         protected override Task OnPausedAsync(CancellationToken cancellationToken)
         {
             return SafeFlushAsync(cancellationToken);
-        }
-
-        /// <inheritdoc />
-        protected override async Task OnStoppedAsync(CancellationToken cancellationToken)
-        {
-            await SafeFlushAsync(cancellationToken)
-               .ConfigureAwait(false);
-            await OnCloseAsync(_exception, cancellationToken)
-               .ConfigureAwait(false);
         }
 
         /// <inheritdoc />

@@ -324,11 +324,11 @@ namespace FubarDev.FtpServer
                     await _serverCommandHandler.ConfigureAwait(false);
                 }
 
-                await _streamReaderService.StopAsync(CancellationToken.None)
+                await _networkStreamFeature.SecureConnectionAdapter.StopAsync(CancellationToken.None)
                    .ConfigureAwait(false);
                 await _streamWriterService.StopAsync(CancellationToken.None)
                    .ConfigureAwait(false);
-                await _networkStreamFeature.SecureConnectionAdapter.StopAsync(CancellationToken.None)
+                await _streamReaderService.StopAsync(CancellationToken.None)
                    .ConfigureAwait(false);
             }
             catch (Exception ex)
