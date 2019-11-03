@@ -61,7 +61,11 @@ namespace FubarDev.FtpServer.CommandHandlers
                 return new FtpResponse(550, T("File doesn't exist."));
             }
 
-            using (var input = await fsFeature.FileSystem.OpenReadAsync(fileInfo.Entry, restartPosition ?? 0, cancellationToken).ConfigureAwait(false))
+            var input = await fsFeature.FileSystem
+               .OpenReadAsync(fileInfo.Entry, restartPosition ?? 0, cancellationToken)
+               .ConfigureAwait(false);
+
+            try
             {
                 await FtpContext.ServerCommandWriter
                    .WriteAsync(
@@ -77,9 +81,14 @@ namespace FubarDev.FtpServer.CommandHandlers
                             command),
                         cancellationToken)
                    .ConfigureAwait(false);
-
-                return null;
             }
+            catch
+            {
+                input.Dispose();
+                throw;
+            }
+
+            return null;
         }
 
         private async Task<IFtpResponse?> ExecuteSendAsync(
@@ -90,12 +99,15 @@ namespace FubarDev.FtpServer.CommandHandlers
             var stream = dataConnection.Stream;
             stream.WriteTimeout = 10000;
             var buffer = new byte[BufferSize];
-            int receivedBytes;
-            while ((receivedBytes = await input.ReadAsync(buffer, 0, buffer.Length, cancellationToken)
-               .ConfigureAwait(false)) != 0)
+            using (input)
             {
-                await stream.WriteAsync(buffer, 0, receivedBytes, cancellationToken)
-                   .ConfigureAwait(false);
+                int receivedBytes;
+                while ((receivedBytes = await input.ReadAsync(buffer, 0, buffer.Length, cancellationToken)
+                          .ConfigureAwait(false)) != 0)
+                {
+                    await stream.WriteAsync(buffer, 0, receivedBytes, cancellationToken)
+                       .ConfigureAwait(false);
+                }
             }
 
             return new FtpResponse(226, T("File download succeeded."));
