@@ -86,7 +86,7 @@ namespace TestFtpServer
             {
                 using (var host = hostBuilder.Build())
                 {
-                    var appLifetime = host.Services.GetRequiredService<IApplicationLifetime>();
+                    var appLifetime = host.Services.GetRequiredService<IHostApplicationLifetime>();
 
                     var ipcServiceHost = new IpcServiceHostBuilder(host.Services)
                         .AddNamedPipeEndpoint<Api.IFtpServerHost>("ftpserver", "ftpserver")

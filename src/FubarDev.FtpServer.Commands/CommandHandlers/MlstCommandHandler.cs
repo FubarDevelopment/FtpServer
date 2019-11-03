@@ -166,11 +166,23 @@ namespace FubarDev.FtpServer.CommandHandlers
             }
 
             var factsFeature = Connection.Features.Get<IMlstFactsFeature>() ?? CreateMlstFactsFeature();
-            return await Connection.SendDataAsync(
-                    (dataConnection, ct) => ExecuteSendAsync(dataConnection, authUser, fsFeature.FileSystem, path, dirEntry, factsFeature, ct),
-                    _logger,
+
+            await FtpContext.ServerCommandWriter
+               .WriteAsync(
+                    new DataConnectionServerCommand(
+                        (dataConnection, ct) => ExecuteSendAsync(
+                            dataConnection,
+                            authUser,
+                            fsFeature.FileSystem,
+                            path,
+                            dirEntry,
+                            factsFeature,
+                            ct),
+                        command),
                     cancellationToken)
-                .ConfigureAwait(false);
+               .ConfigureAwait(false);
+
+            return null;
         }
 
         private async Task<IFtpResponse?> ExecuteSendAsync(

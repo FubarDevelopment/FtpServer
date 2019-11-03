@@ -47,7 +47,7 @@ namespace FubarDev.FtpServer.Networking
         protected bool IsPauseRequested => _jobPaused.IsCancellationRequested;
 
         /// <inheritdoc />
-        public async Task StartAsync(CancellationToken cancellationToken)
+        public virtual async Task StartAsync(CancellationToken cancellationToken)
         {
             if (Status != FtpServiceStatus.ReadyToRun)
             {
@@ -75,7 +75,7 @@ namespace FubarDev.FtpServer.Networking
         }
 
         /// <inheritdoc />
-        public async Task StopAsync(CancellationToken cancellationToken)
+        public virtual async Task StopAsync(CancellationToken cancellationToken)
         {
             if (Status != FtpServiceStatus.Running && Status != FtpServiceStatus.Stopped && Status != FtpServiceStatus.Paused)
             {
@@ -97,7 +97,7 @@ namespace FubarDev.FtpServer.Networking
         }
 
         /// <inheritdoc />
-        public async Task PauseAsync(CancellationToken cancellationToken)
+        public virtual async Task PauseAsync(CancellationToken cancellationToken)
         {
             if (Status == FtpServiceStatus.Paused)
             {
@@ -122,7 +122,7 @@ namespace FubarDev.FtpServer.Networking
         }
 
         /// <inheritdoc />
-        public async Task ContinueAsync(CancellationToken cancellationToken)
+        public virtual async Task ContinueAsync(CancellationToken cancellationToken)
         {
             if (Status == FtpServiceStatus.Stopped)
             {
@@ -162,43 +162,52 @@ namespace FubarDev.FtpServer.Networking
                 await semaphore.WaitAsync(cancellationToken);
             }
         }
+
         protected abstract Task ExecuteAsync(
             CancellationToken cancellationToken);
+
         protected virtual Task OnStopRequestingAsync(
             CancellationToken cancellationToken)
         {
             return Task.CompletedTask;
         }
+
         protected virtual Task OnStopRequestedAsync(
             CancellationToken cancellationToken)
         {
             return Task.CompletedTask;
         }
+
         protected virtual Task OnPauseRequestingAsync(
             CancellationToken cancellationToken)
         {
             return Task.CompletedTask;
         }
+
         protected virtual Task OnPauseRequestedAsync(
             CancellationToken cancellationToken)
         {
             return Task.CompletedTask;
         }
+
         protected virtual Task OnContinueRequestingAsync(
             CancellationToken cancellationToken)
         {
             return Task.CompletedTask;
         }
+
         protected virtual Task OnPausedAsync(
             CancellationToken cancellationToken)
         {
             return Task.CompletedTask;
         }
+
         protected virtual Task OnStoppedAsync(
             CancellationToken cancellationToken)
         {
             return Task.CompletedTask;
         }
+
         protected virtual Task<bool> OnFailedAsync(
             Exception exception,
             CancellationToken cancellationToken)
@@ -256,7 +265,7 @@ namespace FubarDev.FtpServer.Networking
 
             // Change the status
             statusProgress.Report(FtpServiceStatus.Stopped);
-            await OnStoppedAsync(_connectionClosed)
+            await OnStoppedAsync(CancellationToken.None)
                .ConfigureAwait(false);
         }
     }
