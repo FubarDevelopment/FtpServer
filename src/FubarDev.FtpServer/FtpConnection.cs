@@ -108,6 +108,7 @@ namespace FubarDev.FtpServer
         /// <param name="secureDataConnectionWrapper">Wraps a data connection into an SSL stream.</param>
         /// <param name="sslStreamWrapperFactory">The SSL stream wrapper factory.</param>
         /// <param name="logger">The logger for the FTP connection.</param>
+        /// <param name="loggerFactory">The logger factory.</param>
         public FtpConnection(
             TcpSocketClientAccessor socketAccessor,
             IOptions<FtpConnectionOptions> options,
@@ -118,7 +119,8 @@ namespace FubarDev.FtpServer
             IServiceProvider serviceProvider,
             SecureDataConnectionWrapper secureDataConnectionWrapper,
             ISslStreamWrapperFactory sslStreamWrapperFactory,
-            ILogger<FtpConnection>? logger = null)
+            ILogger<FtpConnection>? logger = null,
+            ILoggerFactory? loggerFactory = null)
         {
             var socket = socketAccessor.TcpSocketClient ?? throw new InvalidOperationException("The socket to communicate with the client was not set");
             ConnectionServices = serviceProvider;
