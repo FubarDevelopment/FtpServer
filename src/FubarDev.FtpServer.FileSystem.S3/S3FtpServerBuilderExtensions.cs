@@ -2,10 +2,17 @@
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
+using FubarDev.FtpServer.FileSystem;
+using FubarDev.FtpServer.FileSystem.S3;
+
 using Microsoft.Extensions.DependencyInjection;
 
-namespace FubarDev.FtpServer.FileSystem.S3
+// ReSharper disable once CheckNamespace
+namespace FubarDev.FtpServer
 {
+    /// <summary>
+    /// Extension methods for <see cref="IFtpServerBuilder"/>.
+    /// </summary>
     public static class S3FtpServerBuilderExtensions
     {
         /// <summary>
@@ -16,7 +23,7 @@ namespace FubarDev.FtpServer.FileSystem.S3
         public static IFtpServerBuilder UseS3FileSystem(this IFtpServerBuilder builder)
         {
             builder.Services
-                .AddSingleton<IFileSystemClassFactory, S3FileSystemProvider>();
+               .AddSingleton<IFileSystemClassFactory, S3FileSystemProvider>();
 
             return builder;
         }

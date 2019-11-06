@@ -18,26 +18,47 @@ using FubarDev.FtpServer.BackgroundTransfer;
 
 namespace FubarDev.FtpServer.FileSystem.S3
 {
+    /// <summary>
+    /// The S3-based file system implementation.
+    /// </summary>
     public sealed class S3FileSystem : IUnixFileSystem
     {
         private readonly S3FileSystemOptions _options;
         private readonly AmazonS3Client _client;
         private readonly TransferUtility _transferUtility;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="S3FileSystem"/> class.
+        /// </summary>
+        /// <param name="options">The provider options.</param>
+        /// <param name="rootDirectory">The root directory for the current user.</param>
         public S3FileSystem(S3FileSystemOptions options, string rootDirectory)
         {
             _options = options;
-            _client = new AmazonS3Client(options.AwsAccessKeyId, options.AwsSecretAccessKey, RegionEndpoint.GetBySystemName(options.BucketRegion));
+            _client = new AmazonS3Client(
+                options.AwsAccessKeyId,
+                options.AwsSecretAccessKey,
+                RegionEndpoint.GetBySystemName(options.BucketRegion));
             Root = new S3DirectoryEntry(rootDirectory, true);
             _transferUtility = new TransferUtility(_client);
         }
 
+        /// <inheritdoc />
         public bool SupportsAppend => false;
+
+        /// <inheritdoc />
         public bool SupportsNonEmptyDirectoryDelete => true;
+
+        /// <inheritdoc />
         public StringComparer FileSystemEntryComparer => StringComparer.Ordinal;
+
+        /// <inheritdoc />
         public IUnixDirectoryEntry Root { get; }
 
-        public Task<IReadOnlyList<IUnixFileSystemEntry>> GetEntriesAsync(IUnixDirectoryEntry directoryEntry, CancellationToken cancellationToken)
+        /// <inheritdoc />
+        public Task<IReadOnlyList<IUnixFileSystemEntry>> GetEntriesAsync(
+            IUnixDirectoryEntry directoryEntry,
+            CancellationToken cancellationToken)
         {
             var prefix = ((S3DirectoryEntry)directoryEntry).Key;
             if (!string.IsNullOrEmpty(prefix) && !prefix.EndsWith("/"))
@@ -48,7 +69,11 @@ namespace FubarDev.FtpServer.FileSystem.S3
             return ListObjectsAsync(prefix, cancellationToken);
         }
 
-        public async Task<IUnixFileSystemEntry?> GetEntryByNameAsync(IUnixDirectoryEntry directoryEntry, string name, CancellationToken cancellationToken)
+        /// <inheritdoc />
+        public async Task<IUnixFileSystemEntry?> GetEntryByNameAsync(
+            IUnixDirectoryEntry directoryEntry,
+            string name,
+            CancellationToken cancellationToken)
         {
             var prefix = S3Path.Combine(((S3DirectoryEntry)directoryEntry).Key, name);
 
@@ -67,7 +92,13 @@ namespace FubarDev.FtpServer.FileSystem.S3
             return null;
         }
 
-        public async Task<IUnixFileSystemEntry> MoveAsync(IUnixDirectoryEntry parent, IUnixFileSystemEntry source, IUnixDirectoryEntry target, string fileName, CancellationToken cancellationToken)
+        /// <inheritdoc />
+        public async Task<IUnixFileSystemEntry> MoveAsync(
+            IUnixDirectoryEntry parent,
+            IUnixFileSystemEntry source,
+            IUnixDirectoryEntry target,
+            string fileName,
+            CancellationToken cancellationToken)
         {
             var sourceKey = ((S3FileSystemEntry)source).Key;
             var key = S3Path.Combine(((S3DirectoryEntry)target).Key, fileName);
@@ -75,10 +106,9 @@ namespace FubarDev.FtpServer.FileSystem.S3
             if (source is S3FileEntry file)
             {
                 await MoveFile(sourceKey, key, cancellationToken);
-                return new S3FileEntry(key)
+                return new S3FileEntry(key, file.Size)
                 {
-                    LastWriteTime = DateTimeOffset.UtcNow,
-                    Size = file.Size,
+                    LastWriteTime = file.LastWriteTime ?? DateTimeOffset.UtcNow,
                 };
             }
 
@@ -101,12 +131,18 @@ namespace FubarDev.FtpServer.FileSystem.S3
 
             throw new InvalidOperationException();
         }
+
+        /// <inheritdoc />
         public Task UnlinkAsync(IUnixFileSystemEntry entry, CancellationToken cancellationToken)
         {
             return _client.DeleteObjectAsync(_options.BucketName, ((S3FileSystemEntry)entry).Key, cancellationToken);
         }
 
-        public async Task<IUnixDirectoryEntry> CreateDirectoryAsync(IUnixDirectoryEntry targetDirectory, string directoryName, CancellationToken cancellationToken)
+        /// <inheritdoc />
+        public async Task<IUnixDirectoryEntry> CreateDirectoryAsync(
+            IUnixDirectoryEntry targetDirectory,
+            string directoryName,
+            CancellationToken cancellationToken)
         {
             var key = S3Path.Combine(((S3DirectoryEntry)targetDirectory).Key, directoryName + "/");
 
@@ -115,45 +151,76 @@ namespace FubarDev.FtpServer.FileSystem.S3
                 {
                     BucketName = _options.BucketName,
                     Key = key,
-                }, cancellationToken);
+                },
+                cancellationToken);
 
             return new S3DirectoryEntry(key);
         }
 
-        public async Task<Stream> OpenReadAsync(IUnixFileEntry fileEntry, long startPosition, CancellationToken cancellationToken)
+        /// <inheritdoc />
+        public async Task<Stream> OpenReadAsync(
+            IUnixFileEntry fileEntry,
+            long startPosition,
+            CancellationToken cancellationToken)
         {
-            var stream = await _transferUtility.OpenStreamAsync(_options.BucketName, ((S3FileSystemEntry)fileEntry).Key, cancellationToken);
+            var stream = await _transferUtility.OpenStreamAsync(
+                _options.BucketName,
+                ((S3FileSystemEntry)fileEntry).Key,
+                cancellationToken);
             if (startPosition != 0)
             {
                 stream.Seek(startPosition, SeekOrigin.Begin);
             }
+
             return stream;
         }
 
-        public Task<IBackgroundTransfer?> AppendAsync(IUnixFileEntry fileEntry, long? startPosition, Stream data, CancellationToken cancellationToken)
+        /// <inheritdoc />
+        public Task<IBackgroundTransfer?> AppendAsync(
+            IUnixFileEntry fileEntry,
+            long? startPosition,
+            Stream data,
+            CancellationToken cancellationToken)
         {
             throw new InvalidOperationException();
         }
 
-        public async Task<IBackgroundTransfer?> CreateAsync(IUnixDirectoryEntry targetDirectory, string fileName, Stream data, CancellationToken cancellationToken)
+        /// <inheritdoc />
+        public async Task<IBackgroundTransfer?> CreateAsync(
+            IUnixDirectoryEntry targetDirectory,
+            string fileName,
+            Stream data,
+            CancellationToken cancellationToken)
         {
             var key = S3Path.Combine(((S3DirectoryEntry)targetDirectory).Key, fileName);
             await UploadFile(data, key, cancellationToken);
             return default;
         }
 
-        public async Task<IBackgroundTransfer?> ReplaceAsync(IUnixFileEntry fileEntry, Stream data, CancellationToken cancellationToken)
+        /// <inheritdoc />
+        public async Task<IBackgroundTransfer?> ReplaceAsync(
+            IUnixFileEntry fileEntry,
+            Stream data,
+            CancellationToken cancellationToken)
         {
             await UploadFile(data, ((S3FileEntry)fileEntry).Key, cancellationToken);
             return default;
         }
 
-        public Task<IUnixFileSystemEntry> SetMacTimeAsync(IUnixFileSystemEntry entry, DateTimeOffset? modify, DateTimeOffset? access, DateTimeOffset? create, CancellationToken cancellationToken)
+        /// <inheritdoc />
+        public Task<IUnixFileSystemEntry> SetMacTimeAsync(
+            IUnixFileSystemEntry entry,
+            DateTimeOffset? modify,
+            DateTimeOffset? access,
+            DateTimeOffset? create,
+            CancellationToken cancellationToken)
         {
             return Task.FromResult(entry);
         }
 
-        private async Task<IReadOnlyList<IUnixFileSystemEntry>> ListObjectsAsync(string prefix, CancellationToken cancellationToken)
+        private async Task<IReadOnlyList<IUnixFileSystemEntry>> ListObjectsAsync(
+            string prefix,
+            CancellationToken cancellationToken)
         {
             var objects = new List<IUnixFileSystemEntry>();
 
@@ -168,7 +235,8 @@ namespace FubarDev.FtpServer.FileSystem.S3
                         Marker = marker,
                         Prefix = prefix,
                         Delimiter = "/",
-                    }, cancellationToken);
+                    },
+                    cancellationToken);
 
                 foreach (var directory in response.CommonPrefixes)
                 {
@@ -182,11 +250,11 @@ namespace FubarDev.FtpServer.FileSystem.S3
                         continue; // this is the folder itself
                     }
 
-                    objects.Add(new S3FileEntry(s3Object.Key)
-                    {
-                        LastWriteTime = s3Object.LastModified,
-                        Size = s3Object.Size,
-                    });
+                    objects.Add(
+                        new S3FileEntry(s3Object.Key, s3Object.Size)
+                        {
+                            LastWriteTime = s3Object.LastModified,
+                        });
                 }
 
                 marker = response.NextMarker;
@@ -223,16 +291,18 @@ namespace FubarDev.FtpServer.FileSystem.S3
                     }
 
                     using var ms = new MemoryStream(buffer, 0, read);
-                    responses.Add(await _client.UploadPartAsync(
-                        new UploadPartRequest
-                        {
-                            BucketName = _options.BucketName,
-                            Key = key,
-                            UploadId = upload.UploadId,
-                            PartNumber = index++,
-                            PartSize = read,
-                            InputStream = ms,
-                        }, cancellationToken));
+                    responses.Add(
+                        await _client.UploadPartAsync(
+                            new UploadPartRequest
+                            {
+                                BucketName = _options.BucketName,
+                                Key = key,
+                                UploadId = upload.UploadId,
+                                PartNumber = index++,
+                                PartSize = read,
+                                InputStream = ms,
+                            },
+                            cancellationToken));
                 }
                 while (chunk > 0);
 
@@ -249,7 +319,11 @@ namespace FubarDev.FtpServer.FileSystem.S3
             catch (Exception)
             {
                 // do not pass cancellation token because this most likely happened because the task was cancelled
-                await _client.AbortMultipartUploadAsync(_options.BucketName, key, upload.UploadId, CancellationToken.None);
+                await _client.AbortMultipartUploadAsync(
+                    _options.BucketName,
+                    key,
+                    upload.UploadId,
+                    CancellationToken.None);
             }
         }
     }

@@ -9,11 +9,20 @@ using Microsoft.Extensions.Options;
 
 namespace FubarDev.FtpServer.FileSystem.S3
 {
+    /// <summary>
+    /// The file system factory for a S3-based file system.
+    /// </summary>
     internal class S3FileSystemProvider : IFileSystemClassFactory
     {
         private readonly S3FileSystemOptions _options;
         private readonly IAccountDirectoryQuery _accountDirectoryQuery;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="S3FileSystemProvider"/> class.
+        /// </summary>
+        /// <param name="options">The provider options.</param>
+        /// <param name="accountDirectoryQuery">Interface to query account directories.</param>
+        /// <exception cref="ArgumentException">Gets thrown when the S3 credentials weren't set.</exception>
         public S3FileSystemProvider(IOptions<S3FileSystemOptions> options, IAccountDirectoryQuery accountDirectoryQuery)
         {
             _options = options.Value;
@@ -28,11 +37,13 @@ namespace FubarDev.FtpServer.FileSystem.S3
             }
         }
 
+        /// <inheritdoc />
         public Task<IUnixFileSystem> Create(IAccountInformation accountInformation)
         {
             var directories = _accountDirectoryQuery.GetDirectories(accountInformation);
 
-            return Task.FromResult<IUnixFileSystem>(new S3FileSystem(_options, S3Path.Combine(_options.RootPath, directories.RootPath)));
+            return Task.FromResult<IUnixFileSystem>(
+                new S3FileSystem(_options, S3Path.Combine(_options.RootPath, directories.RootPath)));
         }
     }
 }
