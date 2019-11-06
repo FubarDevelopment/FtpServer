@@ -41,42 +41,63 @@ namespace FubarDev.FtpServer.ServerCommandHandlers
             var serverCommandWriter = connection.Features.Get<IServerCommandFeature>().ServerCommandWriter;
             var localizationFeature = connection.Features.Get<ILocalizationFeature>();
 
-            // Try to open the data connection
-            IFtpDataConnection dataConnection;
-            try
+            using (new ConnectionKeepAlive(connection))
             {
-                dataConnection = await connection.OpenDataConnectionAsync(null, cancellationToken)
-                   .ConfigureAwait(false);
-            }
-            catch (Exception ex)
-            {
-                _logger?.LogWarning(0, ex, "Could not open data connection: {error}", ex.Message);
-                var errorResponse = new FtpResponse(425, localizationFeature.Catalog.GetString("Could not open data connection"));
+                // Try to open the data connection
+                IFtpDataConnection dataConnection;
+                try
+                {
+                    dataConnection = await connection.OpenDataConnectionAsync(null, cancellationToken)
+                       .ConfigureAwait(false);
+                }
+                catch (Exception ex)
+                {
+                    _logger?.LogWarning(0, ex, "Could not open data connection: {error}", ex.Message);
+                    var errorResponse = new FtpResponse(
+                        425,
+                        localizationFeature.Catalog.GetString("Could not open data connection"));
+                    await serverCommandWriter
+                       .WriteAsync(new SendResponseServerCommand(errorResponse), cancellationToken)
+                       .ConfigureAwait(false);
+                    return;
+                }
+
+                // Execute the operation on the data connection.
+                var commandResponse = await connection.ExecuteCommand(
+                    command.Command,
+                    (_, ct) => command.DataConnectionDelegate(dataConnection, ct),
+                    _logger,
+                    cancellationToken);
+                var response =
+                    commandResponse
+                    ?? new FtpResponse(250, localizationFeature.Catalog.GetString("Closing data connection."));
+
+                // Send the response.
                 await serverCommandWriter
-                   .WriteAsync(new SendResponseServerCommand(errorResponse), cancellationToken)
+                   .WriteAsync(new SendResponseServerCommand(response), cancellationToken)
                    .ConfigureAwait(false);
-                return;
+
+                // Close the data connection.
+                await serverCommandWriter
+                   .WriteAsync(new CloseDataConnectionServerCommand(dataConnection), cancellationToken)
+                   .ConfigureAwait(false);
+            }
+        }
+
+        private class ConnectionKeepAlive : IDisposable
+        {
+            private readonly IFtpConnectionKeepAlive _keepAliveFeature;
+            public ConnectionKeepAlive(IFtpConnection connection)
+            {
+                _keepAliveFeature = connection.Features.Get<IFtpConnectionKeepAlive>();
+                _keepAliveFeature.IsInDataTransfer = true;
             }
 
-            // Execute the operation on the data connection.
-            var commandResponse = await connection.ExecuteCommand(
-                command.Command,
-                (_, ct) => command.DataConnectionDelegate(dataConnection, ct),
-                _logger,
-                cancellationToken);
-            var response =
-                commandResponse
-                ?? new FtpResponse(250, localizationFeature.Catalog.GetString("Closing data connection."));
-
-            // Send the response.
-            await serverCommandWriter
-               .WriteAsync(new SendResponseServerCommand(response), cancellationToken)
-               .ConfigureAwait(false);
-
-            // Close the data connection.
-            await serverCommandWriter
-               .WriteAsync(new CloseDataConnectionServerCommand(dataConnection), cancellationToken)
-               .ConfigureAwait(false);
+            /// <inheritdoc />
+            public void Dispose()
+            {
+                _keepAliveFeature.IsInDataTransfer = false;
+            }
         }
     }
 }

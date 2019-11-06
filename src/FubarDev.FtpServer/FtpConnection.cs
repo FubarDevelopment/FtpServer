@@ -87,6 +87,8 @@ namespace FubarDev.FtpServer
         /// </remarks>
         private readonly IFtpService _streamWriterService;
 
+        private readonly IFtpConnectionKeepAlive _keepAliveFeature;
+
         private bool _connectionClosing;
 
         private int _connectionClosed;
@@ -143,6 +145,7 @@ namespace FubarDev.FtpServer
 
             _loggerScope = logger?.BeginScope(properties);
 
+            _keepAliveFeature = new FtpConnectionKeepAlive(options.Value.InactivityTimeout);
             _socket = socket;
             _connectionAccessor = connectionAccessor;
             _serverCommandExecutor = serverCommandExecutor;
@@ -186,6 +189,7 @@ namespace FubarDev.FtpServer
             parentFeatures.Set<ISecureConnectionFeature>(secureConnectionFeature);
             parentFeatures.Set<IServerCommandFeature>(new ServerCommandFeature(_serverCommandChannel));
             parentFeatures.Set<INetworkStreamFeature>(_networkStreamFeature);
+            parentFeatures.Set<IFtpConnectionKeepAlive>(_keepAliveFeature);
 
             var features = new FeatureCollection(parentFeatures);
 #pragma warning disable 618
@@ -645,6 +649,7 @@ namespace FubarDev.FtpServer
 
                         while (commandReader.TryRead(out var command))
                         {
+                            _keepAliveFeature.KeepAlive();
                             _logger?.Command(command);
                             var context = new FtpContext(command, _serverCommandChannel, this);
                             await requestDelegate(context)

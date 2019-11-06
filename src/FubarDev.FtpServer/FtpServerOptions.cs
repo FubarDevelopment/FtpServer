@@ -2,6 +2,8 @@
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
+using System;
+
 namespace FubarDev.FtpServer
 {
     /// <summary>
@@ -28,5 +30,10 @@ namespace FubarDev.FtpServer
         /// 0 (default) means no control over connection count.
         /// </remarks>
         public int MaxActiveConnections { get; set; }
+
+        /// <summary>
+        /// Gets or sets the interval between checks for inactive connections.
+        /// </summary>
+        public TimeSpan? ConnectionInactivityCheckInterval { get; set; } = TimeSpan.FromMinutes(1);
     }
 }

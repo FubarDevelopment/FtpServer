@@ -49,6 +49,13 @@ namespace TestFtpServer
             this IServiceCollection services,
             FtpOptions options)
         {
+            static TimeSpan? ToTomeSpan(int? seconds)
+            {
+                return seconds == null
+                    ? (TimeSpan?)null
+                    : TimeSpan.FromSeconds(seconds.Value);
+            }
+
             services
                .Configure<AuthTlsOptions>(
                     opt =>
@@ -56,13 +63,20 @@ namespace TestFtpServer
                         opt.ServerCertificate = options.GetCertificate();
                         opt.ImplicitFtps = options.Ftps.Implicit;
                     })
-               .Configure<FtpConnectionOptions>(opt => opt.DefaultEncoding = Encoding.ASCII)
+               .Configure<FtpConnectionOptions>(
+                    opt =>
+                    {
+                        opt.DefaultEncoding = Encoding.ASCII;
+                        opt.InactivityTimeout = ToTomeSpan(options.Server.InactivityTimeout);
+                    })
                .Configure<FubarDev.FtpServer.FtpServerOptions>(
                     opt =>
                     {
                         opt.ServerAddress = options.Server.Address;
                         opt.Port = options.GetServerPort();
                         opt.MaxActiveConnections = options.Server.MaxActiveConnections ?? 0;
+                        opt.ConnectionInactivityCheckInterval =
+                            ToTomeSpan(options.Server.ConnectionInactivityCheckInterval);
                     })
                .Configure<PortCommandOptions>(
                     opt =>
