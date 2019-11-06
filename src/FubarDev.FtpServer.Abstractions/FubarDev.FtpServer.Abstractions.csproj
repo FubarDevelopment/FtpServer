@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>netstandard1.3;netstandard2.0;net461</TargetFrameworks>
+    <TargetFrameworks>netstandard1.3;netstandard2.0;net461;netstandard2.1</TargetFrameworks>
     <Description>Interfaces for the portable FTP server</Description>
     <RootNamespace>FubarDev.FtpServer</RootNamespace>
     <PackageTags>portable;FTP;server</PackageTags>
@@ -23,6 +23,7 @@
     <PackageReference Include="JetBrains.Annotations" Version="2019.1.3" PrivateAssets="All" />
     <PackageReference Include="NGettext" Version="0.6.3" />
     <PackageReference Include="System.ComponentModel.Annotations" Version="4.1.0" />
+    <PackageReference Include="System.Net.Sockets" Version="4.3.0" />
     <PackageReference Include="System.Threading.Channels" Version="4.5.0" />
   </ItemGroup>
   <Import Project="..\FubarDev.FtpServer.Shared\FubarDev.FtpServer.Shared.projitems" Label="Shared" />

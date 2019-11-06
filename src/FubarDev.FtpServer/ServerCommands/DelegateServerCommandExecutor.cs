@@ -51,7 +51,7 @@ namespace FubarDev.FtpServer.ServerCommands
                 _serverCommandHandlerDelegates.Add(serverCommandType, cmdDelegate);
             }
 
-            return (Task)cmdDelegate.DynamicInvoke(serverCommand, cancellationToken);
+            return (Task)cmdDelegate.DynamicInvoke(serverCommand, cancellationToken)!;
         }
     }
 }

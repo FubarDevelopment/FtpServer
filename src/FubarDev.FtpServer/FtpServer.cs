@@ -39,6 +39,7 @@ namespace FubarDev.FtpServer
         private readonly ILogger<FtpServer>? _log;
         private readonly Task _clientReader;
         private readonly CancellationTokenSource _serverShutdown = new CancellationTokenSource();
+        private readonly Timer? _connectionTimeoutChecker;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FtpServer"/> class.
@@ -69,6 +70,15 @@ namespace FubarDev.FtpServer
             };
 
             _clientReader = ReadClientsAsync(tcpClientChannel, _serverShutdown.Token);
+
+            if (serverOptions.Value.ConnectionInactivityCheckInterval is TimeSpan checkInterval)
+            {
+                _connectionTimeoutChecker = new Timer(
+                    _ => CloseExpiredConnections(),
+                    null,
+                    checkInterval,
+                    checkInterval);
+            }
         }
 
         /// <inheritdoc />
@@ -103,11 +113,26 @@ namespace FubarDev.FtpServer
                 StopAsync(CancellationToken.None).Wait();
             }
 
+            _connectionTimeoutChecker?.Dispose();
+
             _serverShutdown.Dispose();
             foreach (var connectionInfo in _connections.Values)
             {
                 connectionInfo.Scope.Dispose();
             }
+        }
+
+        /// <summary>
+        /// Returns all connections.
+        /// </summary>
+        /// <returns>The currently active connections.</returns>
+        /// <remarks>
+        /// The connection might be closed between calling this function and
+        /// using/querying the connection by the client.
+        /// </remarks>
+        public IEnumerable<IFtpConnection> GetConnections()
+        {
+            return _connections.Keys.ToList();
         }
 
         /// <inheritdoc />
@@ -156,6 +181,39 @@ namespace FubarDev.FtpServer
             await _clientReader.ConfigureAwait(false);
         }
 
+        /// <summary>
+        /// Close expired FTP connections.
+        /// </summary>
+        /// <remarks>
+        /// This will always happen when the FTP client is idle (without sending notifications) or
+        /// when the client was disconnected due to an undetectable network error.
+        /// </remarks>
+        private void CloseExpiredConnections()
+        {
+            foreach (var connection in GetConnections())
+            {
+                try
+                {
+                    var keepAliveFeature = connection.Features.Get<IFtpConnectionKeepAlive>();
+                    if (keepAliveFeature.IsAlive)
+                    {
+                        // Ignore connections that are still alive.
+                        continue;
+                    }
+
+                    var serverCommandFeature = connection.Features.Get<IServerCommandFeature>();
+
+                    // Just ignore a failed write operation. We'll try again later.
+                    serverCommandFeature.ServerCommandWriter.TryWrite(
+                        new CloseConnectionServerCommand());
+                }
+                catch
+                {
+                    // Errors are most likely indicating a closed connection. Nothing to do here...
+                }
+            }
+        }
+
         private IEnumerable<ConnectionInitAsyncDelegate> OnConfigureConnection(IFtpConnection connection)
         {
             var eventArgs = new ConnectionEventArgs(connection);
@@ -188,7 +246,7 @@ namespace FubarDev.FtpServer
             catch (Exception ex)
             {
                 var exception = ex;
-                while (exception is AggregateException aggregateException)
+                while (exception is AggregateException aggregateException && aggregateException.InnerException != null)
                 {
                     exception = aggregateException.InnerException;
                 }
@@ -292,9 +350,9 @@ namespace FubarDev.FtpServer
             }
         }
 
-        private void ConnectionOnClosed(object sender, EventArgs eventArgs)
+        private void ConnectionOnClosed(object? sender, EventArgs eventArgs)
         {
-            var connection = (IFtpConnection)sender;
+            var connection = (IFtpConnection)(sender ?? throw new InvalidOperationException("Missing sender information."));
             if (!_connections.TryRemove(connection, out var info))
             {
                 return;

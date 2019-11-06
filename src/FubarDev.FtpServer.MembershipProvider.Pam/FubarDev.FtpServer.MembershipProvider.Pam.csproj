@@ -3,7 +3,7 @@
   <Import Project="../../PackageLibrary.props" />
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <TargetFrameworks>netcoreapp2.0;netcoreapp3.0</TargetFrameworks>
     <Description>PAM membership provider for portable FTP server</Description>
     <PackageTags>pam;membership;portable;FTP;server</PackageTags>
   </PropertyGroup>

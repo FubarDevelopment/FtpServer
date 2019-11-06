@@ -2,6 +2,8 @@
 <RuleSet Name="Regeln für FubarDev.FtpServer" Description="Codeanalyseregeln für FubarDev.FtpServer.csproj." ToolsVersion="14.0">
   <Rules AnalyzerId="StyleCop.Analyzers" RuleNamespace="StyleCop.Analyzers">
     <Rule Id="SA0001" Action="None" />
+    <!-- StyleCop.Analyzers cannot handle C# 8.0 yet -->
+    <Rule Id="SA1009" Action="None" />
     <Rule Id="SA1101" Action="None" />
     <Rule Id="SA1200" Action="None" />
     <Rule Id="SA1309" Action="None" />

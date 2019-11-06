@@ -31,12 +31,7 @@ namespace TestFtpServer.Shell
 
             while (!_status.Closed)
             {
-                var readTask = Task.Run(
-                    () =>
-                    {
-                        var input = ReadLine.Read("> ");
-                        return Task.FromResult(input);
-                    });
+                var readTask = Task.Run(() => ReadLine.ReadAsync("> "), CancellationToken.None);
                 var waitTask = await Task.WhenAny(readTask, Task.Delay(-1, cancellationToken))
                    .ConfigureAwait(false);
 
@@ -51,7 +46,7 @@ namespace TestFtpServer.Shell
                     continue;
                 }
 
-                var handler = _autoCompletionHandler.GetCommand(command);
+                var handler = await _autoCompletionHandler.GetCommandAsync(command, cancellationToken);
                 if (handler == null)
                 {
                     if (string.IsNullOrEmpty(command))

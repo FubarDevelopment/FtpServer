@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -33,8 +34,10 @@ namespace TestFtpServer.Shell.Commands
         /// <inheritdoc />
         public IReadOnlyCollection<string> AlternativeNames { get; } = new[] { "resume" };
 
+        /// <param name="cancellationToken"></param>
         /// <inheritdoc />
-        public IReadOnlyCollection<ICommandInfo> SubCommands { get; } = Array.Empty<ICommandInfo>();
+        public IAsyncEnumerable<ICommandInfo> GetSubCommandsAsync(CancellationToken cancellationToken)
+            => AsyncEnumerable.Empty<ICommandInfo>();
 
         /// <inheritdoc />
         public Task ExecuteAsync(CancellationToken cancellationToken)

@@ -57,7 +57,7 @@ namespace FubarDev.FtpServer.CommandExtensions
             switch (mode)
             {
                 case "data":
-                    return await SendBlstWithDataConnection(cancellationToken).ConfigureAwait(false);
+                    return await SendBlstWithDataConnection(command, cancellationToken).ConfigureAwait(false);
                 case "control":
                 case "direct":
                     return await SendBlstDirectly().ConfigureAwait(false);
@@ -82,18 +82,24 @@ namespace FubarDev.FtpServer.CommandExtensions
                     GetLines(taskStates)));
         }
 
-        private async Task<IFtpResponse?> SendBlstWithDataConnection(CancellationToken cancellationToken)
+        private async Task<IFtpResponse?> SendBlstWithDataConnection(
+            FtpCommand command,
+            CancellationToken cancellationToken)
         {
             await FtpContext.ServerCommandWriter.WriteAsync(
                     new SendResponseServerCommand(new FtpResponse(150, T("Opening data connection."))),
                     cancellationToken)
                .ConfigureAwait(false);
 
-            return await Connection.SendDataAsync(
-                    ExecuteSend,
-                    _logger,
+            await FtpContext.ServerCommandWriter
+               .WriteAsync(
+                    new DataConnectionServerCommand(
+                        ExecuteSend,
+                        command),
                     cancellationToken)
                .ConfigureAwait(false);
+
+            return null;
         }
 
         private async Task<IFtpResponse?> ExecuteSend(IFtpDataConnection dataConnection, CancellationToken cancellationToken)

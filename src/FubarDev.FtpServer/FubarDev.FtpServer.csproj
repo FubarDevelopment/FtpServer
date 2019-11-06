@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>netstandard1.3;netstandard2.0;netcoreapp2.0;net461;net47</TargetFrameworks>
+    <TargetFrameworks>netstandard1.3;netstandard2.0;netcoreapp2.0;net461;net47;netstandard2.1;netcoreapp3.0</TargetFrameworks>
     <Description>TCP-based FTP server implementation</Description>
     <PackageTags>portable;FTP;server</PackageTags>
   </PropertyGroup>

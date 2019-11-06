@@ -1,0 +1,131 @@
+# ASP.NET Core (.NET Framework)
+# Build and test ASP.NET Core projects targeting the full .NET Framework.
+# Add steps that publish symbols, save build artifacts, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/dotnet-core
+
+trigger:
+  branches:
+    include:
+    - release/*
+    - develop
+    - master
+  tags:
+    include:
+    - v*
+
+pr:
+  branches:
+    include:
+    - '*'  # must quote since "*" is a YAML reserved character; we want a string
+
+variables:
+  solution: FubarDev.FtpServer.sln
+  buildPlatform: 'Any CPU'
+  buildConfiguration: Release
+
+jobs:
+- job: prepare
+  displayName: Setting the build number
+  steps:
+  - task: UseGitVersion@5
+    inputs:
+      versionSpec: '5.0.2-beta1.130'
+      includePrerelease: true
+      updateAssemblyInfo: false
+    env:
+      BUILD_BUILDNUMBER: $(GitVersion.FullSemVer)
+
+- job: pack
+  displayName: Build and create NuGet packages
+  dependsOn: prepare
+  condition: and(succeeded(), not(eq(variables['Build.Reason'], 'PullRequest')))
+  pool:
+    vmImage: 'windows-latest'
+  steps:
+  - task: DotNetCoreCLI@2
+    inputs:
+      command: 'restore'
+      projects: '$(solution)'
+      feedsToUse: 'select'
+      verbosityRestore: 'Normal'
+  - task: VSBuild@1
+    inputs:
+      solution: '$(solution)'
+      platform: '$(buildPlatform)'
+      configuration: '$(buildConfiguration)'
+      msbuildArgs: '/p:Version="$(build.buildNumber)"'
+  - task: BuildQualityChecks@6
+    inputs:
+      checkWarnings: true
+      warningFailOption: 'build'
+      allowWarningVariance: true
+      warningVariance: '5'
+      showStatistics: true
+      includePartiallySucceeded: false
+      warningTaskFilters: '/^vsbuild/i'
+      warningFilters: |
+        /##\[warning\].+CS.+:/i
+        /##\[warning\].+SA.+:/i
+  - task: DotNetCoreCLI@2
+    inputs:
+      command: custom
+      custom: pack
+      arguments: $(solution) --output $(Build.ArtifactStagingDirectory) --include-symbols /p:Configuration=$(buildConfiguration) /p:Version=$(build.buildNumber) --verbosity Minimal
+  - publish: $(Build.ArtifactStagingDirectory)
+    artifact: packages
+
+- job: build
+  displayName: Build the solution
+  dependsOn: prepare
+  condition: and(succeeded(), eq(variables['Build.Reason'], 'PullRequest'))
+  pool:
+    vmImage: 'windows-latest'
+  steps:
+  - task: DotNetCoreCLI@2
+    inputs:
+      command: 'restore'
+      projects: '$(solution)'
+      feedsToUse: 'select'
+      verbosityRestore: 'Normal'
+  - task: VSBuild@1
+    inputs:
+      solution: '$(solution)'
+      platform: '$(buildPlatform)'
+      configuration: '$(buildConfiguration)'
+      msbuildArgs: '/p:Version="$(build.buildNumber)"'
+  - task: BuildQualityChecks@6
+    inputs:
+      checkWarnings: true
+      warningFailOption: 'build'
+      allowWarningVariance: true
+      warningVariance: '5'
+      showStatistics: true
+      includePartiallySucceeded: false
+      warningTaskFilters: '/^vsbuild/i'
+      warningFilters: |
+        /##\[warning\].+CS.+:/i
+        /##\[warning\].+SA.+:/i
+
+- job: test
+  displayName: Running the tests
+  dependsOn: prepare
+  variables:
+    buildConfiguration: 'Debug'
+  steps:
+  - task: DotNetCoreCLI@2
+    inputs:
+      command: 'test'
+      projects: 'test/FubarDev.FtpServer.Tests/FubarDev.FtpServer.Tests.csproj'
+
+- job: tagRelease
+  displayName: Tagging the build
+  dependsOn:
+  - test
+  - pack
+  condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/v'))
+  steps:
+  - checkout: none
+  - task: tagBuildOrRelease@0
+    inputs:
+      type: 'Build'
+      tags: 'release'

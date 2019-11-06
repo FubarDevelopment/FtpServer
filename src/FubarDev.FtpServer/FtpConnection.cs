@@ -87,6 +87,8 @@ namespace FubarDev.FtpServer
         /// </remarks>
         private readonly IFtpService _streamWriterService;
 
+        private readonly IFtpConnectionKeepAlive _keepAliveFeature;
+
         private bool _connectionClosing;
 
         private int _connectionClosed;
@@ -108,6 +110,7 @@ namespace FubarDev.FtpServer
         /// <param name="secureDataConnectionWrapper">Wraps a data connection into an SSL stream.</param>
         /// <param name="sslStreamWrapperFactory">The SSL stream wrapper factory.</param>
         /// <param name="logger">The logger for the FTP connection.</param>
+        /// <param name="loggerFactory">The logger factory.</param>
         public FtpConnection(
             TcpSocketClientAccessor socketAccessor,
             IOptions<FtpConnectionOptions> options,
@@ -118,7 +121,8 @@ namespace FubarDev.FtpServer
             IServiceProvider serviceProvider,
             SecureDataConnectionWrapper secureDataConnectionWrapper,
             ISslStreamWrapperFactory sslStreamWrapperFactory,
-            ILogger<FtpConnection>? logger = null)
+            ILogger<FtpConnection>? logger = null,
+            ILoggerFactory? loggerFactory = null)
         {
             var socket = socketAccessor.TcpSocketClient ?? throw new InvalidOperationException("The socket to communicate with the client was not set");
             ConnectionServices = serviceProvider;
@@ -141,6 +145,7 @@ namespace FubarDev.FtpServer
 
             _loggerScope = logger?.BeginScope(properties);
 
+            _keepAliveFeature = new FtpConnectionKeepAlive(options.Value.InactivityTimeout);
             _socket = socket;
             _connectionAccessor = connectionAccessor;
             _serverCommandExecutor = serverCommandExecutor;
@@ -164,11 +169,13 @@ namespace FubarDev.FtpServer
             _streamReaderService = new ConnectionClosingNetworkStreamReader(
                 originalStream,
                 _socketCommandPipe.Writer,
-                _cancellationTokenSource);
+                _cancellationTokenSource,
+                loggerFactory?.CreateLogger($"{nameof(StreamPipeWriterService)}:Socket:Receive"));
             _streamWriterService = new StreamPipeWriterService(
                 originalStream,
                 _socketResponsePipe.Reader,
-                _cancellationTokenSource.Token);
+                _cancellationTokenSource.Token,
+                loggerFactory?.CreateLogger($"{nameof(StreamPipeWriterService)}:Socket:Transmit"));
 
             _networkStreamFeature = new NetworkStreamFeature(
                 new SecureConnectionAdapter(
@@ -182,6 +189,7 @@ namespace FubarDev.FtpServer
             parentFeatures.Set<ISecureConnectionFeature>(secureConnectionFeature);
             parentFeatures.Set<IServerCommandFeature>(new ServerCommandFeature(_serverCommandChannel));
             parentFeatures.Set<INetworkStreamFeature>(_networkStreamFeature);
+            parentFeatures.Set<IFtpConnectionKeepAlive>(_keepAliveFeature);
 
             var features = new FeatureCollection(parentFeatures);
 #pragma warning disable 618
@@ -320,11 +328,11 @@ namespace FubarDev.FtpServer
                     await _serverCommandHandler.ConfigureAwait(false);
                 }
 
-                await _streamReaderService.StopAsync(CancellationToken.None)
+                await _networkStreamFeature.SecureConnectionAdapter.StopAsync(CancellationToken.None)
                    .ConfigureAwait(false);
                 await _streamWriterService.StopAsync(CancellationToken.None)
                    .ConfigureAwait(false);
-                await _networkStreamFeature.SecureConnectionAdapter.StopAsync(CancellationToken.None)
+                await _streamReaderService.StopAsync(CancellationToken.None)
                    .ConfigureAwait(false);
             }
             catch (Exception ex)
@@ -417,6 +425,12 @@ namespace FubarDev.FtpServer
             // Dispose all features (if disposable)
             foreach (var featureItem in Features)
             {
+                if (featureItem.Value is FtpConnection)
+                {
+                    // Never dispose the connection itself.
+                    continue;
+                }
+
                 try
                 {
                     (featureItem.Value as IDisposable)?.Dispose();
@@ -463,7 +477,7 @@ namespace FubarDev.FtpServer
             catch (Exception ex)
             {
                 var exception = ex;
-                while (exception is AggregateException aggregateException)
+                while (exception is AggregateException aggregateException && aggregateException.InnerException != null)
                 {
                     exception = aggregateException.InnerException;
                 }
@@ -641,6 +655,7 @@ namespace FubarDev.FtpServer
 
                         while (commandReader.TryRead(out var command))
                         {
+                            _keepAliveFeature.KeepAlive();
                             _logger?.Command(command);
                             var context = new FtpContext(command, _serverCommandChannel, this);
                             await requestDelegate(context)

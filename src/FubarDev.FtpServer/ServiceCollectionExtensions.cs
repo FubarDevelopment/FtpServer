@@ -121,7 +121,9 @@ namespace Microsoft.Extensions.DependencyInjection
                .AddScoped<IServerCommandHandler<CloseConnectionServerCommand>, CloseConnectionServerCommandHandler>()
                .AddScoped<IServerCommandHandler<TlsEnableServerCommand>, TlsEnableServerCommandHandler>()
                .AddScoped<IServerCommandHandler<PauseConnectionServerCommand>, PauseConnectionServerCommandHandler>()
-               .AddScoped<IServerCommandHandler<ResumeConnectionServerCommand>, ResumeConnectionServerCommandHandler>();
+               .AddScoped<IServerCommandHandler<ResumeConnectionServerCommand>, ResumeConnectionServerCommandHandler>()
+               .AddScoped<IServerCommandHandler<DataConnectionServerCommand>, DataConnectionServerCommandHandler>()
+               .AddScoped<IServerCommandHandler<CloseDataConnectionServerCommand>, CloseDataConnectionServerCommandHandler>();
 
             services
                .AddSingleton<ActiveDataConnectionFeatureFactory>()

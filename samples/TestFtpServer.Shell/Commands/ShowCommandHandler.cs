@@ -19,6 +19,8 @@ namespace TestFtpServer.Shell.Commands
     /// </summary>
     public class ShowCommandHandler : IRootCommandInfo
     {
+        private readonly IAsyncEnumerable<ICommandInfo> _subCommands;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="ShowCommandHandler"/> class.
         /// </summary>
@@ -28,19 +30,26 @@ namespace TestFtpServer.Shell.Commands
             IpcServiceClient<IFtpServerHost> client,
             IShellStatus status)
         {
-            SubCommands = status.ExtendedModuleInfoName
+            _subCommands = status.ExtendedModuleInfoName
                .Select(x => new ModuleCommandInfo(client, x))
-               .ToList();
+               .Concat(
+                    new ICommandInfo[]
+                    {
+                        new ShowConnectionsCommandInfo(client),
+                    })
+               .ToList()
+               .ToAsyncEnumerable();
         }
 
         /// <inheritdoc />
         public string Name { get; } = "show";
 
         /// <inheritdoc />
-        public IReadOnlyCollection<string> AlternativeNames { get; } = Array.Empty<string>();
+        public IReadOnlyCollection<string> AlternativeNames { get; } = new[] { "list" };
 
+        /// <param name="cancellationToken"></param>
         /// <inheritdoc />
-        public IReadOnlyCollection<ICommandInfo> SubCommands { get; }
+        public IAsyncEnumerable<ICommandInfo> GetSubCommandsAsync(CancellationToken cancellationToken) => _subCommands;
 
         private class ModuleCommandInfo : IExecutableCommandInfo
         {
@@ -65,8 +74,10 @@ namespace TestFtpServer.Shell.Commands
             /// <inheritdoc />
             public IReadOnlyCollection<string> AlternativeNames { get; } = Array.Empty<string>();
 
+            /// <param name="cancellationToken"></param>
             /// <inheritdoc />
-            public IReadOnlyCollection<ICommandInfo> SubCommands { get; } = Array.Empty<ICommandInfo>();
+            public IAsyncEnumerable<ICommandInfo> GetSubCommandsAsync(CancellationToken cancellationToken)
+                => AsyncEnumerable.Empty<ICommandInfo>();
 
             /// <inheritdoc />
             public async Task ExecuteAsync(CancellationToken cancellationToken)

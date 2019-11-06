@@ -37,5 +37,15 @@ namespace TestFtpServer.Configuration
         /// 0 (default) means no control over connection count.
         /// </remarks>
         public int? MaxActiveConnections { get; set; }
+
+        /// <summary>
+        /// Gets or sets the interval between checks for inactive connections.
+        /// </summary>
+        public int? ConnectionInactivityCheckInterval { get; set; }
+
+        /// <summary>
+        /// Gets or sets the timeout for inactive connections.
+        /// </summary>
+        public int? InactivityTimeout { get; set; }
     }
 }
