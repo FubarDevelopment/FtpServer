@@ -5,6 +5,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace TestFtpServer.Shell
 {
@@ -28,9 +30,10 @@ namespace TestFtpServer.Shell
         /// <summary>
         /// Gets the executable command for the given text.
         /// </summary>
-        /// <param name="text"></param>
-        /// <returns></returns>
-        public IExecutableCommandInfo? GetCommand(string text)
+        /// <param name="text">The text to find the command for.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <returns>The found executable command.</returns>
+        public async ValueTask<IExecutableCommandInfo?> GetCommandAsync(string text, CancellationToken cancellationToken)
         {
             var words = text.Trim().Split(
                 Separators,
@@ -41,7 +44,10 @@ namespace TestFtpServer.Shell
             {
                 var word = words[i];
                 current = next.FindCommandInfo(word);
-                next = current.SelectMany(x => x.SubCommands).ToList();
+                next = await current.ToAsyncEnumerable()
+                   .SelectMany(x => x.GetSubCommandsAsync(cancellationToken))
+                   .ToListAsync(cancellationToken)
+                   .ConfigureAwait(false);
             }
 
             if (current.Count != 1)
@@ -53,12 +59,11 @@ namespace TestFtpServer.Shell
         }
 
         /// <inheritdoc />
-        public string[] GetSuggestions(string? text, int index)
+        public async Task<string[]> GetSuggestionsAsync(string? text, int index)
         {
             if (string.IsNullOrWhiteSpace(text))
             {
-                return _commands
-                   .Select(x => x.Name).ToArray();
+                return _commands.Select(x => x.Name).ToArray();
             }
 
             var words = text!.Substring(0, index)
@@ -70,7 +75,11 @@ namespace TestFtpServer.Shell
             {
                 var word = words[i];
                 var found = current.FindCommandInfo(word);
-                current = found.SelectMany(x => x.SubCommands).ToList();
+                current = await found
+                   .ToAsyncEnumerable()
+                   .SelectMany(x => x.GetSubCommandsAsync(CancellationToken.None))
+                   .ToListAsync()
+                   .ConfigureAwait(false);
             }
 
             var lastWord = text.Substring(index).Trim();
@@ -79,11 +88,12 @@ namespace TestFtpServer.Shell
                 current = current.FindCommandInfo(lastWord);
             }
 
-            return current
+            var result = current
                .Select(x => x.Name)
                .Concat(current.SelectMany(x => x.AlternativeNames))
                .Where(x => x.StartsWith(lastWord, StringComparison.OrdinalIgnoreCase))
                .ToArray();
+            return result;
         }
 
         /// <inheritdoc />

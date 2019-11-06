@@ -31,6 +31,19 @@ namespace TestFtpServer.Api
         Task StopAsync();
 
         /// <summary>
+        /// Gets all active connections.
+        /// </summary>
+        /// <returns></returns>
+        ICollection<FtpConnectionStatus> GetConnections();
+
+        /// <summary>
+        /// Closes the connection.
+        /// </summary>
+        /// <param name="connectionId">The ID of the connection to be closed.</param>
+        /// <returns>The task.</returns>
+        Task CloseConnectionAsync(string connectionId);
+
+        /// <summary>
         /// Get the list of registered simple modules.
         /// </summary>
         /// <returns>The list of registered simple modules.</returns>

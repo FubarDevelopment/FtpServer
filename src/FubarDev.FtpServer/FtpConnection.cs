@@ -425,6 +425,12 @@ namespace FubarDev.FtpServer
             // Dispose all features (if disposable)
             foreach (var featureItem in Features)
             {
+                if (featureItem.Value is FtpConnection)
+                {
+                    // Never dispose the connection itself.
+                    continue;
+                }
+
                 try
                 {
                     (featureItem.Value as IDisposable)?.Dispose();

@@ -3,6 +3,7 @@
 // </copyright>
 
 using System.Collections.Generic;
+using System.Threading;
 
 namespace TestFtpServer.Shell
 {
@@ -24,6 +25,7 @@ namespace TestFtpServer.Shell
         /// <summary>
         /// Gets the sub-commands.
         /// </summary>
-        IReadOnlyCollection<ICommandInfo> SubCommands { get; }
+        /// <param name="cancellationToken">The cancellation token.</param>
+        IAsyncEnumerable<ICommandInfo> GetSubCommandsAsync(CancellationToken cancellationToken);
     }
 }

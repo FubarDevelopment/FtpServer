@@ -37,8 +37,10 @@ namespace TestFtpServer.Shell.Commands
         /// <inheritdoc />
         public IReadOnlyCollection<string> AlternativeNames { get; } = Array.Empty<string>();
 
+        /// <param name="cancellationToken"></param>
         /// <inheritdoc />
-        public IReadOnlyCollection<ICommandInfo> SubCommands { get; } = Array.Empty<ICommandInfo>();
+        public IAsyncEnumerable<ICommandInfo> GetSubCommandsAsync(CancellationToken cancellationToken)
+            => AsyncEnumerable.Empty<ICommandInfo>();
 
         /// <inheritdoc />
         public async Task ExecuteAsync(CancellationToken cancellationToken)
