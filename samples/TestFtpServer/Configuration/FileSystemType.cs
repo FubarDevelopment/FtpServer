@@ -33,5 +33,10 @@ namespace TestFtpServer.Configuration
         /// Google Drive for a service.
         /// </summary>
         GoogleDriveService,
+
+        /// <summary>
+        /// Amazon S3 file system.
+        /// </summary>
+        AmazonS3,
     }
 }

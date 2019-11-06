@@ -52,6 +52,7 @@ namespace TestFtpServer.Configuration
             {
                 switch (BackendType)
                 {
+                    case FileSystemType.AmazonS3: return "amazon-s3";
                     case FileSystemType.InMemory: return "in-memory";
                     case FileSystemType.SystemIO: return "system-io";
                     case FileSystemType.Unix: return "unix";
@@ -64,6 +65,13 @@ namespace TestFtpServer.Configuration
             {
                 switch (value)
                 {
+                    case "s3":
+                    case "S3":
+                    case "AmazonS3":
+                    case "amazonS3":
+                    case "amazon-s3":
+                        BackendType = FileSystemType.AmazonS3;
+                        break;
                     case "inMemory":
                     case "in-memory":
                         BackendType = FileSystemType.InMemory;
@@ -85,7 +93,7 @@ namespace TestFtpServer.Configuration
                         break;
                     default:
                         throw new ArgumentOutOfRangeException(
-                            $"Value must be one of \"in-memory\", \"system-io\", \"unix\", \"google-drive:user\", \"google-drive:service\", but was , \"{value}\"");
+                            $"Value must be one of \"in-memory\", \"system-io\", \"unix\", \"google-drive:user\", \"google-drive:service\", \"amazon-s3\" but was , \"{value}\"");
                 }
             }
         }
@@ -151,6 +159,11 @@ namespace TestFtpServer.Configuration
         /// Gets or sets Google Drive file system options.
         /// </summary>
         public FileSystemGoogleDriveOptions GoogleDrive { get; set; } = new FileSystemGoogleDriveOptions();
+
+        /// <summary>
+        /// Gets or sets S3 system options.
+        /// </summary>
+        public FileSystemAmazonS3Options AmazonS3 { get; set; } = new FileSystemAmazonS3Options();
 
         internal FileSystemLayoutType LayoutType
         {

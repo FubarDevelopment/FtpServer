@@ -97,6 +97,14 @@ namespace TestFtpServer
                     })
                .Configure<PasvCommandOptions>(opt => opt.PromiscuousPasv = options.Server.Pasv.Promiscuous)
                .Configure<GoogleDriveOptions>(opt => opt.UseBackgroundUpload = options.GoogleDrive.BackgroundUpload)
+               .Configure<FileSystemAmazonS3Options>(
+                    opt =>
+                    {
+                        opt.BucketName = options.AmazonS3.BucketName;
+                        opt.BucketRegion = options.AmazonS3.BucketRegion;
+                        opt.AwsAccessKeyId = options.AmazonS3.AwsAccessKeyId;
+                        opt.AwsSecretAccessKey = options.AmazonS3.AwsSecretAccessKey;
+                    })
                .Configure<PamMembershipProviderOptions>(
                     opt => opt.IgnoreAccountManagement = options.Pam.NoAccountManagement);
 
@@ -156,6 +164,10 @@ namespace TestFtpServer
                        .CreateScoped(DriveService.Scope.Drive, DriveService.Scope.DriveFile);
                     services = services
                        .AddFtpServer(sb => sb.ConfigureAuthentication(options).UseGoogleDrive(serviceCredential));
+                    break;
+                case FileSystemType.AmazonS3:
+                    services = services
+                       .AddFtpServer(sb => sb.ConfigureAuthentication(options).UseS3FileSystem());
                     break;
                 default:
                     throw new NotSupportedException(

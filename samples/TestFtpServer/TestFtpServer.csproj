@@ -24,6 +24,7 @@
     <ProjectReference Include="..\..\src\FubarDev.FtpServer.FileSystem.DotNet\FubarDev.FtpServer.FileSystem.DotNet.csproj" />
     <ProjectReference Include="..\..\src\FubarDev.FtpServer.FileSystem.GoogleDrive\FubarDev.FtpServer.FileSystem.GoogleDrive.csproj" />
     <ProjectReference Include="..\..\src\FubarDev.FtpServer.FileSystem.InMemory\FubarDev.FtpServer.FileSystem.InMemory.csproj" />
+    <ProjectReference Include="..\..\src\FubarDev.FtpServer.FileSystem.S3\FubarDev.FtpServer.FileSystem.S3.csproj" />
     <ProjectReference Include="..\..\src\FubarDev.FtpServer.FileSystem.Unix\FubarDev.FtpServer.FileSystem.Unix.csproj" />
     <ProjectReference Include="..\..\src\FubarDev.FtpServer.MembershipProvider.Pam\FubarDev.FtpServer.MembershipProvider.Pam.csproj" />
     <ProjectReference Include="..\..\src\FubarDev.FtpServer\FubarDev.FtpServer.csproj" />
