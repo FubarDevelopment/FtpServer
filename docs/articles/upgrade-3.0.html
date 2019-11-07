@@ -92,6 +92,12 @@
 <ul>
 <li><a href="#connection-data-changes">Connection data changes</a></li>
 <li><a href="#data-connections">Data connections</a></li>
+<li><a href="#connection-checks">Connection checks</a>
+<ul>
+<li><a href="#idle-check">Idle check</a></li>
+<li><a href="#connection-check">Connection check</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li><a href="#ftp-middleware">FTP middleware</a>
@@ -336,6 +342,29 @@ a new <a class="xref" href="../api/FubarDev.FtpServer.IFtpDataConnection.html"><
 the <a class="xref" href="../api/FubarDev.FtpServer.DataConnection.SecureDataConnectionWrapper.html"><code>SecureDataConnectionWrapper</code></a>.</p>
 <p>The extension method <code>SendResponseAsync</code> on the <code>IFtpConnection</code> was replaced by the <a class="xref" href="../api/FubarDev.FtpServer.ServerCommands.DataConnectionServerCommand.html"><code>DataConnectionServerCommand</code></a>
 server command and takes care of closing the <a class="xref" href="../api/FubarDev.FtpServer.IFtpDataConnection.html"><code>IFtpDataConnection</code></a>.</p>
+<h2 id="connection-checks">Connection checks</h2>
+<p>The FTP server allows to check if a connection is still active. It ensures that the server doesn't get filled with dead connections, where
+the server didn't recognize that the client is gone (e.g. client crash, aborted TCP connection, etc...).</p>
+<p>This was made possible by using the following two implementations for <a class="xref" href="../api/FubarDev.FtpServer.ConnectionChecks.IFtpConnectionCheck.html"><code>IFtpConnectionCheck</code></a>:</p>
+<ul>
+<li><a class="xref" href="../api/FubarDev.FtpServer.ConnectionChecks.FtpConnectionEstablishedCheck.html"><code>FtpConnectionEstablishedCheck</code></a> checks if the TCP connection is still established</li>
+<li><a class="xref" href="../api/FubarDev.FtpServer.ConnectionChecks.FtpConnectionIdleCheck.html"><code>FtpConnectionIdleCheck</code></a> checks if the connection is idle for too long</li>
+</ul>
+<p>This checks are enabled by default and can be disabled and reenabled by the following extension methods for
+the <a class="xref" href="../api/FubarDev.FtpServer.IFtpServerBuilder.html"><code>IFtpServerBuilder</code></a>:</p>
+<ul>
+<li><a class="xref" href="../api/FubarDev.FtpServer.FtpServerBuilderExtensionsForChecks.html#FubarDev_FtpServer_FtpServerBuilderExtensionsForChecks_DisableChecks_"><code>DisableChecks</code></a> disables all checks (the default ones and the ones manually enabled before)</li>
+<li><a class="xref" href="../api/FubarDev.FtpServer.FtpServerBuilderExtensionsForChecks.html#FubarDev_FtpServer_FtpServerBuilderExtensionsForChecks_EnableDefaultChecks_"><code>EnableDefaultChecks</code></a> enables all default checks (see above)</li>
+<li><a class="xref" href="../api/FubarDev.FtpServer.FtpServerBuilderExtensionsForChecks.html#FubarDev_FtpServer_FtpServerBuilderExtensionsForChecks_EnableIdleCheck_"><code>EnableIdleCheck</code></a> enables the check for an idle connection</li>
+<li><a class="xref" href="../api/FubarDev.FtpServer.FtpServerBuilderExtensionsForChecks.html#FubarDev_FtpServer_FtpServerBuilderExtensionsForChecks_EnableConnectionCheck_"><code>EnableConnectionCheck</code></a> enables the check for an establised TCP connection</li>
+<li><a class="xref" href="../api/FubarDev.FtpServer.FtpServerBuilderExtensionsForChecks.html#FubarDev_FtpServer_FtpServerBuilderExtensionsForChecks_DisableIdleCheck_"><code>DisableIdleCheck</code></a> enables the check for an idle connection</li>
+<li><a class="xref" href="../api/FubarDev.FtpServer.FtpServerBuilderExtensionsForChecks.html#FubarDev_FtpServer_FtpServerBuilderExtensionsForChecks_DisableConnectionCheck_"><code>DisableConnectionCheck</code></a> disables the check for an establised TCP connection</li>
+</ul>
+<p>The checks above are enabled by default.</p>
+<h3 id="idle-check">Idle check</h3>
+<p>The idle check determines if the connection was idle for too long. The default timeout is 5 minutes, configured through <a class="xref" href="../api/FubarDev.FtpServer.FtpConnectionOptions.html#FubarDev_FtpServer_FtpConnectionOptions_InactivityTimeout"><code>FtpConnectionOptions.InactivityTimeout</code></a>.</p>
+<h3 id="connection-check">Connection check</h3>
+<p>This determines if the TCP connection is still established by sending an empty data packet to the client.</p>
 <h1 id="ftp-middleware">FTP middleware</h1>
 <p>There are two types of middlewares:</p>
 <ul>
@@ -445,6 +474,7 @@ and <a class="xref" href="../api/FubarDev.FtpServer.FtpCommandCollector.html"><c
 <li>Root and home directories for an account can be queried</li>
 <li>New <a class="xref" href="../api/FubarDev.FtpServer.IFtpMiddleware.html"><code>IFtpMiddleware</code></a> interface for custom request middleware</li>
 <li>New <a class="xref" href="../api/FubarDev.FtpServer.Commands.IFtpCommandMiddleware.html"><code>IFtpCommandMiddleware</code></a> interface for custom command execution middleware</li>
+<li>New <a href="#connection-checks">FTP connection checks</a></li>
 </ul>
 <h2 id="whats-changed">What's changed?</h2>
 <ul>
