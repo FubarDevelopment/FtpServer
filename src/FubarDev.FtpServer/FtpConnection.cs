@@ -21,8 +21,10 @@ using System.Threading.Tasks;
 using FubarDev.FtpServer.Authentication;
 using FubarDev.FtpServer.CommandHandlers;
 using FubarDev.FtpServer.Commands;
+using FubarDev.FtpServer.ConnectionChecks;
 using FubarDev.FtpServer.ConnectionHandlers;
 using FubarDev.FtpServer.DataConnection;
+using FubarDev.FtpServer.Events;
 using FubarDev.FtpServer.Features;
 using FubarDev.FtpServer.Features.Impl;
 using FubarDev.FtpServer.Localization;
@@ -39,7 +41,7 @@ namespace FubarDev.FtpServer
     /// <summary>
     /// This class represents a FTP connection.
     /// </summary>
-    public sealed class FtpConnection : FtpConnectionContext, IFtpConnection
+    public sealed class FtpConnection : FtpConnectionContext, IFtpConnection, IObservable<IFtpConnectionEvent>, IFtpConnectionEventHost
     {
         private readonly CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
 
@@ -71,6 +73,9 @@ namespace FubarDev.FtpServer
 
         private readonly IPEndPoint _remoteEndPoint;
 
+        private readonly object _observersLock = new object();
+        private readonly List<ObserverRegistration> _observers = new List<ObserverRegistration>();
+
         /// <summary>
         /// Gets the stream reader service.
         /// </summary>
@@ -87,7 +92,12 @@ namespace FubarDev.FtpServer
         /// </remarks>
         private readonly IFtpService _streamWriterService;
 
-        private readonly IFtpConnectionKeepAlive _keepAliveFeature;
+        private readonly IdleCheck _idleCheck;
+
+#pragma warning disable 612
+        [Obsolete]
+        private readonly FtpConnectionKeepAlive _keepAlive;
+#pragma warning restore 612
 
         private bool _connectionClosing;
 
@@ -130,6 +140,10 @@ namespace FubarDev.FtpServer
             ConnectionId = "FTP-" + Guid.NewGuid().ToString("N");
 
             _dataPort = portOptions.Value.DataPort;
+#pragma warning disable 612
+            _keepAlive = new FtpConnectionKeepAlive(this);
+#pragma warning restore 612
+            _idleCheck = new IdleCheck(this);
             var remoteEndPoint = _remoteEndPoint = (IPEndPoint)socket.Client.RemoteEndPoint;
 #pragma warning disable 618
             RemoteAddress = new Address(remoteEndPoint.Address.ToString(), remoteEndPoint.Port);
@@ -145,7 +159,6 @@ namespace FubarDev.FtpServer
 
             _loggerScope = logger?.BeginScope(properties);
 
-            _keepAliveFeature = new FtpConnectionKeepAlive(options.Value.InactivityTimeout);
             _socket = socket;
             _connectionAccessor = connectionAccessor;
             _serverCommandExecutor = serverCommandExecutor;
@@ -189,7 +202,13 @@ namespace FubarDev.FtpServer
             parentFeatures.Set<ISecureConnectionFeature>(secureConnectionFeature);
             parentFeatures.Set<IServerCommandFeature>(new ServerCommandFeature(_serverCommandChannel));
             parentFeatures.Set<INetworkStreamFeature>(_networkStreamFeature);
-            parentFeatures.Set<IFtpConnectionKeepAlive>(_keepAliveFeature);
+            parentFeatures.Set<IFtpConnectionEventHost>(this);
+            parentFeatures.Set<IFtpConnectionStatusCheck>(_idleCheck);
+#pragma warning disable 618
+#pragma warning disable 612
+            parentFeatures.Set<IFtpConnectionKeepAlive>(_keepAlive);
+#pragma warning restore 612
+#pragma warning restore 618
 
             var features = new FeatureCollection(parentFeatures);
 #pragma warning disable 618
@@ -282,6 +301,13 @@ namespace FubarDev.FtpServer
             var dataConnectionFeature = await activeDataConnectionFeatureFactory.CreateFeatureAsync(null, _remoteEndPoint, _dataPort)
                .ConfigureAwait(false);
             Features.Set(dataConnectionFeature);
+
+            // Set the checks for the activity information of the FTP connection.
+            var checks = ConnectionServices.GetRequiredService<IEnumerable<IFtpConnectionCheck>>().ToList();
+#pragma warning disable 612
+            _keepAlive.SetChecks(checks);
+#pragma warning restore 612
+            _idleCheck.SetChecks(checks);
 
             // Connection information
             var connectionFeature = Features.Get<IConnectionFeature>();
@@ -396,6 +422,18 @@ namespace FubarDev.FtpServer
             return createEncryptedStream(unencryptedStream);
         }
 
+        /// <inheritdoc />
+        public IDisposable Subscribe(IObserver<IFtpConnectionEvent> observer)
+        {
+            var registration = new ObserverRegistration(this, observer);
+            lock (_observersLock)
+            {
+                _observers.Add(registration);
+            }
+
+            return registration;
+        }
+
         /// <inheritdoc/>
         public void Dispose()
         {
@@ -410,6 +448,18 @@ namespace FubarDev.FtpServer
             Data.Dispose();
 #pragma warning restore 618
             _loggerScope?.Dispose();
+        }
+
+        /// <summary>
+        /// Publish the event.
+        /// </summary>
+        /// <param name="evt">The event to publish.</param>
+        public void PublishEvent(IFtpConnectionEvent evt)
+        {
+            foreach (var observer in GetObservers())
+            {
+                observer.OnNext(evt);
+            }
         }
 
         private void Abort()
@@ -588,6 +638,12 @@ namespace FubarDev.FtpServer
             catch (Exception ex)
             {
                 _logger?.LogError(ex, "Closing connection due to error {0}", ex.Message);
+
+                foreach (var observer in GetObservers())
+                {
+                    observer.OnError(ex);
+                }
+
                 Abort();
             }
             finally
@@ -595,6 +651,11 @@ namespace FubarDev.FtpServer
                 reader.Complete();
 
                 _logger?.LogDebug("Stopped reading commands");
+
+                foreach (var observer in GetObservers())
+                {
+                    observer.OnCompleted();
+                }
             }
         }
 
@@ -655,7 +716,7 @@ namespace FubarDev.FtpServer
 
                         while (commandReader.TryRead(out var command))
                         {
-                            _keepAliveFeature.KeepAlive();
+                            PublishEvent(new FtpConnectionCommandReceivedEvent(command));
                             _logger?.Command(command);
                             var context = new FtpContext(command, _serverCommandChannel, this);
                             await requestDelegate(context)
@@ -677,6 +738,72 @@ namespace FubarDev.FtpServer
                 // We must set this to null to avoid a deadlock.
                 _commandChannelReader = null;
                 await StopAsync().ConfigureAwait(false);
+            }
+        }
+
+        private List<IObserver<IFtpConnectionEvent>> GetObservers()
+        {
+            lock (_observersLock)
+            {
+                return _observers.Select(x => x.Observer).ToList();
+            }
+        }
+
+        private class IdleCheck : IFtpConnectionStatusCheck
+        {
+            private readonly IFtpConnection _connection;
+            private readonly List<IFtpConnectionCheck> _checks = new List<IFtpConnectionCheck>();
+
+            public IdleCheck(IFtpConnection connection)
+            {
+                _connection = connection;
+            }
+
+            /// <inheritdoc />
+            public bool CheckIfAlive()
+            {
+                var context = new FtpConnectionCheckContext(_connection);
+                var checkResults = _checks
+                   .Select(x => x.Check(context))
+                   .ToArray();
+                return checkResults.Select(x => x.IsUsable)
+                   .Aggregate(true, (pv, item) => pv && item);
+            }
+
+            public void SetChecks(IEnumerable<IFtpConnectionCheck> checks)
+            {
+                _checks.Clear();
+                _checks.AddRange(checks);
+            }
+        }
+
+        /// <summary>
+        /// Observer registration.
+        /// </summary>
+        private class ObserverRegistration : IDisposable
+        {
+            private readonly FtpConnection _connection;
+
+            public ObserverRegistration(
+                FtpConnection connection,
+                IObserver<IFtpConnectionEvent> observer)
+            {
+                _connection = connection;
+                Observer = observer;
+            }
+
+            /// <summary>
+            /// Gets the registered observer.
+            /// </summary>
+            public IObserver<IFtpConnectionEvent> Observer { get; }
+
+            /// <inheritdoc />
+            public void Dispose()
+            {
+                lock (_connection._observersLock)
+                {
+                    _connection._observers.Remove(this);
+                }
             }
         }
 

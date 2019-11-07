@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using FubarDev.FtpServer;
+using FubarDev.FtpServer.ConnectionChecks;
 using FubarDev.FtpServer.Features;
 using FubarDev.FtpServer.ServerCommands;
 
@@ -90,10 +91,10 @@ namespace TestFtpServer
             {
                 try
                 {
-                    var keepAliveFeature = connection.Features.Get<IFtpConnectionKeepAlive>();
+                    var keepAliveFeature = connection.Features.Get<IFtpConnectionStatusCheck>();
                     var ftpConnection = (FtpConnection)connection;
                     var connectionId = ftpConnection.ConnectionId;
-                    var isAlive = keepAliveFeature.IsAlive;
+                    var isAlive = keepAliveFeature.CheckIfAlive();
                     result.Add(
                         new FtpConnectionStatus(connectionId)
                         {

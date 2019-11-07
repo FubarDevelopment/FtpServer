@@ -133,7 +133,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services
                .AddSingleton<IFtpDataConnectionValidator, PromiscuousPasvDataConnectionValidator>();
 
-            configure(new FtpServerBuilder(services));
+            configure(new FtpServerBuilder(services).EnableDefaultChecks());
 
             return services;
         }

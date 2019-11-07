@@ -15,6 +15,7 @@ using System.Threading;
 using System.Threading.Channels;
 using System.Threading.Tasks;
 
+using FubarDev.FtpServer.ConnectionChecks;
 using FubarDev.FtpServer.Features;
 using FubarDev.FtpServer.Localization;
 using FubarDev.FtpServer.Networking;
@@ -194,8 +195,9 @@ namespace FubarDev.FtpServer
             {
                 try
                 {
-                    var keepAliveFeature = connection.Features.Get<IFtpConnectionKeepAlive>();
-                    if (keepAliveFeature.IsAlive)
+                    var keepAliveFeature = connection.Features.Get<IFtpConnectionStatusCheck>();
+                    var isAlive = keepAliveFeature.CheckIfAlive();
+                    if (isAlive)
                     {
                         // Ignore connections that are still alive.
                         continue;

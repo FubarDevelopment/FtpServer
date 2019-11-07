@@ -7,6 +7,7 @@ using System;
 using FubarDev.FtpServer.AccountManagement;
 using FubarDev.FtpServer.AccountManagement.Directories.RootPerUser;
 using FubarDev.FtpServer.AccountManagement.Directories.SingleRootWithoutHome;
+using FubarDev.FtpServer.ConnectionChecks;
 using FubarDev.FtpServer.FileSystem;
 
 using Microsoft.Extensions.DependencyInjection;

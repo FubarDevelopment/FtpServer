@@ -6,6 +6,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
+using FubarDev.FtpServer.Events;
 using FubarDev.FtpServer.Features;
 using FubarDev.FtpServer.ServerCommands;
 
@@ -86,17 +87,19 @@ namespace FubarDev.FtpServer.ServerCommandHandlers
 
         private class ConnectionKeepAlive : IDisposable
         {
-            private readonly IFtpConnectionKeepAlive _keepAliveFeature;
+            private readonly string _transferId = Guid.NewGuid().ToString("N");
+            private readonly IFtpConnectionEventHost _eventHost;
+
             public ConnectionKeepAlive(IFtpConnection connection)
             {
-                _keepAliveFeature = connection.Features.Get<IFtpConnectionKeepAlive>();
-                _keepAliveFeature.IsInDataTransfer = true;
+                _eventHost = connection.Features.Get<IFtpConnectionEventHost>();
+                _eventHost.PublishEvent(new FtpConnectionDataTransferStartedEvent(_transferId));
             }
 
             /// <inheritdoc />
             public void Dispose()
             {
-                _keepAliveFeature.IsInDataTransfer = false;
+                _eventHost.PublishEvent(new FtpConnectionDataTransferStoppedEvent(_transferId));
             }
         }
     }
