@@ -96,11 +96,35 @@
     <h5>Implements</h5>
     <div><a class="xref" href="FubarDev.FtpServer.Authorization.IAuthorizationMechanism.html">IAuthorizationMechanism</a></div>
   </div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.equals#System_Object_Equals_System_Object_">Object.Equals(Object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.equals#System_Object_Equals_System_Object_System_Object_">Object.Equals(Object, Object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.gethashcode#System_Object_GetHashCode">Object.GetHashCode()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.gettype#System_Object_GetType">Object.GetType()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.memberwiseclone#System_Object_MemberwiseClone">Object.MemberwiseClone()</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.referenceequals#System_Object_ReferenceEquals_System_Object_System_Object_">Object.ReferenceEquals(Object, Object)</a>
+    </div>
+    <div>
+      <a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object.tostring#System_Object_ToString">Object.ToString()</a>
+    </div>
+  </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="FubarDev.FtpServer.Authorization.html">FubarDev.FtpServer.Authorization</a></h6>
   <h6><strong>Assembly</strong>: FubarDev.FtpServer.Abstractions.dll</h6>
   <h5 id="FubarDev_FtpServer_Authorization_AuthorizationMechanism_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public abstract class AuthorizationMechanism : object, IAuthorizationMechanism</code></pre>
+    <pre><code class="lang-csharp hljs">public abstract class AuthorizationMechanism : IAuthorizationMechanism</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
@@ -109,7 +133,7 @@
     <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_Authorization_AuthorizationMechanism__ctor_FubarDev_FtpServer_IFtpConnection_.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.Authorization.AuthorizationMechanism.%23ctor(FubarDev.FtpServer.IFtpConnection)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.Abstractions/Authorization/AuthorizationMechanism.cs/#L24">View Source</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/blob/master/src/FubarDev.FtpServer.Abstractions/Authorization/AuthorizationMechanism.cs/#L24">View Source</a>
   </span>
   <a id="FubarDev_FtpServer_Authorization_AuthorizationMechanism__ctor_" data-uid="FubarDev.FtpServer.Authorization.AuthorizationMechanism.#ctor*"></a>
   <h4 id="FubarDev_FtpServer_Authorization_AuthorizationMechanism__ctor_FubarDev_FtpServer_IFtpConnection_" data-uid="FubarDev.FtpServer.Authorization.AuthorizationMechanism.#ctor(FubarDev.FtpServer.IFtpConnection)">AuthorizationMechanism(IFtpConnection)</h4>
@@ -145,7 +169,7 @@
     <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_Authorization_AuthorizationMechanism_Connection.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.Authorization.AuthorizationMechanism.Connection%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.Abstractions/Authorization/AuthorizationMechanism.cs/#L32">View Source</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/blob/master/src/FubarDev.FtpServer.Abstractions/Authorization/AuthorizationMechanism.cs/#L32">View Source</a>
   </span>
   <a id="FubarDev_FtpServer_Authorization_AuthorizationMechanism_Connection_" data-uid="FubarDev.FtpServer.Authorization.AuthorizationMechanism.Connection*"></a>
   <h4 id="FubarDev_FtpServer_Authorization_AuthorizationMechanism_Connection" data-uid="FubarDev.FtpServer.Authorization.AuthorizationMechanism.Connection">Connection</h4>
@@ -175,15 +199,14 @@
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_Authorization_AuthorizationMechanism_HandleAcctAsync_System_String_CancellationToken_.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.Authorization.AuthorizationMechanism.HandleAcctAsync(System.String%2CCancellationToken)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_Authorization_AuthorizationMechanism_HandleAcctAsync_System_String_System_Threading_CancellationToken_.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.Authorization.AuthorizationMechanism.HandleAcctAsync(System.String%2CSystem.Threading.CancellationToken)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.Abstractions/Authorization/AuthorizationMechanism.cs/#L45">View Source</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/blob/master/src/FubarDev.FtpServer.Abstractions/Authorization/AuthorizationMechanism.cs/#L44">View Source</a>
   </span>
   <a id="FubarDev_FtpServer_Authorization_AuthorizationMechanism_HandleAcctAsync_" data-uid="FubarDev.FtpServer.Authorization.AuthorizationMechanism.HandleAcctAsync*"></a>
-  <h4 id="FubarDev_FtpServer_Authorization_AuthorizationMechanism_HandleAcctAsync_System_String_CancellationToken_" data-uid="FubarDev.FtpServer.Authorization.AuthorizationMechanism.HandleAcctAsync(System.String,CancellationToken)">HandleAcctAsync(String, CancellationToken)</h4>
-  <div class="markdown level1 summary"><p>Handles the <code>ACCT</code> command.</p>
-</div>
+  <h4 id="FubarDev_FtpServer_Authorization_AuthorizationMechanism_HandleAcctAsync_System_String_System_Threading_CancellationToken_" data-uid="FubarDev.FtpServer.Authorization.AuthorizationMechanism.HandleAcctAsync(System.String,System.Threading.CancellationToken)">HandleAcctAsync(String, CancellationToken)</h4>
+  <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -202,14 +225,12 @@
       <tr>
         <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
         <td><span class="parametername">account</span></td>
-        <td><p>The account to select.</p>
-</td>
+        <td></td>
       </tr>
       <tr>
-        <td><span class="xref">CancellationToken</span></td>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.threading.cancellationtoken">CancellationToken</a></td>
         <td><span class="parametername">cancellationToken</span></td>
-        <td><p>The cancellation token.</p>
-</td>
+        <td></td>
       </tr>
     </tbody>
   </table>
@@ -223,23 +244,21 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">Task</span>&lt;<a class="xref" href="FubarDev.FtpServer.IFtpResponse.html">IFtpResponse</a>&gt;</td>
-        <td><p>The task returning the FTP response.</p>
-</td>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a class="xref" href="FubarDev.FtpServer.IFtpResponse.html">IFtpResponse</a>&gt;</td>
+        <td></td>
       </tr>
     </tbody>
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_Authorization_AuthorizationMechanism_HandlePassAsync_System_String_CancellationToken_.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.Authorization.AuthorizationMechanism.HandlePassAsync(System.String%2CCancellationToken)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_Authorization_AuthorizationMechanism_HandlePassAsync_System_String_System_Threading_CancellationToken_.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.Authorization.AuthorizationMechanism.HandlePassAsync(System.String%2CSystem.Threading.CancellationToken)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.Abstractions/Authorization/AuthorizationMechanism.cs/#L42">View Source</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/blob/master/src/FubarDev.FtpServer.Abstractions/Authorization/AuthorizationMechanism.cs/#L41">View Source</a>
   </span>
   <a id="FubarDev_FtpServer_Authorization_AuthorizationMechanism_HandlePassAsync_" data-uid="FubarDev.FtpServer.Authorization.AuthorizationMechanism.HandlePassAsync*"></a>
-  <h4 id="FubarDev_FtpServer_Authorization_AuthorizationMechanism_HandlePassAsync_System_String_CancellationToken_" data-uid="FubarDev.FtpServer.Authorization.AuthorizationMechanism.HandlePassAsync(System.String,CancellationToken)">HandlePassAsync(String, CancellationToken)</h4>
-  <div class="markdown level1 summary"><p>Handles the <code>PASS</code> command.</p>
-</div>
+  <h4 id="FubarDev_FtpServer_Authorization_AuthorizationMechanism_HandlePassAsync_System_String_System_Threading_CancellationToken_" data-uid="FubarDev.FtpServer.Authorization.AuthorizationMechanism.HandlePassAsync(System.String,System.Threading.CancellationToken)">HandlePassAsync(String, CancellationToken)</h4>
+  <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -258,14 +277,12 @@
       <tr>
         <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
         <td><span class="parametername">password</span></td>
-        <td><p>The password.</p>
-</td>
+        <td></td>
       </tr>
       <tr>
-        <td><span class="xref">CancellationToken</span></td>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.threading.cancellationtoken">CancellationToken</a></td>
         <td><span class="parametername">cancellationToken</span></td>
-        <td><p>The cancellation token.</p>
-</td>
+        <td></td>
       </tr>
     </tbody>
   </table>
@@ -279,23 +296,21 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">Task</span>&lt;<a class="xref" href="FubarDev.FtpServer.IFtpResponse.html">IFtpResponse</a>&gt;</td>
-        <td><p>The task returning the FTP response.</p>
-</td>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a class="xref" href="FubarDev.FtpServer.IFtpResponse.html">IFtpResponse</a>&gt;</td>
+        <td></td>
       </tr>
     </tbody>
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_Authorization_AuthorizationMechanism_HandleUserAsync_System_String_CancellationToken_.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.Authorization.AuthorizationMechanism.HandleUserAsync(System.String%2CCancellationToken)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_Authorization_AuthorizationMechanism_HandleUserAsync_System_String_System_Threading_CancellationToken_.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.Authorization.AuthorizationMechanism.HandleUserAsync(System.String%2CSystem.Threading.CancellationToken)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.Abstractions/Authorization/AuthorizationMechanism.cs/#L39">View Source</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/blob/master/src/FubarDev.FtpServer.Abstractions/Authorization/AuthorizationMechanism.cs/#L38">View Source</a>
   </span>
   <a id="FubarDev_FtpServer_Authorization_AuthorizationMechanism_HandleUserAsync_" data-uid="FubarDev.FtpServer.Authorization.AuthorizationMechanism.HandleUserAsync*"></a>
-  <h4 id="FubarDev_FtpServer_Authorization_AuthorizationMechanism_HandleUserAsync_System_String_CancellationToken_" data-uid="FubarDev.FtpServer.Authorization.AuthorizationMechanism.HandleUserAsync(System.String,CancellationToken)">HandleUserAsync(String, CancellationToken)</h4>
-  <div class="markdown level1 summary"><p>Handles the <code>USER</code> command.</p>
-</div>
+  <h4 id="FubarDev_FtpServer_Authorization_AuthorizationMechanism_HandleUserAsync_System_String_System_Threading_CancellationToken_" data-uid="FubarDev.FtpServer.Authorization.AuthorizationMechanism.HandleUserAsync(System.String,System.Threading.CancellationToken)">HandleUserAsync(String, CancellationToken)</h4>
+  <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
@@ -314,14 +329,12 @@
       <tr>
         <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.string">String</a></td>
         <td><span class="parametername">userIdentifier</span></td>
-        <td><p>The user identifier.</p>
-</td>
+        <td></td>
       </tr>
       <tr>
-        <td><span class="xref">CancellationToken</span></td>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.threading.cancellationtoken">CancellationToken</a></td>
         <td><span class="parametername">cancellationToken</span></td>
-        <td><p>The cancellation token.</p>
-</td>
+        <td></td>
       </tr>
     </tbody>
   </table>
@@ -335,27 +348,25 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">Task</span>&lt;<a class="xref" href="FubarDev.FtpServer.IFtpResponse.html">IFtpResponse</a>&gt;</td>
-        <td><p>The task returning the FTP response.</p>
-</td>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a class="xref" href="FubarDev.FtpServer.IFtpResponse.html">IFtpResponse</a>&gt;</td>
+        <td></td>
       </tr>
     </tbody>
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_Authorization_AuthorizationMechanism_Reset_FubarDev_FtpServer_Authentication_IAuthenticationMechanism_.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.Authorization.AuthorizationMechanism.Reset(FubarDev.FtpServer.Authentication.IAuthenticationMechanism)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_Authorization_AuthorizationMechanism_Reset_System_Nullable_FubarDev_FtpServer_Authentication_IAuthenticationMechanism__.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.Authorization.AuthorizationMechanism.Reset(System.Nullable%7BFubarDev.FtpServer.Authentication.IAuthenticationMechanism%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.Abstractions/Authorization/AuthorizationMechanism.cs/#L36">View Source</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/blob/master/src/FubarDev.FtpServer.Abstractions/Authorization/AuthorizationMechanism.cs/#L35">View Source</a>
   </span>
   <a id="FubarDev_FtpServer_Authorization_AuthorizationMechanism_Reset_" data-uid="FubarDev.FtpServer.Authorization.AuthorizationMechanism.Reset*"></a>
-  <h4 id="FubarDev_FtpServer_Authorization_AuthorizationMechanism_Reset_FubarDev_FtpServer_Authentication_IAuthenticationMechanism_" data-uid="FubarDev.FtpServer.Authorization.AuthorizationMechanism.Reset(FubarDev.FtpServer.Authentication.IAuthenticationMechanism)">Reset(IAuthenticationMechanism)</h4>
-  <div class="markdown level1 summary"><p>Resets the authorization mechanism.</p>
-</div>
+  <h4 id="FubarDev_FtpServer_Authorization_AuthorizationMechanism_Reset_System_Nullable_FubarDev_FtpServer_Authentication_IAuthenticationMechanism__" data-uid="FubarDev.FtpServer.Authorization.AuthorizationMechanism.Reset(System.Nullable{FubarDev.FtpServer.Authentication.IAuthenticationMechanism})">Reset(Nullable&lt;IAuthenticationMechanism&gt;)</h4>
+  <div class="markdown level1 summary"></div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public abstract void Reset(IAuthenticationMechanism authenticationMechanism)</code></pre>
+    <pre><code class="lang-csharp hljs">public abstract void Reset(IAuthenticationMechanism? authenticationMechanism)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -368,10 +379,9 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="FubarDev.FtpServer.Authentication.IAuthenticationMechanism.html">IAuthenticationMechanism</a></td>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.nullable-1">Nullable</a>&lt;<a class="xref" href="FubarDev.FtpServer.Authentication.IAuthenticationMechanism.html">IAuthenticationMechanism</a>&gt;</td>
         <td><span class="parametername">authenticationMechanism</span></td>
-        <td><p>The previously selected authentication mechanism.</p>
-</td>
+        <td></td>
       </tr>
     </tbody>
   </table>
@@ -380,7 +390,7 @@
     <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_Authorization_AuthorizationMechanism_T_System_String_.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.Authorization.AuthorizationMechanism.T(System.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.Abstractions/Authorization/AuthorizationMechanism.cs/#L52">View Source</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/blob/master/src/FubarDev.FtpServer.Abstractions/Authorization/AuthorizationMechanism.cs/#L51">View Source</a>
   </span>
   <a id="FubarDev_FtpServer_Authorization_AuthorizationMechanism_T_" data-uid="FubarDev.FtpServer.Authorization.AuthorizationMechanism.T*"></a>
   <h4 id="FubarDev_FtpServer_Authorization_AuthorizationMechanism_T_System_String_" data-uid="FubarDev.FtpServer.Authorization.AuthorizationMechanism.T(System.String)">T(String)</h4>
@@ -430,7 +440,7 @@
     <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_Authorization_AuthorizationMechanism_T_System_String_System_Object___.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.Authorization.AuthorizationMechanism.T(System.String%2CSystem.Object%5B%5D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.Abstractions/Authorization/AuthorizationMechanism.cs/#L63">View Source</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/blob/master/src/FubarDev.FtpServer.Abstractions/Authorization/AuthorizationMechanism.cs/#L62">View Source</a>
   </span>
   <a id="FubarDev_FtpServer_Authorization_AuthorizationMechanism_T_" data-uid="FubarDev.FtpServer.Authorization.AuthorizationMechanism.T*"></a>
   <h4 id="FubarDev_FtpServer_Authorization_AuthorizationMechanism_T_System_String_System_Object___" data-uid="FubarDev.FtpServer.Authorization.AuthorizationMechanism.T(System.String,System.Object[])">T(String, Object[])</h4>
@@ -439,7 +449,8 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">protected string T(string message, params object[] args)</code></pre>
+    <pre><code class="lang-csharp hljs">[StringFormatMethod(&quot;message&quot;)]
+protected string T(string message, params object[] args)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -496,7 +507,7 @@
                     <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_Authorization_AuthorizationMechanism.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.Authorization.AuthorizationMechanism%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.Abstractions/Authorization/AuthorizationMechanism.cs/#L18" class="contribution-link">View Source</a>
+                    <a href="https://github.com/FubarDevelopment/FtpServer/blob/master/src/FubarDev.FtpServer.Abstractions/Authorization/AuthorizationMechanism.cs/#L18" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

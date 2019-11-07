@@ -90,7 +90,8 @@
   <h6><strong>Assembly</strong>: FubarDev.FtpServer.Abstractions.dll</h6>
   <h5 id="FubarDev_FtpServer_FtpResponseAfterWriteAsyncDelegate_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public delegate Task&lt;IFtpResponse&gt; FtpResponseAfterWriteAsyncDelegate(IFtpConnection connection, CancellationToken cancellationToken);</code></pre>
+    <pre><code class="lang-csharp hljs">[Obsolete(&quot;Use a custom server command.&quot;)]
+public delegate Task&lt;IFtpResponse? &gt; FtpResponseAfterWriteAsyncDelegate(IFtpConnection connection, CancellationToken cancellationToken);</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -109,7 +110,7 @@
 </td>
       </tr>
       <tr>
-        <td><span class="xref">CancellationToken</span></td>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.threading.cancellationtoken">CancellationToken</a></td>
         <td><span class="parametername">cancellationToken</span></td>
         <td><p>The cancellation token.</p>
 </td>
@@ -126,7 +127,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">Task</span>&lt;<a class="xref" href="FubarDev.FtpServer.IFtpResponse.html">IFtpResponse</a>&gt;</td>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a class="xref" href="https://docs.microsoft.com/dotnet/api/system.nullable-1">Nullable</a>&lt;<a class="xref" href="FubarDev.FtpServer.IFtpResponse.html">IFtpResponse</a>&gt;&gt;</td>
         <td><p>The task.</p>
 </td>
       </tr>
@@ -143,7 +144,7 @@
                     <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_FtpResponseAfterWriteAsyncDelegate.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.FtpResponseAfterWriteAsyncDelegate%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.Abstractions/FtpResponseAfterWriteDelegate.cs/#L18" class="contribution-link">View Source</a>
+                    <a href="https://github.com/FubarDevelopment/FtpServer/blob/master/src/FubarDev.FtpServer.Abstractions/FtpResponseAfterWriteDelegate.cs/#L17" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>
