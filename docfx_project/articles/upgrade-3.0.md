@@ -11,6 +11,9 @@ title: Upgrade from 2.x to 3.0
 - [Connection](#connection)
   - [Connection data changes](#connection-data-changes)
   - [Data connections](#data-connections)
+  - [Connection checks](#connection-checks)
+    - [Idle check](#idle-check)
+    - [Connection check](#connection-check)
 - [FTP middleware](#ftp-middleware)
   - [FTP request middleware](#ftp-request-middleware)
   - [FTP command execution middleware](#ftp-command-execution-middleware)
@@ -160,6 +163,36 @@ the [`SecureDataConnectionWrapper`](xref:FubarDev.FtpServer.DataConnection.Secur
 The extension method `SendResponseAsync` on the `IFtpConnection` was replaced by the [`DataConnectionServerCommand`](xref:FubarDev.FtpServer.ServerCommands.DataConnectionServerCommand)
 server command and takes care of closing the [`IFtpDataConnection`](xref:FubarDev.FtpServer.IFtpDataConnection).
 
+## Connection checks
+
+The FTP server allows to check if a connection is still active. It ensures that the server doesn't get filled with dead connections, where
+the server didn't recognize that the client is gone (e.g. client crash, aborted TCP connection, etc...).
+
+This was made possible by using the following two implementations for [`IFtpConnectionCheck`](xref:FubarDev.FtpServer.ConnectionChecks.IFtpConnectionCheck):
+
+- [`FtpConnectionEstablishedCheck`](xref:FubarDev.FtpServer.ConnectionChecks.FtpConnectionEstablishedCheck) checks if the TCP connection is still established
+- [`FtpConnectionIdleCheck`](xref:FubarDev.FtpServer.ConnectionChecks.FtpConnectionIdleCheck) checks if the connection is idle for too long
+
+This checks are enabled by default and can be disabled and reenabled by the following extension methods for
+the [`IFtpServerBuilder`](xref:FubarDev.FtpServer.IFtpServerBuilder):
+
+- [`DisableChecks`](xref:FubarDev.FtpServer.FtpServerBuilderExtensionsForChecks.DisableChecks*) disables all checks (the default ones and the ones manually enabled before)
+- [`EnableDefaultChecks`](xref:FubarDev.FtpServer.FtpServerBuilderExtensionsForChecks.EnableDefaultChecks*) enables all default checks (see above)
+- [`EnableIdleCheck`](xref:FubarDev.FtpServer.FtpServerBuilderExtensionsForChecks.EnableIdleCheck*) enables the check for an idle connection
+- [`EnableConnectionCheck`](xref:FubarDev.FtpServer.FtpServerBuilderExtensionsForChecks.EnableConnectionCheck*) enables the check for an establised TCP connection
+- [`DisableIdleCheck`](xref:FubarDev.FtpServer.FtpServerBuilderExtensionsForChecks.DisableIdleCheck*) enables the check for an idle connection
+- [`DisableConnectionCheck`](xref:FubarDev.FtpServer.FtpServerBuilderExtensionsForChecks.DisableConnectionCheck*) disables the check for an establised TCP connection
+
+The checks above are enabled by default.
+
+### Idle check
+
+The idle check determines if the connection was idle for too long. The default timeout is 5 minutes, configured through [`FtpConnectionOptions.InactivityTimeout`](xref:FubarDev.FtpServer.FtpConnectionOptions.InactivityTimeout).
+
+### Connection check
+
+This determines if the TCP connection is still established by sending an empty data packet to the client.
+
 # FTP middleware
 
 There are two types of middlewares:
@@ -275,6 +308,7 @@ and [`FtpCommandCollector`](xref:FubarDev.FtpServer.FtpCommandCollector).
 - Root and home directories for an account can be queried
 - New [`IFtpMiddleware`](xref:FubarDev.FtpServer.IFtpMiddleware) interface for custom request middleware
 - New [`IFtpCommandMiddleware`](xref:FubarDev.FtpServer.Commands.IFtpCommandMiddleware) interface for custom command execution middleware
+- New [FTP connection checks](#connection-checks)
 
 ## What's changed?
 
