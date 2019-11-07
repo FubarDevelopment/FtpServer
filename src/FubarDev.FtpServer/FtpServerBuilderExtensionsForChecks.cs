@@ -1,4 +1,4 @@
-// <copyright file="FtpServerBuilderExtensions.cs" company="Fubar Development Junker">
+// <copyright file="FtpServerBuilderExtensionsForChecks.cs" company="Fubar Development Junker">
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
@@ -13,7 +13,7 @@ namespace FubarDev.FtpServer
     /// <summary>
     /// Extension methods for <see cref="IFtpServerBuilder"/>.
     /// </summary>
-    public static class FtpServerBuilderExtensions
+    public static class FtpServerBuilderExtensionsForChecks
     {
         /// <summary>
         /// Adds the default checks for the connection.

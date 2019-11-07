@@ -34,8 +34,8 @@ title: Upgrade from 2.x to 3.0
 
 After the upgrade 3.0, you'll see that the `IFtpServer.Start` and `IFtpServer.Stop` functions are
 deprecated. Please query the [`IFtpServerHost`](xref:FubarDev.FtpServer.IFtpServerHost) instead and
-use the [`StartAsync`](xref:FubarDev.FtpServer.IFtpServerHost.StartAsync(CancellationToken))
-and [`StopAsync`](xref:FubarDev.FtpServer.IFtpServerHost.StopAsync(CancellationToken)) functions instead.
+use the [`StartAsync`](xref:FubarDev.FtpServer.IFtpServerHost.StartAsync(System.Threading.CancellationToken))
+and [`StopAsync`](xref:FubarDev.FtpServer.IFtpServerHost.StopAsync(System.Threading.CancellationToken)) functions instead.
 
 You will notice breaking changes in the following areas:
 
@@ -149,9 +149,16 @@ We're now using two factories to create data connections:
 
 This factories create a [`IFtpDataConnectionFeature`](xref:FubarDev.FtpServer.Features.IFtpDataConnectionFeature) which is used to create [`IFtpDataConnection`](xref:FubarDev.FtpServer.IFtpDataConnection) implementations. This allows us to abstract away the differences between active and passive data connections.
 
-The function `IFtpConnection.CreateResponseSocket` was replaced by [`IFtpConnection.OpenDataConnectionAsync`](xref:FubarDev.FtpServer.IFtpConnection.OpenDataConnectionAsync(System.Nullable{TimeSpan},CancellationToken)) and returns a [`IFtpDataConnection`](xref:FubarDev.FtpServer.IFtpDataConnection) implementation. This function also takes care of SSL/TLS encryption as it wraps the [`IFtpDataConnection`](xref:FubarDev.FtpServer.IFtpDataConnection) implementation returned by the [`IFtpDataConnectionFeature`](xref:FubarDev.FtpServer.Features.IFtpDataConnectionFeature) into a new [`IFtpDataConnection`](xref:FubarDev.FtpServer.IFtpDataConnection) implementation with the help of the [`SecureDataConnectionWrapper`](xref:FubarDev.FtpServer.DataConnection.SecureDataConnectionWrapper).
+The function `IFtpConnection.CreateResponseSocket` was replaced by [`DataConnectionServerCommand`](xref:FubarDev.FtpServer.ServerCommands.DataConnectionServerCommand) server command.
+The passed [`AsyncDataConnectionDelegate`](xref:FubarDev.FtpServer.ServerCommands.AsyncDataConnectionDelegate) gets an
+[`IFtpDataConnection`](xref:FubarDev.FtpServer.IFtpDataConnection) implementation and may return a response.
+This function also takes care of SSL/TLS encryption as it wraps the [`IFtpDataConnection`](xref:FubarDev.FtpServer.IFtpDataConnection)
+implementation returned by the [`IFtpDataConnectionFeature`](xref:FubarDev.FtpServer.Features.IFtpDataConnectionFeature) into
+a new [`IFtpDataConnection`](xref:FubarDev.FtpServer.IFtpDataConnection) implementation with the help of
+the [`SecureDataConnectionWrapper`](xref:FubarDev.FtpServer.DataConnection.SecureDataConnectionWrapper).
 
-The extension method `SendResponseAsync` on the `IFtpConnection` was replaced by [`SendDataAsync`](xref:FubarDev.FtpServer.ConnectionExtensions.SendDataAsync(FubarDev.FtpServer.IFtpConnection,Func{FubarDev.FtpServer.IFtpDataConnection,CancellationToken,Task{FubarDev.FtpServer.IFtpResponse}},ILogger,CancellationToken)) and takes care of closing the [`IFtpDataConnection`](xref:FubarDev.FtpServer.IFtpDataConnection).
+The extension method `SendResponseAsync` on the `IFtpConnection` was replaced by the [`DataConnectionServerCommand`](xref:FubarDev.FtpServer.ServerCommands.DataConnectionServerCommand)
+server command and takes care of closing the [`IFtpDataConnection`](xref:FubarDev.FtpServer.IFtpDataConnection).
 
 # FTP middleware
 
