@@ -26,7 +26,7 @@ namespace FubarDev.FtpServer
 
         private readonly ILogger? _logger;
         private readonly IList<TcpListener> _listeners = new List<TcpListener>();
-        private readonly IList<Task<TcpClient?>> _acceptors = new List<Task<TcpClient>>();
+        private readonly IList<Task<TcpClient?>> _acceptors = new List<Task<TcpClient?>>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MultiBindingTcpListener"/> class.

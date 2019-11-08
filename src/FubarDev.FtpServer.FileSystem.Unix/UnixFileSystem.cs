@@ -26,8 +26,8 @@ namespace FubarDev.FtpServer.FileSystem.Unix
     public class UnixFileSystem : IUnixFileSystem
     {
         private readonly ClaimsPrincipal _user;
-
         private readonly UnixUserInfo? _userInfo;
+        private readonly bool _flushStream;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="UnixFileSystem"/> class.
@@ -56,9 +56,26 @@ namespace FubarDev.FtpServer.FileSystem.Unix
             IUnixDirectoryEntry root,
             ClaimsPrincipal user,
             UnixUserInfo? userInfo)
+            : this(root, user, userInfo, false)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="UnixFileSystem"/> class.
+        /// </summary>
+        /// <param name="root">The root directory.</param>
+        /// <param name="user">The current user.</param>
+        /// <param name="userInfo">The user information.</param>
+        /// <param name="flushStream">Flush the stream after every write operation.</param>
+        public UnixFileSystem(
+            IUnixDirectoryEntry root,
+            ClaimsPrincipal user,
+            UnixUserInfo? userInfo,
+            bool flushStream)
         {
             _user = user;
             _userInfo = userInfo;
+            _flushStream = flushStream;
             Root = root;
         }
 
@@ -162,7 +179,7 @@ namespace FubarDev.FtpServer.FileSystem.Unix
             }
 
             /* Must be ConfigureAwait(true) to stay in the same synchronization context. */
-            await data.CopyToAsync(stream, 81920, cancellationToken)
+            await data.CopyToAsync(stream, 81920, _flushStream, cancellationToken)
                .ConfigureAwait(true);
 
             return null;
@@ -180,7 +197,7 @@ namespace FubarDev.FtpServer.FileSystem.Unix
             var stream = fileInfo.Open(FileMode.CreateNew, FileAccess.Write, FilePermissions.DEFFILEMODE);
 
             /* Must be ConfigureAwait(true) to stay in the same synchronization context. */
-            await data.CopyToAsync(stream, 81920, cancellationToken)
+            await data.CopyToAsync(stream, 81920, _flushStream, cancellationToken)
                .ConfigureAwait(true);
 
             return null;
@@ -193,7 +210,7 @@ namespace FubarDev.FtpServer.FileSystem.Unix
             var stream = fileInfo.Open(FileMode.Create, FileAccess.Write, FilePermissions.DEFFILEMODE);
 
             /* Must be ConfigureAwait(true) to stay in the same synchronization context. */
-            await data.CopyToAsync(stream, 81920, cancellationToken)
+            await data.CopyToAsync(stream, 81920, _flushStream, cancellationToken)
                .ConfigureAwait(true);
 
             return null;

@@ -24,6 +24,7 @@ namespace FubarDev.FtpServer.FileSystem.DotNet
         private readonly string _rootPath;
         private readonly int _streamBufferSize;
         private readonly bool _allowNonEmptyDirectoryDelete;
+        private readonly bool _flushAfterWrite;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DotNetFileSystemProvider"/> class.
@@ -43,6 +44,7 @@ namespace FubarDev.FtpServer.FileSystem.DotNet
                 : options.Value.RootPath!;
             _streamBufferSize = options.Value.StreamBufferSize ?? DotNetFileSystem.DefaultStreamBufferSize;
             _allowNonEmptyDirectoryDelete = options.Value.AllowNonEmptyDirectoryDelete;
+            _flushAfterWrite = options.Value.FlushAfterWrite;
         }
 
         /// <inheritdoc/>
@@ -57,7 +59,7 @@ namespace FubarDev.FtpServer.FileSystem.DotNet
 
             _logger?.LogDebug("The root directory for {userName} is {rootPath}", accountInformation.FtpUser.Identity.Name, path);
 
-            return Task.FromResult<IUnixFileSystem>(new DotNetFileSystem(path, _allowNonEmptyDirectoryDelete, _streamBufferSize));
+            return Task.FromResult<IUnixFileSystem>(new DotNetFileSystem(path, _allowNonEmptyDirectoryDelete, _streamBufferSize, _flushAfterWrite));
         }
     }
 }
