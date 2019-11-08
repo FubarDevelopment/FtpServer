@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
@@ -25,7 +26,7 @@ namespace FubarDev.FtpServer
 
         private readonly ILogger? _logger;
         private readonly IList<TcpListener> _listeners = new List<TcpListener>();
-        private readonly IList<Task<TcpClient>> _acceptors = new List<Task<TcpClient>>();
+        private readonly IList<Task<TcpClient?>> _acceptors = new List<Task<TcpClient>>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MultiBindingTcpListener"/> class.
@@ -119,13 +120,20 @@ namespace FubarDev.FtpServer
         /// <returns>The new TCP client.</returns>
         public async Task<TcpClient> WaitAnyTcpClientAsync(CancellationToken token)
         {
-            var tasks = _acceptors.Cast<Task>().ToList();
-            tasks.Add(Task.Delay(-1, token));
-            var retVal = await Task.WhenAny(tasks).ConfigureAwait(false);
-            token.ThrowIfCancellationRequested();
-            var index = tasks.IndexOf(retVal);
-            _acceptors[index] = _listeners[index].AcceptTcpClientAsync();
-            return ((Task<TcpClient>)retVal).Result;
+            TcpClient? result;
+            do
+            {
+                var tasks = _acceptors.Cast<Task>().ToList();
+                tasks.Add(Task.Delay(-1, token));
+                var retVal = await Task.WhenAny(tasks).ConfigureAwait(false);
+                token.ThrowIfCancellationRequested();
+                var index = tasks.IndexOf(retVal);
+                _acceptors[index] = _listeners[index].AcceptTcpClientAsync();
+                result = ((Task<TcpClient?>)retVal).Result;
+            }
+            while (result == null);
+
+            return result;
         }
 
         /// <summary>
@@ -133,7 +141,20 @@ namespace FubarDev.FtpServer
         /// </summary>
         public void StartAccepting()
         {
-            _listeners.ToList().ForEach(x => _acceptors.Add(x.AcceptTcpClientAsync()));
+            _listeners.ToList().ForEach(x => _acceptors.Add(AcceptForListenerAsync(x)));
+        }
+
+        private async Task<TcpClient?> AcceptForListenerAsync(TcpListener listener)
+        {
+            try
+            {
+                return await listener.AcceptTcpClientAsync().ConfigureAwait(false);
+            }
+            catch (ObjectDisposedException)
+            {
+                // Ignore the exception. This happens when the listener gets stopped.
+                return null;
+            }
         }
 
         private int StartListening(IEnumerable<IPAddress> addresses, int port)
