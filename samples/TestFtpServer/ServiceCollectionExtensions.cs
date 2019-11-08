@@ -139,12 +139,22 @@ namespace TestFtpServer
                 case FileSystemType.SystemIO:
                     services = services
                        .AddFtpServer(sb => sb.ConfigureAuthentication(options).UseDotNetFileSystem())
-                       .Configure<DotNetFileSystemOptions>(opt => opt.RootPath = options.SystemIo.Root);
+                       .Configure<DotNetFileSystemOptions>(
+                            opt =>
+                            {
+                                opt.RootPath = options.SystemIo.Root;
+                                opt.FlushAfterWrite = options.SystemIo.FlushAfterWrite;
+                            });
                     break;
                 case FileSystemType.Unix:
                     services = services
                        .AddFtpServer(sb => sb.ConfigureAuthentication(options).UseUnixFileSystem())
-                       .Configure<UnixFileSystemOptions>(opt => opt.Root = options.Unix.Root);
+                       .Configure<UnixFileSystemOptions>(
+                            opt =>
+                            {
+                                opt.Root = options.Unix.Root;
+                                opt.FlushAfterWrite = options.Unix.FlushAfterWrite;
+                            });
                     break;
                 case FileSystemType.GoogleDriveUser:
                     var userCredential = GetUserCredential(
