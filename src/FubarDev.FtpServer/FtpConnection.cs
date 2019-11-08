@@ -83,6 +83,11 @@ namespace FubarDev.FtpServer
         private readonly SemaphoreSlim _serviceControl = new SemaphoreSlim(1);
 
         /// <summary>
+        /// This semaphore avoids the duplicate execution of `StopAsync`.
+        /// </summary>
+        private readonly SemaphoreSlim _stopSemaphore = new SemaphoreSlim(1);
+
+        /// <summary>
         /// Gets the stream reader service.
         /// </summary>
         /// <remarks>
@@ -346,51 +351,65 @@ namespace FubarDev.FtpServer
         /// <inheritdoc />
         public async Task StopAsync()
         {
-            _logger?.LogTrace("StopAsync called");
+            var success = await _stopSemaphore.WaitAsync(0)
+               .ConfigureAwait(false);
+            if (!success)
+            {
+                return;
+            }
 
-            await _serviceControl.WaitAsync().ConfigureAwait(false);
             try
             {
-                if (Interlocked.CompareExchange(ref _connectionClosed, 1, 0) != 0)
-                {
-                    return;
-                }
+                _logger?.LogTrace(" StopAsync called");
 
-                Abort();
-
+                await _serviceControl.WaitAsync().ConfigureAwait(false);
                 try
                 {
-                    _serverCommandChannel.Writer.Complete();
-                    await _commandReader.ConfigureAwait(false);
-
-                    if (_commandChannelReader != null)
+                    if (Interlocked.CompareExchange(ref _connectionClosed, 1, 0) != 0)
                     {
-                        await _commandChannelReader.ConfigureAwait(false);
+                        return;
                     }
 
-                    if (_serverCommandHandler != null)
+                    Abort();
+
+                    try
                     {
-                        await _serverCommandHandler.ConfigureAwait(false);
+                        _serverCommandChannel.Writer.Complete();
+                        await _commandReader.ConfigureAwait(false);
+
+                        if (_commandChannelReader != null)
+                        {
+                            await _commandChannelReader.ConfigureAwait(false);
+                        }
+
+                        if (_serverCommandHandler != null)
+                        {
+                            await _serverCommandHandler.ConfigureAwait(false);
+                        }
+
+                        await _networkStreamFeature.SecureConnectionAdapter.StopAsync(CancellationToken.None)
+                           .ConfigureAwait(false);
+                        await _streamWriterService.StopAsync(CancellationToken.None)
+                           .ConfigureAwait(false);
+                        await _streamReaderService.StopAsync(CancellationToken.None)
+                           .ConfigureAwait(false);
+                    }
+                    catch (Exception ex)
+                    {
+                        // Something went wrong... badly!
+                        _logger?.LogError(ex, ex.Message);
                     }
 
-                    await _networkStreamFeature.SecureConnectionAdapter.StopAsync(CancellationToken.None)
-                       .ConfigureAwait(false);
-                    await _streamWriterService.StopAsync(CancellationToken.None)
-                       .ConfigureAwait(false);
-                    await _streamReaderService.StopAsync(CancellationToken.None)
-                       .ConfigureAwait(false);
+                    _logger?.LogInformation("Connection closed");
                 }
-                catch (Exception ex)
+                finally
                 {
-                    // Something went wrong... badly!
-                    _logger?.LogError(ex, ex.Message);
+                    _serviceControl.Release();
                 }
-
-                _logger?.LogInformation("Connection closed");
             }
             finally
             {
-                _serviceControl.Release();
+                _stopSemaphore.Release();
             }
 
             OnClosed();
