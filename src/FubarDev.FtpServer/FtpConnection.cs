@@ -74,7 +74,13 @@ namespace FubarDev.FtpServer
         private readonly IPEndPoint _remoteEndPoint;
 
         private readonly object _observersLock = new object();
+
         private readonly List<ObserverRegistration> _observers = new List<ObserverRegistration>();
+
+        /// <summary>
+        /// This semaphore avoids the execution of `StopAsync` while a `StartAsync` is running.
+        /// </summary>
+        private readonly SemaphoreSlim _serviceControl = new SemaphoreSlim(1);
 
         /// <summary>
         /// Gets the stream reader service.
@@ -293,38 +299,48 @@ namespace FubarDev.FtpServer
         /// <inheritdoc />
         public async Task StartAsync()
         {
-            // Initialize the FTP connection accessor
-            _connectionAccessor.FtpConnection = this;
+            await _serviceControl.WaitAsync().ConfigureAwait(false);
+            try
+            {
+                // Initialize the FTP connection accessor
+                _connectionAccessor.FtpConnection = this;
 
-            // Set the default FTP data connection feature
-            var activeDataConnectionFeatureFactory = ConnectionServices.GetRequiredService<ActiveDataConnectionFeatureFactory>();
-            var dataConnectionFeature = await activeDataConnectionFeatureFactory.CreateFeatureAsync(null, _remoteEndPoint, _dataPort)
-               .ConfigureAwait(false);
-            Features.Set(dataConnectionFeature);
+                // Set the default FTP data connection feature
+                var activeDataConnectionFeatureFactory =
+                    ConnectionServices.GetRequiredService<ActiveDataConnectionFeatureFactory>();
+                var dataConnectionFeature = await activeDataConnectionFeatureFactory
+                   .CreateFeatureAsync(null, _remoteEndPoint, _dataPort)
+                   .ConfigureAwait(false);
+                Features.Set(dataConnectionFeature);
 
-            // Set the checks for the activity information of the FTP connection.
-            var checks = ConnectionServices.GetRequiredService<IEnumerable<IFtpConnectionCheck>>().ToList();
+                // Set the checks for the activity information of the FTP connection.
+                var checks = ConnectionServices.GetRequiredService<IEnumerable<IFtpConnectionCheck>>().ToList();
 #pragma warning disable 612
-            _keepAlive.SetChecks(checks);
+                _keepAlive.SetChecks(checks);
 #pragma warning restore 612
-            _idleCheck.SetChecks(checks);
+                _idleCheck.SetChecks(checks);
 
-            // Connection information
-            var connectionFeature = Features.Get<IConnectionFeature>();
-            _logger?.LogInformation($"Connected from {connectionFeature.RemoteEndPoint}");
+                // Connection information
+                var connectionFeature = Features.Get<IConnectionFeature>();
+                _logger?.LogInformation($"Connected from {connectionFeature.RemoteEndPoint}");
 
-            await _streamWriterService.StartAsync(CancellationToken.None)
-               .ConfigureAwait(false);
-            await _streamReaderService.StartAsync(CancellationToken.None)
-               .ConfigureAwait(false);
-            await _networkStreamFeature.SecureConnectionAdapter.StartAsync(CancellationToken.None)
-               .ConfigureAwait(false);
+                await _streamWriterService.StartAsync(CancellationToken.None)
+                   .ConfigureAwait(false);
+                await _streamReaderService.StartAsync(CancellationToken.None)
+                   .ConfigureAwait(false);
+                await _networkStreamFeature.SecureConnectionAdapter.StartAsync(CancellationToken.None)
+                   .ConfigureAwait(false);
 
-            _commandChannelReader = CommandChannelDispatcherAsync(
-                _ftpCommandChannel.Reader,
-                _cancellationTokenSource.Token);
+                _commandChannelReader = CommandChannelDispatcherAsync(
+                    _ftpCommandChannel.Reader,
+                    _cancellationTokenSource.Token);
 
-            _serverCommandHandler = SendResponsesAsync(_serverCommandChannel, _cancellationTokenSource.Token);
+                _serverCommandHandler = SendResponsesAsync(_serverCommandChannel, _cancellationTokenSource.Token);
+            }
+            finally
+            {
+                _serviceControl.Release();
+            }
         }
 
         /// <inheritdoc />
@@ -332,42 +348,50 @@ namespace FubarDev.FtpServer
         {
             _logger?.LogTrace("StopAsync called");
 
-            if (Interlocked.CompareExchange(ref _connectionClosed, 1, 0) != 0)
-            {
-                return;
-            }
-
-            Abort();
-
+            await _serviceControl.WaitAsync().ConfigureAwait(false);
             try
             {
-                _serverCommandChannel.Writer.Complete();
-                await _commandReader.ConfigureAwait(false);
-
-                if (_commandChannelReader != null)
+                if (Interlocked.CompareExchange(ref _connectionClosed, 1, 0) != 0)
                 {
-                    await _commandChannelReader.ConfigureAwait(false);
+                    return;
                 }
 
-                if (_serverCommandHandler != null)
+                Abort();
+
+                try
                 {
-                    await _serverCommandHandler.ConfigureAwait(false);
+                    _serverCommandChannel.Writer.Complete();
+                    await _commandReader.ConfigureAwait(false);
+
+                    if (_commandChannelReader != null)
+                    {
+                        await _commandChannelReader.ConfigureAwait(false);
+                    }
+
+                    if (_serverCommandHandler != null)
+                    {
+                        await _serverCommandHandler.ConfigureAwait(false);
+                    }
+
+                    await _networkStreamFeature.SecureConnectionAdapter.StopAsync(CancellationToken.None)
+                       .ConfigureAwait(false);
+                    await _streamWriterService.StopAsync(CancellationToken.None)
+                       .ConfigureAwait(false);
+                    await _streamReaderService.StopAsync(CancellationToken.None)
+                       .ConfigureAwait(false);
+                }
+                catch (Exception ex)
+                {
+                    // Something went wrong... badly!
+                    _logger?.LogError(ex, ex.Message);
                 }
 
-                await _networkStreamFeature.SecureConnectionAdapter.StopAsync(CancellationToken.None)
-                   .ConfigureAwait(false);
-                await _streamWriterService.StopAsync(CancellationToken.None)
-                   .ConfigureAwait(false);
-                await _streamReaderService.StopAsync(CancellationToken.None)
-                   .ConfigureAwait(false);
+                _logger?.LogInformation("Connection closed");
             }
-            catch (Exception ex)
+            finally
             {
-                // Something went wrong... badly!
-                _logger?.LogError(ex, ex.Message);
+                _serviceControl.Release();
             }
-
-            _logger?.LogInformation("Connection closed");
 
             OnClosed();
         }
