@@ -36,10 +36,12 @@ namespace TestFtpServer
                 builder.Services.AddSingleton<IMembershipProvider, CustomMembershipProvider>();
             }
 
+#if NETCOREAPP
             if ((options.Authentication & MembershipProviderType.PAM) != 0)
             {
                 builder = builder.EnablePamAuthentication();
             }
+#endif
 
             if ((options.Authentication & MembershipProviderType.Anonymous) != 0)
             {

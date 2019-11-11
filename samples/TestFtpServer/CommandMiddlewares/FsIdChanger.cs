@@ -2,6 +2,7 @@
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
+#if NETCOREAPP
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
@@ -258,3 +259,4 @@ namespace TestFtpServer.CommandMiddlewares
         // ReSharper restore IdentifierTypo
     }
 }
+#endif
