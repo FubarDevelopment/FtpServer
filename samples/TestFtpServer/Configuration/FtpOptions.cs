@@ -39,6 +39,11 @@ namespace TestFtpServer.Configuration
         public FtpServerOptions Server { get; set; } = new FtpServerOptions();
 
         /// <summary>
+        /// Gets or sets the FTP connection options.
+        /// </summary>
+        public FtpConnectionIdleCheckOptions Connection { get; set; } = new FtpConnectionIdleCheckOptions();
+
+        /// <summary>
         /// Gets or sets the FTPS options.
         /// </summary>
         public FtpsOptions Ftps { get; set; } = new FtpsOptions();

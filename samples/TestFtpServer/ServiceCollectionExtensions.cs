@@ -54,13 +54,6 @@ namespace TestFtpServer
             this IServiceCollection services,
             FtpOptions options)
         {
-            static TimeSpan? ToTomeSpan(int? seconds)
-            {
-                return seconds == null
-                    ? (TimeSpan?)null
-                    : TimeSpan.FromSeconds(seconds.Value);
-            }
-
             services
                .Configure<AuthTlsOptions>(
                     opt =>
@@ -69,11 +62,7 @@ namespace TestFtpServer
                         opt.ImplicitFtps = options.Ftps.Implicit;
                     })
                .Configure<FtpConnectionOptions>(
-                    opt =>
-                    {
-                        opt.DefaultEncoding = Encoding.ASCII;
-                        opt.InactivityTimeout = ToTomeSpan(options.Server.InactivityTimeout);
-                    })
+                    opt => opt.DefaultEncoding = Encoding.ASCII)
                .Configure<FubarDev.FtpServer.FtpServerOptions>(
                     opt =>
                     {
@@ -81,7 +70,7 @@ namespace TestFtpServer
                         opt.Port = options.GetServerPort();
                         opt.MaxActiveConnections = options.Server.MaxActiveConnections ?? 0;
                         opt.ConnectionInactivityCheckInterval =
-                            ToTomeSpan(options.Server.ConnectionInactivityCheckInterval);
+                            ToTimeSpan(options.Server.ConnectionInactivityCheckInterval);
                     })
                .Configure<PortCommandOptions>(
                     opt =>
@@ -142,14 +131,14 @@ namespace TestFtpServer
             {
                 case FileSystemType.InMemory:
                     services = services
-                       .AddFtpServer(sb => sb.ConfigureAuthentication(options).UseInMemoryFileSystem())
+                       .AddFtpServer(sb => sb.ConfigureAuthentication(options).UseInMemoryFileSystem().ConfigureServer(options))
                        .Configure<InMemoryFileSystemOptions>(
                             opt => opt.KeepAnonymousFileSystem = options.InMemory.KeepAnonymous);
                     break;
                 case FileSystemType.Unix:
 #if NETCOREAPP
                     services = services
-                       .AddFtpServer(sb => sb.ConfigureAuthentication(options).UseUnixFileSystem())
+                       .AddFtpServer(sb => sb.ConfigureAuthentication(options).UseUnixFileSystem().ConfigureServer(options))
                        .Configure<UnixFileSystemOptions>(
                             opt =>
                             {
@@ -158,7 +147,7 @@ namespace TestFtpServer
                             });
 #else
                     services = services
-                       .AddFtpServer(sb => sb.ConfigureAuthentication(options).UseDotNetFileSystem())
+                       .AddFtpServer(sb => sb.ConfigureAuthentication(options).UseDotNetFileSystem().ConfigureServer(options))
                        .Configure<DotNetFileSystemOptions>(
                             opt =>
                             {
@@ -169,7 +158,7 @@ namespace TestFtpServer
                     break;
                 case FileSystemType.SystemIO:
                     services = services
-                       .AddFtpServer(sb => sb.ConfigureAuthentication(options).UseDotNetFileSystem())
+                       .AddFtpServer(sb => sb.ConfigureAuthentication(options).UseDotNetFileSystem().ConfigureServer(options))
                        .Configure<DotNetFileSystemOptions>(
                             opt =>
                             {
@@ -187,18 +176,18 @@ namespace TestFtpServer
                                 "User name not specified."),
                             options.GoogleDrive.User.RefreshToken);
                     services = services
-                       .AddFtpServer(sb => sb.ConfigureAuthentication(options).UseGoogleDrive(userCredential));
+                       .AddFtpServer(sb => sb.ConfigureAuthentication(options).UseGoogleDrive(userCredential).ConfigureServer(options));
                     break;
                 case FileSystemType.GoogleDriveService:
                     var serviceCredential = GoogleCredential
                        .FromFile(options.GoogleDrive.Service.CredentialFile)
                        .CreateScoped(DriveService.Scope.Drive, DriveService.Scope.DriveFile);
                     services = services
-                       .AddFtpServer(sb => sb.ConfigureAuthentication(options).UseGoogleDrive(serviceCredential));
+                       .AddFtpServer(sb => sb.ConfigureAuthentication(options).UseGoogleDrive(serviceCredential).ConfigureServer(options));
                     break;
                 case FileSystemType.AmazonS3:
                     services = services
-                       .AddFtpServer(sb => sb.ConfigureAuthentication(options).UseS3FileSystem());
+                       .AddFtpServer(sb => sb.ConfigureAuthentication(options).UseS3FileSystem().ConfigureServer(options));
                     break;
                 default:
                     throw new NotSupportedException(
@@ -293,6 +282,29 @@ namespace TestFtpServer
             return services;
         }
 
+        private static IFtpServerBuilder ConfigureServer(this IFtpServerBuilder builder, FtpOptions options)
+        {
+            builder = builder
+               .DisableChecks();
+
+            if (options.Connection.Inactivity.Enabled)
+            {
+                builder = builder
+                   .EnableIdleCheck();
+                builder.Services
+                   .Configure<FtpConnectionOptions>(
+                        opt => opt.InactivityTimeout = ToTimeSpan(options.Connection.Inactivity.InactivityTimeout));
+            }
+
+            if (options.Connection.SocketState.Enabled)
+            {
+                builder = builder
+                   .EnableConnectionCheck();
+            }
+
+            return builder;
+        }
+
         private static UserCredential GetUserCredential(
             string clientSecretsFile,
             string userName,
@@ -325,6 +337,13 @@ namespace TestFtpServer
             }
 
             public X509Certificate2 Certificate { get; }
+        }
+
+        private static TimeSpan? ToTimeSpan(int? seconds)
+        {
+            return seconds == null
+                ? (TimeSpan?)null
+                : TimeSpan.FromSeconds(seconds.Value);
         }
 
         private class ImplicitFtpsControlConnectionStreamAdapter : IFtpControlStreamAdapter
