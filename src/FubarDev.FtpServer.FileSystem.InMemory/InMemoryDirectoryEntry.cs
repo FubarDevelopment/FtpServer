@@ -33,6 +33,11 @@ namespace FubarDev.FtpServer.FileSystem.InMemory
             Children = children;
         }
 
+        /// <summary>
+        /// Holt ein Objekt über das der Zugriff auf <see cref="Children"/> gesperrt wird.
+        /// </summary>
+        public object ChildrenLock { get; } = new object();
+
         /// <inheritdoc />
         public bool IsRoot => Parent is null;
 
