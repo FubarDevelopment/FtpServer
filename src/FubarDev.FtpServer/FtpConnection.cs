@@ -389,9 +389,9 @@ namespace FubarDev.FtpServer
 
                         await _networkStreamFeature.SecureConnectionAdapter.StopAsync(CancellationToken.None)
                            .ConfigureAwait(false);
-                        await _streamWriterService.StopAsync(CancellationToken.None)
-                           .ConfigureAwait(false);
                         await _streamReaderService.StopAsync(CancellationToken.None)
+                           .ConfigureAwait(false);
+                        await _streamWriterService.StopAsync(CancellationToken.None)
                            .ConfigureAwait(false);
                     }
                     catch (Exception ex)
