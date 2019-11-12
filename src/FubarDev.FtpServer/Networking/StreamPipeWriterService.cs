@@ -65,10 +65,19 @@ namespace FubarDev.FtpServer.Networking
                 var readResult = await _pipeReader.ReadAsync(cancellationToken)
                    .ConfigureAwait(false);
 
-                // Don't use the cancellation token source from above. Otherwise
-                // data might be lost.
-                await SendDataToStream(readResult.Buffer, CancellationToken.None)
-                   .ConfigureAwait(false);
+                try
+                {
+                    // Don't use the cancellation token source from above. Otherwise
+                    // data might be lost.
+                    await SendDataToStream(readResult.Buffer, CancellationToken.None)
+                       .ConfigureAwait(false);
+                }
+                catch
+                {
+                    // Ensure that the read operation is finished, but keep the data.
+                    _pipeReader.AdvanceTo(readResult.Buffer.Start);
+                    throw;
+                }
 
                 _pipeReader.AdvanceTo(readResult.Buffer.End);
 
@@ -136,11 +145,19 @@ namespace FubarDev.FtpServer.Networking
             CancellationToken cancellationToken)
         {
             Logger?.LogTrace("Flushing");
-            while (_pipeReader.TryRead(out var readResult))
+            while (!cancellationToken.IsCancellationRequested && _pipeReader.TryRead(out var readResult))
             {
-                await SendDataToStream(readResult.Buffer, cancellationToken)
-                   .ConfigureAwait(false);
-                _pipeReader.AdvanceTo(readResult.Buffer.End);
+                try
+                {
+                    await SendDataToStream(readResult.Buffer, CancellationToken.None)
+                       .ConfigureAwait(false);
+                }
+                finally
+                {
+                    // Always advance to the end, because the data cannot
+                    // be sent anyways.
+                    _pipeReader.AdvanceTo(readResult.Buffer.End);
+                }
 
                 if (readResult.IsCanceled || readResult.IsCompleted)
                 {
