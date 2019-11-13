@@ -48,10 +48,10 @@ namespace TestFtpServer.Shell.Commands
                .InvokeAsync(host => host.GetConnections(), cancellationToken)
                .ConfigureAwait(false);
 
-            Console.WriteLine("ID                                  \tIs alive?");
+            Console.WriteLine("ID                                  \tIs alive?\tRemote IP");
             foreach (var connection in connections)
             {
-                Console.WriteLine($"{connection.Id}\t{connection.IsAlive}");
+                Console.WriteLine($"{connection.Id}\t{connection.IsAlive}\t{connection.RemoteIp}");
             }
         }
     }

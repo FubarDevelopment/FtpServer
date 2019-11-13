@@ -27,5 +27,10 @@ namespace TestFtpServer.Api
         /// Gets or sets a value indicating whether the connection is alive (read: not expired).
         /// </summary>
         public bool IsAlive { get; set; }
+
+        /// <summary>
+        /// Gets or sets the remote IP.
+        /// </summary>
+        public string RemoteIp { get; set; }
     }
 }

@@ -92,6 +92,7 @@ namespace TestFtpServer
                 try
                 {
                     var keepAliveFeature = connection.Features.Get<IFtpConnectionStatusCheck>();
+                    var connectionFeature = connection.Features.Get<IConnectionFeature>();
                     var ftpConnection = (FtpConnection)connection;
                     var connectionId = ftpConnection.ConnectionId;
                     var isAlive = keepAliveFeature.CheckIfAlive();
@@ -99,6 +100,7 @@ namespace TestFtpServer
                         new FtpConnectionStatus(connectionId)
                         {
                             IsAlive = isAlive,
+                            RemoteIp = connectionFeature.RemoteEndPoint.ToString(),
                         });
                 }
                 catch
