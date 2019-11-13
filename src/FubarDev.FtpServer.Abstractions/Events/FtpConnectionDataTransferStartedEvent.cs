@@ -13,14 +13,21 @@ namespace FubarDev.FtpServer.Events
         /// Initializes a new instance of the <see cref="FtpConnectionDataTransferStartedEvent"/> class.
         /// </summary>
         /// <param name="transferId">The transfer ID.</param>
-        public FtpConnectionDataTransferStartedEvent(string transferId)
+        /// <param name="command">The command that initiated the data transfer.</param>
+        public FtpConnectionDataTransferStartedEvent(string transferId, FtpCommand command)
         {
             TransferId = transferId;
+            Command = command;
         }
 
         /// <summary>
         /// Gets the transfer ID.
         /// </summary>
         public string TransferId { get; }
+
+        /// <summary>
+        /// Gets the command that initiated the transfer.
+        /// </summary>
+        public FtpCommand Command { get; }
     }
 }

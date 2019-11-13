@@ -42,7 +42,7 @@ namespace FubarDev.FtpServer.ServerCommandHandlers
             var serverCommandWriter = connection.Features.Get<IServerCommandFeature>().ServerCommandWriter;
             var localizationFeature = connection.Features.Get<ILocalizationFeature>();
 
-            using (new ConnectionKeepAlive(connection))
+            using (new ConnectionKeepAlive(connection, command.Command))
             {
                 // Try to open the data connection
                 IFtpDataConnection dataConnection;
@@ -90,10 +90,12 @@ namespace FubarDev.FtpServer.ServerCommandHandlers
             private readonly string _transferId = Guid.NewGuid().ToString("N");
             private readonly IFtpConnectionEventHost _eventHost;
 
-            public ConnectionKeepAlive(IFtpConnection connection)
+            public ConnectionKeepAlive(
+                IFtpConnection connection,
+                FtpCommand command)
             {
                 _eventHost = connection.Features.Get<IFtpConnectionEventHost>();
-                _eventHost.PublishEvent(new FtpConnectionDataTransferStartedEvent(_transferId));
+                _eventHost.PublishEvent(new FtpConnectionDataTransferStartedEvent(_transferId, command));
             }
 
             /// <inheritdoc />
