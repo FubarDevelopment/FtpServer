@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 
 using FubarDev.FtpServer.ServerCommands;
 
+using Microsoft.Extensions.DependencyInjection;
+
 namespace FubarDev.FtpServer.ServerCommandHandlers
 {
     /// <summary>
@@ -31,11 +33,18 @@ namespace FubarDev.FtpServer.ServerCommandHandlers
         {
             var connection = _connectionAccessor.FtpConnection;
 
+            // Just abort the connection. This should
+            // avoid problems with an ObjectDisposedException.
+            ((FtpConnection)connection).Abort();
+
+            // The "StopAsync" that will be called in
+            /*
             // - Flush the remaining data
             // - Close the SslStream (if active)
             // - Stop all connection tasks
             await Task.WhenAny(connection.StopAsync(), Task.Delay(-1, cancellationToken))
                .ConfigureAwait(false);
+            */
         }
     }
 }

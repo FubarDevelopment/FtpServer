@@ -355,6 +355,7 @@ namespace FubarDev.FtpServer
                .ConfigureAwait(false);
             if (!success)
             {
+                // Handles recursion caused by CommandChannelDispatcherAsync.
                 return;
             }
 
@@ -505,7 +506,7 @@ namespace FubarDev.FtpServer
             }
         }
 
-        private void Abort()
+        internal void Abort()
         {
             if (_connectionClosing)
             {
@@ -604,7 +605,17 @@ namespace FubarDev.FtpServer
             finally
             {
                 _logger?.LogDebug("Stopped sending responses");
-                _cancellationTokenSource.Cancel();
+                try
+                {
+                    _cancellationTokenSource.Cancel();
+                }
+                catch (ObjectDisposedException)
+                {
+                    // This might happen if the command handler stopped the connection.
+                    // Usual reasons are:
+                    // - Closing the connection was requested by the client
+                    // - Closing the connection was forced due to an FTP status 421
+                }
             }
         }
 
