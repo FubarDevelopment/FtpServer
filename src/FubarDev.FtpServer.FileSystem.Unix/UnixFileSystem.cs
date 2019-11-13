@@ -15,6 +15,8 @@ using FubarDev.FtpServer.AccountManagement;
 using FubarDev.FtpServer.AccountManagement.Compatibility;
 using FubarDev.FtpServer.BackgroundTransfer;
 
+using Microsoft.Extensions.Logging;
+
 using Mono.Unix;
 using Mono.Unix.Native;
 
@@ -28,6 +30,7 @@ namespace FubarDev.FtpServer.FileSystem.Unix
         private readonly ClaimsPrincipal _user;
         private readonly UnixUserInfo? _userInfo;
         private readonly bool _flushStream;
+        private readonly ILogger<UnixFileSystem>? _logger;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="UnixFileSystem"/> class.
@@ -72,10 +75,29 @@ namespace FubarDev.FtpServer.FileSystem.Unix
             ClaimsPrincipal user,
             UnixUserInfo? userInfo,
             bool flushStream)
+            : this(root, user, userInfo, flushStream, null)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="UnixFileSystem"/> class.
+        /// </summary>
+        /// <param name="root">The root directory.</param>
+        /// <param name="user">The current user.</param>
+        /// <param name="userInfo">The user information.</param>
+        /// <param name="flushStream">Flush the stream after every write operation.</param>
+        /// <param name="logger">The logger for this file system implementation.</param>
+        public UnixFileSystem(
+            IUnixDirectoryEntry root,
+            ClaimsPrincipal user,
+            UnixUserInfo? userInfo,
+            bool flushStream,
+            ILogger<UnixFileSystem>? logger)
         {
             _user = user;
             _userInfo = userInfo;
             _flushStream = flushStream;
+            _logger = logger;
             Root = root;
         }
 
@@ -172,15 +194,20 @@ namespace FubarDev.FtpServer.FileSystem.Unix
         public async Task<IBackgroundTransfer?> AppendAsync(IUnixFileEntry fileEntry, long? startPosition, Stream data, CancellationToken cancellationToken)
         {
             var fileInfo = ((UnixFileEntry)fileEntry).Info;
-            var stream = fileInfo.Open(FileMode.Append);
-            if (startPosition != null)
-            {
-                stream.Seek(startPosition.Value, SeekOrigin.Begin);
-            }
 
-            /* Must be ConfigureAwait(true) to stay in the same synchronization context. */
-            await data.CopyToAsync(stream, 81920, _flushStream, cancellationToken)
-               .ConfigureAwait(true);
+            _logger?.LogTrace("Start appending to {fileName}", fileInfo.FullName);
+            using (var stream = fileInfo.Open(FileMode.Append))
+            {
+                if (startPosition != null)
+                {
+                    stream.Seek(startPosition.Value, SeekOrigin.Begin);
+                }
+
+                /* Must be ConfigureAwait(true) to stay in the same synchronization context. */
+                await data.CopyToAsync(stream, 81920, _flushStream, cancellationToken)
+                   .ConfigureAwait(true);
+                _logger?.LogTrace("Closing {fileName}", fileInfo.FullName);
+            }
 
             return null;
         }
@@ -194,11 +221,15 @@ namespace FubarDev.FtpServer.FileSystem.Unix
         {
             var targetInfo = ((UnixDirectoryEntry)targetDirectory).Info;
             var fileInfo = new UnixFileInfo(UnixPath.Combine(targetInfo.FullName, fileName));
-            var stream = fileInfo.Open(FileMode.CreateNew, FileAccess.Write, FilePermissions.DEFFILEMODE);
 
-            /* Must be ConfigureAwait(true) to stay in the same synchronization context. */
-            await data.CopyToAsync(stream, 81920, _flushStream, cancellationToken)
-               .ConfigureAwait(true);
+            _logger?.LogTrace("Start writing to {fileName}", fileInfo.FullName);
+            using (var stream = fileInfo.Open(FileMode.CreateNew, FileAccess.Write, FilePermissions.DEFFILEMODE))
+            {
+                /* Must be ConfigureAwait(true) to stay in the same synchronization context. */
+                await data.CopyToAsync(stream, 81920, _flushStream, cancellationToken)
+                   .ConfigureAwait(true);
+                _logger?.LogTrace("Closing {fileName}", fileInfo.FullName);
+            }
 
             return null;
         }
@@ -207,11 +238,14 @@ namespace FubarDev.FtpServer.FileSystem.Unix
         public async Task<IBackgroundTransfer?> ReplaceAsync(IUnixFileEntry fileEntry, Stream data, CancellationToken cancellationToken)
         {
             var fileInfo = ((UnixFileEntry)fileEntry).Info;
-            var stream = fileInfo.Open(FileMode.Create, FileAccess.Write, FilePermissions.DEFFILEMODE);
-
-            /* Must be ConfigureAwait(true) to stay in the same synchronization context. */
-            await data.CopyToAsync(stream, 81920, _flushStream, cancellationToken)
-               .ConfigureAwait(true);
+            _logger?.LogTrace("Start writing to {fileName} while replacing old content", fileInfo.FullName);
+            using (var stream = fileInfo.Open(FileMode.Create, FileAccess.Write, FilePermissions.DEFFILEMODE))
+            {
+                /* Must be ConfigureAwait(true) to stay in the same synchronization context. */
+                await data.CopyToAsync(stream, 81920, _flushStream, cancellationToken)
+                   .ConfigureAwait(true);
+                _logger?.LogTrace("Closing {fileName}", fileInfo.FullName);
+            }
 
             return null;
         }
