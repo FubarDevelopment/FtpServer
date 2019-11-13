@@ -327,7 +327,7 @@ namespace FubarDev.FtpServer
 
                 // Connection information
                 var connectionFeature = Features.Get<IConnectionFeature>();
-                _logger?.LogInformation($"Connected from {connectionFeature.RemoteEndPoint}");
+                _logger?.LogInformation("Connected from {remoteIp}", connectionFeature.RemoteEndPoint);
 
                 await _streamWriterService.StartAsync(CancellationToken.None)
                    .ConfigureAwait(false);

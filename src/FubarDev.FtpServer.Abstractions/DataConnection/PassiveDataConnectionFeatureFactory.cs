@@ -138,7 +138,7 @@ namespace FubarDev.FtpServer.DataConnection
                         }
                     }
 
-                    _logger?.LogDebug($"Data connection accepted from {dataConnection.RemoteAddress}");
+                    _logger?.LogDebug("Data connection accepted from {remoteIp}", dataConnection.RemoteAddress);
 
                     return dataConnection;
                 }

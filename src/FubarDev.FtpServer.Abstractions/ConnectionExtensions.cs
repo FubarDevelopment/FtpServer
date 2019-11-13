@@ -68,27 +68,27 @@ namespace FubarDev.FtpServer
 #endif
                     case OperationCanceledException _:
                         response = new FtpResponse(426, localizationFeature.Catalog.GetString("Connection closed; transfer aborted."));
-                        Debug.WriteLine($"Command {command} cancelled with response {response}");
+                        logger?.LogTrace("Command {command} cancelled with response {response}", command, response);
                         break;
 
                     case FileSystemException fse:
                     {
                         var message = fse.Message != null ? $"{fse.FtpErrorName}: {fse.Message}" : fse.FtpErrorName;
-                        logger?.LogInformation($"Rejected command ({command}) with error {fse.FtpErrorCode} {message}");
+                        logger?.LogInformation("Rejected command ({command}) with error {code} {message}", command, fse.FtpErrorCode, message);
                         response = new FtpResponse(fse.FtpErrorCode, message);
                         break;
                     }
 
                     case NotSupportedException nse:
                     {
-                        var message = nse.Message ?? localizationFeature.Catalog.GetString("Command {0} not supported", command);
+                        var message = nse.Message ?? localizationFeature.Catalog.GetString("Command {command} not supported", command);
                         logger?.LogInformation(message);
                         response = new FtpResponse(502, message);
                         break;
                     }
 
                     default:
-                        logger?.LogError(0, ex, "Failed to process message ({0})", command);
+                        logger?.LogError(0, ex, "Failed to process message ({command})", command);
                         response = new FtpResponse(501, localizationFeature.Catalog.GetString("Syntax error in parameters or arguments."));
                         break;
                 }
