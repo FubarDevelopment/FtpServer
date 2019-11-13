@@ -188,7 +188,10 @@ namespace FubarDev.FtpServer.Commands
                .ConfigureAwait(false);
             if (response.Code == 421)
             {
-                await _connection.StopAsync().ConfigureAwait(false);
+                // Critical Error: We have to close the connection!
+                await serverCommandFeature.ServerCommandWriter
+                   .WriteAsync(new CloseConnectionServerCommand(), cancellationToken)
+                   .ConfigureAwait(false);
             }
         }
     }
