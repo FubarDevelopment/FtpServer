@@ -209,6 +209,8 @@ namespace FubarDev.FtpServer.FileSystem.Unix
                 _logger?.LogTrace("Closing {fileName}", fileInfo.FullName);
             }
 
+            _logger?.LogTrace("Closined {fileName}", fileInfo.FullName);
+
             return null;
         }
 
@@ -231,6 +233,8 @@ namespace FubarDev.FtpServer.FileSystem.Unix
                 _logger?.LogTrace("Closing {fileName}", fileInfo.FullName);
             }
 
+            _logger?.LogTrace("Closined {fileName}", fileInfo.FullName);
+
             return null;
         }
 
@@ -246,6 +250,8 @@ namespace FubarDev.FtpServer.FileSystem.Unix
                    .ConfigureAwait(true);
                 _logger?.LogTrace("Closing {fileName}", fileInfo.FullName);
             }
+
+            _logger?.LogTrace("Closined {fileName}", fileInfo.FullName);
 
             return null;
         }
