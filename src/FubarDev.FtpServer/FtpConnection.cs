@@ -361,7 +361,7 @@ namespace FubarDev.FtpServer
 
             try
             {
-                _logger?.LogTrace(" StopAsync called");
+                _logger?.LogTrace("StopAsync called");
 
                 await _serviceControl.WaitAsync().ConfigureAwait(false);
                 try
