@@ -69,6 +69,7 @@ namespace FubarDev.FtpServer
             commands.AddRange(_telnetInputParser.Collect(buffer));
             return commands;
         }
+
         private IEnumerable<FtpCommand> InternalCollect(ReadOnlySpan<byte> buffer)
         {
             var commands = new List<FtpCommand>();
