@@ -2,11 +2,9 @@
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
-using System;
 using System.IO;
 using System.Threading.Tasks;
 
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Mono.Unix;
@@ -28,26 +26,7 @@ namespace FubarDev.FtpServer.FileSystem.Unix
         /// </summary>
         /// <param name="options">The file system options.</param>
         /// <param name="accountDirectoryQuery">Interface to query account directories.</param>
-        /// <param name="logger">The logger for this file system.</param>
-        [Obsolete]
-        public UnixFileSystemProvider(
-            IOptions<UnixFileSystemOptions> options,
-            IAccountDirectoryQuery accountDirectoryQuery,
-            ILogger<UnixFileSystemProvider>? logger)
-        {
-            _accountDirectoryQuery = accountDirectoryQuery;
-            _loggerFactory = null;
-            _logger = logger;
-            _options = options.Value;
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="UnixFileSystemProvider"/> class.
-        /// </summary>
-        /// <param name="options">The file system options.</param>
-        /// <param name="accountDirectoryQuery">Interface to query account directories.</param>
         /// <param name="loggerFactory">Factory to create loggers.</param>
-        [ActivatorUtilitiesConstructor]
         public UnixFileSystemProvider(
             IOptions<UnixFileSystemOptions> options,
             IAccountDirectoryQuery accountDirectoryQuery,
