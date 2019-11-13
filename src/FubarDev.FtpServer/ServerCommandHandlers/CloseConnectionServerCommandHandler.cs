@@ -29,22 +29,15 @@ namespace FubarDev.FtpServer.ServerCommandHandlers
         }
 
         /// <inheritdoc />
-        public async Task ExecuteAsync(CloseConnectionServerCommand command, CancellationToken cancellationToken)
+        public Task ExecuteAsync(CloseConnectionServerCommand command, CancellationToken cancellationToken)
         {
             var connection = _connectionAccessor.FtpConnection;
 
-            // Just abort the connection. This should
-            // avoid problems with an ObjectDisposedException.
+            // Just abort the connection. This should avoid problems with an ObjectDisposedException.
+            // The "StopAsync" will be called in CommandChannelDispatcherAsync.
             ((FtpConnection)connection).Abort();
 
-            // The "StopAsync" that will be called in
-            /*
-            // - Flush the remaining data
-            // - Close the SslStream (if active)
-            // - Stop all connection tasks
-            await Task.WhenAny(connection.StopAsync(), Task.Delay(-1, cancellationToken))
-               .ConfigureAwait(false);
-            */
+            return Task.CompletedTask;
         }
     }
 }
