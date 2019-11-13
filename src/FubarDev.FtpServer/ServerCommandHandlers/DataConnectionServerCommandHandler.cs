@@ -71,16 +71,20 @@ namespace FubarDev.FtpServer.ServerCommandHandlers
                     cancellationToken);
                 var response =
                     commandResponse
-                    ?? new FtpResponse(250, localizationFeature.Catalog.GetString("Closing data connection."));
+                    ?? new FtpResponse(226, localizationFeature.Catalog.GetString("Closing data connection."));
+
+                // We have to leave the connection open if the response code is 250.
+                if (response.Code != 250)
+                {
+                    // Close the data connection.
+                    await serverCommandWriter
+                       .WriteAsync(new CloseDataConnectionServerCommand(dataConnection), cancellationToken)
+                       .ConfigureAwait(false);
+                }
 
                 // Send the response.
                 await serverCommandWriter
                    .WriteAsync(new SendResponseServerCommand(response), cancellationToken)
-                   .ConfigureAwait(false);
-
-                // Close the data connection.
-                await serverCommandWriter
-                   .WriteAsync(new CloseDataConnectionServerCommand(dataConnection), cancellationToken)
                    .ConfigureAwait(false);
             }
         }

@@ -30,6 +30,11 @@ namespace FubarDev.FtpServer
         Stream Stream { get; }
 
         /// <summary>
+        /// Gets a value indicating whether the connection was closed.
+        /// </summary>
+        bool Closed { get; }
+
+        /// <summary>
         /// Closes the connection (and the stream).
         /// </summary>
         /// <param name="cancellationToken">The cancellation token.</param>

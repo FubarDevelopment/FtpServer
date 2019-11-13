@@ -401,6 +401,33 @@ namespace FubarDev.FtpServer
                         _logger?.LogError(ex, ex.Message);
                     }
 
+                    // Dispose all features (if disposable)
+                    foreach (var featureItem in Features)
+                    {
+                        try
+                        {
+                            switch (featureItem.Value)
+                            {
+                                case IFtpConnection _:
+                                    // Never dispose the connection itself.
+                                    break;
+                                case IFtpDataConnectionFeature feature:
+                                    await feature.DisposeAsync().ConfigureAwait(false);
+                                    break;
+                                case IDisposable disposable:
+                                    disposable.Dispose();
+                                    break;
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            // Ignore exceptions
+                            _logger?.LogWarning(ex, "Failed to dispose feature of type {featureType}: {errorMessage}", featureItem.Key, ex.Message);
+                        }
+
+                        Features[featureItem.Key] = null;
+                    }
+
                     _logger?.LogInformation("Connection closed");
                 }
                 finally
@@ -486,6 +513,35 @@ namespace FubarDev.FtpServer
                 Abort();
             }
 
+            // HINT: This code is now used in three different places:
+            // - FtpConnection.StopAsync
+            // - FtpConnection.Dispose
+            // - ReinCommandHandler.Process
+            //
+            // We really need to clean up this mess!
+            // Dispose all features (if disposable)
+            foreach (var featureItem in Features)
+            {
+                try
+                {
+                    // TODO: Call DisposeAsync on platforms supporting IAsyncDisposable.
+                    switch (featureItem.Value)
+                    {
+                        case IFtpConnection _:
+                            // Never dispose the connection itself.
+                            break;
+                        case IDisposable disposable:
+                            disposable.Dispose();
+                            break;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // Ignore exceptions
+                    _logger?.LogWarning(ex, "Failed to dispose feature of type {featureType}: {errorMessage}", featureItem.Key, ex.Message);
+                }
+            }
+
             _socket.Dispose();
             _cancellationTokenSource.Dispose();
 #pragma warning disable 618
@@ -515,26 +571,6 @@ namespace FubarDev.FtpServer
 
             _connectionClosing = true;
             _cancellationTokenSource.Cancel(true);
-
-            // Dispose all features (if disposable)
-            foreach (var featureItem in Features)
-            {
-                if (featureItem.Value is FtpConnection)
-                {
-                    // Never dispose the connection itself.
-                    continue;
-                }
-
-                try
-                {
-                    (featureItem.Value as IDisposable)?.Dispose();
-                }
-                catch (Exception ex)
-                {
-                    // Ignore exceptions
-                    _logger?.LogWarning(ex, "Failed to feature of type {featureType}: {errorMessage}", featureItem.Key, ex.Message);
-                }
-            }
         }
 
         /// <summary>

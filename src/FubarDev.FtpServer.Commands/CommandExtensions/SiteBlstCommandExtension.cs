@@ -118,7 +118,7 @@ namespace FubarDev.FtpServer.CommandExtensions
                 }
             }
 
-            return new FtpResponse(250, T("Closing data connection."));
+            return null;
         }
 
         private IEnumerable<string> GetLines(IEnumerable<BackgroundTransferInfo> entries)
