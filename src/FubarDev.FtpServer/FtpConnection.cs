@@ -695,18 +695,16 @@ namespace FubarDev.FtpServer
                         tasks.Add(backgroundTaskLifetimeService.Task);
                     }
 
-                    Debug.WriteLine($"Waiting for {tasks.Count} tasks");
                     var completedTask = await Task.WhenAny(tasks.ToArray()).ConfigureAwait(false);
                     if (completedTask == null)
                     {
                         break;
                     }
 
-                    Debug.WriteLine($"Task {completedTask} completed");
-
                     // ReSharper disable once PatternAlwaysOfType
                     if (backgroundTaskLifetimeService?.Task == completedTask)
                     {
+                        _logger?.LogTrace("Background task completed.");
                         await completedTask.ConfigureAwait(false);
                         Features.Set<IBackgroundTaskLifetimeFeature?>(null);
                     }
