@@ -2,6 +2,7 @@
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -12,7 +13,7 @@ namespace FubarDev.FtpServer
     /// <summary>
     /// An implementation of <see cref="IFtpResponse"/> that is usable for the FTP servers banner message.
     /// </summary>
-    public class FtpResponseTextBlock : IFtpResponse
+    public sealed class FtpResponseTextBlock : IFtpResponse
     {
         private readonly List<string> _lines;
 
@@ -33,6 +34,7 @@ namespace FubarDev.FtpServer
         public int Code { get; }
 
         /// <inheritdoc />
+        [Obsolete("Use GetLinesAsync instead.")]
         public Task<FtpResponseLine> GetNextLineAsync(object? token, CancellationToken cancellationToken)
         {
             IEnumerator<string> enumerator;
@@ -53,6 +55,12 @@ namespace FubarDev.FtpServer
             }
 
             return Task.FromResult(new FtpResponseLine(enumerator.Current, enumerator));
+        }
+
+        /// <inheritdoc />
+        public IAsyncEnumerable<string> GetLinesAsync(CancellationToken cancellationToken)
+        {
+            return GetLines().ToAsyncEnumerable();
         }
 
         /// <inheritdoc />

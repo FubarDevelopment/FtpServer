@@ -2,7 +2,8 @@
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
-using System.Linq;
+using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -40,23 +41,33 @@ namespace FubarDev.FtpServer.CommandHandlers
         }
 
         /// <inheritdoc/>
-        public override async Task<IFtpResponse?> Process(FtpCommand command, CancellationToken cancellationToken)
+        public override Task<IFtpResponse?> Process(FtpCommand command, CancellationToken cancellationToken)
         {
             if (string.IsNullOrEmpty(command.Argument))
             {
-                var taskStates = _backgroundTransferWorker.GetStates();
-                var statusMessage = new StringBuilder();
-                statusMessage.AppendFormat(
-                    "Server functional, {0} open connections",
-                    _server.Statistics.ActiveConnections);
-                if (taskStates.Count != 0)
-                {
-                    statusMessage.AppendFormat(", {0} active background transfers", taskStates.Count);
-                }
-
-                return new FtpResponse(211, statusMessage.ToString());
+                return Task.FromResult(GetServerStatus());
             }
 
+            return Task.FromResult(GetFiles(command));
+        }
+
+        private IFtpResponse? GetServerStatus()
+        {
+            var taskStates = _backgroundTransferWorker.GetStates();
+            var statusMessage = new StringBuilder();
+            statusMessage.AppendFormat(
+                "Server functional, {0} open connections",
+                _server.Statistics.ActiveConnections);
+            if (taskStates.Count != 0)
+            {
+                statusMessage.AppendFormat(", {0} active background transfers", taskStates.Count);
+            }
+
+            return new FtpResponse(211, statusMessage.ToString());
+        }
+
+        private IFtpResponse? GetFiles(FtpCommand command)
+        {
             var mask = command.Argument;
             if (!mask.EndsWith("*"))
             {
@@ -65,28 +76,53 @@ namespace FubarDev.FtpServer.CommandHandlers
 
             var fsFeature = Connection.Features.Get<IFileSystemFeature>();
 
-            var globOptions = new GlobOptions();
-            globOptions.Evaluation.CaseInsensitive = fsFeature.FileSystem.FileSystemEntryComparer.Equals("a", "A");
+            var globOptions = new GlobOptions
+            {
+                Evaluation = { CaseInsensitive = fsFeature.FileSystem.FileSystemEntryComparer.Equals("a", "A") },
+            };
 
             var glob = Glob.Parse(mask, globOptions);
+            return new StatResponseList(command.Argument, glob, fsFeature);
+        }
 
-            var formatter = new LongListFormatter();
+        private class StatResponseList : FtpResponseListBase
+        {
+            private readonly Glob _glob;
+            private readonly IFileSystemFeature _fileSystemFeature;
 
-            var entries = fsFeature.FileSystem.GetEntriesAsync(fsFeature.CurrentDirectory, cancellationToken);
-            var directoryListing = new DirectoryListing(
-                entries,
-                fsFeature.FileSystem,
-                fsFeature.Path,
-                false);
-            var lines = await directoryListing.Where(x => glob.IsMatch(x.Name))
-               .Select(x => formatter.Format(x))
-               .ToListAsync(cancellationToken)
-               .ConfigureAwait(false);
-            return new FtpResponseList(
-                211,
-                $"STAT {command.Argument}",
-                "STAT",
-                lines);
+            public StatResponseList(
+                string argument,
+                Glob glob,
+                IFileSystemFeature fileSystemFeature)
+                : base(211, argument, "End")
+            {
+                _glob = glob;
+                _fileSystemFeature = fileSystemFeature;
+            }
+
+            /// <inheritdoc />
+            protected override async IAsyncEnumerable<string> GetDataLinesAsync(
+                [EnumeratorCancellation] CancellationToken cancellationToken)
+            {
+                var entries = _fileSystemFeature.FileSystem.GetEntriesAsync(
+                    _fileSystemFeature.CurrentDirectory,
+                    cancellationToken);
+                var directoryListing = new DirectoryListing(
+                    entries,
+                    _fileSystemFeature.FileSystem,
+                    _fileSystemFeature.Path,
+                    false);
+                var formatter = new LongListFormatter();
+                await foreach (var entry in directoryListing)
+                {
+                    if (!_glob.IsMatch(entry.Name))
+                    {
+                        continue;
+                    }
+
+                    yield return formatter.Format(entry);
+                }
+            }
         }
     }
 }

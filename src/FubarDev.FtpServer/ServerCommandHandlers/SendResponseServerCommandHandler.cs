@@ -53,32 +53,18 @@ namespace FubarDev.FtpServer.ServerCommandHandlers
 
             _logger?.Log(response);
 
-            object? token = null;
-            do
+            await foreach (var line in response.GetLinesAsync(cancellationToken).ConfigureAwait(false))
             {
-                var line = await response.GetNextLineAsync(token, cancellationToken)
-                   .ConfigureAwait(false);
-                if (line.HasText)
-                {
-                    var data = encoding.GetBytes($"{line.Text}\r\n");
-                    var memory = writer.GetMemory(data.Length);
-                    data.AsSpan().CopyTo(memory.Span);
-                    writer.Advance(data.Length);
-                    var flushResult = await writer.FlushAsync(cancellationToken);
-                    if (flushResult.IsCanceled || flushResult.IsCompleted)
-                    {
-                        break;
-                    }
-                }
-
-                if (!line.HasMoreData)
+                var data = encoding.GetBytes($"{line}\r\n");
+                var memory = writer.GetMemory(data.Length);
+                data.AsSpan().CopyTo(memory.Span);
+                writer.Advance(data.Length);
+                var flushResult = await writer.FlushAsync(cancellationToken);
+                if (flushResult.IsCanceled || flushResult.IsCompleted)
                 {
                     break;
                 }
-
-                token = line.Token;
             }
-            while (token != null);
         }
     }
 }

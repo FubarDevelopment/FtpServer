@@ -5,6 +5,9 @@
 // <author>Mark Junker</author>
 //-----------------------------------------------------------------------
 
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -13,7 +16,7 @@ namespace FubarDev.FtpServer
     /// <summary>
     /// FTP response.
     /// </summary>
-    public class FtpResponse : IFtpResponse
+    public sealed class FtpResponse : IFtpResponse
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="FtpResponse"/> class.
@@ -53,14 +56,16 @@ namespace FubarDev.FtpServer
         }
 
         /// <inheritdoc />
+        [Obsolete("Use GetLinesAsync instead.")]
         public Task<FtpResponseLine> GetNextLineAsync(object? token, CancellationToken cancellationToken)
         {
-            if (token is null)
-            {
-                return Task.FromResult(new FtpResponseLine(ToString(), new object()));
-            }
+            return Task.FromResult(new FtpResponseLine(ToString(), null));
+        }
 
-            return Task.FromResult(new FtpResponseLine(null, null));
+        /// <inheritdoc />
+        public IAsyncEnumerable<string> GetLinesAsync(CancellationToken cancellationToken)
+        {
+            return new[] { ToString() }.ToAsyncEnumerable();
         }
     }
 }
