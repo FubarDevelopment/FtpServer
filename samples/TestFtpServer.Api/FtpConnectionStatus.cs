@@ -13,9 +13,10 @@ namespace TestFtpServer.Api
         /// Initializes a new instance of the <see cref="FtpConnectionStatus"/> class.
         /// </summary>
         /// <param name="id">The ID of the connection.</param>
-        public FtpConnectionStatus(string id)
+        public FtpConnectionStatus(string id, string remoteIp)
         {
             Id = id;
+            RemoteIp = remoteIp;
         }
 
         /// <summary>

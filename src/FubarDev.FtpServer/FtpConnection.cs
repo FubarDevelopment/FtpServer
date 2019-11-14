@@ -208,6 +208,7 @@ namespace FubarDev.FtpServer
             parentFeatures.Set<INetworkStreamFeature>(_networkStreamFeature);
             parentFeatures.Set<IFtpConnectionEventHost>(this);
             parentFeatures.Set<IFtpConnectionStatusCheck>(_idleCheck);
+            parentFeatures.Set<IConnectionIdFeature>(new FtpConnectionIdFeature(ConnectionId));
             parentFeatures.Set<IConnectionLifetimeFeature>(new FtpConnectionLifetimeFeature(this));
 
             var defaultEncoding = options.Value.DefaultEncoding ?? Encoding.ASCII;
@@ -906,6 +907,23 @@ namespace FubarDev.FtpServer
 
             /// <inheritdoc />
             public PipeWriter Output { get; }
+        }
+
+        private class FtpConnectionIdFeature : IConnectionIdFeature
+        {
+            private readonly string _connectionId;
+
+            public FtpConnectionIdFeature(string connectionId)
+            {
+                _connectionId = connectionId;
+            }
+
+            /// <inheritdoc />
+            public string ConnectionId
+            {
+                get => _connectionId;
+                set { }
+            }
         }
 
         private class FtpConnectionLifetimeFeature : IConnectionLifetimeFeature

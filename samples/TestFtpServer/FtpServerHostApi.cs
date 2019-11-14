@@ -97,15 +97,15 @@ namespace TestFtpServer
                 try
                 {
                     var keepAliveFeature = connection.Features.Get<IFtpConnectionStatusCheck>();
-                    var connectionFeature = connection.Features.Get<IConnectionEndPointFeature>();
-                    var ftpConnection = (FtpConnection)connection;
-                    var connectionId = ftpConnection.ConnectionId;
+                    var connectionEndPointFeature = connection.Features.Get<IConnectionEndPointFeature>();
+                    var connectionIdFeature = connection.Features.Get<IConnectionIdFeature>();
+                    var connectionId = connectionIdFeature.ConnectionId;
                     var isAlive = keepAliveFeature.CheckIfAlive();
+                    var remoteIp = connectionEndPointFeature.RemoteEndPoint.ToString();
                     result.Add(
-                        new FtpConnectionStatus(connectionId)
+                        new FtpConnectionStatus(connectionId, remoteIp)
                         {
                             IsAlive = isAlive,
-                            RemoteIp = connectionFeature.RemoteEndPoint.ToString(),
                         });
                 }
                 catch
