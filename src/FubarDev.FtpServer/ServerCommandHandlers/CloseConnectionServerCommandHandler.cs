@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 
 using FubarDev.FtpServer.ServerCommands;
 
+using Microsoft.AspNetCore.Connections.Features;
+
 namespace FubarDev.FtpServer.ServerCommandHandlers
 {
     /// <summary>
@@ -30,10 +32,11 @@ namespace FubarDev.FtpServer.ServerCommandHandlers
         public Task ExecuteAsync(CloseConnectionServerCommand command, CancellationToken cancellationToken)
         {
             var connection = _connectionAccessor.FtpConnection;
+            var lifetimeFeature = connection.Features.Get<IConnectionLifetimeFeature>();
 
             // Just abort the connection. This should avoid problems with an ObjectDisposedException.
             // The "StopAsync" will be called in CommandChannelDispatcherAsync.
-            ((FtpConnection)connection).Abort();
+            lifetimeFeature.Abort();
 
             return Task.CompletedTask;
         }

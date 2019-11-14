@@ -208,6 +208,7 @@ namespace FubarDev.FtpServer
             parentFeatures.Set<INetworkStreamFeature>(_networkStreamFeature);
             parentFeatures.Set<IFtpConnectionEventHost>(this);
             parentFeatures.Set<IFtpConnectionStatusCheck>(_idleCheck);
+            parentFeatures.Set<IConnectionLifetimeFeature>(new FtpConnectionLifetimeFeature(this));
 
             var defaultEncoding = options.Value.DefaultEncoding ?? Encoding.ASCII;
             var authInfoFeature = new AuthorizationInformationFeature();
@@ -464,7 +465,7 @@ namespace FubarDev.FtpServer
             }
         }
 
-        internal void Abort()
+        private void Abort()
         {
             if (_connectionClosing)
             {
@@ -905,6 +906,26 @@ namespace FubarDev.FtpServer
 
             /// <inheritdoc />
             public PipeWriter Output { get; }
+        }
+
+        private class FtpConnectionLifetimeFeature : IConnectionLifetimeFeature
+        {
+            private readonly FtpConnection _connection;
+
+            public FtpConnectionLifetimeFeature(FtpConnection connection)
+            {
+                _connection = connection;
+                ConnectionClosed = connection._cancellationTokenSource.Token;
+            }
+
+            /// <inheritdoc />
+            public CancellationToken ConnectionClosed { get; set; }
+
+            /// <inheritdoc />
+            public void Abort()
+            {
+                _connection.Abort();
+            }
         }
     }
 }
