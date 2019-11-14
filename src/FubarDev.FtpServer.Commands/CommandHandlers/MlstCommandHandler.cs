@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading;
@@ -201,14 +202,12 @@ namespace FubarDev.FtpServer.CommandHandlers
                 NewLine = "\r\n",
             })
             {
-                var entries = await fileSystem.GetEntriesAsync(dirEntry, cancellationToken).ConfigureAwait(false);
-                var enumerator = new DirectoryListingEnumerator(entries, fileSystem, path, true);
-                var formatter = new FactsListFormatter(user, enumerator, factsFeature.ActiveMlstFacts, false);
-                while (enumerator.MoveNext())
+                var entries = fileSystem.GetEntriesAsync(dirEntry, cancellationToken);
+                var listing = new DirectoryListing(entries, fileSystem, path, true);
+                var formatter = new FactsListFormatter(user, factsFeature.ActiveMlstFacts, false);
+                await foreach (var entry in listing.ConfigureAwait(false).WithCancellation(cancellationToken))
                 {
-                    var name = enumerator.Name;
-                    var entry = enumerator.Entry;
-                    var line = formatter.Format(entry, name);
+                    var line = formatter.Format(entry);
                     _logger?.LogTrace(line);
                     await writer.WriteLineAsync(line).ConfigureAwait(false);
                 }
@@ -220,7 +219,7 @@ namespace FubarDev.FtpServer.CommandHandlers
             return new FtpResponse(226, T("Closing data connection."));
         }
 
-        private class MlstFtpResponse : FtpResponseList<Tuple<DirectoryListingEnumerator, FactsListFormatter>>
+        private class MlstFtpResponse : FtpResponseList<Tuple<IAsyncEnumerator<DirectoryListingEntry>, FactsListFormatter>>
         {
             private readonly ISet<string> _activeMlstFacts;
             private readonly ClaimsPrincipal _user;
@@ -244,38 +243,40 @@ namespace FubarDev.FtpServer.CommandHandlers
             }
 
             /// <inheritdoc />
-            protected override Task<Tuple<DirectoryListingEnumerator, FactsListFormatter>> CreateInitialStatusAsync(CancellationToken cancellationToken)
+            protected override Task<Tuple<IAsyncEnumerator<DirectoryListingEntry>, FactsListFormatter>> CreateInitialStatusAsync(CancellationToken cancellationToken)
             {
                 var entries = new List<IUnixFileSystemEntry>()
                 {
                     _targetEntry,
                 };
 
-                var enumerator = new DirectoryListingEnumerator(entries, _fileSystem, _path, false);
-                var formatter = new FactsListFormatter(_user, enumerator, _activeMlstFacts, true);
+                var enumerator = new DirectoryListing(entries.ToAsyncEnumerable(), _fileSystem, _path, false)
+                   .GetAsyncEnumerator(cancellationToken);
+                var formatter = new FactsListFormatter(_user, _activeMlstFacts, true);
 
                 return Task.FromResult(Tuple.Create(enumerator, formatter));
             }
 
             /// <inheritdoc />
-            protected override Task<string?> GetNextLineAsync(Tuple<DirectoryListingEnumerator, FactsListFormatter> status, CancellationToken cancellationToken)
+            protected override async Task<string?> GetNextLineAsync(Tuple<IAsyncEnumerator<DirectoryListingEntry>, FactsListFormatter> status, CancellationToken cancellationToken)
             {
                 if (status == null)
                 {
-                    return Task.FromResult<string?>(null);
+                    return null;
                 }
 
                 var enumerator = status.Item1;
                 var formatter = status.Item2;
 
-                if (enumerator.MoveNext())
+                if (await enumerator.MoveNextAsync())
                 {
-                    var name = enumerator.Name;
-                    var entry = enumerator.Entry;
-                    return Task.FromResult<string?>(formatter.Format(entry, name));
+                    var entry = enumerator.Current;
+                    return formatter.Format(entry);
                 }
 
-                return Task.FromResult<string?>(null);
+                await enumerator.DisposeAsync();
+
+                return null;
             }
         }
     }

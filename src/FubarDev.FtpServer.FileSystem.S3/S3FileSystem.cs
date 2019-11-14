@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -56,7 +57,7 @@ namespace FubarDev.FtpServer.FileSystem.S3
         public IUnixDirectoryEntry Root { get; }
 
         /// <inheritdoc />
-        public Task<IReadOnlyList<IUnixFileSystemEntry>> GetEntriesAsync(
+        public IAsyncEnumerable<IUnixFileSystemEntry> GetEntriesAsync(
             IUnixDirectoryEntry directoryEntry,
             CancellationToken cancellationToken)
         {
@@ -77,7 +78,9 @@ namespace FubarDev.FtpServer.FileSystem.S3
         {
             var prefix = S3Path.Combine(((S3DirectoryEntry)directoryEntry).Key, name);
 
-            var objects = await ListObjectsAsync(prefix, cancellationToken);
+            var objects = await ListObjectsAsync(prefix, cancellationToken)
+               .ToListAsync(cancellationToken)
+               .ConfigureAwait(false);
 
             if (objects.Count == 1 && objects.Single() is IUnixFileEntry entry)
             {
@@ -218,12 +221,10 @@ namespace FubarDev.FtpServer.FileSystem.S3
             return Task.FromResult(entry);
         }
 
-        private async Task<IReadOnlyList<IUnixFileSystemEntry>> ListObjectsAsync(
+        private async IAsyncEnumerable<IUnixFileSystemEntry> ListObjectsAsync(
             string prefix,
-            CancellationToken cancellationToken)
+            [EnumeratorCancellation] CancellationToken cancellationToken)
         {
-            var objects = new List<IUnixFileSystemEntry>();
-
             ListObjectsResponse response;
             string? marker = null;
             do
@@ -240,7 +241,7 @@ namespace FubarDev.FtpServer.FileSystem.S3
 
                 foreach (var directory in response.CommonPrefixes)
                 {
-                    objects.Add(new S3DirectoryEntry(directory));
+                    yield return new S3DirectoryEntry(directory);
                 }
 
                 foreach (var s3Object in response.S3Objects)
@@ -250,18 +251,15 @@ namespace FubarDev.FtpServer.FileSystem.S3
                         continue; // this is the folder itself
                     }
 
-                    objects.Add(
-                        new S3FileEntry(s3Object.Key, s3Object.Size)
-                        {
-                            LastWriteTime = s3Object.LastModified,
-                        });
+                    yield return new S3FileEntry(s3Object.Key, s3Object.Size)
+                    {
+                        LastWriteTime = s3Object.LastModified,
+                    };
                 }
 
                 marker = response.NextMarker;
             }
             while (response.IsTruncated);
-
-            return objects;
         }
 
         private async Task MoveFile(string sourceKey, string key, CancellationToken cancellationToken)

@@ -9,6 +9,7 @@ using System;
 using System.Globalization;
 
 using FubarDev.FtpServer.FileSystem;
+using FubarDev.FtpServer.Utilities;
 
 namespace FubarDev.FtpServer.ListFormatters
 {
@@ -18,10 +19,11 @@ namespace FubarDev.FtpServer.ListFormatters
     public class LongListFormatter : IListFormatter
     {
         /// <inheritdoc/>
-        public string Format(IUnixFileSystemEntry entry, string? name)
+        public string Format(DirectoryListingEntry listingEntry)
         {
+            var entry = listingEntry.Entry;
             var fileEntry = entry as IUnixFileEntry;
-            return BuildLine(entry, fileEntry, name ?? entry.Name);
+            return BuildLine(entry, fileEntry, listingEntry.Name);
         }
 
         private static string BuildLine(IUnixFileSystemEntry entry, IUnixFileEntry? fileEntry, string name)

@@ -8,6 +8,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -79,7 +80,7 @@ namespace FubarDev.FtpServer.FileSystem.DotNet
         public bool SupportsAppend => true;
 
         /// <inheritdoc/>
-        public Task<IReadOnlyList<IUnixFileSystemEntry>> GetEntriesAsync(IUnixDirectoryEntry directoryEntry, CancellationToken cancellationToken)
+        public IAsyncEnumerable<IUnixFileSystemEntry> GetEntriesAsync(IUnixDirectoryEntry directoryEntry, CancellationToken cancellationToken)
         {
             var result = new List<IUnixFileSystemEntry>();
             var searchDirInfo = ((DotNetDirectoryEntry)directoryEntry).DirectoryInfo;
@@ -97,7 +98,8 @@ namespace FubarDev.FtpServer.FileSystem.DotNet
                     }
                 }
             }
-            return Task.FromResult<IReadOnlyList<IUnixFileSystemEntry>>(result);
+
+            return result.ToAsyncEnumerable();
         }
 
         /// <inheritdoc/>

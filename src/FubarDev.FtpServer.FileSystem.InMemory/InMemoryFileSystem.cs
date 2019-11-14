@@ -45,15 +45,14 @@ namespace FubarDev.FtpServer.FileSystem.InMemory
         public IUnixDirectoryEntry Root { get; }
 
         /// <inheritdoc />
-        public Task<IReadOnlyList<IUnixFileSystemEntry>> GetEntriesAsync(
+        public IAsyncEnumerable<IUnixFileSystemEntry> GetEntriesAsync(
             IUnixDirectoryEntry directoryEntry,
             CancellationToken cancellationToken)
         {
             var entry = (InMemoryDirectoryEntry)directoryEntry;
             lock (entry.ChildrenLock)
             {
-                var children = entry.Children.Values.ToList();
-                return Task.FromResult<IReadOnlyList<IUnixFileSystemEntry>>(children);
+                return entry.Children.Values.ToList().ToAsyncEnumerable();
             }
         }
 

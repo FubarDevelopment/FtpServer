@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -57,9 +58,9 @@ namespace FubarDev.FtpServer.FileSystem
         }
 
         /// <inheritdoc/>
-        public Task<IReadOnlyList<IUnixFileSystemEntry>> GetEntriesAsync(IUnixDirectoryEntry directoryEntry, CancellationToken cancellationToken)
+        public IAsyncEnumerable<IUnixFileSystemEntry> GetEntriesAsync(IUnixDirectoryEntry directoryEntry, CancellationToken cancellationToken)
         {
-            return Task.FromResult<IReadOnlyList<IUnixFileSystemEntry>>(new List<IUnixFileSystemEntry>());
+            return AsyncEnumerable.Empty<IUnixFileSystemEntry>();
         }
 
         /// <inheritdoc/>

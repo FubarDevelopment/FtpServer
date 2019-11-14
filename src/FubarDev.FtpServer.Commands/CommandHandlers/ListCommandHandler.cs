@@ -175,12 +175,16 @@ namespace FubarDev.FtpServer.CommandHandlers
 
                     var glob = Glob.Parse(mask, globOptions);
 
-                    var entries = await fsFeature.FileSystem.GetEntriesAsync(currentDirEntry, cancellationToken).ConfigureAwait(false);
-                    var enumerator = new DirectoryListingEnumerator(entries, fsFeature.FileSystem, currentPath, true);
-                    while (enumerator.MoveNext())
+                    var entries = fsFeature.FileSystem.GetEntriesAsync(currentDirEntry, cancellationToken);
+                    var listing = new DirectoryListing(
+                        entries,
+                        fsFeature.FileSystem,
+                        currentPath,
+                        true);
+                    await foreach (var entry in listing)
                     {
-                        var name = enumerator.Name;
-                        if (!enumerator.IsDotEntry)
+                        var name = entry.Name;
+                        if (!entry.IsDotEntry)
                         {
                             if (!glob.IsMatch(name))
                             {
@@ -198,11 +202,10 @@ namespace FubarDev.FtpServer.CommandHandlers
                             continue;
                         }
 
-                        var entry = enumerator.Entry;
-
-                        if (argument.Recursive && !enumerator.IsDotEntry)
+                        var fsEntry = entry.Entry;
+                        if (argument.Recursive && !entry.IsDotEntry)
                         {
-                            if (entry is IUnixDirectoryEntry dirEntry)
+                            if (fsEntry is IUnixDirectoryEntry dirEntry)
                             {
                                 var subDirPath = currentPath.Clone();
                                 subDirPath.Push(dirEntry);
@@ -210,7 +213,7 @@ namespace FubarDev.FtpServer.CommandHandlers
                             }
                         }
 
-                        var line = formatter.Format(entry, name);
+                        var line = formatter.Format(entry);
                         _logger?.LogTrace(line);
                         await writer.WriteLineAsync(line).ConfigureAwait(false);
                     }

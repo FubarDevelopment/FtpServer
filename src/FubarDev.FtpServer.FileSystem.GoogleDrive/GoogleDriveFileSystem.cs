@@ -9,6 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -71,17 +72,15 @@ namespace FubarDev.FtpServer.FileSystem.GoogleDrive
         public bool SupportsAppend => false;
 
         /// <inheritdoc/>
-        public async Task<IReadOnlyList<IUnixFileSystemEntry>> GetEntriesAsync(
+        public IAsyncEnumerable<IUnixFileSystemEntry> GetEntriesAsync(
             IUnixDirectoryEntry directoryEntry,
             CancellationToken cancellationToken)
         {
             var dirEntry = (GoogleDriveDirectoryEntry)directoryEntry;
-            var entries = await ConvertEntries(
-                    dirEntry,
-                    () => GetChildrenAsync(dirEntry.File, cancellationToken),
-                    cancellationToken)
-               .ConfigureAwait(false);
-            return entries;
+            return ConvertEntries(
+                dirEntry,
+                () => GetChildrenAsync(dirEntry.File, cancellationToken),
+                cancellationToken);
         }
 
         /// <inheritdoc/>
@@ -95,6 +94,7 @@ namespace FubarDev.FtpServer.FileSystem.GoogleDrive
                     dirEntry,
                     () => FindChildByNameAsync(dirEntry.File, name, cancellationToken),
                     cancellationToken)
+               .ToListAsync(cancellationToken)
                .ConfigureAwait(false);
             return entries.FirstOrDefault();
         }
@@ -194,36 +194,34 @@ namespace FubarDev.FtpServer.FileSystem.GoogleDrive
             var fe = (GoogleDriveFileEntry)fileEntry;
             var request = Service.Files.Get(fe.File.Id);
 
-            using (var msg = request.CreateRequest())
+            using var msg = request.CreateRequest();
+            if (from != null)
             {
-                if (from != null)
-                {
-                    msg.Headers.Range = new RangeHeaderValue(from, null);
-                }
-
-                // Add alt=media to the query parameters.
-                var uri = new UriBuilder(msg.RequestUri);
-                if (uri.Query.Length <= 1)
-                {
-                    uri.Query = "alt=media";
-                }
-                else
-                {
-                    // Remove the leading '?'. UriBuilder.Query doesn't round-trip.
-                    uri.Query = uri.Query.Substring(1) + "&alt=media";
-                }
-
-                msg.RequestUri = uri.Uri;
-
-                var response = await request.Service.HttpClient.SendAsync(
-                        msg,
-                        HttpCompletionOption.ResponseHeadersRead,
-                        cancellationToken)
-                    .ConfigureAwait(false);
-                response.EnsureSuccessStatusCode();
-                var responseStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
-                return new GoogleDriveDownloadStream(response, responseStream, startPosition, fe.Size);
+                msg.Headers.Range = new RangeHeaderValue(from, null);
             }
+
+            // Add alt=media to the query parameters.
+            var uri = new UriBuilder(msg.RequestUri);
+            if (uri.Query.Length <= 1)
+            {
+                uri.Query = "alt=media";
+            }
+            else
+            {
+                // Remove the leading '?'. UriBuilder.Query doesn't round-trip.
+                uri.Query = uri.Query.Substring(1) + "&alt=media";
+            }
+
+            msg.RequestUri = uri.Uri;
+
+            var response = await request.Service.HttpClient.SendAsync(
+                    msg,
+                    HttpCompletionOption.ResponseHeadersRead,
+                    cancellationToken)
+               .ConfigureAwait(false);
+            response.EnsureSuccessStatusCode();
+            var responseStream = await response.Content.ReadAsStreamAsync().ConfigureAwait(false);
+            return new GoogleDriveDownloadStream(response, responseStream, startPosition, fe.Size);
         }
 
         /// <inheritdoc/>
@@ -383,23 +381,23 @@ namespace FubarDev.FtpServer.FileSystem.GoogleDrive
                 _uploadsLock.Wait();
                 try
                 {
-                _uploads.Remove(fileId);
-            }
-            finally
-            {
+                    _uploads.Remove(fileId);
+                }
+                finally
+                {
                     _uploadsLock.Release();
                 }
             }
             catch (Exception ex) when (ex.Is<ObjectDisposedException>())
             {
                 // Ignore. This may happen when the connection
-                // was closed while a background upate was active.
+                // was closed while a background update was active.
             }
         }
 
-        private async Task<IReadOnlyCollection<File>> ListFilesAsync(
+        private async IAsyncEnumerable<IList<File>> ListFilesAsync(
             string query,
-            CancellationToken cancellationToken)
+            [EnumeratorCancellation] CancellationToken cancellationToken)
         {
             var request = Service.Files.List();
             request.Q = query;
@@ -408,23 +406,15 @@ namespace FubarDev.FtpServer.FileSystem.GoogleDrive
             var response = await request.ExecuteAsync(cancellationToken)
                .ConfigureAwait(false);
 
-            if (string.IsNullOrEmpty(response.NextPageToken))
-            {
-                return response.Files as IReadOnlyList<File> ?? response.Files.ToList();
-            }
+            yield return response.Files;
 
-            var fileList = new List<File>(response.Files);
-
-            do
+            while (!string.IsNullOrEmpty(response.NextPageToken))
             {
                 request.PageToken = response.NextPageToken;
                 response = await request.ExecuteAsync(cancellationToken)
                    .ConfigureAwait(false);
-                fileList.AddRange(response.Files);
+                yield return response.Files;
             }
-            while (!string.IsNullOrEmpty(response.NextPageToken));
-
-            return fileList;
         }
 
         /// <summary>
@@ -444,37 +434,41 @@ namespace FubarDev.FtpServer.FileSystem.GoogleDrive
             }
         }
 
-        private async Task<IReadOnlyList<IUnixFileSystemEntry>> ConvertEntries(
+        private async IAsyncEnumerable<IUnixFileSystemEntry> ConvertEntries(
             GoogleDriveDirectoryEntry dirEntry,
-            Func<Task<IReadOnlyCollection<File>>> getEntriesFunc,
-            CancellationToken cancellationToken)
+            Func<IAsyncEnumerable<IList<File>>> getEntriesFunc,
+            [EnumeratorCancellation] CancellationToken cancellationToken)
         {
-            var result = new List<IUnixFileSystemEntry>();
             await _uploadsLock.WaitAsync(cancellationToken).ConfigureAwait(false);
             try
             {
                 var baseDir = dirEntry.FullName;
-                var children = await getEntriesFunc().ConfigureAwait(false);
-                foreach (var child in children.Where(x => !x.Trashed.GetValueOrDefault()))
+                var childrenEntries = getEntriesFunc()
+                   .ConfigureAwait(false)
+                   .WithCancellation(cancellationToken);
+                await foreach (var children in childrenEntries)
                 {
-                    var fullName = FileSystemExtensions.CombinePath(baseDir, child.Name);
-                    if (child.IsDirectory())
+                    foreach (var child in children.Where(x => !x.Trashed.GetValueOrDefault()))
                     {
-                        result.Add(new GoogleDriveDirectoryEntry(child, fullName));
-                    }
-                    else
-                    {
-                        long? fileSize;
-                        if (_uploads.TryGetValue(child.Id, out var uploader))
+                        var fullName = FileSystemExtensions.CombinePath(baseDir, child.Name);
+                        if (child.IsDirectory())
                         {
-                            fileSize = uploader.FileSize;
+                            yield return new GoogleDriveDirectoryEntry(child, fullName);
                         }
                         else
                         {
-                            fileSize = null;
-                        }
+                            long? fileSize;
+                            if (_uploads.TryGetValue(child.Id, out var uploader))
+                            {
+                                fileSize = uploader.FileSize;
+                            }
+                            else
+                            {
+                                fileSize = null;
+                            }
 
-                        result.Add(new GoogleDriveFileEntry(child, fullName, fileSize));
+                            yield return new GoogleDriveFileEntry(child, fullName, fileSize);
+                        }
                     }
                 }
             }
@@ -482,23 +476,21 @@ namespace FubarDev.FtpServer.FileSystem.GoogleDrive
             {
                 _uploadsLock.Release();
             }
-
-            return result;
         }
 
-        private Task<IReadOnlyCollection<File>> GetChildrenAsync(File parent, CancellationToken cancellationToken)
+        private IAsyncEnumerable<IList<File>> GetChildrenAsync(File parent, CancellationToken cancellationToken)
         {
             return ListFilesAsync($"{parent.Id.ToJsonString()} in parents", cancellationToken);
         }
 
-        private Task<IReadOnlyCollection<File>> FindChildByNameAsync(
+        private IAsyncEnumerable<IList<File>> FindChildByNameAsync(
             File parent,
             string name,
             CancellationToken cancellationToken)
         {
             return ListFilesAsync(
-                $"{parent.Id.ToJsonString()} in parents and name={name.ToJsonString()}",
-                cancellationToken);
+                    $"{parent.Id.ToJsonString()} in parents and name={name.ToJsonString()}",
+                    cancellationToken);
         }
 
         private Task<File> MoveItem(

@@ -5,7 +5,7 @@
 // <author>Mark Junker</author>
 //-----------------------------------------------------------------------
 
-using FubarDev.FtpServer.FileSystem;
+using FubarDev.FtpServer.Utilities;
 
 namespace FubarDev.FtpServer.ListFormatters
 {
@@ -15,9 +15,9 @@ namespace FubarDev.FtpServer.ListFormatters
     public class ShortListFormatter : IListFormatter
     {
         /// <inheritdoc/>
-        public string Format(IUnixFileSystemEntry entry, string? name)
+        public string Format(DirectoryListingEntry listingEntry)
         {
-            return name ?? entry.Name;
+            return listingEntry.Name;
         }
     }
 }

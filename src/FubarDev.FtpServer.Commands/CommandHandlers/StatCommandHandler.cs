@@ -13,6 +13,7 @@ using FubarDev.FtpServer.BackgroundTransfer;
 using FubarDev.FtpServer.Commands;
 using FubarDev.FtpServer.Features;
 using FubarDev.FtpServer.ListFormatters;
+using FubarDev.FtpServer.Utilities;
 
 namespace FubarDev.FtpServer.CommandHandlers
 {
@@ -71,11 +72,16 @@ namespace FubarDev.FtpServer.CommandHandlers
 
             var formatter = new LongListFormatter();
 
-            var entries = await fsFeature.FileSystem.GetEntriesAsync(fsFeature.CurrentDirectory, cancellationToken)
+            var entries = fsFeature.FileSystem.GetEntriesAsync(fsFeature.CurrentDirectory, cancellationToken);
+            var directoryListing = new DirectoryListing(
+                entries,
+                fsFeature.FileSystem,
+                fsFeature.Path,
+                false);
+            var lines = await directoryListing.Where(x => glob.IsMatch(x.Name))
+               .Select(x => formatter.Format(x))
+               .ToListAsync(cancellationToken)
                .ConfigureAwait(false);
-            var lines = entries.Where(x => glob.IsMatch(x.Name))
-               .Select(x => formatter.Format(x, x.Name))
-               .ToList();
             return new FtpResponseList(
                 211,
                 $"STAT {command.Argument}",
