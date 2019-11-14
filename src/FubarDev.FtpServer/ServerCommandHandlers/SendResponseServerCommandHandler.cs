@@ -51,6 +51,8 @@ namespace FubarDev.FtpServer.ServerCommandHandlers
 
             var writer = networkStreamFeature.Output;
 
+            _logger?.Log(response);
+
             object? token = null;
             do
             {
@@ -58,7 +60,6 @@ namespace FubarDev.FtpServer.ServerCommandHandlers
                    .ConfigureAwait(false);
                 if (line.HasText)
                 {
-                    _logger?.LogDebug(line.Text);
                     var data = encoding.GetBytes($"{line.Text}\r\n");
                     var memory = writer.GetMemory(data.Length);
                     data.AsSpan().CopyTo(memory.Span);
