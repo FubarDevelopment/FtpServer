@@ -30,6 +30,7 @@ using FubarDev.FtpServer.MembershipProvider.Pam.Directories;
 using Google.Apis.Auth.OAuth2;
 using Google.Apis.Drive.v3;
 
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.DotNet.PlatformAbstractions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -241,7 +242,7 @@ namespace TestFtpServer
                         {
                             ftpServer.ConfigureConnection += (s, e) =>
                             {
-                                var serviceProvider = e.Connection.ConnectionServices;
+                                var serviceProvider = e.Connection.Features.Get<IServiceProvidersFeature>().RequestServices;
                                 var stateMachine = serviceProvider.GetRequiredService<IFtpLoginStateMachine>();
                                 var authTlsMechanism = serviceProvider.GetRequiredService<IEnumerable<IAuthenticationMechanism>>()
                                    .Single(x => x.CanHandle("TLS"));

@@ -29,6 +29,7 @@ namespace FubarDev.FtpServer
         /// <summary>
         /// Gets the connection services.
         /// </summary>
+        [Obsolete("Use the IServiceProvidersFeature")]
         IServiceProvider ConnectionServices { get; }
 
         /// <summary>

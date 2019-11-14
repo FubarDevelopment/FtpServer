@@ -43,10 +43,11 @@ namespace FubarDev.FtpServer.Authentication
         /// <returns>The string(s) to be returned.</returns>
         public static IEnumerable<string> CreateAuthTlsFeatureString(IFtpConnection connection)
         {
-            var hostSelector = connection.ConnectionServices.GetRequiredService<IFtpHostSelector>();
+            var serviceProvider = connection.Features.GetServiceProvider();
+            var hostSelector = serviceProvider.GetRequiredService<IFtpHostSelector>();
             if (hostSelector.SelectedHost.Certificate != null)
             {
-                var authTlsOptions = connection.ConnectionServices.GetRequiredService<IOptions<AuthTlsOptions>>();
+                var authTlsOptions = serviceProvider.GetRequiredService<IOptions<AuthTlsOptions>>();
                 if (authTlsOptions.Value.ImplicitFtps)
                 {
                     return new[] { "PBSZ", "PROT" };
@@ -74,7 +75,7 @@ namespace FubarDev.FtpServer.Authentication
         public override async Task<IFtpResponse> HandleAuthAsync(string methodIdentifier, CancellationToken cancellationToken)
         {
             var serverCommandWriter = Connection.Features.Get<IServerCommandFeature>().ServerCommandWriter;
-            var hostSelector = Connection.ConnectionServices.GetRequiredService<IFtpHostSelector>();
+            var hostSelector = Connection.Features.GetServiceProvider().GetRequiredService<IFtpHostSelector>();
 
             if (hostSelector.SelectedHost.Certificate == null)
             {
@@ -116,7 +117,7 @@ namespace FubarDev.FtpServer.Authentication
         {
             IFtpResponse response;
 
-            var hostSelector = Connection.ConnectionServices.GetRequiredService<IFtpHostSelector>();
+            var hostSelector = Connection.Features.GetServiceProvider().GetRequiredService<IFtpHostSelector>();
             if (hostSelector.SelectedHost.Certificate == null)
             {
                 response = new FtpResponse(500, T("Syntax error, command unrecognized."));
@@ -138,7 +139,7 @@ namespace FubarDev.FtpServer.Authentication
         {
             IFtpResponse response;
 
-            var hostSelector = Connection.ConnectionServices.GetRequiredService<IFtpHostSelector>();
+            var hostSelector = Connection.Features.GetServiceProvider().GetRequiredService<IFtpHostSelector>();
             if (hostSelector.SelectedHost.Certificate == null)
             {
                 response = new FtpResponse(500, T("Syntax error, command unrecognized."));

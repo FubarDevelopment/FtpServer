@@ -10,6 +10,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)ExceptionExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)FeatureCollectionExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)StreamExtensions.cs" />
   </ItemGroup>
 </Project>

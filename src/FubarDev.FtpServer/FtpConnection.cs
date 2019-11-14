@@ -106,6 +106,8 @@ namespace FubarDev.FtpServer
 
         private readonly IdleCheck _idleCheck;
 
+        private readonly IServiceProvider _serviceProvider;
+
         private bool _connectionClosing;
 
         private int _connectionClosed;
@@ -142,7 +144,10 @@ namespace FubarDev.FtpServer
             ILoggerFactory? loggerFactory = null)
         {
             var socket = socketAccessor.TcpSocketClient ?? throw new InvalidOperationException("The socket to communicate with the client was not set");
-            ConnectionServices = serviceProvider;
+#pragma warning disable 618
+            ConnectionServices =
+#pragma warning restore 618
+                _serviceProvider = serviceProvider;
 
             ConnectionId = "FTP-" + Guid.NewGuid().ToString("N");
 
@@ -214,6 +219,7 @@ namespace FubarDev.FtpServer
             parentFeatures.Set<IConnectionIdFeature>(new FtpConnectionIdFeature(ConnectionId));
             parentFeatures.Set<IConnectionLifetimeFeature>(new FtpConnectionLifetimeFeature(this));
             parentFeatures.Set<IConnectionTransportFeature>(transportFeature);
+            parentFeatures.Set<IServiceProvidersFeature>(new FtpServiceProviderFeature(serviceProvider));
 
             var defaultEncoding = options.Value.DefaultEncoding ?? Encoding.ASCII;
             var authInfoFeature = new AuthorizationInformationFeature();
@@ -240,6 +246,7 @@ namespace FubarDev.FtpServer
         public event EventHandler? Closed;
 
         /// <inheritdoc />
+        [Obsolete("Use the IServiceProvidersFeature")]
         public IServiceProvider ConnectionServices { get; }
 
         /// <inheritdoc />
@@ -266,14 +273,14 @@ namespace FubarDev.FtpServer
 
                 // Set the default FTP data connection feature
                 var activeDataConnectionFeatureFactory =
-                    ConnectionServices.GetRequiredService<ActiveDataConnectionFeatureFactory>();
+                    _serviceProvider.GetRequiredService<ActiveDataConnectionFeatureFactory>();
                 var dataConnectionFeature = await activeDataConnectionFeatureFactory
                    .CreateFeatureAsync(null, _remoteEndPoint, _dataPort)
                    .ConfigureAwait(false);
                 Features.Set(dataConnectionFeature);
 
                 // Set the checks for the activity information of the FTP connection.
-                var checks = ConnectionServices.GetRequiredService<IEnumerable<IFtpConnectionCheck>>().ToList();
+                var checks = _serviceProvider.GetRequiredService<IEnumerable<IFtpConnectionCheck>>().ToList();
                 _idleCheck.SetChecks(checks);
 
                 // Connection information
@@ -570,7 +577,7 @@ namespace FubarDev.FtpServer
         /// <returns>The task.</returns>
         private Task DispatchCommandAsync(FtpContext context)
         {
-            var dispatcher = ConnectionServices.GetRequiredService<IFtpCommandDispatcher>();
+            var dispatcher = _serviceProvider.GetRequiredService<IFtpCommandDispatcher>();
             return dispatcher.DispatchAsync(context, _cancellationTokenSource.Token);
         }
 
@@ -660,7 +667,7 @@ namespace FubarDev.FtpServer
         private async Task CommandChannelDispatcherAsync(ChannelReader<FtpCommand> commandReader, CancellationToken cancellationToken)
         {
             // Initialize middleware objects
-            var middlewareObjects = ConnectionServices.GetRequiredService<IEnumerable<IFtpMiddleware>>();
+            var middlewareObjects = _serviceProvider.GetRequiredService<IEnumerable<IFtpMiddleware>>();
             var nextStep = new FtpRequestDelegate(DispatchCommandAsync);
             foreach (var middleware in middlewareObjects.Reverse())
             {
@@ -959,6 +966,18 @@ namespace FubarDev.FtpServer
             {
                 _connection.Abort();
             }
+        }
+
+        private class FtpServiceProviderFeature : IServiceProvidersFeature
+        {
+            public FtpServiceProviderFeature(
+                IServiceProvider serviceProvider)
+            {
+                RequestServices = serviceProvider;
+            }
+
+            /// <inheritdoc />
+            public IServiceProvider RequestServices { get; set; }
         }
     }
 }

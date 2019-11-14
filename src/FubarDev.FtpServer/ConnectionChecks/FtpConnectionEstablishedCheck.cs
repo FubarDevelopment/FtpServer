@@ -25,7 +25,7 @@ namespace FubarDev.FtpServer.ConnectionChecks
         {
             try
             {
-                var socketAccessor = connection.ConnectionServices.GetRequiredService<TcpSocketClientAccessor>();
+                var socketAccessor = connection.Features.GetServiceProvider().GetRequiredService<TcpSocketClientAccessor>();
                 var client = socketAccessor?.TcpSocketClient;
                 if (client == null)
                 {

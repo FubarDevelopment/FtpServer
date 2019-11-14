@@ -34,7 +34,7 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// <returns>The string to be returned.</returns>
         public static string CreateFeatureString(IFtpConnection connection)
         {
-            var catalogLoader = connection.ConnectionServices.GetRequiredService<IFtpCatalogLoader>();
+            var catalogLoader = connection.Features.GetServiceProvider().GetRequiredService<IFtpCatalogLoader>();
             var currentLanguage = connection.Features.Get<ILocalizationFeature>().Language.IetfLanguageTag;
             var languages = catalogLoader.GetSupportedLanguages()
                .Select(x => x + (string.Equals(x, currentLanguage) ? "*" : string.Empty));
@@ -45,7 +45,7 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// <inheritdoc />
         public override async Task<IFtpResponse?> Process(FtpCommand command, CancellationToken cancellationToken)
         {
-            var catalogLoader = Connection.ConnectionServices.GetRequiredService<IFtpCatalogLoader>();
+            var catalogLoader = Connection.Features.GetServiceProvider().GetRequiredService<IFtpCatalogLoader>();
             var localizationFeature = Connection.Features.Get<ILocalizationFeature>();
             if (string.IsNullOrWhiteSpace(command.Argument))
             {
