@@ -14,6 +14,6 @@ namespace FubarDev.FtpServer.Features
         /// <summary>
         /// Gets or sets the <see cref="IUnixFileEntry"/> to use for a <c>RNTO</c> operation.
         /// </summary>
-        SearchResult<IUnixFileSystemEntry> RenameFrom { get; set; }
+        SearchResult<IUnixFileSystemEntry>? RenameFrom { get; set; }
     }
 }

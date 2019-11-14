@@ -27,5 +27,11 @@ namespace FubarDev.FtpServer.Features
         /// Gets the current <see cref="IUnixDirectoryEntry"/> of the current <see cref="Path"/>.
         /// </summary>
         IUnixDirectoryEntry CurrentDirectory { get; }
+
+        /// <summary>
+        /// Sets the initial path for the user.
+        /// </summary>
+        /// <param name="path">The initial path.</param>
+        void SetInitialPath(Stack<IUnixDirectoryEntry> path);
     }
 }

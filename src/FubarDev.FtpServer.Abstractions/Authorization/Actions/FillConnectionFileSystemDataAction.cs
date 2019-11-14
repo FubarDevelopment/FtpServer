@@ -46,7 +46,7 @@ namespace FubarDev.FtpServer.Authorization.Actions
                .Create(accountInformation)
                .ConfigureAwait(false);
 
-            fsFeature.Path = new Stack<IUnixDirectoryEntry>();
+            fsFeature.SetInitialPath(new Stack<IUnixDirectoryEntry>());
         }
     }
 }

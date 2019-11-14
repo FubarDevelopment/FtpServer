@@ -3,6 +3,8 @@
 // </copyright>
 
 using System.IO.Pipelines;
+using System.Threading;
+using System.Threading.Tasks;
 
 using FubarDev.FtpServer.ConnectionHandlers;
 
@@ -10,7 +12,7 @@ using Microsoft.AspNetCore.Connections.Features;
 
 namespace FubarDev.FtpServer.Features.Impl
 {
-    internal class NetworkStreamFeature : INetworkStreamFeature
+    internal class NetworkStreamFeature : INetworkStreamFeature, IResettableFeature
     {
         private readonly IConnectionTransportFeature _transportFeature;
 
@@ -27,5 +29,11 @@ namespace FubarDev.FtpServer.Features.Impl
 
         /// <inheritdoc />
         public PipeWriter Output => _transportFeature.Transport.Output;
+
+        /// <inheritdoc />
+        public Task ResetAsync(CancellationToken cancellationToken)
+        {
+            return SecureConnectionAdapter.ResetAsync(cancellationToken);
+        }
     }
 }

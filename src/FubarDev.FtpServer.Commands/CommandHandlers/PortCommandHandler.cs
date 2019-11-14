@@ -46,7 +46,7 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// <inheritdoc/>
         public override async Task<IFtpResponse?> Process(FtpCommand command, CancellationToken cancellationToken)
         {
-            if (Connection.Features.Get<IFtpDataConnectionConfigurationFeature>()?.LimitToEpsv ?? false)
+            if (Connection.Features.Get<IFtpDataConnectionConfigurationFeature?>()?.LimitToEpsv ?? false)
             {
                 // EPSV ALL was sent from the client
                 return new FtpResponse(

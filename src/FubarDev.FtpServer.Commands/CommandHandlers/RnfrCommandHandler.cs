@@ -44,7 +44,7 @@ namespace FubarDev.FtpServer.CommandHandlers
             return new FtpResponse(350, T("Rename started ({0}).", fullName));
         }
 
-        private class RenameFeature : IRenameCommandFeature
+        private class RenameFeature : IRenameCommandFeature, IResettableFeature
         {
             public RenameFeature(SearchResult<IUnixFileSystemEntry> renameFrom)
             {
@@ -52,7 +52,14 @@ namespace FubarDev.FtpServer.CommandHandlers
             }
 
             /// <inheritdoc />
-            public SearchResult<IUnixFileSystemEntry> RenameFrom { get; set; }
+            public SearchResult<IUnixFileSystemEntry>? RenameFrom { get; set; }
+
+            /// <inheritdoc />
+            public Task ResetAsync(CancellationToken cancellationToken)
+            {
+                RenameFrom = null;
+                return Task.CompletedTask;
+            }
         }
     }
 }

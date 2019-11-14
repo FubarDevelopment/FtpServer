@@ -3,6 +3,8 @@
 // </copyright>
 
 using System.Security.Claims;
+using System.Threading;
+using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Connections.Features;
 
@@ -13,6 +15,7 @@ namespace FubarDev.FtpServer.Features.Impl
     /// </summary>
     internal class AuthorizationInformationFeature
         : IConnectionUserFeature,
+            IResettableFeature,
 #pragma warning disable 618
             IAuthorizationInformationFeature
 #pragma warning restore 618
@@ -34,5 +37,12 @@ namespace FubarDev.FtpServer.Features.Impl
             set => _user = value;
         }
 #nullable restore
+
+        /// <inheritdoc />
+        public Task ResetAsync(CancellationToken cancellationToken)
+        {
+            _user = null;
+            return Task.CompletedTask;
+        }
     }
 }

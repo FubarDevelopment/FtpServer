@@ -3,13 +3,15 @@
 // </copyright>
 
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace FubarDev.FtpServer.Features.Impl
 {
     /// <summary>
     /// Default implementation of <see cref="IEncodingFeature"/>.
     /// </summary>
-    internal class EncodingFeature : IEncodingFeature
+    internal class EncodingFeature : IEncodingFeature, IResettableFeature
     {
         private Encoding? _encoding;
         private Encoding? _nlstEncoding;
@@ -40,6 +42,13 @@ namespace FubarDev.FtpServer.Features.Impl
         public void Reset()
         {
             _nlstEncoding = _encoding = null;
+        }
+
+        /// <inheritdoc />
+        public Task ResetAsync(CancellationToken cancellationToken)
+        {
+            Reset();
+            return Task.CompletedTask;
         }
     }
 }

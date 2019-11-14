@@ -53,7 +53,7 @@ namespace FubarDev.FtpServer.CommandHandlers
                 }
                 else if (string.Equals(command.Argument, "ALL", StringComparison.OrdinalIgnoreCase))
                 {
-                    var dataConnectionConfigFeature = Connection.Features.Get<IFtpDataConnectionConfigurationFeature>();
+                    var dataConnectionConfigFeature = Connection.Features.Get<IFtpDataConnectionConfigurationFeature?>();
                     if (dataConnectionConfigFeature == null)
                     {
                         dataConnectionConfigFeature = new FtpDataConnectionConfigurationFeature();
@@ -81,7 +81,7 @@ namespace FubarDev.FtpServer.CommandHandlers
                     }
                 }
             }
-            else if (Connection.Features.Get<IFtpDataConnectionConfigurationFeature>()?.LimitToEpsv ?? false)
+            else if (Connection.Features.Get<IFtpDataConnectionConfigurationFeature?>()?.LimitToEpsv ?? false)
             {
                 // EPSV ALL was sent from the client
                 return new FtpResponse(

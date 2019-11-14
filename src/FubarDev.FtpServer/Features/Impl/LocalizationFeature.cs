@@ -3,6 +3,8 @@
 // </copyright>
 
 using System.Globalization;
+using System.Threading;
+using System.Threading.Tasks;
 
 using FubarDev.FtpServer.Localization;
 
@@ -13,15 +15,17 @@ namespace FubarDev.FtpServer.Features.Impl
     /// <summary>
     /// The default implementation of the <see cref="ILocalizationFeature"/> class.
     /// </summary>
-    internal class LocalizationFeature : ILocalizationFeature
+    internal class LocalizationFeature : ILocalizationFeature, IResettableFeature
     {
+        private readonly CultureInfo _initialLanguage;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="LocalizationFeature"/> class.
         /// </summary>
         /// <param name="catalogLoader">The catalog loader.</param>
         public LocalizationFeature(IFtpCatalogLoader catalogLoader)
         {
-            Language = catalogLoader.DefaultLanguage;
+            _initialLanguage = Language = catalogLoader.DefaultLanguage;
             Catalog = catalogLoader.DefaultCatalog;
         }
 
@@ -30,5 +34,12 @@ namespace FubarDev.FtpServer.Features.Impl
 
         /// <inheritdoc />
         public ICatalog Catalog { get; set; }
+
+        /// <inheritdoc />
+        public Task ResetAsync(CancellationToken cancellationToken)
+        {
+            Language = _initialLanguage;
+            return Task.CompletedTask;
+        }
     }
 }

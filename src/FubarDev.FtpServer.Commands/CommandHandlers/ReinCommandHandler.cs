@@ -57,26 +57,10 @@ namespace FubarDev.FtpServer.CommandHandlers
             // Reset the login
             _loginStateMachine.Reset();
 
-            // Reset encoding
-            var encodingFeature = Connection.Features.Get<IEncodingFeature>();
-            encodingFeature.Reset();
-
-            // Remember old features
-            var fileSystemFeature = Connection.Features.Get<IFileSystemFeature>();
-            var connectionFeature = Connection.Features.Get<IConnectionEndPointFeature>();
-            var secureConnectionFeature = Connection.Features.Get<ISecureConnectionFeature>();
-
-            // Reset to empty file system
-            fileSystemFeature.FileSystem = new EmptyUnixFileSystem();
-            fileSystemFeature.Path.Clear();
-
-            // Remove the control connection encryption
-            await secureConnectionFeature.CloseEncryptedControlStream(cancellationToken)
-               .ConfigureAwait(false);
-
-            // Dispose and remove all features (if disposable)
+            // Reinitialize or dispose and remove disposable features
             foreach (var featureItem in Connection.Features)
             {
+                bool remove = false;
                 try
                 {
                     switch (featureItem.Value)
@@ -84,10 +68,15 @@ namespace FubarDev.FtpServer.CommandHandlers
                         case IFtpConnection _:
                             // Never dispose the connection itself.
                             break;
+                        case IResettableFeature f:
+                            await f.ResetAsync(cancellationToken).ConfigureAwait(false);
+                            break;
                         case IFtpDataConnectionFeature f:
+                            remove = true;
                             await f.DisposeAsync().ConfigureAwait(false);
                             break;
                         case IDisposable disposable:
+                            remove = true;
                             disposable.Dispose();
                             break;
                     }
@@ -98,15 +87,19 @@ namespace FubarDev.FtpServer.CommandHandlers
                     _logger?.LogWarning(ex, "Failed to dispose feature of type {featureType}: {errorMessage}", featureItem.Key, ex.Message);
                 }
 
-                // Remove from features collection
-                Connection.Features[featureItem.Key] = null;
+                if (remove)
+                {
+                    // Remove from features collection
+                    Connection.Features[featureItem.Key] = null;
+                }
             }
 
             // Reset the FTP data connection configuration feature
-            Connection.Features.Set<IFtpDataConnectionConfigurationFeature>(new FtpDataConnectionConfigurationFeature());
+            Connection.Features.Set<IFtpDataConnectionConfigurationFeature?>(null);
 
             // Set the default FTP data connection feature
             var activeDataConnectionFeatureFactory = Connection.ConnectionServices.GetRequiredService<ActiveDataConnectionFeatureFactory>();
+            var connectionFeature = Connection.Features.Get<IConnectionEndPointFeature>();
             var remoteIpEndPoint = (IPEndPoint)connectionFeature.RemoteEndPoint;
             var dataConnectionFeature = await activeDataConnectionFeatureFactory.CreateFeatureAsync(null, remoteIpEndPoint, _dataPort)
                .ConfigureAwait(false);

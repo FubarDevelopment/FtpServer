@@ -91,7 +91,7 @@ namespace FubarDev.FtpServer.Authorization.Actions
                 }
             }
 
-            fsFeature.Path = path ?? new Stack<IUnixDirectoryEntry>();
+            fsFeature.SetInitialPath(path ?? new Stack<IUnixDirectoryEntry>());
         }
     }
 }

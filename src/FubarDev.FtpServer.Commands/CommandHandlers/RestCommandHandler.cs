@@ -29,7 +29,7 @@ namespace FubarDev.FtpServer.CommandHandlers
             return Task.FromResult<IFtpResponse?>(new FtpResponse(350, T("Restarting next transfer from position {0}", restartPosition)));
         }
 
-        private class RestCommandFeature : IRestCommandFeature
+        private class RestCommandFeature : IRestCommandFeature, IResettableFeature
         {
             public RestCommandFeature(long restartPosition)
             {
@@ -38,6 +38,13 @@ namespace FubarDev.FtpServer.CommandHandlers
 
             /// <inheritdoc />
             public long RestartPosition { get; set; }
+
+            /// <inheritdoc />
+            public Task ResetAsync(CancellationToken cancellationToken)
+            {
+                RestartPosition = 0;
+                return Task.CompletedTask;
+            }
         }
     }
 }
