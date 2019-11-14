@@ -121,10 +121,6 @@ namespace FubarDev.FtpServer
             _connectionTimeoutChecker?.Dispose();
 
             _serverShutdown.Dispose();
-            foreach (var connectionInfo in _connections.Values)
-            {
-                connectionInfo.Scope.Dispose();
-            }
         }
 
         /// <summary>
@@ -283,9 +279,20 @@ namespace FubarDev.FtpServer
             {
                 // Ignore
             }
+            catch (Exception ex)
+            {
+                _log?.LogWarning(ex, ex.Message);
+            }
             finally
             {
                 _log?.LogDebug("Stopped accepting connections");
+            }
+
+            // Stop all remaining connections
+            foreach (var connection in _connections.Keys.ToList())
+            {
+                await StopConnectionAsync(connection)
+                   .ConfigureAwait(false);
             }
         }
 
@@ -391,6 +398,7 @@ namespace FubarDev.FtpServer
 
             await connection.StopAsync().ConfigureAwait(false);
 
+            info.Registration.Dispose();
             info.Scope.Dispose();
 
             _statistics.CloseConnection();
