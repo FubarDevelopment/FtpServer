@@ -4,7 +4,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
@@ -21,12 +20,10 @@ namespace FubarDev.FtpServer
     public class MultiBindingTcpListener
     {
         private readonly string? _address;
-
         private readonly int _port;
-
         private readonly ILogger? _logger;
-        private readonly IList<TcpListener> _listeners = new List<TcpListener>();
-        private readonly IList<Task<TcpClient?>> _acceptors = new List<Task<TcpClient?>>();
+        private Task<AcceptInfo>[] _acceptors = Array.Empty<Task<AcceptInfo>>();
+        private TcpListener[] _listeners = Array.Empty<TcpListener>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MultiBindingTcpListener"/> class.
@@ -107,8 +104,8 @@ namespace FubarDev.FtpServer
                 listener.Stop();
             }
 
-            _listeners.Clear();
-            _acceptors.Clear();
+            _listeners = Array.Empty<TcpListener>();
+            _acceptors = Array.Empty<Task<AcceptInfo>>();
             Port = 0;
             _logger?.LogInformation("Listener stopped");
         }
@@ -120,16 +117,47 @@ namespace FubarDev.FtpServer
         /// <returns>The new TCP client.</returns>
         public async Task<TcpClient> WaitAnyTcpClientAsync(CancellationToken token)
         {
+            // The task that just waits indefinitely for a triggered cancellation token
+            var cancellationTask = Task.Delay(-1, token);
+
+            // Build the list of awaitable tasks
+            var tasks = new Task[_acceptors.Length + 1];
+            Array.Copy(_acceptors, tasks, _acceptors.Length);
+
+            // Add the cancellation task as last task
+            tasks[_acceptors.Length] = cancellationTask;
+
             TcpClient? result;
             do
             {
-                var tasks = _acceptors.Cast<Task>().ToList();
-                tasks.Add(Task.Delay(-1, token));
+                // Wait for any task to be finished
                 var retVal = await Task.WhenAny(tasks).ConfigureAwait(false);
+
+                // Test if the cancellation token was triggered
                 token.ThrowIfCancellationRequested();
-                var index = tasks.IndexOf(retVal);
-                _acceptors[index] = _listeners[index].AcceptTcpClientAsync();
-                result = ((Task<TcpClient?>)retVal).Result;
+
+                // It was a listener task when the cancellation token was not triggered
+#if NETSTANDARD1_3
+                var acceptInfo = await ((Task<AcceptInfo>)retVal).ConfigureAwait(false);
+#else
+                var acceptInfo = ((Task<AcceptInfo>)retVal).Result;
+                retVal.Dispose();
+#endif
+
+                // Avoid indexed access into the list of acceptors
+                var index = acceptInfo.Index;
+
+                // Gets the result of the finished task.
+                result = acceptInfo.Client;
+
+                // Start accepting the next TCP client for the
+                // listener whose task was finished.
+                var listener = _listeners[index];
+                var newAcceptor = AcceptForListenerAsync(listener, index);
+
+                // Start accepting the next TCP client for the
+                // listener whose task was finished.
+                tasks[index] = _acceptors[index] = newAcceptor;
             }
             while (result == null);
 
@@ -137,29 +165,32 @@ namespace FubarDev.FtpServer
         }
 
         /// <summary>
-        /// Start the asynchronous acception for all listeners.
+        /// Start the asynchronous accept operation for all listeners.
         /// </summary>
         public void StartAccepting()
         {
-            _listeners.ToList().ForEach(x => _acceptors.Add(AcceptForListenerAsync(x)));
+            _acceptors = _listeners.Select(AcceptForListenerAsync).ToArray();
         }
 
-        private async Task<TcpClient?> AcceptForListenerAsync(TcpListener listener)
+        private async Task<AcceptInfo> AcceptForListenerAsync(TcpListener listener, int index)
         {
             try
             {
-                return await listener.AcceptTcpClientAsync().ConfigureAwait(false);
+                var client = await listener.AcceptTcpClientAsync().ConfigureAwait(false);
+                return new AcceptInfo(client, index);
             }
             catch (ObjectDisposedException)
             {
                 // Ignore the exception. This happens when the listener gets stopped.
-                return null;
+                return new AcceptInfo(null, index);
             }
         }
 
         private int StartListening(IEnumerable<IPAddress> addresses, int port)
         {
             var selectedPort = port;
+
+            var listeners = new List<TcpListener>();
             foreach (var address in addresses)
             {
                 var listener = new TcpListener(address, selectedPort);
@@ -172,10 +203,24 @@ namespace FubarDev.FtpServer
 
                 _logger?.LogInformation("Started listening on {address}:{port}", address, selectedPort);
 
-                _listeners.Add(listener);
+                listeners.Add(listener);
             }
 
+            _listeners = listeners.ToArray();
+
             return selectedPort;
+        }
+
+        private struct AcceptInfo
+        {
+            public AcceptInfo(TcpClient? client, int index)
+            {
+                Client = client;
+                Index = index;
+            }
+
+            public TcpClient? Client { get; }
+            public int Index { get; }
         }
     }
 }
