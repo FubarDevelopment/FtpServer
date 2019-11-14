@@ -2,7 +2,6 @@
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
-using System;
 using System.Net;
 
 namespace FubarDev.FtpServer.Features
@@ -21,11 +20,5 @@ namespace FubarDev.FtpServer.Features
         /// Gets the remote end point.
         /// </summary>
         IPEndPoint RemoteEndPoint { get; }
-
-        /// <summary>
-        /// Gets the remote address of the client.
-        /// </summary>
-        [Obsolete]
-        Address RemoteAddress { get; }
     }
 }

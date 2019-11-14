@@ -2,9 +2,6 @@
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
-using System;
-using System.Net.Sockets;
-
 namespace FubarDev.FtpServer.Features
 {
     /// <summary>
@@ -12,12 +9,6 @@ namespace FubarDev.FtpServer.Features
     /// </summary>
     public interface ISecureConnectionFeature
     {
-        /// <summary>
-        /// Gets the control connection stream.
-        /// </summary>
-        [Obsolete("Unused and will be removed.")]
-        NetworkStream OriginalStream { get; }
-
         /// <summary>
         /// Gets or sets a delegate that allows the creation of an encrypted stream.
         /// </summary>

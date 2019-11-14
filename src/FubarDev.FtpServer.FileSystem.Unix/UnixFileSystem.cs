@@ -11,8 +11,6 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
-using FubarDev.FtpServer.AccountManagement;
-using FubarDev.FtpServer.AccountManagement.Compatibility;
 using FubarDev.FtpServer.BackgroundTransfer;
 
 using Microsoft.Extensions.Logging;
@@ -31,23 +29,6 @@ namespace FubarDev.FtpServer.FileSystem.Unix
         private readonly UnixUserInfo? _userInfo;
         private readonly bool _flushStream;
         private readonly ILogger<UnixFileSystem>? _logger;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="UnixFileSystem"/> class.
-        /// </summary>
-        /// <param name="root">The root directory.</param>
-        /// <param name="user">The current user.</param>
-        /// <param name="userInfo">The user information.</param>
-        [Obsolete("Use the overload with ClaimsPrincipal.")]
-        public UnixFileSystem(
-            IUnixDirectoryEntry root,
-            IFtpUser user,
-            UnixUserInfo? userInfo)
-        {
-            _user = user.CreateClaimsPrincipal();
-            _userInfo = userInfo;
-            Root = root;
-        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="UnixFileSystem"/> class.

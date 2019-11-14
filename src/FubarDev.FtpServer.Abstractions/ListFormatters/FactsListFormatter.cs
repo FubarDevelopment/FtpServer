@@ -8,8 +8,6 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 
-using FubarDev.FtpServer.AccountManagement;
-using FubarDev.FtpServer.AccountManagement.Compatibility;
 using FubarDev.FtpServer.FileSystem;
 using FubarDev.FtpServer.ListFormatters.Facts;
 using FubarDev.FtpServer.Utilities;
@@ -28,22 +26,6 @@ namespace FubarDev.FtpServer.ListFormatters
         private readonly ISet<string> _activeFacts;
 
         private readonly bool _absoluteName;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="FactsListFormatter"/> class.
-        /// </summary>
-        /// <param name="user">The user to create this formatter for.</param>
-        /// <param name="enumerator">The enumerator for the directory listing to format.</param>
-        /// <param name="activeFacts">The active facts to return for the entries.</param>
-        /// <param name="absoluteName">Returns an absolute entry name.</param>
-        [Obsolete("Use the overload with ClaimsPrincipal.")]
-        public FactsListFormatter(IFtpUser user, DirectoryListingEnumerator enumerator, ISet<string> activeFacts, bool absoluteName)
-        {
-            _user = user.CreateClaimsPrincipal();
-            _enumerator = enumerator;
-            _activeFacts = activeFacts;
-            _absoluteName = absoluteName;
-        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FactsListFormatter"/> class.

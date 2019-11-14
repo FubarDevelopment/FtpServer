@@ -88,18 +88,9 @@ namespace FubarDev.FtpServer.Commands
                 return new FtpCommandSelection(handler, handlerInfo);
             }
 
-#pragma warning disable 612
-            if (handlerInfo is IFtpCommandHandlerInstanceInformation handlerInstanceInfo)
-#pragma warning restore 612
-            {
-                handler = handlerInstanceInfo.Instance;
-            }
-            else
-            {
-                handler = (IFtpCommandHandler)ActivatorUtilities.CreateInstance(
-                    _serviceProvider,
-                    handlerInfo.Type);
-            }
+            handler = (IFtpCommandHandler)ActivatorUtilities.CreateInstance(
+                _serviceProvider,
+                handlerInfo.Type);
 
             if (handlerInfo.IsExtensible && handler is IFtpCommandHandlerExtensionHost extensionHost)
             {
@@ -127,18 +118,9 @@ namespace FubarDev.FtpServer.Commands
 
                 if (!_commandHandlerExtensions.TryGetValue(extensionType, out var extension))
                 {
-#pragma warning disable 612
-                    if (extensionInfo is IFtpCommandHandlerExtensionInstanceInformation extensionInstanceInfo)
-#pragma warning restore 612
-                    {
-                        extension = extensionInstanceInfo.Instance;
-                    }
-                    else
-                    {
-                        extension = (IFtpCommandHandlerExtension)ActivatorUtilities.CreateInstance(
-                            _serviceProvider,
-                            extensionType);
-                    }
+                    extension = (IFtpCommandHandlerExtension)ActivatorUtilities.CreateInstance(
+                        _serviceProvider,
+                        extensionType);
 
                     ActivateProperty(extension, context);
                     extension.InitializeConnectionData();

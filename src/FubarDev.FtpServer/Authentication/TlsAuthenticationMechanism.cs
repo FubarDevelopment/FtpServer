@@ -19,9 +19,7 @@ namespace FubarDev.FtpServer.Authentication
     /// Implementation for the <c>AUTH TLS</c> command.
     /// </summary>
     [FtpFeatureFunction(nameof(CreateAuthTlsFeatureString))]
-#pragma warning disable CS0618 // Typ oder Element ist veraltet
-    public class TlsAuthenticationMechanism : AuthenticationMechanism, IFeatureHost
-#pragma warning restore CS0618 // Typ oder Element ist veraltet
+    public class TlsAuthenticationMechanism : AuthenticationMechanism
     {
         private readonly ISslStreamWrapperFactory _sslStreamWrapperFactory;
 
@@ -167,19 +165,6 @@ namespace FubarDev.FtpServer.Authentication
             }
 
             return Task.FromResult(response);
-        }
-
-        /// <inheritdoc />
-        [Obsolete("FTP command handlers (and other types) are now annotated with attributes implementing IFeatureInfo.")]
-        public IEnumerable<IFeatureInfo> GetSupportedFeatures(IFtpConnection connection)
-        {
-            var hostSelector = connection.ConnectionServices.GetRequiredService<IFtpHostSelector>();
-            if (hostSelector.SelectedHost.Certificate != null)
-            {
-                yield return new GenericFeatureInfo("AUTH", conn => "AUTH TLS", false);
-                yield return new GenericFeatureInfo("PBSZ", false);
-                yield return new GenericFeatureInfo("PROT", false);
-            }
         }
 
         private async Task<Stream> CreateSslStream(

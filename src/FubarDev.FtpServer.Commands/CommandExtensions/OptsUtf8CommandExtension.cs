@@ -2,7 +2,6 @@
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
-using System;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -20,10 +19,6 @@ namespace FubarDev.FtpServer.CommandExtensions
     public class OptsUtf8CommandExtension : FtpCommandHandlerExtension
     {
         private static readonly UTF8Encoding _encodingUtf8 = new UTF8Encoding(false);
-
-        /// <inheritdoc />
-        [Obsolete("Use the FtpCommandHandlerExtension attribute instead.")]
-        public override bool? IsLoginRequired { get; } = false;
 
         /// <inheritdoc />
         public override void InitializeConnectionData()

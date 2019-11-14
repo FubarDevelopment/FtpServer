@@ -52,20 +52,5 @@ namespace FubarDev.FtpServer
         /// Gets the FTP server statistics.
         /// </summary>
         IFtpServerStatistics Statistics { get; }
-
-        /// <summary>
-        /// Starts the FTP server in the background.
-        /// </summary>
-        [Obsolete("User IFtpServerHost.StartAsync instead.")]
-        void Start();
-
-        /// <summary>
-        /// Stops the FTP server.
-        /// </summary>
-        /// <remarks>
-        /// The FTP server cannot be started again after it was stopped.
-        /// </remarks>
-        [Obsolete("User IFtpServerHost.StopAsync instead.")]
-        void Stop();
     }
 }

@@ -5,7 +5,6 @@
 // <author>Mark Junker</author>
 //-----------------------------------------------------------------------
 
-using System;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -32,10 +31,6 @@ namespace FubarDev.FtpServer.CommandHandlers
         {
             _operatingSystem = options.Value.OperatingSystem ?? "UNIX";
         }
-
-        /// <inheritdoc />
-        [Obsolete("Information about an FTP command handler can be queried through the IFtpCommandHandlerProvider service.")]
-        public override bool IsLoginRequired => false;
 
         /// <inheritdoc/>
         public override Task<IFtpResponse?> Process(FtpCommand command, CancellationToken cancellationToken)

@@ -2,7 +2,6 @@
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
@@ -10,7 +9,6 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using FubarDev.FtpServer.AccountManagement;
-using FubarDev.FtpServer.AccountManagement.Compatibility;
 using FubarDev.FtpServer.Authentication;
 using FubarDev.FtpServer.Features;
 using FubarDev.FtpServer.Localization;
@@ -95,11 +93,6 @@ namespace FubarDev.FtpServer.Authorization
             _needsPassword = true;
 
             var authInfoFeature = Connection.Features.Get<IAuthorizationInformationFeature>();
-#pragma warning disable 618
-#pragma warning disable 612
-            authInfoFeature.User = new UnauthenticatedUser(userIdentifier);
-#pragma warning restore 612
-#pragma warning restore 618
             authInfoFeature.FtpUser = new ClaimsPrincipal(
                 new ClaimsIdentity(
                     new[]
@@ -117,34 +110,12 @@ namespace FubarDev.FtpServer.Authorization
             _userName = null;
         }
 
-        [Obsolete]
-        internal class UnauthenticatedUser : IFtpUser
-        {
-            public UnauthenticatedUser(string name)
-            {
-                Name = name;
-            }
-
-            public string Name { get; }
-
-            public bool IsInGroup(string groupName) => false;
-        }
-
         private class DefaultAccountInformation : IAccountInformation
         {
             public DefaultAccountInformation(ClaimsPrincipal user)
             {
                 FtpUser = user;
-#pragma warning disable 618
-#pragma warning disable 612
-                User = user.CreateUser();
-#pragma warning restore 612
-#pragma warning restore 618
             }
-
-            /// <inheritdoc />
-            [Obsolete]
-            public IFtpUser User { get; }
 
             /// <inheritdoc />
             public ClaimsPrincipal FtpUser { get; }

@@ -2,7 +2,6 @@
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -32,10 +31,6 @@ namespace FubarDev.FtpServer
 
         /// <inheritdoc />
         public int Code { get; }
-
-        /// <inheritdoc />
-        [Obsolete("Use a custom server command.")]
-        public FtpResponseAfterWriteAsyncDelegate? AfterWriteAction => null;
 
         /// <inheritdoc />
         public Task<FtpResponseLine> GetNextLineAsync(object? token, CancellationToken cancellationToken)

@@ -19,8 +19,6 @@ namespace FubarDev.FtpServer.CommandExtensions
     /// </summary>
     public abstract class FtpCommandHandlerExtension : IFtpCommandHandlerExtension
     {
-        private readonly IReadOnlyCollection<string>? _names;
-        private readonly string? _extensionFor;
         private FtpCommandHandlerContext? _commandHandlerContext;
 
         /// <summary>
@@ -29,34 +27,6 @@ namespace FubarDev.FtpServer.CommandExtensions
         protected FtpCommandHandlerExtension()
         {
         }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="FtpCommandHandlerExtension"/> class.
-        /// </summary>
-        /// <param name="extensionFor">The name of the command this extension is for.</param>
-        /// <param name="name">The command name.</param>
-        /// <param name="alternativeNames">Alternative names.</param>
-        [Obsolete("Use the FtpCommandHandlerExtensionAttribute together with an additional IFtpCommandHandlerExtensionScanner.")]
-        protected FtpCommandHandlerExtension(string extensionFor, string name, params string[] alternativeNames)
-        {
-            var names = new List<string>
-            {
-                name,
-            };
-            names.AddRange(alternativeNames);
-            _names = names;
-            _extensionFor = extensionFor;
-        }
-
-        /// <inheritdoc />
-        public IReadOnlyCollection<string> Names => _names ?? throw new InvalidOperationException("Obsolete property \"Names\" called for a command handler extension.");
-
-        /// <inheritdoc />
-        [Obsolete("Use the FtpCommandHandlerExtension attribute instead.")]
-        public virtual bool? IsLoginRequired { get; } = null;
-
-        /// <inheritdoc />
-        public string ExtensionFor => _extensionFor ?? throw new InvalidOperationException("Obsolete property \"ExtensionFor\" called for a command handler extension.");
 
         /// <summary>
         /// Gets or sets the FTP command context.
@@ -78,12 +48,6 @@ namespace FubarDev.FtpServer.CommandExtensions
         /// Gets the connection this command was created for.
         /// </summary>
         protected IFtpConnection Connection => FtpContext.Connection;
-
-        /// <summary>
-        /// Gets the connection data.
-        /// </summary>
-        [Obsolete("Query the information using the Features property instead.")]
-        protected FtpConnectionData Data => Connection.Data;
 
         /// <inheritdoc />
         public abstract void InitializeConnectionData();

@@ -137,22 +137,6 @@ namespace FubarDev.FtpServer
         }
 
         /// <inheritdoc />
-        [Obsolete("Use IFtpServerHost.StartAsync instead.")]
-        void IFtpServer.Start()
-        {
-            var host = _serviceProvider.GetRequiredService<IFtpServerHost>();
-            host.StartAsync(CancellationToken.None).ConfigureAwait(false).GetAwaiter().GetResult();
-        }
-
-        /// <inheritdoc />
-        [Obsolete("Use IFtpServerHost.StopAsync instead.")]
-        void IFtpServer.Stop()
-        {
-            var host = _serviceProvider.GetRequiredService<IFtpServerHost>();
-            host.StopAsync(CancellationToken.None).ConfigureAwait(false).GetAwaiter().GetResult();
-        }
-
-        /// <inheritdoc />
         public Task PauseAsync(CancellationToken cancellationToken)
         {
             return _serverListener.PauseAsync(cancellationToken);

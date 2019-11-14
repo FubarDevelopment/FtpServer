@@ -41,12 +41,6 @@ namespace FubarDev.FtpServer
         public int Code { get; }
 
         /// <summary>
-        /// Gets the async action to execute after sending the response to the client.
-        /// </summary>
-        [Obsolete("Use a custom server command.")]
-        public FtpResponseAfterWriteAsyncDelegate? AfterWriteAction => null;
-
-        /// <summary>
         /// Gets the message for the first line.
         /// </summary>
         public string StartMessage { get; }
