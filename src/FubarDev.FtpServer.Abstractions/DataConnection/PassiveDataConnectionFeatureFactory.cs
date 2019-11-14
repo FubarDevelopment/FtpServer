@@ -203,9 +203,7 @@ namespace FubarDev.FtpServer.DataConnection
                     _closed = true;
 
                     await Stream.FlushAsync(cancellationToken).ConfigureAwait(false);
-#if !NETSTANDARD1_3
                     _client.Close();
-#endif
                     _client.Dispose();
                 }
             }

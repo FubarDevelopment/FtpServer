@@ -137,12 +137,8 @@ namespace FubarDev.FtpServer
                 token.ThrowIfCancellationRequested();
 
                 // It was a listener task when the cancellation token was not triggered
-#if NETSTANDARD1_3
-                var acceptInfo = await ((Task<AcceptInfo>)retVal).ConfigureAwait(false);
-#else
                 var acceptInfo = ((Task<AcceptInfo>)retVal).Result;
                 retVal.Dispose();
-#endif
 
                 // Avoid indexed access into the list of acceptors
                 var index = acceptInfo.Index;
