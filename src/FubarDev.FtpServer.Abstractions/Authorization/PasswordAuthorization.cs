@@ -13,6 +13,8 @@ using FubarDev.FtpServer.Authentication;
 using FubarDev.FtpServer.Features;
 using FubarDev.FtpServer.Localization;
 
+using Microsoft.AspNetCore.Connections.Features;
+
 namespace FubarDev.FtpServer.Authorization
 {
     /// <summary>
@@ -92,8 +94,8 @@ namespace FubarDev.FtpServer.Authorization
             _userName = userIdentifier;
             _needsPassword = true;
 
-            var authInfoFeature = Connection.Features.Get<IAuthorizationInformationFeature>();
-            authInfoFeature.FtpUser = new ClaimsPrincipal(
+            var authInfoFeature = Connection.Features.Get<IConnectionUserFeature>();
+            authInfoFeature.User = new ClaimsPrincipal(
                 new ClaimsIdentity(
                     new[]
                     {

@@ -15,6 +15,7 @@ using FubarDev.FtpServer.Commands;
 using FubarDev.FtpServer.Features;
 using FubarDev.FtpServer.FileSystem.Unix;
 
+using Microsoft.AspNetCore.Connections.Features;
 using Microsoft.Extensions.Logging;
 
 using Mono.Unix;
@@ -46,8 +47,8 @@ namespace TestFtpServer.CommandMiddlewares
         public Task InvokeAsync(FtpExecutionContext context, FtpCommandExecutionDelegate next)
         {
             var connection = context.Connection;
-            var authInfo = connection.Features.Get<IAuthorizationInformationFeature>();
-            var isUnixUser = authInfo.FtpUser?.IsUnixUser() ?? false;
+            var authInfo = connection.Features.Get<IConnectionUserFeature>();
+            var isUnixUser = authInfo.User?.IsUnixUser() ?? false;
             if (!isUnixUser)
             {
                 return next(context);
@@ -59,7 +60,7 @@ namespace TestFtpServer.CommandMiddlewares
                 return next(context);
             }
 
-            return ExecuteWithChangedFsId(context, authInfo.FtpUser!, next);
+            return ExecuteWithChangedFsId(context, authInfo.User!, next);
         }
 
         private static long? ConvertToLong(string? value)

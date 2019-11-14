@@ -4,14 +4,35 @@
 
 using System.Security.Claims;
 
+using Microsoft.AspNetCore.Connections.Features;
+
 namespace FubarDev.FtpServer.Features.Impl
 {
     /// <summary>
-    /// Default implementation of <see cref="IAuthorizationInformationFeature"/>.
+    /// Default implementation of <see cref="IConnectionUserFeature"/>.
     /// </summary>
-    internal class AuthorizationInformationFeature : IAuthorizationInformationFeature
+    internal class AuthorizationInformationFeature
+        : IConnectionUserFeature,
+#pragma warning disable 618
+            IAuthorizationInformationFeature
+#pragma warning restore 618
     {
+        private ClaimsPrincipal? _user;
+
         /// <inheritdoc />
-        public ClaimsPrincipal? FtpUser { get; set; }
+        ClaimsPrincipal? IAuthorizationInformationFeature.FtpUser
+        {
+            get => _user;
+            set => _user = value;
+        }
+
+        /// <inheritdoc />
+#nullable disable
+        public ClaimsPrincipal User
+        {
+            get => _user;
+            set => _user = value;
+        }
+#nullable restore
     }
 }

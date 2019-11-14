@@ -2,6 +2,7 @@
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
+using System;
 using System.Security.Claims;
 
 namespace FubarDev.FtpServer.Features
@@ -9,6 +10,7 @@ namespace FubarDev.FtpServer.Features
     /// <summary>
     /// Authorization information feature.
     /// </summary>
+    [Obsolete("Use Microsoft.AspNetCore.Connections.Features.IConnectionUserFeature")]
     public interface IAuthorizationInformationFeature
     {
         /// <summary>
