@@ -14,7 +14,7 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Scrutor" Version="2.0.0" />
-    <PackageReference Include="System.IO.Pipelines" Version="4.5.1" />
+    <PackageReference Include="System.IO.Pipelines" Version="4.6.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\FubarDev.FtpServer.Commands\FubarDev.FtpServer.Commands.csproj" />

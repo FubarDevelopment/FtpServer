@@ -6,11 +6,11 @@
     <PackageTags>portable;FTP;server;Google;Drive</PackageTags>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Google.Apis.Drive.v3" Version="1.39.0.1566" />
+    <PackageReference Include="Google.Apis.Drive.v3" Version="1.42.0.1750" />
     <PackageReference Include="Microsoft.Extensions.Options" Version="2.0.0" />
   </ItemGroup>
   <ItemGroup Condition=" '$(TargetFramework)' == 'net461' ">
-    <PackageReference Include="System.ValueTuple" Version="4.3.0" />
+    <PackageReference Include="System.ValueTuple" Version="4.5.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\FubarDev.FtpServer.Abstractions\FubarDev.FtpServer.Abstractions.csproj" />
