@@ -3,6 +3,7 @@
 // </copyright>
 
 using System;
+using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -13,6 +14,7 @@ using FubarDev.FtpServer.Features.Impl;
 using FubarDev.FtpServer.FileSystem;
 using FubarDev.FtpServer.Localization;
 
+using Microsoft.AspNetCore.Connections.Features;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -58,7 +60,7 @@ namespace FubarDev.FtpServer.CommandHandlers
 
             // Remember old features
             var fileSystemFeature = Connection.Features.Get<IFileSystemFeature>();
-            var connectionFeature = Connection.Features.Get<IConnectionFeature>();
+            var connectionFeature = Connection.Features.Get<IConnectionEndPointFeature>();
             var secureConnectionFeature = Connection.Features.Get<ISecureConnectionFeature>();
 
             // Reset to empty file system
@@ -102,7 +104,8 @@ namespace FubarDev.FtpServer.CommandHandlers
 
             // Set the default FTP data connection feature
             var activeDataConnectionFeatureFactory = Connection.ConnectionServices.GetRequiredService<ActiveDataConnectionFeatureFactory>();
-            var dataConnectionFeature = await activeDataConnectionFeatureFactory.CreateFeatureAsync(null, connectionFeature.RemoteEndPoint, _dataPort)
+            var remoteIpEndPoint = (IPEndPoint)connectionFeature.RemoteEndPoint;
+            var dataConnectionFeature = await activeDataConnectionFeatureFactory.CreateFeatureAsync(null, remoteIpEndPoint, _dataPort)
                .ConfigureAwait(false);
             Connection.Features.Set(dataConnectionFeature);
 

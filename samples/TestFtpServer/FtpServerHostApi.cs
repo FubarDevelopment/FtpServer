@@ -1,3 +1,7 @@
+// <copyright file="FtpServerHostApi.cs" company="Fubar Development Junker">
+// Copyright (c) Fubar Development Junker. All rights reserved.
+// </copyright>
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +13,7 @@ using FubarDev.FtpServer.ConnectionChecks;
 using FubarDev.FtpServer.Features;
 using FubarDev.FtpServer.ServerCommands;
 
+using Microsoft.AspNetCore.Connections.Features;
 using Microsoft.Extensions.Hosting;
 
 using TestFtpServer.Api;
@@ -92,7 +97,7 @@ namespace TestFtpServer
                 try
                 {
                     var keepAliveFeature = connection.Features.Get<IFtpConnectionStatusCheck>();
-                    var connectionFeature = connection.Features.Get<IConnectionFeature>();
+                    var connectionFeature = connection.Features.Get<IConnectionEndPointFeature>();
                     var ftpConnection = (FtpConnection)connection;
                     var connectionId = ftpConnection.ConnectionId;
                     var isAlive = keepAliveFeature.CheckIfAlive();

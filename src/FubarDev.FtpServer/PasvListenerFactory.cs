@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 
 using FubarDev.FtpServer.Features;
 
+using Microsoft.AspNetCore.Connections.Features;
 using Microsoft.Extensions.Logging;
 
 namespace FubarDev.FtpServer
@@ -61,14 +62,15 @@ namespace FubarDev.FtpServer
                     $"must be in {pasvOptions.PasvMinPort}:{pasvOptions.PasvMaxPort}");
             }
 
-            var connectionFeature = connection.Features.Get<IConnectionFeature>();
+            var connectionFeature = connection.Features.Get<IConnectionEndPointFeature>();
+            var localIpEndPoint = (IPEndPoint)connectionFeature.LocalEndPoint;
             if (port == 0 && pasvOptions.HasPortRange)
             {
-                listener = CreateListenerInRange(connection, connectionFeature.LocalEndPoint.Address, pasvOptions);
+                listener = CreateListenerInRange(connection, localIpEndPoint.Address, pasvOptions);
             }
             else
             {
-                listener = new PasvListener(connectionFeature.LocalEndPoint.Address, port, pasvOptions.PublicAddress);
+                listener = new PasvListener(localIpEndPoint.Address, port, pasvOptions.PublicAddress);
             }
 
             return listener;

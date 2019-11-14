@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 
 using FubarDev.FtpServer.Features;
 
+using Microsoft.AspNetCore.Connections.Features;
 using Microsoft.Extensions.Options;
 
 namespace FubarDev.FtpServer
@@ -54,8 +55,9 @@ namespace FubarDev.FtpServer
             }
             else
             {
-                var connectionFeature = connection.Features.Get<IConnectionFeature>();
-                publicAddress = connectionFeature.LocalEndPoint.Address;
+                var connectionFeature = connection.Features.Get<IConnectionEndPointFeature>();
+                var localIpEndPoint = (IPEndPoint)connectionFeature.LocalEndPoint;
+                publicAddress = localIpEndPoint.Address;
             }
 
             return Task.FromResult(new PasvListenerOptions(minPort, maxPort, publicAddress));

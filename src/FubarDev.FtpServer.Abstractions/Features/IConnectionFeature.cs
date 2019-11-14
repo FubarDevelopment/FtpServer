@@ -2,6 +2,7 @@
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
+using System;
 using System.Net;
 
 namespace FubarDev.FtpServer.Features
@@ -9,6 +10,7 @@ namespace FubarDev.FtpServer.Features
     /// <summary>
     /// Information about the current connection.
     /// </summary>
+    [Obsolete("Use IConnectionEndPointFeature")]
     public interface IConnectionFeature
     {
         /// <summary>

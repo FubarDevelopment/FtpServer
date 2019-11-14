@@ -31,6 +31,7 @@ using FubarDev.FtpServer.Localization;
 using FubarDev.FtpServer.Networking;
 using FubarDev.FtpServer.ServerCommands;
 
+using Microsoft.AspNetCore.Connections.Features;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -198,7 +199,10 @@ namespace FubarDev.FtpServer
                     _cancellationTokenSource.Token),
                 applicationOutputPipe.Writer);
 
+#pragma warning disable 618
             parentFeatures.Set<IConnectionFeature>(connectionFeature);
+#pragma warning restore 618
+            parentFeatures.Set<IConnectionEndPointFeature>(connectionFeature);
             parentFeatures.Set<ISecureConnectionFeature>(secureConnectionFeature);
             parentFeatures.Set<IServerCommandFeature>(new ServerCommandFeature(_serverCommandChannel));
             parentFeatures.Set<INetworkStreamFeature>(_networkStreamFeature);
@@ -262,7 +266,7 @@ namespace FubarDev.FtpServer
                 _idleCheck.SetChecks(checks);
 
                 // Connection information
-                var connectionFeature = Features.Get<IConnectionFeature>();
+                var connectionFeature = Features.Get<IConnectionEndPointFeature>();
                 _logger?.LogInformation("Connected from {remoteIp}", connectionFeature.RemoteEndPoint);
 
                 await _streamWriterService.StartAsync(CancellationToken.None)
@@ -836,21 +840,42 @@ namespace FubarDev.FtpServer
             }
         }
 
-        private class ConnectionFeature : IConnectionFeature
+        private class ConnectionFeature
+            : IConnectionEndPointFeature,
+#pragma warning disable 618
+                IConnectionFeature
+#pragma warning restore 618
         {
+            private IPEndPoint _localEndPoint;
+            private IPEndPoint _remoteEndPoint;
+
             public ConnectionFeature(
                 IPEndPoint localEndPoint,
                 IPEndPoint remoteEndPoint)
             {
-                LocalEndPoint = localEndPoint;
-                RemoteEndPoint = remoteEndPoint;
+                _localEndPoint = localEndPoint;
+                _remoteEndPoint = remoteEndPoint;
             }
 
             /// <inheritdoc />
-            public IPEndPoint LocalEndPoint { get; }
+            public EndPoint RemoteEndPoint
+            {
+                get => _remoteEndPoint;
+                set => _remoteEndPoint = (IPEndPoint)value;
+            }
 
             /// <inheritdoc />
-            public IPEndPoint RemoteEndPoint { get; }
+            public EndPoint LocalEndPoint
+            {
+                get => _localEndPoint;
+                set => _localEndPoint = (IPEndPoint)value;
+            }
+
+            /// <inheritdoc />
+            IPEndPoint IConnectionFeature.LocalEndPoint => _localEndPoint;
+
+            /// <inheritdoc />
+            IPEndPoint IConnectionFeature.RemoteEndPoint => _remoteEndPoint;
         }
 
         private class SecureConnectionFeature : ISecureConnectionFeature
