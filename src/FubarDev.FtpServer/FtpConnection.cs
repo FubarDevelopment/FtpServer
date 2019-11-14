@@ -927,7 +927,13 @@ namespace FubarDev.FtpServer
                     return 0;
                 }
 
-                return readTask.Result;
+#if NETSTANDARD1_3
+                return await readTask.ConfigureAwait(false);
+#else
+                var result = readTask.Result;
+                readTask.Dispose();
+                return result;
+#endif
             }
 
             /// <inheritdoc />
