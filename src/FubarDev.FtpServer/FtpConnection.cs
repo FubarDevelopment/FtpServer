@@ -260,6 +260,7 @@ namespace FubarDev.FtpServer
         /// <summary>
         /// Gets the cancellation token to use to signal a task cancellation.
         /// </summary>
+        [Obsolete("Use the IConnectionLifetimeFeature")]
         CancellationToken IFtpConnection.CancellationToken => _cancellationTokenSource.Token;
 
         /// <inheritdoc />
@@ -740,9 +741,8 @@ namespace FubarDev.FtpServer
             }
             finally
             {
-                // We must set this to null to avoid a deadlock.
-                _commandChannelReader = null;
-                await StopAsync().ConfigureAwait(false);
+                // Trigger stopping this connection
+                Abort();
             }
         }
 

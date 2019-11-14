@@ -10,8 +10,6 @@ using System.ComponentModel;
 using System.Threading;
 using System.Threading.Tasks;
 
-using FubarDev.FtpServer.Features;
-
 using Microsoft.AspNetCore.Http.Features;
 
 namespace FubarDev.FtpServer
@@ -41,6 +39,7 @@ namespace FubarDev.FtpServer
         /// Gets the cancellation token to use to signal a task cancellation.
         /// </summary>
         [EditorBrowsable(EditorBrowsableState.Never)]
+        [Obsolete("Use the IConnectionLifetimeFeature")]
         CancellationToken CancellationToken { get; }
 
         /// <summary>

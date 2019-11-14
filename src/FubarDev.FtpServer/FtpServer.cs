@@ -21,6 +21,7 @@ using FubarDev.FtpServer.Localization;
 using FubarDev.FtpServer.Networking;
 using FubarDev.FtpServer.ServerCommands;
 
+using Microsoft.AspNetCore.Connections.Features;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -39,8 +40,10 @@ namespace FubarDev.FtpServer
         private readonly FtpServerListenerService _serverListener;
         private readonly ILogger<FtpServer>? _log;
         private readonly Task _clientReader;
+        private readonly Task _connectionStopper;
         private readonly CancellationTokenSource _serverShutdown = new CancellationTokenSource();
         private readonly Timer? _connectionTimeoutChecker;
+        private readonly Channel<IFtpConnection> _stoppedConnectionChannel = Channel.CreateUnbounded<IFtpConnection>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FtpServer"/> class.
@@ -71,6 +74,7 @@ namespace FubarDev.FtpServer
             };
 
             _clientReader = ReadClientsAsync(tcpClientChannel, _serverShutdown.Token);
+            _connectionStopper = StopConnectionsAsync(_stoppedConnectionChannel.Reader, _serverShutdown.Token);
 
             if (serverOptions.Value.ConnectionInactivityCheckInterval is TimeSpan checkInterval)
             {
@@ -164,6 +168,7 @@ namespace FubarDev.FtpServer
 
             await _serverListener.StopAsync(cancellationToken).ConfigureAwait(false);
             await _clientReader.ConfigureAwait(false);
+            await _connectionStopper.ConfigureAwait(false);
         }
 
         /// <summary>
@@ -252,6 +257,38 @@ namespace FubarDev.FtpServer
             }
         }
 
+        private async Task StopConnectionsAsync(
+            ChannelReader<IFtpConnection> stoppedFtpClients,
+            CancellationToken cancellationToken)
+        {
+            try
+            {
+                while (!cancellationToken.IsCancellationRequested)
+                {
+                    var hasConnection = await stoppedFtpClients.WaitToReadAsync(cancellationToken)
+                       .ConfigureAwait(false);
+                    if (!hasConnection)
+                    {
+                        return;
+                    }
+
+                    while (stoppedFtpClients.TryRead(out var connection))
+                    {
+                        await StopConnectionAsync(connection)
+                           .ConfigureAwait(false);
+                    }
+                }
+            }
+            catch (Exception ex) when (ex.Is<OperationCanceledException>())
+            {
+                // Ignore
+            }
+            finally
+            {
+                _log?.LogDebug("Stopped accepting connections");
+            }
+        }
+
         private async Task AddClientAsync(TcpClient client)
         {
             var scope = _serviceProvider.CreateScope();
@@ -274,8 +311,14 @@ namespace FubarDev.FtpServer
                 var connectionAccessor = scope.ServiceProvider.GetRequiredService<IFtpConnectionAccessor>();
                 connectionAccessor.FtpConnection = connection;
 
+                // Get access to the connection lifetime
+                var lifetimeFeature = connection.Features.Get<IConnectionLifetimeFeature>();
+
+                // Registration to get notified when the connection should be stopped.
+                var stopRegistration = lifetimeFeature.ConnectionClosed.Register(() => RegisterForStop(connection));
+
                 // Remember connection
-                if (!_connections.TryAdd(connection, new FtpConnectionInfo(scope)))
+                if (!_connections.TryAdd(connection, new FtpConnectionInfo(scope, stopRegistration)))
                 {
                     _log.LogCritical("A new scope was created, but the connection couldn't be added to the list.");
                     client.Dispose();
@@ -307,15 +350,12 @@ namespace FubarDev.FtpServer
                     // Send initial response
                     await serverCommandWriter.WriteAsync(
                             new SendResponseServerCommand(response),
-                            connection.CancellationToken)
+                            lifetimeFeature.ConnectionClosed)
                        .ConfigureAwait(false);
                 }
 
                 // Statistics
                 _statistics.AddConnection();
-
-                // Statistics and cleanup
-                connection.Closed += ConnectionOnClosed;
 
                 // Connection configuration by host
                 var asyncInitFunctions = OnConfigureConnection(connection);
@@ -336,13 +376,20 @@ namespace FubarDev.FtpServer
             }
         }
 
-        private void ConnectionOnClosed(object? sender, EventArgs eventArgs)
+        private async void RegisterForStop(IFtpConnection connection)
         {
-            var connection = (IFtpConnection)(sender ?? throw new InvalidOperationException("Missing sender information."));
+            await _stoppedConnectionChannel.Writer.WriteAsync(connection)
+               .ConfigureAwait(false);
+        }
+
+        private async Task StopConnectionAsync(IFtpConnection connection)
+        {
             if (!_connections.TryRemove(connection, out var info))
             {
                 return;
             }
+
+            await connection.StopAsync().ConfigureAwait(false);
 
             info.Scope.Dispose();
 
@@ -356,12 +403,16 @@ namespace FubarDev.FtpServer
 
         private class FtpConnectionInfo
         {
-            public FtpConnectionInfo(IServiceScope scope)
+            public FtpConnectionInfo(
+                IServiceScope scope,
+                CancellationTokenRegistration registration)
             {
                 Scope = scope;
+                Registration = registration;
             }
 
             public IServiceScope Scope { get; }
+            public CancellationTokenRegistration Registration { get; }
         }
     }
 }

@@ -14,6 +14,7 @@ using FubarDev.FtpServer.ServerCommands;
 
 using JetBrains.Annotations;
 
+using Microsoft.AspNetCore.Connections.Features;
 using Microsoft.Extensions.Logging;
 
 namespace FubarDev.FtpServer.Commands
@@ -161,7 +162,8 @@ namespace FubarDev.FtpServer.Commands
             {
                 try
                 {
-                    await SendResponseAsync(response, context.Connection.CancellationToken)
+                    var lifetimeFeature = context.Connection.Features.Get<IConnectionLifetimeFeature>();
+                    await SendResponseAsync(response, lifetimeFeature.ConnectionClosed)
                        .ConfigureAwait(false);
                 }
                 catch (Exception ex) when (ex.Is<OperationCanceledException>())
