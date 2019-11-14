@@ -191,13 +191,16 @@ namespace FubarDev.FtpServer
                 _cancellationTokenSource.Token,
                 loggerFactory?.CreateLogger($"{nameof(StreamPipeWriterService)}:Socket:Transmit"));
 
+            var transport = new DuplexPipe(applicationInputPipe.Reader, applicationOutputPipe.Writer);
+            var transportFeature = new FtpConnectionTransportFeature(transport);
+
             _networkStreamFeature = new NetworkStreamFeature(
                 new SecureConnectionAdapter(
                     socketPipe,
                     connectionPipe,
                     sslStreamWrapperFactory,
                     _cancellationTokenSource.Token),
-                applicationOutputPipe.Writer);
+                transportFeature);
 
 #pragma warning disable 618
             parentFeatures.Set<IConnectionFeature>(connectionFeature);
@@ -210,6 +213,7 @@ namespace FubarDev.FtpServer
             parentFeatures.Set<IFtpConnectionStatusCheck>(_idleCheck);
             parentFeatures.Set<IConnectionIdFeature>(new FtpConnectionIdFeature(ConnectionId));
             parentFeatures.Set<IConnectionLifetimeFeature>(new FtpConnectionLifetimeFeature(this));
+            parentFeatures.Set<IConnectionTransportFeature>(transportFeature);
 
             var defaultEncoding = options.Value.DefaultEncoding ?? Encoding.ASCII;
             var authInfoFeature = new AuthorizationInformationFeature();
@@ -924,6 +928,17 @@ namespace FubarDev.FtpServer
                 get => _connectionId;
                 set { }
             }
+        }
+
+        private class FtpConnectionTransportFeature : IConnectionTransportFeature
+        {
+            public FtpConnectionTransportFeature(IDuplexPipe transport)
+            {
+                Transport = transport;
+            }
+
+            /// <inheritdoc />
+            public IDuplexPipe Transport { get; set; }
         }
 
         private class FtpConnectionLifetimeFeature : IConnectionLifetimeFeature

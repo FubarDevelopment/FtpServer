@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using FubarDev.FtpServer.Features;
 using FubarDev.FtpServer.ServerCommands;
 
+using Microsoft.AspNetCore.Connections.Features;
 using Microsoft.Extensions.Logging;
 
 namespace FubarDev.FtpServer.ServerCommandHandlers
@@ -46,10 +47,10 @@ namespace FubarDev.FtpServer.ServerCommandHandlers
             IFtpResponse response,
             CancellationToken cancellationToken)
         {
-            var networkStreamFeature = connection.Features.Get<INetworkStreamFeature>();
+            var transportFeature = connection.Features.Get<IConnectionTransportFeature>();
             var encoding = connection.Features.Get<IEncodingFeature>().Encoding;
 
-            var writer = networkStreamFeature.Output;
+            var writer = transportFeature.Transport.Output;
 
             _logger?.Log(response);
 

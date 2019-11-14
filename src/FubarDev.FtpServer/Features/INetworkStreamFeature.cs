@@ -2,6 +2,7 @@
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
+using System;
 using System.IO.Pipelines;
 
 using FubarDev.FtpServer.ConnectionHandlers;
@@ -25,6 +26,7 @@ namespace FubarDev.FtpServer.Features
         /// <summary>
         /// Gets the pipe writer for sending the responses.
         /// </summary>
+        [Obsolete("Use the IConnectionTransportFeature to get the pipe writer.")]
         PipeWriter Output { get; }
     }
 }

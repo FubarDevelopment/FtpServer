@@ -6,15 +6,19 @@ using System.IO.Pipelines;
 
 using FubarDev.FtpServer.ConnectionHandlers;
 
+using Microsoft.AspNetCore.Connections.Features;
+
 namespace FubarDev.FtpServer.Features.Impl
 {
     internal class NetworkStreamFeature : INetworkStreamFeature
     {
+        private readonly IConnectionTransportFeature _transportFeature;
+
         public NetworkStreamFeature(
             IFtpSecureConnectionAdapter secureConnectionAdapter,
-            PipeWriter output)
+            IConnectionTransportFeature transportFeature)
         {
-            Output = output;
+            _transportFeature = transportFeature;
             SecureConnectionAdapter = secureConnectionAdapter;
         }
 
@@ -22,6 +26,6 @@ namespace FubarDev.FtpServer.Features.Impl
         public IFtpSecureConnectionAdapter SecureConnectionAdapter { get; }
 
         /// <inheritdoc />
-        public PipeWriter Output { get; }
+        public PipeWriter Output => _transportFeature.Transport.Output;
     }
 }
