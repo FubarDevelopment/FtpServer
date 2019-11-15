@@ -5,6 +5,8 @@
 using System;
 using System.IO;
 
+using FubarDev.FtpServer.Statistics;
+
 using JKang.IpcServiceFramework;
 
 using Microsoft.Extensions.Configuration;
@@ -92,7 +94,8 @@ namespace TestFtpServer
                                     builder
                                        .AddNamedPipe(opt => opt.ThreadCount = 1)
                                        .AddService<Api.IFtpServerHost, FtpServerHostApi>();
-                                });
+                                })
+                           .AddScoped<IFtpStatisticsCollector, Statistics.ConnectionCommandHistory>();
                     })
                .UseSerilog(
                     (context, configuration) => { configuration.ReadFrom.Configuration(context.Configuration); });

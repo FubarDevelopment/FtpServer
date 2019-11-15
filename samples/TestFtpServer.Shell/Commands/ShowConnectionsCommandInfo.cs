@@ -8,6 +8,8 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
+using ConsoleTables;
+
 using JKang.IpcServiceFramework;
 
 using TestFtpServer.Api;
@@ -48,11 +50,19 @@ namespace TestFtpServer.Shell.Commands
                .InvokeAsync(host => host.GetConnections(), cancellationToken)
                .ConfigureAwait(false);
 
-            Console.WriteLine("ID                                  \tIs alive?\tRemote IP");
+            var table = new ConsoleTable("ID", "Alive", "Remote IP", "User", "Transfer");
             foreach (var connection in connections)
             {
-                Console.WriteLine($"{connection.Id}\t{connection.IsAlive}\t{connection.RemoteIp}");
+                table.AddRow(
+                    connection.Id,
+                    connection.IsAlive,
+                    connection.RemoteIp,
+                    connection.User,
+                    connection.HasActiveTransfer);
             }
+
+            table.Write();
+            Console.WriteLine();
         }
     }
 }

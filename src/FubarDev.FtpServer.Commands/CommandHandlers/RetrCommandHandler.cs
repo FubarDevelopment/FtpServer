@@ -14,6 +14,7 @@ using FubarDev.FtpServer.Commands;
 using FubarDev.FtpServer.Features;
 using FubarDev.FtpServer.FileSystem;
 using FubarDev.FtpServer.ServerCommands;
+using FubarDev.FtpServer.Statistics;
 
 using Microsoft.Extensions.Logging;
 
@@ -61,6 +62,12 @@ namespace FubarDev.FtpServer.CommandHandlers
                 return new FtpResponse(550, T("File doesn't exist."));
             }
 
+            var transferInfo = new FtpFileTransferInformation(
+                Guid.NewGuid().ToString("N"),
+                FtpFileTransferMode.Retrieve,
+                fileInfo.DirectoryPath.GetFullPath(fileInfo.FileName),
+                command);
+
             var input = await fsFeature.FileSystem
                .OpenReadAsync(fileInfo.Entry, restartPosition ?? 0, cancellationToken)
                .ConfigureAwait(false);
@@ -78,7 +85,10 @@ namespace FubarDev.FtpServer.CommandHandlers
                    .WriteAsync(
                         new DataConnectionServerCommand(
                             (dataConnection, ct) => ExecuteSendAsync(dataConnection, input, ct),
-                            command),
+                            command)
+                        {
+                            StatisticsInformation = transferInfo,
+                        },
                         cancellationToken)
                    .ConfigureAwait(false);
             }

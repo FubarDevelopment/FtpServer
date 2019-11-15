@@ -1,9 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <Import Project="../../Global.props" />
-
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
     <IsPackable>false</IsPackable>
   </PropertyGroup>
 
+  <Import Project="../../PackageLibrary.props" />
+  
 </Project>

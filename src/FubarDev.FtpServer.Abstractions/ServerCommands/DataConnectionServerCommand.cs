@@ -2,6 +2,8 @@
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
+using FubarDev.FtpServer.Statistics;
+
 namespace FubarDev.FtpServer.ServerCommands
 {
     /// <summary>
@@ -32,7 +34,12 @@ namespace FubarDev.FtpServer.ServerCommands
         /// </summary>
         public FtpCommand Command { get; }
 
+        /// <summary>
+        /// Gets or sets statistical information.
+        /// </summary>
+        public FtpFileTransferInformation? StatisticsInformation { get; set; }
+
         /// <inheritdoc />
-        public override string ToString() => $"{Command.Name}: SEND DATA OVER DATA CONNECTION";
+        public override string ToString() => $"{Command.Name}: SEND/RECEIVE DATA OVER DATA CONNECTION";
     }
 }

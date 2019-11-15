@@ -16,6 +16,7 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="ConsoleTables" Version="2.3.0" />
     <PackageReference Include="JKang.IpcServiceFramework.Client" Version="2.2.2" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="3.0.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.0.0" />

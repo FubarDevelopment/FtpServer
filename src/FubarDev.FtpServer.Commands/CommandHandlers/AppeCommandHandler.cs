@@ -14,6 +14,7 @@ using FubarDev.FtpServer.Commands;
 using FubarDev.FtpServer.Features;
 using FubarDev.FtpServer.FileSystem;
 using FubarDev.FtpServer.ServerCommands;
+using FubarDev.FtpServer.Statistics;
 
 namespace FubarDev.FtpServer.CommandHandlers
 {
@@ -77,11 +78,20 @@ namespace FubarDev.FtpServer.CommandHandlers
                     cancellationToken)
                .ConfigureAwait(false);
 
+            var transferInfo = new FtpFileTransferInformation(
+                Guid.NewGuid().ToString("N"),
+                FtpFileTransferMode.Append,
+                fileInfo.DirectoryPath.GetFullPath(fileInfo.FileName),
+                command);
+
             await FtpContext.ServerCommandWriter
                .WriteAsync(
                     new DataConnectionServerCommand(
                         (dataConnection, ct) => ExecuteSend(dataConnection, fileInfo, restartPosition, ct),
-                        command),
+                        command)
+                    {
+                        StatisticsInformation = transferInfo,
+                    },
                     cancellationToken)
                .ConfigureAwait(false);
 

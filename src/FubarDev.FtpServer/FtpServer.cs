@@ -20,6 +20,7 @@ using FubarDev.FtpServer.Features;
 using FubarDev.FtpServer.Localization;
 using FubarDev.FtpServer.Networking;
 using FubarDev.FtpServer.ServerCommands;
+using FubarDev.FtpServer.Statistics;
 
 using Microsoft.AspNetCore.Connections.Features;
 using Microsoft.Extensions.DependencyInjection;
@@ -324,8 +325,19 @@ namespace FubarDev.FtpServer
                 // Registration to get notified when the connection should be stopped.
                 var stopRegistration = lifetimeFeature.ConnectionClosed.Register(() => RegisterForStop(connection));
 
+                // Register statistics collectors
+                var statisticsCollectors =
+                    scope.ServiceProvider.GetRequiredService<IEnumerable<IFtpStatisticsCollector>>();
+                var statCollFeature = connection.Features.Get<IFtpStatisticsCollectorFeature>();
+                var statCollRegistrations = statisticsCollectors
+                   .Select(statCollFeature.Register)
+                   .ToList();
+
+                // Create connection information
+                var connectionInfo = new FtpConnectionInfo(scope, stopRegistration, statCollRegistrations);
+
                 // Remember connection
-                if (!_connections.TryAdd(connection, new FtpConnectionInfo(scope, stopRegistration)))
+                if (!_connections.TryAdd(connection, connectionInfo))
                 {
                     _log.LogCritical("A new scope was created, but the connection couldn't be added to the list.");
                     client.Dispose();
@@ -398,6 +410,11 @@ namespace FubarDev.FtpServer
 
             await connection.StopAsync().ConfigureAwait(false);
 
+            foreach (var registration in info.StatisticsRegistrations)
+            {
+                registration.Dispose();
+            }
+
             info.Registration.Dispose();
             info.Scope.Dispose();
 
@@ -413,14 +430,17 @@ namespace FubarDev.FtpServer
         {
             public FtpConnectionInfo(
                 IServiceScope scope,
-                CancellationTokenRegistration registration)
+                CancellationTokenRegistration registration,
+                IReadOnlyCollection<IDisposable> statisticsRegistrations)
             {
                 Scope = scope;
                 Registration = registration;
+                StatisticsRegistrations = statisticsRegistrations;
             }
 
             public IServiceScope Scope { get; }
             public CancellationTokenRegistration Registration { get; }
+            public IReadOnlyCollection<IDisposable> StatisticsRegistrations { get; }
         }
     }
 }

@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -12,12 +13,16 @@ using FubarDev.FtpServer;
 using FubarDev.FtpServer.ConnectionChecks;
 using FubarDev.FtpServer.Features;
 using FubarDev.FtpServer.ServerCommands;
+using FubarDev.FtpServer.Statistics;
 
 using Microsoft.AspNetCore.Connections.Features;
+using Microsoft.AspNetCore.Http.Features;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
 using TestFtpServer.Api;
 using TestFtpServer.ServerInfo;
+using TestFtpServer.Statistics;
 
 namespace TestFtpServer
 {
@@ -96,17 +101,36 @@ namespace TestFtpServer
             {
                 try
                 {
-                    var keepAliveFeature = connection.Features.Get<IFtpConnectionStatusCheck>();
+                    var serviceProvider = connection.Features.Get<IServiceProvidersFeature>().RequestServices;
+                    var statistics = serviceProvider.GetRequiredService<IEnumerable<IFtpStatisticsCollector>>()
+                       .OfType<ConnectionCommandHistory>()
+                       .Single();
+
                     var connectionEndPointFeature = connection.Features.Get<IConnectionEndPointFeature>();
+                    var remoteIp = connectionEndPointFeature.RemoteEndPoint.ToString();
+
                     var connectionIdFeature = connection.Features.Get<IConnectionIdFeature>();
                     var connectionId = connectionIdFeature.ConnectionId;
+
+                    var keepAliveFeature = connection.Features.Get<IFtpConnectionStatusCheck>();
                     var isAlive = keepAliveFeature.CheckIfAlive();
-                    var remoteIp = connectionEndPointFeature.RemoteEndPoint.ToString();
-                    result.Add(
-                        new FtpConnectionStatus(connectionId, remoteIp)
+
+                    var status = new FtpConnectionStatus(connectionId, remoteIp)
+                    {
+                        IsAlive = isAlive,
+                        HasActiveTransfer = statistics.GetActiveTransfers().Any(),
+                    };
+
+                    var currentUser = statistics.GetCurrentUser();
+                    if (currentUser != null)
+                    {
+                        status.User = new FtpUser(currentUser.Identity.Name)
                         {
-                            IsAlive = isAlive,
-                        });
+                            Email = currentUser.FindFirst(ClaimTypes.Email)?.Value,
+                        };
+                    }
+
+                    result.Add(status);
                 }
                 catch
                 {

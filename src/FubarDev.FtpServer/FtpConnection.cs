@@ -7,7 +7,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.IO.Pipelines;
 using System.Linq;
@@ -24,7 +23,6 @@ using FubarDev.FtpServer.Commands;
 using FubarDev.FtpServer.ConnectionChecks;
 using FubarDev.FtpServer.ConnectionHandlers;
 using FubarDev.FtpServer.DataConnection;
-using FubarDev.FtpServer.Events;
 using FubarDev.FtpServer.Features;
 using FubarDev.FtpServer.Features.Impl;
 using FubarDev.FtpServer.Localization;
@@ -42,7 +40,7 @@ namespace FubarDev.FtpServer
     /// <summary>
     /// This class represents a FTP connection.
     /// </summary>
-    public sealed class FtpConnection : FtpConnectionContext, IFtpConnection, IObservable<IFtpConnectionEvent>, IFtpConnectionEventHost
+    public sealed class FtpConnection : FtpConnectionContext, IFtpConnection
     {
         private readonly CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
 
@@ -73,10 +71,6 @@ namespace FubarDev.FtpServer
         private readonly ILogger<FtpConnection>? _logger;
 
         private readonly IPEndPoint _remoteEndPoint;
-
-        private readonly object _observersLock = new object();
-
-        private readonly List<ObserverRegistration> _observers = new List<ObserverRegistration>();
 
         /// <summary>
         /// This semaphore avoids the execution of `StopAsync` while a `StartAsync` is running.
@@ -207,6 +201,8 @@ namespace FubarDev.FtpServer
                     _cancellationTokenSource.Token),
                 transportFeature);
 
+            var statisticsCollectorFeature = new FtpStatisticsCollectorFeature();
+
 #pragma warning disable 618
             parentFeatures.Set<IConnectionFeature>(connectionFeature);
 #pragma warning restore 618
@@ -214,15 +210,15 @@ namespace FubarDev.FtpServer
             parentFeatures.Set<ISecureConnectionFeature>(secureConnectionFeature);
             parentFeatures.Set<IServerCommandFeature>(new ServerCommandFeature(_serverCommandChannel));
             parentFeatures.Set<INetworkStreamFeature>(_networkStreamFeature);
-            parentFeatures.Set<IFtpConnectionEventHost>(this);
             parentFeatures.Set<IFtpConnectionStatusCheck>(_idleCheck);
             parentFeatures.Set<IConnectionIdFeature>(new FtpConnectionIdFeature(ConnectionId));
             parentFeatures.Set<IConnectionLifetimeFeature>(new FtpConnectionLifetimeFeature(this));
             parentFeatures.Set<IConnectionTransportFeature>(transportFeature);
             parentFeatures.Set<IServiceProvidersFeature>(new FtpServiceProviderFeature(serviceProvider));
+            parentFeatures.Set<IFtpStatisticsCollectorFeature>(statisticsCollectorFeature);
 
             var defaultEncoding = options.Value.DefaultEncoding ?? Encoding.ASCII;
-            var authInfoFeature = new AuthorizationInformationFeature();
+            var authInfoFeature = new AuthorizationInformationFeature(statisticsCollectorFeature);
 
             var features = new FeatureCollection(parentFeatures);
             features.Set<ILocalizationFeature>(new LocalizationFeature(catalogLoader));
@@ -412,18 +408,6 @@ namespace FubarDev.FtpServer
                .ConfigureAwait(false);
         }
 
-        /// <inheritdoc />
-        public IDisposable Subscribe(IObserver<IFtpConnectionEvent> observer)
-        {
-            var registration = new ObserverRegistration(this, observer);
-            lock (_observersLock)
-            {
-                _observers.Add(registration);
-            }
-
-            return registration;
-        }
-
         /// <inheritdoc/>
         public void Dispose()
         {
@@ -464,18 +448,6 @@ namespace FubarDev.FtpServer
             _socket.Dispose();
             _cancellationTokenSource.Dispose();
             _loggerScope?.Dispose();
-        }
-
-        /// <summary>
-        /// Publish the event.
-        /// </summary>
-        /// <param name="evt">The event to publish.</param>
-        public void PublishEvent(IFtpConnectionEvent evt)
-        {
-            foreach (var observer in GetObservers())
-            {
-                observer.OnNext(evt);
-            }
         }
 
         private void Abort()
@@ -644,12 +616,6 @@ namespace FubarDev.FtpServer
             catch (Exception ex)
             {
                 _logger?.LogError(ex, "Closing connection due to error {0}", ex.Message);
-
-                foreach (var observer in GetObservers())
-                {
-                    observer.OnError(ex);
-                }
-
                 Abort();
             }
             finally
@@ -657,11 +623,6 @@ namespace FubarDev.FtpServer
                 reader.Complete();
 
                 _logger?.LogDebug("Stopped reading commands");
-
-                foreach (var observer in GetObservers())
-                {
-                    observer.OnCompleted();
-                }
             }
         }
 
@@ -678,6 +639,8 @@ namespace FubarDev.FtpServer
 
             var requestDelegate = nextStep;
 
+            // Statistics feature
+            var statisticsCollectorFeature = Features.Get<IFtpStatisticsCollectorFeature>();
             try
             {
                 Task<bool>? readTask = null;
@@ -720,7 +683,9 @@ namespace FubarDev.FtpServer
 
                         while (commandReader.TryRead(out var command))
                         {
-                            PublishEvent(new FtpConnectionCommandReceivedEvent(command));
+                            var receivedCommand = command;
+                            statisticsCollectorFeature.ForEach(collector => collector.ReceivedCommand(receivedCommand));
+
                             _logger?.LogCommand(command);
                             var context = new FtpContext(command, _serverCommandChannel, this);
                             await requestDelegate(context)
@@ -741,14 +706,6 @@ namespace FubarDev.FtpServer
             {
                 // Trigger stopping this connection
                 Abort();
-            }
-        }
-
-        private List<IObserver<IFtpConnectionEvent>> GetObservers()
-        {
-            lock (_observersLock)
-            {
-                return _observers.Select(x => x.Observer).ToList();
             }
         }
 
@@ -777,36 +734,6 @@ namespace FubarDev.FtpServer
             {
                 _checks.Clear();
                 _checks.AddRange(checks);
-            }
-        }
-
-        /// <summary>
-        /// Observer registration.
-        /// </summary>
-        private class ObserverRegistration : IDisposable
-        {
-            private readonly FtpConnection _connection;
-
-            public ObserverRegistration(
-                FtpConnection connection,
-                IObserver<IFtpConnectionEvent> observer)
-            {
-                _connection = connection;
-                Observer = observer;
-            }
-
-            /// <summary>
-            /// Gets the registered observer.
-            /// </summary>
-            public IObserver<IFtpConnectionEvent> Observer { get; }
-
-            /// <inheritdoc />
-            public void Dispose()
-            {
-                lock (_connection._observersLock)
-                {
-                    _connection._observers.Remove(this);
-                }
             }
         }
 

@@ -5,7 +5,8 @@
 using System;
 using System.Collections.Generic;
 
-using FubarDev.FtpServer.Events;
+using FubarDev.FtpServer.Features;
+using FubarDev.FtpServer.Statistics;
 
 using Microsoft.Extensions.Options;
 
@@ -31,7 +32,7 @@ namespace FubarDev.FtpServer.ConnectionChecks
         /// </summary>
         private readonly HashSet<string> _activeDataTransfers = new HashSet<string>();
 
-        private readonly IDisposable? _subscription;
+        private readonly IDisposable _subscription;
 
         /// <summary>
         /// The timestamp of the last activity on the connection.
@@ -56,14 +57,8 @@ namespace FubarDev.FtpServer.ConnectionChecks
             _inactivityTimeout = options.Value.InactivityTimeout ?? TimeSpan.MaxValue;
             UpdateLastActiveTime();
 
-            if (connection is IObservable<IFtpConnectionEvent> observable)
-            {
-                _subscription = observable.Subscribe(new EventObserver(this));
-            }
-            else
-            {
-                _subscription = null;
-            }
+            var statisticsCollectorFeature = connection.Features.Get<IFtpStatisticsCollectorFeature>();
+            _subscription = statisticsCollectorFeature.Register(new IdleStatisticsCollector(this));
         }
 
         /// <inheritdoc />
@@ -115,57 +110,41 @@ namespace FubarDev.FtpServer.ConnectionChecks
                 : _utcLastActiveTime.Add(_inactivityTimeout);
         }
 
-        private class EventObserver : IObserver<IFtpConnectionEvent>
+        private class IdleStatisticsCollector : FtpStatisticsCollectorBase
         {
             private readonly FtpConnectionIdleCheck _check;
 
-            public EventObserver(FtpConnectionIdleCheck check)
+            public IdleStatisticsCollector(FtpConnectionIdleCheck check)
             {
                 _check = check;
             }
 
             /// <inheritdoc />
-            public void OnCompleted()
+            public override void ReceivedCommand(FtpCommand command)
             {
-                // Ignore, connection was closed.
-            }
-
-            /// <inheritdoc />
-            public void OnError(Exception error)
-            {
-                // Ignore
-            }
-
-            /// <inheritdoc />
-            public void OnNext(IFtpConnectionEvent value)
-            {
-                switch (value)
+                lock (_check._inactivityTimeoutLock)
                 {
-                    case FtpConnectionCommandReceivedEvent _:
-                        lock (_check._inactivityTimeoutLock)
-                        {
-                            _check.UpdateLastActiveTime();
-                        }
+                    _check.UpdateLastActiveTime();
+                }
+            }
 
-                        break;
+            /// <inheritdoc />
+            public override void StartFileTransfer(FtpFileTransferInformation information)
+            {
+                lock (_check._inactivityTimeoutLock)
+                {
+                    _check.UpdateLastActiveTime();
+                    _check._activeDataTransfers.Add(information.TransferId);
+                }
+            }
 
-                    case FtpConnectionDataTransferStartedEvent e:
-                        lock (_check._inactivityTimeoutLock)
-                        {
-                            _check.UpdateLastActiveTime();
-                            _check._activeDataTransfers.Add(e.TransferId);
-                        }
-
-                        break;
-
-                    case FtpConnectionDataTransferStoppedEvent e:
-                        lock (_check._inactivityTimeoutLock)
-                        {
-                            _check.UpdateLastActiveTime();
-                            _check._activeDataTransfers.Remove(e.TransferId);
-                        }
-
-                        break;
+            /// <inheritdoc />
+            public override void StopFileTransfer(string transferId)
+            {
+                lock (_check._inactivityTimeoutLock)
+                {
+                    _check.UpdateLastActiveTime();
+                    _check._activeDataTransfers.Remove(transferId);
                 }
             }
         }

@@ -6,9 +6,9 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-using FubarDev.FtpServer.Events;
 using FubarDev.FtpServer.Features;
 using FubarDev.FtpServer.ServerCommands;
+using FubarDev.FtpServer.Statistics;
 
 using Microsoft.Extensions.Logging;
 
@@ -42,7 +42,7 @@ namespace FubarDev.FtpServer.ServerCommandHandlers
             var serverCommandWriter = connection.Features.Get<IServerCommandFeature>().ServerCommandWriter;
             var localizationFeature = connection.Features.Get<ILocalizationFeature>();
 
-            using (new ConnectionKeepAlive(connection, command.Command))
+            using (CreateConnectionKeepAlive(connection, command.StatisticsInformation))
             {
                 // Try to open the data connection
                 IFtpDataConnection dataConnection;
@@ -89,23 +89,31 @@ namespace FubarDev.FtpServer.ServerCommandHandlers
             }
         }
 
+        private static IDisposable? CreateConnectionKeepAlive(
+            IFtpConnection connection,
+            FtpFileTransferInformation? information)
+        {
+            return information == null ? null : new ConnectionKeepAlive(connection, information);
+        }
+
         private class ConnectionKeepAlive : IDisposable
         {
-            private readonly string _transferId = Guid.NewGuid().ToString("N");
-            private readonly IFtpConnectionEventHost _eventHost;
+            private readonly string _transferId;
+            private readonly IFtpStatisticsCollectorFeature _collectorFeature;
 
             public ConnectionKeepAlive(
                 IFtpConnection connection,
-                FtpCommand command)
+                FtpFileTransferInformation information)
             {
-                _eventHost = connection.Features.Get<IFtpConnectionEventHost>();
-                _eventHost.PublishEvent(new FtpConnectionDataTransferStartedEvent(_transferId, command));
+                _transferId = information.TransferId;
+                _collectorFeature = connection.Features.Get<IFtpStatisticsCollectorFeature>();
+                _collectorFeature.ForEach(collector => collector.StartFileTransfer(information));
             }
 
             /// <inheritdoc />
             public void Dispose()
             {
-                _eventHost.PublishEvent(new FtpConnectionDataTransferStoppedEvent(_transferId));
+                _collectorFeature.ForEach(collector => collector.StopFileTransfer(_transferId));
             }
         }
     }

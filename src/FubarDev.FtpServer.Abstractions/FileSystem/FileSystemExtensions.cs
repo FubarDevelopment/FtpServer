@@ -144,7 +144,7 @@ namespace FubarDev.FtpServer.FileSystem
                 return null;
             }
 
-            return new SearchResult<IUnixDirectoryEntry>(sourceDir, foundDirEntry, fileName);
+            return new SearchResult<IUnixDirectoryEntry>(sourceDir, foundDirEntry, fileName, currentPath);
         }
 
         /// <summary>
@@ -185,7 +185,7 @@ namespace FubarDev.FtpServer.FileSystem
                 return null;
             }
 
-            return new SearchResult<IUnixFileEntry>(sourceDir, foundFileEntry, fileName);
+            return new SearchResult<IUnixFileEntry>(sourceDir, foundFileEntry, fileName, currentPath);
         }
 
         /// <summary>
@@ -263,7 +263,7 @@ namespace FubarDev.FtpServer.FileSystem
                     break;
             }
 
-            return new SearchResult<IUnixFileSystemEntry>(sourceDir, foundEntry, fileName);
+            return new SearchResult<IUnixFileSystemEntry>(sourceDir, foundEntry, fileName, currentPath);
         }
 
         /// <summary>

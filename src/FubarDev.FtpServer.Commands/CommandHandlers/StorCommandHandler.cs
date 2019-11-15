@@ -14,6 +14,8 @@ using FubarDev.FtpServer.Commands;
 using FubarDev.FtpServer.Features;
 using FubarDev.FtpServer.FileSystem;
 using FubarDev.FtpServer.ServerCommands;
+using FubarDev.FtpServer.Statistics;
+
 using Microsoft.Extensions.Logging;
 
 namespace FubarDev.FtpServer.CommandHandlers
@@ -73,6 +75,12 @@ namespace FubarDev.FtpServer.CommandHandlers
                 return new FtpResponse(553, T("File name not allowed."));
             }
 
+            var transferInfo = new FtpFileTransferInformation(
+                Guid.NewGuid().ToString("N"),
+                FtpFileTransferMode.Store,
+                fileInfo.DirectoryPath.GetFullPath(fileInfo.FileName),
+                command);
+
             var doReplace = restartPosition.GetValueOrDefault() == 0 && fileInfo.Entry != null;
 
             await FtpContext.ServerCommandWriter
@@ -90,7 +98,10 @@ namespace FubarDev.FtpServer.CommandHandlers
                             fileInfo,
                             restartPosition,
                             ct),
-                        command),
+                        command)
+                    {
+                        StatisticsInformation = transferInfo,
+                    },
                     cancellationToken)
                .ConfigureAwait(false);
 
