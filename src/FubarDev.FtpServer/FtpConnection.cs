@@ -701,9 +701,9 @@ namespace FubarDev.FtpServer
                 var readTask = Stream
                    .ReadAsync(buffer, offset, length, cancellationToken);
 
-                // We ensure that this service can be closed ASAP with the help
-                // of a Task.Delay.
-                var resultTask = await Task.WhenAny(readTask, Task.Delay(-1, cancellationToken))
+                var tcs = new TaskCompletionSource<object?>();
+                using var registration = cancellationToken.Register(() => tcs.TrySetResult(null));
+                var resultTask = await Task.WhenAny(readTask, tcs.Task)
                    .ConfigureAwait(false);
                 if (resultTask != readTask || cancellationToken.IsCancellationRequested)
                 {
