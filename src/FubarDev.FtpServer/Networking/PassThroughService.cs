@@ -42,8 +42,13 @@ namespace FubarDev.FtpServer.Networking
         {
             await base.StopAsync(cancellationToken)
                .ConfigureAwait(false);
-            await SafeFlushAsync(cancellationToken)
-               .ConfigureAwait(false);
+
+            if (!IsPauseRequested)
+            {
+                await SafeFlushAsync(cancellationToken)
+                   .ConfigureAwait(false);
+            }
+
             await OnCloseAsync(_exception, cancellationToken)
                .ConfigureAwait(false);
         }
