@@ -27,6 +27,7 @@ namespace FubarDev.FtpServer.ConnectionHandlers
         private readonly X509Certificate2 _certificate;
 
         private readonly CancellationToken _connectionClosed;
+        private readonly ILoggerFactory? _loggerFactory;
 
         private SslCommunicationInfo? _info;
 
@@ -35,13 +36,15 @@ namespace FubarDev.FtpServer.ConnectionHandlers
             IDuplexPipe connectionPipe,
             ISslStreamWrapperFactory sslStreamWrapperFactory,
             X509Certificate2 certificate,
-            CancellationToken connectionClosed)
+            CancellationToken connectionClosed,
+            ILoggerFactory? loggerFactory = null)
         {
             _socketPipe = socketPipe;
             _connectionPipe = connectionPipe;
             _sslStreamWrapperFactory = sslStreamWrapperFactory;
             _certificate = certificate;
             _connectionClosed = connectionClosed;
+            _loggerFactory = loggerFactory;
         }
 
         /// <inheritdoc />
@@ -62,15 +65,24 @@ namespace FubarDev.FtpServer.ConnectionHandlers
                 _socketPipe.Output);
             var sslStream = await _sslStreamWrapperFactory.WrapStreamAsync(rawStream, false, _certificate, cancellationToken)
                .ConfigureAwait(false);
+
+            var receiverLogger = _loggerFactory
+              ?.CreateLogger(typeof(SslStreamConnectionAdapter).FullName + ":Receiver");
             var receiverService = new NonClosingNetworkStreamReader(
                 sslStream,
                 _connectionPipe.Output,
                 _socketPipe.Input,
-                _connectionClosed);
+                _connectionClosed,
+                receiverLogger);
+
+            var transmitterLogger = _loggerFactory
+              ?.CreateLogger(typeof(SslStreamConnectionAdapter).FullName + ":Transmitter");
             var transmitterService = new NonClosingNetworkStreamWriter(
                 sslStream,
                 _connectionPipe.Input,
-                _connectionClosed);
+                _connectionClosed,
+                transmitterLogger);
+
             var info = new SslCommunicationInfo(transmitterService, receiverService, sslStream);
             _info = info;
 

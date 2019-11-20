@@ -60,9 +60,9 @@ dotnet_naming_style.camel_case_underscore_style.required_prefix = _
 dotnet_naming_style.camel_case_underscore_style.capitalization = camel_case
 
 # private static fields should be _camelCase
-dotnet_naming_rule.camel_case_for_private_internal_fields.severity = suggestion
-dotnet_naming_rule.camel_case_for_private_internal_fields.symbols  = private_static_fields
-dotnet_naming_rule.camel_case_for_private_internal_fields.style    = camel_case_underscore_style
+dotnet_naming_rule.camel_case_for_private_static_fields.severity = suggestion
+dotnet_naming_rule.camel_case_for_private_static_fields.symbols  = private_static_fields
+dotnet_naming_rule.camel_case_for_private_static_fields.style    = camel_case_underscore_style
 
 dotnet_naming_symbols.private_static_fields.applicable_kinds = field
 dotnet_naming_symbols.private_static_fields.required_modifiers = static

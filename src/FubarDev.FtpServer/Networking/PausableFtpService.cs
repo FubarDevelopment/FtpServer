@@ -94,6 +94,12 @@ namespace FubarDev.FtpServer.Networking
                .ConfigureAwait(false);
 
             Status = FtpServiceStatus.Stopped;
+
+            if (IsPauseRequested)
+            {
+                await OnStoppedAsync(cancellationToken)
+                   .ConfigureAwait(false);
+            }
         }
 
         /// <inheritdoc />
@@ -119,6 +125,14 @@ namespace FubarDev.FtpServer.Networking
 
             await _task
                .ConfigureAwait(false);
+
+            Status = FtpServiceStatus.Paused;
+
+            if (IsStopRequested)
+            {
+                await OnPausedAsync(cancellationToken)
+                   .ConfigureAwait(false);
+            }
         }
 
         /// <inheritdoc />
@@ -169,24 +183,28 @@ namespace FubarDev.FtpServer.Networking
         protected virtual Task OnStopRequestingAsync(
             CancellationToken cancellationToken)
         {
+            Logger?.LogTrace("STOP requesting");
             return Task.CompletedTask;
         }
 
         protected virtual Task OnStopRequestedAsync(
             CancellationToken cancellationToken)
         {
+            Logger?.LogTrace("STOP requested");
             return Task.CompletedTask;
         }
 
         protected virtual Task OnPauseRequestingAsync(
             CancellationToken cancellationToken)
         {
+            Logger?.LogTrace("PAUSE requesting");
             return Task.CompletedTask;
         }
 
         protected virtual Task OnPauseRequestedAsync(
             CancellationToken cancellationToken)
         {
+            Logger?.LogTrace("PAUSE requested");
             return Task.CompletedTask;
         }
 
@@ -199,12 +217,14 @@ namespace FubarDev.FtpServer.Networking
         protected virtual Task OnPausedAsync(
             CancellationToken cancellationToken)
         {
+            Logger?.LogTrace("PAUSED");
             return Task.CompletedTask;
         }
 
         protected virtual Task OnStoppedAsync(
             CancellationToken cancellationToken)
         {
+            Logger?.LogTrace("STOPPED");
             return Task.CompletedTask;
         }
 
