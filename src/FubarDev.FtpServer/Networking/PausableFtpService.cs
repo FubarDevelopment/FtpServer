@@ -94,6 +94,12 @@ namespace FubarDev.FtpServer.Networking
                .ConfigureAwait(false);
 
             Status = FtpServiceStatus.Stopped;
+
+            if (IsPauseRequested)
+            {
+                await OnStoppedAsync(cancellationToken)
+                   .ConfigureAwait(false);
+            }
         }
 
         /// <inheritdoc />
@@ -119,6 +125,14 @@ namespace FubarDev.FtpServer.Networking
 
             await _task
                .ConfigureAwait(false);
+
+            Status = FtpServiceStatus.Paused;
+
+            if (IsStopRequested)
+            {
+                await OnPausedAsync(cancellationToken)
+                   .ConfigureAwait(false);
+            }
         }
 
         /// <inheritdoc />
