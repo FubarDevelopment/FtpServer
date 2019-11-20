@@ -9,6 +9,8 @@ using System.Threading.Tasks;
 
 using FubarDev.FtpServer.Authentication;
 
+using Microsoft.Extensions.Logging;
+
 namespace FubarDev.FtpServer.ConnectionHandlers
 {
     /// <summary>
@@ -21,6 +23,7 @@ namespace FubarDev.FtpServer.ConnectionHandlers
         private readonly ISslStreamWrapperFactory _sslStreamWrapperFactory;
 
         private readonly CancellationToken _connectionClosed;
+        private readonly ILoggerFactory? _loggerFactory;
         private IFtpConnectionAdapter _activeCommunicationService;
 
         /// <summary>
@@ -30,20 +33,24 @@ namespace FubarDev.FtpServer.ConnectionHandlers
         /// <param name="connectionPipe">The pipe to the connection object.</param>
         /// <param name="sslStreamWrapperFactory">The SSL stream wrapper factory.</param>
         /// <param name="connectionClosed">The cancellation token for a closed connection.</param>
+        /// <param name="loggerFactory">The logger factory.</param>
         public SecureConnectionAdapter(
             IDuplexPipe socketPipe,
             IDuplexPipe connectionPipe,
             ISslStreamWrapperFactory sslStreamWrapperFactory,
-            CancellationToken connectionClosed)
+            CancellationToken connectionClosed,
+            ILoggerFactory? loggerFactory = null)
         {
             _socketPipe = socketPipe;
             _connectionPipe = connectionPipe;
             _sslStreamWrapperFactory = sslStreamWrapperFactory;
             _connectionClosed = connectionClosed;
+            _loggerFactory = loggerFactory;
             _activeCommunicationService = new PassThroughConnectionAdapter(
                 socketPipe,
                 connectionPipe,
-                connectionClosed);
+                connectionClosed,
+                loggerFactory);
         }
 
         /// <inheritdoc />
@@ -60,7 +67,8 @@ namespace FubarDev.FtpServer.ConnectionHandlers
             _activeCommunicationService = new PassThroughConnectionAdapter(
                 _socketPipe,
                 _connectionPipe,
-                _connectionClosed);
+                _connectionClosed,
+                _loggerFactory);
             await StartAsync(cancellationToken)
                .ConfigureAwait(false);
         }
@@ -77,14 +85,16 @@ namespace FubarDev.FtpServer.ConnectionHandlers
                     _connectionPipe,
                     _sslStreamWrapperFactory,
                     certificate,
-                    _connectionClosed);
+                    _connectionClosed,
+                    _loggerFactory);
             }
             catch
             {
                 _activeCommunicationService = new PassThroughConnectionAdapter(
                     _socketPipe,
                     _connectionPipe,
-                    _connectionClosed);
+                    _connectionClosed,
+                    _loggerFactory);
                 throw;
             }
             finally

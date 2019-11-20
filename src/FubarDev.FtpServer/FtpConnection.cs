@@ -182,7 +182,8 @@ namespace FubarDev.FtpServer
                     socketPipe,
                     connectionPipe,
                     sslStreamWrapperFactory,
-                    _cancellationTokenSource.Token),
+                    _cancellationTokenSource.Token,
+                    loggerFactory),
                 applicationOutputPipe.Writer);
 
             parentFeatures.Set<IConnectionFeature>(connectionFeature);
