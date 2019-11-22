@@ -40,10 +40,12 @@ namespace FubarDev.FtpServer.Networking
         /// <inheritdoc />
         public override async Task StopAsync(CancellationToken cancellationToken)
         {
+            var wasRunning = IsRunning;
+
             await base.StopAsync(cancellationToken)
                .ConfigureAwait(false);
 
-            if (!IsPauseRequested)
+            if (wasRunning && !IsPauseRequested)
             {
                 await SafeFlushAsync(cancellationToken)
                    .ConfigureAwait(false);
