@@ -21,6 +21,7 @@ namespace FubarDev.FtpServer.Networking
         private readonly CancellationToken _connectionClosed;
         private CancellationTokenSource _jobPaused = new CancellationTokenSource();
         private Task _task = Task.CompletedTask;
+        private volatile FtpServiceStatus _status = FtpServiceStatus.ReadyToRun;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PausableFtpService"/> class.
@@ -36,7 +37,11 @@ namespace FubarDev.FtpServer.Networking
         }
 
         /// <inheritdoc />
-        public FtpServiceStatus Status { get; private set; } = FtpServiceStatus.ReadyToRun;
+        public FtpServiceStatus Status
+        {
+            get => _status;
+            private set => _status = value;
+        }
 
         protected ILogger? Logger { get; }
 
@@ -45,6 +50,18 @@ namespace FubarDev.FtpServer.Networking
         protected bool IsStopRequested => _jobStopped.IsCancellationRequested;
 
         protected bool IsPauseRequested => _jobPaused.IsCancellationRequested;
+
+        /// <summary>
+        /// Gets a value indicating whether the service is running.
+        /// </summary>
+        protected bool IsRunning
+        {
+            get
+            {
+                var status = Status;
+                return status == FtpServiceStatus.Running;
+            }
+        }
 
         /// <inheritdoc />
         public virtual async Task StartAsync(CancellationToken cancellationToken)
@@ -77,10 +94,7 @@ namespace FubarDev.FtpServer.Networking
         /// <inheritdoc />
         public virtual async Task StopAsync(CancellationToken cancellationToken)
         {
-            if (Status != FtpServiceStatus.Running && Status != FtpServiceStatus.Stopped && Status != FtpServiceStatus.Paused)
-            {
-                throw new InvalidOperationException($"Status must be {FtpServiceStatus.Running}, {FtpServiceStatus.Stopped}, or {FtpServiceStatus.Paused}, but was {Status}.");
-            }
+            var wasRunning = IsRunning;
 
             await OnStopRequestingAsync(cancellationToken)
                .ConfigureAwait(false);
@@ -95,7 +109,7 @@ namespace FubarDev.FtpServer.Networking
 
             Status = FtpServiceStatus.Stopped;
 
-            if (IsPauseRequested)
+            if (!wasRunning || IsPauseRequested)
             {
                 await OnStoppedAsync(cancellationToken)
                    .ConfigureAwait(false);
@@ -110,7 +124,7 @@ namespace FubarDev.FtpServer.Networking
                 return;
             }
 
-            if (Status != FtpServiceStatus.Running)
+            if (IsRunning)
             {
                 throw new InvalidOperationException($"Status must be {FtpServiceStatus.Running}, but was {Status}.");
             }
