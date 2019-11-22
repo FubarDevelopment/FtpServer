@@ -33,6 +33,7 @@ namespace FubarDev.FtpServer
     {
         private readonly FtpServerStatistics _statistics = new FtpServerStatistics();
         private readonly IServiceProvider _serviceProvider;
+        private readonly List<IFtpConnectionConfigurator> _connectionConfigurators;
         private readonly List<IFtpControlStreamAdapter> _controlStreamAdapters;
         private readonly ConcurrentDictionary<IFtpConnection, FtpConnectionInfo> _connections = new ConcurrentDictionary<IFtpConnection, FtpConnectionInfo>();
         private readonly FtpServerListenerService _serverListener;
@@ -47,14 +48,17 @@ namespace FubarDev.FtpServer
         /// <param name="serverOptions">The server options.</param>
         /// <param name="serviceProvider">The service provider used to query services.</param>
         /// <param name="controlStreamAdapters">Adapters for the control connection stream.</param>
+        /// <param name="connectionConfigurators">Configurators for FTP connections.</param>
         /// <param name="logger">The FTP server logger.</param>
         public FtpServer(
             IOptions<FtpServerOptions> serverOptions,
             IServiceProvider serviceProvider,
             IEnumerable<IFtpControlStreamAdapter> controlStreamAdapters,
+            IEnumerable<IFtpConnectionConfigurator> connectionConfigurators,
             ILogger<FtpServer>? logger = null)
         {
             _serviceProvider = serviceProvider;
+            _connectionConfigurators = connectionConfigurators.ToList();
             _controlStreamAdapters = controlStreamAdapters.ToList();
             _log = logger;
             ServerAddress = serverOptions.Value.ServerAddress;
@@ -336,6 +340,13 @@ namespace FubarDev.FtpServer
                 foreach (var asyncInitFunction in asyncInitFunctions)
                 {
                     await asyncInitFunction(connection, CancellationToken.None)
+                       .ConfigureAwait(false);
+                }
+
+                // Configure the connection
+                foreach (var connectionConfigurator in _connectionConfigurators)
+                {
+                    await connectionConfigurator.Configure(connection, CancellationToken.None)
                        .ConfigureAwait(false);
                 }
 

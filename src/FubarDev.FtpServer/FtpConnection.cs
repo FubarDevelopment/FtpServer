@@ -191,6 +191,7 @@ namespace FubarDev.FtpServer
             parentFeatures.Set<IServerCommandFeature>(new ServerCommandFeature(_serverCommandChannel));
             parentFeatures.Set<INetworkStreamFeature>(_networkStreamFeature);
             parentFeatures.Set<IFtpConnectionKeepAlive>(_keepAliveFeature);
+            parentFeatures.Set<IServiceProvidersFeature>(new ServiceProvidersFeature(serviceProvider));
 
             var features = new FeatureCollection(parentFeatures);
 #pragma warning disable 618
@@ -723,6 +724,24 @@ namespace FubarDev.FtpServer
                 // Signal a closed connection.
                 _connectionClosedCts.Cancel();
             }
+        }
+
+        /// <summary>
+        /// Implementation of <see cref="IServiceProvidersFeature"/>.
+        /// </summary>
+        private class ServiceProvidersFeature : IServiceProvidersFeature
+        {
+            /// <summary>
+            /// Initializes a new instance of the <see cref="ServiceProvidersFeature"/> class.
+            /// </summary>
+            /// <param name="requestServices">The services for the connection.</param>
+            public ServiceProvidersFeature(IServiceProvider requestServices)
+            {
+                RequestServices = requestServices;
+            }
+
+            /// <inheritdoc />
+            public IServiceProvider RequestServices { get; set; }
         }
 
         private class ConnectionFeature : IConnectionFeature

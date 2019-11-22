@@ -124,18 +124,18 @@ namespace TestFtpServer
             {
                 case FileSystemType.InMemory:
                     services = services
-                       .AddFtpServer(sb => sb.ConfigureAuthentication(options).UseInMemoryFileSystem())
+                       .AddFtpServer(sb => sb.ConfigureAuthentication(options).UseInMemoryFileSystem().ConfigureServer(options))
                        .Configure<InMemoryFileSystemOptions>(
                             opt => opt.KeepAnonymousFileSystem = options.InMemory.KeepAnonymous);
                     break;
                 case FileSystemType.SystemIO:
                     services = services
-                       .AddFtpServer(sb => sb.ConfigureAuthentication(options).UseDotNetFileSystem())
+                       .AddFtpServer(sb => sb.ConfigureAuthentication(options).UseDotNetFileSystem().ConfigureServer(options))
                        .Configure<DotNetFileSystemOptions>(opt => opt.RootPath = options.SystemIo.Root);
                     break;
                 case FileSystemType.Unix:
                     services = services
-                       .AddFtpServer(sb => sb.ConfigureAuthentication(options).UseUnixFileSystem())
+                       .AddFtpServer(sb => sb.ConfigureAuthentication(options).UseUnixFileSystem().ConfigureServer(options))
                        .Configure<UnixFileSystemOptions>(opt => opt.Root = options.Unix.Root);
                     break;
                 case FileSystemType.GoogleDriveUser:
@@ -148,14 +148,14 @@ namespace TestFtpServer
                                 "User name not specified."),
                             options.GoogleDrive.User.RefreshToken);
                     services = services
-                       .AddFtpServer(sb => sb.ConfigureAuthentication(options).UseGoogleDrive(userCredential));
+                       .AddFtpServer(sb => sb.ConfigureAuthentication(options).UseGoogleDrive(userCredential).ConfigureServer(options));
                     break;
                 case FileSystemType.GoogleDriveService:
                     var serviceCredential = GoogleCredential
                        .FromFile(options.GoogleDrive.Service.CredentialFile)
                        .CreateScoped(DriveService.Scope.Drive, DriveService.Scope.DriveFile);
                     services = services
-                       .AddFtpServer(sb => sb.ConfigureAuthentication(options).UseGoogleDrive(serviceCredential));
+                       .AddFtpServer(sb => sb.ConfigureAuthentication(options).UseGoogleDrive(serviceCredential).ConfigureServer(options));
                     break;
                 default:
                     throw new NotSupportedException(
@@ -190,33 +190,6 @@ namespace TestFtpServer
                     break;
             }
 
-            if (options.Ftps.Implicit)
-            {
-                var implicitFtpsCertificate = options.GetCertificate();
-                if (implicitFtpsCertificate != null)
-                {
-                    services
-                       .AddSingleton(new ImplicitFtpsControlConnectionStreamAdapterOptions(implicitFtpsCertificate))
-                       .AddSingleton<IFtpControlStreamAdapter, ImplicitFtpsControlConnectionStreamAdapter>();
-
-                    // Ensure that PROT and PBSZ commands are working.
-                    services.Decorate<IFtpServer>(
-                        (ftpServer, _) =>
-                        {
-                            ftpServer.ConfigureConnection += (s, e) =>
-                            {
-                                var serviceProvider = e.Connection.ConnectionServices;
-                                var stateMachine = serviceProvider.GetRequiredService<IFtpLoginStateMachine>();
-                                var authTlsMechanism = serviceProvider.GetRequiredService<IEnumerable<IAuthenticationMechanism>>()
-                                   .Single(x => x.CanHandle("TLS"));
-                                stateMachine.Activate(authTlsMechanism);
-                            };
-
-                            return ftpServer;
-                        });
-                }
-            }
-
             services.Decorate<IFtpServer>(
                 (ftpServer, serviceProvider) =>
                 {
@@ -244,6 +217,21 @@ namespace TestFtpServer
             return services;
         }
 
+        private static IFtpServerBuilder ConfigureServer(this IFtpServerBuilder builder, FtpOptions options)
+        {
+            if (options.Ftps.Implicit)
+            {
+                var implicitFtpsCertificate = options.GetCertificate();
+                if (implicitFtpsCertificate != null)
+                {
+                    builder = builder
+                       .UseImplicitTls(implicitFtpsCertificate);
+                }
+            }
+
+            return builder;
+        }
+
         private static UserCredential GetUserCredential(
             string clientSecretsFile,
             string userName,
@@ -266,36 +254,6 @@ namespace TestFtpServer
             }
 
             return credential;
-        }
-
-        private class ImplicitFtpsControlConnectionStreamAdapterOptions
-        {
-            public ImplicitFtpsControlConnectionStreamAdapterOptions(X509Certificate2 certificate)
-            {
-                Certificate = certificate;
-            }
-
-            public X509Certificate2 Certificate { get; }
-        }
-
-        private class ImplicitFtpsControlConnectionStreamAdapter : IFtpControlStreamAdapter
-        {
-            private readonly ImplicitFtpsControlConnectionStreamAdapterOptions _options;
-            private readonly ISslStreamWrapperFactory _sslStreamWrapperFactory;
-
-            public ImplicitFtpsControlConnectionStreamAdapter(
-                ImplicitFtpsControlConnectionStreamAdapterOptions options,
-                ISslStreamWrapperFactory sslStreamWrapperFactory)
-            {
-                _options = options;
-                _sslStreamWrapperFactory = sslStreamWrapperFactory;
-            }
-
-            /// <inheritdoc />
-            public Task<Stream> WrapAsync(Stream stream, CancellationToken cancellationToken)
-            {
-                return _sslStreamWrapperFactory.WrapStreamAsync(stream, false, _options.Certificate, cancellationToken);
-            }
         }
     }
 }
