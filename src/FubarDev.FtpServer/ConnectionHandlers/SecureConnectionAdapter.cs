@@ -74,7 +74,7 @@ namespace FubarDev.FtpServer.ConnectionHandlers
         }
 
         /// <inheritdoc />
-        public async Task EnableSslStreamAsync(X509Certificate2 certificate, CancellationToken cancellationToken)
+        public async Task EnableSslStreamAsync(X509Certificate certificate, CancellationToken cancellationToken)
         {
             await StopAsync(cancellationToken)
                .ConfigureAwait(false);

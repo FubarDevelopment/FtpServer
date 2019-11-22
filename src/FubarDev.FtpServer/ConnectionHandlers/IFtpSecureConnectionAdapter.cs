@@ -27,6 +27,6 @@ namespace FubarDev.FtpServer.ConnectionHandlers
         /// <param name="certificate">The server certificate (with private key).</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>The task.</returns>
-        Task EnableSslStreamAsync(X509Certificate2 certificate, CancellationToken cancellationToken);
+        Task EnableSslStreamAsync(X509Certificate certificate, CancellationToken cancellationToken);
     }
 }

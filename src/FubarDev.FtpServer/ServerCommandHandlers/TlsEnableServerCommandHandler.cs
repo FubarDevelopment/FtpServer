@@ -22,7 +22,7 @@ namespace FubarDev.FtpServer.ServerCommandHandlers
     {
         private readonly IFtpConnectionAccessor _connectionAccessor;
         private readonly ILogger<TlsEnableServerCommandHandler>? _logger;
-        private readonly X509Certificate2? _serverCertificate;
+        private readonly X509Certificate? _serverCertificate;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TlsEnableServerCommandHandler"/> class.
@@ -82,7 +82,7 @@ namespace FubarDev.FtpServer.ServerCommandHandlers
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         private static async Task EnableTlsAsync(
             IFtpConnection connection,
-            X509Certificate2 certificate,
+            X509Certificate certificate,
             ILogger? logger,
             CancellationToken cancellationToken)
         {

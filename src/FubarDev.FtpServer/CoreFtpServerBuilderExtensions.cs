@@ -21,7 +21,7 @@ namespace FubarDev.FtpServer
     /// </summary>
     public static class CoreFtpServerBuilderExtensions
     {
-        public static IFtpServerBuilder UseImplicitTls(this IFtpServerBuilder builder, X509Certificate2 certificate)
+        public static IFtpServerBuilder UseImplicitTls(this IFtpServerBuilder builder, X509Certificate certificate)
         {
             builder.Services
                .AddSingleton(new ImplicitFtpsControlConnectionStreamAdapterOptions(certificate))
