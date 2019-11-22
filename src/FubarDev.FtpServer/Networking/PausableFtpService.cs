@@ -124,7 +124,7 @@ namespace FubarDev.FtpServer.Networking
                 return;
             }
 
-            if (IsRunning)
+            if (!IsRunning)
             {
                 throw new InvalidOperationException($"Status must be {FtpServiceStatus.Running}, but was {Status}.");
             }
