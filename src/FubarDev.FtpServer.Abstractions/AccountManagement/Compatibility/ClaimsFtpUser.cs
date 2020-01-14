@@ -28,6 +28,8 @@ namespace FubarDev.FtpServer.AccountManagement.Compatibility
         /// <inheritdoc />
         public string Name { get; }
 
+        public string AuthorityId => "none1";
+
         /// <inheritdoc />
         public bool IsInGroup(string groupName)
         {

@@ -2,6 +2,8 @@
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
+using FubarDev.FtpServer.AccountManagement;
+
 namespace FubarDev.FtpServer.FileSystem
 {
     /// <summary>
@@ -18,5 +20,10 @@ namespace FubarDev.FtpServer.FileSystem
         /// Gets the group.
         /// </summary>
         string Group { get; }
+
+        /// <summary>
+        /// Gets or sets AuthoridyId.
+        /// </summary>
+        IFtpUser User { get; set; }
     }
 }

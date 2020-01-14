@@ -24,5 +24,11 @@ namespace FubarDev.FtpServer.AccountManagement
         /// <param name="password">The password.</param>
         /// <returns>The result of the validation.</returns>
         Task<MemberValidationResult> ValidateUserAsync(string username, string password);
+
+        /// <summary>
+        /// Logs the out.
+        /// </summary>
+        /// <param name="username">The username.</param>
+        void LogOut(string username);
     }
 }

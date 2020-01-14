@@ -67,6 +67,11 @@ namespace FubarDev.FtpServer.AccountManagement
             return principal;
         }
 
+        public void LogOut(string username)
+        {
+            throw new System.NotImplementedException();
+        }
+
         /// <inheritdoc/>
         public Task<MemberValidationResult> ValidateUserAsync(string username, string password)
         {

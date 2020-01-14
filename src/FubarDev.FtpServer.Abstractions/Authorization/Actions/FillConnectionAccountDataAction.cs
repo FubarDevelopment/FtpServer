@@ -40,10 +40,13 @@ namespace FubarDev.FtpServer.Authorization.Actions
             authInfoFeature.User = accountInformation.User;
 #pragma warning restore 618
             authInfoFeature.FtpUser = accountInformation.FtpUser;
+            authInfoFeature.MembershipProvider = accountInformation.MembershipProvider;
 
 #pragma warning disable 618
             connection.Data.IsAnonymous = accountInformation.User is IAnonymousFtpUser;
             connection.Data.IsLoggedIn = true;
+            connection.Data.MembershipProvider = accountInformation.MembershipProvider;
+
 #pragma warning restore 618
 
             return Task.CompletedTask;

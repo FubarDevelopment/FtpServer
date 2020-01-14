@@ -24,5 +24,7 @@ namespace FubarDev.FtpServer
         /// Gets the current FTP user.
         /// </summary>
         ClaimsPrincipal FtpUser { get; }
+
+        IMembershipProvider MembershipProvider { get; }
     }
 }
