@@ -4,7 +4,8 @@
 
 using System;
 using System.Globalization;
-
+using System.Security.Principal;
+using FubarDev.FtpServer.AccountManagement;
 using Mono.Unix;
 
 namespace FubarDev.FtpServer.FileSystem.Unix
@@ -47,6 +48,10 @@ namespace FubarDev.FtpServer.FileSystem.Unix
 
         /// <inheritdoc />
         public long NumberOfLinks => _info.LinkCount;
+
+        public IPrincipal PrincipalUser => throw new NotImplementedException();
+
+        public IFtpUser User { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
         private static string GetNameOrId(Func<string> getName, Func<long> getId)
         {

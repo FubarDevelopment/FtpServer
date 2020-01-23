@@ -4,7 +4,8 @@
 
 using System;
 using System.IO;
-
+using System.Security.Principal;
+using FubarDev.FtpServer.AccountManagement;
 using FubarDev.FtpServer.FileSystem.Generic;
 
 namespace FubarDev.FtpServer.FileSystem.DotNet
@@ -52,5 +53,9 @@ namespace FubarDev.FtpServer.FileSystem.DotNet
 
         /// <inheritdoc/>
         public string Group => "group";
+
+        public IPrincipal PrincipalUser => throw new NotImplementedException();
+
+        public IFtpUser User { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
     }
 }

@@ -77,6 +77,11 @@ namespace FubarDev.FtpServer.MembershipProvider.Pam
             return new ClaimsPrincipal(new ClaimsIdentity(claims, "pam"));
         }
 
+        public void LogOut(string username)
+        {
+            throw new System.NotImplementedException();
+        }
+
         /// <inheritdoc />
         public Task<MemberValidationResult> ValidateUserAsync(
             string username,
