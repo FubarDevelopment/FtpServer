@@ -5,7 +5,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -66,7 +65,7 @@ namespace FubarDev.FtpServer.FileSystem.S3
                 prefix += '/';
             }
 
-            return ListObjectsAsync(prefix, cancellationToken);
+            return ListObjectsAsync(prefix, false, cancellationToken);
         }
 
         /// <inheritdoc />
@@ -75,19 +74,18 @@ namespace FubarDev.FtpServer.FileSystem.S3
             string name,
             CancellationToken cancellationToken)
         {
-            var prefix = S3Path.Combine(((S3DirectoryEntry)directoryEntry).Key, name);
+            var key = S3Path.Combine(((S3DirectoryEntry)directoryEntry).Key, name);
 
-            var objects = await ListObjectsAsync(prefix, cancellationToken);
-
-            if (objects.Count == 1 && objects.Single() is IUnixFileEntry entry)
-            {
+            var entry = await GetObjectAsync(key, cancellationToken);
+            if (entry != null)
                 return entry;
-            }
 
+            // not a file search for directory
+            key += '/';
+
+            var objects = await ListObjectsAsync(key, true, cancellationToken);
             if (objects.Count > 0)
-            {
-                return new S3DirectoryEntry(prefix);
-            }
+                return new S3DirectoryEntry(key);
 
             return null;
         }
@@ -218,8 +216,35 @@ namespace FubarDev.FtpServer.FileSystem.S3
             return Task.FromResult(entry);
         }
 
+        private async Task<IUnixFileSystemEntry?> GetObjectAsync(string key, CancellationToken cancellationToken)
+        {
+            try
+            {
+                var s3Object = await _client.GetObjectMetadataAsync(
+                    new GetObjectMetadataRequest
+                    {
+                        BucketName = _options.BucketName,
+                        Key = key,
+                    }, cancellationToken);
+
+                if (key.EndsWith("/"))
+                    return new S3DirectoryEntry(key);
+
+                return new S3FileEntry(key, s3Object.Headers.ContentLength)
+                {
+                    LastWriteTime = s3Object.LastModified,
+                };
+            }
+            catch (AmazonS3Exception)
+            {
+            }
+
+            return null;
+        }
+
         private async Task<IReadOnlyList<IUnixFileSystemEntry>> ListObjectsAsync(
             string prefix,
+            bool includeSelf,
             CancellationToken cancellationToken)
         {
             var objects = new List<IUnixFileSystemEntry>();
@@ -247,7 +272,11 @@ namespace FubarDev.FtpServer.FileSystem.S3
                 {
                     if (s3Object.Key.EndsWith("/") && s3Object.Key == prefix)
                     {
-                        continue; // this is the folder itself
+                        // this is the folder itself
+                        if (includeSelf)
+                            objects.Add(new S3DirectoryEntry(s3Object.Key));
+
+                        continue;
                     }
 
                     objects.Add(
