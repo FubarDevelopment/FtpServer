@@ -34,7 +34,7 @@ namespace FubarDev.FtpServer.FileSystem.InMemory
         }
 
         /// <inheritdoc />
-        public string Name { get; }
+        public string Name { get; internal set; }
 
         /// <inheritdoc />
         public string Owner { get; private set; }
