@@ -101,6 +101,7 @@ namespace FubarDev.FtpServer.FileSystem.InMemory
             lock (targetEntry.ChildrenLock)
             {
                 sourceEntry.Parent = targetEntry;
+                sourceEntry.Name = fileName;
                 targetEntry.Children.Add(fileName, source);
             }
 
