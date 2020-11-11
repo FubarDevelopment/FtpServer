@@ -101,18 +101,28 @@ namespace FubarDev.FtpServer.Commands
                     handlerInfo.Type);
             }
 
+            IFtpCommandInformation commandInformation = handlerInfo;
             if (handlerInfo.IsExtensible && handler is IFtpCommandHandlerExtensionHost extensionHost)
             {
                 var extensions = ActivateExtensions(context, handlerInfo).ToList();
-                extensionHost.Extensions = extensions.ToDictionary(
+                var hostExtensions = extensions.ToDictionary(
                     x => x.Item2.Name,
-                    x => x.Item1,
+                    x => Tuple.Create(x.Item1, x.Item2),
                     StringComparer.OrdinalIgnoreCase);
+                extensionHost.Extensions = hostExtensions.ToDictionary(
+                    x => x.Key,
+                    x => x.Value.Item1);
+
+                var argument = FtpCommand.Parse(context.FtpContext.Command.Argument);
+                if (hostExtensions.TryGetValue(argument.Name, out var hostExtensionDictValue))
+                {
+                    commandInformation = hostExtensionDictValue.Item2;
+                }
             }
 
             _commandHandlers.Add(handlerInfo.Type, handler);
 
-            return new FtpCommandSelection(handler, handlerInfo);
+            return new FtpCommandSelection(handler, commandInformation);
         }
         private IEnumerable<Tuple<IFtpCommandHandlerExtension, IFtpCommandHandlerExtensionInformation>> ActivateExtensions(
             FtpCommandHandlerContext context,
