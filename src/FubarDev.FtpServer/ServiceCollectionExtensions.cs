@@ -16,6 +16,7 @@ using FubarDev.FtpServer.Commands;
 using FubarDev.FtpServer.DataConnection;
 using FubarDev.FtpServer.FileSystem;
 using FubarDev.FtpServer.Localization;
+using FubarDev.FtpServer.Networking;
 using FubarDev.FtpServer.ServerCommandHandlers;
 using FubarDev.FtpServer.ServerCommands;
 
