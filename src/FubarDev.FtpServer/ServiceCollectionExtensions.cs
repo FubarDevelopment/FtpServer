@@ -42,6 +42,8 @@ namespace Microsoft.Extensions.DependencyInjection
         {
             services.AddOptions();
 
+            services.AddSingleton<IListenerService, FtpServerListenerService>();
+
             services.AddSingleton<IFtpServer, FtpServer>();
             services.AddSingleton<ITemporaryDataFactory, TemporaryDataFactory>();
             services.AddSingleton<IPasvListenerFactory, PasvListenerFactory>();
