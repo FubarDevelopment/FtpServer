@@ -17,7 +17,7 @@
     <PackageReference Include="System.IO.Pipelines" Version="4.5.1" />
   </ItemGroup>
   <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard1.3' ">
-    <PackageReference Include="System.Net.Security" Version="4.0.0" />
+    <PackageReference Include="System.Net.Security" Version="4.0.1" />
     <PackageReference Include="System.Net.NameResolution" Version="4.0.0" />
     <PackageReference Include="System.Threading.Thread" Version="4.3.0" />
   </ItemGroup>
