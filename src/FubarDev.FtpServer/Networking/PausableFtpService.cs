@@ -14,7 +14,7 @@ namespace FubarDev.FtpServer.Networking
     /// <summary>
     /// Base class for communication services.
     /// </summary>
-    internal abstract class PausableFtpService : IPausableFtpService
+    public abstract class PausableFtpService : IPausableFtpService
     {
         private readonly CancellationTokenSource _jobStopped = new CancellationTokenSource();
 

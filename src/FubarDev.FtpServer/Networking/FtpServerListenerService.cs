@@ -7,7 +7,7 @@ using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Channels;
 using System.Threading.Tasks;
-
+using FubarDev.FtpServer.DataConnection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
@@ -19,12 +19,12 @@ namespace FubarDev.FtpServer.Networking
     /// <remarks>
     /// Accepting connections can be paused.
     /// </remarks>
-    internal sealed class FtpServerListenerService : PausableFtpService
+    internal sealed class FtpServerListenerService : PausableFtpService, IListenerService
     {
-        private readonly ChannelWriter<TcpClient> _newClientWriter;
-        private readonly MultiBindingTcpListener _multiBindingTcpListener;
+        private static readonly CancellationTokenSource _serverShutdown = new CancellationTokenSource();
 
-        private readonly CancellationTokenSource _connectionClosedCts;
+        private readonly Channel<TcpClient> _channels = System.Threading.Channels.Channel.CreateBounded<TcpClient>(5);
+        private readonly MultiBindingTcpListener _multiBindingTcpListener;
 
         private Exception? _exception;
 
@@ -36,14 +36,10 @@ namespace FubarDev.FtpServer.Networking
         /// <param name="logger">The logger.</param>
         /// <param name="connectionClosedCts">Cancellation token source for a closed connection.</param>
         public FtpServerListenerService(
-            ChannelWriter<TcpClient> newClientWriter,
             IOptions<FtpServerOptions> serverOptions,
-            CancellationTokenSource connectionClosedCts,
             ILogger? logger = null)
-            : base(connectionClosedCts.Token, logger)
+            : base(_serverShutdown.Token, logger)
         {
-            _newClientWriter = newClientWriter;
-            _connectionClosedCts = connectionClosedCts;
             var options = serverOptions.Value;
             _multiBindingTcpListener = new MultiBindingTcpListener(options.ServerAddress, options.Port, logger);
         }
@@ -52,6 +48,24 @@ namespace FubarDev.FtpServer.Networking
         /// Event for a started listener.
         /// </summary>
         public event EventHandler<ListenerStartedEventArgs>? ListenerStarted;
+
+        public ChannelReader<TcpClient> Channel => _channels;
+
+        public CancellationToken Token => _serverShutdown.Token;
+
+        public bool IsCancellationRequested => _serverShutdown.IsCancellationRequested;
+
+        private ChannelWriter<TcpClient> _newClientWriter => _channels;
+
+        public void Dispose()
+        {
+            _serverShutdown.Dispose();
+        }
+
+        public void Cancel(bool throwOnFirstException)
+        {
+            _serverShutdown.Cancel(throwOnFirstException);
+        }
 
         /// <inheritdoc />
         protected override async Task ExecuteAsync(CancellationToken cancellationToken)
@@ -101,7 +115,7 @@ namespace FubarDev.FtpServer.Networking
             _newClientWriter.Complete(_exception);
 
             // Signal a closed connection.
-            _connectionClosedCts.Cancel();
+            _serverShutdown.Cancel();
 
             return Task.CompletedTask;
         }

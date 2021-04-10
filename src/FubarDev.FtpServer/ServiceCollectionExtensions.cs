@@ -16,6 +16,7 @@ using FubarDev.FtpServer.Commands;
 using FubarDev.FtpServer.DataConnection;
 using FubarDev.FtpServer.FileSystem;
 using FubarDev.FtpServer.Localization;
+using FubarDev.FtpServer.Networking;
 using FubarDev.FtpServer.ServerCommandHandlers;
 using FubarDev.FtpServer.ServerCommands;
 
@@ -41,6 +42,8 @@ namespace Microsoft.Extensions.DependencyInjection
             Action<IFtpServerBuilder> configure)
         {
             services.AddOptions();
+
+            services.AddSingleton<IListenerService, FtpServerListenerService>();
 
             services.AddSingleton<IFtpServer, FtpServer>();
             services.AddSingleton<ITemporaryDataFactory, TemporaryDataFactory>();

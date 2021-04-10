@@ -16,6 +16,7 @@ using System.Threading.Channels;
 using System.Threading.Tasks;
 
 using FubarDev.FtpServer.ConnectionChecks;
+using FubarDev.FtpServer.DataConnection;
 using FubarDev.FtpServer.Features;
 using FubarDev.FtpServer.Localization;
 using FubarDev.FtpServer.Networking;
@@ -36,10 +37,10 @@ namespace FubarDev.FtpServer
         private readonly IServiceProvider _serviceProvider;
         private readonly List<IFtpControlStreamAdapter> _controlStreamAdapters;
         private readonly ConcurrentDictionary<IFtpConnection, FtpConnectionInfo> _connections = new ConcurrentDictionary<IFtpConnection, FtpConnectionInfo>();
-        private readonly FtpServerListenerService _serverListener;
+        private readonly IListenerService _serverListener;
         private readonly ILogger<FtpServer>? _log;
         private readonly Task _clientReader;
-        private readonly CancellationTokenSource _serverShutdown = new CancellationTokenSource();
+        
         private readonly Timer? _connectionTimeoutChecker;
 
         /// <summary>
@@ -48,11 +49,13 @@ namespace FubarDev.FtpServer
         /// <param name="serverOptions">The server options.</param>
         /// <param name="serviceProvider">The service provider used to query services.</param>
         /// <param name="controlStreamAdapters">Adapters for the control connection stream.</param>
+        /// <param name="serverListener">The underlying TCP listener.</param>
         /// <param name="logger">The FTP server logger.</param>
         public FtpServer(
             IOptions<FtpServerOptions> serverOptions,
             IServiceProvider serviceProvider,
             IEnumerable<IFtpControlStreamAdapter> controlStreamAdapters,
+            IListenerService serverListener,
             ILogger<FtpServer>? logger = null)
         {
             _serviceProvider = serviceProvider;
@@ -62,15 +65,14 @@ namespace FubarDev.FtpServer
             Port = serverOptions.Value.Port;
             MaxActiveConnections = serverOptions.Value.MaxActiveConnections;
 
-            var tcpClientChannel = Channel.CreateBounded<TcpClient>(5);
-            _serverListener = new FtpServerListenerService(tcpClientChannel, serverOptions, _serverShutdown, logger);
+            _serverListener = serverListener;
             _serverListener.ListenerStarted += (s, e) =>
             {
                 Port = e.Port;
                 OnListenerStarted(e);
             };
 
-            _clientReader = ReadClientsAsync(tcpClientChannel, _serverShutdown.Token);
+            _clientReader = ReadClientsAsync(_serverListener.Channel, _serverListener.Token);
 
             if (serverOptions.Value.ConnectionInactivityCheckInterval is TimeSpan checkInterval)
             {
@@ -116,7 +118,7 @@ namespace FubarDev.FtpServer
 
             _connectionTimeoutChecker?.Dispose();
 
-            _serverShutdown.Dispose();
+            _serverListener.Dispose();
             foreach (var connectionInfo in _connections.Values)
             {
                 connectionInfo.Scope.Dispose();
@@ -173,9 +175,9 @@ namespace FubarDev.FtpServer
         /// <inheritdoc />
         public async Task StopAsync(CancellationToken cancellationToken)
         {
-            if (!_serverShutdown.IsCancellationRequested)
+            if (!_serverListener.IsCancellationRequested)
             {
-                _serverShutdown.Cancel(true);
+                _serverListener.Cancel(true);
             }
 
             await _serverListener.StopAsync(cancellationToken).ConfigureAwait(false);
