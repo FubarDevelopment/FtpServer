@@ -6,6 +6,7 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Security.Principal;
 
 namespace FubarDev.FtpServer.FileSystem
 {
@@ -38,5 +39,13 @@ namespace FubarDev.FtpServer.FileSystem
         /// Gets the number of links.
         /// </summary>
         long NumberOfLinks { get; }
+
+        /// <summary>
+        /// Gets the principal user.
+        /// </summary>
+        /// <value>
+        /// The principal user.
+        /// </value>
+        IPrincipal PrincipalUser { get; }
     }
 }

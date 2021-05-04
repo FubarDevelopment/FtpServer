@@ -54,11 +54,6 @@ namespace FubarDev.FtpServer.AccountManagement
             _ftpUser = user.CreateClaimsPrincipal();
         }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="MemberValidationResult"/> class.
-        /// </summary>
-        /// <param name="status">The success status for the validation.</param>
-        /// <param name="user">The validated user.</param>
         public MemberValidationResult(MemberValidationStatus status, ClaimsPrincipal user)
         {
             if (status != MemberValidationStatus.Anonymous && status != MemberValidationStatus.AuthenticatedUser)
@@ -70,6 +65,31 @@ namespace FubarDev.FtpServer.AccountManagement
             _ftpUser = user ?? throw new ArgumentNullException(nameof(user));
 #pragma warning disable 618
             _user = user.CreateUser();
+
+#pragma warning restore 618
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MemberValidationResult" /> class.
+        /// </summary>
+        /// <param name="status">The success status for the validation.</param>
+        /// <param name="user">The validated user.</param>
+        /// <param name="ftpUser">The FTP user.</param>
+        /// <exception cref="ArgumentOutOfRangeException">status - User object must only be specified when validation was successful.</exception>
+        /// <exception cref="ArgumentNullException">user</exception>
+        public MemberValidationResult(MemberValidationStatus status, ClaimsPrincipal user, IFtpUser ftpUser)
+        {
+            if (status != MemberValidationStatus.Anonymous && status != MemberValidationStatus.AuthenticatedUser)
+            {
+                throw new ArgumentOutOfRangeException(nameof(status), "User object must only be specified when validation was successful.");
+            }
+
+            _status = status;
+            _ftpUser = user ?? throw new ArgumentNullException(nameof(user));
+#pragma warning disable 618
+            // _user = user.CreateUser();
+
+            _user = ftpUser ?? throw new ArgumentNullException(nameof(ftpUser));
 #pragma warning restore 618
         }
 

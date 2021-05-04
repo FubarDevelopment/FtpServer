@@ -5,9 +5,10 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Security.Principal;
 using System.Threading;
 using System.Threading.Tasks;
-
+using FubarDev.FtpServer.AccountManagement;
 using FubarDev.FtpServer.BackgroundTransfer;
 using FubarDev.FtpServer.FileSystem.Generic;
 
@@ -123,6 +124,10 @@ namespace FubarDev.FtpServer.FileSystem
             public string Owner => "owner";
 
             public IUnixPermissions Permissions { get; }
+
+            public IFtpUser User { get; set; }
+
+            public IPrincipal PrincipalUser { get; }
         }
     }
 }

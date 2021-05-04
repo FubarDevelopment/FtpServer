@@ -86,6 +86,8 @@ namespace FubarDev.FtpServer
         [Obsolete("User the IFtpLoginStateMachine services to get the current status.")]
         public bool IsLoggedIn { get; set; }
 
+        public IMembershipProvider MembershipProvider { get; set; }
+
         /// <summary>
         /// Gets or sets a value indicating whether the current user is anonymous.
         /// </summary>

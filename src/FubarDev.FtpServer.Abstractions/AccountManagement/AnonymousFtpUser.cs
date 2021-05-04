@@ -37,5 +37,10 @@ namespace FubarDev.FtpServer.AccountManagement
         {
             return _guestGroups.Contains(groupName);
         }
+
+        /// <summary>
+        /// Gets authority id.
+        /// </summary>
+        public string AuthorityId => "none";
     }
 }

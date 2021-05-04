@@ -3,7 +3,8 @@
 // </copyright>
 
 using System;
-
+using System.Security.Principal;
+using FubarDev.FtpServer.AccountManagement;
 using FubarDev.FtpServer.FileSystem.Generic;
 
 using Google.Apis.Drive.v3.Data;
@@ -69,5 +70,9 @@ namespace FubarDev.FtpServer.FileSystem.GoogleDrive
 
         /// <inheritdoc/>
         public long Size { get; }
+
+        public IPrincipal PrincipalUser => throw new NotImplementedException();
+
+        public IFtpUser User { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
     }
 }

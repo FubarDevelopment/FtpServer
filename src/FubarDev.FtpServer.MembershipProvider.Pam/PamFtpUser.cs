@@ -56,6 +56,8 @@ namespace FubarDev.FtpServer.MembershipProvider.Pam
         /// <inheritdoc />
         public long GroupId { get; }
 
+        public string AuthorityId => throw new NotImplementedException();
+
         /// <inheritdoc />
         public bool IsInGroup(string groupName)
         {

@@ -23,5 +23,10 @@ namespace FubarDev.FtpServer.AccountManagement
         /// <param name="groupName">The name of the group.</param>
         /// <returns><c>true</c> when the user is in the queries <paramref name="groupName"/>.</returns>
         bool IsInGroup(string groupName);
+
+        /// <summary>
+        /// Gets authority id.
+        /// </summary>
+        string AuthorityId { get; }
     }
 }

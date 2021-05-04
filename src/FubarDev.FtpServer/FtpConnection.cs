@@ -372,6 +372,8 @@ namespace FubarDev.FtpServer
                         return;
                     }
 
+                    ((FubarDev.FtpServer.FtpConnection)((FubarDev.FtpServer.FtpConnectionAccessor)this._connectionAccessor).FtpConnection)?.Data?.MembershipProvider?.LogOut(((FubarDev.FtpServer.FtpConnection)((FubarDev.FtpServer.FtpConnectionAccessor)this._connectionAccessor).FtpConnection).Data.User.Name);
+
                     Abort();
 
                     try

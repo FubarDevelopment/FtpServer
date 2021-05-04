@@ -71,7 +71,7 @@ namespace FubarDev.FtpServer.Authorization
                    .ConfigureAwait(false);
                 if (validationResult.IsSuccess)
                 {
-                    var accountInformation = new DefaultAccountInformation(validationResult.FtpUser);
+                    var accountInformation = new DefaultAccountInformation(validationResult.FtpUser, validationResult.User, membershipProvider);
 
                     foreach (var authorizationAction in _authorizationActions)
                     {
@@ -127,17 +127,42 @@ namespace FubarDev.FtpServer.Authorization
 
             public string Name { get; }
 
+            public string AuthorityId => "none";
+
             public bool IsInGroup(string groupName) => false;
         }
 
         private class DefaultAccountInformation : IAccountInformation
         {
-            public DefaultAccountInformation(ClaimsPrincipal user)
+            /// <summary>
+            /// Initializes a new instance of the <see cref="DefaultAccountInformation"/> class.
+            /// </summary>
+            /// <param name="user">The user.</param>
+            /// <param name="membershipProvider">The membership provider.</param>
+            public DefaultAccountInformation(ClaimsPrincipal user, IMembershipProvider membershipProvider)
             {
                 FtpUser = user;
 #pragma warning disable 618
 #pragma warning disable 612
                 User = user.CreateUser();
+                MembershipProvider = membershipProvider;
+#pragma warning restore 612
+#pragma warning restore 618
+            }
+
+            /// <summary>
+            /// Initializes a new instance of the <see cref="DefaultAccountInformation"/> class.
+            /// </summary>
+            /// <param name="user">The user.</param>
+            /// <param name="ftpUser">The FTP user.</param>
+            /// <param name="membershipProvider">The membership provider.</param>
+            public DefaultAccountInformation(ClaimsPrincipal user, IFtpUser ftpUser, IMembershipProvider membershipProvider)
+            {
+                FtpUser = user;
+#pragma warning disable 618
+#pragma warning disable 612
+                User = ftpUser;
+                MembershipProvider = membershipProvider;
 #pragma warning restore 612
 #pragma warning restore 618
             }
@@ -148,6 +173,14 @@ namespace FubarDev.FtpServer.Authorization
 
             /// <inheritdoc />
             public ClaimsPrincipal FtpUser { get; }
+
+            /// <summary>
+            /// Gets the membership provider.
+            /// </summary>
+            /// <value>
+            /// The membership provider.
+            /// </value>
+            public IMembershipProvider MembershipProvider { get; }
         }
     }
 }

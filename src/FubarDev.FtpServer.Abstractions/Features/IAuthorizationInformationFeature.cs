@@ -24,5 +24,13 @@ namespace FubarDev.FtpServer.Features
         /// Gets or sets the current user.
         /// </summary>
         ClaimsPrincipal? FtpUser { get; set; }
+
+        /// <summary>
+        /// Gets or sets the membership provider.
+        /// </summary>
+        /// <value>
+        /// The membership provider.
+        /// </value>
+        IMembershipProvider MembershipProvider { get; set; }
     }
 }

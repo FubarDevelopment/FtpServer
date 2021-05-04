@@ -4,7 +4,7 @@
 
 using System;
 using System.Security.Claims;
-
+using System.Security.Principal;
 using FubarDev.FtpServer.AccountManagement;
 
 namespace FubarDev.FtpServer.FileSystem.InMemory
@@ -58,6 +58,10 @@ namespace FubarDev.FtpServer.FileSystem.InMemory
         /// Gets or sets the parent entry.
         /// </summary>
         public InMemoryDirectoryEntry? Parent { get; set; }
+
+        public IPrincipal PrincipalUser => throw new NotImplementedException();
+
+        public IFtpUser User { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
         /// <summary>
         /// Configure directory entry as owned by given <paramref name="user"/>.

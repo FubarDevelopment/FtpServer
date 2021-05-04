@@ -14,6 +14,11 @@ namespace TestFtpServer
     /// </summary>
     public class CustomMembershipProvider : IMembershipProvider
     {
+        public void LogOut(string username)
+        {
+            throw new System.NotImplementedException();
+        }
+
         /// <inheritdoc />
         public Task<MemberValidationResult> ValidateUserAsync(string username, string password)
         {

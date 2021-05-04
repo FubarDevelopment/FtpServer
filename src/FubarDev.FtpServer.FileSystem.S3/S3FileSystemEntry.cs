@@ -3,7 +3,8 @@
 // </copyright>
 
 using System;
-
+using System.Security.Principal;
+using FubarDev.FtpServer.AccountManagement;
 using FubarDev.FtpServer.FileSystem.Generic;
 
 namespace FubarDev.FtpServer.FileSystem.S3
@@ -53,5 +54,9 @@ namespace FubarDev.FtpServer.FileSystem.S3
 
         /// <inheritdoc />
         public long NumberOfLinks => 1;
+
+        public IPrincipal PrincipalUser => throw new NotImplementedException();
+
+        public IFtpUser User { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
     }
 }

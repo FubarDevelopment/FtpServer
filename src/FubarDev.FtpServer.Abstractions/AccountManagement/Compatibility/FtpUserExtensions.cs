@@ -69,7 +69,7 @@ namespace FubarDev.FtpServer.AccountManagement.Compatibility
         }
 
         [Obsolete]
-        private class ClaimsPrincipalUser : ClaimsPrincipal
+        public class ClaimsPrincipalUser : ClaimsPrincipal
         {
             private readonly IFtpUser _user;
             private readonly ClaimsIdentityUser _identity;
@@ -86,6 +86,8 @@ namespace FubarDev.FtpServer.AccountManagement.Compatibility
 
             /// <inheritdoc />
             public override IEnumerable<ClaimsIdentity> Identities => _identities;
+
+            public IFtpUser User => _user;
 
             /// <inheritdoc />
             public override void AddIdentity(ClaimsIdentity identity)
@@ -107,7 +109,7 @@ namespace FubarDev.FtpServer.AccountManagement.Compatibility
                     return true;
                 }
 
-                if (!_user.IsInGroup(role))
+                if (!User.IsInGroup(role))
                 {
                     return false;
                 }
