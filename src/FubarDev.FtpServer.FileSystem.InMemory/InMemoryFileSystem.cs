@@ -90,7 +90,12 @@ namespace FubarDev.FtpServer.FileSystem.InMemory
             parentEntry.SetLastWriteTime(now);
             targetEntry.SetLastWriteTime(now);
 
-            sourceEntry.Parent = targetEntry;
+            lock (targetEntry.ChildrenLock)
+            {
+                sourceEntry.Parent = targetEntry;
+                sourceEntry.Name = fileName;
+                targetEntry.Children.Add(fileName, source);
+            }
 
             return Task.FromResult(source);
         }
