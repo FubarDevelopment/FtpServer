@@ -13,5 +13,10 @@ namespace TestFtpServer.Configuration
         /// Gets or sets the root directory.
         /// </summary>
         public string Root { get; set; } = "/";
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the content should be flushed to disk after every write operation.
+        /// </summary>
+        public bool FlushAfterWrite { get; set; }
     }
 }

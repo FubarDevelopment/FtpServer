@@ -54,6 +54,11 @@ namespace FubarDev.FtpServer.CommandHandlers
             }
 
             var fsFeature = Connection.Features.Get<IFileSystemFeature>();
+            if (!fsFeature.FileSystem.SupportsAppend)
+            {
+                return new FtpResponse(550, T("The underlying file system doesn't support this operation."));
+            }
+
             var currentPath = fsFeature.Path.Clone();
             var fileInfo = await fsFeature.FileSystem.SearchFileAsync(currentPath, fileName, cancellationToken).ConfigureAwait(false);
             if (fileInfo == null)

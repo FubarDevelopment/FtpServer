@@ -37,13 +37,14 @@ namespace TestFtpServer.Shell.Commands
         /// <inheritdoc />
         public Task ExecuteAsync(CancellationToken cancellationToken)
         {
-            Console.WriteLine("help          - Show help");
-            Console.WriteLine("exit          - Close server");
-            Console.WriteLine("pause         - Pause accepting clients");
-            Console.WriteLine("continue      - Continue accepting clients");
-            Console.WriteLine("stop          - Stop the server");
-            Console.WriteLine("status        - Show server status");
-            Console.WriteLine("show <module> - Show module information");
+            Console.WriteLine("help                    - Show help");
+            Console.WriteLine("exit                    - Close this shell");
+            Console.WriteLine("pause                   - Pause accepting clients");
+            Console.WriteLine("continue                - Continue accepting clients");
+            Console.WriteLine("stop                    - Stop the server");
+            Console.WriteLine("status                  - Show server status");
+            Console.WriteLine("show <module>           - Show module information");
+            Console.WriteLine("close connection <name> - Close the connection with the given name");
 
             if (_status.ExtendedModuleInfoName.Count != 0)
             {

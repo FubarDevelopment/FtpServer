@@ -42,10 +42,5 @@ namespace TestFtpServer.Configuration
         /// Gets or sets the interval between checks for inactive connections.
         /// </summary>
         public int? ConnectionInactivityCheckInterval { get; set; }
-
-        /// <summary>
-        /// Gets or sets the timeout for inactive connections.
-        /// </summary>
-        public int? InactivityTimeout { get; set; }
     }
 }

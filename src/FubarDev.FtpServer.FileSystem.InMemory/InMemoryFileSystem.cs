@@ -50,17 +50,23 @@ namespace FubarDev.FtpServer.FileSystem.InMemory
             CancellationToken cancellationToken)
         {
             var entry = (InMemoryDirectoryEntry)directoryEntry;
-            var children = entry.Children.Values.ToList();
-            return Task.FromResult<IReadOnlyList<IUnixFileSystemEntry>>(children);
+            lock (entry.ChildrenLock)
+            {
+                var children = entry.Children.Values.ToList();
+                return Task.FromResult<IReadOnlyList<IUnixFileSystemEntry>>(children);
+            }
         }
 
         /// <inheritdoc />
         public Task<IUnixFileSystemEntry?> GetEntryByNameAsync(IUnixDirectoryEntry directoryEntry, string name, CancellationToken cancellationToken)
         {
             var entry = (InMemoryDirectoryEntry)directoryEntry;
-            if (entry.Children.TryGetValue(name, out var childEntry))
+            lock (entry.ChildrenLock)
             {
-                return Task.FromResult<IUnixFileSystemEntry?>(childEntry);
+                if (entry.Children.TryGetValue(name, out var childEntry))
+                {
+                    return Task.FromResult<IUnixFileSystemEntry?>(childEntry);
+                }
             }
 
             return Task.FromResult<IUnixFileSystemEntry?>(null);
@@ -78,12 +84,14 @@ namespace FubarDev.FtpServer.FileSystem.InMemory
             var sourceEntry = (InMemoryFileSystemEntry)source;
             var targetEntry = (InMemoryDirectoryEntry)target;
 
-            targetEntry.Children.Add(fileName, source);
-
-            if (!parentEntry.Children.Remove(source.Name))
+            lock (parentEntry.ChildrenLock)
             {
-                targetEntry.Children.Remove(fileName);
-                throw new FileUnavailableException($"The source file {source.Name} couldn't be found in directory {parentEntry.Name}");
+                if (!parentEntry.Children.Remove(source.Name))
+                {
+                    targetEntry.Children.Remove(fileName);
+                    throw new FileUnavailableException(
+                        $"The source file {source.Name} couldn't be found in directory {parentEntry.Name}");
+                }
             }
 
             var now = DateTimeOffset.Now;
@@ -104,10 +112,17 @@ namespace FubarDev.FtpServer.FileSystem.InMemory
         public Task UnlinkAsync(IUnixFileSystemEntry entry, CancellationToken cancellationToken)
         {
             var fsEntry = (InMemoryFileSystemEntry)entry;
-            if (fsEntry.Parent != null && fsEntry.Parent.Children.Remove(entry.Name))
+            var parent = fsEntry.Parent;
+            if (parent != null)
             {
-                fsEntry.Parent.SetLastWriteTime(DateTimeOffset.Now);
-                fsEntry.Parent = null;
+                lock (parent.ChildrenLock)
+                {
+                    if (parent.Children.Remove(entry.Name))
+                    {
+                        parent.SetLastWriteTime(DateTimeOffset.Now);
+                        fsEntry.Parent = null;
+                    }
+                }
             }
 
             return Task.CompletedTask;
@@ -124,7 +139,12 @@ namespace FubarDev.FtpServer.FileSystem.InMemory
                 dirEntry,
                 directoryName,
                 new Dictionary<string, IUnixFileSystemEntry>(FileSystemEntryComparer));
-            dirEntry.Children.Add(directoryName, childEntry);
+
+            lock (dirEntry.ChildrenLock)
+            {
+                dirEntry.Children.Add(directoryName, childEntry);
+            }
+
             var now = DateTimeOffset.Now;
             dirEntry.SetLastWriteTime(now)
                 .SetCreateTime(now);
@@ -182,7 +202,10 @@ namespace FubarDev.FtpServer.FileSystem.InMemory
 
             var targetEntry = (InMemoryDirectoryEntry)targetDirectory;
             var entry = new InMemoryFileEntry(targetEntry, fileName, temp.ToArray());
-            targetEntry.Children.Add(fileName, entry);
+            lock (targetEntry.ChildrenLock)
+            {
+                targetEntry.Children.Add(fileName, entry);
+            }
 
             var now = DateTimeOffset.Now;
             targetEntry.SetLastWriteTime(now);

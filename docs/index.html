@@ -106,13 +106,13 @@ using (var serviceProvider = services.BuildServiceProvider())
     var ftpServerHost = serviceProvider.GetRequiredService&lt;IFtpServerHost&gt;();
 
     // Start the FTP server
-    ftpServerHost.StartAsync().Wait();
+    await ftpServerHost.StartAsync();
 
     Console.WriteLine(&quot;Press ENTER/RETURN to close the test application.&quot;);
     Console.ReadLine();
 
     // Stop the FTP server
-    ftpServerHost.StopAsync().Wait();
+    await ftpServerHost.StopAsync();
 }
 </code></pre><h2 id="aspnet-core-integration">ASP.NET Core integration</h2>
 <p>You can also add the FTP server to your ASP.NET Core application by

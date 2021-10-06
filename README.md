@@ -1,6 +1,6 @@
 # Portable FTP server
 
-[![Build status](https://build.fubar-dev.de/app/rest/builds/buildType:%28id:FtpServer_ReleaseBuild%29/statusIcon.svg)](https://build.fubar-dev.com/project.html?projectId=FtpServer)
+[![Build Status](https://dev.azure.com/fubar-development/ftp-server/_apis/build/status/FubarDevelopment.FtpServer?branchName=master)](https://dev.azure.com/fubar-development/ftp-server/_build/latest?definitionId=5&branchName=master)
 
 This FTP server is written as .NET Standard 2.0 library and has an
 abstract file system which allows e.g. Google Drive as backend.
@@ -76,10 +76,10 @@ using (var serviceProvider = services.BuildServiceProvider())
 
     // Start the FTP server
     ftpServerHost.StartAsync(CancellationToken.None).Wait();
-    
+
     Console.WriteLine("Press ENTER/RETURN to close the test application.");
     Console.ReadLine();
-    
+
     // Stop the FTP server
     ftpServerHost.StopAsync(CancellationToken.None).Wait();
 }

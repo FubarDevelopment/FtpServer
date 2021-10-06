@@ -79,6 +79,9 @@ namespace FubarDev.FtpServer.DataConnection
             public Stream Stream { get; }
 
             /// <inheritdoc />
+            public bool Closed => _closed;
+
+            /// <inheritdoc />
             public async Task CloseAsync(CancellationToken cancellationToken)
             {
                 if (_closed)
@@ -87,6 +90,7 @@ namespace FubarDev.FtpServer.DataConnection
                 }
 
                 _closed = true;
+
                 await _sslStreamWrapperFactory.CloseStreamAsync(Stream, cancellationToken)
                    .ConfigureAwait(false);
                 await _originalDataConnection.CloseAsync(cancellationToken)

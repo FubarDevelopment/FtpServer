@@ -79,8 +79,8 @@ namespace FubarDev.FtpServer.DataConnection
             private readonly IPasvListener _listener;
             private readonly List<IFtpDataConnectionValidator> _validators;
             private readonly IFtpConnection _ftpConnection;
-
             private readonly ILogger? _logger;
+            private IFtpDataConnection? _activeDataConnection;
 
             public PassiveDataConnectionFeature(
                 IPasvListener listener,
@@ -107,6 +107,11 @@ namespace FubarDev.FtpServer.DataConnection
             /// <inheritdoc />
             public async Task<IFtpDataConnection> GetDataConnectionAsync(TimeSpan timeout, CancellationToken cancellationToken)
             {
+                if (_activeDataConnection != null && !_activeDataConnection.Closed)
+                {
+                    return _activeDataConnection;
+                }
+
                 try
                 {
                     var connectTask = _listener.AcceptPasvClientAsync();
@@ -138,8 +143,9 @@ namespace FubarDev.FtpServer.DataConnection
                         }
                     }
 
-                    _logger?.LogDebug($"Data connection accepted from {dataConnection.RemoteAddress}");
+                    _logger?.LogDebug("Data connection accepted from {remoteIp}", dataConnection.RemoteAddress);
 
+                    _activeDataConnection = dataConnection;
                     return dataConnection;
                 }
                 finally
@@ -149,8 +155,13 @@ namespace FubarDev.FtpServer.DataConnection
             }
 
             /// <inheritdoc />
-            public void Dispose()
+            public async Task DisposeAsync()
             {
+                if (_activeDataConnection != null)
+                {
+                    await _activeDataConnection.CloseAsync(CancellationToken.None);
+                }
+
                 _listener.Dispose();
             }
 
@@ -179,6 +190,9 @@ namespace FubarDev.FtpServer.DataConnection
                 public Stream Stream { get; }
 
                 /// <inheritdoc />
+                public bool Closed => _closed;
+
+                /// <inheritdoc />
                 public async Task CloseAsync(CancellationToken cancellationToken)
                 {
                     if (_closed)
@@ -189,6 +203,9 @@ namespace FubarDev.FtpServer.DataConnection
                     _closed = true;
 
                     await Stream.FlushAsync(cancellationToken).ConfigureAwait(false);
+#if !NETSTANDARD1_3
+                    _client.Close();
+#endif
                     _client.Dispose();
                 }
             }

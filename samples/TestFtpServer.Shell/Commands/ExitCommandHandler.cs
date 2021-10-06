@@ -7,10 +7,6 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-using JKang.IpcServiceFramework;
-
-using TestFtpServer.Api;
-
 namespace TestFtpServer.Shell.Commands
 {
     /// <summary>
@@ -19,35 +15,26 @@ namespace TestFtpServer.Shell.Commands
     public class ExitCommandHandler : IRootCommandInfo, IExecutableCommandInfo
     {
         private readonly IShellStatus _status;
-        private readonly IAsyncEnumerable<ICommandInfo> _subCommands;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="IExecutableCommandInfo"/> class.
+        /// Initializes a new instance of the <see cref="ExitCommandHandler"/> class.
         /// </summary>
-        /// <param name="client">The IPC client.</param>
         /// <param name="status">The shell status.</param>
         public ExitCommandHandler(
-            IpcServiceClient<IFtpServerHost> client,
             IShellStatus status)
         {
             _status = status;
-            _subCommands = new ICommandInfo[]
-                {
-                    new CloseConnectionCommandHandler(client),
-                }
-               .ToAsyncEnumerable();
         }
 
         /// <inheritdoc />
         public string Name { get; } = "exit";
 
         /// <inheritdoc />
-        public IReadOnlyCollection<string> AlternativeNames { get; } = new[] { "quit", "close" };
+        public IReadOnlyCollection<string> AlternativeNames { get; } = new[] { "quit" };
 
-        /// <param name="cancellationToken"></param>
         /// <inheritdoc />
         public IAsyncEnumerable<ICommandInfo> GetSubCommandsAsync(CancellationToken cancellationToken)
-            => _subCommands;
+            => AsyncEnumerable.Empty<ICommandInfo>();
 
         /// <inheritdoc />
         public Task ExecuteAsync(CancellationToken cancellationToken)

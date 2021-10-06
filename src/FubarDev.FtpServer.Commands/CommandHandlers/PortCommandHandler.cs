@@ -67,7 +67,7 @@ namespace FubarDev.FtpServer.CommandHandlers
                 var oldFeature = Connection.Features.Get<IFtpDataConnectionFeature>();
                 try
                 {
-                    oldFeature.Dispose();
+                    await oldFeature.DisposeAsync();
                 }
                 catch
                 {

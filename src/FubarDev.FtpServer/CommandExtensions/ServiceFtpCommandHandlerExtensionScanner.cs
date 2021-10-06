@@ -67,7 +67,7 @@ namespace FubarDev.FtpServer.CommandExtensions
             {
                 if (!commandHandlers.TryGetValue(handlerExtension.ExtensionFor, out var commandHandlerInformation))
                 {
-                    logger?.LogWarning($"No command handler found for ID {handlerExtension.ExtensionFor}.");
+                    logger?.LogWarning("No command handler found for ID {commandId}.", handlerExtension.ExtensionFor);
                     continue;
                 }
 

@@ -21,9 +21,11 @@ using FubarDev.FtpServer.FileSystem;
 using FubarDev.FtpServer.FileSystem.DotNet;
 using FubarDev.FtpServer.FileSystem.GoogleDrive;
 using FubarDev.FtpServer.FileSystem.InMemory;
+#if NETCOREAPP
 using FubarDev.FtpServer.FileSystem.Unix;
 using FubarDev.FtpServer.MembershipProvider.Pam;
 using FubarDev.FtpServer.MembershipProvider.Pam.Directories;
+#endif
 
 using Google.Apis.Auth.OAuth2;
 using Google.Apis.Drive.v3;
@@ -32,9 +34,12 @@ using Microsoft.DotNet.PlatformAbstractions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
+#if NETCOREAPP
 using Mono.Unix.Native;
 
 using TestFtpServer.CommandMiddlewares;
+#endif
+
 using TestFtpServer.Commands;
 using TestFtpServer.Configuration;
 using TestFtpServer.Extensions;
@@ -49,13 +54,6 @@ namespace TestFtpServer
             this IServiceCollection services,
             FtpOptions options)
         {
-            static TimeSpan? ToTomeSpan(int? seconds)
-            {
-                return seconds == null
-                    ? (TimeSpan?)null
-                    : TimeSpan.FromSeconds(seconds.Value);
-            }
-
             services
                .Configure<AuthTlsOptions>(
                     opt =>
@@ -64,11 +62,7 @@ namespace TestFtpServer
                         opt.ImplicitFtps = options.Ftps.Implicit;
                     })
                .Configure<FtpConnectionOptions>(
-                    opt =>
-                    {
-                        opt.DefaultEncoding = Encoding.ASCII;
-                        opt.InactivityTimeout = ToTomeSpan(options.Server.InactivityTimeout);
-                    })
+                    opt => opt.DefaultEncoding = Encoding.ASCII)
                .Configure<FubarDev.FtpServer.FtpServerOptions>(
                     opt =>
                     {
@@ -76,7 +70,7 @@ namespace TestFtpServer
                         opt.Port = options.GetServerPort();
                         opt.MaxActiveConnections = options.Server.MaxActiveConnections ?? 0;
                         opt.ConnectionInactivityCheckInterval =
-                            ToTomeSpan(options.Server.ConnectionInactivityCheckInterval);
+                            ToTimeSpan(options.Server.ConnectionInactivityCheckInterval);
                     })
                .Configure<PortCommandOptions>(
                     opt =>
@@ -97,8 +91,19 @@ namespace TestFtpServer
                     })
                .Configure<PasvCommandOptions>(opt => opt.PromiscuousPasv = options.Server.Pasv.Promiscuous)
                .Configure<GoogleDriveOptions>(opt => opt.UseBackgroundUpload = options.GoogleDrive.BackgroundUpload)
+               .Configure<FileSystemAmazonS3Options>(
+                    opt =>
+                    {
+                        opt.BucketName = options.AmazonS3.BucketName;
+                        opt.BucketRegion = options.AmazonS3.BucketRegion;
+                        opt.AwsAccessKeyId = options.AmazonS3.AwsAccessKeyId;
+                        opt.AwsSecretAccessKey = options.AmazonS3.AwsSecretAccessKey;
+                    });
+#if NETCOREAPP
+            services
                .Configure<PamMembershipProviderOptions>(
                     opt => opt.IgnoreAccountManagement = options.Pam.NoAccountManagement);
+#endif
 
             // Add "Hello" service - unique per FTP connection
             services.AddScoped<Hello>();
@@ -114,11 +119,13 @@ namespace TestFtpServer
                     sp.GetService<ILogger<AssemblyFtpCommandHandlerExtensionScanner>>(),
                     typeof(SiteHelloFtpCommandHandlerExtension).Assembly));
 
+#if NETCOREAPP
             if (options.SetFileSystemId && RuntimeEnvironment.OperatingSystemPlatform !=
                 Microsoft.DotNet.PlatformAbstractions.Platform.Windows)
             {
                 services.AddScoped<IFtpCommandMiddleware, FsIdChanger>();
             }
+#endif
 
             switch (options.BackendType)
             {
@@ -128,15 +135,36 @@ namespace TestFtpServer
                        .Configure<InMemoryFileSystemOptions>(
                             opt => opt.KeepAnonymousFileSystem = options.InMemory.KeepAnonymous);
                     break;
+                case FileSystemType.Unix:
+#if NETCOREAPP
+                    services = services
+                       .AddFtpServer(sb => sb.ConfigureAuthentication(options).UseUnixFileSystem().ConfigureServer(options))
+                       .Configure<UnixFileSystemOptions>(
+                            opt =>
+                            {
+                                opt.Root = options.Unix.Root;
+                                opt.FlushAfterWrite = options.Unix.FlushAfterWrite;
+                            });
+#else
+                    services = services
+                       .AddFtpServer(sb => sb.ConfigureAuthentication(options).UseDotNetFileSystem().ConfigureServer(options))
+                       .Configure<DotNetFileSystemOptions>(
+                            opt =>
+                            {
+                                opt.RootPath = options.Unix.Root;
+                                opt.FlushAfterWrite = options.Unix.FlushAfterWrite;
+                            });
+#endif
+                    break;
                 case FileSystemType.SystemIO:
                     services = services
                        .AddFtpServer(sb => sb.ConfigureAuthentication(options).UseDotNetFileSystem().ConfigureServer(options))
-                       .Configure<DotNetFileSystemOptions>(opt => opt.RootPath = options.SystemIo.Root);
-                    break;
-                case FileSystemType.Unix:
-                    services = services
-                       .AddFtpServer(sb => sb.ConfigureAuthentication(options).UseUnixFileSystem().ConfigureServer(options))
-                       .Configure<UnixFileSystemOptions>(opt => opt.Root = options.Unix.Root);
+                       .Configure<DotNetFileSystemOptions>(
+                            opt =>
+                            {
+                                opt.RootPath = options.SystemIo.Root;
+                                opt.FlushAfterWrite = options.SystemIo.FlushAfterWrite;
+                            });
                     break;
                 case FileSystemType.GoogleDriveUser:
                     var userCredential = GetUserCredential(
@@ -157,6 +185,10 @@ namespace TestFtpServer
                     services = services
                        .AddFtpServer(sb => sb.ConfigureAuthentication(options).UseGoogleDrive(serviceCredential).ConfigureServer(options));
                     break;
+                case FileSystemType.AmazonS3:
+                    services = services
+                       .AddFtpServer(sb => sb.ConfigureAuthentication(options).UseS3FileSystem().ConfigureServer(options));
+                    break;
                 default:
                     throw new NotSupportedException(
                         $"Backend of type {options.Backend} cannot be run from configuration file options.");
@@ -167,18 +199,16 @@ namespace TestFtpServer
                 case FileSystemLayoutType.SingleRoot:
                     services.AddSingleton<IAccountDirectoryQuery, SingleRootWithoutHomeAccountDirectoryQuery>();
                     break;
-                case FileSystemLayoutType.RootPerUser:
-                    services
-                       .AddSingleton<IAccountDirectoryQuery, RootPerUserAccountDirectoryQuery>()
-                       .Configure<RootPerUserAccountDirectoryQueryOptions>(opt => opt.AnonymousRootPerEmail = true);
-                    break;
                 case FileSystemLayoutType.PamHome:
+#if NETCOREAPP
                     services
                        .AddSingleton<IAccountDirectoryQuery, PamAccountDirectoryQuery>()
                        .Configure<PamAccountDirectoryQueryOptions>(
                             opt => opt.AnonymousRootDirectory = Path.GetTempPath());
                     break;
+#endif
                 case FileSystemLayoutType.PamHomeChroot:
+#if NETCOREAPP
                     services
                        .AddSingleton<IAccountDirectoryQuery, PamAccountDirectoryQuery>()
                        .Configure<PamAccountDirectoryQueryOptions>(
@@ -188,8 +218,42 @@ namespace TestFtpServer
                                 opt.UserHomeIsRoot = true;
                             });
                     break;
+#endif
+                case FileSystemLayoutType.RootPerUser:
+                    services
+                       .AddSingleton<IAccountDirectoryQuery, RootPerUserAccountDirectoryQuery>()
+                       .Configure<RootPerUserAccountDirectoryQueryOptions>(opt => opt.AnonymousRootPerEmail = true);
+                    break;
             }
 
+            if (options.Ftps.Implicit)
+            {
+                var implicitFtpsCertificate = options.GetCertificate();
+                if (implicitFtpsCertificate != null)
+                {
+                    services
+                       .AddSingleton(new ImplicitFtpsControlConnectionStreamAdapterOptions(implicitFtpsCertificate))
+                       .AddSingleton<IFtpControlStreamAdapter, ImplicitFtpsControlConnectionStreamAdapter>();
+
+                    // Ensure that PROT and PBSZ commands are working.
+                    services.Decorate<IFtpServer>(
+                        (ftpServer, _) =>
+                        {
+                            ftpServer.ConfigureConnection += (s, e) =>
+                            {
+                                var serviceProvider = e.Connection.ConnectionServices;
+                                var stateMachine = serviceProvider.GetRequiredService<IFtpLoginStateMachine>();
+                                var authTlsMechanism = serviceProvider.GetRequiredService<IEnumerable<IAuthenticationMechanism>>()
+                                   .Single(x => x.CanHandle("TLS"));
+                                stateMachine.Activate(authTlsMechanism);
+                            };
+
+                            return ftpServer;
+                        });
+                }
+            }
+
+#if NETCOREAPP
             services.Decorate<IFtpServer>(
                 (ftpServer, serviceProvider) =>
                 {
@@ -207,6 +271,7 @@ namespace TestFtpServer
 
                     return ftpServer;
                 });
+#endif
 
             services.Scan(
                 ts => ts
@@ -219,14 +284,22 @@ namespace TestFtpServer
 
         private static IFtpServerBuilder ConfigureServer(this IFtpServerBuilder builder, FtpOptions options)
         {
-            if (options.Ftps.Implicit)
+            builder = builder
+               .DisableChecks();
+
+            if (options.Connection.Inactivity.Enabled)
             {
-                var implicitFtpsCertificate = options.GetCertificate();
-                if (implicitFtpsCertificate != null)
-                {
-                    builder = builder
-                       .UseImplicitTls(implicitFtpsCertificate);
-                }
+                builder = builder
+                   .EnableIdleCheck();
+                builder.Services
+                   .Configure<FtpConnectionOptions>(
+                        opt => opt.InactivityTimeout = ToTimeSpan(options.Connection.Inactivity.InactivityTimeout));
+            }
+
+            if (options.Connection.SocketState.Enabled)
+            {
+                builder = builder
+                   .EnableConnectionCheck();
             }
 
             return builder;
@@ -254,6 +327,43 @@ namespace TestFtpServer
             }
 
             return credential;
+        }
+
+        private class ImplicitFtpsControlConnectionStreamAdapterOptions
+        {
+            public ImplicitFtpsControlConnectionStreamAdapterOptions(X509Certificate2 certificate)
+            {
+                Certificate = certificate;
+            }
+
+            public X509Certificate2 Certificate { get; }
+        }
+
+        private static TimeSpan? ToTimeSpan(int? seconds)
+        {
+            return seconds == null
+                ? (TimeSpan?)null
+                : TimeSpan.FromSeconds(seconds.Value);
+        }
+
+        private class ImplicitFtpsControlConnectionStreamAdapter : IFtpControlStreamAdapter
+        {
+            private readonly ImplicitFtpsControlConnectionStreamAdapterOptions _options;
+            private readonly ISslStreamWrapperFactory _sslStreamWrapperFactory;
+
+            public ImplicitFtpsControlConnectionStreamAdapter(
+                ImplicitFtpsControlConnectionStreamAdapterOptions options,
+                ISslStreamWrapperFactory sslStreamWrapperFactory)
+            {
+                _options = options;
+                _sslStreamWrapperFactory = sslStreamWrapperFactory;
+            }
+
+            /// <inheritdoc />
+            public Task<Stream> WrapAsync(Stream stream, CancellationToken cancellationToken)
+            {
+                return _sslStreamWrapperFactory.WrapStreamAsync(stream, false, _options.Certificate, cancellationToken);
+            }
         }
     }
 }

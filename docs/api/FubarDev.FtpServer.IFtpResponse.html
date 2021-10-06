@@ -99,7 +99,7 @@
     <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_IFtpResponse_AfterWriteAction.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.IFtpResponse.AfterWriteAction%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.Abstractions/IFtpResponse.cs/#L26">View Source</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/blob/master/src/FubarDev.FtpServer.Abstractions/IFtpResponse.cs/#L24">View Source</a>
   </span>
   <a id="FubarDev_FtpServer_IFtpResponse_AfterWriteAction_" data-uid="FubarDev.FtpServer.IFtpResponse.AfterWriteAction*"></a>
   <h4 id="FubarDev_FtpServer_IFtpResponse_AfterWriteAction" data-uid="FubarDev.FtpServer.IFtpResponse.AfterWriteAction">AfterWriteAction</h4>
@@ -108,7 +108,8 @@
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">FtpResponseAfterWriteAsyncDelegate AfterWriteAction { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">[Obsolete(&quot;Use a custom server command.&quot;)]
+FtpResponseAfterWriteAsyncDelegate? AfterWriteAction { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -120,7 +121,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="FubarDev.FtpServer.FtpResponseAfterWriteAsyncDelegate.html">FtpResponseAfterWriteAsyncDelegate</a></td>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.nullable-1">Nullable</a>&lt;<a class="xref" href="FubarDev.FtpServer.FtpResponseAfterWriteAsyncDelegate.html">FtpResponseAfterWriteAsyncDelegate</a>&gt;</td>
         <td></td>
       </tr>
     </tbody>
@@ -130,7 +131,7 @@
     <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_IFtpResponse_Code.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.IFtpResponse.Code%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.Abstractions/IFtpResponse.cs/#L21">View Source</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/blob/master/src/FubarDev.FtpServer.Abstractions/IFtpResponse.cs/#L19">View Source</a>
   </span>
   <a id="FubarDev_FtpServer_IFtpResponse_Code_" data-uid="FubarDev.FtpServer.IFtpResponse.Code*"></a>
   <h4 id="FubarDev_FtpServer_IFtpResponse_Code" data-uid="FubarDev.FtpServer.IFtpResponse.Code">Code</h4>
@@ -160,19 +161,19 @@
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_IFtpResponse_GetNextLineAsync_System_Object_CancellationToken_.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.IFtpResponse.GetNextLineAsync(System.Object%2CCancellationToken)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_IFtpResponse_GetNextLineAsync_System_Nullable_System_Object__System_Threading_CancellationToken_.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.IFtpResponse.GetNextLineAsync(System.Nullable%7BSystem.Object%7D%2CSystem.Threading.CancellationToken)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.Abstractions/IFtpResponse.cs/#L36">View Source</a>
+    <a href="https://github.com/FubarDevelopment/FtpServer/blob/master/src/FubarDev.FtpServer.Abstractions/IFtpResponse.cs/#L33">View Source</a>
   </span>
   <a id="FubarDev_FtpServer_IFtpResponse_GetNextLineAsync_" data-uid="FubarDev.FtpServer.IFtpResponse.GetNextLineAsync*"></a>
-  <h4 id="FubarDev_FtpServer_IFtpResponse_GetNextLineAsync_System_Object_CancellationToken_" data-uid="FubarDev.FtpServer.IFtpResponse.GetNextLineAsync(System.Object,CancellationToken)">GetNextLineAsync(Object, CancellationToken)</h4>
+  <h4 id="FubarDev_FtpServer_IFtpResponse_GetNextLineAsync_System_Nullable_System_Object__System_Threading_CancellationToken_" data-uid="FubarDev.FtpServer.IFtpResponse.GetNextLineAsync(System.Nullable{System.Object},System.Threading.CancellationToken)">GetNextLineAsync(Nullable&lt;Object&gt;, CancellationToken)</h4>
   <div class="markdown level1 summary"><p>Tries to get the the next line.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">Task&lt;FtpResponseLine&gt; GetNextLineAsync(object token, CancellationToken cancellationToken)</code></pre>
+    <pre><code class="lang-csharp hljs">Task&lt;FtpResponseLine&gt; GetNextLineAsync(object? token, CancellationToken cancellationToken)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -185,13 +186,13 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object">Object</a></td>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.nullable-1">Nullable</a>&lt;<a class="xref" href="https://docs.microsoft.com/dotnet/api/system.object">Object</a>&gt;</td>
         <td><span class="parametername">token</span></td>
         <td><p>Token that saves the current position. Must be <span class="xref">null</span> at the beginning.</p>
 </td>
       </tr>
       <tr>
-        <td><span class="xref">CancellationToken</span></td>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.threading.cancellationtoken">CancellationToken</a></td>
         <td><span class="parametername">cancellationToken</span></td>
         <td><p>The cancellation token.</p>
 </td>
@@ -208,7 +209,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">Task</span>&lt;<a class="xref" href="FubarDev.FtpServer.FtpResponseLine.html">FtpResponseLine</a>&gt;</td>
+        <td><a class="xref" href="https://docs.microsoft.com/dotnet/api/system.threading.tasks.task-1">Task</a>&lt;<a class="xref" href="FubarDev.FtpServer.FtpResponseLine.html">FtpResponseLine</a>&gt;</td>
         <td><p><span class="xref">true</span> when a new line is available to send.</p>
 </td>
       </tr>
@@ -225,7 +226,7 @@
                     <a href="https://github.com/FubarDevelopment/FtpServer/new/master/docfx_project/apidoc/new?filename=FubarDev_FtpServer_IFtpResponse.md&amp;value=---%0Auid%3A%20FubarDev.FtpServer.IFtpResponse%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/FubarDevelopment/FtpServer/blob/release/3.0/src/FubarDev.FtpServer.Abstractions/IFtpResponse.cs/#L16" class="contribution-link">View Source</a>
+                    <a href="https://github.com/FubarDevelopment/FtpServer/blob/master/src/FubarDev.FtpServer.Abstractions/IFtpResponse.cs/#L14" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

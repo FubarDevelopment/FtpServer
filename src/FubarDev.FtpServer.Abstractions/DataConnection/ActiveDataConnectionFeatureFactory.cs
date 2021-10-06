@@ -101,6 +101,7 @@ namespace FubarDev.FtpServer.DataConnection
             private readonly IPEndPoint _portAddress;
             private readonly List<IFtpDataConnectionValidator> _validators;
             private readonly IFtpConnection _ftpConnection;
+            private IFtpDataConnection? _activeDataConnection;
 
             public ActiveDataConnectionFeature(
                 IPEndPoint localEndPoint,
@@ -125,6 +126,11 @@ namespace FubarDev.FtpServer.DataConnection
             /// <inheritdoc />
             public async Task<IFtpDataConnection> GetDataConnectionAsync(TimeSpan timeout, CancellationToken cancellationToken)
             {
+                if (_activeDataConnection != null && !_activeDataConnection.Closed)
+                {
+                    return _activeDataConnection;
+                }
+
 #if NETSTANDARD1_3
                 var client = new TcpClient(LocalEndPoint.AddressFamily);
 #else
@@ -166,6 +172,7 @@ namespace FubarDev.FtpServer.DataConnection
                             throw new TimeoutException();
                         }
 
+                        // Try to connect
                         try
                         {
                             await connectTask.ConfigureAwait(false);
@@ -178,6 +185,7 @@ namespace FubarDev.FtpServer.DataConnection
                             continue;
                         }
 
+                        // Ensure that we're allowed to use the connection.
                         var dataConnection = new ActiveDataConnection(client);
                         foreach (var validator in _validators)
                         {
@@ -189,6 +197,7 @@ namespace FubarDev.FtpServer.DataConnection
                             }
                         }
 
+                        _activeDataConnection = dataConnection;
                         return dataConnection;
                     }
                     catch (Exception) when (CloseTcpClient(client))
@@ -203,8 +212,9 @@ namespace FubarDev.FtpServer.DataConnection
             }
 
             /// <inheritdoc />
-            public void Dispose()
+            public Task DisposeAsync()
             {
+                return _activeDataConnection?.CloseAsync(CancellationToken.None) ?? Task.CompletedTask;
             }
 
             private bool CloseTcpClient(TcpClient client)
@@ -238,6 +248,9 @@ namespace FubarDev.FtpServer.DataConnection
                 public Stream Stream { get; }
 
                 /// <inheritdoc />
+                public bool Closed => _closed;
+
+                /// <inheritdoc />
                 public async Task CloseAsync(CancellationToken cancellationToken)
                 {
                     if (_closed)
@@ -248,6 +261,9 @@ namespace FubarDev.FtpServer.DataConnection
                     _closed = true;
 
                     await Stream.FlushAsync(cancellationToken).ConfigureAwait(false);
+#if !NETSTANDARD1_3
+                    _client.Close();
+#endif
                     _client.Dispose();
                 }
             }

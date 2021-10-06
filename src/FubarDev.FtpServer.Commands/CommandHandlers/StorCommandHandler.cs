@@ -137,7 +137,7 @@ namespace FubarDev.FtpServer.CommandHandlers
                    .ConfigureAwait(false);
             }
 
-            return new FtpResponse(226, T("Uploaded file successfully."));
+            return new FtpResponse(226, T("Closing data connection, file action successful."));
         }
     }
 }

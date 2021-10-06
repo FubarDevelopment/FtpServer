@@ -71,31 +71,31 @@ namespace FubarDev.FtpServer.CommandHandlers
                .ConfigureAwait(false);
 
             // Dispose and remove all features (if disposable)
-            var setFeatureMethod = Connection.Features.GetType().GetTypeInfo().GetDeclaredMethod("Set");
             foreach (var featureItem in Connection.Features)
             {
-                if (!(featureItem.Value is IDisposable disposableFeature))
-                {
-                    continue;
-                }
-
                 try
                 {
-                    disposableFeature.Dispose();
+                    switch (featureItem.Value)
+                    {
+                        case IFtpConnection _:
+                            // Never dispose the connection itself.
+                            break;
+                        case IFtpDataConnectionFeature f:
+                            await f.DisposeAsync().ConfigureAwait(false);
+                            break;
+                        case IDisposable disposable:
+                            disposable.Dispose();
+                            break;
+                    }
                 }
                 catch (Exception ex)
                 {
                     // Ignore exceptions
-                    _logger?.LogWarning(
-                        ex,
-                        "Failed to feature of type {featureType}: {errorMessage}",
-                        featureItem.Key,
-                        ex.Message);
+                    _logger?.LogWarning(ex, "Failed to dispose feature of type {featureType}: {errorMessage}", featureItem.Key, ex.Message);
                 }
 
                 // Remove from features collection
-                var setMethod = setFeatureMethod.MakeGenericMethod(featureItem.Key);
-                setMethod.Invoke(Connection.Features, new object?[] { null });
+                Connection.Features[featureItem.Key] = null;
             }
 
             // Reset the FTP data connection configuration feature

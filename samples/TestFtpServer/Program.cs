@@ -4,8 +4,6 @@
 
 using System;
 using System.IO;
-using System.Threading;
-using System.Threading.Tasks;
 
 using JKang.IpcServiceFramework;
 
@@ -14,7 +12,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
-using NLog.Web;
+using Serilog;
+using Serilog.Events;
 
 using TestFtpServer.Configuration;
 
@@ -22,15 +21,38 @@ namespace TestFtpServer
 {
     internal static class Program
     {
-        private static async Task<int> Main(string[] args)
+        private static int Main(string[] args)
+        {
+            Log.Logger = new LoggerConfiguration()
+               .MinimumLevel.Debug()
+               .MinimumLevel.Override("Microsoft", LogEventLevel.Information)
+               .Enrich.FromLogContext()
+               .WriteTo.Console()
+               .CreateLogger();
+
+            try
+            {
+                CreateHostBuilder(args).Build().Run();
+                return 0;
+            }
+            catch (Exception ex)
+            {
+                Log.Fatal(ex, "Host terminated unexpectedly");
+                return 1;
+            }
+            finally
+            {
+                Log.CloseAndFlush();
+            }
+        }
+
+        private static IHostBuilder CreateHostBuilder(string[] args)
         {
             var configPath = Path.Combine(
                 Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData),
                 "SharpFtpServer");
 
-            NLog.LogManager.LoadConfiguration("NLog.config");
-
-            var hostBuilder = new HostBuilder()
+            return new HostBuilder()
                .UseConsoleLifetime()
                .ConfigureHostConfiguration(
                     configHost => { configHost.AddEnvironmentVariables("FTPSERVER_"); })
@@ -52,10 +74,7 @@ namespace TestFtpServer
                            .Add(new OptionsConfigSource(args));
                     })
                .ConfigureLogging(
-                    (hostContext, loggingBuilder) =>
-                    {
-                        loggingBuilder.ClearProviders();
-                    })
+                    (hostContext, loggingBuilder) => { loggingBuilder.ClearProviders(); })
                .ConfigureServices(
                     (hostContext, services) =>
                     {
@@ -63,10 +82,10 @@ namespace TestFtpServer
                         options.Validate();
 
                         services
-                           .AddLogging(cfg => cfg.SetMinimumLevel(LogLevel.Trace))
                            .AddOptions()
                            .AddFtpServices(options)
                            .AddHostedService<HostedFtpService>()
+                           .AddHostedService<HostedIpcService>()
                            .AddIpc(
                                 builder =>
                                 {
@@ -75,46 +94,8 @@ namespace TestFtpServer
                                        .AddService<Api.IFtpServerHost, FtpServerHostApi>();
                                 });
                     })
-               .UseNLog(
-                    new NLogAspNetCoreOptions()
-                    {
-                        CaptureMessageTemplates = true,
-                        CaptureMessageProperties = true,
-                    });
-
-            try
-            {
-                using (var host = hostBuilder.Build())
-                {
-                    var appLifetime = host.Services.GetRequiredService<IHostApplicationLifetime>();
-
-                    var ipcServiceHost = new IpcServiceHostBuilder(host.Services)
-                        .AddNamedPipeEndpoint<Api.IFtpServerHost>("ftpserver", "ftpserver")
-                        .Build();
-
-                    // Catch request to stop the application
-                    var appStopCts = new CancellationTokenSource();
-                    using (appLifetime.ApplicationStopping.Register(() => appStopCts.Cancel()))
-                    {
-                        // Start the host
-                        await host.StartAsync(appStopCts.Token).ConfigureAwait(false);
-
-                        // Run the shell
-                        await ipcServiceHost.RunAsync(appStopCts.Token)
-                            .ConfigureAwait(false);
-
-                        // Ignore. Shell not available?
-                        await host.WaitForShutdownAsync(CancellationToken.None).ConfigureAwait(false);
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.Error.WriteLine(ex);
-                return 1;
-            }
-
-            return 0;
+               .UseSerilog(
+                    (context, configuration) => { configuration.ReadFrom.Configuration(context.Configuration); });
         }
     }
 }
