@@ -1,4 +1,4 @@
-// <copyright file="FtpServerFixture.cs" company="Fubar Development Junker">
+﻿// <copyright file="FtpServerTestsBase.cs" company="Fubar Development Junker">
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
@@ -9,16 +9,24 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
 using Xunit;
+using Xunit.Abstractions;
 
 namespace FubarDev.FtpServer.Tests
 {
-    /// <summary>
-    /// Fixture that initializes an FTP server.
-    /// </summary>
-    public class FtpServerFixture : IAsyncLifetime
+    public class FtpServerTestsBase : IAsyncLifetime
     {
+        private readonly ITestOutputHelper _testOutputHelper;
         private ServiceProvider? _serviceProvider;
         private IFtpServer? _server;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FtpServerFixture"/> class.
+        /// </summary>
+        /// <param name="testOutputHelper">The test output helper.</param>
+        public FtpServerTestsBase(ITestOutputHelper testOutputHelper)
+        {
+            _testOutputHelper = testOutputHelper;
+        }
 
         /// <summary>
         /// Gets the FTP server.
@@ -26,13 +34,14 @@ namespace FubarDev.FtpServer.Tests
         public IFtpServer Server => _server ?? throw new InvalidOperationException();
 
         /// <inheritdoc />
-        public Task InitializeAsync()
+        public virtual Task InitializeAsync()
         {
             var services = new ServiceCollection()
                .AddLogging(
                     lb =>
                     {
-                        lb.AddConsole();
+                        // lb.AddConsole();
+                        lb.AddXunit(_testOutputHelper, LogLevel.Trace);
                         lb.SetMinimumLevel(LogLevel.Trace);
                         lb.AddFilter("System", LogLevel.Warning);
                         lb.AddFilter("Microsoft", LogLevel.Warning);
@@ -47,10 +56,13 @@ namespace FubarDev.FtpServer.Tests
         }
 
         /// <inheritdoc />
-        public async Task DisposeAsync()
+        public virtual async Task DisposeAsync()
         {
             await Server.StopAsync(default).ConfigureAwait(false);
-            _serviceProvider?.Dispose();
+            if (_serviceProvider != null)
+            {
+                await _serviceProvider.DisposeAsync();
+            }
         }
 
         /// <summary>

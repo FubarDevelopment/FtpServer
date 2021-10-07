@@ -59,7 +59,7 @@ namespace FubarDev.FtpServer.Tests
 
         private class AddressComparer : IEqualityComparer<Address>
         {
-            public bool Equals(Address x, Address y)
+            public bool Equals(Address? x, Address? y)
             {
                 if (ReferenceEquals(x, y))
                 {

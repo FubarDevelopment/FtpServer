@@ -72,8 +72,10 @@ namespace FubarDev.FtpServer.Networking
                     await SendDataToStream(readResult.Buffer, CancellationToken.None)
                        .ConfigureAwait(false);
                 }
-                catch
+                catch (Exception ex)
                 {
+                    Logger?.LogWarning(ex, "Sending data failed {ErrorMessage}", ex.Message);
+
                     // Ensure that the read operation is finished, but keep the data.
                     _pipeReader.AdvanceTo(readResult.Buffer.Start);
                     throw;
@@ -83,7 +85,7 @@ namespace FubarDev.FtpServer.Networking
 
                 if (readResult.IsCanceled || readResult.IsCompleted)
                 {
-                    Logger?.LogTrace("Was cancelled or completed.");
+                    Logger?.LogTrace("Was cancelled or completed");
                     break;
                 }
             }

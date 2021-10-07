@@ -97,11 +97,14 @@ namespace FubarDev.FtpServer.Networking
         /// <inheritdoc />
         protected override Task OnStoppedAsync(CancellationToken cancellationToken)
         {
-            // Tell the channel that there's no more data coming
-            _newClientWriter.Complete(_exception);
+            if (!_connectionClosedCts.IsCancellationRequested)
+            {
+                // Tell the channel that there's no more data coming
+                _newClientWriter.Complete(_exception);
 
-            // Signal a closed connection.
-            _connectionClosedCts.Cancel();
+                // Signal a closed connection.
+                _connectionClosedCts.Cancel();
+            }
 
             return Task.CompletedTask;
         }
