@@ -18,7 +18,6 @@ using System.Threading.Tasks;
 using FubarDev.FtpServer.ConnectionChecks;
 using FubarDev.FtpServer.Features;
 using FubarDev.FtpServer.Localization;
-using FubarDev.FtpServer.Networking;
 using FubarDev.FtpServer.ServerCommands;
 
 using Microsoft.Extensions.DependencyInjection;
@@ -37,10 +36,9 @@ namespace FubarDev.FtpServer
         private readonly List<IFtpConnectionConfigurator> _connectionConfigurators;
         private readonly List<IFtpControlStreamAdapter> _controlStreamAdapters;
         private readonly ConcurrentDictionary<IFtpConnection, FtpConnectionInfo> _connections = new ConcurrentDictionary<IFtpConnection, FtpConnectionInfo>();
-        private readonly FtpServerListenerService _serverListener;
+        private readonly IFtpListenerService _serverListener;
         private readonly ILogger<FtpServer>? _log;
         private readonly Task _clientReader;
-        private readonly CancellationTokenSource _serverShutdown = new CancellationTokenSource();
         private readonly Timer? _connectionTimeoutChecker;
 
         /// <summary>
@@ -50,12 +48,14 @@ namespace FubarDev.FtpServer
         /// <param name="serviceProvider">The service provider used to query services.</param>
         /// <param name="controlStreamAdapters">Adapters for the control connection stream.</param>
         /// <param name="connectionConfigurators">Configurators for FTP connections.</param>
+        /// <param name="ftpListenerService">Listener service for FTP connections.</param>
         /// <param name="logger">The FTP server logger.</param>
         public FtpServer(
             IOptions<FtpServerOptions> serverOptions,
             IServiceProvider serviceProvider,
             IEnumerable<IFtpControlStreamAdapter> controlStreamAdapters,
             IEnumerable<IFtpConnectionConfigurator> connectionConfigurators,
+            IFtpListenerService ftpListenerService,
             ILogger<FtpServer>? logger = null)
         {
             _serviceProvider = serviceProvider;
@@ -66,15 +66,16 @@ namespace FubarDev.FtpServer
             Port = serverOptions.Value.Port;
             MaxActiveConnections = serverOptions.Value.MaxActiveConnections;
 
-            var tcpClientChannel = Channel.CreateBounded<TcpClient>(5);
-            _serverListener = new FtpServerListenerService(tcpClientChannel, serverOptions, _serverShutdown, logger);
+            _serverListener = ftpListenerService;
             _serverListener.ListenerStarted += (s, e) =>
             {
                 Port = e.Port;
                 OnListenerStarted(e);
             };
 
-            _clientReader = ReadClientsAsync(tcpClientChannel, _serverShutdown.Token);
+            _clientReader = ReadClientsAsync(
+                _serverListener.Channel,
+                _serverListener.ListenerShutdown.Token);
 
             if (serverOptions.Value.ConnectionInactivityCheckInterval is TimeSpan checkInterval)
             {
@@ -120,7 +121,7 @@ namespace FubarDev.FtpServer
 
             _connectionTimeoutChecker?.Dispose();
 
-            _serverShutdown.Dispose();
+            (_serverListener as IDisposable)?.Dispose();
             foreach (var connectionInfo in _connections.Values)
             {
                 connectionInfo.Scope.Dispose();
@@ -177,9 +178,9 @@ namespace FubarDev.FtpServer
         /// <inheritdoc />
         public async Task StopAsync(CancellationToken cancellationToken)
         {
-            if (!_serverShutdown.IsCancellationRequested)
+            if (!_serverListener.ListenerShutdown.IsCancellationRequested)
             {
-                _serverShutdown.Cancel(true);
+                _serverListener.ListenerShutdown.Cancel(true);
             }
 
             await _serverListener.StopAsync(cancellationToken).ConfigureAwait(false);
@@ -297,7 +298,7 @@ namespace FubarDev.FtpServer
                 // Remember connection
                 if (!_connections.TryAdd(connection, new FtpConnectionInfo(scope)))
                 {
-                    _log.LogCritical("A new scope was created, but the connection couldn't be added to the list.");
+                    _log.LogCritical("A new scope was created, but the connection couldn't be added to the list");
                     client.Dispose();
                     scope.Dispose();
                     return;
@@ -359,7 +360,7 @@ namespace FubarDev.FtpServer
             catch (Exception ex)
             {
                 scope.Dispose();
-                _log?.LogError(ex, ex.Message);
+                _log?.LogError(ex, "Failed to start the client connection: {ErrorMessage}", ex.Message);
             }
         }
 

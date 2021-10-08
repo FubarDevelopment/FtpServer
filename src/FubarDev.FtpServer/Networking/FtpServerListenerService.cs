@@ -23,7 +23,6 @@ namespace FubarDev.FtpServer.Networking
     {
         private readonly ChannelWriter<TcpClient> _newClientWriter;
         private readonly MultiBindingTcpListener _multiBindingTcpListener;
-
         private readonly CancellationTokenSource _connectionClosedCts;
 
         private Exception? _exception;
