@@ -5,6 +5,7 @@
 // <author>Mark Junker</author>
 //-----------------------------------------------------------------------
 
+using System;
 using System.Threading.Tasks;
 
 namespace FubarDev.FtpServer.AccountManagement
@@ -23,6 +24,9 @@ namespace FubarDev.FtpServer.AccountManagement
         /// <param name="username">The user name.</param>
         /// <param name="password">The password.</param>
         /// <returns>The result of the validation.</returns>
-        Task<MemberValidationResult> ValidateUserAsync(string username, string password);
+        [Obsolete("Use IMembershipProviderAsync.ValidateUserAsync")]
+        Task<MemberValidationResult> ValidateUserAsync(
+            string username,
+            string password);
     }
 }

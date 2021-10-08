@@ -20,5 +20,8 @@ namespace FubarDev.FtpServer.Features.Impl
 
         /// <inheritdoc />
         public ClaimsPrincipal? FtpUser { get; set; }
+
+        /// <inheritdoc />
+        public IMembershipProvider? MembershipProvider { get; set; }
     }
 }

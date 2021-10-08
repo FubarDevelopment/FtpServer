@@ -18,6 +18,7 @@ using System.Threading;
 using System.Threading.Channels;
 using System.Threading.Tasks;
 
+using FubarDev.FtpServer.AccountManagement;
 using FubarDev.FtpServer.Authentication;
 using FubarDev.FtpServer.CommandHandlers;
 using FubarDev.FtpServer.Commands;
@@ -41,7 +42,11 @@ namespace FubarDev.FtpServer
     /// <summary>
     /// This class represents a FTP connection.
     /// </summary>
-    public sealed class FtpConnection : FtpConnectionContext, IFtpConnection, IObservable<IFtpConnectionEvent>, IFtpConnectionEventHost
+    public sealed class FtpConnection
+        : FtpConnectionContext,
+            IFtpConnection,
+            IObservable<IFtpConnectionEvent>,
+            IFtpConnectionEventHost
     {
         private readonly CancellationTokenSource _cancellationTokenSource = new CancellationTokenSource();
 
@@ -109,6 +114,8 @@ namespace FubarDev.FtpServer
         [Obsolete]
         private readonly FtpConnectionKeepAlive _keepAlive;
 #pragma warning restore 612
+
+        private readonly IAuthorizationInformationFeature _authorizationInformationFeature;
 
         private bool _connectionClosing;
 
@@ -232,6 +239,8 @@ namespace FubarDev.FtpServer
 
             Features = features;
 
+            _authorizationInformationFeature = features.Get<IAuthorizationInformationFeature>();
+
             _commandReader = ReadCommandsFromPipeline(
                 applicationInputPipe.Reader,
                 _ftpCommandChannel.Writer,
@@ -352,7 +361,7 @@ namespace FubarDev.FtpServer
         /// <inheritdoc />
         public async Task StopAsync()
         {
-            var success = await _stopSemaphore.WaitAsync(0)
+            var success = await _stopSemaphore.WaitAsync(0, CancellationToken.None)
                .ConfigureAwait(false);
             if (!success)
             {
@@ -364,12 +373,22 @@ namespace FubarDev.FtpServer
             {
                 _logger?.LogTrace("StopAsync called");
 
-                await _serviceControl.WaitAsync().ConfigureAwait(false);
+                await _serviceControl.WaitAsync(CancellationToken.None)
+                   .ConfigureAwait(false);
                 try
                 {
                     if (Interlocked.CompareExchange(ref _connectionClosed, 1, 0) != 0)
                     {
                         return;
+                    }
+
+                    var currentUser = _authorizationInformationFeature.FtpUser;
+                    var membershipProvider = _authorizationInformationFeature.MembershipProvider;
+                    if (currentUser != null
+                        && membershipProvider is IMembershipProviderAsync membershipProviderAsync)
+                    {
+                        await membershipProviderAsync.LogOutAsync(currentUser, CancellationToken.None)
+                           .ConfigureAwait(false);
                     }
 
                     Abort();
@@ -399,7 +418,7 @@ namespace FubarDev.FtpServer
                     catch (Exception ex)
                     {
                         // Something went wrong... badly!
-                        _logger?.LogError(ex, ex.Message);
+                        _logger?.LogError(ex, "Failed to stop the client connection: {ErrorMessage}", ex.Message);
                     }
 
                     // Dispose all features (if disposable)

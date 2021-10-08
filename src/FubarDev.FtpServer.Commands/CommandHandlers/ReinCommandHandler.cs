@@ -3,10 +3,10 @@
 // </copyright>
 
 using System;
-using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 
+using FubarDev.FtpServer.AccountManagement;
 using FubarDev.FtpServer.Commands;
 using FubarDev.FtpServer.DataConnection;
 using FubarDev.FtpServer.Features;
@@ -49,6 +49,15 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// <inheritdoc />
         public override async Task<IFtpResponse?> Process(FtpCommand command, CancellationToken cancellationToken)
         {
+            // User-Logout
+            var authorizationInformationFeature = Connection.Features.Get<IAuthorizationInformationFeature>();
+            var user = authorizationInformationFeature.FtpUser;
+            var membershipProvider = authorizationInformationFeature.MembershipProvider;
+            if (user != null && membershipProvider is IMembershipProviderAsync membershipProviderAsync)
+            {
+                await membershipProviderAsync.LogOutAsync(user, cancellationToken);
+            }
+
             // Reset the login
             var loginStateMachine = Connection.ConnectionServices.GetRequiredService<IFtpLoginStateMachine>();
             loginStateMachine.Reset();
@@ -91,7 +100,11 @@ namespace FubarDev.FtpServer.CommandHandlers
                 catch (Exception ex)
                 {
                     // Ignore exceptions
-                    _logger?.LogWarning(ex, "Failed to dispose feature of type {featureType}: {errorMessage}", featureItem.Key, ex.Message);
+                    _logger?.LogWarning(
+                        ex,
+                        "Failed to dispose feature of type {FeatureType}: {ErrorMessage}",
+                        featureItem.Key,
+                        ex.Message);
                 }
 
                 // Remove from features collection

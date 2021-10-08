@@ -3,6 +3,7 @@
 // </copyright>
 
 using System.Security.Claims;
+using System.Threading;
 using System.Threading.Tasks;
 
 using FubarDev.FtpServer.AccountManagement;
@@ -12,10 +13,13 @@ namespace TestFtpServer
     /// <summary>
     /// Custom membership provider
     /// </summary>
-    public class CustomMembershipProvider : IMembershipProvider
+    public class CustomMembershipProvider : IMembershipProviderAsync
     {
         /// <inheritdoc />
-        public Task<MemberValidationResult> ValidateUserAsync(string username, string password)
+        public Task<MemberValidationResult> ValidateUserAsync(
+            string username,
+            string password,
+            CancellationToken cancellationToken)
         {
             if (username != "tester" || password != "testing")
             {
@@ -37,6 +41,18 @@ namespace TestFtpServer
                     MemberValidationStatus.AuthenticatedUser,
                     user));
 
+        }
+
+        /// <inheritdoc />
+        public Task LogOutAsync(ClaimsPrincipal principal, CancellationToken cancellationToken)
+        {
+            return Task.CompletedTask;
+        }
+
+        /// <inheritdoc />
+        public Task<MemberValidationResult> ValidateUserAsync(string username, string password)
+        {
+            return ValidateUserAsync(username, password, CancellationToken.None);
         }
     }
 }

@@ -66,12 +66,20 @@ namespace FubarDev.FtpServer.Authorization
 
             foreach (var membershipProvider in _membershipProviders)
             {
-                var validationResult = await membershipProvider
-                   .ValidateUserAsync(_userName, password)
-                   .ConfigureAwait(false);
+#pragma warning disable 618
+                var validationResult = membershipProvider is IMembershipProviderAsync membershipProviderAsync
+                    ? await membershipProviderAsync
+                       .ValidateUserAsync(_userName, password, cancellationToken)
+                       .ConfigureAwait(false)
+                    : await membershipProvider
+                       .ValidateUserAsync(_userName, password)
+                       .ConfigureAwait(false);
+#pragma warning restore 618
                 if (validationResult.IsSuccess)
                 {
-                    var accountInformation = new DefaultAccountInformation(validationResult.FtpUser);
+                    var accountInformation = new DefaultAccountInformation(
+                        validationResult.FtpUser,
+                        membershipProvider);
 
                     foreach (var authorizationAction in _authorizationActions)
                     {
@@ -132,8 +140,11 @@ namespace FubarDev.FtpServer.Authorization
 
         private class DefaultAccountInformation : IAccountInformation
         {
-            public DefaultAccountInformation(ClaimsPrincipal user)
+            public DefaultAccountInformation(
+                ClaimsPrincipal user,
+                IMembershipProvider membershipProvider)
             {
+                MembershipProvider = membershipProvider;
                 FtpUser = user;
 #pragma warning disable 618
 #pragma warning disable 612
@@ -148,6 +159,9 @@ namespace FubarDev.FtpServer.Authorization
 
             /// <inheritdoc />
             public ClaimsPrincipal FtpUser { get; }
+
+            /// <inheritdoc />
+            public IMembershipProvider MembershipProvider { get; }
         }
     }
 }

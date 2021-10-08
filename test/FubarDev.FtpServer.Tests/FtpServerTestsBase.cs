@@ -20,10 +20,10 @@ namespace FubarDev.FtpServer.Tests
         private IFtpServer? _server;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="FtpServerFixture"/> class.
+        /// Initializes a new instance of the <see cref="FtpServerTestsBase"/> class.
         /// </summary>
         /// <param name="testOutputHelper">The test output helper.</param>
-        public FtpServerTestsBase(ITestOutputHelper testOutputHelper)
+        protected FtpServerTestsBase(ITestOutputHelper testOutputHelper)
         {
             _testOutputHelper = testOutputHelper;
         }
@@ -32,6 +32,11 @@ namespace FubarDev.FtpServer.Tests
         /// Gets the FTP server.
         /// </summary>
         public IFtpServer Server => _server ?? throw new InvalidOperationException();
+
+        /// <summary>
+        /// Gets the service provider.
+        /// </summary>
+        public IServiceProvider ServiceProvider => _serviceProvider ?? throw new InvalidOperationException();
 
         /// <inheritdoc />
         public virtual Task InitializeAsync()

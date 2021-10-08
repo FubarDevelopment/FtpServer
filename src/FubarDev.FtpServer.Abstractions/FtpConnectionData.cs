@@ -54,7 +54,7 @@ namespace FubarDev.FtpServer
         }
 
         /// <inheritdoc />
-        [Obsolete("User the IAuthorizationInformationFeature services to get the current status.")]
+        [Obsolete("Use the IAuthorizationInformationFeature services to get the current status.")]
         public IFtpUser? User
         {
             get => _featureCollection.Get<IAuthorizationInformationFeature>().User;
@@ -67,7 +67,7 @@ namespace FubarDev.FtpServer
         }
 
         /// <inheritdoc />
-        [Obsolete("User the IAuthorizationInformationFeature services to get the current status.")]
+        [Obsolete("Use the IAuthorizationInformationFeature services to get the current status.")]
         public ClaimsPrincipal? FtpUser
         {
             get => _featureCollection.Get<IAuthorizationInformationFeature>().FtpUser;
@@ -79,11 +79,23 @@ namespace FubarDev.FtpServer
             }
         }
 
+        /// <inheritdoc />
+        [Obsolete("Use the IAuthorizationInformationFeature services to get the current status.")]
+        public IMembershipProvider? MembershipProvider
+        {
+            get => _featureCollection.Get<IAuthorizationInformationFeature>().MembershipProvider;
+            set
+            {
+                var feature = _featureCollection.Get<IAuthorizationInformationFeature>();
+                feature.MembershipProvider = value;
+            }
+        }
+
         /// <summary>
         /// Gets or sets a value indicating whether the user with the <see cref="User"/>.
         /// is logged in.
         /// </summary>
-        [Obsolete("User the IFtpLoginStateMachine services to get the current status.")]
+        [Obsolete("Use the IFtpLoginStateMachine services to get the current status.")]
         public bool IsLoggedIn { get; set; }
 
         /// <summary>

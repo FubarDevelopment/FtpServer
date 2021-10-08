@@ -2,7 +2,9 @@
 // Copyright (c) Fubar Development Junker. All rights reserved.
 // </copyright>
 
+using System;
 using System.Security.Claims;
+using System.Threading;
 using System.Threading.Tasks;
 
 using FluentFTP;
@@ -28,6 +30,32 @@ namespace FubarDev.FtpServer.Tests.Issues
         {
             using var client = new FtpClient("127.0.0.1", Server.Port, "tester", "test");
             await client.ConnectAsync();
+        }
+
+        [Fact]
+        public async Task LogoutCalledAfterSuccessfulLogin()
+        {
+            using (var client = new FtpClient("127.0.0.1", Server.Port, "tester", "test"))
+            {
+                await client.ConnectAsync();
+            }
+
+            var membershipProvider =
+                (CustomMembershipProvider)ServiceProvider.GetRequiredService<IMembershipProvider>();
+            var maxDelay = TimeSpan.FromSeconds(2);
+            var start = DateTimeOffset.UtcNow;
+            while (membershipProvider.LogoutCalled == 0)
+            {
+                await Task.Delay(100);
+                var end = DateTimeOffset.UtcNow;
+                var delay = end - start;
+                if (delay > maxDelay)
+                {
+                    break;
+                }
+            }
+
+            Assert.Equal(1, membershipProvider.LogoutCalled);
         }
 
         [Fact]
@@ -61,10 +89,15 @@ namespace FubarDev.FtpServer.Tests.Issues
                .AddSingleton<IMembershipProvider, CustomMembershipProvider>();
         }
 
-        private class CustomMembershipProvider : IMembershipProvider
+        private class CustomMembershipProvider : IMembershipProviderAsync
         {
+            public int LogoutCalled { get; set; }
+
             /// <inheritdoc />
-            public Task<MemberValidationResult> ValidateUserAsync(string username, string password)
+            public Task<MemberValidationResult> ValidateUserAsync(
+                string username,
+                string password,
+                CancellationToken cancellationToken)
             {
                 if (username == "tester" && password == "test")
                 {
@@ -76,6 +109,19 @@ namespace FubarDev.FtpServer.Tests.Issues
                 }
 
                 return Task.FromResult(new MemberValidationResult(MemberValidationStatus.InvalidLogin));
+            }
+
+            /// <inheritdoc />
+            public Task LogOutAsync(ClaimsPrincipal principal, CancellationToken cancellationToken)
+            {
+                LogoutCalled += 1;
+                return Task.CompletedTask;
+            }
+
+            /// <inheritdoc />
+            public Task<MemberValidationResult> ValidateUserAsync(string username, string password)
+            {
+                return ValidateUserAsync(username, password, CancellationToken.None);
             }
         }
     }

@@ -7,6 +7,7 @@
 
 using System.Collections.Generic;
 using System.Security.Claims;
+using System.Threading;
 using System.Threading.Tasks;
 
 using FubarDev.FtpServer.AccountManagement.Anonymous;
@@ -16,7 +17,7 @@ namespace FubarDev.FtpServer.AccountManagement
     /// <summary>
     /// Allow any anonymous login.
     /// </summary>
-    public class AnonymousMembershipProvider : IMembershipProvider
+    public class AnonymousMembershipProvider : IMembershipProviderAsync
     {
         private readonly IAnonymousPasswordValidator _anonymousPasswordValidator;
 
@@ -68,7 +69,10 @@ namespace FubarDev.FtpServer.AccountManagement
         }
 
         /// <inheritdoc/>
-        public Task<MemberValidationResult> ValidateUserAsync(string username, string password)
+        public Task<MemberValidationResult> ValidateUserAsync(
+            string username,
+            string password,
+            CancellationToken cancellationToken)
         {
             if (string.Equals(username, "anonymous"))
             {
@@ -82,6 +86,18 @@ namespace FubarDev.FtpServer.AccountManagement
             }
 
             return Task.FromResult(new MemberValidationResult(MemberValidationStatus.InvalidLogin));
+        }
+
+        /// <inheritdoc />
+        public Task LogOutAsync(ClaimsPrincipal principal, CancellationToken cancellationToken)
+        {
+            return Task.CompletedTask;
+        }
+
+        /// <inheritdoc />
+        public Task<MemberValidationResult> ValidateUserAsync(string username, string password)
+        {
+            return ValidateUserAsync(username, password, CancellationToken.None);
         }
     }
 }

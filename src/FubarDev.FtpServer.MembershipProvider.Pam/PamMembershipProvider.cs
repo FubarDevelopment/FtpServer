@@ -7,6 +7,7 @@ using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Security.Claims;
+using System.Threading;
 using System.Threading.Tasks;
 
 using FubarDev.FtpServer.AccountManagement;
@@ -22,7 +23,7 @@ namespace FubarDev.FtpServer.MembershipProvider.Pam
     /// <summary>
     /// The PAM membership provider.
     /// </summary>
-    public class PamMembershipProvider : IMembershipProvider
+    public class PamMembershipProvider : IMembershipProviderAsync
     {
         private readonly IFtpConnectionAccessor _connectionAccessor;
         private readonly IPamService _pamService;
@@ -80,7 +81,8 @@ namespace FubarDev.FtpServer.MembershipProvider.Pam
         /// <inheritdoc />
         public Task<MemberValidationResult> ValidateUserAsync(
             string username,
-            string password)
+            string password,
+            CancellationToken cancellationToken)
         {
             MemberValidationResult result;
             var credentials = new NetworkCredential(username, password);
@@ -119,6 +121,18 @@ namespace FubarDev.FtpServer.MembershipProvider.Pam
             }
 
             return Task.FromResult(result);
+        }
+
+        /// <inheritdoc />
+        public Task LogOutAsync(ClaimsPrincipal principal, CancellationToken cancellationToken)
+        {
+            return Task.CompletedTask;
+        }
+
+        /// <inheritdoc />
+        public Task<MemberValidationResult> ValidateUserAsync(string username, string password)
+        {
+            return ValidateUserAsync(username, password, CancellationToken.None);
         }
     }
 }

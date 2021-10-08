@@ -4,16 +4,12 @@
 
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Diagnostics;
 using System.Linq;
-using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
 
 using FubarDev.FtpServer.Features;
 using FubarDev.FtpServer.Features.Impl;
-using FubarDev.FtpServer.FileSystem.Error;
 using FubarDev.FtpServer.ServerCommands;
 
 using JetBrains.Annotations;
