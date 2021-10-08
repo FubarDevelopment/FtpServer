@@ -8,8 +8,6 @@ using System.Threading.Tasks;
 using FubarDev.FtpServer.Features;
 using FubarDev.FtpServer.ServerCommands;
 
-using Microsoft.Extensions.DependencyInjection;
-
 namespace FubarDev.FtpServer.ServerCommandHandlers
 {
     /// <summary>
