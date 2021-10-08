@@ -24,12 +24,5 @@ namespace FubarDev.FtpServer.ConnectionHandlers
         /// Gets the pausable receiver for this connection adapter.
         /// </summary>
         IPausableFtpService Receiver { get; }
-
-        /// <summary>
-        /// Writes all pending data to the output.
-        /// </summary>
-        /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
-        /// <returns>The task.</returns>
-        Task FlushAsync(CancellationToken cancellationToken);
     }
 }

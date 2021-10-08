@@ -23,7 +23,7 @@ namespace FubarDev.FtpServer.Tests.Issues
         [Fact]
         public async Task TestParallelRequests()
         {
-            const int maxTasks = 20;
+            const int maxTasks = 100;
             var tasks = new List<Task>();
             for (var i = 0; i != maxTasks; i++)
             {

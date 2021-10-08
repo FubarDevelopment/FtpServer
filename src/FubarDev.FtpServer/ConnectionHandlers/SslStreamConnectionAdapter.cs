@@ -58,16 +58,6 @@ namespace FubarDev.FtpServer.ConnectionHandlers
                 ?? throw new InvalidOperationException("Receiver can only be accessed when the connection service was started.");
 
         /// <inheritdoc />
-        public async Task FlushAsync(CancellationToken cancellationToken)
-        {
-            if (_info != null)
-            {
-                await _info.TransmitterService.PauseAsync(cancellationToken);
-                await _info.TransmitterService.ContinueAsync(cancellationToken);
-            }
-        }
-
-        /// <inheritdoc />
         public async Task StartAsync(CancellationToken cancellationToken)
         {
             var rawStream = new SimplePipeStream(

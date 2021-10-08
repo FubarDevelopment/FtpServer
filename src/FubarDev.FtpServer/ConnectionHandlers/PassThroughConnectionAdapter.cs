@@ -53,13 +53,6 @@ namespace FubarDev.FtpServer.ConnectionHandlers
         public IPausableFtpService Receiver => _receiverService;
 
         /// <inheritdoc />
-        public async Task FlushAsync(CancellationToken cancellationToken)
-        {
-            await _transmitService.PauseAsync(cancellationToken);
-            await _transmitService.ContinueAsync(cancellationToken);
-        }
-
-        /// <inheritdoc />
         public Task StartAsync(CancellationToken cancellationToken)
         {
             return Task.WhenAll(

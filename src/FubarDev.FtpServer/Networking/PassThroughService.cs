@@ -76,9 +76,6 @@ namespace FubarDev.FtpServer.Networking
                     await _writer.WriteAsync(memory, CancellationToken.None)
                        .ConfigureAwait(false);
 
-                    await _writer.FlushAsync(CancellationToken.None)
-                       .ConfigureAwait(false);
-
                     if (readResult.IsCanceled || readResult.IsCompleted)
                     {
                         break;
@@ -86,6 +83,9 @@ namespace FubarDev.FtpServer.Networking
                 }
 
                 _reader.AdvanceTo(buffer.End);
+
+                await _writer.FlushAsync(CancellationToken.None)
+                   .ConfigureAwait(false);
 
                 if (readResult.IsCanceled || readResult.IsCompleted)
                 {

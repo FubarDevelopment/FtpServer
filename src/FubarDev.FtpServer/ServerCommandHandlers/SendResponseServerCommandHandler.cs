@@ -94,9 +94,6 @@ namespace FubarDev.FtpServer.ServerCommandHandlers
 
             await writer.FlushAsync(cancellationToken)
                .ConfigureAwait(false);
-
-            var connectionAdapter = networkStreamFeature.SecureConnectionAdapter;
-            await connectionAdapter.FlushAsync(cancellationToken);
         }
     }
 }
