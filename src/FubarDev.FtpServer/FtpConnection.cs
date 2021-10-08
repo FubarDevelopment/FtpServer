@@ -194,12 +194,12 @@ namespace FubarDev.FtpServer
                 originalStream,
                 _socketCommandPipe.Writer,
                 _cancellationTokenSource,
-                loggerFactory?.CreateLogger($"{nameof(StreamPipeWriterService)}:Socket:Receive"));
+                loggerFactory?.CreateLogger($"{typeof(StreamPipeWriterService).FullName}.Socket.Receive"));
             _streamWriterService = new StreamPipeWriterService(
                 originalStream,
                 _socketResponsePipe.Reader,
                 _cancellationTokenSource.Token,
-                loggerFactory?.CreateLogger($"{nameof(StreamPipeWriterService)}:Socket:Transmit"));
+                loggerFactory?.CreateLogger($"{typeof(StreamPipeWriterService).FullName}.Socket.Transmit"));
 
             _networkStreamFeature = new NetworkStreamFeature(
                 new SecureConnectionAdapter(
@@ -669,7 +669,7 @@ namespace FubarDev.FtpServer
 
         private void OnClosed()
         {
-            Closed?.Invoke(this, new EventArgs());
+            Closed?.Invoke(this, EventArgs.Empty);
         }
 
         private async Task ReadCommandsFromPipeline(
@@ -922,7 +922,14 @@ namespace FubarDev.FtpServer
                 using var registration = cancellationToken.Register(() => tcs.TrySetResult(null));
                 var resultTask = await Task.WhenAny(readTask, tcs.Task)
                    .ConfigureAwait(false);
-                if (resultTask != readTask || cancellationToken.IsCancellationRequested)
+
+                if (cancellationToken.IsCancellationRequested)
+                {
+                    Logger?.LogTrace("Cancelled through CancellationToken");
+                    return 0;
+                }
+
+                if (resultTask != readTask)
                 {
                     Logger?.LogTrace("Cancelled through Task.Delay");
                     return 0;
@@ -946,6 +953,24 @@ namespace FubarDev.FtpServer
                 // Signal a closed connection.
                 _connectionClosedCts.Cancel();
             }
+        }
+
+        /// <summary>
+        /// Implementation of <see cref="IServiceProvidersFeature"/>.
+        /// </summary>
+        private class ServiceProvidersFeature : IServiceProvidersFeature
+        {
+            /// <summary>
+            /// Initializes a new instance of the <see cref="ServiceProvidersFeature"/> class.
+            /// </summary>
+            /// <param name="requestServices">The services for the connection.</param>
+            public ServiceProvidersFeature(IServiceProvider requestServices)
+            {
+                RequestServices = requestServices;
+            }
+
+            /// <inheritdoc />
+            public IServiceProvider RequestServices { get; set; }
         }
 
         private class ConnectionFeature : IConnectionFeature

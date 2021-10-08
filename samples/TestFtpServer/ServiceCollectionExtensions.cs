@@ -3,18 +3,13 @@
 // </copyright>
 
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 
 using FubarDev.FtpServer;
 using FubarDev.FtpServer.AccountManagement.Directories.RootPerUser;
 using FubarDev.FtpServer.AccountManagement.Directories.SingleRootWithoutHome;
-using FubarDev.FtpServer.Authentication;
 using FubarDev.FtpServer.CommandExtensions;
 using FubarDev.FtpServer.Commands;
 using FubarDev.FtpServer.FileSystem;
@@ -226,33 +221,6 @@ namespace TestFtpServer
                     break;
             }
 
-            if (options.Ftps.Implicit)
-            {
-                var implicitFtpsCertificate = options.GetCertificate();
-                if (implicitFtpsCertificate != null)
-                {
-                    services
-                       .AddSingleton(new ImplicitFtpsControlConnectionStreamAdapterOptions(implicitFtpsCertificate))
-                       .AddSingleton<IFtpControlStreamAdapter, ImplicitFtpsControlConnectionStreamAdapter>();
-
-                    // Ensure that PROT and PBSZ commands are working.
-                    services.Decorate<IFtpServer>(
-                        (ftpServer, _) =>
-                        {
-                            ftpServer.ConfigureConnection += (s, e) =>
-                            {
-                                var serviceProvider = e.Connection.ConnectionServices;
-                                var stateMachine = serviceProvider.GetRequiredService<IFtpLoginStateMachine>();
-                                var authTlsMechanism = serviceProvider.GetRequiredService<IEnumerable<IAuthenticationMechanism>>()
-                                   .Single(x => x.CanHandle("TLS"));
-                                stateMachine.Activate(authTlsMechanism);
-                            };
-
-                            return ftpServer;
-                        });
-                }
-            }
-
 #if NETCOREAPP
             services.Decorate<IFtpServer>(
                 (ftpServer, serviceProvider) =>
@@ -302,6 +270,15 @@ namespace TestFtpServer
                    .EnableConnectionCheck();
             }
 
+            if (options.Ftps.Implicit)
+            {
+                var implicitFtpsCertificate = options.GetCertificate();
+                if (implicitFtpsCertificate != null)
+                {
+                    builder = builder.UseImplicitTls(implicitFtpsCertificate);
+                }
+            }
+
             return builder;
         }
 
@@ -329,41 +306,11 @@ namespace TestFtpServer
             return credential;
         }
 
-        private class ImplicitFtpsControlConnectionStreamAdapterOptions
-        {
-            public ImplicitFtpsControlConnectionStreamAdapterOptions(X509Certificate2 certificate)
-            {
-                Certificate = certificate;
-            }
-
-            public X509Certificate2 Certificate { get; }
-        }
-
         private static TimeSpan? ToTimeSpan(int? seconds)
         {
             return seconds == null
                 ? (TimeSpan?)null
                 : TimeSpan.FromSeconds(seconds.Value);
-        }
-
-        private class ImplicitFtpsControlConnectionStreamAdapter : IFtpControlStreamAdapter
-        {
-            private readonly ImplicitFtpsControlConnectionStreamAdapterOptions _options;
-            private readonly ISslStreamWrapperFactory _sslStreamWrapperFactory;
-
-            public ImplicitFtpsControlConnectionStreamAdapter(
-                ImplicitFtpsControlConnectionStreamAdapterOptions options,
-                ISslStreamWrapperFactory sslStreamWrapperFactory)
-            {
-                _options = options;
-                _sslStreamWrapperFactory = sslStreamWrapperFactory;
-            }
-
-            /// <inheritdoc />
-            public Task<Stream> WrapAsync(Stream stream, CancellationToken cancellationToken)
-            {
-                return _sslStreamWrapperFactory.WrapStreamAsync(stream, false, _options.Certificate, cancellationToken);
-            }
         }
     }
 }

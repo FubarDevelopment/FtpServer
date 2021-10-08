@@ -222,7 +222,7 @@ namespace FubarDev.FtpServer.Tests
         {
             private static readonly StringComparer _stringComparer = StringComparer.OrdinalIgnoreCase;
 
-            public int Compare(FtpCommand x, FtpCommand y)
+            public int Compare(FtpCommand? x, FtpCommand? y)
             {
                 if (ReferenceEquals(x, y))
                 {
@@ -248,7 +248,7 @@ namespace FubarDev.FtpServer.Tests
                 return _stringComparer.Compare(x.Argument, y.Argument);
             }
 
-            public bool Equals(FtpCommand x, FtpCommand y)
+            public bool Equals(FtpCommand? x, FtpCommand? y)
             {
                 return Compare(x, y) == 0;
             }

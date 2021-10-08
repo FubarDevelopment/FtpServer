@@ -58,7 +58,7 @@ namespace FubarDev.FtpServer.ServerCommandHandlers
                    .ConfigureAwait(false);
                 if (line.HasText)
                 {
-                    _logger?.LogDebug(line.Text);
+                    _logger?.LogDebug("{Response}", line.Text);
                     var data = encoding.GetBytes($"{line.Text}\r\n");
                     var memory = writer.GetMemory(data.Length);
                     data.AsSpan().CopyTo(memory.Span);
@@ -91,6 +91,9 @@ namespace FubarDev.FtpServer.ServerCommandHandlers
                 }
             }
 #pragma warning restore CS0618 // Typ oder Element ist veraltet
+
+            await writer.FlushAsync(cancellationToken)
+               .ConfigureAwait(false);
         }
     }
 }

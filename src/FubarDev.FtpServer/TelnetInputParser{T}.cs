@@ -112,7 +112,7 @@ namespace FubarDev.FtpServer
         protected virtual IEnumerable<T> Synch()
         {
             Debug.WriteLine("TELNET: Synch command received");
-            return new T[0];
+            return Array.Empty<T>();
         }
 
         /// <summary>
@@ -122,7 +122,7 @@ namespace FubarDev.FtpServer
         protected virtual IEnumerable<T> InterruptProcess()
         {
             Debug.WriteLine("TELNET: Interrupt Process command received");
-            return new T[0];
+            return Array.Empty<T>();
         }
     }
 }

@@ -14,12 +14,13 @@ namespace FubarDev.FtpServer
         /// <summary>
         /// This event is raised when the connection is ready to be configured.
         /// </summary>
-        event EventHandler<ConnectionEventArgs> ConfigureConnection;
+        [Obsolete("Register a service of type IFtpConnectionConfigurator instead.")]
+        event EventHandler<ConnectionEventArgs>? ConfigureConnection;
 
         /// <summary>
         /// This event is raised when the listener was started.
         /// </summary>
-        event EventHandler<ListenerStartedEventArgs> ListenerStarted;
+        event EventHandler<ListenerStartedEventArgs>? ListenerStarted;
 
         /// <summary>
         /// Gets the public IP address (required for <c>PASV</c> and <c>EPSV</c>).

@@ -12,29 +12,28 @@ using FubarDev.FtpServer.AccountManagement;
 using Microsoft.Extensions.DependencyInjection;
 
 using Xunit;
+using Xunit.Abstractions;
 
 namespace FubarDev.FtpServer.Tests.Issues
 {
-    public class Issue30CustomFtpUser : IClassFixture<Issue30CustomFtpUser.Issue30FtpServerFixture>
+    public class Issue30CustomFtpUser : FtpServerTestsBase
     {
-        private readonly IFtpServer _server;
-
-        public Issue30CustomFtpUser(Issue30FtpServerFixture ftpServerFixture)
+        public Issue30CustomFtpUser(ITestOutputHelper testOutputHelper)
+            : base(testOutputHelper)
         {
-            _server = ftpServerFixture.Server;
         }
 
         [Fact]
         public async Task LoginSucceedsWithTester()
         {
-            using var client = new FtpClient("127.0.0.1", _server.Port, "tester", "test");
+            using var client = new FtpClient("127.0.0.1", Server.Port, "tester", "test");
             await client.ConnectAsync();
         }
 
         [Fact]
         public async Task LoginFailsWithWrongUserName()
         {
-            using var client = new FtpClient("127.0.0.1", _server.Port, "testerX", "test");
+            using var client = new FtpClient("127.0.0.1", Server.Port, "testerX", "test");
             await Assert.ThrowsAsync<FtpAuthenticationException>(() => client.ConnectAsync())
                .ConfigureAwait(false);
         }
@@ -42,30 +41,24 @@ namespace FubarDev.FtpServer.Tests.Issues
         [Fact]
         public async Task LoginFailsWithWrongPassword()
         {
-            using var client = new FtpClient("127.0.0.1", _server.Port, "tester", "testX");
+            using var client = new FtpClient("127.0.0.1", Server.Port, "tester", "testX");
             await Assert.ThrowsAsync<FtpAuthenticationException>(() => client.ConnectAsync())
                .ConfigureAwait(false);
         }
 
-        /// <summary>
-        /// Custom configuration of the FTP server.
-        /// </summary>
-        public class Issue30FtpServerFixture : FtpServerFixture
+        /// <inheritdoc />
+        protected override IFtpServerBuilder Configure(IFtpServerBuilder builder)
         {
-            /// <inheritdoc />
-            protected override IFtpServerBuilder Configure(IFtpServerBuilder builder)
-            {
-                return builder
-                   .UseSingleRoot()
-                   .UseInMemoryFileSystem();
-            }
+            return builder
+               .UseSingleRoot()
+               .UseInMemoryFileSystem();
+        }
 
-            /// <inheritdoc />
-            protected override IServiceCollection Configure(IServiceCollection services)
-            {
-                return base.Configure(services)
-                   .AddSingleton<IMembershipProvider, CustomMembershipProvider>();
-            }
+        /// <inheritdoc />
+        protected override IServiceCollection Configure(IServiceCollection services)
+        {
+            return base.Configure(services)
+               .AddSingleton<IMembershipProvider, CustomMembershipProvider>();
         }
 
         private class CustomMembershipProvider : IMembershipProvider

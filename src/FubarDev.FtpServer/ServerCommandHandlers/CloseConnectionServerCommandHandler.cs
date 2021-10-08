@@ -5,6 +5,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 
+using FubarDev.FtpServer.Features;
 using FubarDev.FtpServer.ServerCommands;
 
 using Microsoft.Extensions.DependencyInjection;
@@ -29,15 +30,16 @@ namespace FubarDev.FtpServer.ServerCommandHandlers
         }
 
         /// <inheritdoc />
-        public Task ExecuteAsync(CloseConnectionServerCommand command, CancellationToken cancellationToken)
+        public async Task ExecuteAsync(CloseConnectionServerCommand command, CancellationToken cancellationToken)
         {
             var connection = _connectionAccessor.FtpConnection;
+
+            var networkStreamFeature = connection.Features.Get<INetworkStreamFeature>();
+            await networkStreamFeature.SecureConnectionAdapter.StopAsync(cancellationToken);
 
             // Just abort the connection. This should avoid problems with an ObjectDisposedException.
             // The "StopAsync" will be called in CommandChannelDispatcherAsync.
             ((FtpConnection)connection).Abort();
-
-            return Task.CompletedTask;
         }
     }
 }

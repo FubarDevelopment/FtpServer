@@ -24,7 +24,7 @@ namespace FubarDev.FtpServer.ConnectionHandlers
         private readonly IDuplexPipe _socketPipe;
         private readonly IDuplexPipe _connectionPipe;
         private readonly ISslStreamWrapperFactory _sslStreamWrapperFactory;
-        private readonly X509Certificate2 _certificate;
+        private readonly X509Certificate _certificate;
 
         private readonly CancellationToken _connectionClosed;
         private readonly ILoggerFactory? _loggerFactory;
@@ -35,7 +35,7 @@ namespace FubarDev.FtpServer.ConnectionHandlers
             IDuplexPipe socketPipe,
             IDuplexPipe connectionPipe,
             ISslStreamWrapperFactory sslStreamWrapperFactory,
-            X509Certificate2 certificate,
+            X509Certificate certificate,
             CancellationToken connectionClosed,
             ILoggerFactory? loggerFactory = null)
         {
@@ -67,7 +67,7 @@ namespace FubarDev.FtpServer.ConnectionHandlers
                .ConfigureAwait(false);
 
             var receiverLogger = _loggerFactory
-              ?.CreateLogger(typeof(SslStreamConnectionAdapter).FullName + ":Receiver");
+              ?.CreateLogger(typeof(SslStreamConnectionAdapter).FullName + ".Receiver");
             var receiverService = new NonClosingNetworkStreamReader(
                 sslStream,
                 _connectionPipe.Output,
@@ -76,7 +76,7 @@ namespace FubarDev.FtpServer.ConnectionHandlers
                 receiverLogger);
 
             var transmitterLogger = _loggerFactory
-              ?.CreateLogger(typeof(SslStreamConnectionAdapter).FullName + ":Transmitter");
+              ?.CreateLogger(typeof(SslStreamConnectionAdapter).FullName + ".Transmitter");
             var transmitterService = new NonClosingNetworkStreamWriter(
                 sslStream,
                 _connectionPipe.Input,
@@ -118,7 +118,7 @@ namespace FubarDev.FtpServer.ConnectionHandlers
         private class SslCommunicationInfo
         {
             public SslCommunicationInfo(
-                IFtpService transmitterService,
+                IPausableFtpService transmitterService,
                 IPausableFtpService receiverService,
                 Stream sslStream)
             {
@@ -126,7 +126,7 @@ namespace FubarDev.FtpServer.ConnectionHandlers
                 ReceiverService = receiverService;
                 SslStream = sslStream;
             }
-            public IFtpService TransmitterService { get; }
+            public IPausableFtpService TransmitterService { get; }
             public IPausableFtpService ReceiverService { get; }
             public Stream SslStream { get; }
         }

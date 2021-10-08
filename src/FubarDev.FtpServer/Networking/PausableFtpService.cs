@@ -21,6 +21,7 @@ namespace FubarDev.FtpServer.Networking
         private readonly CancellationToken _connectionClosed;
         private CancellationTokenSource _jobPaused = new CancellationTokenSource();
         private Task _task = Task.CompletedTask;
+        private volatile FtpServiceStatus _status = FtpServiceStatus.ReadyToRun;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PausableFtpService"/> class.
@@ -36,7 +37,11 @@ namespace FubarDev.FtpServer.Networking
         }
 
         /// <inheritdoc />
-        public FtpServiceStatus Status { get; private set; } = FtpServiceStatus.ReadyToRun;
+        public FtpServiceStatus Status
+        {
+            get => _status;
+            private set => _status = value;
+        }
 
         protected ILogger? Logger { get; }
 
@@ -46,6 +51,18 @@ namespace FubarDev.FtpServer.Networking
 
         protected bool IsPauseRequested => _jobPaused.IsCancellationRequested;
 
+        /// <summary>
+        /// Gets a value indicating whether the service is running.
+        /// </summary>
+        protected bool IsRunning
+        {
+            get
+            {
+                var status = Status;
+                return status == FtpServiceStatus.Running;
+            }
+        }
+
         /// <inheritdoc />
         public virtual async Task StartAsync(CancellationToken cancellationToken)
         {
@@ -54,33 +71,28 @@ namespace FubarDev.FtpServer.Networking
                 throw new InvalidOperationException($"Status must be {FtpServiceStatus.ReadyToRun}, but was {Status}.");
             }
 
-            using (var semaphore = new SemaphoreSlim(0, 1))
-            {
-                _jobPaused = new CancellationTokenSource();
-                _task = RunAsync(
-                    new Progress<FtpServiceStatus>(
-                        status =>
+            using var semaphore = new SemaphoreSlim(0, 1);
+            _jobPaused = new CancellationTokenSource();
+            _task = RunAsync(
+                new Progress<FtpServiceStatus>(
+                    status =>
+                    {
+                        Status = status;
+
+                        if (status == FtpServiceStatus.Running)
                         {
-                            Status = status;
+                            // ReSharper disable once AccessToDisposedClosure
+                            semaphore.Release();
+                        }
+                    }));
 
-                            if (status == FtpServiceStatus.Running)
-                            {
-                                // ReSharper disable once AccessToDisposedClosure
-                                semaphore.Release();
-                            }
-                        }));
-
-                await semaphore.WaitAsync(cancellationToken);
-            }
+            await semaphore.WaitAsync(cancellationToken);
         }
 
         /// <inheritdoc />
         public virtual async Task StopAsync(CancellationToken cancellationToken)
         {
-            if (Status != FtpServiceStatus.Running && Status != FtpServiceStatus.Stopped && Status != FtpServiceStatus.Paused)
-            {
-                throw new InvalidOperationException($"Status must be {FtpServiceStatus.Running}, {FtpServiceStatus.Stopped}, or {FtpServiceStatus.Paused}, but was {Status}.");
-            }
+            var wasRunning = IsRunning;
 
             await OnStopRequestingAsync(cancellationToken)
                .ConfigureAwait(false);
@@ -95,7 +107,7 @@ namespace FubarDev.FtpServer.Networking
 
             Status = FtpServiceStatus.Stopped;
 
-            if (IsPauseRequested)
+            if (!wasRunning || IsPauseRequested)
             {
                 await OnStoppedAsync(cancellationToken)
                    .ConfigureAwait(false);
@@ -110,7 +122,7 @@ namespace FubarDev.FtpServer.Networking
                 return;
             }
 
-            if (Status != FtpServiceStatus.Running)
+            if (!IsRunning)
             {
                 throw new InvalidOperationException($"Status must be {FtpServiceStatus.Running}, but was {Status}.");
             }
@@ -160,21 +172,23 @@ namespace FubarDev.FtpServer.Networking
             await OnContinueRequestingAsync(cancellationToken)
                .ConfigureAwait(false);
 
-            using (var semaphore = new SemaphoreSlim(0, 1))
+            using var semaphore = new SemaphoreSlim(0, 1);
+            _task = RunAsync(new Progress<FtpServiceStatus>(status =>
             {
-                _task = RunAsync(new Progress<FtpServiceStatus>(status =>
+                Status = status;
+
+                if (status == FtpServiceStatus.Running)
                 {
-                    Status = status;
+                    // ReSharper disable once AccessToDisposedClosure
+                    semaphore.Release();
+                }
+            }));
 
-                    if (status == FtpServiceStatus.Running)
-                    {
-                        // ReSharper disable once AccessToDisposedClosure
-                        semaphore.Release();
-                    }
-                }));
+            await semaphore.WaitAsync(cancellationToken)
+               .ConfigureAwait(false);
 
-                await semaphore.WaitAsync(cancellationToken);
-            }
+            await OnContinuedAsync(cancellationToken)
+               .ConfigureAwait(false);
         }
 
         protected abstract Task ExecuteAsync(
@@ -211,6 +225,7 @@ namespace FubarDev.FtpServer.Networking
         protected virtual Task OnContinueRequestingAsync(
             CancellationToken cancellationToken)
         {
+            Logger?.LogTrace("CONTINUE requesting");
             return Task.CompletedTask;
         }
 
@@ -228,11 +243,18 @@ namespace FubarDev.FtpServer.Networking
             return Task.CompletedTask;
         }
 
+        protected virtual Task OnContinuedAsync(
+            CancellationToken cancellationToken)
+        {
+            Logger?.LogTrace("CONTINUED");
+            return Task.CompletedTask;
+        }
+
         protected virtual Task<bool> OnFailedAsync(
             Exception exception,
             CancellationToken cancellationToken)
         {
-            Logger?.LogCritical(exception, exception.Message);
+            Logger?.LogCritical(exception, "{ErrorMessage}", exception.Message);
             return Task.FromResult(false);
         }
 

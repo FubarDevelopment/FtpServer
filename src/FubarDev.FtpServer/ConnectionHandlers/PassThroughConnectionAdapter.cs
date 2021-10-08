@@ -18,7 +18,7 @@ namespace FubarDev.FtpServer.ConnectionHandlers
     /// </summary>
     internal class PassThroughConnectionAdapter : IFtpConnectionAdapter
     {
-        private readonly IFtpService _transmitService;
+        private readonly IPausableFtpService _transmitService;
         private readonly IPausableFtpService _receiverService;
 
         /// <summary>
@@ -38,12 +38,12 @@ namespace FubarDev.FtpServer.ConnectionHandlers
                 socketPipe.Input,
                 connectionPipe.Output,
                 connectionClosed,
-                loggerFactory?.CreateLogger(typeof(PassThroughConnectionAdapter).FullName + ":Receiver"));
+                loggerFactory?.CreateLogger(typeof(PassThroughConnectionAdapter).FullName + ".Receiver"));
             _transmitService = new NonClosingNetworkPassThrough(
                 connectionPipe.Input,
                 socketPipe.Output,
                 connectionClosed,
-                loggerFactory?.CreateLogger(typeof(PassThroughConnectionAdapter).FullName + ":Transmitter"));
+                loggerFactory?.CreateLogger(typeof(PassThroughConnectionAdapter).FullName + ".Transmitter"));
         }
 
         /// <inheritdoc />
