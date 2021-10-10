@@ -2,7 +2,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <Import Project="../../Global.props" />
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <TargetFramework>net5.0</TargetFramework>
     <OutputType>Exe</OutputType>
     <AssemblyName>ftpserver</AssemblyName>
     <IsPackable>false</IsPackable>
@@ -29,7 +29,7 @@
     <ProjectReference Include="..\..\src\FubarDev.FtpServer\FubarDev.FtpServer.csproj" />
     <ProjectReference Include="..\TestFtpServer.Api\TestFtpServer.Api.csproj" />
   </ItemGroup>
-  <ItemGroup Condition=" '$(TargetFramework)' == 'netcoreapp3.0' ">
+  <ItemGroup Condition=" '$(TargetFramework)' == 'netcoreapp3.0' or '$(TargetFramework)' == 'net5.0' ">
     <ProjectReference Include="..\..\src\FubarDev.FtpServer.FileSystem.Unix\FubarDev.FtpServer.FileSystem.Unix.csproj" />
     <ProjectReference Include="..\..\src\FubarDev.FtpServer.MembershipProvider.Pam\FubarDev.FtpServer.MembershipProvider.Pam.csproj" />
   </ItemGroup>
