@@ -228,6 +228,7 @@ namespace FubarDev.FtpServer
             parentFeatures.Set<IFtpConnectionKeepAlive>(_keepAlive);
 #pragma warning restore 612
 #pragma warning restore 618
+            parentFeatures.Set<IServiceProvidersFeature>(new ServiceProvidersFeature(ConnectionServices));
 
             var features = new FeatureCollection(parentFeatures);
 #pragma warning disable 618
