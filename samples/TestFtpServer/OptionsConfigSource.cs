@@ -81,7 +81,7 @@ namespace TestFtpServer
                 { "c|certificate=", "Set the SSL certificate", v => values["ftps:certificate"] = v },
                 { "k|private-key=", "Set the private key file for the SSL certificate", v => values["ftps:privateKey"] = v },
                 { "P|password=", "Password for the SSL certificate", v => values["ftps:password"] = v },
-                { "i|implicit", "Use implicit FTPS", v => values["ftps:implicit"] = XmlConvert.ToBoolean(v.ToLowerInvariant()) ? "true" : "false" },
+                { "i|implicit", "Use implicit FTPS", v => values["ftps:implicit"] = "true" },
                 "Backends",
                 new Command("system-io", "Use the System.IO file system access")
                 {
