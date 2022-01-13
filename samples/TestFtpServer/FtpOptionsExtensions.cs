@@ -95,7 +95,7 @@ namespace TestFtpServer
                 return null;
             }
 
-            var cert = new X509Certificate2(options.Ftps.Certificate);
+            var cert = new X509Certificate2(options.Ftps.Certificate, options.Ftps.Password);
             if (cert.HasPrivateKey)
             {
                 return cert;
