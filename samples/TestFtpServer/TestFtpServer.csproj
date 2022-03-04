@@ -22,6 +22,7 @@
     <PackageReference Include="Serilog.Sinks.Console" Version="3.1.1" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\src\FubarDev.FtpServer.FileSystem.AzureBlobStorage\FubarDev.FtpServer.FileSystem.AzureBlobStorage.csproj" />
     <ProjectReference Include="..\..\src\FubarDev.FtpServer.FileSystem.DotNet\FubarDev.FtpServer.FileSystem.DotNet.csproj" />
     <ProjectReference Include="..\..\src\FubarDev.FtpServer.FileSystem.GoogleDrive\FubarDev.FtpServer.FileSystem.GoogleDrive.csproj" />
     <ProjectReference Include="..\..\src\FubarDev.FtpServer.FileSystem.InMemory\FubarDev.FtpServer.FileSystem.InMemory.csproj" />
