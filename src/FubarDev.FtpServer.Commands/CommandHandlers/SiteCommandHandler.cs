@@ -30,7 +30,7 @@ namespace FubarDev.FtpServer.CommandHandlers
             }
 
             var argument = FtpCommand.Parse(command.Argument);
-            if (!Extensions.TryGetValue(argument.Name, out var extension))
+            if (!Extensions.TryGetValue(argument.Name.ToUpper(), out var extension))
             {
                 return Task.FromResult<IFtpResponse?>(new FtpResponse(500, T("Syntax error, command unrecognized.")));
             }
