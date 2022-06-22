@@ -6,7 +6,7 @@
     <PackageTags>portable;FTP;server</PackageTags>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Scrutor" Version="2.0.0" />
+    <PackageReference Include="Scrutor" Version="3.1.0" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\FubarDev.FtpServer.Commands\FubarDev.FtpServer.Commands.csproj" />
