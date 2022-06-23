@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.28516.95
+# Visual Studio Version 17
+VisualStudioVersion = 17.2.32602.215
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FubarDev.FtpServer", "src\FubarDev.FtpServer\FubarDev.FtpServer.csproj", "{01EBBF94-7469-43A0-A618-07FB734B163F}"
 EndProject
@@ -10,13 +10,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		.dockerignore = .dockerignore
 		.editorconfig = .editorconfig
 		azure-pipelines.yml = azure-pipelines.yml
+		DotNetSdkMono.props = DotNetSdkMono.props
 		FubarDev.FtpServer.ruleset = FubarDev.FtpServer.ruleset
 		Global.props = Global.props
 		LICENSE.md = LICENSE.md
 		PackageLibrary.props = PackageLibrary.props
 		README.md = README.md
 		stylecop.json = stylecop.json
-		DotNetSdkMono.props = DotNetSdkMono.props
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FubarDev.FtpServer.FileSystem.DotNet", "src\FubarDev.FtpServer.FileSystem.DotNet\FubarDev.FtpServer.FileSystem.DotNet.csproj", "{9A83C6F5-378B-48B3-B32A-151DB90B390C}"
@@ -70,12 +70,6 @@ EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "ReadLine", "third-party\ReadLine\ReadLine.shproj", "{F68F448F-E8A4-4536-9A83-12018B6294B0}"
 EndProject
 Global
-	GlobalSection(SharedMSBuildProjectFiles) = preSolution
-		src\FubarDev.FtpServer.Shared\FubarDev.FtpServer.Shared.projitems*{52126b62-de83-4597-a832-d144f9a5a870}*SharedItemsImports = 13
-		third-party\DotNet.Glob\DotNet.Glob.projitems*{a45290b4-20f7-48e9-8543-c69240bfb9f8}*SharedItemsImports = 13
-		third-party\ReadLine\ReadLine.projitems*{f68f448f-e8a4-4536-9a83-12018b6294b0}*SharedItemsImports = 13
-		third-party\GnuSslStream\GnuSslStream.projitems*{fd524518-e097-4ac0-aac8-d5ea24f31545}*SharedItemsImports = 13
-	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
@@ -175,5 +169,18 @@ Global
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {DAA7D00E-C61D-4640-A54E-D307E4682263}
+	EndGlobalSection
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		src\FubarDev.FtpServer.Shared\FubarDev.FtpServer.Shared.projitems*{01ebbf94-7469-43a0-a618-07fb734b163f}*SharedItemsImports = 5
+		src\FubarDev.FtpServer.Shared\FubarDev.FtpServer.Shared.projitems*{37ce4218-fac3-4201-82a0-54945698c6ad}*SharedItemsImports = 5
+		src\FubarDev.FtpServer.Shared\FubarDev.FtpServer.Shared.projitems*{474bd381-5b80-4580-bfb1-d41beb70c458}*SharedItemsImports = 5
+		third-party\ReadLine\ReadLine.projitems*{4bda38ca-a19d-4ba9-ac7e-e0b091b3770d}*SharedItemsImports = 5
+		src\FubarDev.FtpServer.Shared\FubarDev.FtpServer.Shared.projitems*{52126b62-de83-4597-a832-d144f9a5a870}*SharedItemsImports = 13
+		third-party\DotNet.Glob\DotNet.Glob.projitems*{7e3f81e2-764e-4075-992f-e53bf50f9623}*SharedItemsImports = 5
+		src\FubarDev.FtpServer.Shared\FubarDev.FtpServer.Shared.projitems*{9a83c6f5-378b-48b3-b32a-151db90b390c}*SharedItemsImports = 5
+		third-party\DotNet.Glob\DotNet.Glob.projitems*{a45290b4-20f7-48e9-8543-c69240bfb9f8}*SharedItemsImports = 13
+		src\FubarDev.FtpServer.Shared\FubarDev.FtpServer.Shared.projitems*{e763936d-dd8d-4392-8075-ca26d7f2ba1e}*SharedItemsImports = 5
+		third-party\ReadLine\ReadLine.projitems*{f68f448f-e8a4-4536-9a83-12018b6294b0}*SharedItemsImports = 13
+		third-party\GnuSslStream\GnuSslStream.projitems*{fd524518-e097-4ac0-aac8-d5ea24f31545}*SharedItemsImports = 13
 	EndGlobalSection
 EndGlobal
