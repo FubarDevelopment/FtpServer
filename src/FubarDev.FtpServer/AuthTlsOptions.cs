@@ -20,5 +20,13 @@ namespace FubarDev.FtpServer
         /// Gets or sets a value indicating whether implicit FTPS is used.
         /// </summary>
         public bool ImplicitFtps { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether [only secure connection].
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if [only secure connection]; otherwise, <c>false</c>.
+        /// </value>
+        public bool OnlySecureConnection { get; set; }
     }
 }

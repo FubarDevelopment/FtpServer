@@ -1,10 +1,43 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;netstandard2.1</TargetFrameworks>
+    <!--<TargetFrameworks>netstandard2.0;netstandard2.1;net472</TargetFrameworks>-->
+    <TargetFrameworks>netstandard2.1;net472;net471</TargetFrameworks>
     <Description>TCP-based FTP server implementation</Description>
     <PackageTags>portable;FTP;server</PackageTags>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netstandard2.0|AnyCPU'">
+    <DefineConstants>$(DefineConstants)TRACE;USE_SYNC_SSL_STREAM;NETCOREAPP;USE_GNU_SSL_STREAM</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|netstandard2.0|AnyCPU'">
+    <DefineConstants>$(DefineConstants)TRACE;USE_SYNC_SSL_STREAM;NETCOREAPP;USE_GNU_SSL_STREAM</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|netstandard2.1|AnyCPU'">
+    <DefineConstants>$(DefineConstants)TRACE;USE_GNU_SSL_STREAM;USE_SYNC_SSL_STREAM;NETCOREAPP</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|netstandard2.1|AnyCPU'">
+    <DefineConstants>$(DefineConstants)TRACE;USE_GNU_SSL_STREAM;USE_SYNC_SSL_STREAM;NETCOREAPP</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net472|AnyCPU'">
+    <DefineConstants>$(DefineConstants)TRACE;USE_GNU_SSL_STREAM;USE_SYNC_SSL_STREAM;NET47</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net472|AnyCPU'">
+    <DefineConstants>$(DefineConstants)TRACE;USE_GNU_SSL_STREAM;USE_SYNC_SSL_STREAM;NET47</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net471|AnyCPU'">
+    <DefineConstants>$(DefineConstants)TRACE;USE_GNU_SSL_STREAM;USE_SYNC_SSL_STREAM;NET47</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net471|AnyCPU'">
+    <DefineConstants>$(DefineConstants)TRACE;USE_GNU_SSL_STREAM;USE_SYNC_SSL_STREAM;NET47</DefineConstants>
+  </PropertyGroup>
+  
+  <ItemGroup>
+    <Compile Remove="Authentication\SslStreamExt.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Authentication\SslStreamExt.cs" />
+  </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Scrutor" Version="3.1.0" />
   </ItemGroup>
@@ -13,4 +46,5 @@
   </ItemGroup>
   <Import Project="..\FubarDev.FtpServer.Shared\FubarDev.FtpServer.Shared.projitems" Label="Shared" />
   <Import Project="../../PackageLibrary.props" />
+  <Import Project="..\..\third-party\GnuSslStream\GnuSslStream.projitems" Label="Shared" />
 </Project>

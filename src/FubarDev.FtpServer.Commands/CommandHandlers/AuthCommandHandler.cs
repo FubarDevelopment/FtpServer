@@ -6,6 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using FubarDev.FtpServer.Commands;
+using FubarDev.FtpServer.Features;
 
 using Microsoft.Extensions.DependencyInjection;
 
@@ -21,7 +22,13 @@ namespace FubarDev.FtpServer.CommandHandlers
         public override Task<IFtpResponse?> Process(FtpCommand command, CancellationToken cancellationToken)
         {
             var loginStateMachine = Connection.ConnectionServices.GetRequiredService<IFtpLoginStateMachine>();
-            return loginStateMachine.ExecuteAsync(command, cancellationToken);
+
+            var res = loginStateMachine.ExecuteAsync(command, cancellationToken);
+
+            var secureConnectionFeature = Connection.Features.Get<ISecureConnectionFeature>();
+            secureConnectionFeature.IsSecure = true;
+
+            return res;
         }
     }
 }

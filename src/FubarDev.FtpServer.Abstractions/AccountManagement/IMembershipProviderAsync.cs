@@ -23,10 +23,7 @@ namespace FubarDev.FtpServer.AccountManagement
         /// <param name="password">The password.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
         /// <returns>The result of the validation.</returns>
-        Task<MemberValidationResult> ValidateUserAsync(
-            string username,
-            string password,
-            CancellationToken cancellationToken = default);
+        Task<MemberValidationResult> ValidateUserAsync(string username, string password, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Logout of the given <paramref name="principal"/>.
@@ -34,8 +31,6 @@ namespace FubarDev.FtpServer.AccountManagement
         /// <param name="principal">The principal to be logged out.</param>
         /// <param name="cancellationToken">The <see cref="CancellationToken"/>.</param>
         /// <returns>The task.</returns>
-        Task LogOutAsync(
-            ClaimsPrincipal principal,
-            CancellationToken cancellationToken = default);
+        Task LogOutAsync(ClaimsPrincipal principal, CancellationToken cancellationToken = default);
     }
 }

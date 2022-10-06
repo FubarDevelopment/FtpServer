@@ -12,8 +12,7 @@ namespace System.Net.Security
         public static object GetField(object obj, string fieldName)
         {
             var tp = obj.GetType();
-            var info = GetAllFields(tp)
-                .Where(f => f.Name == fieldName).SingleOrDefault();
+            var info = GetAllFields(tp)?.Where(f => f.Name == fieldName)?.FirstOrDefault();
             return info?.GetValue(obj);
         }
 

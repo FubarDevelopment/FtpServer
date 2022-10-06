@@ -31,5 +31,10 @@ namespace FubarDev.FtpServer.AccountManagement
         /// User authenticated successfully.
         /// </summary>
         AuthenticatedUser,
+
+        /// <summary>
+        /// The too many users
+        /// </summary>
+        TooManyUsers,
     }
 }

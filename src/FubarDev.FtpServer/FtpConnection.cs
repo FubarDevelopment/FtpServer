@@ -1030,6 +1030,25 @@ namespace FubarDev.FtpServer
 
             /// <inheritdoc />
             public CloseEncryptedStreamDelegate CloseEncryptedControlStream { get; set; } = ct => Task.CompletedTask;
+
+            /// <summary>
+            /// Gets or sets a value indicating whether this instance is secure.
+            /// </summary>
+            /// <value>
+            ///   <c>true</c> if this instance is secure; otherwise, <c>false</c>.
+            /// </value>
+            public bool IsSecure { get; set; }
+
+            /// <summary>
+            /// Checks the security.
+            /// </summary>
+            /// <returns>FtpResponse if response not TLS.</returnse>
+            public IFtpResponse CheckSecurity(string errorMess, IFtpConnection connection)
+            {
+                var authTlsOptions = connection.ConnectionServices.GetRequiredService<IOptions<AuthTlsOptions>>();
+
+                return authTlsOptions.Value?.OnlySecureConnection == true && !this.IsSecure ? new FtpResponse(550, errorMess) : null;
+            }
         }
 
         private class DuplexPipe : IDuplexPipe

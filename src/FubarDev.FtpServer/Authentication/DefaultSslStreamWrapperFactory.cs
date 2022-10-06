@@ -4,6 +4,7 @@
 
 using System;
 using System.IO;
+using System.Net;
 using System.Net.Security;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading;
@@ -39,6 +40,7 @@ namespace FubarDev.FtpServer.Authentication
         {
             try
             {
+                ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
                 _logger?.LogTrace("Create SSL stream");
                 var sslStream = CreateSslStream(unencryptedStream, keepOpen);
                 try

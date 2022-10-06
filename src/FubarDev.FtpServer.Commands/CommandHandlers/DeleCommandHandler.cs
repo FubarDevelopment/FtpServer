@@ -37,6 +37,15 @@ namespace FubarDev.FtpServer.CommandHandlers
         /// <inheritdoc/>
         public override async Task<IFtpResponse?> Process(FtpCommand command, CancellationToken cancellationToken)
         {
+            var secureConnectionFeature = Connection.Features.Get<ISecureConnectionFeature>();
+
+            var isSecureResponse = secureConnectionFeature.CheckSecurity(T("Please use TLS connection"), Connection);
+
+            if (isSecureResponse != null)
+            {
+                return isSecureResponse;
+            }
+
             var path = command.Argument;
             var fsFeature = Connection.Features.Get<IFileSystemFeature>();
             var currentPath = fsFeature.Path.Clone();

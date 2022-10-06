@@ -7,6 +7,8 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 
+using Abc.FubarDev.FtpServer.Networking;
+
 using Microsoft.Extensions.Logging;
 
 namespace FubarDev.FtpServer.Networking
@@ -71,7 +73,7 @@ namespace FubarDev.FtpServer.Networking
                 throw new InvalidOperationException($"Status must be {FtpServiceStatus.ReadyToRun}, but was {Status}.");
             }
 
-            using var semaphore = new SemaphoreSlim(0, 1);
+            using var semaphore = new SemaphoreSlimExt(0, 1);
             _jobPaused = new CancellationTokenSource();
             _task = RunAsync(
                 new Progress<FtpServiceStatus>(
