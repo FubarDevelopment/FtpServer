@@ -7,8 +7,6 @@ using System.Globalization;
 using System.Threading;
 using System.Threading.Tasks;
 
-using NGettext;
-
 namespace FubarDev.FtpServer.Localization
 {
     /// <summary>
@@ -19,7 +17,7 @@ namespace FubarDev.FtpServer.Localization
         /// <summary>
         /// Gets the catalog for the <see cref="DefaultLanguage"/>.
         /// </summary>
-        ICatalog DefaultCatalog { get; }
+        ILocalizationCatalog DefaultCatalog { get; }
 
         /// <summary>
         /// Gets the default language.
@@ -38,6 +36,6 @@ namespace FubarDev.FtpServer.Localization
         /// <param name="language">The language to load the catalog for.</param>
         /// <param name="cancellationToken">The cancellation token.</param>
         /// <returns>The loaded catalog.</returns>
-        Task<ICatalog> LoadAsync(CultureInfo language, CancellationToken cancellationToken = default);
+        Task<ILocalizationCatalog> LoadAsync(CultureInfo language, CancellationToken cancellationToken = default);
     }
 }

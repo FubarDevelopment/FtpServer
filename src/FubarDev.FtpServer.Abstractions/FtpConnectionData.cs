@@ -22,8 +22,6 @@ using FubarDev.FtpServer.Localization;
 
 using Microsoft.AspNetCore.Http.Features;
 
-using NGettext;
-
 namespace FubarDev.FtpServer
 {
     /// <summary>
@@ -144,7 +142,7 @@ namespace FubarDev.FtpServer
 
         /// <inheritdoc />
         [Obsolete("Query the information using the ILocalizationFeature instead.")]
-        public ICatalog Catalog
+        public ILocalizationCatalog Catalog
         {
             get => _featureCollection.Get<ILocalizationFeature>().Catalog;
             set => _featureCollection.Get<ILocalizationFeature>().Catalog = value;
