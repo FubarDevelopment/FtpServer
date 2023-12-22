@@ -27,15 +27,15 @@ The library is released under the [![MIT license](https://img.shields.io/github/
 
 ## NuGet packages
 
-| Package name                      | Description				    | Badge |
-|-----------------------------------|-------------------------------|-------|
-| `FubarDev.FtpServer`              | Core library				    | [![FubarDev.FtpServer](https://img.shields.io/nuget/vpre/FubarDev.FtpServer.svg)](https://www.nuget.org/packages/FubarDev.FtpServer) |
-| `FubarDev.FtpServer.Abstractions`              | Basic types				    | [![FubarDev.FtpServer.Abstractions](https://img.shields.io/nuget/vpre/FubarDev.FtpServer.Abstractions.svg)](https://www.nuget.org/packages/FubarDev.FtpServer.Abstractions) |
-| `FubarDev.FtpServer.FileSystem.DotNet`         | `System.IO`-based file system| [![FubarDev.FtpServer.FileSystem.DotNet](https://img.shields.io/nuget/vpre/FubarDev.FtpServer.FileSystem.DotNet.svg)](https://www.nuget.org/packages/FubarDev.FtpServer.FileSystem.DotNet) |
-| `FubarDev.FtpServer.FileSystem.GoogleDrive`    | Google Drive as file system	| [![FubarDev.FtpServer.FileSystem.GoogleDrive](https://img.shields.io/nuget/vpre/FubarDev.FtpServer.FileSystem.GoogleDrive.svg)](https://www.nuget.org/packages/FubarDev.FtpServer.FileSystem.GoogleDrive) |
-| `FubarDev.FtpServer.FileSystem.InMemory`       | In-memory file system	    | [![FubarDev.FtpServer.FileSystem.InMemory](https://img.shields.io/nuget/vpre/FubarDev.FtpServer.FileSystem.InMemory.svg)](https://www.nuget.org/packages/FubarDev.FtpServer.FileSystem.InMemory) |
-| `FubarDev.FtpServer.FileSystem.Unix`           | Unix file system             | [![FubarDev.FtpServer.FileSystem.Unix](https://img.shields.io/nuget/vpre/FubarDev.FtpServer.FileSystem.Unix.svg)](https://www.nuget.org/packages/FubarDev.FtpServer.FileSystem.Unix) |
-| `FubarDev.FtpServer.MembershipProvider.Pam`    | PAM membership provider      | [![FubarDev.FtpServer.MembershipProvider.Pam](https://img.shields.io/nuget/vpre/FubarDev.FtpServer.MembershipProvider.Pam.svg)](https://www.nuget.org/packages/FubarDev.FtpServer.MembershipProvider.Pam) |
+| Package name                                   | Description                   | Badge |
+|------------------------------------------------|-------------------------------|-------|
+| `FubarDev.FtpServer`                           | Core library                  | [![FubarDev.FtpServer](https://img.shields.io/nuget/vpre/FubarDev.FtpServer.svg)](https://www.nuget.org/packages/FubarDev.FtpServer) |
+| `FubarDev.FtpServer.Abstractions`              | Basic types                   | [![FubarDev.FtpServer.Abstractions](https://img.shields.io/nuget/vpre/FubarDev.FtpServer.Abstractions.svg)](https://www.nuget.org/packages/FubarDev.FtpServer.Abstractions) |
+| `FubarDev.FtpServer.FileSystem.DotNet`         | `System.IO`-based file system | [![FubarDev.FtpServer.FileSystem.DotNet](https://img.shields.io/nuget/vpre/FubarDev.FtpServer.FileSystem.DotNet.svg)](https://www.nuget.org/packages/FubarDev.FtpServer.FileSystem.DotNet) |
+| `FubarDev.FtpServer.FileSystem.GoogleDrive`    | Google Drive as file system   | [![FubarDev.FtpServer.FileSystem.GoogleDrive](https://img.shields.io/nuget/vpre/FubarDev.FtpServer.FileSystem.GoogleDrive.svg)](https://www.nuget.org/packages/FubarDev.FtpServer.FileSystem.GoogleDrive) |
+| `FubarDev.FtpServer.FileSystem.InMemory`       | In-memory file system         | [![FubarDev.FtpServer.FileSystem.InMemory](https://img.shields.io/nuget/vpre/FubarDev.FtpServer.FileSystem.InMemory.svg)](https://www.nuget.org/packages/FubarDev.FtpServer.FileSystem.InMemory) |
+| `FubarDev.FtpServer.FileSystem.Unix`           | Unix file system              | [![FubarDev.FtpServer.FileSystem.Unix](https://img.shields.io/nuget/vpre/FubarDev.FtpServer.FileSystem.Unix.svg)](https://www.nuget.org/packages/FubarDev.FtpServer.FileSystem.Unix) |
+| `FubarDev.FtpServer.MembershipProvider.Pam`    | PAM membership provider       | [![FubarDev.FtpServer.MembershipProvider.Pam](https://img.shields.io/nuget/vpre/FubarDev.FtpServer.MembershipProvider.Pam.svg)](https://www.nuget.org/packages/FubarDev.FtpServer.MembershipProvider.Pam) |
 
 # Example FTP server
 
