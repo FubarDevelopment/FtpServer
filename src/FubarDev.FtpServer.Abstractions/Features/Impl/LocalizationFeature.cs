@@ -6,8 +6,6 @@ using System.Globalization;
 
 using FubarDev.FtpServer.Localization;
 
-using NGettext;
-
 namespace FubarDev.FtpServer.Features.Impl
 {
     /// <summary>
@@ -29,6 +27,6 @@ namespace FubarDev.FtpServer.Features.Impl
         public CultureInfo Language { get; set; }
 
         /// <inheritdoc />
-        public ICatalog Catalog { get; set; }
+        public ILocalizationCatalog Catalog { get; set; }
     }
 }

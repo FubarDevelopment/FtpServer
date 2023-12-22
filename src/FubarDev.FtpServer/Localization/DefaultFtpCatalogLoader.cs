@@ -7,8 +7,6 @@ using System.Globalization;
 using System.Threading;
 using System.Threading.Tasks;
 
-using NGettext;
-
 namespace FubarDev.FtpServer.Localization
 {
     /// <summary>
@@ -19,7 +17,7 @@ namespace FubarDev.FtpServer.Localization
         private static readonly CultureInfo _defaultLanguage = new CultureInfo("en");
 
         /// <inheritdoc />
-        public ICatalog DefaultCatalog { get; } = new Catalog(_defaultLanguage);
+        public ILocalizationCatalog DefaultCatalog { get; } = new EmptyLocalizationCatalog(_defaultLanguage);
 
         /// <inheritdoc />
         public CultureInfo DefaultLanguage { get; } = _defaultLanguage;
@@ -34,9 +32,9 @@ namespace FubarDev.FtpServer.Localization
         }
 
         /// <inheritdoc />
-        public Task<ICatalog> LoadAsync(CultureInfo language, CancellationToken cancellationToken = default)
+        public Task<ILocalizationCatalog> LoadAsync(CultureInfo language, CancellationToken cancellationToken = default)
         {
-            return Task.FromResult<ICatalog>(new Catalog(language));
+            return Task.FromResult<ILocalizationCatalog>(new EmptyLocalizationCatalog(language));
         }
     }
 }

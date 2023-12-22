@@ -4,7 +4,7 @@
 
 using System.Globalization;
 
-using NGettext;
+using FubarDev.FtpServer.Localization;
 
 namespace FubarDev.FtpServer.Features
 {
@@ -21,6 +21,6 @@ namespace FubarDev.FtpServer.Features
         /// <summary>
         /// Gets or sets the catalog to be used by the default FTP server implementation.
         /// </summary>
-        ICatalog Catalog { get; set; }
+        ILocalizationCatalog Catalog { get; set; }
     }
 }
