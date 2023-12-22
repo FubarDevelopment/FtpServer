@@ -933,38 +933,6 @@ namespace FubarDev.FtpServer
             }
 
             /// <inheritdoc />
-            protected override async Task<int> ReadFromStreamAsync(byte[] buffer, int offset, int length, CancellationToken cancellationToken)
-            {
-                var readTask = Stream
-                   .ReadAsync(buffer, offset, length, cancellationToken);
-
-                var tcs = new TaskCompletionSource<object?>();
-                using var registration = cancellationToken.Register(() => tcs.TrySetResult(null));
-                var resultTask = await Task.WhenAny(readTask, tcs.Task)
-                   .ConfigureAwait(false);
-
-                if (cancellationToken.IsCancellationRequested)
-                {
-                    Logger?.LogTrace("Cancelled through CancellationToken");
-                    return 0;
-                }
-
-                if (resultTask != readTask)
-                {
-                    Logger?.LogTrace("Cancelled through Task.Delay");
-                    return 0;
-                }
-
-#if NETSTANDARD1_3
-                return await readTask.ConfigureAwait(false);
-#else
-                var result = readTask.Result;
-                readTask.Dispose();
-                return result;
-#endif
-            }
-
-            /// <inheritdoc />
             protected override async Task OnCloseAsync(Exception? exception, CancellationToken cancellationToken)
             {
                 await base.OnCloseAsync(exception, cancellationToken)
