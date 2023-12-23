@@ -33,6 +33,14 @@ namespace FubarDev.FtpServer.FileSystem.S3
         public string? BucketRegion { get; set; }
 
         /// <summary>
+        /// Gets or sets the S3 service URL.
+        /// </summary>
+        /// <remarks>
+        /// Takes precedence over BucketRegion.
+        /// </remarks>
+        public string? ServiceUrl { get; set; }
+
+        /// <summary>
         /// Gets or sets the S3 bucket name.
         /// </summary>
         public string? BucketName { get; set; }
