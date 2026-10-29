@@ -69,8 +69,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FubarDev.FtpServer.FileSyst
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "ReadLine", "third-party\ReadLine\ReadLine.shproj", "{F68F448F-E8A4-4536-9A83-12018B6294B0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FubarDev.FtpServer.UnitTests", "test\FubarDev.FtpServer.UnitTests\FubarDev.FtpServer.UnitTests.csproj", "{D65122AC-06A7-4BFA-AB2B-F37AD2C70052}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -273,18 +271,6 @@ Global
 		{220D3222-EDF4-4E2D-BEE7-7E0C22F39A3E}.Release|x64.Build.0 = Release|Any CPU
 		{220D3222-EDF4-4E2D-BEE7-7E0C22F39A3E}.Release|x86.ActiveCfg = Release|Any CPU
 		{220D3222-EDF4-4E2D-BEE7-7E0C22F39A3E}.Release|x86.Build.0 = Release|Any CPU
-		{D65122AC-06A7-4BFA-AB2B-F37AD2C70052}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D65122AC-06A7-4BFA-AB2B-F37AD2C70052}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D65122AC-06A7-4BFA-AB2B-F37AD2C70052}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{D65122AC-06A7-4BFA-AB2B-F37AD2C70052}.Debug|x64.Build.0 = Debug|Any CPU
-		{D65122AC-06A7-4BFA-AB2B-F37AD2C70052}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{D65122AC-06A7-4BFA-AB2B-F37AD2C70052}.Debug|x86.Build.0 = Debug|Any CPU
-		{D65122AC-06A7-4BFA-AB2B-F37AD2C70052}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D65122AC-06A7-4BFA-AB2B-F37AD2C70052}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D65122AC-06A7-4BFA-AB2B-F37AD2C70052}.Release|x64.ActiveCfg = Release|Any CPU
-		{D65122AC-06A7-4BFA-AB2B-F37AD2C70052}.Release|x64.Build.0 = Release|Any CPU
-		{D65122AC-06A7-4BFA-AB2B-F37AD2C70052}.Release|x86.ActiveCfg = Release|Any CPU
-		{D65122AC-06A7-4BFA-AB2B-F37AD2C70052}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -312,7 +298,6 @@ Global
 		{D03594D1-84CC-4B55-A56D-20ED446CFDB1} = {7004709E-5C0D-4D3E-AF27-89968FA47C19}
 		{220D3222-EDF4-4E2D-BEE7-7E0C22F39A3E} = {A3AF1D22-494F-42F3-8DA5-CC2FD3391798}
 		{F68F448F-E8A4-4536-9A83-12018B6294B0} = {441F13FB-D457-402E-8DAC-4B6485AFCE30}
-		{D65122AC-06A7-4BFA-AB2B-F37AD2C70052} = {B0D91078-FA02-4ADD-8EDE-831243BE9794}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {DAA7D00E-C61D-4640-A54E-D307E4682263}
