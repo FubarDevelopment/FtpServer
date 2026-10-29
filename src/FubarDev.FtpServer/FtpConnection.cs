@@ -122,6 +122,7 @@ namespace FubarDev.FtpServer
         private int _connectionClosed;
 
         private Task? _commandChannelReader;
+        private volatile bool _commandChannelDispatcherStopping;
 
         private Task? _serverCommandHandler;
 
@@ -399,7 +400,7 @@ namespace FubarDev.FtpServer
                         _serverCommandChannel.Writer.Complete();
                         await _commandReader.ConfigureAwait(false);
 
-                        if (_commandChannelReader != null)
+                        if (_commandChannelReader != null && !_commandChannelDispatcherStopping)
                         {
                             await _commandChannelReader.ConfigureAwait(false);
                         }
@@ -847,6 +848,7 @@ namespace FubarDev.FtpServer
             finally
             {
                 // We must set this to null to avoid a deadlock.
+                _commandChannelDispatcherStopping = true;
                 _commandChannelReader = null;
                 await StopAsync().ConfigureAwait(false);
             }
