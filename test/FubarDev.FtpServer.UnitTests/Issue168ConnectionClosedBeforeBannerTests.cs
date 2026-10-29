@@ -6,7 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 using Xunit;
 
-namespace FubarDev.FtpServer.Tests.Xunit3;
+namespace FubarDev.FtpServer.UnitTests;
 
 /// <summary>
 /// Connections closed by the client before the 220 banner was sent must be cleaned up.

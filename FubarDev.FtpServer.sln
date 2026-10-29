@@ -69,7 +69,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FubarDev.FtpServer.FileSyst
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "ReadLine", "third-party\ReadLine\ReadLine.shproj", "{F68F448F-E8A4-4536-9A83-12018B6294B0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FubarDev.FtpServer.Tests.Xunit3", "test\FubarDev.FtpServer.Tests.Xunit3\FubarDev.FtpServer.Tests.Xunit3.csproj", "{D65122AC-06A7-4BFA-AB2B-F37AD2C70052}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FubarDev.FtpServer.UnitTests", "test\FubarDev.FtpServer.UnitTests\FubarDev.FtpServer.UnitTests.csproj", "{D65122AC-06A7-4BFA-AB2B-F37AD2C70052}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
