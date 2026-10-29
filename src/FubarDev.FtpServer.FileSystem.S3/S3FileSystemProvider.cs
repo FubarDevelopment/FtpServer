@@ -31,7 +31,7 @@ namespace FubarDev.FtpServer.FileSystem.S3
             if (string.IsNullOrEmpty(_options.AwsAccessKeyId)
                 || string.IsNullOrEmpty(_options.AwsSecretAccessKey)
                 || string.IsNullOrEmpty(_options.BucketName)
-                || string.IsNullOrEmpty(_options.BucketRegion))
+                || (string.IsNullOrEmpty(_options.BucketRegion) && string.IsNullOrEmpty(_options.ServiceUrl)))
             {
                 throw new ArgumentException("S3 Credentials have not been set correctly");
             }

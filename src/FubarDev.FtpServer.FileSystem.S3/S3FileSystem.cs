@@ -34,10 +34,19 @@ namespace FubarDev.FtpServer.FileSystem.S3
         public S3FileSystem(S3FileSystemOptions options, string rootDirectory)
         {
             _options = options;
-            _client = new AmazonS3Client(
-                options.AwsAccessKeyId,
-                options.AwsSecretAccessKey,
-                RegionEndpoint.GetBySystemName(options.BucketRegion));
+
+            var config = new AmazonS3Config();
+
+            if (!string.IsNullOrEmpty(options.ServiceUrl))
+            {
+                config.ServiceURL = options.ServiceUrl;
+            }
+            else
+            {
+                config.RegionEndpoint = RegionEndpoint.GetBySystemName(options.BucketRegion);
+            }
+
+            _client = new AmazonS3Client(options.AwsAccessKeyId, options.AwsSecretAccessKey, config);
             Root = new S3DirectoryEntry(rootDirectory, true);
             _transferUtility = new TransferUtility(_client);
         }
