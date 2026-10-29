@@ -38,5 +38,10 @@ namespace TestFtpServer.Configuration
         /// Amazon S3 file system.
         /// </summary>
         AmazonS3,
+
+        /// <summary>
+        /// Azure Blob Storage file system.
+        /// </summary>
+        AzureBlobStorage,
     }
 }

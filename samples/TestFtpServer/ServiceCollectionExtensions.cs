@@ -13,6 +13,7 @@ using FubarDev.FtpServer.AccountManagement.Directories.SingleRootWithoutHome;
 using FubarDev.FtpServer.CommandExtensions;
 using FubarDev.FtpServer.Commands;
 using FubarDev.FtpServer.FileSystem;
+using FubarDev.FtpServer.FileSystem.AzureBlobStorage;
 using FubarDev.FtpServer.FileSystem.DotNet;
 using FubarDev.FtpServer.FileSystem.GoogleDrive;
 using FubarDev.FtpServer.FileSystem.InMemory;
@@ -93,7 +94,12 @@ namespace TestFtpServer
                         opt.BucketRegion = options.AmazonS3.BucketRegion;
                         opt.AwsAccessKeyId = options.AmazonS3.AwsAccessKeyId;
                         opt.AwsSecretAccessKey = options.AmazonS3.AwsSecretAccessKey;
-                    });
+                    })
+               .Configure<AzureBlobStorageFileSystemOptions>(opt =>
+               {
+                   opt.ContainerName = options.AzureBlobStorage.ContainerName;
+                   opt.ConnectionString = options.AzureBlobStorage.ConnectionString;
+               });
 #if NETCOREAPP
             services
                .Configure<PamMembershipProviderOptions>(
@@ -183,6 +189,10 @@ namespace TestFtpServer
                 case FileSystemType.AmazonS3:
                     services = services
                        .AddFtpServer(sb => sb.ConfigureAuthentication(options).UseS3FileSystem().ConfigureServer(options));
+                    break;
+                case FileSystemType.AzureBlobStorage:
+                    services = services
+                       .AddFtpServer(sb => sb.ConfigureAuthentication(options).UseAzureBlobStorageFileSystem().ConfigureServer(options));
                     break;
                 default:
                     throw new NotSupportedException(

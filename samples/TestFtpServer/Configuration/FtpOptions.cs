@@ -58,6 +58,7 @@ namespace TestFtpServer.Configuration
                 switch (BackendType)
                 {
                     case FileSystemType.AmazonS3: return "amazon-s3";
+                    case FileSystemType.AzureBlobStorage: return "azureblobstorage";
                     case FileSystemType.InMemory: return "in-memory";
                     case FileSystemType.SystemIO: return "system-io";
                     case FileSystemType.Unix: return "unix";
@@ -76,6 +77,9 @@ namespace TestFtpServer.Configuration
                     case "amazonS3":
                     case "amazon-s3":
                         BackendType = FileSystemType.AmazonS3;
+                        break;
+                    case "azureblobstorage":
+                        BackendType = FileSystemType.AzureBlobStorage;
                         break;
                     case "inMemory":
                     case "in-memory":
@@ -98,7 +102,7 @@ namespace TestFtpServer.Configuration
                         break;
                     default:
                         throw new ArgumentOutOfRangeException(
-                            $"Value must be one of \"in-memory\", \"system-io\", \"unix\", \"google-drive:user\", \"google-drive:service\", \"amazon-s3\" but was , \"{value}\"");
+                            $"Value must be one of \"in-memory\", \"system-io\", \"unix\", \"google-drive:user\", \"google-drive:service\", \"amazon-s3\", \"azureblobstorage\" but was , \"{value}\"");
                 }
             }
         }
@@ -169,6 +173,11 @@ namespace TestFtpServer.Configuration
         /// Gets or sets S3 system options.
         /// </summary>
         public FileSystemAmazonS3Options AmazonS3 { get; set; } = new FileSystemAmazonS3Options();
+
+        /// <summary>
+        /// Gets or sets azure blob storage system options.
+        /// </summary>
+        public FileSystemAzureBlobStorageOptions AzureBlobStorage { get; set; } = new FileSystemAzureBlobStorageOptions();
 
         internal FileSystemLayoutType LayoutType
         {
