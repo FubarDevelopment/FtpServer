@@ -184,6 +184,11 @@ namespace FubarDev.FtpServer
                 // Ignore the exception. This happens when the listener gets stopped.
                 return new AcceptInfo(null, index);
             }
+            catch (SocketException ex) when (ex.SocketErrorCode == SocketError.ConnectionReset)
+            {
+                // The remote peer closed the connection during the handshake process. We ignore these.
+                return new AcceptInfo(null, index);
+            }
         }
 
         private int StartListening(IEnumerable<IPAddress> addresses, int port)
