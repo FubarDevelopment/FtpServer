@@ -298,7 +298,7 @@ namespace FubarDev.FtpServer
                 // Remember connection
                 if (!_connections.TryAdd(connection, new FtpConnectionInfo(scope)))
                 {
-                    _log.LogCritical("A new scope was created, but the connection couldn't be added to the list");
+                    _log?.LogCritical("A new scope was created, but the connection couldn't be added to the list");
                     client.Dispose();
                     scope.Dispose();
                     return;

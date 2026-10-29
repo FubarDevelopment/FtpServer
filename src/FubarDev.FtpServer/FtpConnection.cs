@@ -115,7 +115,7 @@ namespace FubarDev.FtpServer
         private readonly FtpConnectionKeepAlive _keepAlive;
 #pragma warning restore 612
 
-        private readonly IAuthorizationInformationFeature _authorizationInformationFeature;
+        private readonly IAuthorizationInformationFeature? _authorizationInformationFeature;
 
         private bool _connectionClosing;
 
@@ -384,8 +384,8 @@ namespace FubarDev.FtpServer
                         return;
                     }
 
-                    var currentUser = _authorizationInformationFeature.FtpUser;
-                    var membershipProvider = _authorizationInformationFeature.MembershipProvider;
+                    var currentUser = _authorizationInformationFeature?.FtpUser;
+                    var membershipProvider = _authorizationInformationFeature?.MembershipProvider;
                     if (currentUser != null
                         && membershipProvider is IMembershipProviderAsync membershipProviderAsync)
                     {

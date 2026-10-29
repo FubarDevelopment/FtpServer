@@ -15,6 +15,6 @@ namespace FubarDev.FtpServer.Localization
         /// <param name="text">The text to be translated.</param>
         /// <param name="args">The format arguments.</param>
         /// <returns>The translated text.</returns>
-        string GetString(string text, params object[] args);
+        string GetString(string text, params object?[] args);
     }
 }

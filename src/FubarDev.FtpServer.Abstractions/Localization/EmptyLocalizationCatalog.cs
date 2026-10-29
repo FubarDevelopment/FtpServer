@@ -26,6 +26,6 @@ namespace FubarDev.FtpServer.Localization
 
         public virtual string GetString(string text) => text;
 
-        public virtual string GetString(string text, params object[] args) => string.Format(FormatProvider, text, args);
+        public virtual string GetString(string text, params object?[] args) => string.Format(FormatProvider, text, args);
     }
 }

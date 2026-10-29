@@ -78,7 +78,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddScoped<IFeatureInfoProvider, DefaultFeatureInfoProvider>();
 
             services.AddScoped<TcpSocketClientAccessor>();
-            services.AddScoped(sp => sp.GetRequiredService<TcpSocketClientAccessor>().TcpSocketClient);
+            services.AddScoped(sp => sp.GetRequiredService<TcpSocketClientAccessor>().TcpSocketClient ?? throw new NullReferenceException("TCP socket client null"));
 
             services.AddScoped<IFtpConnection, FtpConnection>();
             services.AddScoped<IFtpLoginStateMachine, FtpLoginStateMachine>();
