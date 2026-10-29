@@ -6,6 +6,7 @@ using System;
 using System.Buffers;
 using System.IO;
 using System.IO.Pipelines;
+using System.Net.Sockets;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -71,6 +72,11 @@ namespace FubarDev.FtpServer.Networking
                     // data might be lost.
                     await SendDataToStream(readResult.Buffer, CancellationToken.None)
                        .ConfigureAwait(false);
+                }
+                catch (IOException ex) when (ex.InnerException is SocketException { SocketErrorCode: SocketError.ConnectionReset })
+                {
+                    Logger?.LogDebug(ex, "Sending data failed. The remote peer closed the connection.");
+                    return;
                 }
                 catch (Exception ex)
                 {
